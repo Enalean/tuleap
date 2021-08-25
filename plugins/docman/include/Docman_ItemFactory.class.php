@@ -192,7 +192,7 @@ class Docman_ItemFactory
     public function getItemTypeForItem(&$item)
     {
         $type = false;
-        switch (strtolower(get_class($item))) {
+        switch (strtolower($item::class)) {
             case 'docman_folder':
                 $type = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
                 break;
@@ -1368,7 +1368,7 @@ class Docman_ItemFactory
         if (is_a($folder, 'Docman_Folder')) {
             $items = $folder->getAllItems();
             foreach ($items->iterator() as $item) {
-                $class = get_class($item);
+                $class = $item::class;
                 $type  = strtolower(substr(strrchr($class, '_'), 1));
 
                 if (! isset($stats['types'][$type])) {

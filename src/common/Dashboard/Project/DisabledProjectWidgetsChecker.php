@@ -39,7 +39,7 @@ class DisabledProjectWidgetsChecker
 
     public function checkWidgetIsDisabledFromDashboard(Widget $widget, Dashboard $dashboard): bool
     {
-        if (get_class($dashboard) !== ProjectDashboard::class) {
+        if ($dashboard::class !== ProjectDashboard::class) {
             return false;
         }
 

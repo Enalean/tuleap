@@ -98,7 +98,7 @@ class SvnrootUpdater
                 $generate();
                 $logger->info("Update completed");
             } catch (Exception $e) {
-                $logger->error("Caught exception " . get_class($e) . ": " . $e->getMessage());
+                $logger->error("Caught exception " . $e::class . ": " . $e->getMessage());
             }
         });
     }

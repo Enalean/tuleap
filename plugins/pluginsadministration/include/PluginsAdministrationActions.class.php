@@ -247,7 +247,7 @@ class PluginsAdministrationActions extends Actions
                 $descriptor = $plug_info->getPluginDescriptor();
                 $name       = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
-                    $name = get_class($plugin);
+                    $name = $plugin::class;
                 }
                 $return           = [];
                 $return['name']   = $name;

@@ -217,11 +217,11 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory                 = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
         $custom_plugin           = new class extends Plugin {
         };
-        $custom_plugin_classname = get_class($custom_plugin);
+        $custom_plugin_classname = $custom_plugin::class;
         $factory->shouldReceive('getClassNameForPluginName')->with('custom')->andReturns(['class' => $custom_plugin_classname, 'custom' => true]);
         $official_plugin           = new class extends Plugin {
         };
-        $official_plugin_classname = get_class($official_plugin);
+        $official_plugin_classname = $official_plugin::class;
         $factory->shouldReceive('getClassNameForPluginName')->with('official')->andReturns(['class' => $official_plugin_classname, 'custom' => false]);
 
         $plugin_custom = $factory->getPluginByName('custom');

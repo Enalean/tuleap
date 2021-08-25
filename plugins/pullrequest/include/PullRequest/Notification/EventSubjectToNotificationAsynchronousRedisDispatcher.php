@@ -64,7 +64,7 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcher implements Eve
         $queue->pushSinglePersistentMessage(
             self::TOPIC,
             [
-                'event_class' => get_class($event),
+                'event_class' => $event::class,
                 'content'     => $event->toWorkerEventPayload(),
             ]
         );

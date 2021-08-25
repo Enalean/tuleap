@@ -63,8 +63,8 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
         };
 
         $builder = new AuthenticationScopeBuilderFromClassNames(
-            get_class($key_scope_recognize_identifier),
-            get_class($key_scope_not_supposed_to_be_tried)
+            $key_scope_recognize_identifier::class,
+            $key_scope_not_supposed_to_be_tried::class
         );
 
         $this->assertEquals(
@@ -97,7 +97,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
         };
 
         $builder = new AuthenticationScopeBuilderFromClassNames(
-            get_class($key_scope)
+            $key_scope::class
         );
 
         $this->assertNull(
@@ -148,8 +148,8 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             }
         };
 
-        $key_scope_1_class_name = get_class($key_scope_1);
-        $key_scope_2_class_name = get_class($key_scope_2);
+        $key_scope_1_class_name = $key_scope_1::class;
+        $key_scope_2_class_name = $key_scope_2::class;
 
         $this->assertNotEquals($key_scope_1_class_name, $key_scope_2_class_name);
 
@@ -160,7 +160,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
 
         $all_scope_classnames = [];
         foreach ($builder->buildAllAvailableAuthenticationScopes() as $scope) {
-            $all_scope_classnames[] = get_class($scope);
+            $all_scope_classnames[] = $scope::class;
         }
 
         $this->assertEqualsCanonicalizing(

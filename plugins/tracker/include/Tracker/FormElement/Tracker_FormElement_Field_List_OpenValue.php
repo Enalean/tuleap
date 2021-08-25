@@ -61,7 +61,7 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
         if (! $field instanceof Tracker_FormElement_Field_OpenList) {
-            throw new InvalidArgumentException('Expected ' . Tracker_FormElement_Field_OpenList::class . ', got ' . get_class($field));
+            throw new InvalidArgumentException('Expected ' . Tracker_FormElement_Field_OpenList::class . ', got ' . $field::class);
         }
         return $field->getBind()->getFullRESTValue($this);
     }

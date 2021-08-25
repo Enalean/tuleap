@@ -101,10 +101,6 @@ seed_data() {
 setup_tuleap
 setup_database
 case "$PHP_FPM" in
-    '/opt/remi/php74/root/usr/sbin/php-fpm')
-    echo "Deploy PHP FPM 7.4"
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy --php-version=php74
-    ;;
     '/opt/remi/php80/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 80"
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy --php-version=php80

@@ -28,7 +28,7 @@ function gif_loadFile($lpszFileName, $iIndex = 0)
 
 function gif_outputAsBmp($gif, $lpszFileName, $bgColor = -1)
 {
-    if (! isset($gif) || (@get_class($gif) <> "cgif") || ! $gif->loaded() || ($lpszFileName == "")) {
+    if (! isset($gif) || (@$gif::class <> "cgif") || ! $gif->loaded() || ($lpszFileName == "")) {
         return false;
     }
 
@@ -50,7 +50,7 @@ function gif_outputAsBmp($gif, $lpszFileName, $bgColor = -1)
 
 function gif_outputAsPng($gif, $lpszFileName, $bgColor = -1)
 {
-    if (! isset($gif) || (@get_class($gif) <> "cgif") || ! $gif->loaded() || ($lpszFileName == "")) {
+    if (! isset($gif) || (@$gif::class <> "cgif") || ! $gif->loaded() || ($lpszFileName == "")) {
         return false;
     }
 
@@ -92,7 +92,7 @@ function gif_outputAsJpeg($gif, $lpszFileName, $bgColor = -1)
 
 function gif_getSize($gif, &$width, &$height)
 {
-    if (isset($gif) && (@get_class($gif) == "cgif") && $gif->loaded()) {
+    if (isset($gif) && (@$gif::class == "cgif") && $gif->loaded()) {
         $width  = $gif->width();
         $height = $gif->height();
     } elseif (@file_exists($gif)) {

@@ -192,7 +192,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
             }
         };
 
-        $event_manager->addListener(get_class($unnamed_event), $listener, 'handleEvent', false);
+        $event_manager->addListener($unnamed_event::class, $listener, 'handleEvent', false);
 
         $unnamed_event = $event_manager->dispatch($unnamed_event);
 

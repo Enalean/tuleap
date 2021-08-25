@@ -203,7 +203,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $this->group_classnames,
             $this->staticfield_classnames
         );
-        return array_search(get_class($form_element), $all_classnames);
+        return (string) array_search($form_element::class, $all_classnames);
     }
 
     /**
@@ -399,7 +399,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     public function getUsedFormElementFieldByNameForUser($tracker_id, $field_name, PFUser $user)
     {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
-        if ($field && array_search(get_class($field), array_merge($this->classnames, $this->special_classnames))) {
+        if ($field && array_search($field::class, array_merge($this->classnames, $this->special_classnames))) {
             return $field;
         }
 

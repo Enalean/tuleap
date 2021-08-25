@@ -1475,7 +1475,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         $field = $event->getField();
 
-        if (get_class($field) === 'Tuleap\AgileDashboard\FormElement\Burnup') {
+        if ($field::class === Tuleap\AgileDashboard\FormElement\Burnup::class) {
             $event->setWarnings($message_fetcher->getWarningsRelatedToPlanningConfiguration($field->getTracker()));
         }
     }

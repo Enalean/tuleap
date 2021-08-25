@@ -140,7 +140,7 @@ class SoftyTheme extends Theme
 
     public function ApplyPlot($plot)
     {
-        switch (get_class($plot)) {
+        switch ($plot::class) {
             case 'BarPlot':
                 $plot->Clear();
 

@@ -80,11 +80,11 @@ class CreateTestEnvResource
                 \HTTPRequest::instance()->getServerUrl()
             );
         } catch (InvalidPasswordException $exception) {
-            throw new RestException(400, $exception->getMessage(), ['exception' => get_class($exception), 'password_exceptions' => $exception->getPasswordErrors()]);
+            throw new RestException(400, $exception->getMessage(), ['exception' => $exception::class, 'password_exceptions' => $exception->getPasswordErrors()]);
         } catch (InvalidInputException $exception) {
-            throw new RestException(400, $exception->getMessage(), ['exception' => get_class($exception)]);
+            throw new RestException(400, $exception->getMessage(), ['exception' => $exception::class]);
         } catch (CreateTestEnvException $exception) {
-            throw new RestException(500, $exception->getMessage(), ['exception' => get_class($exception)]);
+            throw new RestException(500, $exception->getMessage(), ['exception' => $exception::class]);
         } finally {
             $this->cleanUpTempDir($tmp_name . '/data');
             $this->cleanUpTempDir($tmp_name);

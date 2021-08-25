@@ -48,6 +48,6 @@ final class EventSubjectToNotificationListenerProvider implements ListenerProvid
      */
     public function getListenersForEvent(object $event): iterable
     {
-        return $this->mapping[get_class($event)] ?? [];
+        return $this->mapping[$event::class] ?? [];
     }
 }

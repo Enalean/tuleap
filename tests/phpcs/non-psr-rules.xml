@@ -177,5 +177,5 @@
 
     <!-- Ensure code is compatible with the targeted version of PHP -->
     <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="7.4-8.0"/>
+    <config name="testVersion" value="8.0-8.1"/>
 </ruleset>

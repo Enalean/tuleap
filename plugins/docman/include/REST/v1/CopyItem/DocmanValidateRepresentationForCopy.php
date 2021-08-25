@@ -54,7 +54,7 @@ final class DocmanValidateRepresentationForCopy
 
     private function areNonCopyPropertySetToDefaultValues(CanContainACopyRepresentation $representation): bool
     {
-        $representation_class_name = get_class($representation);
+        $representation_class_name = $representation::class;
         /*
          * This can crash for a lot of reason but since looks but doing something safer
          * requires the usage of reflection. In our case we expect to only handle representations

@@ -12,7 +12,6 @@ let
         gettext
         iconv
         intl
-        json
         ldap
         mbstring
         mysqli

@@ -112,7 +112,7 @@ class Backend
 
             //check that all is ok
             if (! is_a($backend, $wanted_base)) {
-                throw new Exception('Backend should inherit from ' . $wanted_base . '. Received: "' . get_class($backend) . '"');
+                throw new Exception('Backend should inherit from ' . $wanted_base . '. Received: "' . $backend::class . '"');
             }
 
             assert($backend instanceof Backend);

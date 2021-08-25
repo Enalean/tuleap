@@ -122,7 +122,7 @@ try {
     exit(0);
 } catch (Exception $exception) {
     $console->error(
-        get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile(
+        $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile(
         ) . ' L' . $exception->getLine()
     );
 }

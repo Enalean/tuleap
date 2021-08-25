@@ -90,6 +90,6 @@ final class DoesItemHasExpectedTypeVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = []): bool
     {
-        return get_class($item) === $this->expected_item_class;
+        return $item::class === $this->expected_item_class;
     }
 }

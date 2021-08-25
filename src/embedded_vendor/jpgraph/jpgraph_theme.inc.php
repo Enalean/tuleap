@@ -47,10 +47,10 @@ abstract class Theme
         $this->graph = $graph;
         $method_name = '';
 
-        if (get_class($graph) == 'Graph') {
+        if ($graph::class == 'Graph') {
             $method_name = 'SetupGraph';
         } else {
-            $method_name = 'Setup' . get_class($graph);
+            $method_name = 'Setup' . $graph::class;
         }
 
         if (method_exists($this, $method_name)) {

@@ -195,8 +195,8 @@ class Tracker_Artifact_XMLImport
                 $tracker_xml_config
             );
         } catch (Exception $exception) {
-            $this->logger->error("" . get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
-            echo ("" . get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
+            $this->logger->error("" . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
+            echo ("" . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
             return false;
         }
     }

@@ -76,7 +76,7 @@ final class UpdateCategoriesProcessorTest extends TestCase
             ->expects(self::never())
             ->method('update');
 
-        $this->expectException(get_class($exception));
+        $this->expectException($exception::class);
 
         $this->processor->processUpdate(
             Project::buildForTest(),

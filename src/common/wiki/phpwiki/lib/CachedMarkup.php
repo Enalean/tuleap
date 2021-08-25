@@ -155,7 +155,7 @@ class CacheableMarkup extends XmlContent
         } elseif (method_exists($item, 'asString')) {
             $this->_buf .= self::_quote($item->asString());
         } else {
-            $this->_buf .= sprintf("==Object(%s)==", get_class($item));
+            $this->_buf .= sprintf("==Object(%s)==", $item::class);
         }
     }
 

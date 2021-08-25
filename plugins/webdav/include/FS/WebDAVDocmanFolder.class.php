@@ -69,7 +69,7 @@ class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
 
         foreach ($nodes as $node) {
             if ($docmanPermissionManager->userCanAccess($this->user, $node->getId())) {
-                $class = get_class($node);
+                $class = $node::class;
                 switch ($class) {
                     case Docman_File::class:
                         $item = $docmanItemFactory->getItemFromDb($node->getId());

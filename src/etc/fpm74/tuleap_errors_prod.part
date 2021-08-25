@@ -1,2 +1,0 @@
-php_flag[display_errors] = off
-php_flag[html_errors] = off

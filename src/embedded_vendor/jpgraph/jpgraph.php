@@ -1685,7 +1685,7 @@ class Graph
                     // settings means that we will shift the entire plot half a tick step
                     // to the right in oder to align with the center of the bars.
                     if (class_exists('BarPlot', false)) {
-                        $cl = strtolower(get_class($p));
+                        $cl = strtolower($p::class);
                         if ((class_exists('BarPlot', false) && ($p instanceof BarPlot)) || empty($p->barcenter)) {
                             $max = max($max, $p->numpoints - 1);
                         } else {

@@ -63,6 +63,6 @@ final class DocumentIconPresenterBuilder
     {
         $docman_icons = new Docman_Icons('');
 
-        return (string) substr($docman_icons->getIconForItem($item), 0, -4);
+        return substr($docman_icons->getIconForItem($item), 0, -4);
     }
 }

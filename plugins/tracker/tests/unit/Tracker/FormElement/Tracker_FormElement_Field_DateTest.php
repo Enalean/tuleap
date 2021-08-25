@@ -622,7 +622,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $to          = strtotime('2014-07-07');
 
         $field      = $this->getDateField();
-        $reflection = new \ReflectionClass(get_class($field));
+        $reflection = new \ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
@@ -639,7 +639,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $to          = strtotime('2014-07-07');
 
         $field      = $this->getDateField();
-        $reflection = new \ReflectionClass(get_class($field));
+        $reflection = new \ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
@@ -656,7 +656,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $to          = strtotime('2014-07-07');
 
         $field      = $this->getDateField();
-        $reflection = new \ReflectionClass(get_class($field));
+        $reflection = new \ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
@@ -673,7 +673,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $to          = strtotime('2014-07-07');
 
         $field      = $this->getDateField();
-        $reflection = new \ReflectionClass(get_class($field));
+        $reflection = new \ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 
@@ -690,7 +690,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $to          = strtotime('2014-07-07');
 
         $field      = $this->getDateField();
-        $reflection = new \ReflectionClass(get_class($field));
+        $reflection = new \ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
         $method->setAccessible(true);
 

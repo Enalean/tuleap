@@ -28,10 +28,8 @@ use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
-    private const PHP74_DST_CONF_DIR = '/etc/opt/remi/php74';
-    private const PHP74_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm74';
-    public const PHP80_DST_CONF_DIR  = '/etc/opt/remi/php80';
-    public const PHP80_SRC_CONF_DIR  = __DIR__ . '/../../../../etc/fpm80';
+    public const PHP80_DST_CONF_DIR = '/etc/opt/remi/php80';
+    public const PHP80_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm80';
 
     private const FPM_PART_ERRORS             = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD        = 'tuleap_errors_prod.part';
@@ -108,22 +106,6 @@ final class SiteDeployFPM
             return new FPMSessionRedis(\ForgeConfig::get('redis_config_file'), \ForgeConfig::get('sys_http_user'), $server, $use_tls, $port, $password);
         }
         return new FPMSessionFiles();
-    }
-
-    public static function buildForPHP74(
-        LoggerInterface $logger,
-        string $application_user,
-        bool $development
-    ): self {
-        return new self(
-            $logger,
-            $application_user,
-            $development,
-            self::buildSessionFromEnv(),
-            self::PHP74_DST_CONF_DIR,
-            self::PHP74_SRC_CONF_DIR,
-            []
-        );
     }
 
     public static function buildForPHP80(
