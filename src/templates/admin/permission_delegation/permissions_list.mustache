@@ -53,7 +53,9 @@
                 </table>
             {{/ has_permissions }}
             {{^ has_permissions }}
-                <p id="siteadmin-permission-delegation-group-details-perms-empty">{{ no_permission }}</p>
+                <section class="empty-state-pane">
+                    <p class="empty-state-text empty-state-text-smaller">{{ no_permission }}</p>
+                </section>
             {{/ has_permissions }}
         </section>
     </form>

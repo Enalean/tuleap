@@ -19,17 +19,26 @@
   -->
 
 <template>
-    <div class="switch-to-modal-body-global-empty">
+    <section class="empty-state-pane switch-to-modal-body-global-empty">
         <global-empty-state-svg />
 
-        <translate class="switch-to-modal-body-global-empty-text">
+        <p
+            class="empty-state-text empty-state-text-smaller switch-to-modal-body-global-empty-text"
+            v-translate
+        >
             You don’t belong to any project or haven’t viewed anything yet
-        </translate>
+        </p>
 
-        <trove-cat-link class="tlp-button-secondary switch-to-projects-softwaremap-empty-state">
+        <trove-cat-link
+            class="
+                tlp-button-secondary
+                switch-to-projects-softwaremap-empty-state
+                empty-state-action
+            "
+        >
             {{ trove_cat_label }}
         </trove-cat-link>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

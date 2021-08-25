@@ -15,8 +15,7 @@ admin_utils	menu	Accueil admin. site
 # Script: SF/www/admin/approve_pending.php
 #
 admin_approve_pending	title	Projets en attente de validation
-admin_approve_pending	no_pending	Prenez une pause,
-admin_approve_pending	no_pending_next	aucun projet à valider.
+admin_approve_pending	no_pending	Aucun projet à valider
 admin_approve_pending	go_back	Retour à la page d'administration
 admin_approve_pending	approve	Approuver le projet
 admin_approve_pending	delete	Détruire le projet
@@ -41,11 +40,10 @@ admin_approve_pending	activate_all_label	Activer tous les projets
 #
 admin_approve_pending_users	title	Utilisateurs en attente de validation
 admin_approve_pending_users	title_validated	Utilisateurs validés à activer
-admin_approve_pending_users	take_break	Faites une pause,
 admin_approve_pending_users	go_back	Retour à la page d'administration
-admin_approve_pending_users	no_pending	il n'y a aucun utilisateur en attente d'approbation.
-admin_approve_pending_users	no_pending_validated	il n'y a aucun utilisateur en attente de validation.
-admin_approve_pending_users	no_validated	il n'y a aucun utilisateur validé en attente d'approbation.
+admin_approve_pending_users	no_pending	Aucun utilisateur en attente d'approbation
+admin_approve_pending_users	no_pending_validated	Aucun utilisateur en attente de validation
+admin_approve_pending_users	no_validated	Aucun utilisateur validé en attente d'approbation
 admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
 admin_approve_pending_users	user_edit	Voir les détails de l'utilisateur
 admin_approve_pending_users	activate	Activer
@@ -474,7 +472,7 @@ admin_permission_delegation	page_description	Ici vous pouvez assigner des permis
 admin_permission_delegation	group_action_add	Ajouter un groupe
 admin_permission_delegation	group_action_edit	Editer
 admin_permission_delegation	group_action_delete	Supprimer
-admin_permission_delegation	no_group	Il n'y a rien ici,<br>commencez par ajouter un groupe.
+admin_permission_delegation	no_group	Il n'y a rien ici, commencez par ajouter un groupe
 admin_permission_delegation	permissions_title	Permissions
 admin_permission_delegation	no_permission	Il n'y a aucune permission associée à ce groupe
 admin_permission_delegation	users_title	Utilisateurs

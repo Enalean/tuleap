@@ -54,14 +54,14 @@
             </section>
         {{/ has_customisations }}
         {{^ has_customisations }}
-            <div class="empty-state-page">
-                <i class="far fa-thumbs-up empty-state-icon siteadmin-custom-site-content-empty-icon"></i>
-                <div class="empty-state-text">
+            <section class="empty-state-pane">
+                <i class="far fa-thumbs-up empty-state-icon"></i>
+                <p class="empty-state-text">
                     {{# gettext }}
                         Congratulations, you don't have any customisations in your language files!
                     {{/ gettext }}
-                </div>
-            </div>
+                </p>
+            </section>
         {{/ has_customisations }}
     </div>
 </section>

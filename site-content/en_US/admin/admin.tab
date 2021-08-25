@@ -22,8 +22,7 @@ admin_utils	menu	Site Admin Home
 # Script: SF/www/admin/approve_pending.php
 #
 admin_approve_pending	title	Projects waiting for validation
-admin_approve_pending	no_pending	Take a break,
-admin_approve_pending	no_pending_next	there is no project to validate.
+admin_approve_pending	no_pending	No project to validate
 admin_approve_pending	go_back	Go back to administration
 admin_approve_pending	approve	Approve Project
 admin_approve_pending	delete	Delete Project
@@ -49,10 +48,9 @@ admin_approve_pending	activate_all_label	Activate all projects
 admin_approve_pending_users	title	Users waiting for validation
 admin_approve_pending_users	title_validated	Validated users needing activation
 admin_approve_pending_users	go_back	Go back to administration
-admin_approve_pending_users	take_break	Take a break,
-admin_approve_pending_users	no_pending	there is no users to approve.
-admin_approve_pending_users	no_pending_validated	there is no users to validate.
-admin_approve_pending_users	no_validated	there is no validated users to approve.
+admin_approve_pending_users	no_pending	No user to approve
+admin_approve_pending_users	no_pending_validated	No user to validate
+admin_approve_pending_users	no_validated	No validated user to approve
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
 admin_approve_pending_users	user_edit	See user details
 admin_approve_pending_users	activate	Activate
@@ -480,7 +478,7 @@ admin_permission_delegation	page_description	Here you can assign plateform roles
 admin_permission_delegation	group_action_add	Add group
 admin_permission_delegation	group_action_edit	Edit
 admin_permission_delegation	group_action_delete	Delete
-admin_permission_delegation	no_group	There is nothing here,<br>start by adding a group.
+admin_permission_delegation	no_group	There is nothing here, start by adding a group
 admin_permission_delegation	permissions_title	Permissions
 admin_permission_delegation	no_permission	There is no permission associated to this group
 admin_permission_delegation	users_title	Users

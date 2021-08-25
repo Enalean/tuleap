@@ -25,7 +25,7 @@
         viewBox="0 0 123 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        class="switch-to-empty-illustration"
+        class="empty-state-illustration switch-to-empty-illustration"
     >
         <rect x="39.5" y="40.5" width="14" height="5" rx="2.5" class="stroked" />
         <rect x="57" y="42" width="24" height="2" rx="1" class="filled" />

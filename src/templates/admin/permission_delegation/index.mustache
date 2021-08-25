@@ -58,15 +58,15 @@
         {{/ current_group }}
     {{/ has_groups }}
     {{^ has_groups }}
-        <div class="empty-state-page">
-            <div class="empty-state-text">{{{ purified_no_group }}}</div>
+        <section class="empty-state-page">
+            <h1 class="empty-state-title">{{{ purified_no_group }}}</h1>
             <button type="button"
                     id="siteadmin-permission-delegation-add-group"
-                    class="tlp-button-primary tlp-button-large"
+                    class="empty-state-action tlp-button-primary"
             >
                 <i class="fa fa-plus tlp-button-icon"></i> {{ group_action_add }}
             </button>
-        </div>
+        </section>
     {{/ has_groups }}
 </div>
 

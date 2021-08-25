@@ -73,7 +73,6 @@ main[role="main"]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empt
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
-@import "empty-states";
 @import "header";
 @import "toolbar";
 @import "navbar";

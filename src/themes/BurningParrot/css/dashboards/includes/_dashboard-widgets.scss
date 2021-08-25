@@ -155,14 +155,5 @@
 }
 
 #dashboard-add-widget-settings-empty {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     height: 100%;
-    text-align: center;
-
-    > .empty-state-icon {
-        color: var(--tlp-main-color-transparent-70);
-        font-size: 70px;
-    }
 }

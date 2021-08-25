@@ -249,15 +249,11 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     }
 }
 
-.switch-to-modal-body-global-empty-text,
-.switch-to-recent-items-empty-text,
-.switch-to-projects-empty-text {
-    margin: var(--tlp-medium-spacing) 0 var(--tlp-large-spacing);
+.empty-state-text.switch-to-modal-body-global-empty-text,
+.empty-state-text.switch-to-recent-items-empty-text,
+.empty-state-text.switch-to-projects-empty-text {
     opacity: 0.75;
     color: var(--tlp-dimmed-color-on-dark-background);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1rem;
 }
 
 .switch-to-empty-illustration {

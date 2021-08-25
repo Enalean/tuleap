@@ -1,28 +1,28 @@
-<div class="empty-state-page">
+<section class="empty-state-page">
     <div class="empty-state-illustration">
         {{> svg-locked-project }}
     </div>
 
-    <div class="empty-state-text-with-small-text" data-test="project-is-private-exception">
-        {{# gettext }}This is a private project.{{/ gettext }}
-        <div class="empty-state-text-small">
-            {{# gettext }}You may only have access to private projects you are member of.{{/ gettext }}
-        </div>
-    </div>
+    <h1 class="empty-state-title" data-test="project-is-private-exception">
+        {{# gettext }}This is a private project{{/ gettext }}
+    </h1>
+    <p class="empty-state-text">
+        {{# gettext }}You may only have access to private projects you are member of.{{/ gettext }}
+    </p>
 
-    <div>
+    <div class="empty-state-action">
         <button type="button"
-                class="tlp-button-primary tlp-button-large"
+                class="tlp-button-primary"
                 id="button-ask-to-join"
                 data-modal-id="join-project-modal"
         >
             <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i> {{# gettext }}Ask to join this project{{/ gettext }}
         </button>
 
-        <a class="tlp-button-primary tlp-button-outline tlp-button-large error-back-to-homepage" href="/my/">
+        <a class="tlp-button-primary tlp-button-outline error-back-to-homepage" href="/my/">
             <i class="fa fa-reply tlp-button-icon"></i> {{# gettext }}Go to my home page{{/ gettext }}
         </a>
     </div>
-</div>
+</section>
 
 {{> join-project }}
