@@ -107,7 +107,7 @@ class TaskBuilder
         return new CreateProgramIncrementsTask(
             new SourceChangesetValuesCollectionAdapter(
                 $synchronized_fields_gatherer,
-                new FieldValuesGathererRetriever($tracker_artifact_factory),
+                new FieldValuesGathererRetriever($tracker_artifact_factory, $form_element_factory),
             ),
             new PlanningAdapter(\PlanningFactory::build()),
             $mirror_creator,

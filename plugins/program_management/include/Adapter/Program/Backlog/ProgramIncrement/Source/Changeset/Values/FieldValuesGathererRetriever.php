@@ -31,10 +31,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Repl
 final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
 {
     private \Tracker_ArtifactFactory $artifact_factory;
+    private \Tracker_FormElementFactory $form_element_factory;
 
-    public function __construct(\Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(\Tracker_ArtifactFactory $artifact_factory, \Tracker_FormElementFactory $form_element_factory)
     {
-        $this->artifact_factory = $artifact_factory;
+        $this->artifact_factory     = $artifact_factory;
+        $this->form_element_factory = $form_element_factory;
     }
 
     public function getFieldValuesGatherer(ReplicationData $replication): GatherFieldValues
@@ -49,6 +51,6 @@ final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
         if (! $full_changeset) {
             throw new PendingArtifactChangesetNotFoundException($program_increment_id, $changeset_id);
         }
-        return new ArtifactFieldValuesRetriever($full_changeset);
+        return new ArtifactFieldValuesRetriever($full_changeset, $this->form_element_factory);
     }
 }
