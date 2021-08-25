@@ -216,4 +216,12 @@ class DashboardProjectMilestones extends Widget
     {
         return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
     }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        return $widget;
+    }
 }
