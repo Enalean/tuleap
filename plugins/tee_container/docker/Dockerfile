@@ -77,10 +77,10 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-embed \
     tuleap-plugin-jira-import \
     tuleap-plugin-program_management \
+    tuleap-plugin-document_generation \
     tuleap-theme-burningparrot \
     tuleap-theme-flamingparrot \
     tuleap-realtime && \
-    if [ "$RELEASE_CYCLE" == "dev" ]; then yum install -y tuleap-plugin-document_generation; fi && \
     yum clean all && \
     /bin/rm -rf /rpms $YUM_REPO_PATH && \
     localedef -i fr_FR -c -f UTF-8 fr_FR.UTF-8 && \
