@@ -33,7 +33,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { SubtaskRow } from "../../../type";
 import HeaderLink from "../Task/HeaderLink.vue";
-import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
+import type { Popover } from "@tuleap/tlp-popovers";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
 import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";

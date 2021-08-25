@@ -68,7 +68,7 @@ import TaskBar from "./TaskBar.vue";
 import DependencyArrow from "./DependencyArrow.vue";
 import { getDimensions } from "../../../helpers/tasks-dimensions";
 import { createPopover } from "@tuleap/tlp-popovers";
-import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
+import type { Popover } from "@tuleap/tlp-popovers";
 import { Styles } from "../../../helpers/styles";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
 import { namespace } from "vuex-class";

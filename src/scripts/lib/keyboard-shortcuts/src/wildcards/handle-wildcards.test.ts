@@ -18,7 +18,7 @@
  */
 
 import { isWildCardAndNotQuestionMark } from "./handle-wildcards";
-import type { Shortcut } from "../../types";
+import type { Shortcut } from "../type";
 
 describe("isWildCardAndNotQuestionMark()", () => {
     const question_mark_keyboard_event: KeyboardEvent = new KeyboardEvent("question_mark", {

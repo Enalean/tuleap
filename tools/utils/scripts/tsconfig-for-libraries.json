@@ -7,7 +7,6 @@
         "isolatedModules": true,
         "noImplicitOverride": true,
         "declaration": true,
-        "emitDeclarationOnly": true,
         "sourceMap": true,
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "Node",

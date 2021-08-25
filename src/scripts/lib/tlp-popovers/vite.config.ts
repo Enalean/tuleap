@@ -20,19 +20,22 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "TlpPopovers",
-        },
-        rollupOptions: {
-            external: ["popper.js"],
-            output: {
-                globals: {
-                    "popper.js": "popper.js",
+export default defineConfig(
+    {
+        build: {
+            lib: {
+                entry: path.resolve(__dirname, "src/index.ts"),
+                name: "TlpPopovers",
+            },
+            rollupOptions: {
+                external: ["popper.js"],
+                output: {
+                    globals: {
+                        "popper.js": "popper.js",
+                    },
                 },
             },
         },
     },
-});
+    { typescript: true }
+);

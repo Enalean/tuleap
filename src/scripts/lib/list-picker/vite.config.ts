@@ -23,30 +23,33 @@ import {
 } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig({
-    plugins: [createPOGettextPlugin()],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "ListPicker",
-        },
-        rollupOptions: {
-            external: [
-                "@juggle/resize-observer",
-                "lit-html",
-                "lit-html/directives/style-map",
-                "lit-html/directives/class-map",
-                "@tuleap/gettext",
-            ],
-            output: {
-                globals: {
-                    "@juggle/resize-observer": "@juggle/resize-observer",
-                    "lit-html": "lit-html",
-                    "lit-html/directives/style-map": "lit-html/directives/style-map",
-                    "lit-html/directives/class-map": "lit-html/directives/class-map",
-                    "@tuleap/gettext": "@tuleap/gettext",
+export default defineConfig(
+    {
+        plugins: [createPOGettextPlugin()],
+        build: {
+            lib: {
+                entry: path.resolve(__dirname, "src/index.ts"),
+                name: "ListPicker",
+            },
+            rollupOptions: {
+                external: [
+                    "@juggle/resize-observer",
+                    "lit-html",
+                    "lit-html/directives/style-map",
+                    "lit-html/directives/class-map",
+                    "@tuleap/gettext",
+                ],
+                output: {
+                    globals: {
+                        "@juggle/resize-observer": "@juggle/resize-observer",
+                        "lit-html": "lit-html",
+                        "lit-html/directives/style-map": "lit-html/directives/style-map",
+                        "lit-html/directives/class-map": "lit-html/directives/class-map",
+                        "@tuleap/gettext": "@tuleap/gettext",
+                    },
                 },
             },
         },
     },
-});
+    { typescript: true }
+);

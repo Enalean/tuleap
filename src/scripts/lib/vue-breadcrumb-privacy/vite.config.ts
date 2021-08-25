@@ -21,21 +21,24 @@ import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator"
 import { createVuePlugin } from "vite-plugin-vue2";
 import * as path from "path";
 
-export default defineConfig({
-    plugins: [createVuePlugin()],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "BreadcrumbPrivacy",
-        },
-        rollupOptions: {
-            external: ["vue", "@tuleap/tlp"],
-            output: {
-                globals: {
-                    vue: "Vue",
-                    "@tuleap/tlp": "tlp",
+export default defineConfig(
+    {
+        plugins: [createVuePlugin()],
+        build: {
+            lib: {
+                entry: path.resolve(__dirname, "src/index.ts"),
+                name: "BreadcrumbPrivacy",
+            },
+            rollupOptions: {
+                external: ["vue", "@tuleap/tlp"],
+                output: {
+                    globals: {
+                        vue: "Vue",
+                        "@tuleap/tlp": "tlp",
+                    },
                 },
             },
         },
     },
-});
+    { typescript: true }
+);

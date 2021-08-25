@@ -21,6 +21,9 @@ import type { BuildOptions, ServerOptions, UserConfig, UserConfigExport } from "
 import { defineConfig as viteDefineConfig } from "vite";
 export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 import { esbuild_target } from "./browserslist_config";
+import type { UserPluginConfig as PluginCheckerConfig } from "vite-plugin-checker";
+import checker from "vite-plugin-checker";
+import dts from "vite-dts";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
 type OverloadedServerOptions = Omit<ServerOptions, "fs">;
@@ -29,7 +32,17 @@ type OverloadedUserConfig = UserConfigWithoutBuildAndServer & { build?: Overload
     server?: OverloadedServerOptions;
 };
 
-export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
+export function defineConfig(
+    config: OverloadedUserConfig,
+    typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
+): UserConfigExport {
+    const plugins = config.plugins ?? [];
+    if (typechecks !== null) {
+        plugins.push(checker(typechecks));
+        if (config.build?.lib) {
+            plugins.push(dts());
+        }
+    }
     return viteDefineConfig({
         ...config,
         build: {
@@ -38,6 +51,7 @@ export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
             minify: "esbuild",
             target: esbuild_target,
         },
+        plugins,
         server: {
             fs: {
                 allow: [__dirname + "/../../../"],
