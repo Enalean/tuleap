@@ -333,4 +333,48 @@ describe("ExecutionDetailController -", () => {
             });
         });
     });
+
+    describe("Update the comment", () => {
+        const user = { id: 626 };
+        const status = "passed";
+        const execution = {
+            id: 8,
+            status,
+            time: "",
+            results: "new comment",
+        };
+        const event = { target: {} };
+
+        beforeEach(() => {
+            jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
+            jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "removeViewTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
+                $q.when(execution)
+            );
+            ExecutionService.editor = ckeditorGetData;
+            $scope.execution = execution;
+        });
+
+        it("When the user updates the comment, Then the status does not change", () => {
+            execution.uploaded_files = [];
+
+            $scope.updateComment(event, execution);
+            $scope.$apply();
+
+            expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                execution.id,
+                status,
+                execution.results,
+                []
+            );
+            expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+            expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
+                execution.id,
+                user
+            );
+            expect($scope.displayTestCommentContainer).toBeFalsy();
+            expect(execution.status).toEqual(status);
+        });
+    });
 });

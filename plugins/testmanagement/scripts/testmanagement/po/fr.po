@@ -267,6 +267,9 @@ msgstr "Renommer la campagne"
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 
+msgid "Save comment"
+msgstr "Sauvegarder le commentaire"
+
 msgid "Select first test tab from test list"
 msgstr "Sélectionne le premier onglet de test de la liste"
 

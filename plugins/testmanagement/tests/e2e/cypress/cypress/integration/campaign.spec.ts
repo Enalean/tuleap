@@ -172,7 +172,7 @@ describe("TTM campaign", () => {
                 });
 
                 it("Add another comment when one is already set", () => {
-                    cy.get("[data-test=edit-comment-button]").click();
+                    cy.get("[data-test=edit-comment-button]").click({ force: true });
                     cy.get("[data-test=current-test-comment]").then(($container) => {
                         cy.window().then((win) => {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -195,6 +195,22 @@ describe("TTM campaign", () => {
                         cy.contains("It's ok. Fix works!");
                         cy.get("[data-dismiss=modal]").first().click();
                     });
+                });
+
+                it("Update the comment without change the status", () => {
+                    cy.get("[data-test=current-test").should("have.class", "passed");
+                    cy.get("[data-test=edit-comment-button]").click({ force: true });
+                    cy.get("[data-test=current-test-comment]").then(($container) => {
+                        cy.window().then((win) => {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            win.CKEDITOR.instances[$container.attr("id")].setData(
+                                "<p>I confirm that. It's ok. Fix works!</p>"
+                            );
+                        });
+                    });
+                    cy.get("[data-test=save-comment-button]").click({ force: true });
+                    cy.get("[data-test=current-test").should("have.class", "passed");
                 });
 
                 it("Edits the test", () => {
