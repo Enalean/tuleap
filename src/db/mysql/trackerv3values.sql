@@ -22,18 +22,18 @@ INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description,
 --
 -- Dumping data for table 'artifact_field_set'
 --
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (1, 1, 'fieldset_default_bugs_lbl_key', 'fieldset_default_bugs_desc_key', 10);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (2, 1, 'fieldset_status_bugs_lbl_key', 'fieldset_status_bugs_desc_key', 20);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (3, 2, 'fieldset_default_tasks_lbl_key', 'fieldset_default_tasks_desc_key', 10);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (4, 2, 'fieldset_status_tasks_lbl_key', 'fieldset_status_tasks_desc_key', 20);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (5, 3, 'fieldset_default_SR_lbl_key', 'fieldset_default_SR_desc_key', 10);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (6, 3, 'fieldset_status_SR_lbl_key', 'fieldset_status_SR_desc_key', 20);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (7, 4, 'fieldset_default_lbl_key', 'fieldset_default_desc_key', 10);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (8, 5, 'fieldset_default_patches_lbl_key', 'fieldset_default_patches_desc_key', 10);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (9, 5, 'fieldset_patchtext_patches_lbl_key', 'fieldset_patchtext_patches_desc_key', 20);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (10, 5, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (14, 7, 'fieldset_scrum_description_lbl_key', 'fieldset_scrum_description_desc_key', 10);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (15, 7, 'fieldset_scrum_status_lbl_key', 'fieldset_scrum_status_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (1, 1, 'fieldset_default_bugs_lbl_key', 'fieldset_default_bugs_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (2, 1, 'fieldset_status_bugs_lbl_key', 'fieldset_status_bugs_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (3, 2, 'fieldset_default_tasks_lbl_key', 'fieldset_default_tasks_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (4, 2, 'fieldset_status_tasks_lbl_key', 'fieldset_status_tasks_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (5, 3, 'fieldset_default_SR_lbl_key', 'fieldset_default_SR_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (6, 3, 'fieldset_status_SR_lbl_key', 'fieldset_status_SR_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (7, 4, 'fieldset_default_lbl_key', 'fieldset_default_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (8, 5, 'fieldset_default_patches_lbl_key', 'fieldset_default_patches_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (9, 5, 'fieldset_patchtext_patches_lbl_key', 'fieldset_patchtext_patches_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (10, 5, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (14, 7, 'fieldset_scrum_description_lbl_key', 'fieldset_scrum_description_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, `rank`) VALUES (15, 7, 'fieldset_scrum_status_lbl_key', 'fieldset_scrum_status_desc_key', 20);
 --
 -- Dumping data for table 'artifact_field'
 --
@@ -586,10 +586,10 @@ INSERT INTO artifact_notification_event_default VALUES (9,'NEW_ARTIFACT',90,'eve
 INSERT INTO artifact_notification_event_default VALUES (10,'COMMENT_CHANGE',100,'event_COMMENT_CHANGE_short_desc','event_COMMENT_CHANGE_desc');
 
 # Project 100
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (15, 100, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (15, 100, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
 
 # Project 1
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (41, 1, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=1', 1, 1, 'system', 150);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (41, 1, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=1', 1, 1, 'system', 150);
 
 # Tracker admin
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "ugroup_tracker_admins_name_key", "ugroup_tracker_admins_desc_key", 100);

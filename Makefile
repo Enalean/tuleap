@@ -162,7 +162,7 @@ tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to u
 	$(eval DB ?= mysql57)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mariadb103)
+tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mariadb103, mysql80)
 	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)

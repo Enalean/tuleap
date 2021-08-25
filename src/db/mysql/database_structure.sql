@@ -309,7 +309,7 @@ CREATE TABLE frs_package (
   group_id int(11) NOT NULL default '0',
   name text,
   status_id int(11) NOT NULL default '0',
-  rank int(11) NOT NULL default '0',
+  `rank` int(11) NOT NULL default '0',
   approve_license TINYINT(1) NOT NULL default '1',
   PRIMARY KEY  (package_id),
   KEY idx_package_group_id (group_id)
@@ -344,7 +344,7 @@ CREATE TABLE frs_download_agreement_default (
 CREATE TABLE frs_processor (
   processor_id int(11) NOT NULL auto_increment,
   name text,
-  rank int(11) NOT NULL default '0',
+  `rank` int(11) NOT NULL default '0',
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (processor_id)
 );
@@ -465,7 +465,7 @@ CREATE TABLE group_history (
 
 CREATE TABLE group_type (
   type_id int(11) NOT NULL,
-  name text NOT NULL default '',
+  name text NOT NULL,
   PRIMARY KEY  (type_id)
 );
 
@@ -474,7 +474,7 @@ CREATE TABLE group_type (
 # Table structure for table 'groups'
 #
 
-CREATE TABLE groups (
+CREATE TABLE `groups` (
   group_id int(11) NOT NULL auto_increment,
   group_name varchar(255) default NULL,
   access VARCHAR(16) NOT NULL DEFAULT 'private',
@@ -541,8 +541,8 @@ CREATE TABLE svn_accessfile_history (
 
 CREATE TABLE svn_immutable_tags (
     group_id INT(11),
-    paths TEXT NOT NULL DEFAULT '',
-    whitelist TEXT NOT NULL DEFAULT '',
+    paths TEXT NOT NULL,
+    whitelist TEXT NOT NULL,
     PRIMARY KEY(group_id)
 );
 
@@ -687,7 +687,7 @@ CREATE TABLE session (
   session_hash CHAR(64) NOT NULL,
   ip_addr varchar(45) NOT NULL default '',
   time int(11) NOT NULL default '0',
-  user_agent TEXT NOT NULL DEFAULT '',
+  user_agent TEXT NOT NULL,
   KEY idx_session_user_id (user_id),
   KEY idx_session_time (time)
 ) ENGINE=InnoDB;
@@ -845,7 +845,7 @@ CREATE TABLE user (
   email text NOT NULL,
   user_pw varchar(32) NOT NULL default '',
   password varchar(255) DEFAULT NULL,
-  realname text NOT NULL default '',
+  realname text NOT NULL,
   register_purpose text,
   status char(1) NOT NULL default 'A',
   shell varchar(50) NOT NULL default '/sbin/nologin',
@@ -1130,7 +1130,7 @@ CREATE TABLE service (
     is_active int(11) DEFAULT 0 NOT NULL,
     is_used int(11) DEFAULT 0 NOT NULL,
     scope text NOT NULL,
-    rank int(11) NOT NULL default '0',
+    `rank` int(11) NOT NULL default '0',
     location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master', -- distributed architecture: to be deleted (but requires to check all plugins)
     server_id INT( 11 ) UNSIGNED NULL,  -- distributed architecture: to be deleted (but requires to check all plugins)
     is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
@@ -1203,7 +1203,7 @@ CREATE TABLE wiki_group_list (
 	wiki_name varchar(255) NOT NULL default '',
 	wiki_link varchar(255) NOT NULL default '',
 	description varchar(255) NOT NULL default '',
-	rank int(11) NOT NULL default '0',
+	`rank` int(11) NOT NULL default '0',
         language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
 	PRIMARY KEY (id)
 );
@@ -1271,7 +1271,7 @@ CREATE TABLE wiki_page (
 	id              INT NOT NULL AUTO_INCREMENT,
     pagename        VARCHAR(100) BINARY NOT NULL,
 	hits            INT NOT NULL DEFAULT 0,
-    pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
+    pagedata        MEDIUMTEXT NOT NULL,
 	cached_html 	MEDIUMBLOB,
 	group_id        INT NOT NULL DEFAULT 0,
     PRIMARY KEY (id),
@@ -1283,8 +1283,8 @@ CREATE TABLE wiki_version (
         version         INT NOT NULL,
 	mtime           INT NOT NULL,
 	minor_edit      TINYINT DEFAULT 0,
-        content         MEDIUMTEXT NOT NULL DEFAULT '',
-        versiondata     MEDIUMTEXT NOT NULL DEFAULT '',
+        content         MEDIUMTEXT NOT NULL,
+        versiondata     MEDIUMTEXT NOT NULL,
         PRIMARY KEY (id,version),
 	INDEX (mtime)
 );
@@ -1500,7 +1500,7 @@ CREATE TABLE groups_notif_delegation (
 
 CREATE TABLE groups_notif_delegation_message (
   group_id int(11) NOT NULL default 0,
-  msg_to_requester text NOT NULL default "",
+  msg_to_requester text NOT NULL,
   PRIMARY KEY (group_id)
 );
 
@@ -1523,7 +1523,7 @@ CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker(
 
 CREATE TABLE IF NOT EXISTS svn_notification (
     group_id int(11) NOT NULL,
-    svn_events_mailing_list text NOT NULL DEFAULT "",
+    svn_events_mailing_list text NOT NULL,
     path varchar(255) DEFAULT "/",
     PRIMARY KEY (group_id, path)
 );
@@ -1619,7 +1619,7 @@ CREATE TABLE dashboards_lines (
   dashboard_id INT(11) UNSIGNED NOT NULL,
   dashboard_type VARCHAR(255) NOT NULL,
   layout VARCHAR(255) NOT NULL,
-  rank INT(11) NOT NULL,
+  `rank` INT(11) NOT NULL,
   INDEX idx(dashboard_id, dashboard_type(3))
 );
 
@@ -1627,7 +1627,7 @@ DROP TABLE IF EXISTS dashboards_lines_columns;
 CREATE TABLE dashboards_lines_columns (
   id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   line_id INT(11) UNSIGNED NOT NULL,
-  rank INT(11) NOT NULL,
+  `rank` INT(11) NOT NULL,
   INDEX idx(line_id)
 );
 
@@ -1635,7 +1635,7 @@ DROP TABLE IF EXISTS dashboards_lines_columns_widgets;
 CREATE TABLE dashboards_lines_columns_widgets (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     column_id INT(11) UNSIGNED NOT NULL,
-    rank INT(11) NOT NULL,
+    `rank` INT(11) NOT NULL,
     is_minimized INT(1) NOT NULL DEFAULT '0',
     name VARCHAR(255) NOT NULL,
     content_id INT DEFAULT '0' NOT NULL,

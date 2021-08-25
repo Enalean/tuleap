@@ -89,7 +89,7 @@ VALUES (31, 'pr', 'plugin_pullrequest:reference_pullrequest_desc_key', '/plugins
 (32, 'pullrequest', 'plugin_pullrequest:reference_pullrequest_desc_key', '/plugins/git/?action=pull-requests&repo_id=$repo_id&group_id=$group_id#/pull-requests/$1/overview', 'S', 'plugin_pullrequest', 'pullrequest');
 
 INSERT INTO reference_group (reference_id, group_id, is_active)
-SELECT 31, group_id, 1 FROM groups WHERE group_id;
+SELECT 31, group_id, 1 FROM `groups` WHERE group_id;
 
 INSERT INTO reference_group (reference_id, group_id, is_active)
-SELECT 32, group_id, 1 FROM groups WHERE group_id;
+SELECT 32, group_id, 1 FROM `groups` WHERE group_id;

@@ -97,7 +97,7 @@ INSERT INTO user_access SET \
 #
 # Note: if you change the 'group' structure, do not forget to update the IM group (no 47) in the IM plugin.
 
-INSERT INTO groups SET \
+INSERT INTO `groups` SET \
   group_id = '1', \
   group_name = 'Administration Project', \
   access = 'public', \
@@ -122,7 +122,7 @@ INSERT INTO groups SET \
   svn_preamble = '', \
   svn_commit_to_tag_denied ='0' ;
 
-INSERT INTO groups SET \
+INSERT INTO `groups` SET \
   group_id = '46', \
   group_name = 'Site News', \
   access = 'private', \
@@ -148,7 +148,7 @@ INSERT INTO groups SET \
   svn_commit_to_tag_denied ='0' ;
 
 
-INSERT INTO groups SET \
+INSERT INTO `groups` SET \
   group_id = '100', \
   group_name = 'Default Site Template', \
   access = 'private', \
@@ -240,35 +240,35 @@ INSERT INTO trove_cat (trove_cat_id, version, parent, root_parent, shortname, fu
 --
 
 -- Group 100 (templates)
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (1, 100, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/$projectname/', 1, 1, 'system', 10);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (2, 100, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (4, 100, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=$group_id', 0, 0, 'system', 40);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (8, 100, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=$group_id', 1, 0, 'system', 80);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 0, 0, 'system', 120);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 0, 0, 'system', 130);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (14, 100, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=$group_id', 1, 0, 'system', 140);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 0, 0, 'system', 105);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (1, 100, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/$projectname/', 1, 1, 'system', 10);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (2, 100, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (4, 100, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=$group_id', 0, 0, 'system', 40);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (8, 100, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=$group_id', 1, 0, 'system', 80);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 0, 0, 'system', 120);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 0, 0, 'system', 130);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (14, 100, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=$group_id', 1, 0, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 0, 0, 'system', 105);
 
 -- Group 1
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/admin/', 1, 1, 'system', 10);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (32, 1, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=1', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 0, 0, 'system', 40);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 0, 0, 'system', 80);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (38, 1, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=1', 0, 0, 'system', 120);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (40, 1, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=1', 1, 0, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/admin/', 1, 1, 'system', 10);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (32, 1, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=1', 1, 1, 'system', 20);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 0, 0, 'system', 40);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 0, 0, 'system', 80);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (38, 1, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=1', 0, 0, 'system', 120);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (40, 1, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=1', 1, 0, 'system', 140);
 
 -- Group 46 - SiteNews
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (51, 46, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/sitenews/', 1, 1, 'system', 10);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (52, 46, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=46', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (54, 46, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=46', 1, 1, 'system', 40);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (55, 46, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=46', 1, 1, 'system', 120);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (51, 46, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/sitenews/', 1, 1, 'system', 10);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (52, 46, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=46', 1, 1, 'system', 20);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (54, 46, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=46', 1, 1, 'system', 40);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (55, 46, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=46', 1, 1, 'system', 120);
 
 --
 --
 -- This service has the id 100 to force the next id to be greater than 100
 -- 100 is a special value (None value)
 --
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (100, 0, 'None', 'None', '', '', 0, 0, 'project', 0);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES (100, 0, 'None', 'None', '', '', 0, 0, 'project', 0);
 
 
 --
@@ -581,16 +581,16 @@ INSERT INTO svn_cache_parameter VALUES ('maximum_credentials' , '10'), ('lifetim
 -- Default dashboards
 --
 INSERT INTO project_dashboards (id, project_id, name) VALUES (1, 100, 'Dashboard');
-INSERT INTO dashboards_lines (id, dashboard_id, dashboard_type, layout, rank) VALUES (1, 1, 'project', 'two-columns-small-big', 0);
-INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (1, 1, 0);
-INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (1, 1, 0, 'projectdescription', 0, 0);
-INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (2, 1, 1);
-INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (2, 2, 0, 'projectheartbeat', 0, 0);
+INSERT INTO dashboards_lines (id, dashboard_id, dashboard_type, layout, `rank`) VALUES (1, 1, 'project', 'two-columns-small-big', 0);
+INSERT INTO dashboards_lines_columns (id, line_id, `rank`) VALUES (1, 1, 0);
+INSERT INTO dashboards_lines_columns_widgets (id, column_id, `rank`, name, content_id, is_minimized) VALUES (1, 1, 0, 'projectdescription', 0, 0);
+INSERT INTO dashboards_lines_columns (id, line_id, `rank`) VALUES (2, 1, 1);
+INSERT INTO dashboards_lines_columns_widgets (id, column_id, `rank`, name, content_id, is_minimized) VALUES (2, 2, 0, 'projectheartbeat', 0, 0);
 
 INSERT INTO user_dashboards (id, user_id, name) VALUES (1, 101, 'My Dashboard');
-INSERT INTO dashboards_lines (id, dashboard_id, dashboard_type, layout, rank) VALUES (2, 1, 'user', 'two-columns', 0);
-INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (3, 2, 0);
-INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (3, 3, 0, 'mywelcomemessage', 0, 0);
-INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (4, 2, 1);
-INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (4, 4, 0, 'myadmin', 0, 0);
-INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (5, 4, 1, 'mysystemevent', 0, 0);
+INSERT INTO dashboards_lines (id, dashboard_id, dashboard_type, layout, `rank`) VALUES (2, 1, 'user', 'two-columns', 0);
+INSERT INTO dashboards_lines_columns (id, line_id, `rank`) VALUES (3, 2, 0);
+INSERT INTO dashboards_lines_columns_widgets (id, column_id, `rank`, name, content_id, is_minimized) VALUES (3, 3, 0, 'mywelcomemessage', 0, 0);
+INSERT INTO dashboards_lines_columns (id, line_id, `rank`) VALUES (4, 2, 1);
+INSERT INTO dashboards_lines_columns_widgets (id, column_id, `rank`, name, content_id, is_minimized) VALUES (4, 4, 0, 'myadmin', 0, 0);
+INSERT INTO dashboards_lines_columns_widgets (id, column_id, `rank`, name, content_id, is_minimized) VALUES (5, 4, 1, 'mysystemevent', 0, 0);

@@ -127,7 +127,7 @@ CREATE TABLE tracker_field(
     label TEXT NOT NULL ,
     description TEXT NOT NULL ,
     use_it TINYINT(1) NOT NULL ,
-    rank INT( 11 ) UNSIGNED NOT NULL,
+    `rank` INT( 11 ) UNSIGNED NOT NULL,
     scope CHAR( 1 ) NOT NULL,
     required TINYINT(1) NULL,
     notifications TINYINT(1) NULL,
@@ -247,7 +247,7 @@ CREATE TABLE tracker_field_list_bind_static_value(
     field_id INT(11) NOT NULL,
     label VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    rank INT(11) NOT NULL,
+    `rank` INT(11) NOT NULL,
     is_hidden TINYINT(1) NOT NULL,
     original_value_id INT(11) NOT NULL DEFAULT '0',
     INDEX idx_original_value_id (original_value_id, id),
@@ -430,7 +430,7 @@ CREATE TABLE tracker_report(
     parent_report_id INT(11) NULL,
     is_query_displayed TINYINT(1) NOT NULL,
     is_in_expert_mode TINYINT(1) NOT NULL DEFAULT 0,
-    expert_query TEXT NOT NULL DEFAULT '',
+    expert_query TEXT NOT NULL,
     updated_by int(11) NULL,
     updated_at int(11) NULL,
     INDEX tracker_idx(tracker_id)
@@ -444,7 +444,7 @@ CREATE TABLE tracker_report_renderer(
     renderer_type VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    rank INT(11) NOT NULL,
+    `rank` INT(11) NOT NULL,
     INDEX report_idx(report_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
@@ -460,7 +460,7 @@ CREATE TABLE tracker_report_renderer_table_sort(
     renderer_id INT(11) NOT NULL,
     field_id INT(11) NOT NULL,
     is_desc TINYINT(1) NOT NULL,
-    rank INT(11) NOT NULL,
+    `rank` INT(11) NOT NULL,
     PRIMARY KEY sort_idx(renderer_id, field_id)
 ) ENGINE=InnoDB;
 
@@ -470,7 +470,7 @@ CREATE TABLE tracker_report_renderer_table_columns(
     field_id INT(11) NOT NULL,
     artlink_nature VARCHAR(255) NULL,
     artlink_nature_format VARCHAR(255) NULL,
-    rank INT(11) NOT NULL,
+    `rank` INT(11) NOT NULL,
     width TINYINT NOT NULL,
     INDEX column_idx(renderer_id, field_id)
 ) ENGINE=InnoDB;
@@ -488,7 +488,7 @@ CREATE TABLE tracker_report_criteria(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     report_id INT(11) NOT NULL,
     field_id INT(11) NOT NULL,
-    rank INT(11) NOT NULL,
+    `rank` INT(11) NOT NULL,
     is_advanced TINYINT(1) NOT NULL,
     INDEX report_idx(report_id),
     INDEX report_field_idx(report_id, field_id)
@@ -567,8 +567,8 @@ CREATE TABLE plugin_tracker_artifact_pending_removal LIKE tracker_artifact;
 DROP TABLE IF EXISTS tracker_artifact_priority_rank;
 CREATE TABLE tracker_artifact_priority_rank(
     artifact_id INT(11) PRIMARY KEY,
-    rank INT(11) UNSIGNED NOT NULL,
-    INDEX idx_rank(rank)
+    `rank` INT(11) UNSIGNED NOT NULL,
+    INDEX idx_rank(`rank`)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_artifact_priority_history;
@@ -588,7 +588,7 @@ DROP TABLE IF EXISTS  tracker_tooltip;
 CREATE TABLE tracker_tooltip(
     tracker_id INT(11) NOT NULL ,
     field_id INT(11) NOT NULL ,
-    rank INT(11) NOT NULL ,
+    `rank` INT(11) NOT NULL ,
     PRIMARY KEY idx(tracker_id, field_id)
 ) ENGINE=InnoDB;
 
@@ -646,7 +646,7 @@ CREATE TABLE tracker_notification_role(
     role_id int(11) NOT NULL,
     tracker_id int(11) NOT NULL,
     role_label VARCHAR(255) NULL,
-    rank int(11) NOT NULL,
+    `rank` int(11) NOT NULL,
     short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX role_id_idx(role_id),
@@ -658,7 +658,7 @@ CREATE TABLE  tracker_notification_event(
     event_id int(11) NOT NULL,
     tracker_id int(11) NOT NULL,
     event_label VARCHAR(255) NULL,
-    rank int(11) NOT NULL,
+    `rank` int(11) NOT NULL,
     short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX event_id_idx(event_id),
@@ -680,7 +680,7 @@ DROP TABLE IF EXISTS tracker_notification_role_default;
 CREATE TABLE  tracker_notification_role_default(
     role_id int(11) NOT NULL,
     role_label VARCHAR(255) NULL,
-    rank int(11) NOT NULL,
+    `rank` int(11) NOT NULL,
     short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX role_id_idx(role_id)
@@ -690,7 +690,7 @@ DROP TABLE IF EXISTS tracker_notification_event_default;
 CREATE TABLE  tracker_notification_event_default(
     event_id int(11) NOT NULL,
     event_label VARCHAR(255) NULL,
-    rank int(11) NOT NULL,
+    `rank` int(11) NOT NULL,
     short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX event_id_idx(event_id)
@@ -1029,12 +1029,12 @@ CREATE TABLE plugin_tracker_semantic_done (
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
 
 
 -- Create service for all projects (but disabled)
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
 SELECT DISTINCT group_id , 'plugin_tracker:service_lbl_key' , 'plugin_tracker:service_desc_key' , 'plugin_tracker', CONCAT('/plugins/tracker/?group_id=', group_id), 1 , 0 , 'system',  151
 FROM service
 WHERE group_id != 100;
@@ -1137,10 +1137,10 @@ INSERT INTO user_access SET
 INSERT INTO tracker_report_config (query_limit) VALUES (30);
 
 INSERT INTO plugin_tracker_projects_use_artifactlink_types (project_id)
-SELECT DISTINCT groups.group_id
-FROM groups
+SELECT DISTINCT `groups`.group_id
+FROM `groups`
     INNER JOIN service USING (group_id)
-WHERE groups.status != 'D'
+WHERE `groups`.status != 'D'
       AND service.short_name = 'plugin_tracker';
 
 INSERT INTO forgeconfig (name, value) VALUES ('feature_flag_use_list_pickers_in_trackers_and_modals', 1);

@@ -33,6 +33,9 @@ case "${2:-}" in
     "mysql57")
     export DB_HOST="mysql57"
     ;;
+    "mysql80")
+    export DB_HOST="mysql80"
+    ;;
     "mariadb103")
     export DB_HOST="mariadb-10.3"
     ;;
