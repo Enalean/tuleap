@@ -21,28 +21,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-/**
- * @psalm-immutable
- */
-final class SemanticStatusMissingValuesPresenter
+final class ProgramTrackerBuilder
 {
-    public string $missing_values;
-    /**
-     * @var ProgramTracker[]
-     */
-    public array $trackers;
-
-    /**
-     * @param string[]         $missing_values
-     * @param ProgramTracker[] $trackers
-     */
-    public function __construct(array $missing_values, array $trackers)
+    public static function buildWithId(int $id): ProgramTracker
     {
-        $this->missing_values = implode(', ', $missing_values);
-        $this->trackers       = $trackers;
+        return new ProgramTracker(TrackerTestBuilder::aTracker()->withId($id)->build());
     }
 }

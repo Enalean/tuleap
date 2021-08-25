@@ -60,7 +60,7 @@ final class ConfigurationErrorsCollector
      */
     private array $field_synchronisation_error = [];
     /**
-     * @var int[]
+     * @var ProgramTracker[]
      */
     private array $team_tracker_id_errors = [];
     /**
@@ -68,7 +68,7 @@ final class ConfigurationErrorsCollector
      */
     private array $semantic_status_no_field = [];
     /**
-     * @var int[]
+     * @var ProgramTracker[]
      */
     private array $status_missing_in_teams = [];
     /**
@@ -132,7 +132,7 @@ final class ConfigurationErrorsCollector
         $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker);
     }
 
-    public function userCanNotSubmitInTeam(int $team_tracker_id): void
+    public function userCanNotSubmitInTeam(ProgramTracker $team_tracker_id): void
     {
         $this->team_tracker_id_errors[] = $team_tracker_id;
     }
@@ -142,14 +142,20 @@ final class ConfigurationErrorsCollector
         $this->semantic_status_no_field[] = new SemanticStatusNoFieldPresenter($tracker_id);
     }
 
-    public function addMissingSemanticInTeamErrors(array $tracker_ids): void
+    /**
+     * @param array ProgramTracker[] $trackers
+     */
+    public function addMissingSemanticInTeamErrors(array $trackers): void
     {
-        $this->status_missing_in_teams = $tracker_ids;
+        $this->status_missing_in_teams = $trackers;
     }
 
-    public function addMissingValueInSemantic(array $missing_values, array $tracker_ids): void
+    /**
+     * @param array ProgramTracker[] $trackers
+     */
+    public function addMissingValueInSemantic(array $missing_values, array $trackers): void
     {
-        $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($missing_values, $tracker_ids);
+        $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($missing_values, $trackers);
     }
 
     public function addFieldSynchronisationError(string $message): void
@@ -238,7 +244,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return int[]
+     * @return ProgramTracker[]
      */
     public function getTeamTrackerIdErrors(): array
     {
@@ -254,7 +260,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return int[]
+     * @return ProgramTracker[]
      */
     public function getStatusMissingInTeams(): array
     {

@@ -107,7 +107,7 @@ final class TrackerCollection
         $can_submit = true;
         foreach ($this->mirrored_timebox_trackers as $milestone_tracker) {
             if (! $milestone_tracker->userCanSubmitArtifact($user)) {
-                $configuration_errors->userCanNotSubmitInTeam($milestone_tracker->getTrackerId());
+                $configuration_errors->userCanNotSubmitInTeam($milestone_tracker);
                 $can_submit = false;
                 if (! $configuration_errors->shouldCollectAllIssues()) {
                     return $can_submit;

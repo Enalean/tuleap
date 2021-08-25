@@ -7,7 +7,7 @@
             {{ tracker_id }}
         {{/ dgettext }}
         {{# semantic_status_no_field }}
-            <a href='/plugins/tracker/?tracker={{ . }}&func=admin-semantic&semantic=status'>#{{ . }}</a>
+            <a href='/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-semantic&semantic=status'>#{{ getTrackerId }} ({{ getTrackerName }})</a>
         {{/ semantic_status_no_field }}
     </li>
 {{/ has_status_field_not_defined }}
@@ -19,7 +19,7 @@
             Some tracker does not have status semantic defined, please check trackers
         {{/ dgettext }}
         {{# status_missing_in_teams }}
-            <a href='/plugins/tracker/?tracker={{ . }}&func=admin-semantic&semantic=status'>#{{ . }}</a>
+            <a href='/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-semantic&semantic=status'>#{{ getTrackerId }} ({{ getTrackerName }})</a>
         {{/ status_missing_in_teams }}
     </li>
 {{/ has_status_missing_in_teams }}
@@ -29,12 +29,12 @@
         {{# semantic_status_missing_values }}
             {{# dgettext }}
                 tuleap-program_management |
-                    Values '%s' are not found in every tracker, please check tracker |
-                    {{ missing_values }}
+                Values '%s' are not found in every tracker, please check tracker |
+                {{ missing_values }}
             {{/ dgettext }}
-            {{# tracker_ids }}
-                <a href='/plugins/tracker/?tracker={{ . }}&func=admin-semantic&semantic=status'>#{{ . }}</a>
-            {{/ tracker_ids }}
+            {{# trackers }}
+                <a href='/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-semantic&semantic=status'>#{{ getTrackerId }} ({{ getTrackerName }})</a>
+            {{/ trackers }}
         {{/ semantic_status_missing_values }}
     </li>
 {{/ has_status_missing_values }}
