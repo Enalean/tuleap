@@ -259,24 +259,26 @@ execution-with-steps.current-test-content {
     }
 
     > .tlp-button-secondary.tlp-button-outline {
+        transition: opacity 100ms ease-in-out, color 100ms ease-in-out;
         border: 0;
         border-radius: 50%;
-        background: inherit;
+        opacity: 0.8;
+        background: none;
         box-shadow: none;
-        color: inherit;
+        color: var(--tlp-dimmed-color);
 
+        &:focus,
         &:hover {
-            background: var(--tlp-white-color-transparent-80);
-            box-shadow: var(--tlp-button-shadow-hover);
+            opacity: 1;
+            color: var(--tlp-main-color);
         }
+
         &:focus {
-            background: var(--tlp-white-color-transparent-80);
             box-shadow: var(--tlp-shadow-focus);
         }
 
         > .tlp-button-icon {
             margin: 0;
-            color: var(--tlp-dimmed-color);
         }
     }
 }
