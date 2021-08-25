@@ -216,6 +216,15 @@
                 >
                     {{ 'Edit comment' | translate }}
                 </button>
+                <button
+                    type="button"
+                    ng-if="displayTestCommentContainer"
+                    class="tlp-button-secondary tlp-button-outline"
+                    data-test="save-comment-button"
+                    ng-click="updateComment($event, execution)"
+                >
+                    {{ 'Save comment' | translate }}
+                </button>
                 <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
                     <button id="test-result-passed" type="button"
                             data-test="mark-test-as-passed"

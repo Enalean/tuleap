@@ -74,6 +74,7 @@ function ExecutionDetailCtrl(
     $scope.block = block;
     $scope.notrun = notrun;
     $scope.getStatusLabel = getStatusLabel;
+    $scope.updateComment = updateComment;
     $scope.linkMenuIsVisible = issue_config.permissions.create && issue_config.permissions.link;
     $scope.canCreateIssue = issue_config.permissions.create;
     $scope.canLinkIssue = issue_config.permissions.link;
@@ -303,6 +304,10 @@ function ExecutionDetailCtrl(
 
     function isCurrentExecutionLoaded() {
         return typeof ExecutionService.executions[execution_id] !== "undefined";
+    }
+
+    function updateComment(event, execution) {
+        setNewStatus(event, execution, execution.status);
     }
 
     function pass(event, execution) {
