@@ -21,6 +21,8 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+
 final class ConfigurationErrorsCollector
 {
     private bool $should_collect_all_issues;
@@ -99,9 +101,9 @@ final class ConfigurationErrorsCollector
         );
     }
 
-    public function addRequiredFieldError(int $tracker_id, int $field_id, string $field_label): void
+    public function addRequiredFieldError(TrackerReference $tracker_reference, int $field_id, string $field_label): void
     {
-        $this->required_fields_errors[] = new RequiredErrorPresenter($tracker_id, $field_id, $field_label);
+        $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker_reference);
     }
 
     public function addWorkflowTransitionRulesError(int $tracker_id): void

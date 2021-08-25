@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 use PFUser;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -32,21 +33,13 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 class TimeboxCreatorChecker
 {
-    private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder;
-    private CheckSemantic $semantic_checker;
-    private CheckRequiredField $required_field_checker;
-    private CheckWorkflow $workflow_checker;
-
     public function __construct(
-        SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
-        CheckSemantic $semantic_checker,
-        CheckRequiredField $required_field_checker,
-        CheckWorkflow $workflow_checker
+        private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
+        private CheckSemantic $semantic_checker,
+        private CheckRequiredField $required_field_checker,
+        private CheckWorkflow $workflow_checker,
+        private RetrieveTrackerFromField $retrieve_tracker_from_field
     ) {
-        $this->field_collection_builder = $field_collection_builder;
-        $this->semantic_checker         = $semantic_checker;
-        $this->required_field_checker   = $required_field_checker;
-        $this->workflow_checker         = $workflow_checker;
     }
 
     public function canTimeboxBeCreated(
@@ -85,7 +78,8 @@ class TimeboxCreatorChecker
                 ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
                     $team_trackers,
                     $synchronized_fields_data_collection,
-                    $configuration_errors
+                    $configuration_errors,
+                    $this->retrieve_tracker_from_field
                 )
             ) {
                 $can_be_created = false;

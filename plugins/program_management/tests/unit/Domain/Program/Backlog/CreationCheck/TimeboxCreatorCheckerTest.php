@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -70,17 +71,20 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user;
     private ProgramTracker $program_increment_tracker;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
+    private RetrieveTrackerFromFieldStub $retrieve_tracker_from_field;
 
     protected function setUp(): void
     {
-        $this->fields_adapter           = $this->createStub(BuildSynchronizedFields::class);
-        $this->field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+        $this->fields_adapter              = $this->createStub(BuildSynchronizedFields::class);
+        $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
+        $this->field_collection_builder    = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter,
-            new NullLogger()
+            new NullLogger(),
+            $this->retrieve_tracker_from_field
         );
-        $this->semantic_checker         = $this->createStub(CheckSemantic::class);
-        $this->required_field_checker   = $this->createStub(CheckRequiredField::class);
-        $this->workflow_checker         = $this->createStub(CheckWorkflow::class);
+        $this->semantic_checker            = $this->createStub(CheckSemantic::class);
+        $this->required_field_checker      = $this->createStub(CheckRequiredField::class);
+        $this->workflow_checker            = $this->createStub(CheckWorkflow::class);
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
@@ -301,7 +305,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_collection_builder,
             $this->semantic_checker,
             $this->required_field_checker,
-            $this->workflow_checker
+            $this->workflow_checker,
+            $this->retrieve_tracker_from_field
         );
     }
 

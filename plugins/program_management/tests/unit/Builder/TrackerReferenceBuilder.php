@@ -21,26 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-/**
- * @psalm-immutable
- */
-final class RequiredErrorPresenter
+final class TrackerReferenceBuilder
 {
-    public string $field_admin_url;
-    public string $tracker_name;
-    public int $tracker_id;
-
-    public function __construct(public int $field_id, public string $field_label, TrackerReference $tracker)
+    public static function buildWithId(int $id): TrackerReference
     {
-        $this->field_admin_url = '/plugins/tracker/?' .
-            http_build_query(
-                ['tracker' => $tracker->id, 'func' => 'admin-formElement-update', 'formElement' => $field_id]
-            );
-        $this->tracker_name    = $tracker->label;
-        $this->tracker_id      = $tracker->id;
+        return TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId($id)->build());
+    }
+
+    public static function buildWithIdAndName(int $id, string $name): TrackerReference
+    {
+        return TrackerReference::fromTracker(
+            TrackerTestBuilder::aTracker()->withId($id)->withName($name)->build()
+        );
     }
 }

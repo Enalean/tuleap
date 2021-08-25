@@ -57,6 +57,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\Fe
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
@@ -359,13 +360,14 @@ final class program_managementPlugin extends Plugin
 
         $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
 
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
-        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
-        $logger                  = $this->getLogger();
-        $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
-        $program_increments_dao  = new ProgramIncrementsDAO();
-        $iteration_dao           = new IterationsDAO();
+        $form_element_factory        = \Tracker_FormElementFactory::instance();
+        $timeframe_dao               = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $semantic_status_factory     = new Tracker_Semantic_StatusFactory();
+        $logger                      = $this->getLogger();
+        $planning_adapter            = new PlanningAdapter(\PlanningFactory::build());
+        $program_increments_dao      = new ProgramIncrementsDAO();
+        $iteration_dao               = new IterationsDAO();
+        $retrieve_tracker_from_field = new TrackerFromFieldRetriever($form_element_factory);
 
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             new SynchronizedFieldsAdapter(
@@ -401,7 +403,8 @@ final class program_managementPlugin extends Plugin
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
                 new Tracker_Rule_List_Dao()
-            )
+            ),
+            $retrieve_tracker_from_field
         );
 
         return new DisplayAdminProgramManagementController(
@@ -1032,14 +1035,15 @@ final class program_managementPlugin extends Plugin
 
     private function getCanSubmitNewArtifactHandler(): CanSubmitNewArtifactHandler
     {
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
-        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
-        $logger                  = $this->getLogger();
-        $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
-        $program_increments_dao  = new ProgramIncrementsDAO();
-        $tracker_factory         = \TrackerFactory::instance();
-        $iteration_dao           = new IterationsDAO();
+        $form_element_factory        = \Tracker_FormElementFactory::instance();
+        $timeframe_dao               = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $semantic_status_factory     = new Tracker_Semantic_StatusFactory();
+        $logger                      = $this->getLogger();
+        $planning_adapter            = new PlanningAdapter(\PlanningFactory::build());
+        $program_increments_dao      = new ProgramIncrementsDAO();
+        $tracker_factory             = \TrackerFactory::instance();
+        $iteration_dao               = new IterationsDAO();
+        $retrieve_tracker_from_field = new TrackerFromFieldRetriever($form_element_factory);
 
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             new SynchronizedFieldsAdapter(
@@ -1075,7 +1079,8 @@ final class program_managementPlugin extends Plugin
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
                 new Tracker_Rule_List_Dao()
-            )
+            ),
+            $retrieve_tracker_from_field
         );
 
         return new CanSubmitNewArtifactHandler(

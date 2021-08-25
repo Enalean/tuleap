@@ -21,26 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use LogicException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-/**
- * @psalm-immutable
- */
-final class RequiredErrorPresenter
+final class TrackerFromFieldRetriever implements RetrieveTrackerFromField
 {
-    public string $field_admin_url;
-    public string $tracker_name;
-    public int $tracker_id;
-
-    public function __construct(public int $field_id, public string $field_label, TrackerReference $tracker)
+    public function __construct(private \Tracker_FormElementFactory $form_element_factory)
     {
-        $this->field_admin_url = '/plugins/tracker/?' .
-            http_build_query(
-                ['tracker' => $tracker->id, 'func' => 'admin-formElement-update', 'formElement' => $field_id]
-            );
-        $this->tracker_name    = $tracker->label;
-        $this->tracker_id      = $tracker->id;
+    }
+
+    public function fromFieldId(int $field_id): TrackerReference
+    {
+        $full_field = $this->form_element_factory->getFieldById($field_id);
+
+        if (! $full_field) {
+            throw new LogicException("Can not found the field #" . $field_id);
+        }
+
+        return TrackerReference::fromTracker($full_field->getTracker());
     }
 }
