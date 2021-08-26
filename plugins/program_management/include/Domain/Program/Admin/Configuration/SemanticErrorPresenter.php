@@ -23,25 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
+
 /**
  * @psalm-immutable
  */
 final class SemanticErrorPresenter
 {
-    public string $semantic_name;
-    public string $semantic_short_name;
     /**
-     * @var int[]
+     * @param ProgramTracker[] $potential_trackers_in_error
      */
-    public array $potential_trackers_in_error;
-
-    /**
-     * @param int[]  $potential_trackers_in_error
-     */
-    public function __construct(string $semantic_name, string $semantic_short_name, array $potential_trackers_in_error)
+    public function __construct(public string $semantic_name, public string $semantic_short_name, public array $potential_trackers_in_error)
     {
-        $this->semantic_name               = $semantic_name;
-        $this->semantic_short_name         = $semantic_short_name;
-        $this->potential_trackers_in_error = $potential_trackers_in_error;
     }
 }

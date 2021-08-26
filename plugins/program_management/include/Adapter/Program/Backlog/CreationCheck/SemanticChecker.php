@@ -32,21 +32,12 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticChecker implements CheckSemantic
 {
-    private \Tracker_Semantic_TitleDao $semantic_title_dao;
-    private \Tracker_Semantic_DescriptionDao $semantic_description_dao;
-    private SemanticTimeframeDao $semantic_timeframe_dao;
-    private CheckStatus $semantic_status_checker;
-
     public function __construct(
-        \Tracker_Semantic_TitleDao $semantic_title_dao,
-        \Tracker_Semantic_DescriptionDao $semantic_description_dao,
-        SemanticTimeframeDao $semantic_timeframe_dao,
-        CheckStatus $semantic_status_checker
+        private \Tracker_Semantic_TitleDao $semantic_title_dao,
+        private \Tracker_Semantic_DescriptionDao $semantic_description_dao,
+        private SemanticTimeframeDao $semantic_timeframe_dao,
+        private CheckStatus $semantic_status_checker
     ) {
-        $this->semantic_title_dao       = $semantic_title_dao;
-        $this->semantic_description_dao = $semantic_description_dao;
-        $this->semantic_timeframe_dao   = $semantic_timeframe_dao;
-        $this->semantic_status_checker  = $semantic_status_checker;
     }
 
     public function areTrackerSemanticsWellConfigured(
@@ -61,7 +52,7 @@ final class SemanticChecker implements CheckSemantic
         if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
             $this->buildSemanticError(
                 $configuration_errors,
-                $tracker_ids,
+                $source_tracker_collection->getSourceTrackers(),
                 dgettext('tuleap-program_management', 'Title'),
                 \Tracker_Semantic_Title::NAME
             );
@@ -73,7 +64,7 @@ final class SemanticChecker implements CheckSemantic
         if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
             $this->buildSemanticError(
                 $configuration_errors,
-                $tracker_ids,
+                $source_tracker_collection->getSourceTrackers(),
                 dgettext('tuleap-program_management', 'Description'),
                 \Tracker_Semantic_Description::NAME
             );
@@ -85,7 +76,7 @@ final class SemanticChecker implements CheckSemantic
         if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
             $this->buildSemanticError(
                 $configuration_errors,
-                $tracker_ids,
+                $source_tracker_collection->getSourceTrackers(),
                 dgettext('tuleap-program_management', 'Timeframe'),
                 SemanticTimeframe::NAME
             );
@@ -125,12 +116,15 @@ final class SemanticChecker implements CheckSemantic
         return true;
     }
 
+    /**
+     * @param ProgramTracker[] $trackers
+     */
     private function buildSemanticError(
         ConfigurationErrorsCollector $configuration_errors,
-        array $tracker_ids,
+        array $trackers,
         string $semantic_name,
         string $semantic_shortname
     ): void {
-        $configuration_errors->addSemanticError($semantic_name, $semantic_shortname, $tracker_ids);
+        $configuration_errors->addSemanticError($semantic_name, $semantic_shortname, $trackers);
     }
 }
