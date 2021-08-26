@@ -178,7 +178,7 @@
                     </div>
                     <div class="current-test-results-container">
                         <div
-                            ng-show="displayTestCommentContainer"
+                            ng-show="displayTestCommentEditor"
                             class="current-test-comment"
                             id="execution_{{execution.id}}"
                             data-test="current-test-comment"
@@ -186,7 +186,7 @@
                         >
                         </div>
                         <div
-                            ng-if="! displayTestCommentContainer"
+                            ng-if="! displayTestCommentEditor"
                             class="current-test-comment current-test-comment-displayer"
                             data-test="current-test-comment-preview"
                             ng-bind-html="truncateExecutionResult(execution, 200)"
@@ -207,17 +207,17 @@
             <section class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container">
                 <button
                     type="button"
-                    ng-if="! displayTestCommentContainer"
+                    ng-if="! displayTestCommentEditor"
                     class="tlp-button-secondary tlp-button-outline"
                     data-test="edit-comment-button"
-                    ng-click="showTestCommentContainer(execution)"
+                    ng-click="showTestCommentEditor(execution)"
                     data-shortcut-edit-comment-button
                 >
                     {{ 'Edit comment' | translate }}
                 </button>
                 <button
                     type="button"
-                    ng-if="displayTestCommentContainer"
+                    ng-if="displayTestCommentEditor"
                     class="tlp-button-secondary tlp-button-outline"
                     data-test="save-comment-button"
                     ng-click="updateComment($event, execution)"

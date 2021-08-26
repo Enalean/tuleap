@@ -85,8 +85,8 @@ function ExecutionDetailCtrl(
     $scope.truncateExecutionResult = truncateExecutionResult;
     $scope.linkedIssueId = null;
     $scope.linkedIssueAlertVisible = false;
-    $scope.displayTestCommentContainer = false;
-    $scope.showTestCommentContainer = showTestCommentContainer;
+    $scope.displayTestCommentEditor = false;
+    $scope.showTestCommentEditor = showTestCommentEditor;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -299,7 +299,7 @@ function ExecutionDetailCtrl(
             Boolean($scope.execution.definition.automated_tests) &&
             $scope.execution.definition.automated_tests !== "";
         $scope.execution.uploaded_files = [];
-        $scope.displayTestCommentContainer = !$scope.execution.previous_result.result;
+        $scope.displayTestCommentEditor = !$scope.execution.previous_result.result;
     }
 
     function isCurrentExecutionLoaded() {
@@ -361,10 +361,10 @@ function ExecutionDetailCtrl(
 
     function handleCommentBox(has_test_comment, execution) {
         if (!has_test_comment) {
-            showTestCommentContainer(execution);
+            showTestCommentEditor(execution);
             return;
         }
-        hideTestCommentContainer(execution);
+        hideTestCommentEditor(execution);
     }
 
     function getStatusLabel(status) {
@@ -426,8 +426,8 @@ function ExecutionDetailCtrl(
         });
     }
 
-    function showTestCommentContainer(execution) {
-        $scope.displayTestCommentContainer = true;
+    function showTestCommentEditor(execution) {
+        $scope.displayTestCommentEditor = true;
         ExecutionService.viewTestExecutionIfRTEAlreadyExists(
             execution.id,
             SharedPropertiesService.getCurrentUser()
@@ -435,8 +435,8 @@ function ExecutionDetailCtrl(
         ExecutionService.clearEditor(execution);
     }
 
-    function hideTestCommentContainer(execution) {
-        $scope.displayTestCommentContainer = false;
+    function hideTestCommentEditor(execution) {
+        $scope.displayTestCommentEditor = false;
         ExecutionService.removeViewTestExecution(
             execution.id,
             SharedPropertiesService.getCurrentUser()
