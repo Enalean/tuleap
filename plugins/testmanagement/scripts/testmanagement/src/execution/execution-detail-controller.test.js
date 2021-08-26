@@ -197,7 +197,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     user
                 );
-                expect($scope.displayTestCommentContainer).toBeFalsy();
+                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
 
             it("When there is a problem with the update, then the error will be shown on the execution", () => {
@@ -238,7 +238,7 @@ describe("ExecutionDetailController -", () => {
                     user
                 );
                 expect(ExecutionService.clearEditor).toHaveBeenCalledWith(execution);
-                expect($scope.displayTestCommentContainer).toBeTruthy();
+                expect($scope.displayTestCommentEditor).toBeTruthy();
             });
         });
 
@@ -258,7 +258,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     user
                 );
-                expect($scope.displayTestCommentContainer).toBeFalsy();
+                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
 
@@ -278,7 +278,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     user
                 );
-                expect($scope.displayTestCommentContainer).toBeFalsy();
+                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
 
@@ -306,7 +306,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     user
                 );
-                expect($scope.displayTestCommentContainer).toBeFalsy();
+                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
 
             it("Then the status will be saved to 'notrun' and only the file in ckeditor will be send", () => {
@@ -336,7 +336,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     user
                 );
-                expect($scope.displayTestCommentContainer).toBeFalsy();
+                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
     });
@@ -380,7 +380,7 @@ describe("ExecutionDetailController -", () => {
                 execution.id,
                 user
             );
-            expect($scope.displayTestCommentContainer).toBeFalsy();
+            expect($scope.displayTestCommentEditor).toBeFalsy();
             expect(execution.status).toEqual(status);
         });
     });
