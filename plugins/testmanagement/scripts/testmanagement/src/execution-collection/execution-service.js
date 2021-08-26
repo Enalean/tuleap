@@ -77,6 +77,7 @@ function ExecutionService(
         displayErrorMessage,
         executionsForCampaign,
         addArtifactLink,
+        setCommentOnEditor,
     });
 
     initialization();
@@ -256,6 +257,10 @@ function ExecutionService(
     function clearEditor(execution) {
         self.editor.setData("");
         execution.uploaded_files = [];
+    }
+
+    function setCommentOnEditor(comment) {
+        self.editor.setData(comment);
     }
 
     function hasDefinitionChanged(execution, execution_updated) {
