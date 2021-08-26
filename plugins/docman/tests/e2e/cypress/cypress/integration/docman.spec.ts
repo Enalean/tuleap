@@ -57,7 +57,7 @@ describe("Docman", function () {
                 cy.get("[data-test=use_it]").check();
                 cy.get("[data-test=admin_create_metadata]").submit();
 
-                cy.contains("New document").click();
+                cy.get("[data-test=new-document]").click();
                 cy.get("[data-test=create_document_next]").click();
                 cy.get("[data-test=title]").type("my document title");
                 cy.get("[data-test=item_type_4]").check();

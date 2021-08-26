@@ -44,7 +44,7 @@ describe("Platform allows restricted", function () {
         });
 
         cy.get("[data-test=error-user-is-restricted]").contains(
-            "You have a restricted user account."
+            "You have a restricted user account"
         );
     });
 
@@ -52,7 +52,7 @@ describe("Platform allows restricted", function () {
         cy.projectAdministratorLogin();
 
         cy.visitProjectAdministration("platform-allows-restricted");
-        cy.contains("Details").click();
+        cy.get("[data-test=admin-nav-details]").click();
         cy.get("[data-test=project_visibility]").select("private");
         cy.get("[data-test=project-details-submit-button]").click();
         cy.get("[data-test=term_of_service]").click();

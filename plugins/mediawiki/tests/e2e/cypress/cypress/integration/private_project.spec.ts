@@ -37,6 +37,6 @@ describe("Mediawiki private projects", function () {
             failOnStatusCode: false,
         });
 
-        cy.get("[data-test=project-is-private-exception]").contains("This is a private project.");
+        cy.get("[data-test=project-is-private-exception]").contains("This is a private project");
     });
 });

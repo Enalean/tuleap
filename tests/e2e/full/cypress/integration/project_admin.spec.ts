@@ -38,7 +38,7 @@ context("Suspended users", function () {
         cy.userLogout();
         cy.projectAdministratorLogin();
         cy.visitProjectAdministration("project-admin-test");
-        cy.contains("Groups").click();
+        cy.get("[data-test=admin-nav-groups]").click();
         const project_id = this.project_id;
         cy.visit(
             "/project/admin/editugroup.php?group_id=" +
@@ -55,7 +55,7 @@ context("Suspended users", function () {
             });
         cy.should("not.contain", "Suspended");
 
-        cy.contains("Members").click();
+        cy.get("[data-test=admin-nav-members]").click();
         cy.contains("Suspended")
             .should("have.attr", "data-user-id")
             .as("user_id")
@@ -154,7 +154,7 @@ describe("Project admin", function () {
 
         it("should be able to add users to a public project", function () {
             cy.visitProjectAdministration("project-admin-test");
-            cy.contains("Members").click();
+            cy.get("[data-test=admin-nav-members]").click();
 
             cy.get(
                 "[data-test=project-admin-members-add-user-select] + .select2-container"
@@ -203,7 +203,9 @@ describe("Project admin", function () {
 
         it("should verify that a project administrator can enable a new service", () => {
             cy.visitProjectAdministration("project-admin-test");
-            cy.contains("Services").click({ force: true });
+            cy.get("[data-test=project-administration-navigation]").within(() => {
+                cy.get("[data-test=services]").click({ force: true });
+            });
 
             cy.get("[data-test=edit-service-plugin_svn]").click();
 
@@ -313,7 +315,7 @@ context("Membership management", function () {
         const project_id = this.project_id;
 
         cy.visitProjectAdministration("project-admin-test");
-        cy.contains("Groups").click();
+        cy.get("[data-test=admin-nav-groups]").click();
 
         cy.log("Add restricted group to project");
         cy.get("[data-test=project-admin-ugroups-modal]").click();
@@ -336,7 +338,7 @@ context("Membership management", function () {
         cy.log("Restricted user can manage members");
         cy.restrictedRegularUserLogin();
         cy.visit(`/project/${project_id}/admin/members`);
-        cy.contains("Members");
+        cy.get("[data-test=admin-nav-members]").click();
         cy.should("not.contain", "Data");
 
         cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
@@ -360,7 +362,7 @@ context("Membership management", function () {
         cy.projectAdministratorLogin();
 
         cy.visitProjectAdministration("project-admin-test");
-        cy.contains("Groups").click();
+        cy.get("[data-test=admin-nav-groups]").click();
 
         cy.get("[data-test=custom-groups]").should("not.contain", "RestrictedMember");
         cy.userLogout();
@@ -368,7 +370,7 @@ context("Membership management", function () {
         cy.log("Remove restricted user permission");
         cy.projectAdministratorLogin();
         cy.visitProjectAdministration("project-admin-test");
-        cy.contains("Groups").click();
+        cy.get("[data-test=admin-nav-groups]").click();
         cy.get("[data-test=custom-groups]").contains("Details").click();
         cy.get("[data-test=membership-management]").uncheck({ force: true });
         cy.get("[data-test=save-delegated-permissions]").click({ force: true });

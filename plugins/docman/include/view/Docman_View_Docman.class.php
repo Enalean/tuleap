@@ -61,7 +61,8 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
             }
             $tools[] = [
                 'title' => dgettext('tuleap-docman', 'New document'),
-                'url'   => DocmanViewURLBuilder::buildUrl($params['default_url'], $url_params)
+                'url'   => DocmanViewURLBuilder::buildUrl($params['default_url'], $url_params),
+                'data-test' => 'new-document'
             ];
         }
     }
