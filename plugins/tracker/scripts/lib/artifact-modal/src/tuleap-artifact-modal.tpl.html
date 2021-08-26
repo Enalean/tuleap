@@ -67,12 +67,18 @@
 </script>
 
 <script type="text/ng-template" id="field-rb.tpl.html">
-<tuleap-artifact-modal-radio-button-field
-    class="field"
-    field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
-></tuleap-artifact-modal-radio-button-field>
+<tuleap-artifact-modal-radio-buttons-field
+    field-id="field.field_id"
+    name="field.name"
+    label="field.label"
+    required="field.required"
+    disabled="modal.isDisabled(field)"
+    value="modal.values[field.field_id].bind_value_ids[0]"
+    values="field.values"
+    on-value-changed="modal.setFieldValueForRadioButtonsCustomElement($event)"
+    ce-one-way
+    data-test="radiobutton-field"
+></tuleap-artifact-modal-radio-buttons-field>
 </script>
 
 <script type="text/ng-template" id="field-cb.tpl.html">
