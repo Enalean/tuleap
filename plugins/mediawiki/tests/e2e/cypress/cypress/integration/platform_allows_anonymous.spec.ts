@@ -37,7 +37,7 @@ describe("Plateform allows anonymous", function () {
         cy.projectAdministratorLogin();
 
         cy.visitProjectAdministration("platform-allows-anonymous");
-        cy.contains("Details").click();
+        cy.get("[data-test=admin-nav-details]").click();
         cy.get("[data-test=project_visibility]").select("private");
         cy.get("[data-test=project-details-short-description-input]").type("My short description");
         cy.get("[data-test=project-details-submit-button]").click();
