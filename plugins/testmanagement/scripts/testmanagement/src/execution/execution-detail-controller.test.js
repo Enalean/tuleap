@@ -160,23 +160,24 @@ describe("ExecutionDetailController -", () => {
             status: "notrun",
             time: "",
             results: "psychoanalyzer rupture solidish",
+            previous_result: { result: "old comment" },
         };
         const event = { target: {} };
 
         beforeEach(() => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
             jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
-            jest.spyOn(ExecutionService, "removeViewTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "setCommentOnEditor").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "viewTestExecutionIfRTEAlreadyExists").mockImplementation(
                 () => {}
             );
-            jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
                 $q.when(execution)
             );
             ExecutionService.editor = ckeditorGetData;
             execution.results = "psychoanalyzer rupture solidish";
             $scope.execution = execution;
+            $scope.displayTestCommentEditor = true;
         });
 
         describe("pass()", () => {
@@ -193,10 +194,6 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
-                    execution.id,
-                    user
-                );
                 expect($scope.displayTestCommentEditor).toBeFalsy();
             });
 
@@ -218,7 +215,7 @@ describe("ExecutionDetailController -", () => {
                 );
             });
 
-            it("When there is no comment, Then the comment box is created and displayed", () => {
+            it("When there is no comment, Then the comment box is created and displayed with previous comment", () => {
                 execution.results = "";
                 execution.uploaded_files = [];
 
@@ -232,12 +229,11 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect(ExecutionService.removeViewTestExecution).not.toHaveBeenCalled();
                 expect(ExecutionService.viewTestExecutionIfRTEAlreadyExists).toHaveBeenCalledWith(
                     execution.id,
                     user
                 );
-                expect(ExecutionService.clearEditor).toHaveBeenCalledWith(execution);
+                expect(ExecutionService.setCommentOnEditor).toHaveBeenCalledWith("old comment");
                 expect($scope.displayTestCommentEditor).toBeTruthy();
             });
         });
@@ -254,10 +250,6 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
-                    execution.id,
-                    user
-                );
                 expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
@@ -274,10 +266,6 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
-                    execution.id,
-                    user
-                );
                 expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
@@ -302,10 +290,6 @@ describe("ExecutionDetailController -", () => {
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
-                    execution.id,
-                    user
-                );
                 expect($scope.displayTestCommentEditor).toBeFalsy();
             });
 
@@ -332,10 +316,6 @@ describe("ExecutionDetailController -", () => {
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
-                    execution.id,
-                    user
-                );
                 expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
@@ -349,18 +329,19 @@ describe("ExecutionDetailController -", () => {
             status,
             time: "",
             results: "new comment",
+            previous_result: { result: "old comment" },
         };
         const event = { target: {} };
 
         beforeEach(() => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
             jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
-            jest.spyOn(ExecutionService, "removeViewTestExecution").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
                 $q.when(execution)
             );
             ExecutionService.editor = ckeditorGetData;
             $scope.execution = execution;
+            $scope.displayTestCommentEditor = true;
         });
 
         it("When the user updates the comment, Then the status does not change", () => {
@@ -376,10 +357,6 @@ describe("ExecutionDetailController -", () => {
                 []
             );
             expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-            expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
-                execution.id,
-                user
-            );
             expect($scope.displayTestCommentEditor).toBeFalsy();
             expect(execution.status).toEqual(status);
         });

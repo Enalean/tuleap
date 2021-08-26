@@ -172,7 +172,7 @@ describe("TTM campaign", () => {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             win.CKEDITOR.instances[$container.attr("id")].setData(
-                                "<p>It's ok. Fix works!</p>"
+                                "<p>It is ok. Fix works!</p>"
                             );
                         });
                     });
@@ -180,7 +180,7 @@ describe("TTM campaign", () => {
                     cy.get("[data-test=current-test").should("have.class", "passed");
                     cy.get("[data-test=expand-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
-                        cy.contains("It's ok. Fix works!");
+                        cy.contains("It is ok. Fix works!");
                         cy.get("[data-dismiss=modal]").first().click();
                     });
                 });
@@ -192,13 +192,25 @@ describe("TTM campaign", () => {
                         cy.window().then((win) => {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
-                            win.CKEDITOR.instances[$container.attr("id")].setData(
-                                "<p>I confirm that. It's ok. Fix works!</p>"
-                            );
+                            const instance = win.CKEDITOR.instances[$container.attr("id")];
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            expect(instance.getData()).to.contain("<p>It is ok. Fix works!</p>");
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            instance.setData("<p>I confirm that. It is ok. Fix works!</p>");
                         });
                     });
                     cy.get("[data-test=save-comment-button]").click({ force: true });
                     cy.get("[data-test=current-test").should("have.class", "passed");
+                });
+
+                it("Update the status with same comment", () => {
+                    cy.get("[data-test=mark-test-as-blocked]").click();
+                    cy.get("[data-test=current-test").should("have.class", "blocked");
+                    cy.get("[data-test=current-test-comment-preview]").contains(
+                        "I confirm that. It is ok. Fix works!"
+                    );
                 });
 
                 it("Edits the test", () => {
@@ -209,6 +221,7 @@ describe("TTM campaign", () => {
                     cy.get("[data-test=current-test-header-title]").contains(
                         "My first test edited"
                     );
+                    cy.get("[data-test=current-test-comment]").should("be.visible");
                 });
 
                 it("Paste an image on comment box", () => {
