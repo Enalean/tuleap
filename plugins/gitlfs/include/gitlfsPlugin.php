@@ -26,6 +26,7 @@ use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\ConfigKey;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
@@ -64,17 +65,10 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public const SERVICE_LABEL = "Git LFS";
 
-    /**
-     * Toggle site admin ability to configure `git_lfs_max_file_size`
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Toggle site admin ability to configure `git_lfs_max_file_size`")]
     public const DISPLAY_CONFIG_KEY = 'git_lfs_display_config';
-    /**
-     * Max size for individual git lfs files (in bytes). Default 536870912 (512MiB).
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Max size for individual git lfs files (in bytes). Default 536870912 (512MiB).")]
     public const MAX_FILE_SIZE_KEY = 'git_lfs_max_file_size';
 
     public function __construct($id)

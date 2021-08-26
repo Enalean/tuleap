@@ -22,6 +22,7 @@
 namespace Tuleap\System;
 
 use ForgeConfig;
+use Tuleap\Config\ConfigKey;
 
 /**
  * Abstract service control from system implementation
@@ -34,10 +35,7 @@ class ServiceControl
     public const INITV       = 'initv';
     public const SUPERVISORD = 'supervisord';
 
-    /**
-     * Init mode for the platform (systemd, initv, supervisord)
-     * @tlp-config-key
-     */
+    #[ConfigKey("Init mode for the platform (systemd, initv, supervisord)")]
     public const FORGECONFIG_INIT_MODE = 'init_mode';
 
     public function getInitMode()

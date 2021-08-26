@@ -52,7 +52,7 @@ class ConfigListCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $white_listed_keys = $this->event_manager->dispatch(GetWhitelistedKeys::build());
+        $white_listed_keys = $this->event_manager->dispatch(new GetWhitelistedKeys());
 
         $table = new Table($output);
         $table->setHeaders(['Variable', 'Documentation']);

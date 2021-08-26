@@ -20,21 +20,16 @@
 
 declare(strict_types=1);
 
+use Tuleap\Config\ConfigKey;
+
 class ForgeAccess
 {
     public const SUPER_PUBLIC_PROJECTS = 'super_public_projects';
 
-    /**
-     * Set to 1 if anonymous users should be allowed to site site home page
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Set to 1 if anonymous users should be allowed to site site home page")]
     public const ANONYMOUS_CAN_SEE_SITE_HOMEPAGE = 'anonymous_can_see_site_homepage';
-    /**
-     * Set to 1 if anonymous users should be allowed to see Contact page
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Set to 1 if anonymous users should be allowed to see Contact page")]
     public const ANONYMOUS_CAN_SEE_CONTACT = 'anonymous_can_see_contact';
 
     public const CONFIG     = 'access_mode';

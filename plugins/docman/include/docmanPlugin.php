@@ -30,6 +30,7 @@ use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\ConfigKey;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -127,17 +128,11 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public const ITEM_MAPPING_KEY       = 'plugin_docman_item_mapping';
 
     public const ADMIN_BASE_URL = '/admin/document';
-    /**
-     * Max size for individual files in Document and Docman plugins (in bytes)
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Max size for individual files in Document and Docman plugins (in bytes)")]
     public const PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING = 'plugin_docman_max_file_size';
-    /**
-     * Max number of files that can be uploaded with a drag'n drop in interface
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Max number of files that can be uploaded with a drag'n drop in interface")]
     public const PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING = 'plugin_docman_max_number_of_files';
 
     /**

@@ -26,15 +26,12 @@ namespace Tuleap\SVN\Commit;
 use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Tuleap\Config\ConfigKey;
 use Tuleap\SVN\Repository\Repository;
 
 final class FileSizeValidator implements PathValidator
 {
-    /**
-     * Define the maximum file size for new files committed to Subversion plugin (in bytes)
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Define the maximum file size for new files committed to Subversion plugin (in bytes)")]
     public const CONFIG_KEY = 'plugin_svn_file_size_limit';
 
     private const SVNLOOK_ERROR_IS_NOT_FILE = 'svnlook: E160017:';

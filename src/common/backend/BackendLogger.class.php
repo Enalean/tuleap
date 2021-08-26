@@ -20,17 +20,14 @@
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Tuleap\Config\ConfigKey;
 use Tuleap\Log\LogToFiles;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Log\LogToSyslog;
 
 class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
-    /**
-     * Which logger should be used ('files', 'syslog', 'graylog2'). Default is 'files'
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Which logger should be used ('files', 'syslog', 'graylog2'). Default is 'files'")]
     public const CONFIG_LOGGER = 'sys_logger';
 
     public const FILENAME = 'codendi_syslog';

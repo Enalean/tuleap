@@ -27,6 +27,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 use RSS;
+use Tuleap\Config\ConfigKey;
 use Tuleap\User\Account\RemoveFromProjectController;
 use UserManager;
 
@@ -37,11 +38,7 @@ use UserManager;
 */
 class MyProjects extends \Widget
 {
-    /**
-     * Do not allow to contact project members from 'My projects' widget
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Do not allow to contact project members from 'My projects' widget")]
     public const CONFIG_DISABLE_CONTACT = 'widget_myprojects_disable_contact';
 
     public function __construct()

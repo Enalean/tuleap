@@ -22,23 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\BrowserDetection;
 
+use Tuleap\Config\ConfigKey;
+
 /**
  * @psalm-immutable
  */
 final class BrowserDeprecationMessage
 {
-    /**
-     * Allow to dismiss IE deprecation message
-     *
-     * @tlp-config-key
-     */
-    public const TEMPORARILY_ALLOW_IE                      = 'temporarily_allow_dismiss_ie_deprecation_message';
-    private const IE_DISMISS_EXPECTED_CONFIRMATION_MESSAGE = 'I_understand_this_is_a_temporary_configuration_switch_(please_warn_the_Tuleap_dev_team_when_enabling_this)';
-    /**
-     * Allow to disable old browser warning message
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Allow to dismiss IE deprecation message")]
+    public const TEMPORARILY_ALLOW_IE                              = 'temporarily_allow_dismiss_ie_deprecation_message';
+    private const IE_DISMISS_EXPECTED_CONFIRMATION_MESSAGE         = 'I_understand_this_is_a_temporary_configuration_switch_(please_warn_the_Tuleap_dev_team_when_enabling_this)';
+    #[ConfigKey("Allow to disable old browser warning message")]
     public const DISABLE_OLD_BROWSER_WARNING                       = 'disable_old_browsers_warning';
     private const DISABLE_OLD_BROWSER_WARNING_CONFIRMATION_MESSAGE = 'I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present';
 
