@@ -18,47 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Tracker\Artifact\PossibleParentSelector;
+
 class Tracker_Artifact_PossibleParentsRetriever
 {
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    public function __construct(Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(private Tracker_ArtifactFactory $artifact_factory, private EventDispatcherInterface $event_dispatcher)
     {
-        $this->artifact_factory = $artifact_factory;
     }
 
-    public function getPossibleArtifactParents(Tracker $parent_tracker, PFUser $user, $limit, $offset)
+    public function getPossibleArtifactParents(Tracker $parent_tracker, PFUser $user, $limit, $offset): PossibleParentSelector
     {
-        $label            = '';
-        $possible_parents = [];
-        $display_selector = true;
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR,
-            [
-                'user'             => $user,
-                'parent_tracker'   => $parent_tracker,
-                'possible_parents' => &$possible_parents,
-                'label'            => &$label,
-                'display_selector' => &$display_selector,
-            ]
-        );
+        $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $parent_tracker));
 
-        $paginated_possible_parents = null;
-        if (! $possible_parents) {
-            $label = sprintf(dgettext('tuleap-tracker', 'Open %1$s'), $parent_tracker->getName());
+        if ($possible_parents->getPossibleParents()) {
+            return $possible_parents;
+        }
 
-            $paginated_possible_parents = $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
+        $possible_parents->setLabel(sprintf(dgettext('tuleap-tracker', 'Open %1$s'), $parent_tracker->getName()));
+        $possible_parents->setPossibleParents(
+            $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
                 $user,
                 $parent_tracker->getId(),
                 $limit,
                 $offset
-            );
-        } else {
-            $paginated_possible_parents = new Tracker_Artifact_PaginatedArtifacts($possible_parents, count($possible_parents));
-        }
+            )
+        );
 
-        return [$label, $paginated_possible_parents, $display_selector];
+        return $possible_parents;
     }
 }

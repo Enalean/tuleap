@@ -111,6 +111,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -202,7 +203,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
+            $this->addHook(PossibleParentSelector::NAME);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
             $this->addHook(TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
@@ -512,7 +513,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function event_artifact_parents_selector($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function trackerArtifactPossibleParentSelector(PossibleParentSelector $possible_parent_selector): void
     {
         $artifact_parents_selector = new Planning_ArtifactParentsSelector(
             $this->getArtifactFactory(),
@@ -521,7 +522,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getHierarchyFactory()
         );
         $event_listener            = new Planning_ArtifactParentsSelectorEventListener($this->getArtifactFactory(), $artifact_parents_selector, HTTPRequest::instance());
-        $event_listener->process($params);
+        $event_listener->process($possible_parent_selector);
     }
 
     public function tracker_event_include_css_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

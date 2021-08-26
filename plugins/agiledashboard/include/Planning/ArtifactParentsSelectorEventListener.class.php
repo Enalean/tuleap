@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\PossibleParentSelector;
+
 /**
  * This class is responsible of processing the TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR event
  * in the agiledashboard.
@@ -50,18 +52,24 @@ class Planning_ArtifactParentsSelectorEventListener
         $this->request                   = $request;
     }
 
-    /**
-     * @param array $params the parameters of the event see TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR
-     */
-    public function process($params)
+    public function process(PossibleParentSelector $possible_parent_selector): void
     {
         $source_artifact = $this->getSourceArtifact();
         if ($source_artifact) {
-            $params['label']                         = sprintf(dgettext('tuleap-agiledashboard', 'Available %1$s'), $params['parent_tracker']->getName());
-            $params['possible_parents']              = $this->artifact_parents_selector->getPossibleParents($params['parent_tracker'], $source_artifact, $params['user']);
-            $we_are_linking_the_artifact_to_a_parent = ($params['possible_parents'] == [$source_artifact]);
+            $possible_parents = $this->artifact_parents_selector->getPossibleParents($possible_parent_selector->parent_tracker, $source_artifact, $possible_parent_selector->user);
+            if ($possible_parents) {
+                $possible_parent_selector->setLabel(sprintf(dgettext('tuleap-agiledashboard', 'Available %1$s'), $possible_parent_selector->parent_tracker->getName()));
+                $possible_parent_selector->setPossibleParents(
+                    new Tracker_Artifact_PaginatedArtifacts(
+                        $possible_parents,
+                        count($possible_parents),
+                    )
+                );
+            }
+
+            $we_are_linking_the_artifact_to_a_parent = ($possible_parents == [$source_artifact]);
             if ($we_are_linking_the_artifact_to_a_parent) {
-                $params['display_selector'] = false;
+                $possible_parent_selector->disableSelector();
             }
         }
     }

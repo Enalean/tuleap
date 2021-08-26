@@ -68,23 +68,6 @@ define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_asso
 define('TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED', 'tracker_event_artifact_link_nature_requested');
 
 /**
- * Should we display a selector to choose the parent of an item during creation?
- * If so, which artifacts are possible parents for the created item?
- *
- * By default, we display the selector with open artifacts parents
- *
- * Parameters:
- * 'user'             => User    The current user
- * 'parent_tracker'   => Tracker The parent tracker
- *
- * Re
- * 'possible_parents' => array of Tracker_Artifact
- * 'label'            => string the label of the possible parents list
- * 'display_selector' => bool true if we can display the selector
- */
-define('TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR', 'tracker_event_artifact_parents_selector');
-
-/**
  * Fetch the semantics used by other plugins
  *
  * Parameters:

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\PossibleParentSelector;
 
 final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -135,87 +136,55 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Te
 
     public function testItRetrievesThePossibleParentsForANewArtifactLink(): void
     {
-        $label            = '';
-        $possible_parents = '';
-        $display_selector = true;
-        $params           = [
-            'user'             => $this->user,
-            'parent_tracker'   => $this->epic_tracker,
-            'label'            => &$label,
-            'possible_parents' => &$possible_parents,
-            'display_selector' => &$display_selector,
-        ];
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact-link');
         $this->request->shouldReceive('get')->with('id')->andReturns($this->sprint_id);
 
-        $this->event_listener->process($params);
+        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $this->event_listener->process($possible_parent);
 
-        $this->assertEquals('Available epic_tracker', $label);
-        $this->assertEquals([$this->epic, $this->epic2], $possible_parents);
-        $this->assertTrue($display_selector);
+        $this->assertEquals('Available epic_tracker', $possible_parent->getLabel());
+        $this->assertEquals([$this->epic, $this->epic2], $possible_parent->getPossibleParents()->getArtifacts());
+        $this->assertTrue($possible_parent->isSelectorDisplayed());
     }
 
     public function testItRetrievesThePossibleParentsForChildMilestone(): void
     {
-        $label            = '';
-        $possible_parents = '';
-        $display_selector = true;
-        $params           = [
-            'user'             => $this->user,
-            'parent_tracker'   => $this->epic_tracker,
-            'label'            => &$label,
-            'possible_parents' => &$possible_parents,
-            'display_selector' => &$display_selector,
-        ];
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact');
         $this->request->shouldReceive('get')->with('child_milestone')->andReturns($this->sprint_id);
 
-        $this->event_listener->process($params);
+        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $this->event_listener->process($possible_parent);
 
-        $this->assertEquals('Available epic_tracker', $label);
-        $this->assertEquals([$this->epic, $this->epic2], $possible_parents);
-        $this->assertTrue($display_selector);
+        $this->assertEquals('Available epic_tracker', $possible_parent->getLabel());
+        $this->assertEquals([$this->epic, $this->epic2], $possible_parent->getPossibleParents()->getArtifacts());
+        $this->assertTrue($possible_parent->isSelectorDisplayed());
     }
 
     public function testItRetrievesNothingIfThereIsNoChildMilestoneNorNewArtifactLink(): void
     {
-        $label            = 'untouched';
-        $possible_parents = 'untouched';
-        $display_selector = 'untouched';
-        $params           = [
-            'user'             => $this->user,
-            'parent_tracker'   => $this->epic_tracker,
-            'label'            => &$label,
-            'possible_parents' => &$possible_parents,
-            'display_selector' => &$display_selector,
-        ];
         $this->request->shouldReceive('get')->andReturns(false);
 
-        $this->event_listener->process($params);
+        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $possible_parent->setLabel('untouched');
+        $already_there_artifacts = new Tracker_Artifact_PaginatedArtifacts([], 0);
+        $possible_parent->setPossibleParents($already_there_artifacts);
+        $possible_parent->disableSelector();
+        $this->event_listener->process($possible_parent);
 
-        $this->assertEquals('untouched', $label);
-        $this->assertEquals('untouched', $possible_parents);
-        $this->assertEquals('untouched', $display_selector);
+        $this->assertEquals('untouched', $possible_parent->getLabel());
+        $this->assertSame($already_there_artifacts, $possible_parent->getPossibleParents());
+        $this->assertFalse($possible_parent->isSelectorDisplayed());
     }
 
     public function testItAsksForNoSelectorIfWeLinkToAParent(): void
     {
-        $label            = '';
-        $possible_parents = '';
-        $display_selector = true;
-        $params           = [
-            'user'             => $this->user,
-            'parent_tracker'   => $this->epic_tracker,
-            'label'            => &$label,
-            'possible_parents' => &$possible_parents,
-            'display_selector' => &$display_selector,
-        ];
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact');
         $this->request->shouldReceive('get')->with('child_milestone')->andReturns($this->epic2_id);
 
-        $this->event_listener->process($params);
+        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $this->event_listener->process($possible_parent);
 
-        $this->assertEquals([$this->epic2], $possible_parents);
-        $this->assertFalse($display_selector);
+        $this->assertEquals([$this->epic2], $possible_parent->getPossibleParents()->getArtifacts());
+        $this->assertFalse($possible_parent->isSelectorDisplayed());
     }
 }
