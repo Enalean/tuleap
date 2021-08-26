@@ -26,7 +26,8 @@ import type {
     GlobalExportProperties,
     DateReportCriterionValue,
 } from "../../type";
-import type { ILevelsOptions, ParagraphChild, XmlComponent } from "docx";
+import type { ILevelsOptions, XmlComponent } from "docx";
+import { ShadingType } from "docx";
 import {
     AlignmentType,
     Bookmark,
@@ -169,6 +170,63 @@ export async function downloadDocx(
         styles: {
             paragraphStyles: [
                 {
+                    id: HeadingLevel.TITLE,
+                    name: HeadingLevel.TITLE,
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        size: 64,
+                        bold: true,
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.CENTER,
+                        spacing: {
+                            before: convertInchesToTwip(1.5),
+                        },
+                    },
+                },
+                {
+                    id: "title_separator",
+                    name: "title_separator",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        size: 48,
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.CENTER,
+                        spacing: {
+                            before: convertInchesToTwip(0.2),
+                            after: convertInchesToTwip(0.75),
+                        },
+                    },
+                },
+                {
+                    id: "cover_table_header",
+                    name: "cover_table_header",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        size: 20,
+                        color: "545454",
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.RIGHT,
+                    },
+                },
+                {
+                    id: "cover_table_value",
+                    name: "cover_table_value",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        size: 20,
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.LEFT,
+                    },
+                },
+                {
                     id: HEADER_STYLE_ARTIFACT_TITLE,
                     name: HEADER_STYLE_ARTIFACT_TITLE,
                     basedOn: HEADER_LEVEL_ARTIFACT_TITLE,
@@ -211,25 +269,6 @@ export async function downloadDocx(
         numbering: {
             config: [
                 {
-                    reference: "unordered-list",
-                    levels: [
-                        {
-                            level: 0,
-                            format: LevelFormat.BULLET,
-                            text: "•",
-                            alignment: AlignmentType.LEFT,
-                            style: {
-                                paragraph: {
-                                    indent: {
-                                        left: convertInchesToTwip(0.1),
-                                        hanging: convertInchesToTwip(0.1),
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                },
-                {
                     reference: MAIN_TITLES_NUMBERING_ID,
                     levels: generateMainTitlesNumberingLevelConfiguration(),
                 },
@@ -238,13 +277,16 @@ export async function downloadDocx(
         sections: [
             {
                 children: [
-                    ...buildIntroductionParagraphes(
+                    ...buildCoverPage(
                         gettext_provider,
                         global_export_properties,
                         datetime_locale_information
                     ),
                     ...table_of_contents,
-                    new Paragraph({ children: [new PageBreak()] }),
+                ],
+            },
+            {
+                children: [
                     ...report_criteria_data,
                     new Paragraph({ children: [new PageBreak()] }),
                     new Paragraph({
@@ -264,55 +306,142 @@ export async function downloadDocx(
     triggerBlobDownload(`${document.name}.docx`, await Packer.toBlob(file));
 }
 
-function buildIntroductionParagraphes(
+function buildCoverPage(
     gettext_provider: GetText,
     global_export_properties: GlobalExportProperties,
     datetime_locale_information: DateTimeLocaleInformation
-): ReadonlyArray<Paragraph> {
-    const { platform_name, project_name, tracker_name, report_name, report_url } =
-        global_export_properties;
+): ReadonlyArray<XmlComponent> {
+    const {
+        platform_name,
+        project_name,
+        tracker_name,
+        report_name,
+        report_url,
+        user_display_name,
+    } = global_export_properties;
+
     return [
         new Paragraph({
+            text: report_name,
             heading: HeadingLevel.TITLE,
-            text: `${platform_name} ‒ ${project_name} ‒ ${tracker_name} ‒ ${report_name}`,
         }),
-        buildParagraphOfAnUnorderedList(
-            new TextRun(
-                sprintf(
-                    gettext_provider.gettext("Export date: %s"),
-                    new Date().toLocaleDateString(datetime_locale_information.locale, {
-                        timeZone: datetime_locale_information.timezone,
-                    })
-                )
-            )
-        ),
-        buildParagraphOfAnUnorderedList(
-            new TextRun(
-                sprintf(
-                    gettext_provider.gettext("Exported by: %s"),
-                    global_export_properties.user_display_name
-                )
-            )
-        ),
-        buildParagraphOfAnUnorderedList(
-            new ExternalHyperlink({
-                child: new TextRun(
-                    sprintf(gettext_provider.gettext("Tracker report URL: %s"), report_url)
-                ),
-                link: report_url,
-            })
+        new Paragraph({
+            text: `———`,
+            style: "title_separator",
+        }),
+        buildCoverTable(
+            gettext_provider,
+            platform_name,
+            project_name,
+            tracker_name,
+            report_url,
+            user_display_name,
+            datetime_locale_information
         ),
         new Paragraph({ children: [new PageBreak()] }),
     ];
 }
 
-function buildParagraphOfAnUnorderedList(content: ParagraphChild): Paragraph {
-    return new Paragraph({
-        children: [content],
-        numbering: {
-            reference: "unordered-list",
-            level: 0,
+function buildCoverTable(
+    gettext_provider: GetText,
+    platform_name: string,
+    project_name: string,
+    tracker_name: string,
+    report_url: string,
+    user_name: string,
+    datetime_locale_information: DateTimeLocaleInformation
+): Table {
+    return new Table({
+        width: {
+            size: 0,
+            type: WidthType.AUTO,
         },
+        columnWidths: [2000, 7638],
+        rows: [
+            buildCoverTableRow(gettext_provider.gettext("Platform"), new TextRun(platform_name)),
+            buildCoverTableRow(gettext_provider.gettext("Project"), new TextRun(project_name)),
+            buildCoverTableRow(gettext_provider.gettext("Tracker"), new TextRun(tracker_name)),
+            buildCoverTableRow(gettext_provider.gettext("Exported by"), new TextRun(user_name)),
+            buildCoverTableRow(
+                gettext_provider.gettext("Export date"),
+                new TextRun(
+                    new Date().toLocaleDateString(datetime_locale_information.locale, {
+                        timeZone: datetime_locale_information.timezone,
+                    })
+                )
+            ),
+            buildCoverTableRow(
+                gettext_provider.gettext("Report URL"),
+                new ExternalHyperlink({
+                    child: new TextRun(report_url),
+                    link: report_url,
+                })
+            ),
+        ],
+    });
+}
+
+function buildCoverTableRow(label: string, value: TextRun | ExternalHyperlink): TableRow {
+    const cover_table_header_shading = {
+        type: ShadingType.SOLID,
+        color: "auto",
+        fill: "EEEEEE",
+    };
+
+    const margins = {
+        top: convertInchesToTwip(0.1),
+        bottom: convertInchesToTwip(0.1),
+        left: convertInchesToTwip(0.1),
+        right: convertInchesToTwip(0.1),
+    };
+
+    const no_border = {
+        top: {
+            style: BorderStyle.NONE,
+            size: 0,
+            color: "FFFFFF",
+        },
+        right: {
+            style: BorderStyle.NONE,
+            size: 0,
+            color: "FFFFFF",
+        },
+        bottom: {
+            style: BorderStyle.NONE,
+            size: 0,
+            color: "FFFFFF",
+        },
+        left: {
+            style: BorderStyle.NONE,
+            size: 0,
+            color: "FFFFFF",
+        },
+    };
+
+    return new TableRow({
+        children: [
+            new TableCell({
+                children: [
+                    new Paragraph({
+                        text: label,
+                        style: "cover_table_header",
+                    }),
+                ],
+                borders: no_border,
+                margins: margins,
+                shading: cover_table_header_shading,
+            }),
+            new TableCell({
+                children: [
+                    new Paragraph({
+                        children: [value],
+                        style: "cover_table_value",
+                    }),
+                ],
+                borders: no_border,
+                margins: margins,
+            }),
+        ],
     });
 }
 
