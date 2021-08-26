@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tracker_FormElementFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
@@ -31,20 +32,25 @@ use Tuleap\Tracker\Artifact\Artifact;
 final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     private ReplicationData $replication;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElementFactory
+     */
+    private mixed $factory;
 
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
         $this->replication      = ReplicationDataBuilder::build();
+        $this->factory          =  $this->createStub(Tracker_FormElementFactory::class);
     }
 
     private function getRetriever(): FieldValuesGathererRetriever
     {
-        return new FieldValuesGathererRetriever($this->artifact_factory);
+        return new FieldValuesGathererRetriever($this->artifact_factory, $this->factory);
     }
 
     public function testItReturnsAFieldValuesGatherer(): void

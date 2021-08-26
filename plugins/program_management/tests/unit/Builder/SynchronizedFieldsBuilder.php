@@ -34,6 +34,33 @@ final class SynchronizedFieldsBuilder
         return self::buildWithIds(1991, 1376, 1412, 1499, 1784, 1368);
     }
 
+    public static function buildWithFields(
+        \Tracker_FormElement_Field_String $title_field,
+        \Tracker_FormElement_Field_Text $description_field,
+        \Tracker_FormElement_Field_Selectbox $status_field,
+        \Tracker_FormElement_Field_Date $start_date_field,
+        \Tracker_FormElement_Field_Date $end_period_field
+    ): SynchronizedFields {
+        $artifact_link_field_data = new Field(
+            new \Tracker_FormElement_Field_ArtifactLink(1991, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1)
+        );
+
+        $title_field_data       = new Field($title_field);
+        $description_field_data = new Field($description_field);
+        $status_field_data      = new Field($status_field);
+        $start_date_field_data  = new Field($start_date_field);
+        $end_date_field_data    = new Field($end_period_field);
+
+        return new SynchronizedFields(
+            $artifact_link_field_data,
+            $title_field_data,
+            $description_field_data,
+            $status_field_data,
+            $start_date_field_data,
+            $end_date_field_data
+        );
+    }
+
     public static function buildWithIds(
         int $artifact_link_id,
         int $title_id,

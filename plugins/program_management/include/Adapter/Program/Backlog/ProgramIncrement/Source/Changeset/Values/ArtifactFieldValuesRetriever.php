@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
@@ -31,17 +32,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 
 final class ArtifactFieldValuesRetriever implements GatherFieldValues
 {
-    private \Tracker_Artifact_Changeset $changeset;
-
-    public function __construct(\Tracker_Artifact_Changeset $changeset)
+    public function __construct(private \Tracker_Artifact_Changeset $changeset, private \Tracker_FormElementFactory $form_element_factory)
     {
-        $this->changeset = $changeset;
     }
 
     public function getTitleValue(SynchronizedFields $fields): string
     {
         $title_field = $fields->getTitleField();
-        $title_value = $this->changeset->getValue($title_field->getFullField());
+        $full_field  = $this->form_element_factory->getFieldById($title_field->getId());
+        if (! $full_field) {
+            throw new FieldNotFoundException($title_field->getId());
+        }
+
+        $title_value = $this->changeset->getValue($full_field);
         if (! $title_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
@@ -58,7 +61,12 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
     public function getDescriptionValue(SynchronizedFields $fields): TextFieldValue
     {
         $description_field = $fields->getDescriptionField();
-        $description_value = $this->changeset->getValue($description_field->getFullField());
+        $full_field        = $this->form_element_factory->getFieldById($description_field->getId());
+        if (! $full_field) {
+            throw new FieldNotFoundException($description_field->getId());
+        }
+
+        $description_value = $this->changeset->getValue($full_field);
         if (! $description_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
@@ -73,7 +81,12 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
     public function getStartDateValue(SynchronizedFields $fields): string
     {
         $start_date_field = $fields->getStartDateField();
-        $start_date_value = $this->changeset->getValue($start_date_field->getFullField());
+        $full_field       = $this->form_element_factory->getFieldById($start_date_field->getId());
+        if (! $full_field) {
+            throw new FieldNotFoundException($start_date_field->getId());
+        }
+
+        $start_date_value = $this->changeset->getValue($full_field);
         if (! $start_date_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
@@ -88,7 +101,12 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
     public function getEndPeriodValue(SynchronizedFields $fields): string
     {
         $end_period_field = $fields->getEndPeriodField();
-        $end_period_value = $this->changeset->getValue($end_period_field->getFullField());
+        $full_field       = $this->form_element_factory->getFieldById($end_period_field->getId());
+        if (! $full_field) {
+            throw new FieldNotFoundException($end_period_field->getId());
+        }
+
+        $end_period_value = $this->changeset->getValue($full_field);
         if (! $end_period_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
@@ -102,7 +120,12 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
     public function getStatusValues(SynchronizedFields $fields): array
     {
         $status_field = $fields->getStatusField();
-        $status_value = $this->changeset->getValue($status_field->getFullField());
+        $full_field   = $this->form_element_factory->getFieldById($status_field->getId());
+        if (! $full_field) {
+            throw new FieldNotFoundException($status_field->getId());
+        }
+
+        $status_value = $this->changeset->getValue($full_field);
         if (! $status_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
