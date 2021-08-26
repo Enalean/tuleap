@@ -24,7 +24,7 @@
             class="document-new-item-type"
             tabindex="0"
             data-modal-focus
-            v-for="type of supported_types"
+            v-for="type of supported_types()"
             v-bind:key="type.identifier"
             v-bind:class="{ 'document-new-item-type-checked': type.is_checked }"
             v-on:click="$emit('input', type.identifier)"
@@ -40,47 +40,45 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import { ICON_EMBEDDED, ICON_LINK, TYPE_EMBEDDED, TYPE_LINK, TYPE_FILE } from "../../../constants";
-import { mapState } from "vuex";
+import { namespace } from "vuex-class";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
-export default {
-    name: "TypeSelectorForEmptyModal",
-    props: {
-        value: String,
-    },
-    computed: {
-        ...mapState("configuration", ["embedded_are_allowed"]),
-        supported_types() {
-            let types = [
-                {
-                    identifier: TYPE_FILE,
-                    is_checked: this.value === TYPE_FILE,
-                    label: this.$gettext("File"),
-                    icons: [
-                        "fa-file-excel-o",
-                        "fa-file-word-o",
-                        "fa-file-pdf-o",
-                        "fa-file-image-o",
-                    ],
-                },
-                {
-                    identifier: TYPE_LINK,
-                    is_checked: this.value === TYPE_LINK,
-                    label: this.$gettext("Link"),
-                    icons: [ICON_LINK],
-                },
-            ];
-            if (this.embedded_are_allowed) {
-                types.push({
-                    identifier: TYPE_EMBEDDED,
-                    is_checked: this.value === TYPE_EMBEDDED,
-                    label: this.$gettext("Embedded"),
-                    icons: [ICON_EMBEDDED],
-                });
-            }
-            return types;
-        },
-    },
-};
+const configuration = namespace("configuration");
+
+@Component
+export default class TypeSelectorForEmptyModal extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
+
+    @configuration.State
+    readonly embedded_are_allowed!: boolean;
+
+    supported_types() {
+        let types = [
+            {
+                identifier: TYPE_FILE,
+                is_checked: this.value === TYPE_FILE,
+                label: this.$gettext("File"),
+                icons: ["fa-file-excel-o", "fa-file-word-o", "fa-file-pdf-o", "fa-file-image-o"],
+            },
+            {
+                identifier: TYPE_LINK,
+                is_checked: this.value === TYPE_LINK,
+                label: this.$gettext("Link"),
+                icons: [ICON_LINK],
+            },
+        ];
+        if (this.embedded_are_allowed) {
+            types.push({
+                identifier: TYPE_EMBEDDED,
+                is_checked: this.value === TYPE_EMBEDDED,
+                label: this.$gettext("Embedded"),
+                icons: [ICON_EMBEDDED],
+            });
+        }
+        return types;
+    }
+}
 </script>

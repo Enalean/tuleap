@@ -18,42 +18,42 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-
 import TypeSelectorForEmptyModal from "./TypeSelectorForEmptyModal.vue";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("TypeSelectorForEmptyModal", () => {
-    let factory, state, store, store_options;
-    beforeEach(() => {
-        state = { configuration: { embedded_are_allowed: false } };
-        store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
+    async function createWrapper(
+        embedded_are_allowed: boolean
+    ): Promise<Wrapper<TypeSelectorForEmptyModal>> {
+        return shallowMount(TypeSelectorForEmptyModal, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            embedded_are_allowed,
+                        },
+                    },
+                }),
+            },
+            propsData: { value: "My empty name" },
+            localVue: await createDocumentLocalVue(),
+        });
+    }
 
-        factory = (props = {}) => {
-            return shallowMount(TypeSelectorForEmptyModal, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
     it(`Given embedded files are not enabled in project
-        Then the type selector does not display embedded box to user`, () => {
-        store.state.configuration.embedded_are_allowed = false;
-        const wrapper = factory();
+        Then the type selector does not display embedded box to user`, async () => {
+        const wrapper = await createWrapper(false);
         expect(wrapper.find("[data-test=document-type-selector-file]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-link]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-embedded]").exists()).toBeFalsy();
     });
 
     it(`Given embedded files are available in project
-        Then the type selector display embedded box to user`, () => {
-        store.state.configuration.embedded_are_allowed = true;
-        const wrapper = factory();
+        Then the type selector display embedded box to user`, async () => {
+        const wrapper = await createWrapper(true);
         expect(wrapper.find("[data-test=document-type-selector-file]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-link]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-embedded]").exists()).toBeTruthy();
