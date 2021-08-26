@@ -27,6 +27,7 @@ export interface State {
     folder_content: Array<Item | FakeItem>;
     current_folder_ascendant_hierarchy: Array<Folder>;
     root_title: string;
+    currently_previewed_item: Item | null;
 }
 
 export interface RootState extends State {
@@ -86,7 +87,7 @@ export interface Item {
     creation_date: string;
     user_can_write: boolean;
     can_user_manage: boolean;
-    lock_info: LockInfo;
+    lock_info: LockInfo | null;
     metadata: Array<Metadata> | Array<FolderMetadata>;
     parent_id: number | null;
     type: string;

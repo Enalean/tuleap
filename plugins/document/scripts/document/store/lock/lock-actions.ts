@@ -52,10 +52,8 @@ export const lockDocument = async (
         }
 
         const updated_item = await getItem(item.id);
-        context.commit("replaceLockInfoWithNewVersion", {
-            item: item,
-            lock_info: updated_item.lock_info,
-        });
+        item.lock_info = updated_item.lock_info;
+        context.commit("replaceFolderContentByItem", updated_item, { root: true });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForLock", exception, { root: true });
     }
@@ -79,10 +77,8 @@ export const unlockDocument = async (
         }
 
         const updated_item = await getItem(item.id);
-        context.commit("replaceLockInfoWithNewVersion", {
-            item: item,
-            lock_info: updated_item.lock_info,
-        });
+        item.lock_info = updated_item.lock_info;
+        context.commit("replaceFolderContentByItem", updated_item, { root: true });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForLock", exception, { root: true });
     }

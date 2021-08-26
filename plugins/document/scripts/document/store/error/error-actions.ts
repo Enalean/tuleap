@@ -60,8 +60,8 @@ export async function handleErrorsForLock(
 ): Promise<void> {
     try {
         const json = await exception.response.json();
-        context.commit("error/setLockError", getErrorMessage(json));
+        context.commit("setLockError", getErrorMessage(json));
     } catch (error) {
-        context.commit("error/setLockError", message);
+        context.commit("setLockError", message);
     }
 }
