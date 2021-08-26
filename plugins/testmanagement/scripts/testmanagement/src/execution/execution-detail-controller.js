@@ -428,7 +428,11 @@ function ExecutionDetailCtrl(
 
     function showTestCommentContainer(execution) {
         $scope.displayTestCommentContainer = true;
-        ExecutionService.viewTestExecution(execution.id, SharedPropertiesService.getCurrentUser());
+        ExecutionService.viewTestExecutionIfRTEAlreadyExists(
+            execution.id,
+            SharedPropertiesService.getCurrentUser()
+        );
+        ExecutionService.clearEditor(execution);
     }
 
     function hideTestCommentContainer(execution) {

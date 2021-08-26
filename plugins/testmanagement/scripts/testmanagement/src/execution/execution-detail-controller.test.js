@@ -167,7 +167,10 @@ describe("ExecutionDetailController -", () => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
             jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "removeViewTestExecution").mockImplementation(() => {});
-            jest.spyOn(ExecutionService, "viewTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "viewTestExecutionIfRTEAlreadyExists").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
                 $q.when(execution)
             );
@@ -230,7 +233,11 @@ describe("ExecutionDetailController -", () => {
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect(ExecutionService.removeViewTestExecution).not.toHaveBeenCalled();
-                expect(ExecutionService.viewTestExecution).toHaveBeenCalledWith(execution.id, user);
+                expect(ExecutionService.viewTestExecutionIfRTEAlreadyExists).toHaveBeenCalledWith(
+                    execution.id,
+                    user
+                );
+                expect(ExecutionService.clearEditor).toHaveBeenCalledWith(execution);
                 expect($scope.displayTestCommentContainer).toBeTruthy();
             });
         });

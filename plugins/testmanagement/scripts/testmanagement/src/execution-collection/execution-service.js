@@ -68,6 +68,7 @@ function ExecutionService(
         updatePresenceOnCampaign,
         removeAllPresencesOnCampaign,
         viewTestExecution,
+        viewTestExecutionIfRTEAlreadyExists,
         removeAllViewTestExecution,
         removeViewTestExecution,
         removeViewTestExecutionByUUID,
@@ -323,6 +324,14 @@ function ExecutionService(
         } else if (_.has(user, "score")) {
             _.extend(user_id_exists, user.score);
         }
+    }
+
+    function viewTestExecutionIfRTEAlreadyExists(execution_id, user) {
+        if (CKEDITOR.instances["execution_" + execution_id]) {
+            return;
+        }
+
+        viewTestExecution(execution_id, user);
     }
 
     function viewTestExecution(execution_id, user) {
