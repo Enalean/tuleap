@@ -387,7 +387,9 @@ final class program_managementPlugin extends Plugin
                     )
                 )
             ),
-            $logger
+            $logger,
+            $user_manager_adapter,
+            $retrieve_tracker_from_field
         );
 
         $checker = new TimeboxCreatorChecker(
@@ -1044,6 +1046,7 @@ final class program_managementPlugin extends Plugin
         $tracker_factory             = \TrackerFactory::instance();
         $iteration_dao               = new IterationsDAO();
         $retrieve_tracker_from_field = new TrackerFromFieldRetriever($form_element_factory);
+        $retrieve_user               = new UserManagerAdapter(UserManager::instance());
 
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             new SynchronizedFieldsAdapter(
@@ -1063,7 +1066,9 @@ final class program_managementPlugin extends Plugin
                     )
                 )
             ),
-            $logger
+            $logger,
+            $retrieve_user,
+            $retrieve_tracker_from_field
         );
 
         $checker = new TimeboxCreatorChecker(
@@ -1082,6 +1087,7 @@ final class program_managementPlugin extends Plugin
             ),
             $retrieve_tracker_from_field
         );
+
 
         return new CanSubmitNewArtifactHandler(
             new ConfigurationErrorsGatherer(
@@ -1102,7 +1108,7 @@ final class program_managementPlugin extends Plugin
                 ),
                 new ProgramDao(),
                 $this->getProgramManagementProjectAdapter(),
-                new UserManagerAdapter(UserManager::instance())
+                $retrieve_user
             )
         );
     }

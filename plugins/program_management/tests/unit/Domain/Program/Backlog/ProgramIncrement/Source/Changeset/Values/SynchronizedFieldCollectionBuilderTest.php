@@ -32,6 +32,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -51,10 +53,14 @@ final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
     protected function setUp(): void
     {
-        $this->fields_adapter     = $this->createStub(BuildSynchronizedFields::class);
-        $this->collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+        $retrieve_user               = RetrieveUserStub::withGenericUser();
+        $retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
+        $this->fields_adapter        = $this->createStub(BuildSynchronizedFields::class);
+        $this->collection_builder    = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter,
-            new NullLogger()
+            new NullLogger(),
+            $retrieve_user,
+            $retrieve_tracker_from_field
         );
     }
 
