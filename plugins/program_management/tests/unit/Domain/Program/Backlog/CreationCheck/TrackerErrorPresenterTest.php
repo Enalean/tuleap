@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationE
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -91,7 +92,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasRequiredErrors(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addRequiredFieldError(1, 100, 'My field');
+        $errors_collector->addRequiredFieldError(TrackerReferenceBuilder::buildWithId(1), 100, 'My field');
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
