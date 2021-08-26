@@ -38,11 +38,9 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
      */
     private array $synchronized_fields = [];
 
-    public function __construct(
-        private LoggerInterface $logger,
-        private RetrieveUser $retrieve_user,
-        private RetrieveTrackerFromField $tracker_from_field_retriever
-    ) {
+
+    public function __construct(private LoggerInterface $logger, private RetrieveUser $retrieve_user, private RetrieveTrackerFromField $retrieve_tracker_from_field)
+    {
     }
 
     /**
@@ -56,11 +54,11 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
         $can_submit = true;
         foreach ($this->synchronized_fields as $synchronized_field) {
             if (! $synchronized_field->userCanSubmit($user)) {
-                $tracker = $this->tracker_from_field_retriever->fromFieldId($synchronized_field->getId());
+                $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
                 $errors_collector->addSubmitFieldPermissionError(
                     $synchronized_field->getId(),
                     $synchronized_field->getLabel(),
-                    $tracker->id
+                    $tracker_reference
                 );
                 $can_submit = false;
                 if (! $errors_collector->shouldCollectAllIssues()) {
@@ -68,7 +66,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                         sprintf(
                             "User can not submit the field #%d of tracker #%d",
                             $synchronized_field->getId(),
-                            $tracker->id
+                            $tracker_reference->id
                         )
                     );
 
@@ -76,11 +74,11 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                 }
             }
             if (! $synchronized_field->userCanUpdate($user)) {
-                $tracker = $this->tracker_from_field_retriever->fromFieldId($synchronized_field->getId());
+                $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
                 $errors_collector->addUpdateFieldPermissionError(
                     $synchronized_field->getId(),
                     $synchronized_field->getLabel(),
-                    $tracker->id
+                    $tracker_reference
                 );
                 $can_submit = false;
                 if (! $errors_collector->shouldCollectAllIssues()) {
@@ -88,7 +86,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                         sprintf(
                             "User can not update the field #%d of tracker #%d",
                             $synchronized_field->getId(),
-                            $tracker->id
+                            $tracker_reference->id
                         )
                     );
 

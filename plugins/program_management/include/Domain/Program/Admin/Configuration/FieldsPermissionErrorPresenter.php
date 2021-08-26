@@ -23,23 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+
 /**
  * @psalm-immutable
  */
 final class FieldsPermissionErrorPresenter
 {
-    public int $field_id;
-    public string $label;
     public int $tracker_id;
     public string $field_url;
+    public string $tracker_name;
 
-    public function __construct(int $field_id, string $label, int $tracker_id)
+    public function __construct(public int $field_id, public string $label, TrackerReference $tracker)
     {
-        $this->field_id   = $field_id;
-        $this->label      = $label;
-        $this->tracker_id = $tracker_id;
-        $this->field_url  = '/plugins/tracker/permissions/fields-by-field/' .
-            urlencode((string) $tracker_id) . '?' .
+        $this->tracker_id   = $tracker->id;
+        $this->field_url    = '/plugins/tracker/permissions/fields-by-field/' .
+            urlencode((string) $tracker->id) . '?' .
             http_build_query(['selected_id' => $field_id]);
+        $this->tracker_name = $tracker->label;
     }
 }
