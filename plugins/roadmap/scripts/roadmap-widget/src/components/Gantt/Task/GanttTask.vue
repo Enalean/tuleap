@@ -71,7 +71,7 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
 import { Styles } from "../../../helpers/styles";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 
 const timeperiod = namespace("timeperiod");
 
@@ -103,6 +103,9 @@ export default class GanttTask extends Vue {
 
     @Prop({ required: true })
     private readonly popover_element_id!: string;
+
+    @State
+    private readonly show_closed_elements!: boolean;
 
     private popover: Popover | undefined;
 
@@ -154,8 +157,21 @@ export default class GanttTask extends Vue {
         if (!dependencies_for_current_task) {
             return [];
         }
+        let dependencies_to_filter = dependencies_for_current_task.get(
+            this.dependencies_nature_to_display
+        );
 
-        return dependencies_for_current_task.get(this.dependencies_nature_to_display) || [];
+        let dependencies_to_display: Task[] = [];
+        if (!dependencies_to_filter) {
+            return [];
+        }
+        dependencies_to_filter.forEach((dependencie) => {
+            if (dependencie.is_open || this.show_closed_elements) {
+                dependencies_to_display.push(dependencie);
+            }
+        });
+
+        return dependencies_to_display;
     }
 
     get percentage(): string {

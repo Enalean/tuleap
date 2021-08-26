@@ -36,7 +36,8 @@ describe("GanttTask", () => {
     function mountGanttTask(
         task: Task,
         tasks_by_nature: TasksByNature | null = null,
-        dependencies_nature_to_display: string | null = null
+        dependencies_nature_to_display: string | null = null,
+        show_closed_elements: boolean | null = false
     ): Wrapper<GanttTask> {
         const defaults: Task = {
             id: 123,
@@ -77,6 +78,7 @@ describe("GanttTask", () => {
                 $store: createStoreMock({
                     state: {
                         timeperiod: {} as TimeperiodState,
+                        show_closed_elements: show_closed_elements,
                     } as RootState,
                     getters: {
                         "timeperiod/time_period": time_period,
@@ -142,9 +144,9 @@ describe("GanttTask", () => {
     });
 
     describe("Displays an arrow for each possible dependency", () => {
-        const dep_1: Task = { id: 124 } as Task;
-        const dep_2: Task = { id: 125 } as Task;
-        const dep_3: Task = { id: 126 } as Task;
+        const dep_1: Task = { id: 124, is_open: true } as Task;
+        const dep_2: Task = { id: 125, is_open: true } as Task;
+        const dep_3: Task = { id: 126, is_open: true } as Task;
 
         it.each([
             ["depends_on", [dep_1, dep_2]],
@@ -168,11 +170,38 @@ describe("GanttTask", () => {
         });
     });
 
+    it("Don't display arrow when task is closed and closed items are not shown", () => {
+        const dep_3: Task = { id: 126, is_open: false } as Task;
+
+        const wrapper = mountGanttTask(
+            { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
+            new TasksByNature([["", [dep_3]]]),
+            ""
+        );
+
+        const arrows = wrapper.findAllComponents(DependencyArrow);
+        expect(arrows.length).toBe(0);
+    });
+
+    it("Display arrow when task is closed and closed items are not shown", () => {
+        const dep_3: Task = { id: 126, is_open: false } as Task;
+
+        const wrapper = mountGanttTask(
+            { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
+            new TasksByNature([["", [dep_3]]]),
+            "",
+            true
+        );
+
+        const arrows = wrapper.findAllComponents(DependencyArrow);
+        expect(arrows.length).toBe(1);
+    });
+
     it("should display an arrow even if the dependency is displayed more than once because it is a subtask with multiple parents", () => {
         const a_parent: Task = { id: 122 } as Task;
         const another_parent: Task = { id: 123 } as Task;
-        const dep_1: Task = { id: 124, parent: a_parent } as Task;
-        const dep_2: Task = { id: 124, parent: another_parent } as Task;
+        const dep_1: Task = { id: 124, parent: a_parent, is_open: true } as Task;
+        const dep_2: Task = { id: 124, parent: another_parent, is_open: true } as Task;
 
         const wrapper = mountGanttTask(
             { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
