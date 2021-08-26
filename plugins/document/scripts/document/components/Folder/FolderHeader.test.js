@@ -32,6 +32,7 @@ describe("FolderHeader", () => {
         const general_store = {
             state: {
                 is_loading_ascendant_hierarchy: false,
+                modals: { delete_item: null },
             },
             getters: {
                 current_folder_title: "My folder title",
@@ -121,8 +122,8 @@ describe("FolderHeader", () => {
             const wrapper = factory();
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(false);
 
-            const event = { detail: { current_item: { type: TYPE_EMPTY } } };
-            wrapper.vm.showDeleteItemModal(event);
+            store.state.modals.delete_item = { id: 20 };
+
             await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(true);
         });
