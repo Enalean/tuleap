@@ -21,6 +21,7 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 final class ConfigurationErrorsCollector
@@ -87,7 +88,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @param int[] $potential_trackers_in_error
+     * @param ProgramTracker[] $potential_trackers_in_error
      */
     public function addSemanticError(
         string $semantic_name,

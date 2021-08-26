@@ -107,6 +107,14 @@ final class ProgramTracker
     /**
      * @psalm-mutation-free
      */
+    public function getTrackerName(): string
+    {
+        return $this->tracker->getName();
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
     public function getProjectId(): int
     {
         return (int) $this->tracker->getGroupId();
