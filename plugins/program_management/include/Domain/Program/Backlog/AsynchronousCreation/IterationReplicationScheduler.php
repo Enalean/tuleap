@@ -28,9 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifie
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIterationHasBeenLinkedBefore;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I detect when an Iteration needs to be replicated, store the pending replication
@@ -38,51 +37,32 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 final class IterationReplicationScheduler
 {
-    private VerifyIterationsFeatureActive $feature_flag_verifier;
-    private SearchIterations $iterations_searcher;
-    private VerifyIsVisibleArtifact $visibility_verifier;
-    private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier;
-    private LoggerInterface $logger;
-    private RetrieveLastChangeset $changeset_retriever;
-    private StorePendingIterations $pending_store;
-    private RunIterationsCreation $iterations_creator;
-
     public function __construct(
-        VerifyIterationsFeatureActive $feature_flag_verifier,
-        SearchIterations $iterations_searcher,
-        VerifyIsVisibleArtifact $visibility_verifier,
-        VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
-        LoggerInterface $logger,
-        RetrieveLastChangeset $changeset_retriever,
-        StorePendingIterations $pending_store,
-        RunIterationsCreation $iterations_creator
+        private VerifyIterationsFeatureActive $feature_flag_verifier,
+        private SearchIterations $iterations_searcher,
+        private VerifyIsVisibleArtifact $visibility_verifier,
+        private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
+        private LoggerInterface $logger,
+        private RetrieveLastChangeset $changeset_retriever,
+        private StorePendingIterations $pending_store,
+        private RunIterationsCreation $iterations_creator
     ) {
-        $this->feature_flag_verifier   = $feature_flag_verifier;
-        $this->iterations_searcher     = $iterations_searcher;
-        $this->visibility_verifier     = $visibility_verifier;
-        $this->iteration_link_verifier = $iteration_link_verifier;
-        $this->logger                  = $logger;
-        $this->changeset_retriever     = $changeset_retriever;
-        $this->pending_store           = $pending_store;
-        $this->iterations_creator      = $iterations_creator;
     }
 
-    public function replicateIterationsIfNeeded(
-        ProgramIncrementIdentifier $program_increment,
-        UserIdentifier $user
-    ): void {
+    public function replicateIterationsIfNeeded(ProgramIncrementUpdate $program_increment_update): void
+    {
         if (! $this->feature_flag_verifier->isIterationsFeatureActive()) {
             return;
         }
         $iterations             = IterationIdentifier::buildCollectionFromProgramIncrement(
             $this->iterations_searcher,
             $this->visibility_verifier,
-            $program_increment,
-            $user
+            $program_increment_update->program_increment,
+            $program_increment_update->user
         );
         $just_linked_iterations = JustLinkedIterationCollection::fromIterations(
             $this->iteration_link_verifier,
-            $program_increment,
+            $program_increment_update->program_increment,
             ...$iterations
         );
         if ($just_linked_iterations->isEmpty()) {
@@ -93,7 +73,7 @@ final class IterationReplicationScheduler
             $this->changeset_retriever,
             $this->logger,
             $just_linked_iterations,
-            $user
+            $program_increment_update->user
         );
         $this->pending_store->storePendingIterationCreations(...$creations);
         $this->iterations_creator->scheduleIterationCreations(...$creations);

@@ -23,23 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_ITERATION_ID  = 828;
     private const SECOND_ITERATION_ID = 251;
-    private UserIdentifier $user;
-    private ProgramIncrementIdentifier $program_increment;
+    private ProgramIncrementUpdate $program_increment_update;
     private TestLogger $logger;
     private VerifyIterationsFeatureActiveStub $feature_flag_verifier;
     private SearchIterationsStub $iterations_searcher;
@@ -51,29 +47,23 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
 
     protected function setUp(): void
     {
-        $pfuser                        = UserTestBuilder::aUser()->build();
-        $this->user                    = UserIdentifierStub::buildGenericUser();
-        $this->program_increment       = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            902,
-            $pfuser
-        );
-        $this->logger                  = new TestLogger();
-        $this->feature_flag_verifier   = VerifyIterationsFeatureActiveStub::withActiveFeature();
-        $this->iterations_searcher     = SearchIterationsStub::withIterationIds(
+        $this->program_increment_update = ProgramIncrementUpdateBuilder::build();
+        $this->logger                   = new TestLogger();
+        $this->feature_flag_verifier    = VerifyIterationsFeatureActiveStub::withActiveFeature();
+        $this->iterations_searcher      = SearchIterationsStub::withIterationIds(
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
         );
-        $this->visibility_verifier     = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
-        $this->iteration_link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
-        $this->changeset_retriever     = RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872);
-        $this->pending_store           = new class implements StorePendingIterations {
+        $this->visibility_verifier      = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
+        $this->iteration_link_verifier  = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
+        $this->changeset_retriever      = RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872);
+        $this->pending_store            = new class implements StorePendingIterations {
             public function storePendingIterationCreations(IterationCreation ...$creations): void
             {
                 // Side effects
             }
         };
-        $this->iterations_creator      = new class implements RunIterationsCreation {
+        $this->iterations_creator       = new class implements RunIterationsCreation {
             public function scheduleIterationCreations(IterationCreation ...$creations): void
             {
                 // Side effects
@@ -100,7 +90,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->feature_flag_verifier = VerifyIterationsFeatureActiveStub::withDisabledFeature();
         $this->pending_store         = $this->getStoreShouldNotBeCalled();
 
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
@@ -110,7 +100,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
         $this->pending_store       = $this->getStoreShouldNotBeCalled();
 
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
@@ -122,13 +112,13 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         );
         $this->pending_store           = $this->getStoreShouldNotBeCalled();
 
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
     public function testItSchedulesAReplication(): void
     {
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
 
         self::assertTrue($this->logger->hasDebug('Program increment has new iterations: [828,251]'));
     }

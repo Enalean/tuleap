@@ -20,15 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\Tracker\Artifact\Event;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-interface ArtifactUpdatedEvent
+final class ArtifactUpdatedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function getArtifactId(): int;
-    public function getTrackerId(): int;
-    public function getUser(): UserIdentifier;
-    public function getChangeset(): ChangesetIdentifier;
+    public function testItBuildsFromArtifact(): void
+    {
+        $user      = UserTestBuilder::aUser()->withId(101)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(150)->build();
+        $changeset = new \Tracker_Artifact_Changeset('1974', $artifact, $user->getId(), 1234567890, null);
+
+        $event = new ArtifactUpdated($artifact, $user, $changeset);
+        self::assertSame($user, $event->getUser());
+        self::assertSame($artifact, $event->getArtifact());
+        self::assertSame($changeset, $event->getChangeset());
+    }
 }

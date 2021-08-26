@@ -20,37 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Events;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
+use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ArtifactUpdatedProxyTest extends TestCase
+final class ProgramIncrementUpdateBuilder
 {
-    public function testItBuildsFromArtifactUpdated(): void
+    public static function build(): ProgramIncrementUpdate
     {
-        $user      = UserTestBuilder::aUser()->withId(110)->build();
-        $tracker   = TrackerTestBuilder::aTracker()->withId(33)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(228)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('884')
+        $user      = UserTestBuilder::aUser()->withId(141)->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withId(20)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(334)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset('7516')
             ->ofArtifact($artifact)
             ->submittedBy($user->getId())
             ->build();
 
-        $event = new ArtifactUpdated(
-            $artifact,
-            $user,
-            $changeset
+        $tracker_event = new ArtifactUpdated($artifact, $user, $changeset);
+        $proxy         = ArtifactUpdatedProxy::fromArtifactUpdated($tracker_event);
+        return ProgramIncrementUpdate::fromArtifactUpdatedEvent(
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+            $proxy
         );
-
-        $proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);
-        self::assertSame(228, $proxy->getArtifactId());
-        self::assertSame(33, $proxy->getTrackerId());
-        self::assertSame(110, $proxy->getUser()->getId());
-        self::assertSame(884, $proxy->getChangeset()->getId());
     }
 }

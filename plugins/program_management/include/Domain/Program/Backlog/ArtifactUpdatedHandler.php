@@ -26,47 +26,39 @@ use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 
 final class ArtifactUpdatedHandler
 {
-    private VerifyIsProgramIncrementTracker $program_increment_verifier;
-    private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner;
-    private RemovePlannedFeaturesFromTopBacklog $feature_remover;
-    private IterationReplicationScheduler $iteration_replicator;
-
     public function __construct(
-        VerifyIsProgramIncrementTracker $program_increment_verifier,
-        PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
-        RemovePlannedFeaturesFromTopBacklog $feature_remover,
-        IterationReplicationScheduler $iteration_replicator
+        private VerifyIsProgramIncrementTracker $program_increment_verifier,
+        private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
+        private RemovePlannedFeaturesFromTopBacklog $feature_remover,
+        private IterationReplicationScheduler $iteration_replicator
     ) {
-        $this->program_increment_verifier = $program_increment_verifier;
-        $this->user_stories_planner       = $user_stories_planner;
-        $this->feature_remover            = $feature_remover;
-        $this->iteration_replicator       = $iteration_replicator;
     }
 
     public function handle(ArtifactUpdatedEvent $event): void
     {
-        $program_increment = ProgramIncrementIdentifier::fromArtifactUpdated($this->program_increment_verifier, $event);
-        if ($program_increment) {
-            $this->planArtifactIfNeeded($event, $program_increment);
-            $this->iteration_replicator->replicateIterationsIfNeeded($program_increment, $event->getUser());
+        $program_increment_update = ProgramIncrementUpdate::fromArtifactUpdatedEvent(
+            $this->program_increment_verifier,
+            $event
+        );
+        if ($program_increment_update) {
+            $this->planArtifactIfNeeded($program_increment_update);
+            $this->iteration_replicator->replicateIterationsIfNeeded($program_increment_update);
         }
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event);
     }
 
-    private function planArtifactIfNeeded(
-        ArtifactUpdatedEvent $artifact_updated,
-        ProgramIncrementIdentifier $program_increment
-    ): void {
+    private function planArtifactIfNeeded(ProgramIncrementUpdate $program_increment_update): void
+    {
         $program_increment_changed = new ProgramIncrementChanged(
-            $program_increment->getId(),
-            $artifact_updated->getTrackerId(),
-            $artifact_updated->getUser()
+            $program_increment_update->program_increment->getId(),
+            $program_increment_update->tracker->id,
+            $program_increment_update->user
         );
         $this->user_stories_planner->plan($program_increment_changed);
     }

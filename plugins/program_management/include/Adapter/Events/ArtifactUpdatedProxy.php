@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
-use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 
@@ -38,19 +40,26 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
     private int $artifact_id;
     private int $tracker_id;
     private UserIdentifier $user;
+    private ChangesetIdentifier $changeset;
 
-    private function __construct(int $artifact_id, int $tracker_id, UserIdentifier $user)
-    {
+    private function __construct(
+        int $artifact_id,
+        int $tracker_id,
+        UserIdentifier $user,
+        ChangesetIdentifier $changeset
+    ) {
         $this->artifact_id = $artifact_id;
         $this->tracker_id  = $tracker_id;
         $this->user        = $user;
+        $this->changeset   = $changeset;
     }
 
     public static function fromArtifactUpdated(ArtifactUpdated $artifact_updated): self
     {
         $artifact        = $artifact_updated->getArtifact();
         $user_identifier = UserProxy::buildFromPFUser($artifact_updated->getUser());
-        return new self($artifact->getId(), $artifact->getTrackerId(), $user_identifier);
+        $changeset       = ChangesetProxy::fromChangeset($artifact_updated->getChangeset());
+        return new self($artifact->getId(), $artifact->getTrackerId(), $user_identifier, $changeset);
     }
 
     public function getArtifactId(): int
@@ -66,5 +75,10 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
     public function getUser(): UserIdentifier
     {
         return $this->user;
+    }
+
+    public function getChangeset(): ChangesetIdentifier
+    {
+        return $this->changeset;
     }
 }
