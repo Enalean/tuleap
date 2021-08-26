@@ -951,7 +951,7 @@
       </permissions>
     </tracker>
     <tracker id="T1187" parent_id="0" instantiate_for_new_projects="1">
-      <name><![CDATA[Team Enabler]]></name>
+      <name><![CDATA[Team Enablers]]></name>
       <item_name><![CDATA[team_enabler]]></item_name>
       <description><![CDATA[Team Enabler]]></description>
       <color><![CDATA[army-green]]></color>
@@ -1212,6 +1212,9 @@
           <label><![CDATA[Effort Estimé]]></label>
           <description><![CDATA[Définir l'effort estimé d'un artéfact]]></description>
           <field REF="F26123"/>
+        </semantic>
+        <semantic type="timeframe">
+          <inherited_from_tracker id="T1036"/>
         </semantic>
       </semantics>
       <rules>
