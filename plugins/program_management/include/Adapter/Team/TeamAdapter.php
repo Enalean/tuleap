@@ -29,6 +29,8 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\REST\ProjectAuthorization;
 
 final class TeamAdapter implements BuildTeam
@@ -40,15 +42,17 @@ final class TeamAdapter implements BuildTeam
     public function __construct(
         \ProjectManager $project_manager,
         VerifyIsProgram $program_verifier,
-        ExplicitBacklogDao $explicit_backlog_dao
+        ExplicitBacklogDao $explicit_backlog_dao,
+        private RetrieveUser $retrieve_user
     ) {
         $this->project_manager      = $project_manager;
         $this->program_verifier     = $program_verifier;
         $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
-    public function checkProjectIsATeam(int $team_id, \PFUser $user): void
+    public function checkProjectIsATeam(int $team_id, UserIdentifier $user_identifier): void
     {
+        $user    = $this->retrieve_user->getUserWithId($user_identifier);
         $project = $this->project_manager->getProject($team_id);
         try {
             ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
@@ -59,7 +63,7 @@ final class TeamAdapter implements BuildTeam
         $this->checkProject($project);
     }
 
-    public function checkProjectIsATeamForRestTestInitialization(int $team_id, \PFUser $user): void
+    public function checkProjectIsATeamForRestTestInitialization(int $team_id): void
     {
         $project = $this->project_manager->getProject($team_id);
 

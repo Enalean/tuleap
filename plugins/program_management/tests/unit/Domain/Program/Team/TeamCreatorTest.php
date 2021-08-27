@@ -25,10 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -46,7 +46,7 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $team_store;
     private \Project $program_project;
-    private \PFUser $user;
+    private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
@@ -56,8 +56,7 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permission_verifier = VerifyProjectPermissionStub::withAdministrator();
         $this->team_builder        = $this->createStub(BuildTeam::class);
         $this->team_store          = $this->createMock(TeamStore::class);
-
-        $this->user = UserTestBuilder::aUser()->build();
+        $this->user_identifier     = UserIdentifierStub::buildGenericUser();
     }
 
     private function getCreator(): TeamCreator
@@ -77,13 +76,13 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->team_builder->method('checkProjectIsATeam');
         $this->team_store->expects(self::once())->method('save');
 
-        $this->getCreator()->create($this->user, self::PROGRAM_ID, [self::TEAM_ID]);
+        $this->getCreator()->create($this->user_identifier, self::PROGRAM_ID, [self::TEAM_ID]);
     }
 
     public function testThrowExceptionWhenTeamIdsContainProgram(): void
     {
         $this->expectException(ProgramIsTeamException::class);
 
-        $this->getCreator()->create($this->user, self::PROGRAM_ID, [self::TEAM_ID, self::PROGRAM_ID]);
+        $this->getCreator()->create($this->user_identifier, self::PROGRAM_ID, [self::TEAM_ID, self::PROGRAM_ID]);
     }
 }

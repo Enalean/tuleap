@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
 /**
  * @psalm-immutable
  */
@@ -46,9 +48,9 @@ final class Team
      * @throws \Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException
      * @throws \Tuleap\ProgramManagement\Domain\Team\TeamAccessException
      */
-    public static function build(BuildTeam $build_team, int $team_id, \PFUser $user): self
+    public static function build(BuildTeam $build_team, int $team_id, UserIdentifier $user_identifier): self
     {
-        $build_team->checkProjectIsATeam($team_id, $user);
+        $build_team->checkProjectIsATeam($team_id, $user_identifier);
 
         return new self($team_id);
     }
@@ -59,9 +61,9 @@ final class Team
      * @throws \Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException
      * @throws \Tuleap\ProgramManagement\Domain\Team\TeamAccessException
      */
-    public static function buildForRestTest(BuildTeam $build_team, int $team_id, \PFUser $user): self
+    public static function buildForRestTest(BuildTeam $build_team, int $team_id): self
     {
-        $build_team->checkProjectIsATeamForRestTestInitialization($team_id, $user);
+        $build_team->checkProjectIsATeamForRestTestInitialization($team_id);
 
         return new self($team_id);
     }

@@ -24,32 +24,29 @@ namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID     = 102;
     private const FIRST_TEAM_ID  = 140;
     private const SECOND_TEAM_ID = 119;
-    private \PFUser $user;
     private ProgramForAdministrationIdentifier $program;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|BuildTeam
-     */
-    private $team_builder;
+    private BuildTeam $team_builder;
+    private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
-        $this->user         = UserTestBuilder::aUser()->withId(101)->build();
-        $this->program      = ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM_ID);
-        $this->team_builder = $this->createStub(BuildTeam::class);
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->program         = ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM_ID);
+        $this->team_builder    = BuildTeamStub::withValidTeam();
     }
 
     public function testItBuildsFromProgramAndTeams(): void
     {
-        $this->team_builder->method('checkProjectIsATeam');
         $teams = array_map(
-            fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $this->user),
+            fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $this->user_identifier),
             [self::FIRST_TEAM_ID, self::SECOND_TEAM_ID]
         );
 

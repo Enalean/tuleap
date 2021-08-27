@@ -66,6 +66,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
 
         $user_manager                         = UserManager::instance();
+        $user_adapter                         = new UserManagerAdapter($user_manager);
         $this->artifact_factory               = Tracker_ArtifactFactory::instance();
         $changeset_factory                    = Tracker_Artifact_ChangesetFactoryBuilder::build();
         $team_dao                             = new TeamDao();
@@ -73,7 +74,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $project_permissions_verifier         = new ProjectPermissionVerifier(RetrieveUserStub::withGenericUser());
         $this->pending_program_increments_dao = new PendingArtifactCreationDao();
 
-        $team_builder = new TeamAdapter($this->project_manager, $program_dao, new ExplicitBacklogDao());
+        $team_builder = new TeamAdapter($this->project_manager, $program_dao, new ExplicitBacklogDao(), $user_adapter);
 
         $this->replication_data_adapter = new ReplicationDataAdapter(
             $this->artifact_factory,
@@ -99,7 +100,6 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $program_project = $this->getProjectByShortName(self::PROJECT_PROGRAM_NAME);
         $team_project    = $this->getProjectByShortName(self::PROJECT_TEAM_NAME);
 
-        $user_adapter = new UserManagerAdapter($user_manager);
 
         $program = ProgramForAdministrationIdentifier::fromProject(
             $team_dao,
@@ -109,7 +109,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
             ProjectProxy::buildFromProject($program_project)
         );
 
-        $team = Team::buildForRestTest($team_builder, (int) $team_project->getID(), $this->user);
+        $team = Team::buildForRestTest($team_builder, (int) $team_project->getID());
         $team_dao->save(TeamCollection::fromProgramAndTeams($program, $team));
 
         $tracker_factory = \TrackerFactory::instance();
@@ -140,8 +140,11 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         assert($featureA_artifact_link instanceof \Tracker_FormElement_Field_ArtifactLink);
         $fieldsA_data                                                     = [];
         $fieldsA_data[$featureA_artifact_link->getId()]['new_values']     = (string) $us1->getId();
-        $fieldsA_data[$featureA_artifact_link->getId()]['nature']         = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
-        $fieldsA_data[$featureA_artifact_link->getId()]['natures']        = [$us1->getId() => Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD];
+        $fieldsA_data[$featureA_artifact_link->getId(
+        )]['nature']                                                      = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        $fieldsA_data[$featureA_artifact_link->getId()]['natures']        = [
+            $us1->getId() => Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+        ];
         $fieldsA_data[$featureA_artifact_link->getId()]['removed_values'] = [];
 
         $featureA->createNewChangeset($fieldsA_data, "", $this->user);
@@ -159,7 +162,11 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $program_increment_list = $this->artifact_factory->getArtifactsByTrackerId($this->program_increment->getId());
 
         $pi = $this->getArtifactByTitle($program_increment_list, "PI");
-        $this->pending_program_increments_dao->addArtifactToPendingCreation((int) $pi->getId(), (int) $pi->getSubmittedBy(), (int) $pi->getLastChangeset()->getId());
+        $this->pending_program_increments_dao->addArtifactToPendingCreation(
+            (int) $pi->getId(),
+            (int) $pi->getSubmittedBy(),
+            (int) $pi->getLastChangeset()->getId()
+        );
         $replication_data = $this->replication_data_adapter->buildFromArtifactAndUserId(
             $pi->getId(),
             (int) $pi->getSubmittedBy()
@@ -206,6 +213,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         if (! $program_project) {
             throw new \LogicException(sprintf('Could not find project with short name %s', $short_name));
         }
+
         return $program_project;
     }
 }
