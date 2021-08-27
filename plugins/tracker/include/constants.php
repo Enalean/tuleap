@@ -23,8 +23,6 @@ define('TRACKER_TEMPLATE_DIR', realpath(dirname(__FILE__) . '/../templates'));
 
 define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
 
-define('TRACKER_SERVICE_ICON', '\e80d');
-
 /**
  * The trackers from a project have been duplicated in another project
  *
@@ -168,22 +166,6 @@ define('TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA', 'tracker_event_report_lo
 define('TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT', 'tracker_event_field_augment_data_for_report');
 
 /**
- * Event emitted when a tracker has its permissions changed
- *
- * Parameters:
- *   'tracker'    Tracker
- */
-define('TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE', 'tracker_event_tracker_permisssions_change');
-
-/**
- * Event emitted when a tracker has its contributor semantic changed
- *
- * Parameters:
- *   'tracker'    Tracker
- */
-define('TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE', 'tracker_event_semantic_contributor_change');
-
-/**
  * Event emitted to check if a tracker can be deleted
  *
  * Parameters:
@@ -191,16 +173,6 @@ define('TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE', 'tracker_event_semantic_cont
  *   'result'                 Array (OUT)
  */
 define('TRACKER_USAGE', 'tracker_usage');
-
-/**
- * Event emitted to check if a tracker can be used in hierarchy
- *
- * Parameters:
- *  'tracker'   Tracker (in)
- *  'user'      PFUser (in)
- *  'result'    Array of Tracker that cannot be used in hierarchy (out)
- */
-define('TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY', 'tracker_event_trackers_cannot_use_in_hierarchy');
 
 /**
  * Event emitted to check if a user can change the priority of an artifact
