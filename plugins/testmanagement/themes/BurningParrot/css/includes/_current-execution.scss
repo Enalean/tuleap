@@ -235,6 +235,10 @@ execution-with-steps.current-test-content {
     justify-content: flex-end;
 }
 
+.current-test-footer-section-save-comment-button {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
 .current-comment-header-section {
     display: flex;
     align-items: center;

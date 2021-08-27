@@ -89,6 +89,9 @@ msgstr "Liste des campagnes"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Cancel edition"
+msgstr "Annuler l'édition"
+
 msgid "Choose tests"
 msgstr "Sélectionner les tests"
 

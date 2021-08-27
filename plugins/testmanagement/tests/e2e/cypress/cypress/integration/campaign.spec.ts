@@ -265,6 +265,23 @@ describe("TTM campaign", () => {
                     );
                 });
 
+                it("Cancel the edition of the comment", function () {
+                    cy.get("[data-test=edit-comment-button]").click({ force: true });
+                    cy.get("[data-test=current-test-comment]").then(($container) => {
+                        cy.window().then((win) => {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            win.CKEDITOR.instances[$container.attr("id")].setData(
+                                "<p>A new comment</p>"
+                            );
+                        });
+                    });
+                    cy.get("[data-test=cancel-edit-comment-button]").click({ force: true });
+                    cy.get("[data-test=current-test-comment-preview]").contains(
+                        "I confirm that. It is ok. Fix works!"
+                    );
+                });
+
                 it("Edits the test", () => {
                     cy.get("[data-test=current-test-edit]").click();
                     getStringFieldWithLabel("Summary").type("{selectall}My first test edited");

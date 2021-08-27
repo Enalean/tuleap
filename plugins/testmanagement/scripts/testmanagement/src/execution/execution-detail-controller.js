@@ -88,6 +88,8 @@ function ExecutionDetailCtrl(
     $scope.displayTestCommentEditor = false;
     $scope.showTestCommentEditor = showTestCommentEditor;
     $scope.shouldCommentSectionBeDisplayed = shouldCommentSectionBeDisplayed;
+    $scope.onCancelEditionComment = onCancelEditionComment;
+    $scope.shouldCancelEditionCommentBeDisplayed = shouldCancelEditionCommentBeDisplayed;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -445,6 +447,15 @@ function ExecutionDetailCtrl(
             SharedPropertiesService.getCurrentUser()
         );
         ExecutionService.setCommentOnEditor(execution.previous_result.result);
+    }
+
+    function shouldCancelEditionCommentBeDisplayed(execution) {
+        return $scope.displayTestCommentEditor && execution.previous_result.result.length > 0;
+    }
+
+    function onCancelEditionComment(execution) {
+        $scope.displayTestCommentEditor = !execution.previous_result.result;
+        ExecutionService.clearEditor(execution);
     }
 
     function hideTestCommentEditor() {
