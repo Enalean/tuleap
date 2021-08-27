@@ -62,11 +62,11 @@ final class TrackerErrorPresenter
     public array $non_updatable_field_errors;
     public bool $has_presenter_errors;
     /**
-     * @var int[]
+     * @var ProgramTracker[]
      */
     public array $team_tracker_id_errors;
     /**
-     * @var int[]
+     * @var ProgramTracker[]
      */
     public array $status_missing_in_teams;
     /**
@@ -89,8 +89,8 @@ final class TrackerErrorPresenter
      * @param WorkFlowErrorPresenter[]               $field_dependency_error
      * @param FieldsPermissionErrorPresenter[]       $non_submittable_field_errors
      * @param FieldsPermissionErrorPresenter[]       $non_updatable_field_errors
-     * @param int[]                                  $team_tracker_id_errors
-     * @param int[]                                  $status_missing_in_teams
+     * @param ProgramTracker[]                       $team_tracker_id_errors
+     * @param ProgramTracker[]                       $status_missing_in_teams
      * @param SemanticStatusNoFieldPresenter[]       $semantic_status_no_field
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
      */

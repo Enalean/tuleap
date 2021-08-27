@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationE
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
@@ -195,7 +196,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasErrorWhenUserCanNotSubmitInTeam(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->userCanNotSubmitInTeam(101);
+        $errors_collector->userCanNotSubmitInTeam(ProgramTrackerBuilder::buildWithId(101));
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,

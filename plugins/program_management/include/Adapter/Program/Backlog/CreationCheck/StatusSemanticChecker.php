@@ -60,7 +60,7 @@ final class StatusSemanticChecker implements CheckStatus
             $source_tracker_collection->getSourceTrackerIds()
         );
         if ($nb_of_trackers_without_status > 0) {
-            $configuration_errors->addMissingSemanticInTeamErrors($source_tracker_collection->getSourceTrackerIds());
+            $configuration_errors->addMissingSemanticInTeamErrors($source_tracker_collection->getSourceTrackers());
             return false;
         }
 
@@ -70,7 +70,7 @@ final class StatusSemanticChecker implements CheckStatus
             $status_semantic = $this->semantic_status_factory->getByTracker($source_tracker->getFullTracker());
             $array_diff      = array_diff($program_open_values_labels, $status_semantic->getOpenLabels());
             if (count($array_diff) > 0) {
-                $configuration_errors->addMissingValueInSemantic($array_diff, $source_tracker_collection->getSourceTrackerIds());
+                $configuration_errors->addMissingValueInSemantic($array_diff, $source_tracker_collection->getSourceTrackers());
                 return false;
             }
         }
