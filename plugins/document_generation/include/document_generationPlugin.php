@@ -92,6 +92,7 @@ class document_generationPlugin extends Plugin
                             "report_has_changed" => $report->hasChanged(),
                             "tracker_shortname" => $tracker_shortname,
                             "platform_name" => ForgeConfig::get('sys_name'),
+                            "platform_logo_url" => Admin_Homepage_LogoFinder::getCurrentUrl(),
                             "project_name" => $project->getPublicName(),
                             "tracker_id" => $tracker->getId(),
                             "tracker_name" => $tracker->getName(),

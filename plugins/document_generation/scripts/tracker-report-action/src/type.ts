@@ -23,6 +23,7 @@ export interface GlobalExportProperties {
     readonly report_has_changed: boolean;
     readonly tracker_shortname: string;
     readonly platform_name: string;
+    readonly platform_logo_url: string;
     readonly project_name: string;
     readonly tracker_id: number;
     readonly tracker_name: string;
