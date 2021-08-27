@@ -31,6 +31,14 @@ CREATE TABLE plugin_program_management_pending_mirrors(
     INDEX idx_program_artifact_id(program_artifact_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_program_management_pending_program_increment_update(
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    program_increment_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    changeset_id INT(11) NOT NULL,
+    INDEX idx_program_increment_id(program_increment_id)
+) ENGINE=InnoDB;
+
 CREATE TABLE plugin_program_management_pending_iterations(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     iteration_id INT(11) NOT NULL,

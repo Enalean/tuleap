@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
@@ -36,7 +36,7 @@ final class ArtifactUpdatedHandler
         private VerifyIsProgramIncrementTracker $program_increment_verifier,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         private RemovePlannedFeaturesFromTopBacklog $feature_remover,
-        private IterationReplicationScheduler $iteration_replicator
+        private ProgramIncrementUpdateScheduler $pi_update_scheduler
     ) {
     }
 
@@ -48,7 +48,7 @@ final class ArtifactUpdatedHandler
         );
         if ($program_increment_update) {
             $this->planArtifactIfNeeded($program_increment_update);
-            $this->iteration_replicator->replicateIterationsIfNeeded($program_increment_update);
+            $this->pi_update_scheduler->replicateProgramIncrementUpdate($program_increment_update);
         }
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event);
     }

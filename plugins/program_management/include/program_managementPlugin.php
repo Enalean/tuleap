@@ -45,6 +45,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Iterat
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
@@ -115,6 +116,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
@@ -567,28 +569,31 @@ final class program_managementPlugin extends Plugin
                 $artifacts_linked_to_parent_dao
             ),
             new ArtifactsExplicitTopBacklogDAO(),
-            new IterationReplicationScheduler(
-                new ForgeConfigAdapter(),
-                $iterations_linked_dao,
-                $visibility_verifier,
-                $iterations_linked_dao,
-                $logger,
-                new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
-                $iteration_creation_DAO,
-                new IterationCreationsRunner(
+            new ProgramIncrementUpdateScheduler(
+                new PendingProgramIncrementUpdateDAO(),
+                new IterationReplicationScheduler(
+                    new ForgeConfigAdapter(),
+                    $iterations_linked_dao,
+                    $visibility_verifier,
+                    $iterations_linked_dao,
                     $logger,
-                    new QueueFactory($logger),
-                    new IterationCreationEventHandler(
+                    new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
+                    $iteration_creation_DAO,
+                    new IterationCreationsRunner(
                         $logger,
-                        $iteration_creation_DAO,
-                        $user_retriever,
-                        new IterationsDAO(),
-                        $visibility_verifier,
-                        $user_retriever,
-                        new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
-                        new ChangesetDAO(),
-                        $iteration_creation_DAO
-                    )
+                        new QueueFactory($logger),
+                        new IterationCreationEventHandler(
+                            $logger,
+                            $iteration_creation_DAO,
+                            $user_retriever,
+                            new IterationsDAO(),
+                            $visibility_verifier,
+                            $user_retriever,
+                            new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
+                            new ChangesetDAO(),
+                            $iteration_creation_DAO
+                        )
+                    ),
                 ),
             )
         );
