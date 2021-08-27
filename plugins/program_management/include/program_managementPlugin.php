@@ -99,6 +99,7 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetri
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -435,7 +436,7 @@ final class program_managementPlugin extends Plugin
                 new CanPrioritizeFeaturesDAO(),
                 new UGroupRepresentationBuilder()
             ),
-            new ProjectPermissionVerifier(),
+            new ProjectPermissionVerifier($user_manager_adapter),
             new ProgramIncrementsDAO(),
             new TrackerFactoryAdapter($tracker_factory),
             new IterationsDAO(),
@@ -462,7 +463,8 @@ final class program_managementPlugin extends Plugin
                     $this->getProgramManagementProjectAdapter(),
                     $user_manager_adapter
                 )
-            )
+            ),
+            $user_manager_adapter
         );
     }
 
@@ -1186,14 +1188,16 @@ final class program_managementPlugin extends Plugin
 
     public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
-        $importer = new ProgramManagementConfigXMLImporter(
+        $retrieve_user = new UserManagerAdapter(UserManager::instance());
+        $importer      = new ProgramManagementConfigXMLImporter(
             new PlanCreator(
                 new TrackerFactoryAdapter(\TrackerFactory::instance()),
                 new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
                 new PlanDao(),
                 new ProjectManagerAdapter(\ProjectManager::instance()),
                 new TeamDao(),
-                new ProjectPermissionVerifier()
+                new ProjectPermissionVerifier($retrieve_user),
+                $retrieve_user
             ),
             new ProgramManagementXMLConfigParser(),
             new ProgramManagementXMLConfigExtractor(
@@ -1205,9 +1209,10 @@ final class program_managementPlugin extends Plugin
         $importer->import(
             ProgramForAdministrationIdentifier::fromProject(
                 new TeamDao(),
-                new ProjectPermissionVerifier(),
-                $event->getUser(),
-                $event->getProject()
+                new ProjectPermissionVerifier($retrieve_user),
+                $retrieve_user,
+                UserProxy::buildFromPFUser($event->getUser()),
+                ProjectProxy::buildFromProject($event->getProject())
             ),
             $event->getExtractionPath(),
             $event->getCreatedTrackersMapping(),

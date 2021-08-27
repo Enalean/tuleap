@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-interface VerifyProjectPermission
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
+
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+
+/**
+ * @psalm-immutable
+ */
+final class ProjectProxy implements ProjectIdentifier
 {
-    public function isProjectAdministrator(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool;
+    private function __construct(private int $project_id)
+    {
+    }
+
+    public static function buildFromProject(\Project $project): self
+    {
+        return new self((int) $project->getID());
+    }
+    public function getId(): int
+    {
+        return $this->project_id;
+    }
 }

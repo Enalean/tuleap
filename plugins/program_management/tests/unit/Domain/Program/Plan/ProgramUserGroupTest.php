@@ -24,11 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistException;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,12 +33,7 @@ final class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->program = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            UserTestBuilder::aUser()->build(),
-            ProjectTestBuilder::aProject()->withId(101)->build()
-        );
+        $this->program = ProgramForAdministrationIdentifierBuilder::build();
     }
 
     public function testRejectIfUgroupDoesNotExist(): void

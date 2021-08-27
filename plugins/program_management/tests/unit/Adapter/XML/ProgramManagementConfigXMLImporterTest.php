@@ -23,13 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\XML;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CreatePlanStub;
 use Tuleap\ProgramManagement\Tests\Stub\ExtractXMLConfigStub;
 use Tuleap\ProgramManagement\Tests\Stub\ParseXMLConfigStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -130,12 +127,7 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
         );
 
         $importer->import(
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                $this->current_user,
-                ProjectTestBuilder::aProject()->withId(101)->build()
-            ),
+            ProgramForAdministrationIdentifierBuilder::build(),
             'path/to/xml',
             [
                 'T10' => 10,

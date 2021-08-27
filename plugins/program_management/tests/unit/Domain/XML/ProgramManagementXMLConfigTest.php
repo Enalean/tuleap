@@ -20,13 +20,9 @@
 
 namespace Tuleap\ProgramManagement\Domain\XML;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ExtractXMLConfigStub;
 use Tuleap\ProgramManagement\Tests\Stub\ParseXMLConfigStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,12 +40,7 @@ final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 null,
                 null
             ),
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                UserTestBuilder::aUser()->build(),
-                ProjectTestBuilder::aProject()->withId(101)->build()
-            ),
+            ProgramForAdministrationIdentifierBuilder::build(),
             'path/to/xml',
             []
         );
@@ -78,12 +69,7 @@ final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Rations de survie',
                 'ration'
             ),
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                UserTestBuilder::aUser()->build(),
-                ProjectTestBuilder::aProject()->withId(101)->build()
-            ),
+            ProgramForAdministrationIdentifierBuilder::build(),
             'path/to/xml',
             []
         );

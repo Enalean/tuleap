@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -30,28 +32,19 @@ use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class TeamCreator implements CreateTeam
 {
-    private RetrieveProject $project_retriever;
-    private VerifyIsTeam $team_verifier;
-    private VerifyProjectPermission $permission_verifier;
-    private BuildTeam $team_builder;
-    private TeamStore $team_store;
-
     public function __construct(
-        RetrieveProject $project_retriever,
-        VerifyIsTeam $team_verifier,
-        VerifyProjectPermission $permission_verifier,
-        BuildTeam $team_builder,
-        TeamStore $team_store
+        private RetrieveProject $project_retriever,
+        private VerifyIsTeam $team_verifier,
+        private VerifyProjectPermission $permission_verifier,
+        private BuildTeam $team_builder,
+        private TeamStore $team_store,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->project_retriever   = $project_retriever;
-        $this->team_verifier       = $team_verifier;
-        $this->permission_verifier = $permission_verifier;
-        $this->team_builder        = $team_builder;
-        $this->team_store          = $team_store;
     }
 
     /**
@@ -70,8 +63,9 @@ final class TeamCreator implements CreateTeam
         $program         = ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
-            $user,
-            $project
+            $this->retrieve_user,
+            UserProxy::buildFromPFUser($user),
+            ProjectProxy::buildFromProject($project)
         );
         $teams           = array_map(
             fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $user),

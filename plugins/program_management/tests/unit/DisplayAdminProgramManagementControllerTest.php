@@ -201,7 +201,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                     new BuildProjectStub(),
                     RetrieveUserStub::withUser($this->user)
                 )
-            )
+            ),
+            RetrieveUserStub::withGenericUser()
         );
     }
 

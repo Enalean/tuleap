@@ -22,23 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramUserGroupCollectionTest extends TestCase
 {
     public function testItBuildsFromRawIdentifiers(): void
     {
-        $program = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            UserTestBuilder::aUser()->build(),
-            ProjectTestBuilder::aProject()->withId(101)->build()
-        );
+        $program = ProgramForAdministrationIdentifierBuilder::build();
 
         $collection = ProgramUserGroupCollection::fromRawIdentifiers(
             RetrieveProgramUserGroupStub::withValidUserGroups(3, 4),

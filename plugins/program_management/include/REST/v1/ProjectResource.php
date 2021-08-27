@@ -115,7 +115,7 @@ final class ProjectResource extends AuthenticatedResource
         $explicit_backlog_dao        = new ExplicitBacklogDao();
         $this->user_manager_adapter  = new UserManagerAdapter($this->user_manager);
         $project_retriever           = new ProjectManagerAdapter($project_manager);
-        $project_permission_verifier = new ProjectPermissionVerifier();
+        $project_permission_verifier = new ProjectPermissionVerifier($this->user_manager_adapter);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
@@ -134,7 +134,8 @@ final class ProjectResource extends AuthenticatedResource
             $plan_dao,
             $project_retriever,
             $team_dao,
-            $project_permission_verifier
+            $project_permission_verifier,
+            $this->user_manager_adapter
         );
 
         $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
@@ -143,7 +144,8 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao,
             $project_permission_verifier,
             $team_adapter,
-            $team_dao
+            $team_dao,
+            $this->user_manager_adapter
         );
 
         $artifact_factory                   = \Tracker_ArtifactFactory::instance();

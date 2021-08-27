@@ -22,36 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class PlanCreator implements CreatePlan
 {
-    private RetrieveTracker $tracker_retriever;
-    private PlanStore $plan_store;
-    private RetrieveProgramUserGroup $ugroup_retriever;
-    private RetrieveProject $project_retriever;
-    private VerifyIsTeam $team_verifier;
-    private VerifyProjectPermission $permission_verifier;
-
     public function __construct(
-        RetrieveTracker $tracker_retriever,
-        RetrieveProgramUserGroup $ugroup_retriever,
-        PlanStore $plan_store,
-        RetrieveProject $project_retriever,
-        VerifyIsTeam $team_verifier,
-        VerifyProjectPermission $permission_verifier
+        private RetrieveTracker $tracker_retriever,
+        private RetrieveProgramUserGroup $ugroup_retriever,
+        private PlanStore $plan_store,
+        private RetrieveProject $project_retriever,
+        private VerifyIsTeam $team_verifier,
+        private VerifyProjectPermission $permission_verifier,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->tracker_retriever   = $tracker_retriever;
-        $this->ugroup_retriever    = $ugroup_retriever;
-        $this->plan_store          = $plan_store;
-        $this->project_retriever   = $project_retriever;
-        $this->team_verifier       = $team_verifier;
-        $this->permission_verifier = $permission_verifier;
     }
 
     public function create(PlanChange $plan_change): void
@@ -60,8 +51,9 @@ final class PlanCreator implements CreatePlan
         $program           = ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
-            $plan_change->user,
-            $project
+            $this->retrieve_user,
+            UserProxy::buildFromPFUser($plan_change->user),
+            ProjectProxy::buildFromProject($project)
         );
         $program_tracker   = ProgramIncrementTracker::buildProgramIncrementTracker(
             $this->tracker_retriever,

@@ -23,12 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,12 +41,7 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(123);
         $this->all_program_searcher      = AllProgramSearcherStub::buildPrograms(126);
         $this->user                      = UserTestBuilder::aUser()->build();
-        $this->program                   = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            $this->user,
-            ProjectTestBuilder::aProject()->withId(101)->build()
-        );
+        $this->program                   = ProgramForAdministrationIdentifierBuilder::build();
     }
 
     public function testBuildEmptyTeamsIfNoAggregatedTeamsAndNoProjectUserIsAdminOf(): void
@@ -91,12 +84,7 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             $this->teams_of_program_searcher,
             $this->all_program_searcher,
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                $this->user,
-                $program_project
-            ),
+            ProgramForAdministrationIdentifierBuilder::buildWithId(125),
             $this->user
         );
 

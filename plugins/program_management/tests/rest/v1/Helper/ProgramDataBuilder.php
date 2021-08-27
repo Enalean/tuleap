@@ -36,9 +36,13 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
@@ -66,7 +70,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $changeset_factory                    = Tracker_Artifact_ChangesetFactoryBuilder::build();
         $team_dao                             = new TeamDao();
         $program_dao                          = new ProgramDao();
-        $project_permissions_verifier         = new ProjectPermissionVerifier();
+        $project_permissions_verifier         = new ProjectPermissionVerifier(RetrieveUserStub::withGenericUser());
         $this->pending_program_increments_dao = new PendingArtifactCreationDao();
 
         $team_builder = new TeamAdapter($this->project_manager, $program_dao, new ExplicitBacklogDao());
@@ -95,11 +99,14 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $program_project = $this->getProjectByShortName(self::PROJECT_PROGRAM_NAME);
         $team_project    = $this->getProjectByShortName(self::PROJECT_TEAM_NAME);
 
+        $user_adapter = new UserManagerAdapter($user_manager);
+
         $program = ProgramForAdministrationIdentifier::fromProject(
             $team_dao,
             $project_permissions_verifier,
-            $this->user,
-            $program_project
+            $user_adapter,
+            UserProxy::buildFromPFUser($this->user),
+            ProjectProxy::buildFromProject($program_project)
         );
 
         $team = Team::buildForRestTest($team_builder, (int) $team_project->getID(), $this->user);

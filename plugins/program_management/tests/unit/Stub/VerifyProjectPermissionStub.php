@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class VerifyProjectPermissionStub implements VerifyProjectPermission
@@ -33,7 +35,7 @@ final class VerifyProjectPermissionStub implements VerifyProjectPermission
         $this->is_admin = $is_admin;
     }
 
-    public function isProjectAdministrator(\PFUser $user, \Project $project): bool
+    public function isProjectAdministrator(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool
     {
         return $this->is_admin;
     }

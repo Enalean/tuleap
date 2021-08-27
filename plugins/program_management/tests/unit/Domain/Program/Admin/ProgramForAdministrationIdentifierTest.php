@@ -20,29 +20,30 @@
 
 declare(strict_types=1);
 
-namespace unit\Domain\Program\Admin;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramForAdministrationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \Project $project;
-    private \PFUser $user;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
+    private ProjectIdentifierStub $project;
+    private UserIdentifierStub $user;
+    private RetrieveUserStub $retrieve_user;
 
     protected function setUp(): void
     {
-        $this->project             = ProjectTestBuilder::aProject()->withId(101)->build();
-        $this->user                = UserTestBuilder::aUser()->build();
+        $this->project             = ProjectIdentifierStub::build();
+        $this->user                = UserIdentifierStub::buildGenericUser();
         $this->team_verifier       = VerifyIsTeamStub::withNotValidTeam();
         $this->permission_verifier = VerifyProjectPermissionStub::withAdministrator();
+        $this->retrieve_user       = RetrieveUserStub::withGenericUser();
     }
 
     public function testItBuildsFromAProject(): void
@@ -50,6 +51,7 @@ final class ProgramForAdministrationIdentifierTest extends \Tuleap\Test\PHPUnit\
         $program = ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
+            $this->retrieve_user,
             $this->user,
             $this->project
         );
@@ -64,6 +66,7 @@ final class ProgramForAdministrationIdentifierTest extends \Tuleap\Test\PHPUnit\
         ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
+            $this->retrieve_user,
             $this->user,
             $this->project
         );
@@ -77,6 +80,7 @@ final class ProgramForAdministrationIdentifierTest extends \Tuleap\Test\PHPUnit\
         ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
+            $this->retrieve_user,
             $this->user,
             $this->project
         );

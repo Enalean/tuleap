@@ -22,12 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class ProjectPermissionVerifier implements VerifyProjectPermission
 {
-    public function isProjectAdministrator(\PFUser $user, \Project $project): bool
+    private RetrieveUser $retrieve_user;
+
+    public function __construct(RetrieveUser $retrieve_user)
     {
-        return $user->isAdmin((int) $project->getID());
+        $this->retrieve_user = $retrieve_user;
+    }
+
+    public function isProjectAdministrator(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool
+    {
+        $user = $this->retrieve_user->getUserWithId($user_identifier);
+        return $user->isAdmin($project_identifier->getId());
     }
 }

@@ -23,11 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramPlannableTrackerCollectionTest extends TestCase
@@ -38,12 +35,7 @@ final class ProgramPlannableTrackerCollectionTest extends TestCase
     protected function setUp(): void
     {
         $this->project_id = 101;
-        $this->program    = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            UserTestBuilder::aUser()->build(),
-            ProjectTestBuilder::aProject()->withId($this->project_id)->build()
-        );
+        $this->program    = ProgramForAdministrationIdentifierBuilder::build();
     }
 
     public function testItThrowsAnExceptionWhenTrackerListIsEmpty(): void
