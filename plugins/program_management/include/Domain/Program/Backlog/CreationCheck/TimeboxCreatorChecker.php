@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
@@ -57,6 +58,8 @@ class TimeboxCreatorChecker
             }
         }
 
+        $user_identifier = UserProxy::buildFromPFUser($user);
+
         if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors)) {
             $can_be_created = false;
             if (! $configuration_errors->shouldCollectAllIssues()) {
@@ -67,7 +70,7 @@ class TimeboxCreatorChecker
         try {
             $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_milestone_trackers);
 
-            if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user, $configuration_errors)) {
+            if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user_identifier, $configuration_errors)) {
                 $can_be_created = false;
                 if (! $configuration_errors->shouldCollectAllIssues()) {
                     return $can_be_created;

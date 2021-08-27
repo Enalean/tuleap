@@ -50,6 +50,14 @@ final class Field
         return $this->field->getId();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
+    public function getLabel(): string
+    {
+        return $this->field->getLabel();
+    }
+
     public function userCanSubmit(\PFUser $user): bool
     {
         return $this->field->userCanSubmit($user);
