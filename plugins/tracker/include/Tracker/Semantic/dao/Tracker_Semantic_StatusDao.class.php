@@ -85,4 +85,18 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
 
         return $row['nb'];
     }
+
+    public function getTrackerIdsWithoutSemanticStatusDefined(array $trackers_id): array
+    {
+        $trackers_id = $this->da->escapeIntImplode($trackers_id);
+
+        $sql = "SELECT tracker.id as id
+                FROM tracker
+                    LEFT JOIN tracker_semantic_status AS status
+                    ON (tracker.id = status.tracker_id)
+                WHERE tracker.id IN ($trackers_id)
+                    AND status.tracker_id IS NULL";
+
+        return $this->retrieveIds($sql);
+    }
 }

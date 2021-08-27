@@ -113,9 +113,9 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn($list_field);
 
-        $this->semantic_status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')
+        $this->semantic_status_dao->method('getTrackerIdsWithoutSemanticStatusDefined')
             ->with([1, 123, 124])
-            ->willReturn(0);
+            ->willReturn([]);
 
         $top_planning_tracker_semantic_status->expects(self::once())
             ->method('getOpenLabels')
@@ -186,9 +186,9 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn($list_field);
 
-        $this->semantic_status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')
+        $this->semantic_status_dao->method('getTrackerIdsWithoutSemanticStatusDefined')
             ->with([1, 123, 124])
-            ->willReturn(1);
+            ->willReturn([1]);
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
@@ -209,9 +209,9 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn($list_field);
 
-        $this->semantic_status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')
+        $this->semantic_status_dao->method('getTrackerIdsWithoutSemanticStatusDefined')
             ->with([1, 123, 124])
-            ->willReturn(0);
+            ->willReturn([]);
 
         $top_planning_tracker_semantic_status->expects(self::once())
             ->method('getOpenLabels')

@@ -56,11 +56,12 @@ final class StatusSemanticChecker implements CheckStatus
             return false;
         }
 
-        $nb_of_trackers_without_status = $this->semantic_status_dao->getNbOfTrackerWithoutSemanticStatusDefined(
-            $source_tracker_collection->getSourceTrackerIds()
+        $trackers_in_error = $this->getProgramTrackersWithoutStatusDefined(
+            $source_tracker_collection
         );
-        if ($nb_of_trackers_without_status > 0) {
-            $configuration_errors->addMissingSemanticInTeamErrors($source_tracker_collection->getSourceTrackers());
+
+        if (count($trackers_in_error) > 0) {
+            $configuration_errors->addMissingSemanticInTeamErrors($trackers_in_error);
             return false;
         }
 
@@ -76,5 +77,30 @@ final class StatusSemanticChecker implements CheckStatus
         }
 
         return true;
+    }
+
+    private function getProgramTrackersWithoutStatusDefined(SourceTrackerCollection $source_tracker_collection): array
+    {
+        $trackers_ids_without_status = $this->semantic_status_dao->getTrackerIdsWithoutSemanticStatusDefined(
+            $source_tracker_collection->getSourceTrackerIds()
+        );
+
+        if (count($trackers_ids_without_status) === 0) {
+            return [];
+        }
+
+        $mapping = [];
+        foreach ($source_tracker_collection->getSourceTrackers() as $program_tracker) {
+            $mapping[$program_tracker->getTrackerId()] = $program_tracker;
+        }
+
+        $trackers_in_error = [];
+        foreach ($trackers_ids_without_status as $tracker_id) {
+            if (array_key_exists($tracker_id, $mapping)) {
+                $trackers_in_error[] = $mapping[$tracker_id];
+            }
+        }
+
+        return $trackers_in_error;
     }
 }
