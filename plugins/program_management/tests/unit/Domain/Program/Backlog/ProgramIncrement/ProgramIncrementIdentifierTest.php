@@ -26,19 +26,20 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const PROGRAM_INCREMENT_ID = 96;
     private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::aUser()->build();
+        $this->user = UserTestBuilder::aUser()->withId(197)->build();
     }
 
     public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
@@ -51,10 +52,10 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $program_increment = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            1,
+            self::PROGRAM_INCREMENT_ID,
             $this->user
         );
-        self::assertEquals(1, $program_increment->getId());
+        self::assertEquals(self::PROGRAM_INCREMENT_ID, $program_increment->getId());
     }
 
     public function testItReturnsNullWhenArtifactUpdatedIsNotAProgramIncrement(): void
@@ -73,14 +74,18 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             $this->buildArtifactUpdated()
         );
-        self::assertSame(96, $program_increment->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $program_increment->getId());
     }
 
     private function buildArtifactUpdated(): ArtifactUpdatedEvent
     {
-        $tracker  = TrackerTestBuilder::aTracker()->withId(127)->build();
-        $artifact = ArtifactTestBuilder::anArtifact(96)->inTracker($tracker)->build();
-        $event    = new ArtifactUpdated($artifact, $this->user, ProjectTestBuilder::aProject()->build());
+        $tracker   = TrackerTestBuilder::aTracker()->withId(127)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(self::PROGRAM_INCREMENT_ID)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset('919')
+            ->ofArtifact($artifact)
+            ->submittedBy($this->user->getId())
+            ->build();
+        $event     = new ArtifactUpdated($artifact, $this->user, $changeset);
         return ArtifactUpdatedProxy::fromArtifactUpdated($event);
     }
 }

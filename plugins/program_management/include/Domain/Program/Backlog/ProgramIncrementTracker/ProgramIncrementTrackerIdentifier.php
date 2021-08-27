@@ -20,15 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-
-interface ArtifactUpdatedEvent
+/**
+ * I am the ID (identifier) of the Program Increment Tracker
+ * @psalm-immutable
+ */
+final class ProgramIncrementTrackerIdentifier
 {
-    public function getArtifactId(): int;
-    public function getTrackerId(): int;
-    public function getUser(): UserIdentifier;
-    public function getChangeset(): ChangesetIdentifier;
+    private function __construct(public int $id)
+    {
+    }
+
+    public static function fromId(VerifyIsProgramIncrementTracker $program_increment_verifier, int $tracker_id): ?self
+    {
+        if (! $program_increment_verifier->isProgramIncrementTracker($tracker_id)) {
+            return null;
+        }
+        return new self($tracker_id);
+    }
 }

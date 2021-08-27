@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Test\Builders;
 use Project;
 use Tuleap\Tracker\TrackerColor;
 
-class TrackerTestBuilder
+final class TrackerTestBuilder
 {
     /**
      * @var TrackerColor
