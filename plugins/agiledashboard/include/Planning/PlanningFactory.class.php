@@ -20,8 +20,9 @@
 
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\RetrievePlannings;
+use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
 
-class PlanningFactory implements RetrievePlannings
+class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
 {
     private PlanningDao $dao;
     private TrackerFactory $tracker_factory;
@@ -192,12 +193,8 @@ class PlanningFactory implements RetrievePlannings
      * Return the planning at the top of planning hierarchy
      *
      * Note: if there are several parallel, we only return the fist one
-     *
-     * @param int $group_id
-     *
-     * @return Planning | false
      */
-    public function getRootPlanning(PFUser $user, $group_id)
+    public function getRootPlanning(PFUser $user, int $group_id): Planning|false
     {
         $project_plannings = $this->getOrderedPlanningsWithBacklogTracker($user, $group_id);
         reset($project_plannings);

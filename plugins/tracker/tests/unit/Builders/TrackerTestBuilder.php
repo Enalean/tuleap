@@ -76,6 +76,13 @@ final class TrackerTestBuilder
         return $this;
     }
 
+    public function withShortName(string $name): self
+    {
+        $this->short_name = $name;
+
+        return $this;
+    }
+
     public function withColor(TrackerColor $color): self
     {
         $this->color = $color;

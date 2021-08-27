@@ -170,7 +170,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive('get')->once()->withArgs(['planning_id'])->andReturn(42);
         $this->event_manager->shouldReceive('dispatch')->once();
 
-        $root_planning = Mockery::mock(\Planning_Milestone::class);
+        $root_planning = Mockery::mock(\Planning::class);
         $root_planning->shouldReceive('getId')->andReturn(109);
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($root_planning);
         $this->planning_factory->shouldReceive('deletePlanning')->once()->withArgs([42]);
@@ -191,7 +191,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive('get')->once()->withArgs(['planning_id'])->andReturn(42);
         $this->event_manager->shouldReceive('dispatch')->once();
 
-        $root_planning = Mockery::mock(\Planning_Milestone::class);
+        $root_planning = Mockery::mock(\Planning::class);
         $root_planning->shouldReceive('getId')->andReturn(42);
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($root_planning);
         $this->planning_factory->shouldReceive('deletePlanning')->once()->withArgs([42]);

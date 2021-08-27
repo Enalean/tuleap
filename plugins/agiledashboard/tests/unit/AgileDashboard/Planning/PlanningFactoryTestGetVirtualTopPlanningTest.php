@@ -61,7 +61,7 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends \Tuleap\Test\PH
     {
         $this->expectException(Planning_NoPlanningsException::class);
 
-        $this->partial_factory->shouldReceive('getRootPlanning')->andReturn(null);
+        $this->partial_factory->shouldReceive('getRootPlanning')->andReturn(false);
         $this->partial_factory->getVirtualTopPlanning(Mockery::mock(\PFUser::class), 112);
     }
 

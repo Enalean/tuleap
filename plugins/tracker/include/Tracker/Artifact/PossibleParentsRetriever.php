@@ -18,24 +18,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\Tracker\Artifact\PossibleParentSelector;
+namespace Tuleap\Tracker\Artifact;
 
-class Tracker_Artifact_PossibleParentsRetriever
+use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tracker;
+use Tracker_ArtifactFactory;
+
+class PossibleParentsRetriever
 {
-    public function __construct(private Tracker_ArtifactFactory $artifact_factory, private EventDispatcherInterface $event_dispatcher)
-    {
+    public function __construct(
+        private Tracker_ArtifactFactory $artifact_factory,
+        private EventDispatcherInterface $event_dispatcher
+    ) {
     }
 
-    public function getPossibleArtifactParents(Tracker $parent_tracker, PFUser $user, $limit, $offset): PossibleParentSelector
-    {
-        $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $parent_tracker));
+    public function getPossibleArtifactParents(
+        Tracker $tracker,
+        PFUser $user,
+        int $limit,
+        int $offset,
+        bool $can_create
+    ): PossibleParentSelector {
+        $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $tracker));
 
         if ($possible_parents->getPossibleParents()) {
             return $possible_parents;
         }
 
+        $parent_tracker = $tracker->getParentUserCanView($user);
+        if (! $parent_tracker) {
+            $possible_parents->disableSelector();
+            return $possible_parents;
+        }
+
         $possible_parents->setLabel(sprintf(dgettext('tuleap-tracker', 'Open %1$s'), $parent_tracker->getName()));
+        $possible_parents->setParentLabel($parent_tracker->getItemName());
         $possible_parents->setPossibleParents(
             $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
                 $user,
@@ -44,6 +62,9 @@ class Tracker_Artifact_PossibleParentsRetriever
                 $offset
             )
         );
+        if (! $can_create) {
+            $possible_parents->disableCreate();
+        }
 
         return $possible_parents;
     }

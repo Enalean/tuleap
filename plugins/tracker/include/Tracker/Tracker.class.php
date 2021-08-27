@@ -3081,6 +3081,25 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->parent = $tracker;
     }
 
+    public function getParentUserCanView(PFUser $user): ?Tracker
+    {
+        $parent = $this->getParent();
+
+        if (! $parent) {
+            return null;
+        }
+
+        if ($parent->isDeleted()) {
+            return null;
+        }
+
+        if (! $parent->userCanView($user)) {
+            return null;
+        }
+
+        return $parent;
+    }
+
     /**
      * Return parent tracker of current tracker (if any)
      */

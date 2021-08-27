@@ -160,7 +160,7 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->with($this->user, 101)
-            ->andReturnNull();
+            ->andReturnFalse();
 
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }

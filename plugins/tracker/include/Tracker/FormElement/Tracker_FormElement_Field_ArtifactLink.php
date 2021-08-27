@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
@@ -320,7 +321,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $current_user   = $this->getCurrentUser();
         $can_create     = false;
 
-        return $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
+        return $this->fetchParentSelector($prefill_parent, $name, $current_user, $can_create);
     }
 
     public function fetchSubmitForOverlay(array $submitted_values)
@@ -339,7 +340,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             return '';
         }
 
-        return $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
+        return $this->fetchParentSelector($prefill_parent, $name, $current_user, $can_create);
     }
 
     private function getArtifactLinkIdsOfLastChangeset(?Artifact $artifact = null)
@@ -457,27 +458,27 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function fetchParentSelector(
         string $prefill_parent,
         string $name,
-        Tracker $parent_tracker,
         PFUser $user,
         bool $can_create
     ): string {
         $purifier                  = Codendi_HTMLPurifier::instance();
-        $possible_parents_getr     = new Tracker_Artifact_PossibleParentsRetriever($this->getArtifactFactory(), EventManager::instance());
+        $possible_parents_getr     = new PossibleParentsRetriever($this->getArtifactFactory(), EventManager::instance());
         $html                      = '';
         $html                     .= '<div class="tracker-artlink-add-parent">';
         $possible_parents_selector = $possible_parents_getr->getPossibleArtifactParents(
-            $parent_tracker,
+            $this->getTracker(),
             $user,
             0,
-            0
+            0,
+            $can_create,
         );
         $possible_parents          = $possible_parents_selector->getPossibleParents()?->getArtifacts();
         if ($possible_parents_selector->isSelectorDisplayed()) {
             $html .= '<label>';
-            $html .= sprintf(dgettext('tuleap-tracker', 'Select %1$s parent:'), $purifier->purify($parent_tracker->getItemName()));
+            $html .= sprintf(dgettext('tuleap-tracker', 'Select %1$s parent:'), $purifier->purify($possible_parents_selector->getParentLabel()));
             $html .= '<select name="' . $purifier->purify($name) . '[parent]">';
             $html .= '<option value="">' . $GLOBALS['Language']->getText('global', 'please_choose_dashed') . '</option>';
-            if ($can_create) {
+            if ($possible_parents_selector->canCreate()) {
                 $html .= '<option value="' . self::CREATE_NEW_PARENT_VALUE . '">' . dgettext('tuleap-tracker', 'Create a new one') . '</option>';
             }
             $html .= $this->fetchArtifactParentsOptions($prefill_parent, $possible_parents_selector->getLabel(), $possible_parents ?? []);
@@ -602,11 +603,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html .= '</span>';
             $html .= '</div>';
 
-            $parent_tracker = $this->getTracker()->getParent();
-
-            if ($parent_tracker && $artifact->getParentWithoutPermissionChecking() === null) {
+            if ($artifact->getParentWithoutPermissionChecking() === null) {
                 $can_create = $artifact->getId() == -1;
-                $html      .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
+                $html      .= $this->fetchParentSelector($prefill_parent, $name, $current_user, $can_create);
             }
             $html .= '</div>';
             $html .= '</section>'; // end of tracker_formelement_read_and_edit_edition_section

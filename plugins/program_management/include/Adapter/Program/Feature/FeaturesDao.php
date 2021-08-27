@@ -61,4 +61,27 @@ final class FeaturesDao extends DataAccessObject implements FeaturesStore
 
         return $this->getDB()->run($sql, $program->getId());
     }
+
+    public function searchOpenFeatures(ProgramIdentifier $program): array
+    {
+        $sql = <<<SQL
+            SELECT artifact.id AS artifact_id
+                FROM `groups` AS project
+                    INNER JOIN tracker ON tracker.group_id = project.group_id
+                    INNER JOIN plugin_program_management_plan AS plan
+                        ON plan.plannable_tracker_id = tracker.id
+                    INNER JOIN tracker_artifact AS artifact ON artifact.tracker_id = tracker.id
+                    INNER JOIN tracker_changeset ON (artifact.last_changeset_id = tracker_changeset.id)
+                    -- get open artifacts
+                    INNER JOIN (
+                    tracker_semantic_status AS status
+                        INNER JOIN tracker_changeset_value AS status_changeset ON (status.field_id = status_changeset.field_id)
+                        INNER JOIN tracker_changeset_value_list AS status_value
+                            ON (status_changeset.id = status_value.changeset_value_id AND status.open_value_id = status_value.bindvalue_id)
+                    ) ON (tracker.id = status.tracker_id AND tracker_changeset.id = status_changeset.changeset_id)
+            WHERE project.group_id = ?
+            ORDER BY tracker.id, artifact_id DESC
+            SQL;
+        return $this->getDB()->run($sql, $program->getId());
+    }
 }

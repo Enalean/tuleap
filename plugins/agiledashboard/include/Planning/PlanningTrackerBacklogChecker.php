@@ -41,7 +41,7 @@ class PlanningTrackerBacklogChecker
 
     public function isTrackerBacklogOfProjectRootPlanning(Tracker $tracker, PFUser $user): bool
     {
-        $root_planning = $this->planning_factory->getRootPlanning($user, $tracker->getGroupId());
+        $root_planning = $this->planning_factory->getRootPlanning($user, (int) $tracker->getGroupId());
         if (! $root_planning) {
             return false;
         }

@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,26 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+namespace Tuleap\Tracker\Artifact;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-
-/**
- * @psalm-type ArtifactFeature=array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}
- */
-interface FeaturesStore
+interface RetrieveArtifact
 {
     /**
-     * @psalm-return ArtifactFeature[]
+     * @param int $id
      */
-    public function searchPlannableFeatures(ProgramIdentifier $program): array;
-
-    /**
-     * @psalm-return ArtifactFeature[]
-     */
-    public function searchOpenFeatures(ProgramIdentifier $program): array;
+    public function getArtifactById($id): ?Artifact;
 }

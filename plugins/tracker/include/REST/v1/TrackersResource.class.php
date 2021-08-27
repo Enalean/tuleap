@@ -24,7 +24,7 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use PFUser;
 use Tracker;
-use Tracker_Artifact_PossibleParentsRetriever;
+use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Report;
@@ -546,10 +546,8 @@ class TrackersResource extends AuthenticatedResource
             $tracker->getProject()
         );
 
-        $parent = $this->getParentTracker($user, $tracker);
-
-        $possible_parents_getr = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory, \EventManager::instance());
-        $possible_parents      = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);
+        $possible_parents_getr = new PossibleParentsRetriever($this->tracker_artifact_factory, \EventManager::instance());
+        $possible_parents      = $possible_parents_getr->getPossibleArtifactParents($tracker, $user, $limit, $offset, false);
         $pagination            = $possible_parents->getPossibleParents();
         if ($pagination && $possible_parents->isSelectorDisplayed()) {
             $nb_matching = $pagination->getTotalSize();

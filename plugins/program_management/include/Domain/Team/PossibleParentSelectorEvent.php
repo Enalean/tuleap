@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,26 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-/**
- * @psalm-type ArtifactFeature=array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}
- */
-interface FeaturesStore
+interface PossibleParentSelectorEvent
 {
-    /**
-     * @psalm-return ArtifactFeature[]
-     */
-    public function searchPlannableFeatures(ProgramIdentifier $program): array;
+    public function getUser(): UserIdentifier;
+
+    public function trackerIsInRootPlanning(): bool;
 
     /**
-     * @psalm-return ArtifactFeature[]
+     * @psalm-mutation-free
      */
-    public function searchOpenFeatures(ProgramIdentifier $program): array;
+    public function getProjectId(): int;
+
+    public function disableCreate(): void;
+
+    public function setPossibleParents(FeatureIdentifier ...$features): void;
 }

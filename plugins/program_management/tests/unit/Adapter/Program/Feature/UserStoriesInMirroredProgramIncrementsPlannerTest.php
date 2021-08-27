@@ -184,7 +184,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             ->once()->andReturn([new MirroredTimebox($milestone_id)]);
 
         $this->tracker_artifact_factory->shouldReceive('getArtifactById')
-            ->once()->with($milestone_id)->andReturn([]);
+            ->once()->with($milestone_id)->andReturn(null);
 
         $this->planner->plan($change);
     }
