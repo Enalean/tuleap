@@ -110,7 +110,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForTransition(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowTransitionRulesError(1);
+        $errors_collector->addWorkflowTransitionRulesError(TrackerReferenceBuilder::buildWithId(1));
 
 
         $presenter = TrackerErrorPresenter::fromTracker(
@@ -128,7 +128,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForGlobalRules(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowTransitionDateRulesError(1);
+        $errors_collector->addWorkflowTransitionDateRulesError(TrackerReferenceBuilder::buildWithId(1));
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
@@ -145,7 +145,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForFieldDependency(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowDependencyError(1);
+        $errors_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1));
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,

@@ -107,19 +107,19 @@ final class ConfigurationErrorsCollector
         $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker_reference);
     }
 
-    public function addWorkflowTransitionRulesError(int $tracker_id): void
+    public function addWorkflowTransitionRulesError(TrackerReference $tracker_reference): void
     {
-        $this->transition_rule_error[] = new WorkFlowErrorPresenter($tracker_id);
+        $this->transition_rule_error[] = new WorkFlowErrorPresenter($tracker_reference);
     }
 
-    public function addWorkflowTransitionDateRulesError(int $tracker_id): void
+    public function addWorkflowTransitionDateRulesError(TrackerReference $tracker_reference): void
     {
-        $this->transition_rule_date_error[] = new WorkFlowErrorPresenter($tracker_id);
+        $this->transition_rule_date_error[] = new WorkFlowErrorPresenter($tracker_reference);
     }
 
-    public function addWorkflowDependencyError(int $tracker_id): void
+    public function addWorkflowDependencyError(TrackerReference $tracker_reference): void
     {
-        $this->field_dependency_error[] = new WorkFlowErrorPresenter($tracker_id);
+        $this->field_dependency_error[] = new WorkFlowErrorPresenter($tracker_reference);
     }
 
     public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker): void

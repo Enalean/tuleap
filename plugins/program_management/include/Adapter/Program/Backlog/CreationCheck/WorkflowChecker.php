@@ -26,21 +26,25 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 final class WorkflowChecker implements CheckWorkflow
 {
     private \Workflow_Dao $workflow_dao;
     private \Tracker_Rule_Date_Dao $tracker_rule_date_dao;
     private \Tracker_Rule_List_Dao $tracker_rule_list_dao;
+    private \TrackerFactory $tracker_factory;
 
     public function __construct(
         \Workflow_Dao $workflow_dao,
         \Tracker_Rule_Date_Dao $tracker_rule_date_dao,
-        \Tracker_Rule_List_Dao $tracker_rule_list_dao
+        \Tracker_Rule_List_Dao $tracker_rule_list_dao,
+        \TrackerFactory $tracker_factory
     ) {
         $this->workflow_dao          = $workflow_dao;
         $this->tracker_rule_date_dao = $tracker_rule_date_dao;
         $this->tracker_rule_list_dao = $tracker_rule_list_dao;
+        $this->tracker_factory       = $tracker_factory;
     }
 
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
@@ -87,7 +91,10 @@ final class WorkflowChecker implements CheckWorkflow
         $is_valid = true;
         if (count($workflow_transition_rules) > 0) {
             foreach ($workflow_transition_rules as $rule) {
-                $errors_collector->addWorkflowTransitionRulesError($rule['tracker_id']);
+                $tracker = $this->tracker_factory->getTrackerById($rule['tracker_id']);
+                if ($tracker) {
+                    $errors_collector->addWorkflowTransitionRulesError(TrackerReference::fromTracker($tracker));
+                }
             }
             $is_valid = false;
             if (! $errors_collector->shouldCollectAllIssues()) {
@@ -111,7 +118,10 @@ final class WorkflowChecker implements CheckWorkflow
         $is_valid = true;
         if (count($tracker_ids_with_date_rules) > 0) {
             foreach ($tracker_ids_with_date_rules as $tracker_id) {
-                $errors_collector->addWorkflowTransitionDateRulesError($tracker_id);
+                $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+                if ($tracker) {
+                    $errors_collector->addWorkflowTransitionDateRulesError(TrackerReference::fromTracker($tracker));
+                }
             }
             $is_valid = false;
             if (! $errors_collector->shouldCollectAllIssues()) {
@@ -135,7 +145,10 @@ final class WorkflowChecker implements CheckWorkflow
         $is_valid = true;
         if (count($tracker_ids_with_list_rules) > 0) {
             foreach ($tracker_ids_with_list_rules as $tracker_id) {
-                $errors_collector->addWorkflowDependencyError($tracker_id);
+                $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+                if ($tracker) {
+                    $errors_collector->addWorkflowDependencyError(TrackerReference::fromTracker($tracker));
+                }
             }
             $is_valid = false;
             if (! $errors_collector->shouldCollectAllIssues()) {
