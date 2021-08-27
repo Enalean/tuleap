@@ -25,11 +25,13 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
@@ -53,20 +55,20 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_Rule_List_Dao
      */
     private $rule_list_dao;
-    private RetrieveTrackerFromFieldStub $retrieve_tracker_from_field;
-    private RetrieveUserStub $retrieve_user;
+    private RetrieveTrackerFromField $retrieve_tracker_from_field;
+    private RetrieveUser $retrieve_user;
 
     protected function setUp(): void
     {
         $this->workflow_dao                = $this->createMock(\Workflow_Dao::class);
         $this->rule_date_dao               = $this->createMock(\Tracker_Rule_Date_Dao::class);
         $this->rule_list_dao               = $this->createMock(\Tracker_Rule_List_Dao::class);
+        $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
         $this->checker                     = new WorkflowChecker(
             $this->workflow_dao,
             $this->rule_date_dao,
             $this->rule_list_dao
         );
-        $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
         $this->retrieve_user               = RetrieveUserStub::withGenericUser();
     }
 

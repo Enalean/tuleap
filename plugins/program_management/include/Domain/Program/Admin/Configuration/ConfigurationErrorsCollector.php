@@ -122,14 +122,14 @@ final class ConfigurationErrorsCollector
         $this->field_dependency_error[] = new WorkFlowErrorPresenter($tracker_id);
     }
 
-    public function addSubmitFieldPermissionError(int $field_id, string $label, int $tracker_id): void
+    public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker): void
     {
-        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker_id);
+        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker);
     }
 
-    public function addUpdateFieldPermissionError(int $field_id, string $label, int $tracker_id): void
+    public function addUpdateFieldPermissionError(int $field_id, string $label, TrackerReference $tracker): void
     {
-        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker_id);
+        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker);
     }
 
     public function userCanNotSubmitInTeam(int $team_tracker_id): void

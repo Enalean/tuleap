@@ -2,11 +2,12 @@
     <li>
         {{# dgettext }}
             tuleap-program_management |
-            User can not submit the field <a href='%s'>#%s</a> (%s) of tracker #%s |
+            User can not submit the field <a href='%s'>#%s</a> (%s) of tracker #%s (%s) |
             {{ field_url }} |
             {{ field_id }} |
             {{ label }} |
-            {{ tracker_id }}
+            {{ tracker_id }} |
+            {{ tracker_name }}
         {{/ dgettext }}
 
     </li>
@@ -16,11 +17,12 @@
     <li>
         {{# dgettext }}
             tuleap-program_management |
-            User can not update the field <a href='%s'>#%s</a> (%s) of tracker #%s |
+            User can not update the field <a href='%s'>#%s</a> (%s) of tracker #%s (%s) |
             {{ field_url }} |
             {{ field_id }} |
             {{ label }} |
-            {{ tracker_id}}
+            {{ tracker_id }} |
+            {{ tracker_name}}
         {{/ dgettext }}
 
     </li>

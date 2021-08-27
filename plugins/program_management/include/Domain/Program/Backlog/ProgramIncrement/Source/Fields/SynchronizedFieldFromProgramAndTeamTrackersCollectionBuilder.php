@@ -32,7 +32,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
         private BuildSynchronizedFields $fields_adapter,
         private LoggerInterface $logger,
         private RetrieveUser $retrieve_user,
-        private RetrieveTrackerFromField $tracker_from_field_retriever
+        private RetrieveTrackerFromField $retrieve_tracker_from_field
     ) {
     }
 
@@ -42,7 +42,11 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
     public function buildFromSourceTrackers(
         SourceTrackerCollection $source_tracker_collection
     ): SynchronizedFieldFromProgramAndTeamTrackersCollection {
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($this->logger, $this->retrieve_user, $this->tracker_from_field_retriever);
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
+            $this->logger,
+            $this->retrieve_user,
+            $this->retrieve_tracker_from_field
+        );
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $collection->add(
                 new SynchronizedFieldFromProgramAndTeamTrackers($this->fields_adapter->build($source_tracker))

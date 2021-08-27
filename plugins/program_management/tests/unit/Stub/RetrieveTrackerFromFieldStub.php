@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use JetBrains\PhpStorm\Pure;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
@@ -40,14 +40,9 @@ final class RetrieveTrackerFromFieldStub implements RetrieveTrackerFromField
         $this->name = $name;
     }
 
-    public static function with(int $id, string $name): self
+    #[Pure] public static function with(int $id, string $name): self
     {
         return new self($id, $name);
-    }
-
-    public function fromField(Field $field): TrackerReference
-    {
-        return TrackerReferenceBuilder::buildWithIdAndName($this->id, $this->name);
     }
 
     public function fromFieldId(int $field_id): TrackerReference
