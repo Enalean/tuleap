@@ -6,11 +6,11 @@
   "private": true,
   "dependencies": {
     "@tuleap/angular-tlp": "file:../../src/scripts/lib/angular-tlp",
+    "@uirouter/angularjs": "^1.0.29",
     "angular": "^1.8.2",
     "angular-filter": "^0.5.17",
     "angular-gettext": "^2.4.2",
     "angular-sanitize": "^1.8.2",
-    "angular-ui-router": "^1.0.25",
     "ng-showdown": "^1.1.0"
   },
   "devDependencies": {
