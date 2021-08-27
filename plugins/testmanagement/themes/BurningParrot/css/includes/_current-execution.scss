@@ -246,6 +246,12 @@ execution-with-steps.current-test-content {
     }
 
     > .tlp-button-secondary.tlp-button-outline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(0.75rem + 2px * var(--tlp-small-spacing));
+        margin: calc(-1 * var(--tlp-small-spacing)) calc(-1 * var(--tlp-small-spacing)) 0 0;
+        padding: var(--tlp-small-spacing);
         transition: opacity 100ms ease-in-out, color 100ms ease-in-out;
         border: 0;
         border-radius: 50%;
