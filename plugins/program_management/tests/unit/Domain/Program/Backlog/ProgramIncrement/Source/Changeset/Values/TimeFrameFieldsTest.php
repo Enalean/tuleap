@@ -34,9 +34,8 @@ final class TimeFrameFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $fields = TimeFrameFields::fromStartDateAndDuration(new Field($start_date_field), new Field($duration_field));
 
-        self::assertSame($start_date_field, $fields->getStartDateField()->getFullField());
-        self::assertInstanceOf(\Tracker_FormElement_Field_Integer::class, $fields->getEndPeriodField()->getFullField());
-        self::assertSame($duration_field, $fields->getEndPeriodField()->getFullField());
+        self::assertSame($start_date_field->getId(), $fields->getStartDateField()->getId());
+        self::assertSame($duration_field->getId(), $fields->getEndPeriodField()->getId());
     }
 
     public function testItCanBeAStartDateAndEndDate(): void
@@ -46,8 +45,7 @@ final class TimeFrameFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $fields = TimeFrameFields::fromStartAndEndDates(new Field($start_date_field), new Field($end_date_field));
 
-        self::assertSame($start_date_field, $fields->getStartDateField()->getFullField());
-        self::assertInstanceOf(\Tracker_FormElement_Field_Date::class, $fields->getEndPeriodField()->getFullField());
-        self::assertSame($end_date_field, $fields->getEndPeriodField()->getFullField());
+        self::assertSame($start_date_field->getId(), $fields->getStartDateField()->getId());
+        self::assertSame($end_date_field->getId(), $fields->getEndPeriodField()->getId());
     }
 }
