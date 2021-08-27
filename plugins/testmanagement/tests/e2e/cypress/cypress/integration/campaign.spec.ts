@@ -324,9 +324,11 @@ describe("TTM campaign", () => {
 
                     cy.get("[data-test=mark-test-as-failed]").click();
                     cy.get("[data-test=current-test").should("have.class", "failed");
-                    cy.get("[data-test=current-test-comment-preview]").contains(
-                        "A screenshot has been attached"
-                    );
+                    cy.get("[data-test=current-test-comment-preview]").within(() => {
+                        // ignore rule for image stored in ckeditor
+                        // eslint-disable-next-line cypress/require-data-selectors
+                        cy.get("img").should("have.attr", "src").should("include", "blank.gif");
+                    });
                     cy.get("[data-test=expand-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
                         // ignore rule for image stored in ckeditor
