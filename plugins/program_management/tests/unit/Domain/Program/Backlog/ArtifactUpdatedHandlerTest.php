@@ -27,9 +27,12 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunIterationsCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StorePendingIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
@@ -82,30 +85,38 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             $this->program_increment_verifier,
             $this->user_stories_planner,
             $this->feature_remover,
-            new IterationReplicationScheduler(
-                VerifyIterationsFeatureActiveStub::withActiveFeature(),
-                SearchIterationsStub::withIterationIds(101, 102),
-                VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-                VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-                $this->logger,
-                RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
-                new class implements StorePendingIterations {
-                    public function storePendingIterationCreations(IterationCreation ...$creations): void
+            new ProgramIncrementUpdateScheduler(
+                new class implements StoreProgramIncrementUpdate {
+                    public function storeUpdate(ProgramIncrementUpdate $update): void
                     {
                         // Side effects
                     }
                 },
-                new class implements RunIterationsCreation {
-                    public function scheduleIterationCreations(IterationCreation ...$creations): void
-                    {
-                        // Side effects
+                new IterationReplicationScheduler(
+                    VerifyIterationsFeatureActiveStub::withActiveFeature(),
+                    SearchIterationsStub::withIterationIds(101, 102),
+                    VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+                    VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
+                    $this->logger,
+                    RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
+                    new class implements StorePendingIterations {
+                        public function storePendingIterationCreations(IterationCreation ...$creations): void
+                        {
+                            // Side effects
+                        }
+                    },
+                    new class implements RunIterationsCreation {
+                        public function scheduleIterationCreations(IterationCreation ...$creations): void
+                        {
+                            // Side effects
+                        }
                     }
-                }
+                )
             )
         );
     }
 
-    public function testItCleansUpTopBacklogAndPlansUserStoriesAndCreatesIterationMirrors(): void
+    public function testItCleansUpTopBacklogAndPlansUserStoriesAndSchedulesProgramIncrementUpdate(): void
     {
         $this->user_stories_planner->expects(self::once())->method('plan');
         $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
