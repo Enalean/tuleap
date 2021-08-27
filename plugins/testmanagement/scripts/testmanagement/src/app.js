@@ -19,7 +19,7 @@
 
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
-import ui_router from "angular-ui-router";
+import ui_router from "@uirouter/angularjs";
 import angular_artifact_modal from "@tuleap/plugin-tracker-artifact-modal";
 import angular_tlp from "@tuleap/angular-tlp";
 import angular_moment from "angular-moment";

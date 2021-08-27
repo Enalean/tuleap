@@ -19,7 +19,7 @@
 
 import execution_module from "./execution.js";
 import angular from "angular";
-import ui_router from "angular-ui-router";
+import ui_router from "@uirouter/angularjs";
 import "angular-mocks";
 
 describe("ExecutionListFilter", function () {
