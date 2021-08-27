@@ -32,77 +32,64 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private RetrieveTrackerFromField $retrieve_tracker_from_field;
     private TestLogger $logger;
-    private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $collection_builder;
     private UserIdentifier $user_identifier;
-    private SynchronizedFieldFromProgramAndTeamTrackersCollection $collection;
 
     protected function setUp(): void
     {
-        $retrieve_user               = RetrieveUserStub::withGenericUser();
-        $retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
-        $fields_adapter              = $this->createStub(BuildSynchronizedFields::class);
-        $this->user_identifier       = UserIdentifierStub::buildGenericUser();
-        $this->logger                = new TestLogger();
-        $this->collection_builder    = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-            $fields_adapter,
-            $this->logger,
-            $retrieve_user,
-            $retrieve_tracker_from_field
-        );
-        $this->collection            = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
-            $this->logger,
-            $retrieve_user,
-            $retrieve_tracker_from_field
-        );
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->logger          = new TestLogger();
     }
 
     public function testCanUserSubmitAndUpdateAllFieldsReturnsTrue(): void
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $this->collection->add($synchronized_field_data);
+        $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
+        $collection->add($synchronized_field_data);
         $this->assertTrue(
-            $this->collection->canUserSubmitAndUpdateAllFields(
+            $collection->canUserSubmitAndUpdateAllFields(
                 $this->user_identifier,
                 new ConfigurationErrorsCollector(false)
             )
         );
     }
 
-    public function testItReturnsFalseWhenUserCantSubmitOneField(): void
+    public function testItReturnsFalseWhenUserCantSubmitFields(): void
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
 
-        $this->collection->add($synchronized_field_data);
+        $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantSubmit());
+        $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(true);
         $this->assertFalse(
-            $this->collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
+            $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
-        self::assertCount(1, $errors_collector->getNonSubmittableFields());
+
+        self::assertGreaterThan(1, $errors_collector->getNonSubmittableFields());
         self::assertSame(1, $errors_collector->getNonSubmittableFields()[0]->field_id);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    public function testItReturnsFalseWhenUserCantUpdateOneField(): void
+    public function testItReturnsFalseWhenUserCantUpdateFields(): void
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
 
-        $this->collection->add($synchronized_field_data);
+        $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantUpdate());
+        $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(true);
         $this->assertFalse(
-            $this->collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
+            $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
-        self::assertCount(1, $errors_collector->getNonUpdatableFields());
+        self::assertGreaterThan(1, $errors_collector->getNonUpdatableFields());
         self::assertSame(1, $errors_collector->getNonUpdatableFields()[0]->field_id);
         self::assertFalse($this->logger->hasDebugRecords());
     }
@@ -111,10 +98,11 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
 
-        $this->collection->add($synchronized_field_data);
+        $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantSubmit());
+        $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(false);
         $this->assertFalse(
-            $this->collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
+            $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
         self::assertCount(1, $errors_collector->getNonSubmittableFields());
         self::assertTrue($this->logger->hasDebugRecords());
@@ -124,10 +112,11 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
 
-        $this->collection->add($synchronized_field_data);
+        $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantUpdate());
+        $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(false);
         $this->assertFalse(
-            $this->collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
+            $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
         self::assertCount(1, $errors_collector->getNonUpdatableFields());
         self::assertTrue($this->logger->hasDebugRecords());
@@ -140,20 +129,22 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $this->collection->add($synchronized_field_data);
-        $this->assertTrue($this->collection->isFieldSynchronized($field));
+        $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
+        $collection->add($synchronized_field_data);
+        $this->assertTrue($collection->isFieldSynchronized($field));
 
         $not_synchronized_field = M::mock(\Tracker_FormElement_Field::class);
         $not_synchronized_field->shouldReceive('getId')->andReturn('1024');
-        $this->assertFalse($this->collection->isFieldSynchronized($not_synchronized_field));
+        $this->assertFalse($collection->isFieldSynchronized($not_synchronized_field));
     }
 
     public function testCanObtainsTheSynchronizedFieldIDs(): void
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $this->collection->add($synchronized_field_data);
-        $this->assertEquals([1, 2, 3, 4, 5, 6], $this->collection->getSynchronizedFieldIDs());
+        $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
+        $collection->add($synchronized_field_data);
+        $this->assertEquals([1, 2, 3, 4, 5, 6], $collection->getSynchronizedFieldIDs());
     }
 
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(
@@ -201,7 +192,18 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     private function mockField(MockInterface $field, int $id, bool $submitable, bool $updatable): void
     {
         $field->shouldReceive('getId')->andReturn($id);
+        $field->shouldReceive('getLabel')->andReturn("A field");
         $field->shouldReceive('userCanSubmit')->andReturn($submitable);
         $field->shouldReceive('userCanUpdate')->andReturn($updatable);
+    }
+
+    private function getCollection(VerifyFieldPermissions $retrieve_field_permissions): SynchronizedFieldFromProgramAndTeamTrackersCollection
+    {
+        $retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
+        return new SynchronizedFieldFromProgramAndTeamTrackersCollection(
+            $this->logger,
+            $retrieve_tracker_from_field,
+            $retrieve_field_permissions
+        );
     }
 }

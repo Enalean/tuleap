@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollection
@@ -39,7 +38,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
     private array $synchronized_fields = [];
 
 
-    public function __construct(private LoggerInterface $logger, private RetrieveUser $retrieve_user, private RetrieveTrackerFromField $retrieve_tracker_from_field)
+    public function __construct(private LoggerInterface $logger, private RetrieveTrackerFromField $retrieve_tracker_from_field, private VerifyFieldPermissions $retrieve_field_permission)
     {
     }
 
@@ -50,10 +49,9 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): bool {
-        $user       = $this->retrieve_user->getUserWithId($user_identifier);
         $can_submit = true;
         foreach ($this->synchronized_fields as $synchronized_field) {
-            if (! $synchronized_field->userCanSubmit($user)) {
+            if (! $this->retrieve_field_permission->canUserSubmit($user_identifier, $synchronized_field)) {
                 $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
                 $errors_collector->addSubmitFieldPermissionError(
                     $synchronized_field->getId(),
@@ -73,7 +71,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                     return $can_submit;
                 }
             }
-            if (! $synchronized_field->userCanUpdate($user)) {
+            if (! $this->retrieve_field_permission->canUserUpdate($user_identifier, $synchronized_field)) {
                 $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
                 $errors_collector->addUpdateFieldPermissionError(
                     $synchronized_field->getId(),

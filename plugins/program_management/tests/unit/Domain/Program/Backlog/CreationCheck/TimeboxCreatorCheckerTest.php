@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
@@ -41,8 +42,8 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -56,7 +57,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Stub|BuildSynchronizedFields
      */
     private $fields_adapter;
-    private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder;
     /**
      * @var Stub|CheckSemantic
      */
@@ -76,15 +76,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $retrieve_user                     = RetrieveUserStub::withGenericUser();
         $this->fields_adapter              = $this->createStub(BuildSynchronizedFields::class);
         $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
-        $this->field_collection_builder    = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-            $this->fields_adapter,
-            new NullLogger(),
-            $retrieve_user,
-            $this->retrieve_tracker_from_field
-        );
         $this->semantic_checker            = $this->createStub(CheckSemantic::class);
         $this->required_field_checker      = $this->createStub(CheckRequiredField::class);
         $this->workflow_checker            = $this->createStub(CheckWorkflow::class);
@@ -115,7 +108,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(true);
 
         self::assertTrue(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -135,7 +128,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         self::assertFalse(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -154,7 +147,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')->willReturn(true);
 
         self::assertFalse(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -176,7 +169,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_adapter->method('build')->willThrowException(new FieldRetrievalException(1, 'title'));
 
         self::assertFalse(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -197,7 +190,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->buildSynchronizedFields(false);
 
         self::assertFalse(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::userCantSubmit())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -223,7 +216,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         self::assertFalse(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::userCantSubmit())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -251,7 +244,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         self::assertFalse(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -280,7 +273,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->getChecker()->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -302,10 +295,17 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         return RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
     }
 
-    private function getChecker(): TimeboxCreatorChecker
+    private function getChecker(VerifyFieldPermissions $retrieve_field_permissions): TimeboxCreatorChecker
     {
+        $field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+            $this->fields_adapter,
+            new NullLogger(),
+            $this->retrieve_tracker_from_field,
+            $retrieve_field_permissions
+        );
+
         return new TimeboxCreatorChecker(
-            $this->field_collection_builder,
+            $field_collection_builder,
             $this->semantic_checker,
             $this->required_field_checker,
             $this->workflow_checker,

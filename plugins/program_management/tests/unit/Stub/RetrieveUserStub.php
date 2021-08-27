@@ -77,6 +77,17 @@ final class RetrieveUserStub implements RetrieveUser
     /**
      * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
      */
+    public static function buildMockedSuperUser($user): self
+    {
+        $user->method('isSuperUser')->willReturn(true);
+        $user->method('getId')->willReturn(101);
+
+        return new self($user);
+    }
+
+    /**
+     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     */
     public static function buildUserWhoCanAccessProjectAndIsProjectAdmin($user): self
     {
         $user->method('isAdmin')->willReturn(true);
