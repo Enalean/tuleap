@@ -33,10 +33,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 
 final class StatusValueMapper implements MapStatusByValue
 {
+    public function __construct(private \Tracker_FormElementFactory $form_element_factory)
+    {
+    }
+
     public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array
     {
         $matching_values = [];
-        $status_field    = $target_field->getFullField();
+        $status_field    = $this->form_element_factory->getFieldById($target_field->getId());
         assert($status_field instanceof Tracker_FormElement_Field_List);
         foreach ($source_value->getListValues() as $label) {
             $matching_value = $this->getMatchingValueByDuckTyping($label, $status_field);
@@ -44,7 +48,7 @@ final class StatusValueMapper implements MapStatusByValue
                 throw new NoDuckTypedMatchingValueException(
                     $label->getLabel(),
                     $target_field->getId(),
-                    $target_field->getFullField()->getTrackerId()
+                    $status_field->getTrackerId()
                 );
             }
             $matching_values[] = $matching_value;

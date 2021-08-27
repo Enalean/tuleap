@@ -100,7 +100,7 @@ class TaskBuilder
         $mirror_creator = new ProgramIncrementsCreator(
             $transaction_executor,
             $synchronized_fields_gatherer,
-            new StatusValueMapper(),
+            new StatusValueMapper($form_element_factory),
             $artifact_creator
         );
 

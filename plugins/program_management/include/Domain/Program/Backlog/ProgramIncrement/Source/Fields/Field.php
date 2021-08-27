@@ -67,12 +67,4 @@ final class Field
     {
         return $this->field->userCanUpdate($user);
     }
-
-    /**
-     * @psalm-return F
-     */
-    public function getFullField(): Tracker_FormElement_Field
-    {
-        return $this->field;
-    }
 }
