@@ -87,6 +87,7 @@ function ExecutionDetailCtrl(
     $scope.linkedIssueAlertVisible = false;
     $scope.displayTestCommentEditor = false;
     $scope.showTestCommentEditor = showTestCommentEditor;
+    $scope.shouldCommentSectionBeDisplayed = shouldCommentSectionBeDisplayed;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -110,6 +111,13 @@ function ExecutionDetailCtrl(
             );
         }
     });
+
+    function shouldCommentSectionBeDisplayed() {
+        if ($scope.campaign.is_open) {
+            return true;
+        }
+        return $scope.execution.previous_result.result !== "";
+    }
 
     function truncateExecutionResult(execution, max_length) {
         return truncateHTML(

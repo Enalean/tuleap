@@ -278,6 +278,7 @@ execution-with-steps.current-test-content {
 
 .current-test-footer-section-closed-campaign {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100px;

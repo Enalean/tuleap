@@ -72,6 +72,7 @@
                     class="tlp-dropdown-menu-item testmanagement-button-update-status"
                     role="menuitem"
                     ng-if="$ctrl.campaign_state.campaign.is_open"
+                    data-test="test-campaign-close-campaign"
                 >
                     <i class="fas fa-times tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                     {{ ::'Close campaign' | translate }}
@@ -89,6 +90,7 @@
                     class="tlp-dropdown-menu-item testmanagement-button-update-status"
                     role="menuitem"
                     ng-if="! $ctrl.campaign_state.campaign.is_open"
+                    data-test="test-campaign-open-campaign"
                 >
                     <i class="fas fa-check tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                     {{ ::'Open campaign' | translate }}

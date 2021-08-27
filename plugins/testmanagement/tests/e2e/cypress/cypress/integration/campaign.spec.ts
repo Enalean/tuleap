@@ -76,6 +76,60 @@ describe("TTM campaign", () => {
 
             cy.get("[data-test=project-admin-submit-add-member]").click();
         });
+
+        it("Create a campaign", () => {
+            cy.visitProjectService(ttm_project_name, "Test Management");
+            cy.get("[data-test=new-campaign-button]").click();
+
+            cy.get("[data-test=campaign-label]").type("Test comment when campaign is closed");
+            cy.get("[data-test=choose-tests]").select("none");
+            cy.get("[data-test=create-new-campaign-button]").click();
+        });
+
+        it("Create 2 tests", () => {
+            cy.contains("Test comment when campaign is closed").click();
+
+            cy.get("[data-test=edit-campaign-button]").click();
+            cy.get("[data-test=add-test-button]").click();
+            getStringFieldWithLabel("Summary").type("My test with a comment");
+            cy.get("[data-test=artifact-modal-save-button]").click();
+            cy.contains("1 test will be added");
+            cy.get("[data-test=edit-campaign-save-button]").click();
+
+            cy.get("[data-test=edit-campaign-button]").click();
+            cy.get("[data-test=add-test-button]").click();
+            getStringFieldWithLabel("Summary").type("My test without a comment");
+            cy.get("[data-test=artifact-modal-save-button]").click();
+            cy.contains("1 test will be added");
+            cy.get("[data-test=edit-campaign-save-button]").click();
+        });
+
+        it("Add a comment in the test", () => {
+            cy.get("[data-test=test-title]").contains("My test with a comment").click();
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(200); // Need to wait until CKEditor is loaded
+            cy.get("[data-test=current-test-comment]").then(($container) => {
+                cy.window().then((win) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    win.CKEDITOR.instances[$container.attr("id")].setData(
+                        "<p>My first comment</p>"
+                    );
+                });
+            });
+            cy.get("[data-test=save-comment-button]").click({ force: true });
+        });
+
+        it("Close the campaign and checks comments section are displayed as expected", () => {
+            cy.get("[data-test=test-campaign-edit-menu-trigger]").click();
+            cy.get(`[data-test=test-campaign-close-campaign]`).click();
+
+            cy.get("[data-test=test-title]").contains("My test with a comment").click();
+            cy.get("[data-test=current-test-comment-preview]").contains("My first comment");
+
+            cy.get("[data-test=test-title]").contains("My test without a comment").click();
+            cy.get("[data-test=comment-footer-section]").should("not.exist");
+        });
     });
 
     context("As project member", () => {
@@ -100,9 +154,7 @@ describe("TTM campaign", () => {
                 cy.get("[data-test=test-campaign-edit-menu-trigger]").click();
                 cy.get("[data-test=test-campaign-rename-campaign]").click();
 
-                cy.get("[data-test=campaign-label]").type(
-                    "{selectall}My first campaign with tests"
-                );
+                cy.get("[data-test=campaign-label]").clear().type("My first campaign with tests");
 
                 cy.get("[data-test=edit-campaign-label-save-button]").click();
             });
