@@ -461,6 +461,7 @@ class PageEditor
             ['class' => 'wikiedit',
                                          'name' => 'edit[content]',
                                          'id'   => 'edit[content]',
+                                         'data-test'   => 'textarea-wiki-content',
                                          'rows' => $request->getPref('editHeight'),
                                          'cols' => $request->getPref('editWidth'),
                                          'readonly' => (bool) $readonly],

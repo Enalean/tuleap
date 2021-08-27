@@ -27,6 +27,26 @@ function disableSpecificErrorThrownByCkeditor(): void {
     });
 }
 
+function createAWikiDocument(document_title: string, page_name: string): void {
+    cy.get("[data-test=document-header-actions]").within(() => {
+        cy.get("[data-test=document-item-action-new-button]").click();
+    });
+
+    cy.get("[data-test=document-new-item-modal]").within(() => {
+        cy.get("[data-test=wiki]").click();
+
+        cy.get("[data-test=document-new-item-title]").type(document_title);
+        cy.get("[data-test=document-new-item-wiki-page-name]").type(page_name);
+        cy.get("[data-test=document-modal-submit-button]").click();
+    });
+}
+
+function updateWikiPage(page_content: string): void {
+    cy.get("[data-test=php-wiki-edit-page]").contains("Edit").click();
+    cy.get("[data-test=textarea-wiki-content]").clear().type(page_content);
+    cy.get("[data-test=edit-page-action-buttons]").contains("Save").click();
+}
+
 describe("Document new UI", () => {
     before(() => {
         cy.clearSessionCookie();
@@ -153,46 +173,6 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-tree-content]").should("not.exist");
         });
 
-        it("user should be able to manipulate wiki page", () => {
-            cy.get("[data-test=document-header-actions]").within(() => {
-                cy.get("[data-test=document-item-action-new-button]").click();
-            });
-
-            cy.get("[data-test=document-new-item-modal]").within(() => {
-                cy.get("[data-test=wiki]").click();
-
-                cy.get("[data-test=document-new-item-title]").type("My new wiki page");
-                cy.get("[data-test=document-new-item-wiki-page-name]").type("Wiki page");
-                cy.get("[data-test=document-modal-submit-button]").click();
-            });
-
-            cy.get("[data-test=document-tree-content]")
-                .contains("tr", "My new wiki page")
-                .within(() => {
-                    // button is displayed on tr::hover, so we need to force click
-                    cy.get("[data-test=quick-look-button]").click({ force: true });
-                });
-
-            cy.get("[data-test=document-quicklook-action-button-new-version").click({
-                force: true,
-            });
-
-            cy.get("[data-test=document-new-version-modal]").within(() => {
-                cy.get("[data-test=document-new-item-wiki-page-name]").type("Renamed wiki page");
-
-                cy.get("[data-test=document-modal-submit-button]").click();
-            });
-
-            cy.get("[data-test=document-tree-content]").contains("tr", "My new wiki page");
-
-            // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-            // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-            cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-            cy.get("[data-test=document-confirm-deletion-button]").click();
-
-            cy.get("[data-test=document-tree-content]").should("not.exist");
-        });
-
         it("user should be able to create an embedded file", () => {
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-item-action-new-button]").click();
@@ -310,6 +290,123 @@ describe("Document new UI", () => {
             testNewItemShortcut();
             testNavigationShortcuts();
             deleteItems();
+        });
+
+        context("phpwiki integration", function () {
+            it("permissions", function () {
+                cy.userLogout();
+                cy.projectAdministratorLogin();
+
+                cy.visitProjectService("document-project", "Wiki");
+                cy.log("Create wiki service only when it's needed");
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").then((body) => {
+                    if (body.find("[data-test=create-wiki]").length > 0) {
+                        cy.get("[data-test=create-wiki]").click();
+                    }
+                });
+
+                const now = Date.now();
+
+                cy.log("wiki document have their permissions in document service");
+
+                cy.visitProjectService("document-project", "Documents");
+                createAWikiDocument(`private${now}`, "My Wiki & Page document");
+                cy.get("[data-test=wiki-document-link]").last().click();
+
+                // ignore rule for phpwiki generated content
+                updateWikiPage("My wiki content");
+                updateWikiPage("My wiki content updated");
+                cy.get("[data-test=main-content]").contains("My Wiki & Page document");
+
+                cy.visitProjectService("document-project", "Wiki");
+                cy.get("[data-test=wiki-admin]").click();
+                cy.get("[data-test=manage-wiki-page]").click();
+
+                cy.log("Document delegated permissions");
+                cy.get("[data-test=table-test]")
+                    .first()
+                    .contains("Permissions controlled by documents manager");
+
+                cy.log("Wiki permissions");
+                cy.get("[data-test=table-test]").last().contains("[Define Permissions]");
+
+                cy.log("Document events");
+                cy.visitProjectService("document-project", "Documents");
+                cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+                cy.get("[data-test=document-history]").last().click({ force: true });
+
+                cy.get("[data-test=table-test").contains("Wiki page content change");
+                cy.get("[data-test=table-test").contains("Create");
+
+                cy.log("project member can not see document when lack of permissions");
+                cy.visitProjectService("document-project", "Documents");
+                cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+
+                cy.get("[data-test=document-permissions]").last().click({ force: true });
+
+                cy.get("[data-test=document-permission-Reader]").select("Project administrators");
+                cy.get("[data-test=document-permission-Writer]").select("Project administrators");
+                cy.get("[data-test=document-permission-Manager]").select("Project administrators");
+                cy.get("[data-test=document-modal-submit-button]").last().click();
+
+                cy.log("wiki page have their permissions in wiki service");
+
+                let current_url;
+                cy.url().then((url) => {
+                    current_url = url;
+
+                    cy.userLogout();
+                    cy.projectMemberLogin();
+
+                    cy.visit(current_url);
+                });
+
+                cy.get("[data-test=document-user-can-not-read-document]").contains(
+                    "granted read permission"
+                );
+
+                cy.userLogout();
+                cy.projectAdministratorLogin();
+
+                cy.log("Delete wiki page");
+                cy.visitProjectService("document-project", "Documents");
+                cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+                cy.get("[data-test=document-quick-look-delete-button]").click();
+                cy.get("[data-test=delete-associated-wiki-page-checkbox]").click();
+                cy.get("[data-test=document-confirm-deletion-button]").click();
+            });
+
+            it("document", function () {
+                cy.userLogout();
+                cy.projectAdministratorLogin();
+
+                cy.log("Create the wiki service");
+
+                cy.userLogout();
+                cy.projectMemberLogin();
+
+                cy.visitProjectService("document-project", "Documents");
+
+                cy.log("multiple document can references the same wiki page");
+
+                const now = Date.now();
+
+                createAWikiDocument(`A wiki document${now}`, "Wiki page");
+                createAWikiDocument(`An other wiki document${now}`, "Wiki page");
+                createAWikiDocument(`A third wiki document${now}`, "Wiki page");
+
+                cy.get("[data-test=wiki-document-link]").first().click();
+
+                cy.get("[data-test=wiki-document-location-toggle]").click();
+                cy.get("[data-test=wiki-document-location]").contains(`A wiki document${now}`);
+                cy.get("[data-test=wiki-document-location]").contains(
+                    `An other wiki document${now}`
+                );
+                cy.get("[data-test=wiki-document-location]").contains(
+                    `A third wiki document${now}`
+                );
+            });
         });
     });
 });

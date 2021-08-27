@@ -25,6 +25,7 @@
         type="button"
         role="menuitem"
         data-shortcut-permissions
+        data-test="document-permissions"
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>Permissions</translate>

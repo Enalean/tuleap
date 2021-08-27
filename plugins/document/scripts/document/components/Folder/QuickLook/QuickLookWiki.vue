@@ -24,6 +24,7 @@
             type="button"
             class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
             v-on:click="wikiPageRedirect"
+            data-test="go-to-the-wiki-page"
         >
             <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i>
             <translate>Go to the wiki page</translate>

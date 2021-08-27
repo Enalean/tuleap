@@ -22,6 +22,7 @@
         <label class="tlp-label" v-bind:for="selector_id">{{ label }}</label>
         <select
             v-bind:id="selector_id"
+            v-bind:data-test="selector_id"
             class="tlp-select"
             multiple
             v-model="selected_ugroup_ids"

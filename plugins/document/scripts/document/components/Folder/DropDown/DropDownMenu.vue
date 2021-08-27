@@ -53,6 +53,7 @@
             class="tlp-dropdown-menu-item"
             role="menuitem"
             data-shortcut-history
+            data-test="document-history"
         >
             <i class="fa fa-fw fa-history tlp-dropdown-menu-item-icon"></i>
             <span v-translate>History</span>
