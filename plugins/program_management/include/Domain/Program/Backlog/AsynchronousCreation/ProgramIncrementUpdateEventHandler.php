@@ -23,17 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
-final class IterationCreationEventHandler implements ProcessIterationCreation
+final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreation
 {
     private LoggerInterface $logger;
-    private SearchPendingIteration $iteration_searcher;
+    private SearchPendingIterations $iteration_searcher;
     private VerifyIsUser $user_verifier;
     private VerifyIsIteration $iteration_verifier;
     private VerifyIsVisibleArtifact $visibility_verifier;
@@ -44,7 +44,7 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
 
     public function __construct(
         LoggerInterface $logger,
-        SearchPendingIteration $iteration_searcher,
+        SearchPendingIterations $iteration_searcher,
         VerifyIsUser $user_verifier,
         VerifyIsIteration $iteration_verifier,
         VerifyIsVisibleArtifact $visibility_verifier,
@@ -64,22 +64,31 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
         $this->iteration_deleter         = $iteration_deleter;
     }
 
-    public function handle(?IterationCreationEvent $event): void
+    public function handle(?ProgramIncrementUpdateEvent $event): void
     {
         if (! $event) {
             return;
         }
+        $pending_creations = $this->iteration_searcher->searchIterationCreationsByProgramIncrement(
+            $event->getArtifactId(),
+            $event->getUserId()
+        );
+        foreach ($pending_creations as $pending_creation) {
+            $this->buildAndProcessIterationCreation($pending_creation);
+        }
+    }
+
+    private function buildAndProcessIterationCreation(PendingIterationCreation $pending_creation): void
+    {
         try {
-            $iteration_creation = IterationCreation::fromStorage(
-                $this->iteration_searcher,
+            $iteration_creation = IterationCreation::fromPendingIterationCreation(
                 $this->user_verifier,
                 $this->iteration_verifier,
                 $this->visibility_verifier,
                 $this->user_retriever,
                 $this->program_increment_checker,
                 $this->changeset_verifier,
-                $event->getArtifactId(),
-                $event->getUserId()
+                $pending_creation
             );
         } catch (StoredIterationNoLongerValidException $e) {
             $iteration_id = $e->getIterationId();

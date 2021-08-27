@@ -26,10 +26,10 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunIterationsCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StorePendingIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreIterationCreations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
@@ -92,26 +92,26 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                         // Side effects
                     }
                 },
-                new IterationReplicationScheduler(
+                new IterationCreationDetector(
                     VerifyIterationsFeatureActiveStub::withActiveFeature(),
                     SearchIterationsStub::withIterationIds(101, 102),
                     VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                     VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
                     $this->logger,
                     RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
-                    new class implements StorePendingIterations {
-                        public function storePendingIterationCreations(IterationCreation ...$creations): void
-                        {
-                            // Side effects
-                        }
-                    },
-                    new class implements RunIterationsCreation {
-                        public function scheduleIterationCreations(IterationCreation ...$creations): void
-                        {
-                            // Side effects
-                        }
+                ),
+                new class implements StoreIterationCreations {
+                    public function storeCreations(IterationCreation ...$creations): void
+                    {
+                        // Side effects
                     }
-                )
+                },
+                new class implements RunProgramIncrementUpdate {
+                    public function scheduleUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
+                    {
+                        // Side effects
+                    }
+                }
             )
         );
     }

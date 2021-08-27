@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface RunIterationsCreation
+interface StoreIterationCreations
 {
-    public function scheduleIterationCreations(IterationCreation ...$creations): void;
+    public function storeCreations(IterationCreation ...$creations): void;
 }

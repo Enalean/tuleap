@@ -22,10 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface SearchPendingIteration
+/**
+ * I am a storage row for a pending iteration creation. DO NOT trust my values: the iteration artifact could have been
+ * deleted. The program increment artifact could have been deleted.
+ * @psalm-immutable
+ */
+interface PendingIterationCreation
 {
-    /**
-     * @return null|array{iteration_id: int, program_increment_id: int, user_id: int, iteration_changeset_id: int}
-     */
-    public function searchPendingIterationCreation(int $iteration_id, int $user_id): ?array;
+    public function getIterationId(): int;
+    public function getProgramIncrementId(): int;
+    public function getUserId(): int;
+    public function getIterationChangesetId(): int;
 }

@@ -32,10 +32,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 
 /**
- * I detect when an Iteration needs to be replicated, store the pending replication
- * and schedule it.
+ * I detect when new Iterations have been linked to a Program Increment for the first time, and I create
+ * IterationCreations for each one.
  */
-final class IterationReplicationScheduler
+final class IterationCreationDetector
 {
     public function __construct(
         private VerifyIterationsFeatureActive $feature_flag_verifier,
@@ -44,15 +44,16 @@ final class IterationReplicationScheduler
         private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
         private LoggerInterface $logger,
         private RetrieveLastChangeset $changeset_retriever,
-        private StorePendingIterations $pending_store,
-        private RunIterationsCreation $iterations_creator
     ) {
     }
 
-    public function replicateIterationsIfNeeded(ProgramIncrementUpdate $program_increment_update): void
+    /**
+     * @return IterationCreation[]
+     */
+    public function detectNewIterationCreations(ProgramIncrementUpdate $program_increment_update): array
     {
         if (! $this->feature_flag_verifier->isIterationsFeatureActive()) {
-            return;
+            return [];
         }
         $iterations             = IterationIdentifier::buildCollectionFromProgramIncrement(
             $this->iterations_searcher,
@@ -66,17 +67,15 @@ final class IterationReplicationScheduler
             ...$iterations
         );
         if ($just_linked_iterations->isEmpty()) {
-            return;
+            return [];
         }
         $this->logNewIterationIds($just_linked_iterations);
-        $creations = IterationCreation::buildCollectionFromJustLinkedIterations(
+        return IterationCreation::buildCollectionFromJustLinkedIterations(
             $this->changeset_retriever,
             $this->logger,
             $just_linked_iterations,
             $program_increment_update->user
         );
-        $this->pending_store->storePendingIterationCreations(...$creations);
-        $this->iterations_creator->scheduleIterationCreations(...$creations);
     }
 
     private function logNewIterationIds(JustLinkedIterationCollection $just_linked_iterations): void

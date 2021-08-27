@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface IterationCreationEvent
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+
+interface RunProgramIncrementUpdate
 {
-    public const TOPIC = 'tuleap.program_management.iteration.creation';
-    public function getArtifactId(): int;
-    public function getUserId(): int;
+    public function scheduleUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void;
 }
