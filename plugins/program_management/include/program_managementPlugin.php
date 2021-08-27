@@ -404,7 +404,8 @@ final class program_managementPlugin extends Plugin
             new WorkflowChecker(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
-                new Tracker_Rule_List_Dao()
+                new Tracker_Rule_List_Dao(),
+                $tracker_factory
             ),
             $retrieve_tracker_from_field
         );
@@ -1083,7 +1084,8 @@ final class program_managementPlugin extends Plugin
             new WorkflowChecker(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
-                new Tracker_Rule_List_Dao()
+                new Tracker_Rule_List_Dao(),
+                $tracker_factory
             ),
             $retrieve_tracker_from_field
         );

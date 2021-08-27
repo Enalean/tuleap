@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -81,7 +82,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
 
         $error_collector = new ConfigurationErrorsCollector(false);
-        $error_collector->addWorkflowDependencyError(1);
+        $error_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1));
         $this->configuration_error_builder->buildProgramIncrementErrorPresenter(
             $this->program_tracker,
             $this->program_identifier,
@@ -111,7 +112,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->iteration_checker->method('canCreateAnIteration');
 
         $error_collector = new ConfigurationErrorsCollector(true);
-        $error_collector->addWorkflowDependencyError(1);
+        $error_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1));
         $this->configuration_error_builder->buildIterationErrorPresenter(
             $this->program_tracker,
             $this->user,

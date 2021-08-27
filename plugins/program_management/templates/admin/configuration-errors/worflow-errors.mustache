@@ -4,7 +4,7 @@
             tuleap-program_management |
             Following trackers are using a synchronized field in a workflow transition rule
         {{/ dgettext }}
-        <a href='/plugins/tracker/workflow/{{ tracker_id }}/transitions'>#{{ tracker_id }}</a>
+        <a href='/plugins/tracker/workflow/{{ tracker_id }}/transitions'>#{{ tracker_id }} ({{ tracker_label }})</a>
     </li>
 {{/ transition_rule_error }}
 {{# transition_rule_date_error }}
@@ -13,7 +13,7 @@
             tuleap-program_management |
             Following trackers are using a synchronized field in a workflow date rule (global rules)
         {{/ dgettext }}
-        <a href='/plugins/tracker/workflow/{{ tracker_id }}/transitions'>#{{ tracker_id }}</a>
+        <a href='/plugins/tracker/workflow/{{ tracker_id }}/transitions'>#{{ tracker_id }} ({{ tracker_label }})</a>
     </li>
 {{/ transition_rule_date_error }}
 {{# field_dependency_error }}
@@ -22,6 +22,6 @@
             tuleap-program_management |
             Following trackers are using a synchronized field in a workflow list rule (field dependencies)
         {{/ dgettext }}
-        <a href='/plugins/tracker/workflow/{{ tracker_id }}/transitions'>#{{ tracker_id }}</a>
+        <a href='/plugins/tracker/workflow/{{ tracker_id }}/transitions'>#{{ tracker_id }} ({{ tracker_label }})</a>
     </li>
 {{/ field_dependency_error }}
