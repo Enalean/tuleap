@@ -27,13 +27,6 @@ class Tracker_Permission_PermissionManager
 
         if ($this->checkPermissionValidity($request, $tracker)) {
             $this->getChainOfResponsability()->apply($request, $permission_setter);
-
-            EventManager::instance()->processEvent(
-                TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE,
-                [
-                    'tracker' => $tracker,
-                ]
-            );
         }
     }
 

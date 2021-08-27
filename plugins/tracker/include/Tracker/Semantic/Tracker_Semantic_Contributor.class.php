@@ -189,7 +189,6 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             if ($field = Tracker_FormElementFactory::instance()->getUsedUserClosedListFieldById($this->tracker, $request->get('list_field_id'))) {
                 $this->list_field = $field;
                 if ($this->save()) {
-                    $this->sendContributorChangeEvent();
                     $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'The contributor/assignee is now: %1$s'), $field->getLabel()));
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
@@ -204,7 +203,6 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         } elseif ($request->exist('delete')) {
             $this->getCSRFToken()->check();
             if ($this->delete()) {
-                $this->sendContributorChangeEvent();
                 $GLOBALS['Response']->redirect($this->getUrl());
             } else {
                 $GLOBALS['Response']->addFeedback(
@@ -214,16 +212,6 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             }
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
-    }
-
-    private function sendContributorChangeEvent()
-    {
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE,
-            [
-                'tracker' => $this->tracker,
-            ]
-        );
     }
 
     /**
