@@ -390,7 +390,7 @@ execution-with-steps.current-test-content {
 }
 
 .tlp-alert-warning.current-test-should-be-reloaded-warning {
-    margin: var(--tlp-medium-spacing) 0 0;
+    margin: 0 0 var(--tlp-medium-spacing) 0;
 
     &::before {
         top: 35%;
