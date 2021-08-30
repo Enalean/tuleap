@@ -165,6 +165,12 @@
                 data-test="comment-footer-section"
             >
                 <div class="tlp-form-element">
+                    <div class="tlp-alert-warning"
+                         ng-if="onlyStatusHasBeenChanged"
+                         data-test="warning-status-changed"
+                    >
+                        <span translate>Only the test status has changed, not the comment. Maybe you should have a look at it.</span>
+                    </div>
                     <div class="current-comment-header-section">
                         <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
                         <button
