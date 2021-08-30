@@ -37,6 +37,7 @@ import {
     ExternalHyperlink,
     File,
     Footer,
+    Header,
     HeadingLevel,
     LevelFormat,
     Packer,
@@ -73,31 +74,11 @@ export async function downloadDocx(
         { timeZone: datetime_locale_information.timezone }
     );
     const footers = {
-        default: new Footer({
-            children: [
-                new Paragraph({
-                    alignment: AlignmentType.CENTER,
-                    children: [
-                        new TextRun(
-                            sprintf(
-                                gettext_provider.gettext("Exported on %s by %s"),
-                                exported_formatted_date,
-                                global_export_properties.user_display_name
-                            )
-                        ),
-                        new TextRun({
-                            children: ["\t", PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES],
-                        }),
-                    ],
-                    tabStops: [
-                        {
-                            type: TabStopType.RIGHT,
-                            position: TabStopPosition.MAX,
-                        },
-                    ],
-                }),
-            ],
-        }),
+        default: buildFooter(gettext_provider, global_export_properties, exported_formatted_date),
+    };
+
+    const headers = {
+        default: buildHeader(global_export_properties),
     };
 
     const artifacts_content = [];
@@ -300,10 +281,14 @@ export async function downloadDocx(
                         global_export_properties,
                         exported_formatted_date
                     ),
-                    ...table_of_contents,
                 ],
             },
             {
+                headers,
+                children: [...table_of_contents],
+            },
+            {
+                headers,
                 children: [
                     ...report_criteria_data,
                     new Paragraph({ children: [new PageBreak()] }),
@@ -322,6 +307,69 @@ export async function downloadDocx(
         ],
     });
     triggerBlobDownload(`${document.name}.docx`, await Packer.toBlob(file));
+}
+
+function buildHeader(global_export_properties: GlobalExportProperties): Header {
+    return new Header({
+        children: [
+            new Paragraph({
+                children: [
+                    new TextRun({
+                        children: [
+                            global_export_properties.platform_name,
+                            " | ",
+                            global_export_properties.project_name,
+                        ],
+                    }),
+                    new TextRun({
+                        children: [
+                            "\t",
+                            global_export_properties.tracker_name,
+                            " | ",
+                            global_export_properties.report_name,
+                        ],
+                    }),
+                ],
+                tabStops: [
+                    {
+                        type: TabStopType.RIGHT,
+                        position: TabStopPosition.MAX,
+                    },
+                ],
+            }),
+        ],
+    });
+}
+
+function buildFooter(
+    gettext_provider: GetText,
+    global_export_properties: GlobalExportProperties,
+    exported_formatted_date: string
+): Footer {
+    return new Footer({
+        children: [
+            new Paragraph({
+                children: [
+                    new TextRun(
+                        sprintf(
+                            gettext_provider.gettext("Exported on %s by %s"),
+                            exported_formatted_date,
+                            global_export_properties.user_display_name
+                        )
+                    ),
+                    new TextRun({
+                        children: ["\t", PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES],
+                    }),
+                ],
+                tabStops: [
+                    {
+                        type: TabStopType.RIGHT,
+                        position: TabStopPosition.MAX,
+                    },
+                ],
+            }),
+        ],
+    });
 }
 
 function buildCoverPage(
