@@ -18,7 +18,6 @@
  */
 
 import { has, remove } from "lodash";
-import { truncateHTML } from "./truncate.ts";
 
 import "./execution-link-issue.tpl.html";
 import "./execution-details-modal.tpl.html";
@@ -82,7 +81,6 @@ function ExecutionDetailCtrl(
     $scope.showExecutionDetailsModal = showExecutionDetailsModal;
     $scope.showEditArtifactModal = showEditArtifactModal;
     $scope.closeLinkedIssueAlert = closeLinkedIssueAlert;
-    $scope.truncateExecutionResult = truncateExecutionResult;
     $scope.linkedIssueId = null;
     $scope.linkedIssueAlertVisible = false;
     $scope.displayTestCommentEditor = false;
@@ -119,14 +117,6 @@ function ExecutionDetailCtrl(
             return true;
         }
         return $scope.execution.previous_result.result !== "";
-    }
-
-    function truncateExecutionResult(execution, max_length) {
-        return truncateHTML(
-            execution.previous_result.result,
-            max_length,
-            gettextCatalog.getString("A screenshot has been attached")
-        );
     }
 
     function initialization() {

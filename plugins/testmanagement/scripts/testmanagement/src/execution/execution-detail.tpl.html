@@ -158,7 +158,12 @@
         ></execution-with-steps>
 
         <div ng-if="execution.is_automated === false">
-            <section class="tlp-pane-section current-test-footer-section" ng-if="shouldCommentSectionBeDisplayed()" data-test="comment-footer-section">
+            <section
+                class="tlp-pane-section current-test-footer-section"
+                ng-class="{'current-test-footer-section-readonly-comment-container': ! displayTestCommentEditor }"
+                ng-if="shouldCommentSectionBeDisplayed()"
+                data-test="comment-footer-section"
+            >
                 <div class="tlp-form-element">
                     <div class="current-comment-header-section">
                         <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
@@ -189,7 +194,7 @@
                             ng-if="! displayTestCommentEditor"
                             class="current-test-comment current-test-comment-displayer"
                             data-test="current-test-comment-preview"
-                            ng-bind-html="truncateExecutionResult(execution, 200)"
+                            ng-bind-html="execution.previous_result.result"
                         >
                         </div>
                     </div>
