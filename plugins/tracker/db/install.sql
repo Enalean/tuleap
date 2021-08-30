@@ -390,7 +390,8 @@ DROP TABLE IF EXISTS tracker_changeset_value_permissionsonartifact;
 CREATE TABLE tracker_changeset_value_permissionsonartifact(
   changeset_value_id int(11) NOT NULL,
   use_perm tinyint(1) NOT NULL,
-  ugroup_id int(11) NOT NULL
+  ugroup_id int(11) NOT NULL,
+  INDEX idx_changeset_value_id (changeset_value_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_changeset_value_computedfield_manual_value;
