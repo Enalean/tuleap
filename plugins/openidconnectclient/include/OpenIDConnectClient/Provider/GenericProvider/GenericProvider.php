@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\GenericProvider;
 
-use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
+use Tuleap\ServerHostname;
 
 final class GenericProvider implements Provider
 {
@@ -171,6 +171,6 @@ final class GenericProvider implements Provider
 
     public function getRedirectUri(): string
     {
-        return 'https://' . ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
+        return ServerHostname::HTTPSUrl() . '/plugins/openidconnectclient/';
     }
 }

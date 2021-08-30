@@ -22,27 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient;
 
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\LayoutBuilder;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class RouterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItOnlyAcceptsHTTPS(): void
+    public function testProcessRequest(): void
     {
-        $login_controller          = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Controller::class);
-        $account_linker_controller = \Mockery::spy(\Tuleap\OpenIDConnectClient\AccountLinker\Controller::class);
+        $login_controller          = $this->createMock(\Tuleap\OpenIDConnectClient\Login\Controller::class);
+        $account_linker_controller = $this->createStub(\Tuleap\OpenIDConnectClient\AccountLinker\Controller::class);
         $request                   = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(false);
 
-        $response = Mockery::mock(\Tuleap\Layout\BaseLayout::class);
-        $response->shouldReceive('addFeedback')->once();
-        $response->shouldReceive('redirect')->once();
+        $login_controller->expects(self::atLeastOnce())->method('login');
 
         $router = new Router($login_controller, $account_linker_controller);
-        $router->process($request, $response, []);
+        $router->process($request, LayoutBuilder::build(), []);
     }
 }

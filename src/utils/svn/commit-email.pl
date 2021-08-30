@@ -243,15 +243,10 @@ my $gname = $repos;
 $gname =~ s|.*/||; # Remove everything until the last slash
 my $group_id = &set_group_info_from_name($gname);
 
-my $codendi_srv;
-if ($sys_https_host) {
-  $codendi_srv="https://$sys_https_host";
-} else {
-  $codendi_srv="http://$sys_default_domain";
-}
+my $server_url="https://$sys_default_domain";
 
-my $mod_url = $codendi_srv."/svn/viewvc.php/%s?r1=%s&r2=%s&roottype=svn&root=$gname&diff_format=h&pathrev=$rev";
-my $add_url  = $codendi_srv."/svn/viewvc.php/%s?revision=$rev&view=log&roottype=svn&root=$gname&pathrev=$rev";
+my $mod_url = $server_url."/svn/viewvc.php/%s?r1=%s&r2=%s&roottype=svn&root=$gname&diff_format=h&pathrev=$rev";
+my $add_url  = $server_url."/svn/viewvc.php/%s?revision=$rev&view=log&roottype=svn&root=$gname&pathrev=$rev";
 
 my $no_diff = 1; # no inline diff for Codendi
 
@@ -542,7 +537,7 @@ $dirlist =~ s/\n//;
 
 # Put together the body of the log message.
 my @body;
-my $goto_link = "$codendi_srv/goto?key=rev&val=$rev&group_id=$group_id";
+my $goto_link = "$server_url/goto?key=rev&val=$rev&group_id=$group_id";
 
 if (&isGroupUsingTruncatedMails) {
   push(@body, "There was an update on $sys_fullname for you: $goto_link");
@@ -849,7 +844,7 @@ sub extract_xrefs {
     $type="svn_revision";
     $text=join("\n",@log);
 
-    my $req = POST "$codendi_srv/api/reference/extractCross.php",
+    my $req = POST "$server_url/api/reference/extractCross.php",
       [ group_id => "$group_id", text => "$text", rev_id=>"$rev", login=>"$author", type=>"$type" ];
   
 

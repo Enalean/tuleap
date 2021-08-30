@@ -57,7 +57,6 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
         )->makePartial();
 
         $this->request = \Mockery::spy(\HTTPRequest::class);
-        $this->request->shouldReceive('isSecure')->andReturns(true);
     }
 
     public function testGetRedirectionProtocolModified(): void
@@ -71,7 +70,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->url_verification->shouldReceive('getUrlChunks')->andReturns($chunks);
 
-        $this->assertEquals($this->url_verification->getRedirectionURL($this->request, $server), 'https://example.com');
+        $this->assertEquals($this->url_verification->getRedirectionURL($server), 'https://example.com');
     }
 
     public function testGetRedirectionProtocolAndHostModified(): void
@@ -86,7 +85,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             'http://secure.example.com/user.php',
-            $this->url_verification->getRedirectionURL($this->request, $server)
+            $this->url_verification->getRedirectionURL($server)
         );
     }
 
@@ -100,7 +99,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->url_verification->shouldReceive('getUrlChunks')->andReturns($chunks);
 
-        $this->assertEquals('/project.php', $this->url_verification->getRedirectionURL($this->request, $server));
+        $this->assertEquals('/project.php', $this->url_verification->getRedirectionURL($server));
     }
 
     public function testRestrictedUserCanAccessSearchOnTracker(): void

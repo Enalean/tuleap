@@ -31,6 +31,7 @@ use GitRepository;
 use MailBuilder;
 use MailEnhancer;
 use Notification;
+use Tuleap\ServerHostname;
 
 class PostReceiveMailSender
 {
@@ -111,7 +112,7 @@ class PostReceiveMailSender
         $email_domain = ForgeConfig::get('sys_default_mail_domain');
 
         if (! $email_domain) {
-            $email_domain = ForgeConfig::get('sys_default_domain');
+            $email_domain = ServerHostname::rawHostname();
         }
 
         return $email_domain;

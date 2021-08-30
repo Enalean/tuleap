@@ -22,15 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
-use ForgeConfig;
-
 class InstanceBaseURLBuilder
 {
     public function build(): string
     {
-        if (empty(ForgeConfig::get('sys_https_host', ''))) {
-            return 'http://' . ForgeConfig::get('sys_default_domain');
-        }
-        return 'https://' . ForgeConfig::get('sys_https_host');
+        return ServerHostname::HTTPSUrl();
     }
 }

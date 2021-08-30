@@ -28,7 +28,7 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
+final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -109,7 +109,7 @@ class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        ForgeConfig::set('sys_https_host', 'secure.example.com');
+        ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
@@ -127,7 +127,7 @@ class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        ForgeConfig::set('sys_https_host', 'secure.example.com');
+        ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
@@ -145,7 +145,7 @@ class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        ForgeConfig::set('sys_https_host', 'secure.example.com');
+        ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();

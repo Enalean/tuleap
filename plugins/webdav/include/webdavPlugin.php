@@ -46,7 +46,6 @@ class WebDAVPlugin extends Plugin
         parent::__construct($id);
         bindtextdomain('tuleap-webdav', __DIR__ . '/../site-content');
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->addHook('url_verification_instance', 'urlVerification', false);
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
     }
@@ -79,21 +78,6 @@ class WebDAVPlugin extends Plugin
             $this->getWebDAVAuthentication(),
             $this->getServerBuilder(),
         );
-    }
-
-    /**
-     * Returns the class that will be in charge of the url verification
-     *
-     * @param Array $params
-     */
-    public function urlVerification(&$params): void
-    {
-        $webdav_host = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
-        if (! Webdav_URLVerification::isRequestForDedicatedWebdavHost($params['server_param'], $webdav_host)) {
-            return;
-        }
-
-        $params['url_verification'] = new Webdav_URLVerification($webdav_host);
     }
 
     public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void

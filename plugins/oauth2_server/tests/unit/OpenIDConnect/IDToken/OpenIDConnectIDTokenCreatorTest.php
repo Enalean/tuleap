@@ -126,7 +126,7 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     public function testCanIssueIDToken(?string $nonce): void
     {
-        \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
         $current_time = new \DateTimeImmutable('@10');
 
         $this->user_manager->method('getUserAccessInfo')->willReturn(['last_auth_success' => '5']);

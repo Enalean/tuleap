@@ -25,6 +25,7 @@ namespace Tuleap\Log;
 
 use Monolog\Processor\ProcessorInterface;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\ServerHostname;
 
 final class TuleapIdentifierProcessor implements ProcessorInterface
 {
@@ -41,7 +42,7 @@ final class TuleapIdentifierProcessor implements ProcessorInterface
     public function __invoke(array $record)
     {
         $record['extra']['tuleap_version_number'] = $this->version_presenter->version_number;
-        $record['extra']['tuleap_server']         = \ForgeConfig::get('sys_default_domain');
+        $record['extra']['tuleap_server']         = ServerHostname::hostnameWithHTTPSPort();
         return $record;
     }
 }

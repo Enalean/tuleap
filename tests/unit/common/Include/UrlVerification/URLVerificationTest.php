@@ -30,7 +30,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use URLVerification;
 
-class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -153,85 +153,9 @@ class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testVerifyProtocolHTTPAndHTTPSIsAvailable(): void
-    {
-        $urlVerification = new URLVerification();
-
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(false);
-
-        ForgeConfig::set('sys_https_host', true);
-
-        $urlVerification->verifyProtocol($request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEquals('https', $chunks['protocol']);
-    }
-
-    public function testVerifyProtocolHTTPSAndHTTPSIsAvailable(): void
-    {
-        $urlVerification = new URLVerification();
-        $request         = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(false);
-        $urlVerification->verifyProtocol($request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertFalse(isset($chunks['protocol']));
-    }
-
-    public function testVerifyProtocolHTTPAndHTTPSIsNotAvailable(): void
-    {
-        $urlVerification = new URLVerification();
-        $request         = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(false);
-        $urlVerification->verifyProtocol($request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertFalse(isset($chunks['protocol']));
-    }
-
-    public function testVerifyHostHTTPSAndHTTPSIsAvailable(): void
-    {
-        ForgeConfig::set('sys_https_host', 'secure.example.com');
-
-        $urlVerification = new URLVerification();
-        $request         = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(true);
-        $urlVerification->verifyProtocol($request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertFalse(isset($chunks['host']));
-    }
-
-    public function testVerifyHostHTTPAndHTTPSIsAvailable(): void
-    {
-        ForgeConfig::set('sys_default_domain', 'example.com');
-        ForgeConfig::set('sys_https_host', 'secure.example.com');
-
-        $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(false);
-
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEquals('secure.example.com', $chunks['host']);
-    }
-
-    public function testVerifyHostInvalidHostAndHTTPSIsAvailable(): void
-    {
-        ForgeConfig::set('sys_default_domain', 'example.com');
-        ForgeConfig::set('sys_https_host', 'secure.example.com');
-
-        $urlVerification = new URLVerification();
-
-        $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(true);
-
-        $urlVerification->verifyProtocol($request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertFalse(isset($chunks['host']));
-    }
-
     public function testItChecksUriInternal(): void
     {
         ForgeConfig::set('sys_default_domain', 'default.example.test');
-        ForgeConfig::set('sys_https_host', 'default.https.test');
         $url_verification = new URLVerification();
 
         $this->assertFalse($url_verification->isInternal('http://evil.example.com/'));
@@ -243,13 +167,13 @@ class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
             $url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
         );
         $this->assertTrue(
-            $url_verification->isInternal('https://' . ForgeConfig::get('sys_https_host') . '/smthing')
+            $url_verification->isInternal('https://' . ForgeConfig::get('sys_default_domain') . '/smthing')
         );
 
         $this->assertFalse($url_verification->isInternal('//example.com'));
         $this->assertFalse($url_verification->isInternal('/\example.com'));
         $this->assertFalse($url_verification->isInternal(
-            'https://' . ForgeConfig::get('sys_https_host') . '@evil.example.com'
+            'https://' . ForgeConfig::get('sys_default_domain') . '@evil.example.com'
         ));
     }
 }

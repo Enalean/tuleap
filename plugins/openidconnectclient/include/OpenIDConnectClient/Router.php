@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient;
 
-use Feedback;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -50,7 +49,6 @@ class Router implements DispatchableWithRequestNoAuthz
     {
         $action = $request->get('action');
 
-        $this->checkTLSPresence($request, $layout);
         switch ($action) {
             case 'link':
                 $this->account_linker_controller->showIndex($request);
@@ -60,17 +58,6 @@ class Router implements DispatchableWithRequestNoAuthz
                 break;
             default:
                 $this->login_controller->login($request, $request->get('return_to'), $request->getTime());
-        }
-    }
-
-    private function checkTLSPresence(HTTPRequest $request, BaseLayout $layout)
-    {
-        if (! $request->isSecure()) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')
-            );
-            $layout->redirect('/account/login.php');
         }
     }
 }

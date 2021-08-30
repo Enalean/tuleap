@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Service;
 
-use ForgeConfig;
 use Project;
+use Tuleap\ServerHostname;
 
 class ServiceLinkDataBuilder
 {
@@ -38,12 +38,8 @@ class ServiceLinkDataBuilder
                 // When it is done here, the service bar will not appear updated on the current page
                 $link = str_replace('$projectname', $project->getUnixName(), $link);
             }
-            $link                 = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
-            $sys_default_protocol = 'http';
-            if (ForgeConfig::get('sys_https_host')) {
-                $sys_default_protocol = 'https';
-            }
-            $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
+            $link = str_replace('$sys_default_domain', ServerHostname::hostnameWithHTTPSPort(), $link);
+            $link = str_replace('$sys_default_protocol', 'https', $link);
             $link = str_replace('$group_id', (string) $project->getID(), $link);
         }
 

@@ -106,7 +106,6 @@ $presenter         = $presenter_builder->build(
     $_rVar['return_to'],
     $_cVar['pv'],
     $_rVar['form_loginname'],
-    $request->isSecure(),
     $login_csrf,
     (string) $request->get('prompt')
 );

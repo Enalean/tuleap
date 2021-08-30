@@ -3359,7 +3359,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $email_domain = ForgeConfig::get('sys_default_mail_domain');
 
         if (! $email_domain) {
-            $email_domain = ForgeConfig::get('sys_default_domain');
+            $email_domain = \Tuleap\ServerHostname::rawHostname();
         }
 
         return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '+' . $this->id . '@' . $email_domain;

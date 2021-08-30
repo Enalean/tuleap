@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
-use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
+use Tuleap\ServerHostname;
 
 final class AzureADProvider implements Provider
 {
@@ -173,6 +173,6 @@ final class AzureADProvider implements Provider
 
     public function getRedirectUri(): string
     {
-        return 'https://' . ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/azure/';
+        return ServerHostname::HTTPSUrl() . '/plugins/openidconnectclient/azure/';
     }
 }

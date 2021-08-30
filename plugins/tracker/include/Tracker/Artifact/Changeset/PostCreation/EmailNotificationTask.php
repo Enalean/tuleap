@@ -26,6 +26,7 @@ use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tuleap\ServerHostname;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
@@ -242,7 +243,7 @@ final class EmailNotificationTask implements PostCreationTask
     {
         $email_domain = ForgeConfig::get('sys_default_mail_domain');
         if (! $email_domain) {
-            $email_domain = ForgeConfig::get('sys_default_domain');
+            $email_domain = ServerHostname::rawHostname();
         }
         return self::DEFAULT_MAIL_SENDER . '@' . $email_domain;
     }
@@ -359,8 +360,7 @@ final class EmailNotificationTask implements PostCreationTask
         $output  = '+============== ' . '[' . $art->getTracker()->getItemName() . ' #' . $art->getId() . '] ' . $art->fetchMailTitle($recipient_user, $format, $ignore_perms) . ' ==============+';
         $output .= PHP_EOL;
         $output .= PHP_EOL;
-        $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-        $output .= ' <' . $proto . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $art->getId() . '>';
+        $output .= ' <' . ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?aid=' . $art->getId() . '>';
         $output .= PHP_EOL;
         $output .= dgettext('tuleap-tracker', 'last edited by:');
         $output .= ' ' . $this->user_helper->getDisplayNameFromUserId($changeset->getSubmittedBy());

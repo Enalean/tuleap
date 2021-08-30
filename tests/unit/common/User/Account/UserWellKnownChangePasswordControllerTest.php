@@ -72,7 +72,7 @@ final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUn
         $this->event_dispatcher->shouldReceive('dispatch')->with(\Mockery::type(PasswordPreUpdateEvent::class))
             ->andReturn(new PasswordPreUpdateEvent($current_user));
 
-        \ForgeConfig::set('sys_https_host', 'example.com');
+        \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $response = $this->controller->handle(new NullServerRequest());
 

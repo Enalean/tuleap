@@ -99,14 +99,13 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $this->displayStandardHomepage(
             $registration_guard->isRegistrationPossible(),
             $login_url,
-            $request->isSecure(),
             $news_collection
         );
         $layout->footer([]);
         $this->includeRelativeDatesAssetsIfNeeded($news_collection, $layout);
     }
 
-    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure, NewsCollection $news_collection): void
+    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, NewsCollection $news_collection): void
     {
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -118,14 +117,9 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
             );
         }
 
-        $most_secure_url = '';
-        if (ForgeConfig::get('sys_https_host')) {
-            $most_secure_url = 'https://' . ForgeConfig::get('sys_https_host');
-        }
-
         $login_presenter_builder = new User_LoginPresenterBuilder();
         $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
-        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure, $login_csrf);
+        $login_presenter         = $login_presenter_builder->buildForHomepage($login_csrf);
 
         $display_new_account_button = ($current_user->isAnonymous() && $display_new_account_button);
 
@@ -143,7 +137,6 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $presenter     = new HomePagePresenter(
             $headline,
             $current_user,
-            $most_secure_url,
             $login_presenter,
             $display_new_account_button,
             $login_url,

@@ -453,9 +453,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function createGroupEntry(ProjectCreationData $data)
     {
         if (ForgeConfig::get('sys_disable_subdomains')) {
-            $http_domain = ForgeConfig::get('sys_default_domain');
+            $http_domain = \Tuleap\ServerHostname::hostnameWithHTTPSPort();
         } else {
-            $http_domain = $data->getUnixName() . '.' . ForgeConfig::get('sys_default_domain');
+            $http_domain = $data->getUnixName() . '.' . \Tuleap\ServerHostname::hostnameWithHTTPSPort();
         }
 
         $access = $data->getAccess();
@@ -501,7 +501,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $result = db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('" . db_ei($group_id) . "','" . db_es($this->project_manager->getProject($group_id)->getUnixName()) . "')");
         if (! $result) {
-            [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));
+            $host = \Tuleap\ServerHostname::rawHostname();
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', [$host, db_error()]));
         }
     }

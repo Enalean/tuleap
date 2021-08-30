@@ -34,7 +34,7 @@ final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\
 
     public function testBuildsRepresentation(): void
     {
-        \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
         $language_factory = $this->createMock(\BaseLanguageFactory::class);
         $language_factory
             ->expects(self::once())

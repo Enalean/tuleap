@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect;
 
+use Tuleap\ServerHostname;
+
 final class Issuer
 {
     public static function toString(): string
     {
-        return 'https://' . \ForgeConfig::get('sys_https_host');
+        return ServerHostname::HTTPSUrl();
     }
 }

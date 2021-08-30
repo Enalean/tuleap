@@ -20,7 +20,7 @@
 
 namespace Tuleap\OpenIDConnectClient\Administration;
 
-use ForgeConfig;
+use Tuleap\ServerHostname;
 
 class Presenter
 {
@@ -120,16 +120,12 @@ class Presenter
 
     public function callback_generic_url()
     {
-        $host = urlencode(ForgeConfig::get('sys_default_domain'));
-
-        return strtolower('https://' . $host . OPENIDCONNECTCLIENT_BASE_URL . '/');
+        return strtolower(ServerHostname::HTTPSUrl() . OPENIDCONNECTCLIENT_BASE_URL . '/');
     }
 
     public function callback_azure_url()
     {
-        $host = urlencode(ForgeConfig::get('sys_default_domain'));
-
-        return strtolower('https://' . $host . OPENIDCONNECTCLIENT_BASE_URL . '/azure/');
+        return strtolower(ServerHostname::HTTPSUrl() . OPENIDCONNECTCLIENT_BASE_URL . '/azure/');
     }
 
     public function icon()

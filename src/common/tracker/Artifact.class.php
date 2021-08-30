@@ -2453,7 +2453,7 @@ class Artifact
           //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
 
           //Prepare e-mail
-            list($host,) = explode(':', ForgeConfig::get('sys_default_domain'));
+            $host = \Tuleap\ServerHostname::rawHostname();
 
           //treat anonymous users
             $text_mail = $this->createMailForUsers([$GLOBALS['UGROUP_ANONYMOUS']], $changes, $group_id, $group_artifact_id, $ok, $subject);

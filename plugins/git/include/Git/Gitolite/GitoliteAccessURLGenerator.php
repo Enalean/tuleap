@@ -20,8 +20,8 @@
 
 namespace Tuleap\Git\Gitolite;
 
-use ForgeConfig;
 use GitRepository;
+use Tuleap\ServerHostname;
 
 class GitoliteAccessURLGenerator
 {
@@ -44,7 +44,7 @@ class GitoliteAccessURLGenerator
         if ($ssh_url === '') {
             return '';
         } elseif (! $ssh_url) {
-            $ssh_url = 'ssh://gitolite@' . ForgeConfig::get('sys_default_domain');
+            $ssh_url = 'ssh://gitolite@' . ServerHostname::rawHostname();
         }
         return $ssh_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
     }
@@ -65,7 +65,7 @@ class GitoliteAccessURLGenerator
     {
         $value = $this->git_plugin_info->getPropertyValueForName($key);
         if ($value !== false && $value !== null) {
-            $value = str_replace('%server_name%', ForgeConfig::get('sys_default_domain'), $value);
+            $value = str_replace('%server_name%', ServerHostname::hostnameWithHTTPSPort(), $value);
         }
         return $value;
     }

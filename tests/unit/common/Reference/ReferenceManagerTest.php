@@ -251,14 +251,14 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $html = 'myref #123';
         $this->rm->insertReferences($html, 102);
         $this->assertEquals(
-            '<a href="http:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>',
+            '<a href="https:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>',
             $html
         );
 
         $html = 'Text &#x27;myref #123&#x27; end text';
         $this->rm->insertReferences($html, 102);
         $this->assertEquals(
-            'Text &#x27;<a href="http:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>&#x27; end text',
+            'Text &#x27;<a href="https:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>&#x27; end text',
             $html
         );
     }

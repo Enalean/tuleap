@@ -259,14 +259,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function login_additional_connector(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (! $params['is_secure']) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')
-            );
-            return;
-        }
-
         $provider_manager                  = $this->getProviderManager();
         $login_connector_presenter_builder = new ConnectorPresenterBuilder(
             $provider_manager,

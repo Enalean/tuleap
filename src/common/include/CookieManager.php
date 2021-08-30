@@ -36,15 +36,10 @@ class CookieManager
                 'path'     => '/',
                 'expires'  => $expire,
                 'httponly' => true,
-                'secure'   => self::canCookieUseSecureFlag(),
+                'secure'   => true,
                 'samesite' => 'Lax'
             ]
         );
-    }
-
-    public static function canCookieUseSecureFlag(): bool
-    {
-        return (bool) ForgeConfig::get('sys_https_host');
     }
 
     public function getCookie(string $name): ?string
@@ -66,10 +61,6 @@ class CookieManager
     {
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
         $cookie_name   = "${cookie_prefix}_${name}";
-
-        if (! self::canCookieUseSecureFlag()) {
-            return $cookie_name;
-        }
 
         return self::PREFIX_HOST . $cookie_name;
     }

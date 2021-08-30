@@ -208,7 +208,7 @@ class Widget_ProjectPublicAreas extends Widget
         if ($project->isActive()) {
             $html .= '<p>';
 
-            list($host) = explode(':', ForgeConfig::get('sys_default_domain'));
+            $host = \Tuleap\ServerHostname::rawHostname();
             if (ForgeConfig::get('sys_disable_subdomains')) {
                 $ftp_subdomain = "";
             } else {

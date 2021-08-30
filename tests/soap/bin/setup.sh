@@ -22,7 +22,6 @@ setup_tuleap() {
 	-e "s#%sys_dbauth_passwd%#welcome0#g" \
 	-e "s#%sys_org_name%#Tuleap#g" \
 	-e "s#%sys_long_org_name%#Tuleap#g" \
-	-e 's#\$sys_https_host =.*#\$sys_https_host = "localhost";#' \
 	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
 	-e 's#\$sys_use_unsecure_ssl_certificate =.*#\$sys_use_unsecure_ssl_certificate = true;#' \
 	-e 's#/home/users##' \

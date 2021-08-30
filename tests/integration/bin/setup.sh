@@ -18,8 +18,6 @@ setup_tuleap() {
 	-e "s#%sys_dbauth_passwd%#welcome0#g" \
 	-e "s#%sys_org_name%#Tuleap#g" \
 	-e "s#%sys_long_org_name%#Tuleap#g" \
-	-e 's#\$sys_https_host =.*#\$sys_https_host = "localhost";#' \
-	-e 's#\$sys_rest_api_over_http =.*#\$sys_rest_api_over_http = 1;#' \
 	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
 	-e 's#/home/users##' \
 	-e 's#/home/groups##' \
