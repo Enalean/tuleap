@@ -26,11 +26,14 @@ msgstr "Le %s"
 msgid "Before %s"
 msgstr "Avant le %s"
 
-msgid "Export date"
-msgstr "Date de l'export"
-
 msgid "Exported by"
 msgstr "Exporté par"
+
+msgid "Exported on"
+msgstr "Exporté le"
+
+msgid "Exported on %s by %s"
+msgstr "Exporté le %s par %s"
 
 msgid ""
 "No filter has been applied to this report because no TQL query has been set"

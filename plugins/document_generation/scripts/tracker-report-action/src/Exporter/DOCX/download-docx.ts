@@ -27,6 +27,7 @@ import type {
     DateReportCriterionValue,
 } from "../../type";
 import type { ILevelsOptions, XmlComponent } from "docx";
+import { TabStopPosition, TabStopType } from "docx";
 import { ShadingType } from "docx";
 import {
     AlignmentType,
@@ -67,15 +68,32 @@ export async function downloadDocx(
     global_export_properties: GlobalExportProperties,
     datetime_locale_information: DateTimeLocaleInformation
 ): Promise<void> {
+    const exported_formatted_date = new Date().toLocaleDateString(
+        datetime_locale_information.locale,
+        { timeZone: datetime_locale_information.timezone }
+    );
     const footers = {
         default: new Footer({
             children: [
                 new Paragraph({
                     alignment: AlignmentType.CENTER,
                     children: [
+                        new TextRun(
+                            sprintf(
+                                gettext_provider.gettext("Exported on %s by %s"),
+                                exported_formatted_date,
+                                global_export_properties.user_display_name
+                            )
+                        ),
                         new TextRun({
-                            children: [PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES],
+                            children: ["\t", PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES],
                         }),
+                    ],
+                    tabStops: [
+                        {
+                            type: TabStopType.RIGHT,
+                            position: TabStopPosition.MAX,
+                        },
                     ],
                 }),
             ],
@@ -280,7 +298,7 @@ export async function downloadDocx(
                     ...buildCoverPage(
                         gettext_provider,
                         global_export_properties,
-                        datetime_locale_information
+                        exported_formatted_date
                     ),
                     ...table_of_contents,
                 ],
@@ -309,7 +327,7 @@ export async function downloadDocx(
 function buildCoverPage(
     gettext_provider: GetText,
     global_export_properties: GlobalExportProperties,
-    datetime_locale_information: DateTimeLocaleInformation
+    exported_formatted_date: string
 ): ReadonlyArray<XmlComponent> {
     const {
         platform_name,
@@ -336,7 +354,7 @@ function buildCoverPage(
             tracker_name,
             report_url,
             user_display_name,
-            datetime_locale_information
+            exported_formatted_date
         ),
         new Paragraph({ children: [new PageBreak()] }),
     ];
@@ -349,7 +367,7 @@ function buildCoverTable(
     tracker_name: string,
     report_url: string,
     user_name: string,
-    datetime_locale_information: DateTimeLocaleInformation
+    exported_formatted_date: string
 ): Table {
     return new Table({
         width: {
@@ -363,12 +381,8 @@ function buildCoverTable(
             buildCoverTableRow(gettext_provider.gettext("Tracker"), new TextRun(tracker_name)),
             buildCoverTableRow(gettext_provider.gettext("Exported by"), new TextRun(user_name)),
             buildCoverTableRow(
-                gettext_provider.gettext("Export date"),
-                new TextRun(
-                    new Date().toLocaleDateString(datetime_locale_information.locale, {
-                        timeZone: datetime_locale_information.timezone,
-                    })
-                )
+                gettext_provider.gettext("Exported on"),
+                new TextRun(exported_formatted_date)
             ),
             buildCoverTableRow(
                 gettext_provider.gettext("Report URL"),
