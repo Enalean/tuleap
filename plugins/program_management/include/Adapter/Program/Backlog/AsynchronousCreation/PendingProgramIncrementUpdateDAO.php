@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DeletePendingProgramIncrementUpdates;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\SearchPendingProgramIncrementUpdates;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 
-final class PendingProgramIncrementUpdateDAO extends DataAccessObject implements StoreProgramIncrementUpdate
+final class PendingProgramIncrementUpdateDAO extends DataAccessObject implements StoreProgramIncrementUpdate, SearchPendingProgramIncrementUpdates, DeletePendingProgramIncrementUpdates
 {
     public function storeUpdate(ProgramIncrementUpdate $update): void
     {
@@ -35,5 +39,43 @@ final class PendingProgramIncrementUpdateDAO extends DataAccessObject implements
             'user_id'              => $update->user->getId(),
             'changeset_id'         => $update->changeset->getId()
         ]);
+    }
+
+    public function searchUpdate(int $program_increment_id, int $user_id): ?PendingProgramIncrementUpdate
+    {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($program_increment_id, $user_id) {
+            $this->cleanupDeletedProgramIncrementsFromPendingStore($program_increment_id);
+            $sql = 'SELECT program_increment_id, user_id, changeset_id
+                FROM plugin_program_management_pending_program_increment_update
+                WHERE program_increment_id = ? AND user_id = ?';
+            $row = $this->getDB()->row($sql, $program_increment_id, $user_id);
+            if ($row === null) {
+                return null;
+            }
+            return new PendingProgramIncrementUpdateProxy(
+                $row['program_increment_id'],
+                $row['user_id'],
+                $row['changeset_id']
+            );
+        });
+    }
+
+    private function cleanupDeletedProgramIncrementsFromPendingStore(int $program_increment_id): void
+    {
+        $sql = 'DELETE pending.*
+                FROM plugin_program_management_pending_program_increment_update AS pending
+                LEFT JOIN tracker_artifact ON tracker_artifact.id = pending.program_increment_id
+                WHERE tracker_artifact.id IS NULL AND pending.program_increment_id = ?';
+
+        $this->getDB()->run($sql, $program_increment_id);
+    }
+
+    public function deletePendingProgramIncrementUpdatesByProgramIncrementId(int $program_increment_id): void
+    {
+        $sql = 'DELETE pending.*
+                FROM plugin_program_management_pending_program_increment_update AS pending
+                WHERE pending.program_increment_id = ?';
+
+        $this->getDB()->run($sql, $program_increment_id);
     }
 }

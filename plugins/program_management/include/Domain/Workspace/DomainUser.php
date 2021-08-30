@@ -20,17 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
+
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 
 /**
- * I am a storage row for a pending iteration creation. DO NOT trust my values: the iteration artifact could have been
- * deleted since its storage. The program increment artifact could have been deleted.
+ * I am a User identifier that can be built in the Domain, without depending on Tuleap Core objects.
+ * @see UserProxy
  * @psalm-immutable
  */
-interface PendingIterationCreation
+final class DomainUser implements UserIdentifier
 {
-    public function getIterationId(): int;
-    public function getProgramIncrementId(): int;
-    public function getUserId(): int;
-    public function getIterationChangesetId(): int;
+    private int $id;
+
+    private function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public static function fromId(VerifyIsUser $user_verifier, int $user_id): ?self
+    {
+        if (! $user_verifier->isUser($user_id)) {
+            return null;
+        }
+        return new self($user_id);
+    }
 }

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+
 /**
  * I am the ID (identifier) of the Program Increment Tracker
  * @psalm-immutable
@@ -38,5 +40,12 @@ final class ProgramIncrementTrackerIdentifier
             return null;
         }
         return new self($tracker_id);
+    }
+
+    public static function fromProgramIncrement(
+        RetrieveProgramIncrementTracker $tracker_retriever,
+        ProgramIncrementIdentifier $program_increment
+    ): self {
+        return new self($tracker_retriever->getProgramIncrementTrackerIdFromProgramIncrement($program_increment));
     }
 }

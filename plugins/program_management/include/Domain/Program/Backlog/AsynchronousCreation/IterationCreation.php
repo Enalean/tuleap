@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\StoredUser;
+use Tuleap\ProgramManagement\Domain\Workspace\DomainUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
@@ -98,7 +98,7 @@ final class IterationCreation
         VerifyIsChangeset $changeset_verifier,
         PendingIterationCreation $pending_creation
     ): ?self {
-        $user = StoredUser::fromId($user_verifier, $pending_creation->getUserId());
+        $user = DomainUser::fromId($user_verifier, $pending_creation->getUserId());
         if (! $user) {
             return null;
         }

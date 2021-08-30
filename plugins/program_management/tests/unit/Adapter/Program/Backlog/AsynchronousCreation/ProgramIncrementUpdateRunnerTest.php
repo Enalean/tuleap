@@ -26,6 +26,7 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
@@ -49,6 +50,10 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private mixed $queue_factory;
     /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|ProcessProgramIncrementUpdate
+     */
+    private mixed $update_processor;
+    /**
      * @var mixed|\PHPUnit\Framework\MockObject\MockObject|ProcessIterationCreation
      */
     private mixed $iteration_processor;
@@ -62,6 +67,7 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $this->logger              = new TestLogger();
         $this->queue_factory       = $this->createStub(QueueFactory::class);
+        $this->update_processor    = $this->createMock(ProcessProgramIncrementUpdate::class);
         $this->iteration_processor = $this->createMock(ProcessIterationCreation::class);
 
         $this->program_increment_update = ProgramIncrementUpdateBuilder::buildWithIds(
@@ -95,6 +101,7 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
         return new ProgramIncrementUpdateRunner(
             $this->logger,
             $this->queue_factory,
+            $this->update_processor,
             $this->iteration_processor,
         );
     }
@@ -118,6 +125,7 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->queue_factory->method('getPersistentQueue')->willThrowException(
             new NoQueueSystemAvailableException('No queue system')
         );
+        $this->update_processor->expects(self::once())->method('processProgramIncrementUpdate');
         $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
         $this->getRunner()->scheduleUpdate($this->program_increment_update, ...$this->iteration_creations);
@@ -134,6 +142,7 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
             new QueueServerConnectionException('Error with queue')
         );
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
+        $this->update_processor->expects(self::once())->method('processProgramIncrementUpdate');
         $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
         $this->getRunner()->scheduleUpdate($this->program_increment_update, ...$this->iteration_creations);

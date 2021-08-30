@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 /**
- * I am a storage row for a pending iteration creation. DO NOT trust my values: the iteration artifact could have been
- * deleted since its storage. The program increment artifact could have been deleted.
+ * I am a storage row for a pending program increment update. DO NOT trust my values: the program increment artifact
+ * could have been deleted since its storage.
  * @psalm-immutable
  */
-interface PendingIterationCreation
+interface PendingProgramIncrementUpdate
 {
-    public function getIterationId(): int;
     public function getProgramIncrementId(): int;
     public function getUserId(): int;
-    public function getIterationChangesetId(): int;
+    public function getChangesetId(): int;
 }

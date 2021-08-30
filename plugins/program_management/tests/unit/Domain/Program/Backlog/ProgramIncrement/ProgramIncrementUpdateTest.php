@@ -23,7 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredChangesetNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredUserNotFoundException;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -36,12 +45,31 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROGRAM_INCREMENT_TRACKER_ID = 88;
     private const USER_ID                      = 183;
     private const CHANGESET_ID                 = 8996;
-    private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
+    private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
     private ArtifactUpdatedProxy $artifact_updated;
+    private VerifyIsUserStub $user_verifier;
+    private VerifyIsProgramIncrementStub $program_increment_verifier;
+    private VerifyIsVisibleArtifactStub $visibility_verifier;
+    private VerifyIsChangesetStub $changeset_verifier;
+    private RetrieveProgramIncrementTrackerStub $tracker_retriever;
+    private PendingProgramIncrementUpdateProxy $pending_update;
 
     protected function setUp(): void
     {
-        $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->tracker_verifier           = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->user_verifier              = VerifyIsUserStub::withValidUser();
+        $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
+        $this->visibility_verifier        = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
+        $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
+        $this->tracker_retriever          = RetrieveProgramIncrementTrackerStub::withValidTracker(
+            self::PROGRAM_INCREMENT_TRACKER_ID
+        );
+
+        $this->pending_update = new PendingProgramIncrementUpdateProxy(
+            self::PROGRAM_INCREMENT_ID,
+            self::USER_ID,
+            self::CHANGESET_ID
+        );
 
         $user      = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
         $tracker   = TrackerTestBuilder::aTracker()->withId(self::PROGRAM_INCREMENT_TRACKER_ID)->build();
@@ -58,7 +86,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromArtifactUpdatedEvent(): void
     {
         $update = ProgramIncrementUpdate::fromArtifactUpdatedEvent(
-            $this->program_increment_verifier,
+            $this->tracker_verifier,
             $this->artifact_updated
         );
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->program_increment->getId());
@@ -74,5 +102,64 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_updated
         );
         self::assertNull($update);
+    }
+
+    public function testItBuildsFromPendingProgramIncrementUpdate(): void
+    {
+        $update = ProgramIncrementUpdate::fromPendingUpdate(
+            $this->user_verifier,
+            $this->program_increment_verifier,
+            $this->visibility_verifier,
+            $this->changeset_verifier,
+            $this->tracker_retriever,
+            $this->pending_update
+        );
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $update->program_increment->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->tracker->id);
+        self::assertSame(self::USER_ID, $update->user->getId());
+        self::assertSame(self::CHANGESET_ID, $update->changeset->getId());
+    }
+
+    public function testItThrowsWhenStoredUserIsNotValid(): void
+    {
+        // It's not supposed to happen as users cannot be deleted in Tuleap. They change status.
+        $this->expectException(StoredUserNotFoundException::class);
+        ProgramIncrementUpdate::fromPendingUpdate(
+            VerifyIsUserStub::withNotValidUser(),
+            $this->program_increment_verifier,
+            $this->visibility_verifier,
+            $this->changeset_verifier,
+            $this->tracker_retriever,
+            $this->pending_update
+        );
+    }
+
+    public function testItThrowsWhenStoredProgramIncrementIsNotValid(): void
+    {
+        // It can happen if Program configuration changes between storage and processing; for example someone
+        // changed the Program Increment tracker.
+        $this->expectException(StoredProgramIncrementNoLongerValidException::class);
+        ProgramIncrementUpdate::fromPendingUpdate(
+            $this->user_verifier,
+            VerifyIsProgramIncrementStub::withNotProgramIncrement(),
+            $this->visibility_verifier,
+            $this->changeset_verifier,
+            $this->tracker_retriever,
+            $this->pending_update
+        );
+    }
+
+    public function testItThrowsWhenStoredChangesetIsNotValid(): void
+    {
+        // It's not supposed to happen as changesets cannot be deleted in Tuleap.
+        $this->expectException(StoredChangesetNotFoundException::class);
+        ProgramIncrementUpdate::fromPendingUpdate(
+            $this->user_verifier,
+            $this->program_increment_verifier,
+            $this->visibility_verifier,
+            VerifyIsChangesetStub::withNotValidChangeset(),
+            $this->tracker_retriever,
+            $this->pending_update
+        );
     }
 }

@@ -25,45 +25,37 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
-final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreation
+final class ProgramIncrementUpdateEventHandler implements ProcessProgramIncrementUpdate, ProcessIterationCreation
 {
-    private LoggerInterface $logger;
-    private SearchPendingIterations $iteration_searcher;
-    private VerifyIsUser $user_verifier;
-    private VerifyIsIteration $iteration_verifier;
-    private VerifyIsVisibleArtifact $visibility_verifier;
-    private VerifyIsProgramIncrement $program_increment_verifier;
-    private VerifyIsChangeset $changeset_verifier;
-    private DeletePendingIterations $iteration_deleter;
-
     public function __construct(
-        LoggerInterface $logger,
-        SearchPendingIterations $iteration_searcher,
-        VerifyIsUser $user_verifier,
-        VerifyIsIteration $iteration_verifier,
-        VerifyIsVisibleArtifact $visibility_verifier,
-        VerifyIsProgramIncrement $program_increment_verifier,
-        VerifyIsChangeset $changeset_verifier,
-        DeletePendingIterations $iteration_deleter
+        private LoggerInterface $logger,
+        private SearchPendingIterations $iteration_searcher,
+        private VerifyIsUser $user_verifier,
+        private VerifyIsIteration $iteration_verifier,
+        private VerifyIsVisibleArtifact $visibility_verifier,
+        private VerifyIsProgramIncrement $program_increment_verifier,
+        private VerifyIsChangeset $changeset_verifier,
+        private DeletePendingIterations $iteration_deleter,
+        private SearchPendingProgramIncrementUpdates $update_searcher,
+        private RetrieveProgramIncrementTracker $tracker_retriever,
+        private DeletePendingProgramIncrementUpdates $pending_update_deleter
     ) {
-        $this->logger                     = $logger;
-        $this->iteration_searcher         = $iteration_searcher;
-        $this->user_verifier              = $user_verifier;
-        $this->iteration_verifier         = $iteration_verifier;
-        $this->visibility_verifier        = $visibility_verifier;
-        $this->program_increment_verifier = $program_increment_verifier;
-        $this->changeset_verifier         = $changeset_verifier;
-        $this->iteration_deleter          = $iteration_deleter;
     }
 
     public function handle(?ProgramIncrementUpdateEvent $event): void
     {
         if (! $event) {
             return;
+        }
+        $pending_update = $this->update_searcher->searchUpdate($event->getArtifactId(), $event->getUserId());
+        if ($pending_update) {
+            $this->buildAndProcessProgramIncrementUpdate($pending_update);
         }
         $pending_creations = $this->iteration_searcher->searchIterationCreationsByProgramIncrement(
             $event->getArtifactId(),
@@ -72,6 +64,31 @@ final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreati
         foreach ($pending_creations as $pending_creation) {
             $this->buildAndProcessIterationCreation($pending_creation);
         }
+    }
+
+    private function buildAndProcessProgramIncrementUpdate(PendingProgramIncrementUpdate $pending_update): void
+    {
+        try {
+            $update = ProgramIncrementUpdate::fromPendingUpdate(
+                $this->user_verifier,
+                $this->program_increment_verifier,
+                $this->visibility_verifier,
+                $this->changeset_verifier,
+                $this->tracker_retriever,
+                $pending_update
+            );
+        } catch (StoredProgramIncrementNoLongerValidException $e) {
+            $program_increment_id = $e->getProgramIncrementId();
+            $this->logger->debug(
+                sprintf('Stored program increment #%d is no longer valid, cleaning up pending update', $program_increment_id)
+            );
+            $this->pending_update_deleter->deletePendingProgramIncrementUpdatesByProgramIncrementId($program_increment_id);
+            return;
+        } catch (StoredChangesetNotFoundException | StoredUserNotFoundException $e) {
+            $this->logger->error('Invalid data found in the database, skipping pending update', ['exception' => $e]);
+            return;
+        }
+        $this->processProgramIncrementUpdate($update);
     }
 
     private function buildAndProcessIterationCreation(PendingIterationCreation $pending_creation): void
@@ -107,6 +124,15 @@ final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreati
             return;
         }
         $this->processIterationCreation($iteration_creation);
+    }
+
+    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void
+    {
+        $program_increment_id = $update->program_increment->getId();
+        $user_id              = $update->user->getId();
+        $this->logger->debug(
+            "Processing program increment update with program increment #$program_increment_id for user #$user_id"
+        );
     }
 
     public function processIterationCreation(IterationCreation $iteration_creation): void

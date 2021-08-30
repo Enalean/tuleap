@@ -25,8 +25,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationProxy;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateProxy;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchPendingProgramIncrementUpdatesStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
@@ -36,10 +39,11 @@ use Tuleap\Queue\WorkerEvent;
 
 final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ITERATION_ID   = 196;
-    private const SECOND_ITERATION_ID  = 532;
-    private const USER_ID              = 108;
-    private const PROGRAM_INCREMENT_ID = 58;
+    private const FIRST_ITERATION_ID           = 196;
+    private const SECOND_ITERATION_ID          = 532;
+    private const USER_ID                      = 108;
+    private const PROGRAM_INCREMENT_ID         = 58;
+    private const PROGRAM_INCREMENT_TRACKER_ID = 36;
     private TestLogger $logger;
     private SearchPendingIterationsStub $iteration_searcher;
     private VerifyIsProgramIncrementStub $program_increment_verifier;
@@ -47,12 +51,17 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     /**
      * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingIterations
      */
-    private $iteration_deleter;
+    private mixed $iteration_deleter;
     private VerifyIsUserStub $user_verifier;
+    private SearchPendingProgramIncrementUpdatesStub $update_searcher;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingProgramIncrementUpdates
+     */
+    private mixed $update_deleter;
+    private VerifyIsChangesetStub $changeset_verifier;
 
     protected function setUp(): void
     {
-        $this->logger             = new TestLogger();
         $this->iteration_searcher = SearchPendingIterationsStub::withPendingCreations(
             new PendingIterationCreationProxy(
                 self::FIRST_ITERATION_ID,
@@ -68,10 +77,17 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
             ),
         );
 
+        $this->update_searcher = SearchPendingProgramIncrementUpdatesStub::withUpdate(
+            new PendingProgramIncrementUpdateProxy(self::PROGRAM_INCREMENT_ID, self::USER_ID, 7383)
+        );
+
+        $this->logger                     = new TestLogger();
         $this->iteration_verifier         = VerifyIsIterationStub::withValidIteration();
         $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
         $this->iteration_deleter          = $this->createMock(DeletePendingIterations::class);
         $this->user_verifier              = VerifyIsUserStub::withValidUser();
+        $this->update_deleter             = $this->createMock(DeletePendingProgramIncrementUpdates::class);
+        $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
     }
 
     private function getHandler(): ProgramIncrementUpdateEventHandler
@@ -83,8 +99,13 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
             $this->iteration_verifier,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             $this->program_increment_verifier,
-            VerifyIsChangesetStub::withValidChangeset(),
-            $this->iteration_deleter
+            $this->changeset_verifier,
+            $this->iteration_deleter,
+            $this->update_searcher,
+            RetrieveProgramIncrementTrackerStub::withValidTracker(
+                self::PROGRAM_INCREMENT_TRACKER_ID
+            ),
+            $this->update_deleter,
         );
     }
 
@@ -92,6 +113,9 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->getHandler()->handle($this->buildValidEvent());
 
+        self::assertTrue(
+            $this->logger->hasDebug('Processing program increment update with program increment #58 for user #108')
+        );
         self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #196 for user #108'));
         self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #532 for user #108'));
     }
@@ -109,6 +133,16 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
+    public function testItDoesNothingWhenArtifactFromStoredUpdateHasBeenDeleted(): void
+    {
+        // For example when program increment is deleted, the store will return null
+        $this->update_searcher = SearchPendingProgramIncrementUpdatesStub::withNoUpdate();
+
+        $this->getHandler()->handle($this->buildValidEvent());
+
+        self::assertFalse($this->logger->hasDebugThatContains('Processing program increment update'));
+    }
+
     public function testItDoesNothingWhenArtifactsFromStoredCreationsHaveBeenDeleted(): void
     {
         // For example when iteration or program increment are deleted, the store will return an empty array
@@ -116,7 +150,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
 
         $this->getHandler()->handle($this->buildValidEvent());
 
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertFalse($this->logger->hasDebugThatContains('Processing iteration creation'));
     }
 
     public function testItCleansUpStoredCreationWhenIterationIsNoLongerValid(): void
@@ -129,11 +163,14 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         $this->getHandler()->handle($this->buildValidEvent());
     }
 
-    public function testItCleansUpStoredCreationWhenProgramIncrementIsNoLongerValid(): void
+    public function testItCleansUpStoredUpdateAndCreationWhenProgramIncrementIsNoLongerValid(): void
     {
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Program Increment tracker.
         $this->program_increment_verifier = VerifyIsProgramIncrementStub::withNotProgramIncrement();
+        $this->update_deleter->expects(self::atLeastOnce())->method(
+            'deletePendingProgramIncrementUpdatesByProgramIncrementId'
+        );
         $this->iteration_deleter->expects(self::atLeastOnce())->method(
             'deletePendingIterationCreationsByProgramIncrementId'
         );
@@ -141,14 +178,24 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         $this->getHandler()->handle($this->buildValidEvent());
     }
 
-    public function testItSkipsCreationWhenUserIsInvalid(): void
+    public function testItSkipsUpdateAndCreationWhenUserIsInvalid(): void
     {
-        // It should not happen unless the database has been filled with wrong information
+        // It should not happen unless the database has been filled with wrong information or manually tampered with
         $this->user_verifier = VerifyIsUserStub::withNotValidUser();
 
         $this->getHandler()->handle($this->buildValidEvent());
 
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertTrue($this->logger->hasErrorRecords());
+    }
+
+    public function testItSkipsUpdateAndCreationWhenChangesetIsInvalid(): void
+    {
+        // It should not happen unless the database has been filled with wrong information or manually tampered with
+        $this->changeset_verifier = VerifyIsChangesetStub::withNotValidChangeset();
+
+        $this->getHandler()->handle($this->buildValidEvent());
+
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     private function buildValidEvent(): ?ProgramIncrementUpdateEvent

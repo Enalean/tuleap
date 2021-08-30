@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 
 final class RetrieveProgramIncrementTrackerStub implements RetrieveProgramIncrementTracker
@@ -38,12 +39,22 @@ final class RetrieveProgramIncrementTrackerStub implements RetrieveProgramIncrem
         return $this->tracker_id;
     }
 
-    public static function buildValidTrackerId(int $tracker_id): self
+    public function getProgramIncrementTrackerIdFromProgramIncrement(ProgramIncrementIdentifier $program_increment): int
+    {
+        if ($this->tracker_id === null) {
+            throw new \LogicException(
+                'Expected stub to return a valid program increment tracker id, but it was setup with null'
+            );
+        }
+        return $this->tracker_id;
+    }
+
+    public static function withValidTracker(int $tracker_id): self
     {
         return new self($tracker_id);
     }
 
-    public static function buildNoProgramIncrementTracker(): self
+    public static function withNoProgramIncrementTracker(): self
     {
         return new self(null);
     }
