@@ -461,18 +461,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         PFUser $user,
         bool $can_create
     ): string {
-        $purifier                                                = Codendi_HTMLPurifier::instance();
-        $possible_parents_getr                                   = new Tracker_Artifact_PossibleParentsRetriever($this->getArtifactFactory());
-        $html                                                    = '';
-        $html                                                   .= '<div class="tracker-artlink-add-parent">';
-        [$label, $paginated_possible_parents, $display_selector] = $possible_parents_getr->getPossibleArtifactParents(
+        $purifier                  = Codendi_HTMLPurifier::instance();
+        $possible_parents_getr     = new Tracker_Artifact_PossibleParentsRetriever($this->getArtifactFactory(), EventManager::instance());
+        $html                      = '';
+        $html                     .= '<div class="tracker-artlink-add-parent">';
+        $possible_parents_selector = $possible_parents_getr->getPossibleArtifactParents(
             $parent_tracker,
             $user,
             0,
             0
         );
-        $possible_parents                                        = $paginated_possible_parents->getArtifacts();
-        if ($display_selector) {
+        $possible_parents          = $possible_parents_selector->getPossibleParents()?->getArtifacts();
+        if ($possible_parents_selector->isSelectorDisplayed()) {
             $html .= '<label>';
             $html .= sprintf(dgettext('tuleap-tracker', 'Select %1$s parent:'), $purifier->purify($parent_tracker->getItemName()));
             $html .= '<select name="' . $purifier->purify($name) . '[parent]">';
@@ -480,10 +480,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             if ($can_create) {
                 $html .= '<option value="' . self::CREATE_NEW_PARENT_VALUE . '">' . dgettext('tuleap-tracker', 'Create a new one') . '</option>';
             }
-            $html .= $this->fetchArtifactParentsOptions($prefill_parent, $label, $possible_parents);
+            $html .= $this->fetchArtifactParentsOptions($prefill_parent, $possible_parents_selector->getLabel(), $possible_parents ?? []);
             $html .= '</select>';
             $html .= '</label>';
-        } elseif (count($possible_parents) > 0) {
+        } elseif ($possible_parents !== null && count($possible_parents) > 0) {
             $html .= sprintf(dgettext('tuleap-tracker', 'Will have %1$s as parent.'), $possible_parents[0]->fetchDirectLinkToArtifactWithTitle());
         }
         $html .= '</div>';

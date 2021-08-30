@@ -239,14 +239,7 @@ class Tracker_ArtifactFactory
         return $artifacts;
     }
 
-    /**
-     *
-     * @param type $tracker_id
-     * @param type $limit
-     * @param type $offset
-     * @return Tracker_Artifact_PaginatedArtifacts
-     */
-    public function getPaginatedPossibleParentArtifactsUserCanView(PFUser $user, $tracker_id, $limit, $offset)
+    public function getPaginatedPossibleParentArtifactsUserCanView(PFUser $user, int $tracker_id, int $limit, int $offset): Tracker_Artifact_PaginatedArtifacts
     {
         $artifacts = [];
         foreach ($this->getDao()->searchOpenByTrackerIdWithTitle($tracker_id, $limit, $offset)->instanciateWith([$this, 'getInstanceFromRow']) as $artifact) {

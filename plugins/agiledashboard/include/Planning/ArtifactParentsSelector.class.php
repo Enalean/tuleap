@@ -49,9 +49,9 @@ class Planning_ArtifactParentsSelector
     }
 
     /**
-     * @return array of Tracker_Artifact
+     * @return Artifact[]
      */
-    public function getPossibleParents(Tracker $parent_tracker, Artifact $source_artifact, PFUser $user)
+    public function getPossibleParents(Tracker $parent_tracker, Artifact $source_artifact, PFUser $user): array
     {
         foreach ($this->commands as $command) {
             $artifacts = $command->getPossibleParents($parent_tracker, $source_artifact, $user);

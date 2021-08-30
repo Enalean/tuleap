@@ -548,10 +548,10 @@ class TrackersResource extends AuthenticatedResource
 
         $parent = $this->getParentTracker($user, $tracker);
 
-        $possible_parents_getr                   = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory);
-        [$label, $pagination, $display_selector] = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);
-
-        if ($display_selector) {
+        $possible_parents_getr = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory, \EventManager::instance());
+        $possible_parents      = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);
+        $pagination            = $possible_parents->getPossibleParents();
+        if ($pagination && $possible_parents->isSelectorDisplayed()) {
             $nb_matching = $pagination->getTotalSize();
             Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
             $collection = [];
