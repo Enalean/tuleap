@@ -41,6 +41,18 @@ final class ListPickerIncluder
         }
     }
 
+    public static function includeArtifactLinksListPickerAssets(int $tracker_id): void
+    {
+        if (self::isListPickerEnabledAndBrowserCompatible($tracker_id)) {
+            $include_assets = new \Tuleap\Layout\IncludeAssets(
+                __DIR__ . '/../../../../../../src/www/assets/trackers',
+                '/assets/trackers'
+            );
+
+            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('artifact-links-field.js'));
+        }
+    }
+
     public static function isListPickerEnabledAndBrowserCompatible(int $tracker_id): bool
     {
         if (self::isListPickerEnabledOnPlatform() === false) {

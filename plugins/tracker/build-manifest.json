@@ -14,6 +14,10 @@
         "rich-text-editor": {
             "src": "scripts/lib/rich-text-editor/src",
             "po": "scripts/lib/rich-text-editor/po"
+        },
+        "artifact": {
+            "src": "scripts/artifact",
+            "po": "scripts/artifact/po"
         }
     },
     "gettext-vue": {

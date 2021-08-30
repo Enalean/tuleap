@@ -1,0 +1,2 @@
+msgid "Choose a value in the list"
+msgstr "Choisissez une valeur dans la liste"

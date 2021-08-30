@@ -1,0 +1,20 @@
+<div class="tracker-artlink-add-parent">
+    <label for="link-with-parent-select">
+    {{# dgettext }} tuleap-tracker | Select %s parent | {{ parent_label }} {{/ dgettext }}
+    </label>
+    <select id="link-with-parent-select" name="{{ form_name_prefix }}[parent]">
+        <option value=""></option>
+        {{# can_create }}
+            <optgroup label="{{# dgettext }} tuleap-tracker | Creation {{/ dgettext}}">
+                <option value="{{ create_new_parent_value }}">{{# dgettext }} tuleap-tracker | Create a new {{ parent_label }} {{/ dgettext }}</option>
+            </optgroup>
+        {{/ can_create }}
+        {{# has_possible_parents }}
+            <optgroup label="{{ label }}">
+            {{# possible_parents }}
+                <option value="{{ id }}" {{# selected }}selected{{/ selected }}>{{ xref }} - {{ title }}</option>
+            {{/ possible_parents }}
+            </optgroup>
+        {{/ has_possible_parents }}
+    </select>
+</div>
