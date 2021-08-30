@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -33,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class TeamCreator implements CreateTeam
@@ -54,7 +54,7 @@ final class TeamCreator implements CreateTeam
      * @throws ProgramIsTeamException
      * @throws ProgramCannotBeATeamException
      */
-    public function create(\PFUser $user, int $project_id, array $team_ids): void
+    public function create(UserIdentifier $user_identifier, int $project_id, array $team_ids): void
     {
         if (in_array($project_id, $team_ids, true)) {
             throw new ProgramIsTeamException($project_id);
@@ -64,11 +64,11 @@ final class TeamCreator implements CreateTeam
             $this->team_verifier,
             $this->permission_verifier,
             $this->retrieve_user,
-            UserProxy::buildFromPFUser($user),
+            $user_identifier,
             ProjectProxy::buildFromProject($project)
         );
         $teams           = array_map(
-            fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $user),
+            fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $user_identifier),
             $team_ids
         );
         $team_collection = TeamCollection::fromProgramAndTeams($program, ...$teams);

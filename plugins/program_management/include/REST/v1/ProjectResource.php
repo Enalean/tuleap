@@ -138,7 +138,7 @@ final class ProjectResource extends AuthenticatedResource
             $this->user_manager_adapter
         );
 
-        $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
+        $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao, $this->user_manager_adapter);
         $this->team_creator = new TeamCreator(
             $project_retriever,
             $team_dao,
@@ -293,10 +293,11 @@ final class ProjectResource extends AuthenticatedResource
      */
     protected function putTeam(int $id, ProjectResourcePutTeamsRepresentation $representation): void
     {
-        $user = $this->user_manager->getCurrentUser();
+        $user            = $this->user_manager->getCurrentUser();
+        $user_identifier = UserProxy::buildFromPFUser($user);
         try {
             $this->team_creator->create(
-                $user,
+                $user_identifier,
                 $id,
                 $representation->team_ids
             );

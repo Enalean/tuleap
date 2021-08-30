@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,39 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
-use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
+namespace Tuleap\ProgramManagement\Tests\Stub;
+
+use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-interface CreateTeam
+final class BuildTeamStub implements BuildTeam
 {
-    /**
-     * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     * @throws ProjectIsAProgramException
-     * @throws TeamAccessException
-     * @throws ProgramIsTeamException
-     */
-    public function create(UserIdentifier $user_identifier, int $project_id, array $team_ids): void;
+    private function __construct(private bool $is_team)
+    {
+    }
+
+    public static function withValidTeam(): self
+    {
+        return new self(true);
+    }
+
+    public function checkProjectIsATeam(int $team_id, UserIdentifier $user_identifier): void
+    {
+        if (! $this->is_team) {
+            throw new TeamAccessException($team_id);
+        }
+    }
+
+    public function checkProjectIsATeamForRestTestInitialization(int $team_id): void
+    {
+        // should never be implemented
+        throw new \LogicException();
+    }
 }
