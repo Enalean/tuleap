@@ -230,6 +230,7 @@ describe("TTM campaign", () => {
                     });
                     cy.get("[data-test=mark-test-as-passed]").click();
                     cy.get("[data-test=current-test").should("have.class", "passed");
+                    cy.get("[data-test=warning-status-changed]").should("not.exist");
                     cy.get("[data-test=expand-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
                         cy.contains("It is ok. Fix works!");
@@ -260,6 +261,7 @@ describe("TTM campaign", () => {
                 it("Update the status with same comment", () => {
                     cy.get("[data-test=mark-test-as-blocked]").click();
                     cy.get("[data-test=current-test").should("have.class", "blocked");
+                    cy.get("[data-test=warning-status-changed]").should("exist");
                     cy.get("[data-test=current-test-comment-preview]").contains(
                         "I confirm that. It is ok. Fix works!"
                     );

@@ -176,14 +176,13 @@ describe("ExecutionDetailController -", () => {
             );
             ExecutionService.editor = ckeditorGetData;
             execution.results = "psychoanalyzer rupture solidish";
+            execution.uploaded_files = [];
             $scope.execution = execution;
             $scope.displayTestCommentEditor = true;
         });
 
         describe("pass()", () => {
             it("Then the status will be saved to 'passed'", () => {
-                execution.uploaded_files = [];
-
                 $scope.pass(event, execution);
                 $scope.$apply();
 
@@ -217,7 +216,6 @@ describe("ExecutionDetailController -", () => {
 
             it("When there is no comment, Then the comment box is created and displayed with previous comment", () => {
                 execution.results = "";
-                execution.uploaded_files = [];
 
                 $scope.pass(event, execution);
                 $scope.$apply();
@@ -235,6 +233,24 @@ describe("ExecutionDetailController -", () => {
                 );
                 expect(ExecutionService.setCommentOnEditor).toHaveBeenCalledWith("old comment");
                 expect($scope.displayTestCommentEditor).toBeTruthy();
+            });
+
+            it("When the comment has not been changed, Then warning is displayed", () => {
+                execution.results = "old comment";
+                $scope.displayTestCommentEditor = false;
+
+                $scope.pass(event, execution);
+                $scope.$apply();
+
+                expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    "passed",
+                    execution.results,
+                    []
+                );
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect($scope.displayTestCommentEditor).toBeFalsy();
+                expect($scope.onlyStatusHasBeenChanged).toBeTruthy();
             });
         });
 

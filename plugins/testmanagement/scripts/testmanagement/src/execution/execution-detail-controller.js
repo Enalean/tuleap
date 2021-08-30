@@ -88,6 +88,7 @@ function ExecutionDetailCtrl(
     $scope.shouldCommentSectionBeDisplayed = shouldCommentSectionBeDisplayed;
     $scope.onCancelEditionComment = onCancelEditionComment;
     $scope.shouldCancelEditionCommentBeDisplayed = shouldCancelEditionCommentBeDisplayed;
+    $scope.onlyStatusHasBeenChanged = false;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -252,6 +253,7 @@ function ExecutionDetailCtrl(
             $scope.execution.previous_result.result = "";
             notrun($event, $scope.execution);
             theTestHasJustBeenUpdated();
+            $scope.onlyStatusHasBeenChanged = false;
 
             return DefinitionService.getDefinitionById(artifact_id).then(function (definition) {
                 executions.forEach((execution) => {
@@ -328,6 +330,7 @@ function ExecutionDetailCtrl(
     }
 
     function setNewStatus(event, execution, new_status) {
+        $scope.onlyStatusHasBeenChanged = !$scope.displayTestCommentEditor;
         execution.saving = true;
         const comment = getCommentToSave(execution);
         const has_test_comment = comment !== "";
