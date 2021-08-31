@@ -89,6 +89,7 @@ function ExecutionDetailCtrl(
     $scope.onCancelEditionComment = onCancelEditionComment;
     $scope.shouldCancelEditionCommentBeDisplayed = shouldCancelEditionCommentBeDisplayed;
     $scope.onlyStatusHasBeenChanged = false;
+    $scope.onReloadTestBecauseDefinitionIsUpdated = onReloadTestBecauseDefinitionIsUpdated;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -369,9 +370,19 @@ function ExecutionDetailCtrl(
     function handleCommentBox(has_test_comment, execution) {
         if (!has_test_comment) {
             showTestCommentEditor(execution);
+            if (execution.userCanReloadTestBecauseDefinitionIsUpdated) {
+                ExecutionService.clearEditor(execution);
+            }
             return;
         }
         hideTestCommentEditor();
+    }
+
+    function onReloadTestBecauseDefinitionIsUpdated(execution) {
+        $scope.onlyStatusHasBeenChanged = false;
+        $scope.displayTestCommentEditor = true;
+        ExecutionService.clearEditor(execution);
+        execution.userCanReloadTestBecauseDefinitionIsUpdated();
     }
 
     function getStatusLabel(status) {

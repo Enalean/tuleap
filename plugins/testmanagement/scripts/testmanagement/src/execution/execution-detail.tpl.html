@@ -164,7 +164,7 @@
                 ng-if="shouldCommentSectionBeDisplayed()"
                 data-test="comment-footer-section"
             >
-                <div class="tlp-form-element">
+                <div class="tlp-form-element" ng-show="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
                     <div class="tlp-alert-warning"
                          ng-if="onlyStatusHasBeenChanged"
                          data-test="warning-status-changed"
@@ -210,14 +210,17 @@
                     <span translate>The test has been changed by someone else. You should reload the test before executing it.</span>
                     <button type="button"
                             class="tlp-button-warning tlp-button-outline current-test-should-be-reloaded-button"
-                            ng-click="execution.userCanReloadTestBecauseDefinitionIsUpdated()">
+                            ng-click="onReloadTestBecauseDefinitionIsUpdated(execution)">
                         <i class="fas fa-fw fa-sync tlp-button-icon"></i> <span translate>Reload the test</span>
                     </button>
                 </div>
             </section>
         </div>
 
-        <section ng-if="execution.is_automated === false && campaign.is_open" class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container">
+        <section
+            ng-if="execution.is_automated === false && campaign.is_open && ! execution.userCanReloadTestBecauseDefinitionIsUpdated"
+            class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container"
+        >
             <div class="current-test-edit-comment-buttons">
                 <button
                     type="button"
@@ -248,7 +251,7 @@
                     {{ 'Save comment' | translate }}
                 </button>
             </div>
-            <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
+            <div class="current-test-results">
                 <button id="test-result-passed" type="button"
                         data-test="mark-test-as-passed"
                         class="current-test-result tlp-button-large tlp-button-success"
