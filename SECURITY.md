@@ -26,7 +26,7 @@ acknowledgment. SPF, DKIM, or DMARC issues in one of the services managed for th
 The Tuleap community would be grateful if security researchers comply with the following guidelines while researching
 and reporting vulnerabilities:
  * Do not test for vulnerabilities on instances you do not own. Tuleap is an open-source software, you can install your
- own copy or use our [Docker image](https://hub.docker.com/r/enalean/tuleap-aio/) to quickly get a playground.
+ own copy or use our [Docker image](https://hub.docker.com/r/tuleap/tuleap-community-edition) to quickly get a playground.
  * Confirm the vulnerability exists in the most recent stable or development version.
  * Allow the security team enough time to correct the reported vulnerability before publicly identifying or disclosing
 it.
