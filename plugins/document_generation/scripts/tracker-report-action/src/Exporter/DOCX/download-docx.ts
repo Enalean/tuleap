@@ -57,6 +57,7 @@ import { getAnchorToArtifactContent } from "./sections-anchor";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
+import { loadImage } from "./Image/image-loader";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -276,11 +277,11 @@ export async function downloadDocx(
         sections: [
             {
                 children: [
-                    ...buildCoverPage(
+                    ...(await buildCoverPage(
                         gettext_provider,
                         global_export_properties,
                         exported_formatted_date
-                    ),
+                    )),
                 ],
             },
             {
@@ -372,13 +373,14 @@ function buildFooter(
     });
 }
 
-function buildCoverPage(
+async function buildCoverPage(
     gettext_provider: GetText,
     global_export_properties: GlobalExportProperties,
     exported_formatted_date: string
-): ReadonlyArray<XmlComponent> {
+): Promise<ReadonlyArray<XmlComponent>> {
     const {
         platform_name,
+        platform_logo_url,
         project_name,
         tracker_name,
         report_name,
@@ -387,6 +389,10 @@ function buildCoverPage(
     } = global_export_properties;
 
     return [
+        new Paragraph({
+            children: [await loadImage(platform_logo_url)],
+            alignment: AlignmentType.CENTER,
+        }),
         new Paragraph({
             text: report_name,
             heading: HeadingLevel.TITLE,

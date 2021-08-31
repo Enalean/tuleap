@@ -18,8 +18,10 @@
  */
 
 import * as trigger_download from "../trigger-blob-download";
+import * as image_loader from "./Image/image-loader";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { downloadDocx } from "./download-docx";
+import { ImageRun } from "docx";
 
 describe("download-docx", () => {
     it("generates a docx file from the exported document", async (): Promise<void> => {
@@ -33,6 +35,15 @@ describe("download-docx", () => {
             expect(filename).toBe("Document Title.docx");
             expect(blob.size > 0).toBe(true);
         });
+        jest.spyOn(image_loader, "loadImage").mockResolvedValue(
+            new ImageRun({
+                data: "image_data",
+                transformation: {
+                    width: 100,
+                    height: 100,
+                },
+            })
+        );
 
         await downloadDocx(
             {
@@ -74,6 +85,7 @@ describe("download-docx", () => {
                 report_has_changed: false,
                 tracker_shortname: "bug",
                 platform_name: "Platform",
+                platform_logo_url: "/themes/common/images/homepage-logo.png",
                 project_name: "Project name",
                 tracker_id: 852,
                 tracker_name: "Bug",
