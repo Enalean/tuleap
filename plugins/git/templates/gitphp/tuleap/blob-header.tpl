@@ -42,7 +42,7 @@
             {else}
                 <div class="tlp-button-bar git-repository-blob-header-actions-bar">
                     {if isset($can_be_rendered) && $can_be_rendered}
-                        {if $rendered_file}
+                        {if isset($rendered_file) && $rendered_file}
                             <div class="tlp-button-bar-item">
                                 <a href="?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;show_source=1"
                                    class="tlp-button-primary tlp-button-outline tlp-button-small"
