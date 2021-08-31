@@ -138,6 +138,7 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-success-color-transparent-95: #{transparentize($tlp-success-color, 0.95)};
 
     --tlp-dimmed-color-darker-10: #{darken($tlp-dimmed-color, 10%)};
+    --tlp-dimmed-color-lighter-30: #{mix($tlp-dimmed-color, $tlp-white-color, 70%)};
     --tlp-dimmed-color-lighter-50: #{mix($tlp-dimmed-color, $tlp-white-color, 50%)};
     --tlp-dimmed-color-lighter-70: #{mix($tlp-dimmed-color, $tlp-white-color, 30%)};
     --tlp-dimmed-color-lighter-95: #{mix($tlp-dimmed-color, $tlp-white-color, 5%)};
