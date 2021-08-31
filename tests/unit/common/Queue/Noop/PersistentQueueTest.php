@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,26 +16,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Queue\Noop;
 
 use Tuleap\Queue\PersistentQueueStatistics;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PersistentQueue implements \Tuleap\Queue\PersistentQueue
+final class PersistentQueueTest extends TestCase
 {
+    private PersistentQueue $queue;
 
-    public function pushSinglePersistentMessage(string $topic, $content): void
+    protected function setUp(): void
     {
+        $this->queue = new PersistentQueue();
     }
 
-    public function listen($queue_id, $topic, callable $callback)
+    public function testStatisticsShowAnEmptyQueue(): void
     {
-    }
-
-    public function getStatistics(): PersistentQueueStatistics
-    {
-        return PersistentQueueStatistics::emptyQueue();
+        self::assertEquals(PersistentQueueStatistics::emptyQueue(), $this->queue->getStatistics());
     }
 }

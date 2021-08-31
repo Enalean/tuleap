@@ -21,6 +21,7 @@
 
 namespace Tuleap\Queue\Redis;
 
+use Tuleap\Queue\PersistentQueueStatistics;
 use Tuleap\Queue\QueueInstrumentation;
 use Tuleap\Queue\TaskWorker\TaskWorkerTimedOutException;
 use Tuleap\Redis;
@@ -194,5 +195,32 @@ class RedisPersistentQueue implements PersistentQueue
             $this->event_queue_name,
             $message_to_queue->toSerializedEventMessageValue()
         );
+    }
+
+    public function getStatistics(): PersistentQueueStatistics
+    {
+        $this->connect();
+        $queue_size = $this->redis->lLen($this->event_queue_name);
+        if ($queue_size === false || ! ($queue_size > 0)) {
+            return PersistentQueueStatistics::emptyQueue();
+        }
+
+        $values = $this->redis->lRange($this->event_queue_name, 0, -1);
+        if (! isset($values[0])) {
+            return PersistentQueueStatistics::emptyQueue();
+        }
+        $event_message = RedisEventMessageForPersistentQueue::fromSerializedEventMessageValue($values[0]);
+
+        $enqueue_time = $event_message->getEnqueueTime();
+        if ($enqueue_time === 0.0) {
+            return PersistentQueueStatistics::emptyQueue();
+        }
+
+        $oldest_message = \DateTimeImmutable::createFromFormat('U.u', sprintf('%.6F', $enqueue_time));
+        if ($oldest_message === false) {
+            return PersistentQueueStatistics::emptyQueue();
+        }
+
+        return PersistentQueueStatistics::queueWithMessageToProcess($queue_size, $oldest_message);
     }
 }

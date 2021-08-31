@@ -122,6 +122,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
             $errors[] = 'An error occurred while moving FRS files';
         }
 
+        $this->warnWhenThereIsTooMuchDelayInWorkerEventsProcessing($logger);
+
         try {
             EventManager::instance()->processEvent(
                 Event::PROCCESS_SYSTEM_CHECK,
@@ -153,5 +155,13 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         $token_manager = new Rest_TokenManager($token_dao, $token_factory, $user_manager);
 
         $token_manager->expireOldTokens();
+    }
+
+    private function warnWhenThereIsTooMuchDelayInWorkerEventsProcessing(\Psr\Log\LoggerInterface $logger): void
+    {
+        $queue = (new \Tuleap\Queue\QueueFactory($logger))->getPersistentQueue(Tuleap\Queue\Worker::EVENT_QUEUE_NAME);
+
+        $queue_supervisor = new \Tuleap\Queue\QueueSupervisor($queue, $logger);
+        $queue_supervisor->warnWhenThereIsTooMuchDelayInWorkerEventsProcessing(new DateTimeImmutable());
     }
 }
