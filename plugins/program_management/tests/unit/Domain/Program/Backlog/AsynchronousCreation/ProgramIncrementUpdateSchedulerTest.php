@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\Test\TestLogger;
+use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
@@ -49,30 +49,30 @@ final class ProgramIncrementUpdateSchedulerTest extends \Tuleap\Test\PHPUnit\Tes
                     // Side effects
                 }
             },
-            new IterationReplicationScheduler(
+            new IterationCreationDetector(
                 VerifyIterationsFeatureActiveStub::withActiveFeature(),
                 SearchIterationsStub::withIterationIds(101, 102),
                 VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                 VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-                new TestLogger(),
+                new NullLogger(),
                 RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
-                new class implements StorePendingIterations {
-                    public function storePendingIterationCreations(IterationCreation ...$creations): void
-                    {
-                        // Side effects
-                    }
-                },
-                new class implements RunIterationsCreation {
-                    public function scheduleIterationCreations(IterationCreation ...$creations): void
-                    {
-                        // Side effects
-                    }
+            ),
+            new class implements StoreIterationCreations {
+                public function storeCreations(IterationCreation ...$creations): void
+                {
+                    // Side effects
                 }
-            )
+            },
+            new class implements RunProgramIncrementUpdate {
+                public function scheduleUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
+                {
+                    // Side effects
+                }
+            }
         );
     }
 
-    public function testItSchedulesAReplication(): void
+    public function testItSchedulesAnUpdateAndIterationCreations(): void
     {
         $this->getScheduler()->replicateProgramIncrementUpdate($this->update);
         $this->addToAssertionCount(1);

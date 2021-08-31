@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface StorePendingIterations
+interface SearchPendingIterations
 {
-    public function storePendingIterationCreations(IterationCreation ...$creations): void;
+    /**
+     * @return PendingIterationCreation[]
+     */
+    public function searchIterationCreationsByProgramIncrement(int $program_increment_id, int $user_id): array;
 }

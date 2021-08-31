@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\Test\TestLogger;
+use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
@@ -31,24 +31,20 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
 
-final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_ITERATION_ID  = 828;
     private const SECOND_ITERATION_ID = 251;
     private ProgramIncrementUpdate $program_increment_update;
-    private TestLogger $logger;
     private VerifyIterationsFeatureActiveStub $feature_flag_verifier;
     private SearchIterationsStub $iterations_searcher;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
     private RetrieveLastChangesetStub $changeset_retriever;
-    private StorePendingIterations $pending_store;
-    private RunIterationsCreation $iterations_creator;
 
     protected function setUp(): void
     {
         $this->program_increment_update = ProgramIncrementUpdateBuilder::build();
-        $this->logger                   = new TestLogger();
         $this->feature_flag_verifier    = VerifyIterationsFeatureActiveStub::withActiveFeature();
         $this->iterations_searcher      = SearchIterationsStub::withIterationIds(
             self::FIRST_ITERATION_ID,
@@ -57,79 +53,54 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->visibility_verifier      = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->iteration_link_verifier  = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
         $this->changeset_retriever      = RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872);
-        $this->pending_store            = new class implements StorePendingIterations {
-            public function storePendingIterationCreations(IterationCreation ...$creations): void
-            {
-                // Side effects
-            }
-        };
-        $this->iterations_creator       = new class implements RunIterationsCreation {
-            public function scheduleIterationCreations(IterationCreation ...$creations): void
-            {
-                // Side effects
-            }
-        };
     }
 
-    private function getScheduler(): IterationReplicationScheduler
+    private function getDetector(): IterationCreationDetector
     {
-        return new IterationReplicationScheduler(
+        return new IterationCreationDetector(
             $this->feature_flag_verifier,
             $this->iterations_searcher,
             $this->visibility_verifier,
             $this->iteration_link_verifier,
-            $this->logger,
+            new NullLogger(),
             $this->changeset_retriever,
-            $this->pending_store,
-            $this->iterations_creator,
         );
     }
 
-    public function testItDoesNotScheduleAReplicationWhenFeatureFlagIsDisabled(): void
+    public function testItReturnsEmptyArrayWhenFeatureFlagIsDisabled(): void
     {
         $this->feature_flag_verifier = VerifyIterationsFeatureActiveStub::withDisabledFeature();
-        $this->pending_store         = $this->getStoreShouldNotBeCalled();
 
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
-        self::assertFalse($this->logger->hasDebugRecords());
+        $creations = $this->getDetector()->detectNewIterationCreations($this->program_increment_update);
+        self::assertEmpty($creations);
     }
 
-    public function testItDoesNotScheduleAReplicationWhenProgramIncrementHasNoIteration(): void
+    public function testItReturnsEmptyArrayWhenProgramIncrementHasNoIteration(): void
     {
         $this->iterations_searcher = SearchIterationsStub::withNoIteration();
         $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
-        $this->pending_store       = $this->getStoreShouldNotBeCalled();
 
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
-        self::assertFalse($this->logger->hasDebugRecords());
+        $creations = $this->getDetector()->detectNewIterationCreations($this->program_increment_update);
+        self::assertEmpty($creations);
     }
 
-    public function testItDoesNotScheduleAReplicationWhenAllIterationsHadBeenLinkedPreviously(): void
+    public function testItReturnsEmptyArrayWhenAllIterationsHadBeenLinkedPreviously(): void
     {
         $this->iteration_link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withIterationIds(
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
         );
-        $this->pending_store           = $this->getStoreShouldNotBeCalled();
 
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
-        self::assertFalse($this->logger->hasDebugRecords());
+        $creations = $this->getDetector()->detectNewIterationCreations($this->program_increment_update);
+        self::assertEmpty($creations);
     }
 
-    public function testItSchedulesAReplication(): void
+    public function testItReturnsIterationCreations(): void
     {
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment_update);
+        $creations     = $this->getDetector()->detectNewIterationCreations($this->program_increment_update);
+        $iteration_ids = array_map(static fn(IterationCreation $creation): int => $creation->iteration->id, $creations);
 
-        self::assertTrue($this->logger->hasDebug('Program increment has new iterations: [828,251]'));
-    }
-
-    private function getStoreShouldNotBeCalled(): StorePendingIterations
-    {
-        return new class implements StorePendingIterations {
-            public function storePendingIterationCreations(IterationCreation ...$creations): void
-            {
-                throw new \LogicException('Method should not have been called');
-            }
-        };
+        self::assertContains(self::FIRST_ITERATION_ID, $iteration_ids);
+        self::assertContains(self::SECOND_ITERATION_ID, $iteration_ids);
     }
 }

@@ -26,13 +26,17 @@ use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DeletePendingIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\SearchPendingIteration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StorePendingIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingIterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\SearchPendingIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreIterationCreations;
 
-final class PendingIterationCreationDAO extends DataAccessObject implements StorePendingIterations, SearchPendingIteration, DeletePendingIterations
+final class PendingIterationCreationDAO extends DataAccessObject implements StoreIterationCreations, SearchPendingIterations, DeletePendingIterations
 {
-    public function storePendingIterationCreations(IterationCreation ...$creations): void
+    public function storeCreations(IterationCreation ...$creations): void
     {
+        if (empty($creations)) {
+            return;
+        }
         $creation_maps = array_map(static function (IterationCreation $creation): array {
             return [
                 'iteration_id'           => $creation->iteration->id,
@@ -45,29 +49,38 @@ final class PendingIterationCreationDAO extends DataAccessObject implements Stor
         $this->getDB()->insertMany('plugin_program_management_pending_iterations', $creation_maps);
     }
 
-    public function searchPendingIterationCreation(int $iteration_id, int $user_id): ?array
+    public function searchIterationCreationsByProgramIncrement(int $program_increment_id, int $user_id): array
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($iteration_id, $user_id): ?array {
-            $this->cleanupDeletedIterationsFromPendingStore($iteration_id);
-            $this->cleanupDeletedProgramIncrementsFromPendingStore($iteration_id);
-            return $db->row(
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($program_increment_id, $user_id): array {
+            $this->cleanupDeletedIterationsFromPendingStore($program_increment_id);
+            $this->cleanupDeletedProgramIncrementsFromPendingStore($program_increment_id);
+            $rows = $db->q(
                 'SELECT iteration_id, program_increment_id, user_id, iteration_changeset_id
                 FROM plugin_program_management_pending_iterations
-                WHERE iteration_id = ? AND user_id = ?',
-                $iteration_id,
+                WHERE program_increment_id = ? AND user_id = ?',
+                $program_increment_id,
                 $user_id
+            );
+            return array_map(
+                static fn(array $row): PendingIterationCreation => new PendingIterationCreationProxy(
+                    $row['iteration_id'],
+                    $row['program_increment_id'],
+                    $row['user_id'],
+                    $row['iteration_changeset_id']
+                ),
+                $rows
             );
         });
     }
 
-    private function cleanupDeletedIterationsFromPendingStore(int $iteration_id): void
+    private function cleanupDeletedIterationsFromPendingStore(int $program_increment_id): void
     {
         $sql = 'DELETE pending.*
                 FROM plugin_program_management_pending_iterations AS pending
                 LEFT JOIN tracker_artifact ON tracker_artifact.id = pending.iteration_id
-                WHERE tracker_artifact.id IS NULL AND pending.iteration_id = ?';
+                WHERE tracker_artifact.id IS NULL AND pending.program_increment_id = ?';
 
-        $this->getDB()->run($sql, $iteration_id);
+        $this->getDB()->run($sql, $program_increment_id);
     }
 
     private function cleanupDeletedProgramIncrementsFromPendingStore(int $program_increment_id): void
@@ -75,7 +88,7 @@ final class PendingIterationCreationDAO extends DataAccessObject implements Stor
         $sql = 'DELETE pending.*
                 FROM plugin_program_management_pending_iterations AS pending
                 LEFT JOIN tracker_artifact ON tracker_artifact.id = pending.program_increment_id
-                WHERE tracker_artifact.id IS NULL AND pending.iteration_id = ?';
+                WHERE tracker_artifact.id IS NULL AND pending.program_increment_id = ?';
 
         $this->getDB()->run($sql, $program_increment_id);
     }

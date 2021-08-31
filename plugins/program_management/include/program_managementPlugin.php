@@ -35,17 +35,17 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
-use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
+use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
@@ -115,8 +115,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationEventHandler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateEventHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
@@ -520,7 +520,7 @@ final class program_managementPlugin extends Plugin
         $artifact_factory       = \Tracker_ArtifactFactory::instance();
         $iteration_creation_DAO = new PendingIterationCreationDAO();
 
-        $handler = new IterationCreationEventHandler(
+        $handler = new ProgramIncrementUpdateEventHandler(
             $logger,
             $iteration_creation_DAO,
             $user_retriever,
@@ -531,7 +531,7 @@ final class program_managementPlugin extends Plugin
             new ChangesetDAO(),
             $iteration_creation_DAO
         );
-        $handler->handle(IterationCreationEventProxy::fromWorkerEvent($logger, $event));
+        $handler->handle(ProgramIncrementUpdateEventProxy::fromWorkerEvent($logger, $event));
     }
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
@@ -559,6 +559,18 @@ final class program_managementPlugin extends Plugin
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $program_increments_DAO         = new ProgramIncrementsDAO();
 
+        $update_processor = new ProgramIncrementUpdateEventHandler(
+            $logger,
+            $iteration_creation_DAO,
+            $user_retriever,
+            new IterationsDAO(),
+            $visibility_verifier,
+            $user_retriever,
+            new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
+            new ChangesetDAO(),
+            $iteration_creation_DAO
+        );
+
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
             new UserStoriesInMirroredProgramIncrementsPlanner(
@@ -574,30 +586,20 @@ final class program_managementPlugin extends Plugin
             new ArtifactsExplicitTopBacklogDAO(),
             new ProgramIncrementUpdateScheduler(
                 new PendingProgramIncrementUpdateDAO(),
-                new IterationReplicationScheduler(
+                new IterationCreationDetector(
                     new ForgeConfigAdapter(),
                     $iterations_linked_dao,
                     $visibility_verifier,
                     $iterations_linked_dao,
                     $logger,
                     new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
-                    $iteration_creation_DAO,
-                    new IterationCreationsRunner(
-                        $logger,
-                        new QueueFactory($logger),
-                        new IterationCreationEventHandler(
-                            $logger,
-                            $iteration_creation_DAO,
-                            $user_retriever,
-                            new IterationsDAO(),
-                            $visibility_verifier,
-                            $user_retriever,
-                            new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
-                            new ChangesetDAO(),
-                            $iteration_creation_DAO
-                        )
-                    ),
                 ),
+                $iteration_creation_DAO,
+                new ProgramIncrementUpdateRunner(
+                    $logger,
+                    new QueueFactory($logger),
+                    $update_processor
+                )
             )
         );
 

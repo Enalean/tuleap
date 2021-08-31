@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class IterationCreationEventProxyTest extends TestCase
+final class ProgramIncrementUpdateEventProxyTest extends TestCase
 {
     private TestLogger $logger;
 
@@ -39,13 +39,13 @@ final class IterationCreationEventProxyTest extends TestCase
     public function testItBuildsFromValidWorkerEvent(): void
     {
         $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => IterationCreationEvent::TOPIC,
+            'event_name' => ProgramIncrementUpdateEvent::TOPIC,
             'payload'    => [
                 'artifact_id' => 29,
                 'user_id'     => 186,
             ]
         ]);
-        $event        = IterationCreationEventProxy::fromWorkerEvent($this->logger, $worker_event);
+        $event        = ProgramIncrementUpdateEventProxy::fromWorkerEvent($this->logger, $worker_event);
         self::assertSame(29, $event->getArtifactId());
         self::assertSame(186, $event->getUserId());
     }
@@ -56,19 +56,19 @@ final class IterationCreationEventProxyTest extends TestCase
             'event_name' => 'unrelated.topic',
             'payload'    => []
         ]);
-        self::assertNull(IterationCreationEventProxy::fromWorkerEvent($this->logger, $worker_event));
+        self::assertNull(ProgramIncrementUpdateEventProxy::fromWorkerEvent($this->logger, $worker_event));
     }
 
     public function testItLogsMalformedPayload(): void
     {
         $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => IterationCreationEventProxy::TOPIC,
+            'event_name' => ProgramIncrementUpdateEventProxy::TOPIC,
             'payload'    => []
         ]);
-        self::assertNull(IterationCreationEventProxy::fromWorkerEvent($this->logger, $worker_event));
+        self::assertNull(ProgramIncrementUpdateEventProxy::fromWorkerEvent($this->logger, $worker_event));
         self::assertTrue(
             $this->logger->hasWarning(
-                sprintf('The payload for %s seems to be malformed, ignoring', IterationCreationEvent::TOPIC)
+                sprintf('The payload for %s seems to be malformed, ignoring', ProgramIncrementUpdateEvent::TOPIC)
             )
         );
     }

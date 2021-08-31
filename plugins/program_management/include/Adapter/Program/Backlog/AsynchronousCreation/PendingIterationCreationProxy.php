@@ -20,25 +20,40 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingIterationCreation;
 
-final class ProgramIncrementUpdateScheduler
+/**
+ * @psalm-immutable
+ */
+final class PendingIterationCreationProxy implements PendingIterationCreation
 {
     public function __construct(
-        private StoreProgramIncrementUpdate $update_store,
-        private IterationCreationDetector $iteration_creation_detector,
-        private StoreIterationCreations $iteration_store,
-        private RunProgramIncrementUpdate $update_runner
+        private int $iteration_id,
+        private int $program_increment_id,
+        private int $user_id,
+        private int $iteration_changeset_id
     ) {
     }
 
-    public function replicateProgramIncrementUpdate(ProgramIncrementUpdate $update): void
+    public function getIterationId(): int
     {
-        $this->update_store->storeUpdate($update);
-        $creations = $this->iteration_creation_detector->detectNewIterationCreations($update);
-        $this->iteration_store->storeCreations(...$creations);
-        $this->update_runner->scheduleUpdate($update, ...$creations);
+        return $this->iteration_id;
+    }
+
+    public function getProgramIncrementId(): int
+    {
+        return $this->program_increment_id;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
+    }
+
+    public function getIterationChangesetId(): int
+    {
+        return $this->iteration_changeset_id;
     }
 }

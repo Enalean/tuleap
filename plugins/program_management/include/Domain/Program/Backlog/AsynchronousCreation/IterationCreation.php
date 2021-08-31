@@ -37,7 +37,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 /**
  * I hold all the information necessary to create Mirrored Iterations from a source Iteration.
- * I can be stored and retrieved from storage.
  * @psalm-immutable
  */
 final class IterationCreation
@@ -92,37 +91,31 @@ final class IterationCreation
      * @throws StoredIterationNoLongerValidException
      * @throws StoredProgramIncrementNoLongerValidException
      */
-    public static function fromStorage(
-        SearchPendingIteration $iteration_searcher,
+    public static function fromPendingIterationCreation(
         VerifyIsUser $user_verifier,
         VerifyIsIteration $iteration_verifier,
         VerifyIsVisibleArtifact $visibility_verifier,
         RetrieveUser $user_retriever,
         CheckProgramIncrement $program_increment_checker,
         VerifyIsChangeset $changeset_verifier,
-        int $iteration_id,
-        int $user_id
+        PendingIterationCreation $pending_creation
     ): ?self {
-        $stored_creation = $iteration_searcher->searchPendingIterationCreation($iteration_id, $user_id);
-        if (! $stored_creation) {
-            return null;
-        }
-        $user_identifier = StoredUser::fromId($user_verifier, $stored_creation['user_id']);
+        $user_identifier = StoredUser::fromId($user_verifier, $pending_creation->getUserId());
         if (! $user_identifier) {
             return null;
         }
-        $stored_iteration_id = $stored_creation['iteration_id'];
-        $iteration           = IterationIdentifier::fromId(
+        $iteration_id = $pending_creation->getIterationId();
+        $iteration    = IterationIdentifier::fromId(
             $iteration_verifier,
             $visibility_verifier,
-            $stored_iteration_id,
+            $iteration_id,
             $user_identifier
         );
         if (! $iteration) {
-            throw new StoredIterationNoLongerValidException($stored_iteration_id);
+            throw new StoredIterationNoLongerValidException($iteration_id);
         }
         $user                 = $user_retriever->getUserWithId($user_identifier);
-        $program_increment_id = $stored_creation['program_increment_id'];
+        $program_increment_id = $pending_creation->getProgramIncrementId();
         try {
             $program_increment = ProgramIncrementIdentifier::fromId(
                 $program_increment_checker,
@@ -132,7 +125,7 @@ final class IterationCreation
         } catch (ProgramIncrementNotFoundException $e) {
             throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
         }
-        $changeset = DomainChangeset::fromId($changeset_verifier, $stored_creation['iteration_changeset_id']);
+        $changeset = DomainChangeset::fromId($changeset_verifier, $pending_creation->getIterationChangesetId());
         if (! $changeset) {
             return null;
         }

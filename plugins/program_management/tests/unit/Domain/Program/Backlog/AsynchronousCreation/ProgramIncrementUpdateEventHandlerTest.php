@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
-use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
+use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationProxy;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
@@ -35,12 +36,14 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_ID = 13;
-    private const USER_ID      = 108;
+    private const FIRST_ITERATION_ID   = 196;
+    private const SECOND_ITERATION_ID  = 532;
+    private const USER_ID              = 108;
+    private const PROGRAM_INCREMENT_ID = 58;
     private TestLogger $logger;
-    private SearchPendingIterationStub $iteration_searcher;
+    private SearchPendingIterationsStub $iteration_searcher;
     private CheckProgramIncrementStub $program_increment_checker;
     private RetrieveUserStub $user_retriever;
     private VerifyIsIterationStub $iteration_verifier;
@@ -48,15 +51,24 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
      * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingIterations
      */
     private $iteration_deleter;
+    private VerifyIsUserStub $user_verifier;
 
     protected function setUp(): void
     {
         $this->logger                    = new TestLogger();
-        $this->iteration_searcher        = SearchPendingIterationStub::withRow(
-            self::ITERATION_ID,
-            2,
-            self::USER_ID,
-            5457
+        $this->iteration_searcher        = SearchPendingIterationsStub::withPendingCreations(
+            new PendingIterationCreationProxy(
+                self::FIRST_ITERATION_ID,
+                self::PROGRAM_INCREMENT_ID,
+                self::USER_ID,
+                5457
+            ),
+            new PendingIterationCreationProxy(
+                self::SECOND_ITERATION_ID,
+                self::PROGRAM_INCREMENT_ID,
+                self::USER_ID,
+                3325
+            ),
         );
         $this->iteration_verifier        = VerifyIsIterationStub::withValidIteration();
         $this->user_retriever            = RetrieveUserStub::withUser(
@@ -64,14 +76,15 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
         );
         $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
         $this->iteration_deleter         = $this->createMock(DeletePendingIterations::class);
+        $this->user_verifier             = VerifyIsUserStub::withValidUser();
     }
 
-    private function getHandler(): IterationCreationEventHandler
+    private function getHandler(): ProgramIncrementUpdateEventHandler
     {
-        return new IterationCreationEventHandler(
+        return new ProgramIncrementUpdateEventHandler(
             $this->logger,
             $this->iteration_searcher,
-            VerifyIsUserStub::withValidUser(),
+            $this->user_verifier,
             $this->iteration_verifier,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             $this->user_retriever,
@@ -85,7 +98,8 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $this->getHandler()->handle($this->buildValidEvent());
 
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #13 for user #108'));
+        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #196 for user #108'));
+        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #532 for user #108'));
     }
 
     public function testItDoesNothingWhenEventIsNull(): void
@@ -94,17 +108,17 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
             'event_name' => 'unrelated.topic',
             'payload'    => [],
         ]);
-        $event                = IterationCreationEventProxy::fromWorkerEvent($this->logger, $invalid_worker_event);
+        $event                = ProgramIncrementUpdateEventProxy::fromWorkerEvent($this->logger, $invalid_worker_event);
 
         $this->getHandler()->handle($event);
 
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    public function testItDoesNothingWhenArtifactFromStoredCreationHasBeenDeleted(): void
+    public function testItDoesNothingWhenArtifactsFromStoredCreationsHaveBeenDeleted(): void
     {
-        // For example when iteration or program increment are deleted, the store will return null
-        $this->iteration_searcher = SearchPendingIterationStub::withNoRow();
+        // For example when iteration or program increment are deleted, the store will return an empty array
+        $this->iteration_searcher = SearchPendingIterationsStub::withNoCreation();
 
         $this->getHandler()->handle($this->buildValidEvent());
 
@@ -116,7 +130,7 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Iteration tracker.
         $this->iteration_verifier = VerifyIsIterationStub::withNotIteration();
-        $this->iteration_deleter->expects(self::once())->method('deletePendingIterationCreationsByIterationId');
+        $this->iteration_deleter->expects(self::atLeastOnce())->method('deletePendingIterationCreationsByIterationId');
 
         $this->getHandler()->handle($this->buildValidEvent());
     }
@@ -126,20 +140,30 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Program Increment tracker.
         $this->program_increment_checker = CheckProgramIncrementStub::buildOtherArtifactChecker();
-        $this->iteration_deleter->expects(self::once())->method('deletePendingIterationCreationsByProgramIncrementId');
+        $this->iteration_deleter->expects(self::atLeastOnce())->method('deletePendingIterationCreationsByProgramIncrementId');
 
         $this->getHandler()->handle($this->buildValidEvent());
     }
 
-    private function buildValidEvent(): ?IterationCreationEvent
+    public function testItSkipsCreationWhenUserIsInvalid(): void
+    {
+        // It should not happen unless the database has been filled with wrong information
+        $this->user_verifier = VerifyIsUserStub::withNotValidUser();
+
+        $this->getHandler()->handle($this->buildValidEvent());
+
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
+
+    private function buildValidEvent(): ?ProgramIncrementUpdateEvent
     {
         $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => IterationCreationEvent::TOPIC,
+            'event_name' => ProgramIncrementUpdateEvent::TOPIC,
             'payload'    => [
-                'artifact_id' => self::ITERATION_ID,
+                'artifact_id' => self::PROGRAM_INCREMENT_ID,
                 'user_id'     => self::USER_ID,
             ]
         ]);
-        return IterationCreationEventProxy::fromWorkerEvent($this->logger, $worker_event);
+        return ProgramIncrementUpdateEventProxy::fromWorkerEvent($this->logger, $worker_event);
     }
 }

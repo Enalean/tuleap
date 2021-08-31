@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\Queue\WorkerEvent;
 
 /**
@@ -32,15 +32,10 @@ use Tuleap\Queue\WorkerEvent;
  * @see WorkerEvent
  * @psalm-immutable
  */
-final class IterationCreationEventProxy implements IterationCreationEvent
+final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEvent
 {
-    private int $artifact_id;
-    private int $user_id;
-
-    private function __construct(int $artifact_id, int $user_id)
+    private function __construct(private int $artifact_id, private int $user_id)
     {
-        $this->artifact_id = $artifact_id;
-        $this->user_id     = $user_id;
     }
 
     public static function fromWorkerEvent(LoggerInterface $logger, WorkerEvent $event): ?self

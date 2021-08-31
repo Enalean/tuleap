@@ -35,10 +35,19 @@ final class ProgramIncrementUpdateBuilder
 {
     public static function build(): ProgramIncrementUpdate
     {
-        $user      = UserTestBuilder::aUser()->withId(141)->build();
-        $tracker   = TrackerTestBuilder::aTracker()->withId(20)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(334)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('7516')
+        return self::buildWithIds(141, 334, 20, '7516');
+    }
+
+    public static function buildWithIds(
+        int $user_id,
+        int $program_increment_id,
+        int $tracker_id,
+        string $changeset_id
+    ): ProgramIncrementUpdate {
+        $user      = UserTestBuilder::aUser()->withId($user_id)->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withId($tracker_id)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact($program_increment_id)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset($changeset_id)
             ->ofArtifact($artifact)
             ->submittedBy($user->getId())
             ->build();
