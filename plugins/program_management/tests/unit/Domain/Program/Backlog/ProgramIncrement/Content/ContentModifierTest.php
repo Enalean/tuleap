@@ -34,214 +34,145 @@ use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckFeatureIsPlannedInProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use function PHPUnit\Framework\assertTrue;
 
 final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private UserIdentifierStub $user;
+    private VerifyPrioritizeFeaturesPermissionStub $prioritize_permission_verifier;
+    private VerifyIsVisibleFeatureStub $visible_feature_verifier;
+    private VerifyCanBePlannedInProgramIncrementStub $can_be_planned_verifier;
+    private OrderFeatureRank $feature_reorderer;
+    private CheckFeatureIsPlannedInProgramIncrementStub $feature_is_planned_checker;
+
+    protected function setUp(): void
+    {
+        $this->user                           = UserIdentifierStub::buildGenericUser();
+        $this->prioritize_permission_verifier = VerifyPrioritizeFeaturesPermissionStub::canPrioritize();
+        $this->visible_feature_verifier       = VerifyIsVisibleFeatureStub::buildVisibleFeature();
+        $this->can_be_planned_verifier        = VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier();
+        $this->feature_is_planned_checker     = CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature();
+        $this->feature_reorderer              = $this->getStubOrderFeature();
+    }
+
+    public function getModifier(): ContentModifier
+    {
+        return new ContentModifier(
+            $this->prioritize_permission_verifier,
+            VerifyIsProgramIncrementStub::withValidProgramIncrement(),
+            $this->getStubProgramSearcher(),
+            $this->visible_feature_verifier,
+            $this->can_be_planned_verifier,
+            new FeaturePlanner(
+                new DBTransactionExecutorPassthrough(),
+                VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+                $this->buildFeatureRemoverStub(),
+                $this->buildTopBacklogStoreStub(),
+                $this->buildFeatureAdderStub()
+            ),
+            $this->feature_reorderer,
+            $this->feature_is_planned_checker,
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+        );
+    }
+
     public function testItThrowsWhenUserCannotPrioritizeFeatures(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
-
-        $user = $this->getAMockedUser(true);
+        $this->prioritize_permission_verifier = VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize();
 
         $this->expectException(NotAllowedToPrioritizeException::class);
-        $modifier->modifyContent(
-            $user,
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(201, null),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
     public function testItThrowsWhenUserCannotSeeFeatureToAdd(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
-
-        $user = $this->getAMockedUser(false);
-        $user->method('isAdmin')->willReturn(false);
+        $this->visible_feature_verifier = VerifyIsVisibleFeatureStub::withNotVisibleFeature();
 
         $this->expectException(FeatureNotFoundException::class);
-        $modifier->modifyContent(
-            $user,
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(404, null),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
     public function testItThrowsWhenFeatureToAddCannotBePlanned(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
-
-        $user = $this->getAMockedUser(true);
+        $this->can_be_planned_verifier = VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier();
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
-        $modifier->modifyContent(
-            $user,
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(404, null),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
     public function testItSucceedsWhenThereIsOnlyFeatureToAdd(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
-
-        $user = $this->getAMockedUser(true);
-
         $this->expectNotToPerformAssertions();
-        $modifier->modifyContent(
-            $user,
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(201, null),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
     public function testItFailedWhenThereIsNoFeatureToAddOrToOrder(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
-
-        $user = UserTestBuilder::aUser()->build();
-
         $this->expectException(AddOrOrderMustBeSetException::class);
-        $modifier->modifyContent(
-            $user,
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(null, null),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
     public function testItSucceedsWhenThereIsOnlyFeatureToReorder(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(true),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
-
-        $user = $this->getAMockedUser(true);
-
-        $modifier->modifyContent(
-            $user,
+        $this->feature_reorderer = $this->getStubOrderFeature(true);
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
     public function testItThrowsWhenFeatureToReorderIsNotInPlan(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
+        $this->can_be_planned_verifier = VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier();
 
-        $user = $this->getAMockedUser(true);
         $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
-        $modifier->modifyContent(
-            $user,
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
     public function testItThrowsWhenFeatureToReorderIsNotInProgramIncrement(): void
     {
-        $modifier = new ContentModifier(
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            CheckFeatureIsPlannedInProgramIncrementStub::buildUnPlannedFeature(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
-        );
+        $this->feature_is_planned_checker = CheckFeatureIsPlannedInProgramIncrementStub::buildUnPlannedFeature();
 
-        $user = $this->getAMockedUser(true);
         $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
-        $modifier->modifyContent(
-            $user,
+        $this->getModifier()->modifyContent(
             12,
             ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
-            UserIdentifierStub::buildGenericUser()
+            $this->user
         );
     }
 
@@ -269,17 +200,6 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             },
             BuildProgramStub::stubValidProgram()
-        );
-    }
-
-    private function buildFeaturePlanner(): FeaturePlanner
-    {
-        return new FeaturePlanner(
-            new DBTransactionExecutorPassthrough(),
-            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
-            $this->buildFeatureRemoverStub(),
-            $this->buildTopBacklogStoreStub(),
-            $this->buildFeatureAdderStub()
         );
     }
 
@@ -346,18 +266,5 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             }
         };
-    }
-
-    /**
-     * @return \PFUser|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private function getAMockedUser(bool $is_super_user)
-    {
-        $user = $this->createMock(\PFUser::class);
-        $user->method('isSuperUser')->willReturn($is_super_user);
-        $user->method('isAdmin')->willReturn($is_super_user);
-        $user->method('getId')->willReturn(101);
-
-        return $user;
     }
 }

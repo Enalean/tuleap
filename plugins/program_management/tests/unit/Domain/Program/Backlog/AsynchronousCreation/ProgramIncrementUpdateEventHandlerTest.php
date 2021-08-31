@@ -26,15 +26,13 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationProxy;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,8 +42,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     private const PROGRAM_INCREMENT_ID = 58;
     private TestLogger $logger;
     private SearchPendingIterationsStub $iteration_searcher;
-    private CheckProgramIncrementStub $program_increment_checker;
-    private RetrieveUserStub $user_retriever;
+    private VerifyIsProgramIncrementStub $program_increment_verifier;
     private VerifyIsIterationStub $iteration_verifier;
     /**
      * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingIterations
@@ -55,8 +52,8 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
 
     protected function setUp(): void
     {
-        $this->logger                    = new TestLogger();
-        $this->iteration_searcher        = SearchPendingIterationsStub::withPendingCreations(
+        $this->logger             = new TestLogger();
+        $this->iteration_searcher = SearchPendingIterationsStub::withPendingCreations(
             new PendingIterationCreationProxy(
                 self::FIRST_ITERATION_ID,
                 self::PROGRAM_INCREMENT_ID,
@@ -70,13 +67,11 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
                 3325
             ),
         );
-        $this->iteration_verifier        = VerifyIsIterationStub::withValidIteration();
-        $this->user_retriever            = RetrieveUserStub::withUser(
-            UserTestBuilder::aUser()->withId(self::USER_ID)->build()
-        );
-        $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
-        $this->iteration_deleter         = $this->createMock(DeletePendingIterations::class);
-        $this->user_verifier             = VerifyIsUserStub::withValidUser();
+
+        $this->iteration_verifier         = VerifyIsIterationStub::withValidIteration();
+        $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
+        $this->iteration_deleter          = $this->createMock(DeletePendingIterations::class);
+        $this->user_verifier              = VerifyIsUserStub::withValidUser();
     }
 
     private function getHandler(): ProgramIncrementUpdateEventHandler
@@ -87,8 +82,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
             $this->user_verifier,
             $this->iteration_verifier,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            $this->user_retriever,
-            $this->program_increment_checker,
+            $this->program_increment_verifier,
             VerifyIsChangesetStub::withValidChangeset(),
             $this->iteration_deleter
         );
@@ -139,8 +133,10 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     {
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Program Increment tracker.
-        $this->program_increment_checker = CheckProgramIncrementStub::buildOtherArtifactChecker();
-        $this->iteration_deleter->expects(self::atLeastOnce())->method('deletePendingIterationCreationsByProgramIncrementId');
+        $this->program_increment_verifier = VerifyIsProgramIncrementStub::withNotProgramIncrement();
+        $this->iteration_deleter->expects(self::atLeastOnce())->method(
+            'deletePendingIterationCreationsByProgramIncrementId'
+        );
 
         $this->getHandler()->handle($this->buildValidEvent());
     }

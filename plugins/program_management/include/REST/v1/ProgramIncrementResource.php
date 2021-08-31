@@ -27,6 +27,7 @@ use ProjectManager;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureAdditionProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -36,7 +37,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplici
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
@@ -86,7 +86,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $this->user_manager_adapter                = new UserManagerAdapter($this->user_manager);
         $artifact_factory                          = \Tracker_ArtifactFactory::instance();
         $this->program_increment_content_retriever = new FeatureContentRetriever(
-            new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
+            new ProgramIncrementsDAO(),
             new ContentDao(),
             new FeatureRepresentationBuilder(
                 $artifact_factory,
@@ -100,7 +100,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     $this->user_manager_adapter
                 )
             ),
-            $this->getProgramSearcher()
+            $this->getProgramSearcher(),
+            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter)
         );
     }
 
@@ -185,7 +186,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new CanPrioritizeFeaturesDAO(),
                 $this->user_manager_adapter
             ),
-            new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
+            $program_increments_dao,
             $this->getProgramSearcher(),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             $plan_dao,
@@ -197,19 +198,24 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     $artifact_factory,
                     $this->user_manager_adapter
                 ),
-                new FeatureRemovalProcessor($program_increments_dao, $artifact_factory, $artifact_link_updater, $this->user_manager_adapter),
+                new FeatureRemovalProcessor(
+                    $program_increments_dao,
+                    $artifact_factory,
+                    $artifact_link_updater,
+                    $this->user_manager_adapter
+                ),
                 new ArtifactsExplicitTopBacklogDAO(),
                 new FeatureAdditionProcessor($artifact_factory, $artifact_link_updater, $this->user_manager_adapter)
             ),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             new FeatureDAO(),
-            new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter)
+            new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter),
+            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter)
         );
 
         try {
             $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
             $modifier->modifyContent(
-                $user,
                 $id,
                 ContentChange::fromRESTRepresentation($potential_feature_id_to_add, $patch_representation->order),
                 UserProxy::buildFromPFUser($user)

@@ -24,11 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
@@ -43,7 +44,8 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
     private LoggerInterface $logger;
     private RetrieveUser $user_manager_adapter;
     private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier;
-    private CheckProgramIncrement $check_program_increment;
+    private VerifyIsProgramIncrement $program_increment_verifier;
+    private VerifyIsVisibleArtifact $visibility_verifier;
 
     public function __construct(
         ProgramIncrementsDAO $program_increments_dao,
@@ -52,7 +54,8 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         LoggerInterface $logger,
         RetrieveUser $user_manager_adapter,
         VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
-        CheckProgramIncrement $check_program_increment
+        VerifyIsProgramIncrement $program_increment_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier
     ) {
         $this->program_increments_dao                 = $program_increments_dao;
         $this->artifact_factory                       = $artifact_factory;
@@ -60,7 +63,8 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         $this->logger                                 = $logger;
         $this->user_manager_adapter                   = $user_manager_adapter;
         $this->can_plan_in_program_increment_verifier = $can_plan_in_program_increment_verifier;
-        $this->check_program_increment                = $check_program_increment;
+        $this->program_increment_verifier             = $program_increment_verifier;
+        $this->visibility_verifier                    = $visibility_verifier;
     }
 
     /**
@@ -118,9 +122,10 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 
         $user_can_plan = $this->can_plan_in_program_increment_verifier->userCanPlan(
             ProgramIncrementIdentifier::fromId(
-                $this->check_program_increment,
+                $this->program_increment_verifier,
+                $this->visibility_verifier,
                 $program_increment_artifact->getId(),
-                $user
+                $user_identifier
             ),
             $user_identifier
         );

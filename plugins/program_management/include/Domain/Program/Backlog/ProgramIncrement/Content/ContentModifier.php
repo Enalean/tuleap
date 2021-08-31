@@ -29,9 +29,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundExcep
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
@@ -46,7 +47,7 @@ use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepres
 final class ContentModifier implements ModifyContent
 {
     private VerifyPrioritizeFeaturesPermission $permission_verifier;
-    private CheckProgramIncrement $program_increment_checker;
+    private VerifyIsProgramIncrement $program_increment_verifier;
     private ProgramSearcher $program_searcher;
     private VerifyIsVisibleFeature $visible_verifier;
     private VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier;
@@ -54,20 +55,22 @@ final class ContentModifier implements ModifyContent
     private CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI;
     private FeaturePlanner $feature_planner;
     private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier;
+    private VerifyIsVisibleArtifact $visibility_verifier;
 
     public function __construct(
         VerifyPrioritizeFeaturesPermission $permission_verifier,
-        CheckProgramIncrement $program_increment_checker,
+        VerifyIsProgramIncrement $program_increment_verifier,
         ProgramSearcher $program_searcher,
         VerifyIsVisibleFeature $visible_verifier,
         VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
         FeaturePlanner $feature_planner,
         OrderFeatureRank $features_rank_orderer,
         CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI,
-        VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier
+        VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier
     ) {
         $this->permission_verifier                    = $permission_verifier;
-        $this->program_increment_checker              = $program_increment_checker;
+        $this->program_increment_verifier             = $program_increment_verifier;
         $this->program_searcher                       = $program_searcher;
         $this->visible_verifier                       = $visible_verifier;
         $this->can_be_planned_verifier                = $can_be_planned_verifier;
@@ -75,22 +78,27 @@ final class ContentModifier implements ModifyContent
         $this->features_rank_orderer                  = $features_rank_orderer;
         $this->check_feature_is_planned_in_PI         = $check_feature_is_planned_in_PI;
         $this->can_plan_in_program_increment_verifier = $can_plan_in_program_increment_verifier;
+        $this->visibility_verifier                    = $visibility_verifier;
     }
 
-    public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change, UserIdentifier $user_identifier): void
+    public function modifyContent(int $program_increment_id, ContentChange $content_change, UserIdentifier $user): void
     {
         if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
             throw new AddOrOrderMustBeSetException();
         }
         $program_increment   = ProgramIncrementIdentifier::fromId(
-            $this->program_increment_checker,
+            $this->program_increment_verifier,
+            $this->visibility_verifier,
             $program_increment_id,
             $user
         );
-        $program             = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user_identifier);
+        $program             = $this->program_searcher->getProgramOfProgramIncrement(
+            $program_increment->getId(),
+            $user
+        );
         $user_can_prioritize = UserCanPrioritize::fromUser(
             $this->permission_verifier,
-            $user_identifier,
+            $user,
             $program,
             null
         );

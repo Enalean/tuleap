@@ -79,7 +79,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionRepresentation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
@@ -526,10 +525,9 @@ final class program_managementPlugin extends Plugin
             $user_retriever,
             new IterationsDAO(),
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
-            $user_retriever,
-            new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
+            new ProgramIncrementsDAO(),
             new ChangesetDAO(),
-            $iteration_creation_DAO
+            $iteration_creation_DAO,
         );
         $handler->handle(ProgramIncrementUpdateEventProxy::fromWorkerEvent($logger, $event));
     }
@@ -565,8 +563,7 @@ final class program_managementPlugin extends Plugin
             $user_retriever,
             new IterationsDAO(),
             $visibility_verifier,
-            $user_retriever,
-            new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
+            $program_increments_DAO,
             new ChangesetDAO(),
             $iteration_creation_DAO
         );

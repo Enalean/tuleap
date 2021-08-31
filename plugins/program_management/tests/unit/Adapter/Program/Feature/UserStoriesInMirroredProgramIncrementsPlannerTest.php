@@ -35,7 +35,6 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetri
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -72,11 +71,6 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PrioritizeFeaturesPermissionVerifier
      */
     private $prioritize_features_permission_verifier;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CheckProgramIncrement
-     */
-    private $retrieve_program_increment;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
