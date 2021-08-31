@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "@tuleap/tlp": "file:../../../themes/tlp"
+    "@tuleap/tlp-popovers": "file:../tlp-popovers"
   },
   "peerDependencies": {
     "vue": "^2.0.0"
