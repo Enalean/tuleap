@@ -399,7 +399,7 @@ execution-with-steps.current-test-content {
     margin: 0 5px 0 0;
 }
 
-.tlp-alert-warning.current-test-should-be-reloaded-warning {
+.tlp-alert-warning.current-test-message-warning {
     margin: 0 0 var(--tlp-medium-spacing) 0;
 
     &::before {
@@ -410,6 +410,13 @@ execution-with-steps.current-test-content {
 .current-test-should-be-reloaded-button {
     margin: 0 0 0 var(--tlp-small-spacing);
     vertical-align: baseline;
+}
+
+.current-test-comment-has-changed-buttons {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    flex-wrap: wrap;
+    margin: var(--tlp-small-spacing) 0 0 0;
 }
 
 .current-test-description-empty-state {

@@ -179,6 +179,22 @@
                             <span translate>Ok, got it</span>
                         </button>
                     </div>
+                    <div class="tlp-alert-warning current-test-message-warning"
+                         ng-if="displayTestCommentWarningOveriding">
+                        {{ getWarningTestCommentHasBeenUpdatedMessage(execution) }}
+                        <div class="current-test-comment-has-changed-buttons">
+                            <button type="button"
+                                    class="tlp-button-warning tlp-button-outline"
+                                    ng-click="onLoadNewComment(execution)">
+                                <span translate>Load the new comment</span>
+                            </button>
+                            <button type="button"
+                                    class="tlp-button-warning tlp-button-outline"
+                                    ng-click="onContinueToEditComment()">
+                                <span translate>Continue to edit your comment</span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="current-comment-header-section">
                         <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
                         <button
@@ -213,7 +229,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tlp-alert-warning current-test-should-be-reloaded-warning"
+                <div class="tlp-alert-warning current-test-message-warning"
                      ng-if="execution.userCanReloadTestBecauseDefinitionIsUpdated">
                     <span translate>The test has been changed by someone else. You should reload the test before executing it.</span>
                     <button type="button"
@@ -229,7 +245,7 @@
             ng-if="execution.is_automated === false && campaign.is_open && ! execution.userCanReloadTestBecauseDefinitionIsUpdated"
             class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container"
         >
-            <div class="current-test-edit-comment-buttons">
+            <div class="current-test-edit-comment-buttons" ng-if="! displayTestCommentWarningOveriding">
                 <button
                     type="button"
                     ng-if="! displayTestCommentEditor"

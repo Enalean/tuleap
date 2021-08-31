@@ -461,6 +461,7 @@ describe("ExecutionService", () => {
                 nb_of_blocked: 0,
                 total: 1,
             };
+            const brodcast = jest.spyOn($rootScope, "$broadcast");
 
             ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
@@ -468,6 +469,10 @@ describe("ExecutionService", () => {
 
             expect(ExecutionService.executions[4].status).toEqual("failed");
             expect(ExecutionService.campaign).toEqual(campaign_results);
+            expect(brodcast).toHaveBeenCalledWith(
+                "reload-comment-editor-view",
+                ExecutionService.executions[4]
+            );
         });
 
         it("Given that campaign, when I update an execution with different values, then the execution and the campaign must change", function () {
@@ -497,6 +502,7 @@ describe("ExecutionService", () => {
             };
 
             var campaign_copy = _.clone(campaign);
+            const brodcast = jest.spyOn($rootScope, "$broadcast");
 
             ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
@@ -505,6 +511,10 @@ describe("ExecutionService", () => {
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
             expect(Object.keys(ExecutionService.campaign).length).toEqual(
                 Object.keys(campaign_copy).length
+            );
+            expect(brodcast).toHaveBeenCalledWith(
+                "reload-comment-editor-view",
+                ExecutionService.executions[4]
             );
         });
 
@@ -554,6 +564,8 @@ describe("ExecutionService", () => {
                 uuid: "uuid-102",
             };
 
+            const brodcast = jest.spyOn($rootScope, "$broadcast");
+
             ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save, updated_by);
@@ -569,6 +581,10 @@ describe("ExecutionService", () => {
             expect(
                 ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated
             ).toBeFalsy();
+            expect(brodcast).toHaveBeenCalledWith(
+                "reload-comment-editor-view",
+                ExecutionService.executions[4]
+            );
         });
     });
 
