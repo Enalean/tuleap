@@ -19,8 +19,11 @@
 
 import { defineConfig } from "../../../../../../tools/utils/scripts/vite-configurator";
 
-export default defineConfig({
-    server: {
-        open: true,
+export default defineConfig(
+    {
+        server: {
+            open: true,
+        },
     },
-});
+    null
+);

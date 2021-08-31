@@ -7,7 +7,6 @@
   "version": "0.0.0",
   "module": "dist/filter-inline-table.es.js",
   "main": "dist/filter-inline-table.umd.js",
-  "types": "types/filter-inline-table.d.ts",
   "exports": {
     ".": {
       "import": "./dist/filter-inline-table.es.js",
@@ -20,12 +19,8 @@
     "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "$npm_package_config_bin/run-p build:*",
-    "build:vite": "$npm_package_config_bin/vite build",
-    "build:types": "rm -rf types/ && $npm_package_config_bin/tsc",
-    "watch": "$npm_package_config_bin/run-p watch:*",
-    "watch:vite": "$npm_package_config_bin/vite build --watch --mode development --minify false",
-    "watch:types": "rm -rf types/ && $npm_package_config_bin/tsc -w --preserveWatchOutput",
+    "build": "$npm_package_config_bin/vite build",
+    "watch": "$npm_package_config_bin/vite build --watch --mode development --minify false",
     "test": "$npm_package_config_bin/jest"
   }
 }

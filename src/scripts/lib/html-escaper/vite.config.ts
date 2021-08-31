@@ -20,11 +20,14 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/escaper.js"),
-            name: "tuleap.escaper",
+export default defineConfig(
+    {
+        build: {
+            lib: {
+                entry: path.resolve(__dirname, "src/escaper.js"),
+                name: "tuleap.escaper",
+            },
         },
     },
-});
+    null
+);

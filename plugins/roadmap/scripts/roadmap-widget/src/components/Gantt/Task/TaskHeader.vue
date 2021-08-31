@@ -44,7 +44,7 @@ import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
 import { namespace } from "vuex-class";
 import HeaderLink from "./HeaderLink.vue";
-import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
+import type { Popover } from "@tuleap/tlp-popovers";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
 import HeaderInvalidIcon from "./HeaderInvalidIcon.vue";

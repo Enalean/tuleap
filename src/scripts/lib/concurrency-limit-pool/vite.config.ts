@@ -19,12 +19,18 @@
 
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import checker from "vite-plugin-checker";
+import dts from "vite-dts";
 
-export default defineConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/concurrency-limit-pool.ts"),
-            name: "ConcurrencyLimitPool",
+export default defineConfig(
+    {
+        build: {
+            lib: {
+                entry: path.resolve(__dirname, "src/concurrency-limit-pool.ts"),
+                name: "ConcurrencyLimitPool",
+            },
         },
+        plugins: [checker({ typescript: true }), dts()],
     },
-});
+    { typescript: true }
+);
