@@ -374,6 +374,12 @@ execution-with-steps.current-test-content {
         border-color: var(--tlp-dimmed-color);
         background: var(--tlp-dimmed-color);
         color: var(--tlp-white-color);
+
+        &:disabled {
+            border-color: transparent;
+            background: var(--tlp-dimmed-color-lighter-30);
+            color: var(--tlp-white-color-transparent-40);
+        }
     }
 
     &:focus {
