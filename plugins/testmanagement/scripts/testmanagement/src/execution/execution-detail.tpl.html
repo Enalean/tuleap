@@ -218,34 +218,36 @@
         </div>
 
         <section ng-if="execution.is_automated === false && campaign.is_open" class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container">
-            <button
-                type="button"
-                ng-if="! displayTestCommentEditor"
-                class="tlp-button-secondary tlp-button-outline"
-                data-test="edit-comment-button"
-                ng-click="showTestCommentEditor(execution)"
-                data-shortcut-edit-comment-button
-            >
-                {{ 'Edit comment' | translate }}
-            </button>
-            <button
-                type="button"
-                ng-show="shouldCancelEditionCommentBeDisplayed(execution)"
-                class="tlp-button-secondary tlp-button-outline"
-                data-test="cancel-edit-comment-button"
-                ng-click="onCancelEditionComment(execution)"
-            >
-                {{ 'Cancel edition' | translate }}
-            </button>
-            <button
-                type="button"
-                ng-if="displayTestCommentEditor"
-                class="tlp-button-secondary tlp-button-outline current-test-footer-section-save-comment-button"
-                data-test="save-comment-button"
-                ng-click="updateComment($event, execution)"
-            >
-                {{ 'Save comment' | translate }}
-            </button>
+            <div class="current-test-edit-comment-buttons">
+                <button
+                    type="button"
+                    ng-if="! displayTestCommentEditor"
+                    class="tlp-button-secondary tlp-button-outline"
+                    data-test="edit-comment-button"
+                    ng-click="showTestCommentEditor(execution)"
+                    data-shortcut-edit-comment-button
+                >
+                    {{ 'Edit comment' | translate }}
+                </button>
+                <button
+                    type="button"
+                    ng-show="shouldCancelEditionCommentBeDisplayed(execution)"
+                    class="tlp-button-secondary tlp-button-outline"
+                    data-test="cancel-edit-comment-button"
+                    ng-click="onCancelEditionComment(execution)"
+                >
+                    {{ 'Cancel edition' | translate }}
+                </button>
+                <button
+                    type="button"
+                    ng-if="displayTestCommentEditor"
+                    class="tlp-button-secondary tlp-button-outline"
+                    data-test="save-comment-button"
+                    ng-click="updateComment($event, execution)"
+                >
+                    {{ 'Save comment' | translate }}
+                </button>
+            </div>
             <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
                 <button id="test-result-passed" type="button"
                         data-test="mark-test-as-passed"

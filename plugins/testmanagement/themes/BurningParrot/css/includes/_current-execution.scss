@@ -235,12 +235,17 @@ execution-with-steps.current-test-content {
 
 .current-test-footer-section-buttons-container {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
+    gap: var(--tlp-medium-spacing);
 }
 
-.current-test-footer-section-save-comment-button {
-    margin: 0 0 0 var(--tlp-medium-spacing);
+.current-test-edit-comment-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--tlp-medium-spacing);
 }
 
 .current-comment-header-section {
@@ -354,7 +359,6 @@ execution-with-steps.current-test-content {
 
 .current-test-results {
     display: flex;
-    margin: 0 0 0 var(--tlp-small-spacing);
 }
 
 .current-test-result {
@@ -374,6 +378,10 @@ execution-with-steps.current-test-content {
 
     &:focus {
         box-shadow: 0 0 0 2px var(--tlp-main-color);
+    }
+
+    &:first-child {
+        margin: 0;
     }
 }
 
