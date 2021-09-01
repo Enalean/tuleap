@@ -90,6 +90,8 @@ function ExecutionDetailCtrl(
     $scope.shouldCancelEditionCommentBeDisplayed = shouldCancelEditionCommentBeDisplayed;
     $scope.onlyStatusHasBeenChanged = false;
     $scope.onReloadTestBecauseDefinitionIsUpdated = onReloadTestBecauseDefinitionIsUpdated;
+    $scope.userIsAcceptingThatOnlyStatusHasBeenChanged =
+        userIsAcceptingThatOnlyStatusHasBeenChanged;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -383,6 +385,10 @@ function ExecutionDetailCtrl(
         $scope.displayTestCommentEditor = true;
         ExecutionService.clearEditor(execution);
         execution.userCanReloadTestBecauseDefinitionIsUpdated();
+    }
+
+    function userIsAcceptingThatOnlyStatusHasBeenChanged() {
+        $scope.onlyStatusHasBeenChanged = false;
     }
 
     function getStatusLabel(status) {

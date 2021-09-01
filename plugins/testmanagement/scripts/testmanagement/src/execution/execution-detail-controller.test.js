@@ -252,6 +252,20 @@ describe("ExecutionDetailController -", () => {
                 expect($scope.displayTestCommentEditor).toBeFalsy();
                 expect($scope.onlyStatusHasBeenChanged).toBeTruthy();
             });
+
+            it("When the comment has not been changed, and warning is displayed, and user accept the message, Then the warning is not anymore displayed", () => {
+                execution.results = "old comment";
+                $scope.displayTestCommentEditor = false;
+
+                $scope.pass(event, execution);
+                $scope.$apply();
+
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect($scope.onlyStatusHasBeenChanged).toBeTruthy();
+
+                $scope.userIsAcceptingThatOnlyStatusHasBeenChanged();
+                expect($scope.onlyStatusHasBeenChanged).toBeFalsy();
+            });
         });
 
         describe("fail()", () => {

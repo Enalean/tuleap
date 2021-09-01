@@ -169,7 +169,15 @@
                          ng-if="onlyStatusHasBeenChanged"
                          data-test="warning-status-changed"
                     >
-                        <span translate>Only the test status has changed, not the comment. Maybe you should have a look at it.</span>
+                        <span class="current-test-warning-status-changed" translate>Only the test status has changed, not the comment. Maybe you should have a look at it.</span>
+                        <button
+                            type="button"
+                            class="tlp-button-warning tlp-button-small"
+                            ng-click="userIsAcceptingThatOnlyStatusHasBeenChanged()"
+                        >
+                            <i class="fas fa-check tlp-button-icon" aria-hidden="true"></i>
+                            <span translate>Ok, got it</span>
+                        </button>
                     </div>
                     <div class="current-comment-header-section">
                         <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
