@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I am the ID (identifier) of an Artifact from the Program Increment tracker.
@@ -31,11 +33,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Veri
  */
 final class ProgramIncrementIdentifier
 {
-    private int $id;
-
-    private function __construct(int $id)
+    private function __construct(private int $id)
     {
-        $this->id = $id;
     }
 
     public function getId(): int
@@ -47,13 +46,19 @@ final class ProgramIncrementIdentifier
      * @throws ProgramIncrementNotFoundException
      */
     public static function fromId(
-        CheckProgramIncrement $check_program_increment,
-        int $program_increment_id,
-        \PFUser $user
+        VerifyIsProgramIncrement $program_increment_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        int $artifact_id,
+        UserIdentifier $user
     ): self {
-        $check_program_increment->checkIsAProgramIncrement($program_increment_id, $user);
+        if (
+            ! $program_increment_verifier->isProgramIncrement($artifact_id)
+            || ! $visibility_verifier->isVisible($artifact_id, $user)
+        ) {
+            throw new ProgramIncrementNotFoundException($artifact_id);
+        }
 
-        return new self($program_increment_id);
+        return new self($artifact_id);
     }
 
     public static function fromArtifactUpdated(

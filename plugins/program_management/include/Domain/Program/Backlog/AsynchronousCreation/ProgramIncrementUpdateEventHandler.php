@@ -25,9 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreation
@@ -37,8 +36,7 @@ final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreati
     private VerifyIsUser $user_verifier;
     private VerifyIsIteration $iteration_verifier;
     private VerifyIsVisibleArtifact $visibility_verifier;
-    private RetrieveUser $user_retriever;
-    private CheckProgramIncrement $program_increment_checker;
+    private VerifyIsProgramIncrement $program_increment_verifier;
     private VerifyIsChangeset $changeset_verifier;
     private DeletePendingIterations $iteration_deleter;
 
@@ -48,20 +46,18 @@ final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreati
         VerifyIsUser $user_verifier,
         VerifyIsIteration $iteration_verifier,
         VerifyIsVisibleArtifact $visibility_verifier,
-        RetrieveUser $user_retriever,
-        CheckProgramIncrement $program_increment_checker,
+        VerifyIsProgramIncrement $program_increment_verifier,
         VerifyIsChangeset $changeset_verifier,
         DeletePendingIterations $iteration_deleter
     ) {
-        $this->logger                    = $logger;
-        $this->iteration_searcher        = $iteration_searcher;
-        $this->user_verifier             = $user_verifier;
-        $this->iteration_verifier        = $iteration_verifier;
-        $this->visibility_verifier       = $visibility_verifier;
-        $this->user_retriever            = $user_retriever;
-        $this->program_increment_checker = $program_increment_checker;
-        $this->changeset_verifier        = $changeset_verifier;
-        $this->iteration_deleter         = $iteration_deleter;
+        $this->logger                     = $logger;
+        $this->iteration_searcher         = $iteration_searcher;
+        $this->user_verifier              = $user_verifier;
+        $this->iteration_verifier         = $iteration_verifier;
+        $this->visibility_verifier        = $visibility_verifier;
+        $this->program_increment_verifier = $program_increment_verifier;
+        $this->changeset_verifier         = $changeset_verifier;
+        $this->iteration_deleter          = $iteration_deleter;
     }
 
     public function handle(?ProgramIncrementUpdateEvent $event): void
@@ -85,8 +81,7 @@ final class ProgramIncrementUpdateEventHandler implements ProcessIterationCreati
                 $this->user_verifier,
                 $this->iteration_verifier,
                 $this->visibility_verifier,
-                $this->user_retriever,
-                $this->program_increment_checker,
+                $this->program_increment_verifier,
                 $this->changeset_verifier,
                 $pending_creation
             );

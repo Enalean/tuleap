@@ -22,31 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 
-final class CheckProgramIncrementStub implements CheckProgramIncrement
+final class VerifyIsProgramIncrementStub implements VerifyIsProgramIncrement
 {
-    private bool $is_allowed;
-
-    private function __construct(bool $is_allowed)
+    private function __construct(private bool $is_allowed)
     {
-        $this->is_allowed = $is_allowed;
     }
 
-    public function checkIsAProgramIncrement(int $program_increment_id, \PFUser $user): void
+    public function isProgramIncrement(int $artifact_id): bool
     {
-        if (! $this->is_allowed) {
-            throw new ProgramIncrementNotFoundException($program_increment_id);
-        }
+        return $this->is_allowed;
     }
 
-    public static function buildProgramIncrementChecker(): self
+    public static function withValidProgramIncrement(): self
     {
         return new self(true);
     }
 
-    public static function buildOtherArtifactChecker(): self
+    public static function withNotProgramIncrement(): self
     {
         return new self(false);
     }

@@ -26,13 +26,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
@@ -98,55 +97,24 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
-        $user                       = UserTestBuilder::aUser()->build();
-        $user_identifier            = UserIdentifierStub::buildGenericUser();
-        $program                    = ProgramIdentifierBuilder::buildWithId(110);
-        $program_increment          = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            37,
-            $user
-        );
-        $feature                    = FeatureIdentifier::fromId(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            76,
-            $user_identifier,
-            $program,
-            null
-        );
-        $feature_addition           = FeatureAddition::fromFeature(
-            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
-            $feature,
-            $program_increment,
-            UserCanPrioritize::fromUser(
-                VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-                $user_identifier,
-                $program,
-                null
-            )
-        );
         $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturn($program_increment_artifact);
         $this->artifact_link_updater->shouldReceive('updateArtifactLinks')
             ->once()
             ->with(\Mockery::type(\PFUser::class), $program_increment_artifact, [76], [], \Tracker_FormElement_Field_ArtifactLink::NO_NATURE);
 
-        $this->processor->add($feature_addition);
+        $this->processor->add($this->buildFeatureAddition());
     }
 
     private function buildFeatureAddition(): FeatureAddition
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $user_identifier   = UserIdentifierStub::buildGenericUser();
+        $user              = UserIdentifierStub::buildGenericUser();
         $program           = ProgramIdentifierBuilder::buildWithId(110);
-        $program_increment = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            37,
-            $user
-        );
+        $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(37, $user);
         $feature           = FeatureIdentifier::fromId(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             76,
-            $user_identifier,
+            $user,
             $program,
             null
         );
@@ -157,7 +125,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             $program_increment,
             UserCanPrioritize::fromUser(
                 VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-                $user_identifier,
+                $user,
                 $program,
                 null
             )

@@ -22,10 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-interface CheckProgramIncrement
+interface VerifyIsProgramIncrement
 {
-    /**
-     * @throws ProgramIncrementNotFoundException
-     */
-    public function checkIsAProgramIncrement(int $program_increment_id, \PFUser $user): void;
+    public function isProgramIncrement(int $artifact_id): bool;
 }

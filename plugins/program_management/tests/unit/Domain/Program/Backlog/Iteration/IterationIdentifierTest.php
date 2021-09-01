@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,13 +35,13 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SECOND_NOT_VISIBLE_ARTIFACT_ID = 100;
     private const FIRST_VISIBLE_ARTIFACT_ID      = 271;
     private const SECOND_VISIBLE_ARTIFACT_ID     = 124;
-    private \PFUser $user;
+    private UserIdentifier $user;
     private VerifyIsIterationStub $iteration_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
 
     protected function setUp(): void
     {
-        $this->user                = UserTestBuilder::aUser()->build();
+        $this->user                = UserIdentifierStub::buildGenericUser();
         $this->iteration_verifier  = VerifyIsIterationStub::withValidIteration();
         $this->visibility_verifier = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
     }
@@ -53,7 +52,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->iteration_verifier,
             $this->visibility_verifier,
             32,
-            UserProxy::buildFromPFUser($this->user)
+            $this->user
         );
         self::assertSame(32, $iteration->id);
     }
@@ -66,7 +65,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 $iteration_verifier,
                 $this->visibility_verifier,
                 48,
-                UserProxy::buildFromPFUser($this->user)
+                $this->user
             )
         );
     }
@@ -79,7 +78,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->iteration_verifier,
                 $visibility_verifier,
                 404,
-                UserProxy::buildFromPFUser($this->user)
+                $this->user
             )
         );
     }
@@ -97,12 +96,8 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::FIRST_VISIBLE_ARTIFACT_ID,
                 self::SECOND_VISIBLE_ARTIFACT_ID
             ),
-            ProgramIncrementIdentifier::fromId(
-                CheckProgramIncrementStub::buildProgramIncrementChecker(),
-                36,
-                $this->user
-            ),
-            UserProxy::buildFromPFUser($this->user)
+            ProgramIncrementIdentifierBuilder::buildWithIdAndUser(36, $this->user),
+            $this->user
         );
 
         $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->id, $iterations);

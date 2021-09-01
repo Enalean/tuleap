@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeExcept
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -49,8 +50,9 @@ interface ModifyContent
      * @throws ProgramIncrementNotFoundException
      * @throws ProgramTrackerException
      * @throws RemoveFeatureException
-     *  @throws FeatureException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramNotFoundException
+     * @throws FeatureException
+     * @throws ProgramNotFoundException
+     * @throws AddOrOrderMustBeSetException
      */
-    public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change, UserIdentifier $user_identifier): void;
+    public function modifyContent(int $program_increment_id, ContentChange $content_change, UserIdentifier $user): void;
 }

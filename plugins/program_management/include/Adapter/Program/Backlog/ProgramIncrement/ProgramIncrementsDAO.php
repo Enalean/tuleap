@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 
-class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsProgramIncrementTracker, RetrieveProgramIncrementTracker, RetrieveProgramIncrementLabels
+class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsProgramIncrementTracker, RetrieveProgramIncrementTracker, RetrieveProgramIncrementLabels, VerifyIsProgramIncrement
 {
     /**
      * @psalm-return array{id:int}[]
@@ -74,6 +75,14 @@ class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsProgramIn
         $rows = $this->getDB()->run($sql, $tracker_id);
 
         return count($rows) > 0;
+    }
+
+    public function isProgramIncrement(int $artifact_id): bool
+    {
+        $sql = 'SELECT 1 FROM plugin_program_management_program AS program
+                INNER JOIN tracker_artifact ON tracker_artifact.tracker_id = program.program_increment_tracker_id
+                WHERE tracker_artifact.id = ?';
+        return $this->getDB()->exists($sql, $artifact_id);
     }
 
     public function getProgramIncrementTrackerId(int $project_id): ?int

@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
@@ -36,7 +37,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
@@ -51,11 +51,11 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
@@ -182,7 +182,8 @@ final class ProjectResource extends AuthenticatedResource
                 BackendLogger::getDefaultLogger(),
                 $this->user_manager_adapter,
                 new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter),
-                new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
+                $program_increments_dao,
+                new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter)
             )
         );
     }

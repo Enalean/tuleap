@@ -27,12 +27,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -42,24 +41,19 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $user                      = UserTestBuilder::aUser()->build();
-        $this->program_increment   = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            89,
-            $user
-        );
-        $user_identifier           = UserIdentifierStub::buildGenericUser();
+        $user                      = UserIdentifierStub::buildGenericUser();
+        $this->program_increment   = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(89, $user);
         $program                   = ProgramIdentifierBuilder::buildWithId(110);
         $this->feature             = FeatureIdentifier::fromId(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             127,
-            $user_identifier,
+            $user,
             $program,
             null
         );
         $this->user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            $user_identifier,
+            $user,
             $program,
             null
         );

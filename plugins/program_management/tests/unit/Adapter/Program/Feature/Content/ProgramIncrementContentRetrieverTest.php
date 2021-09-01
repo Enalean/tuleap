@@ -37,8 +37,9 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -81,7 +82,7 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     protected function setUp(): void
     {
         $this->content_store        = \Mockery::mock(ContentStore::class);
-        $retrieve_program_increment = CheckProgramIncrementStub::buildProgramIncrementChecker();
+        $retrieve_program_increment = VerifyIsProgramIncrementStub::withValidProgramIncrement();
         $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
@@ -104,7 +105,8 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
                     $retrieve_user
                 )
             ),
-            new ProgramSearcher($this->getStubSearchProgram(), BuildProgramStub::stubValidProgram())
+            new ProgramSearcher($this->getStubSearchProgram(), BuildProgramStub::stubValidProgram()),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
         );
     }
 

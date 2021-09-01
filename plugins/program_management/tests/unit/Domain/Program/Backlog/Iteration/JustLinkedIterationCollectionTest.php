@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,12 +43,8 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
 
     protected function setUp(): void
     {
-        $user                    = UserTestBuilder::aUser()->build();
-        $this->program_increment = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            10,
-            $user
-        );
+        $user                    = UserIdentifierStub::buildGenericUser();
+        $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(10, $user);
         $iterations_searcher     = SearchIterationsStub::withIterationIds(
             self::FIRST_PREVIOUS_ITERATION_ID,
             self::SECOND_PREVIOUS_ITERATION_ID,
@@ -61,7 +56,7 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
             $iterations_searcher,
             $visibility_verifier,
             $this->program_increment,
-            UserIdentifierStub::buildGenericUser()
+            $user
         );
     }
 

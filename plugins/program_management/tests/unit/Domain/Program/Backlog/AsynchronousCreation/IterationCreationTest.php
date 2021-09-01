@@ -24,19 +24,17 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -53,19 +51,16 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsUserStub $user_verifier;
     private VerifyIsIterationStub $iteration_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
-    private RetrieveUserStub $user_retriever;
-    private CheckProgramIncrementStub $program_increment_checker;
+    private VerifyIsProgramIncrementStub $program_increment_verifier;
     private VerifyIsChangesetStub $changeset_verifier;
     private PendingIterationCreation $pending_iteration;
 
     protected function setUp(): void
     {
-        $user                         = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
         $this->user                   = UserIdentifierStub::withId(self::USER_ID);
-        $program_increment            = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
+        $program_increment            = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(
             self::PROGRAM_INCREMENT_ID,
-            $user
+            $this->user
         );
         $iterations                   = IterationIdentifier::buildCollectionFromProgramIncrement(
             SearchIterationsStub::withIterationIds(self::FIRST_ITERATION_ID, self::SECOND_ITERATION_ID),
@@ -91,12 +86,11 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             self::FIRST_CHANGESET_ID
         );
 
-        $this->user_verifier             = VerifyIsUserStub::withValidUser();
-        $this->iteration_verifier        = VerifyIsIterationStub::withValidIteration();
-        $this->visibility_verifier       = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
-        $this->user_retriever            = RetrieveUserStub::withUser($user);
-        $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
-        $this->changeset_verifier        = VerifyIsChangesetStub::withValidChangeset();
+        $this->user_verifier              = VerifyIsUserStub::withValidUser();
+        $this->iteration_verifier         = VerifyIsIterationStub::withValidIteration();
+        $this->visibility_verifier        = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
+        $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
+        $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
     }
 
     public function testItRetrievesLastChangesetOfEachIterationAndBuildsCollection(): void
@@ -141,8 +135,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_verifier,
             $this->iteration_verifier,
             $this->visibility_verifier,
-            $this->user_retriever,
-            $this->program_increment_checker,
+            $this->program_increment_verifier,
             $this->changeset_verifier,
             $this->pending_iteration
         );
@@ -160,8 +153,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
                 VerifyIsUserStub::withNotValidUser(),
                 $this->iteration_verifier,
                 $this->visibility_verifier,
-                $this->user_retriever,
-                $this->program_increment_checker,
+                $this->program_increment_verifier,
                 $this->changeset_verifier,
                 $this->pending_iteration
             )
@@ -177,8 +169,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_verifier,
             VerifyIsIterationStub::withNotIteration(),
             $this->visibility_verifier,
-            $this->user_retriever,
-            $this->program_increment_checker,
+            $this->program_increment_verifier,
             $this->changeset_verifier,
             $this->pending_iteration
         );
@@ -193,8 +184,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_verifier,
             $this->iteration_verifier,
             $this->visibility_verifier,
-            $this->user_retriever,
-            CheckProgramIncrementStub::buildOtherArtifactChecker(),
+            VerifyIsProgramIncrementStub::withNotProgramIncrement(),
             $this->changeset_verifier,
             $this->pending_iteration
         );
@@ -208,8 +198,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_verifier,
                 $this->iteration_verifier,
                 $this->visibility_verifier,
-                $this->user_retriever,
-                $this->program_increment_checker,
+                $this->program_increment_verifier,
                 VerifyIsChangesetStub::withNotValidChangeset(),
                 $this->pending_iteration
             )

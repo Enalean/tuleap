@@ -26,11 +26,10 @@ use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\StoredUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
@@ -95,13 +94,12 @@ final class IterationCreation
         VerifyIsUser $user_verifier,
         VerifyIsIteration $iteration_verifier,
         VerifyIsVisibleArtifact $visibility_verifier,
-        RetrieveUser $user_retriever,
-        CheckProgramIncrement $program_increment_checker,
+        VerifyIsProgramIncrement $program_increment_verifier,
         VerifyIsChangeset $changeset_verifier,
         PendingIterationCreation $pending_creation
     ): ?self {
-        $user_identifier = StoredUser::fromId($user_verifier, $pending_creation->getUserId());
-        if (! $user_identifier) {
+        $user = StoredUser::fromId($user_verifier, $pending_creation->getUserId());
+        if (! $user) {
             return null;
         }
         $iteration_id = $pending_creation->getIterationId();
@@ -109,16 +107,16 @@ final class IterationCreation
             $iteration_verifier,
             $visibility_verifier,
             $iteration_id,
-            $user_identifier
+            $user
         );
         if (! $iteration) {
             throw new StoredIterationNoLongerValidException($iteration_id);
         }
-        $user                 = $user_retriever->getUserWithId($user_identifier);
         $program_increment_id = $pending_creation->getProgramIncrementId();
         try {
             $program_increment = ProgramIncrementIdentifier::fromId(
-                $program_increment_checker,
+                $program_increment_verifier,
+                $visibility_verifier,
                 $program_increment_id,
                 $user
             );
@@ -129,6 +127,6 @@ final class IterationCreation
         if (! $changeset) {
             return null;
         }
-        return new self($iteration, $program_increment, $user_identifier, $changeset);
+        return new self($iteration, $program_increment, $user, $changeset);
     }
 }
