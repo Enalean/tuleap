@@ -114,7 +114,6 @@ final class PossibleParentsRetrieverTest extends TestCase
 
         assertTrue($possible_parent_selector->isSelectorDisplayed());
         assertEquals([ArtifactTestBuilder::anArtifact(123)->build()], $possible_parent_selector->getPossibleParents()->getArtifacts());
-        assertEquals($possible_parent_selector->getLabel(), 'Open Epics');
         assertEquals($possible_parent_selector->getParentLabel(), 'epic');
     }
 }

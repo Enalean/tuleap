@@ -197,12 +197,6 @@ msgstr ""
 msgid "No project have been aggregated yet."
 msgstr "Aucun projet n'a encore été regroupé."
 
-#, php-format
-msgid "Open %1s"
-msgid_plural "Open %1s"
-msgstr[0] "%1s ouvert(e)"
-msgstr[1] "%1s ouvert(e)s"
-
 msgid "Permission"
 msgstr "Permission"
 

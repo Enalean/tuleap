@@ -71,25 +71,16 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
 
     public function setPossibleParents(FeatureIdentifier ...$features): void
     {
-        $labels        = [];
-        $artifacts     = [];
-        $parent_labels = [];
+        $artifacts = [];
         foreach ($features as $feature) {
             $artifact = $this->retrieve_artifact->getArtifactById($feature->id);
             if (! $artifact) {
                 throw new \RuntimeException('Features must always have an artifact counter part');
             }
-            $artifacts[]                                           = $artifact;
-            $labels[$artifact->getTracker()->getName()]            = 1;
-            $parent_labels[$artifact->getTracker()->getItemName()] = 1;
+            $artifacts[] = $artifact;
         }
-        $this->inner_event->setPossibleParents(new \Tracker_Artifact_PaginatedArtifacts($artifacts, count($artifacts)));
-        $this->inner_event->setLabel(
-            sprintf(
-                dngettext('tuleap-program_management', 'Open %1s', 'Open %1s', count(array_keys($labels))),
-                implode(', ', array_keys($labels))
-            )
+        $this->inner_event->setPossibleParents(
+            new \Tracker_Artifact_PaginatedArtifacts($artifacts, count($artifacts))
         );
-        $this->inner_event->setParentLabel(implode(', ', array_keys($parent_labels)));
     }
 }

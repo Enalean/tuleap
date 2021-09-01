@@ -26,17 +26,12 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 /**
  * @psalm-immutable
  */
-final class PossibleParentSelectorPresenter
+final class PossibleParentCategoryPresenter
 {
-    public int $create_new_parent_value = \Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE;
+    public array $possible_parents;
 
-    /**
-     * @var PossibleParentCategoryPresenter[]
-     */
-    public array $possible_parents_categories;
-
-    public function __construct(public string $parent_label, public string $form_name_prefix, public bool $can_create, PossibleParentCategoryPresenter ...$possible_parents_categories)
+    public function __construct(public string $category, PossibleParentPresenter ...$possible_parents)
     {
-        $this->possible_parents_categories = $possible_parents_categories;
+        $this->possible_parents = $possible_parents;
     }
 }
