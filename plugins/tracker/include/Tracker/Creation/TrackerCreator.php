@@ -162,6 +162,12 @@ class TrackerCreator
     {
         if ($this->isTheDuplicationDoneInTheSameProject($from_tracker_id, $project)) {
             $this->semantic_timeframe_duplicator->duplicateInSameProject($from_tracker_id, $to_tracker->getId(), $field_mapping);
+        } else {
+            $this->semantic_timeframe_duplicator->duplicateBasedOnFieldConfiguration(
+                $from_tracker_id,
+                $to_tracker->getId(),
+                $field_mapping
+            );
         }
     }
 

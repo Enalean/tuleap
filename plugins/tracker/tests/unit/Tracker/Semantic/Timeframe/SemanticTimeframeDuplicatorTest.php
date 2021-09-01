@@ -301,4 +301,54 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
     }
+
+    public function testItDoesNothingWhenAskingToDuplicateFromFieldsWhenThisIsNotConfigured(): void
+    {
+        $this->dao
+            ->shouldReceive('searchByTrackerId')
+            ->with(101)
+            ->once()
+            ->andReturn([
+                'start_date_field_id' => 1,
+                'duration_field_id' => 2,
+                'end_date_field_id' => 3,
+                'implied_from_tracker_id' => 50
+            ]);
+
+        $this->dao->shouldNotReceive('save');
+
+        $this->duplicator->duplicateBasedOnFieldConfiguration(
+            101,
+            201,
+            []
+        );
+    }
+
+    public function testItDuplicatesWhenAskingToDuplicateFromFieldsWhenThisIsConfigured(): void
+    {
+        $this->dao
+            ->shouldReceive('searchByTrackerId')
+            ->with(101)
+            ->once()
+            ->andReturn([
+                'start_date_field_id' => 1,
+                'duration_field_id' => 2,
+                'end_date_field_id' => 3,
+                'implied_from_tracker_id' => null
+            ]);
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(201, 1001, null, 3001, null)
+            ->once();
+
+        $this->duplicator->duplicateBasedOnFieldConfiguration(
+            101,
+            201,
+            [
+                ['from' => 1, 'to' => 1001],
+                ['from' => 3, 'to' => 3001]
+            ]
+        );
+    }
 }
