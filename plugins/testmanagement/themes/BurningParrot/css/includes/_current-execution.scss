@@ -229,6 +229,10 @@ execution-with-steps.current-test-content {
     background: var(--tlp-fade-background-color);
 }
 
+.current-test-warning-status-changed {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+}
+
 .current-test-footer-section-readonly-comment-container {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
