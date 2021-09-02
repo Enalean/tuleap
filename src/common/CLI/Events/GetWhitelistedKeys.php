@@ -37,6 +37,7 @@ use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\System\ServiceControl;
+use Tuleap\User\SwitchToPresenterBuilder;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 use User_UserStatusManager;
@@ -64,7 +65,8 @@ final class GetWhitelistedKeys implements Dispatchable
         LogToGraylog2::class,
         InviteBuddyConfiguration::class,
         HelpDropdownPresenterBuilder::class,
-        BrowserDeprecationMessage::class
+        BrowserDeprecationMessage::class,
+        SwitchToPresenterBuilder::class,
     ];
 
     /**

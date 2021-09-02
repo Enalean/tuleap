@@ -36,7 +36,12 @@
         {{# switch_to }}
             <button type="button" data-toggle="modal" id="switch-to-button" data-target="#switch-to-modal" class="btn">
                 <i class="fa fa-random btn-icon" aria-hidden="true"></i>
-                {{# gettext }}Projects...{{/ gettext }}
+                {{# is_forcing_legacy_label }}
+                    {{# gettext }}Projects...{{/ gettext }}
+                {{/ is_forcing_legacy_label }}
+                {{^ is_forcing_legacy_label }}
+                    {{# gettext }}Switch to...{{/ gettext }}
+                {{/ is_forcing_legacy_label }}
             </button>
         {{/ switch_to }}
 
