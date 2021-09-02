@@ -104,6 +104,9 @@ msgstr "Commentaire"
 msgid "Configure automated tests"
 msgstr "Configurer les tests automatisés"
 
+msgid "Continue to edit your comment"
+msgstr "Continuez à éditer votre commentaire"
+
 msgid "Create a campaign"
 msgstr "Créer une campagne"
 
@@ -212,6 +215,9 @@ msgstr "Bugs liés"
 
 msgid "Load closed campaigns"
 msgstr "Charger les campagnes fermées"
+
+msgid "Load the new comment"
+msgstr "Charger le nouveau commentaire"
 
 msgid "Mark test as blocked and open next test"
 msgstr "Marquer le test comme bloqué et ouvrir le suivant"
@@ -339,6 +345,13 @@ msgstr "L'URL vers un projet Jenkins qui exécutera les tests automatisés"
 
 msgid "The campaign is closed."
 msgstr "La campagne est fermée."
+
+msgid ""
+"The comment has been updated by %s. Do you want to continue to edit your "
+"comment, or discard it and load the new one?"
+msgstr ""
+"Le commentaire a été mis à jour par %s. Voulez-vous continuer à modifier "
+"votre commentaire ou le supprimer et charger le nouveau ?"
 
 msgid "The entered id is incorrect."
 msgstr "L’id saisi est incorrect."

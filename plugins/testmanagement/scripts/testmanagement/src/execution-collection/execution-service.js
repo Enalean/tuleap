@@ -78,6 +78,7 @@ function ExecutionService(
         executionsForCampaign,
         addArtifactLink,
         setCommentOnEditor,
+        getDataInEditor,
     });
 
     initialization();
@@ -259,6 +260,10 @@ function ExecutionService(
         execution.uploaded_files = [];
     }
 
+    function getDataInEditor() {
+        return self.editor.getData();
+    }
+
     function setCommentOnEditor(comment) {
         self.editor.setData(comment);
     }
@@ -297,6 +302,8 @@ function ExecutionService(
 
         self.campaign["nb_of_" + status]++;
         self.campaign["nb_of_" + previous_status]--;
+
+        $rootScope.$broadcast("reload-comment-editor-view", execution);
     }
 
     function updatePresenceOnCampaign(user) {

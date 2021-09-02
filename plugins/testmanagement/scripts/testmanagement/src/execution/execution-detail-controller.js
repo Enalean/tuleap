@@ -30,6 +30,7 @@ import {
     BLOCKED_STATUS,
     NOT_RUN_STATUS,
 } from "./execution-constants.js";
+import { sprintf } from "sprintf-js";
 
 export default ExecutionDetailCtrl;
 
@@ -92,6 +93,10 @@ function ExecutionDetailCtrl(
     $scope.onReloadTestBecauseDefinitionIsUpdated = onReloadTestBecauseDefinitionIsUpdated;
     $scope.userIsAcceptingThatOnlyStatusHasBeenChanged =
         userIsAcceptingThatOnlyStatusHasBeenChanged;
+    $scope.displayTestCommentWarningOveriding = false;
+    $scope.onLoadNewComment = onLoadNewComment;
+    $scope.onContinueToEditComment = onContinueToEditComment;
+    $scope.getWarningTestCommentHasBeenUpdatedMessage = getWarningTestCommentHasBeenUpdatedMessage;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -102,6 +107,22 @@ function ExecutionDetailCtrl(
 
     $scope.$on("controller-reload", function () {
         initialization();
+    });
+
+    $scope.$on("reload-comment-editor-view", (event, execution) => {
+        const was_comment_editing = ExecutionService.getDataInEditor() !== "";
+        if (
+            was_comment_editing &&
+            execution.previous_result.submitted_by.id !==
+                SharedPropertiesService.getCurrentUser().id
+        ) {
+            execution.results = ExecutionService.getDataInEditor();
+            $scope.displayTestCommentWarningOveriding = true;
+            $scope.displayTestCommentEditor = true;
+            return;
+        }
+        ExecutionService.clearEditor(execution);
+        $scope.displayTestCommentEditor = !execution.previous_result.result;
     });
 
     $scope.$on("$destroy", function () {
@@ -333,6 +354,7 @@ function ExecutionDetailCtrl(
     }
 
     function setNewStatus(event, execution, new_status) {
+        $scope.displayTestCommentWarningOveriding = false;
         $scope.onlyStatusHasBeenChanged = !$scope.displayTestCommentEditor;
         execution.saving = true;
         const comment = getCommentToSave(execution);
@@ -375,9 +397,7 @@ function ExecutionDetailCtrl(
             if (execution.userCanReloadTestBecauseDefinitionIsUpdated) {
                 ExecutionService.clearEditor(execution);
             }
-            return;
         }
-        hideTestCommentEditor();
     }
 
     function onReloadTestBecauseDefinitionIsUpdated(execution) {
@@ -468,7 +488,25 @@ function ExecutionDetailCtrl(
         ExecutionService.clearEditor(execution);
     }
 
-    function hideTestCommentEditor() {
-        $scope.displayTestCommentEditor = false;
+    function onLoadNewComment(execution) {
+        $scope.displayTestCommentEditor = !execution.previous_result.result;
+        $scope.displayTestCommentWarningOveriding = false;
+        if ($scope.displayTestCommentEditor) {
+            ExecutionService.clearEditor(execution);
+        }
+    }
+
+    function onContinueToEditComment() {
+        $scope.displayTestCommentEditor = true;
+        $scope.displayTestCommentWarningOveriding = false;
+    }
+
+    function getWarningTestCommentHasBeenUpdatedMessage(execution) {
+        return sprintf(
+            gettextCatalog.getString(
+                "The comment has been updated by %s. Do you want to continue to edit your comment, or discard it and load the new one?"
+            ),
+            execution.previous_result.submitted_by.real_name
+        );
     }
 }

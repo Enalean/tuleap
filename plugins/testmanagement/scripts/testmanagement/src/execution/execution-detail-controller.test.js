@@ -193,7 +193,6 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
 
             it("When there is a problem with the update, then the error will be shown on the execution", () => {
@@ -280,7 +279,6 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
 
@@ -296,7 +294,6 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
 
@@ -320,7 +317,6 @@ describe("ExecutionDetailController -", () => {
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
 
             it("Then the status will be saved to 'notrun' and only the file in ckeditor will be send", () => {
@@ -346,7 +342,6 @@ describe("ExecutionDetailController -", () => {
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.displayTestCommentEditor).toBeFalsy();
             });
         });
     });
@@ -387,8 +382,65 @@ describe("ExecutionDetailController -", () => {
                 []
             );
             expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-            expect($scope.displayTestCommentEditor).toBeFalsy();
             expect(execution.status).toEqual(status);
+        });
+    });
+
+    describe("reload-comment-editor-view", () => {
+        const execution = {
+            id: 8,
+            status,
+            time: "",
+            results: "",
+            previous_result: { result: "", submitted_by: { id: 666 } },
+        };
+        let clear_editor;
+        beforeEach(() => {
+            execution.previous_result.result = "";
+            $scope.displayTestCommentEditor = true;
+            jest.spyOn(ExecutionService, "getDataInEditor").mockImplementation(
+                () => "A comment in editing mode"
+            );
+            jest.spyOn(SharedPropertiesService, "getCurrentUser").mockImplementation(() => {
+                return { id: 120 };
+            });
+            clear_editor = jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
+        });
+
+        it("When there is no comment in editing mode and no new comment, Then the editor is cleared and write mode is displayed", () => {
+            jest.spyOn(ExecutionService, "getDataInEditor").mockImplementation(() => "");
+
+            $scope.$emit("reload-comment-editor-view", execution);
+
+            expect(clear_editor).toHaveBeenCalled();
+            expect($scope.displayTestCommentEditor).toBeTruthy();
+        });
+        it("When there is no comment in editing mode but a new comment, Then the editor is cleared and read mode is displayed", () => {
+            jest.spyOn(ExecutionService, "getDataInEditor").mockImplementation(() => "");
+            execution.previous_result.result = "A new comment";
+
+            $scope.$emit("reload-comment-editor-view", execution);
+
+            expect(clear_editor).toHaveBeenCalled();
+            expect($scope.displayTestCommentEditor).toBeFalsy();
+        });
+        it("When the user who pushed the new comment and the user who was editing the comment are same, Then the editor is cleared", () => {
+            jest.spyOn(SharedPropertiesService, "getCurrentUser").mockImplementation(() => {
+                return { id: 666 };
+            });
+
+            $scope.$emit("reload-comment-editor-view", execution);
+
+            expect(clear_editor).toHaveBeenCalled();
+            expect($scope.displayTestCommentEditor).toBeTruthy();
+        });
+        it("When comment is being edited and editor is displayed and users are different, Then warning message is displayed", () => {
+            $scope.$emit("reload-comment-editor-view", execution);
+
+            expect(clear_editor).not.toHaveBeenCalled();
+            expect($scope.displayTestCommentEditor).toBeTruthy();
+            expect($scope.displayTestCommentWarningOveriding).toBeTruthy();
+            expect(execution.results).toEqual("A comment in editing mode");
         });
     });
 });
