@@ -256,7 +256,7 @@ function ExecutionService(
     }
 
     function clearEditor(execution) {
-        self.editor.setData("");
+        self.editor.setData("", { noSnapshot: true });
         execution.uploaded_files = [];
     }
 
