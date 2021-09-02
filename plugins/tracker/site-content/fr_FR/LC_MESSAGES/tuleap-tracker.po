@@ -4216,10 +4216,6 @@ msgstr "Webhooks"
 msgid "When"
 msgstr "Quand"
 
-#, php-format
-msgid "Will have %1$s as parent."
-msgstr "Aura %1$s comme parent"
-
 msgid "Workflow"
 msgstr "Workflow"
 
