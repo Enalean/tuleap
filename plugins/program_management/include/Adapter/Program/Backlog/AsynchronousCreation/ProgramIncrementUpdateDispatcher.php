@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
@@ -40,7 +40,7 @@ use Tuleap\Queue\Worker;
  * will modify the mirrored program increments (for artifact links). If we do them in parallel,
  * due to the way changesets are stored, we will lose modifications.
  */
-final class ProgramIncrementUpdateRunner implements RunProgramIncrementUpdate
+final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrementUpdate
 {
     public function __construct(
         private LoggerInterface $logger,
@@ -50,7 +50,7 @@ final class ProgramIncrementUpdateRunner implements RunProgramIncrementUpdate
     ) {
     }
 
-    public function scheduleUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
+    public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
     {
         try {
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);

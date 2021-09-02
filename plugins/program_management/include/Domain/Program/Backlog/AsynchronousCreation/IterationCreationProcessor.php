@@ -22,23 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Psr\Log\LoggerInterface;
 
-final class ProgramIncrementUpdateScheduler
+final class IterationCreationProcessor implements ProcessIterationCreation
 {
-    public function __construct(
-        private StoreProgramIncrementUpdate $update_store,
-        private IterationCreationDetector $iteration_creation_detector,
-        private StoreIterationCreations $iteration_store,
-        private DispatchProgramIncrementUpdate $update_dispatcher
-    ) {
+    public function __construct(private LoggerInterface $logger)
+    {
     }
 
-    public function replicateProgramIncrementUpdate(ProgramIncrementUpdate $update): void
+    public function processIterationCreation(IterationCreation $iteration_creation): void
     {
-        $this->update_store->storeUpdate($update);
-        $creations = $this->iteration_creation_detector->detectNewIterationCreations($update);
-        $this->iteration_store->storeCreations(...$creations);
-        $this->update_dispatcher->dispatchUpdate($update, ...$creations);
+        $iteration_id = $iteration_creation->iteration->id;
+        $user_id      = $iteration_creation->user->getId();
+        $this->logger->debug("Processing iteration creation with iteration #$iteration_id for user #$user_id");
     }
 }

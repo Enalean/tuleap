@@ -40,7 +40,7 @@ use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\QueueServerConnectionException;
 
-final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID              = 110;
     private const PROGRAM_INCREMENT_ID = 83;
@@ -96,9 +96,9 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-    private function getRunner(): ProgramIncrementUpdateRunner
+    private function getDispatcher(): ProgramIncrementUpdateDispatcher
     {
-        return new ProgramIncrementUpdateRunner(
+        return new ProgramIncrementUpdateDispatcher(
             $this->logger,
             $this->queue_factory,
             $this->update_processor,
@@ -117,7 +117,7 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
             );
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 
-        $this->getRunner()->scheduleUpdate($this->program_increment_update, ...$this->iteration_creations);
+        $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
     }
 
     public function testWhenThereIsNoQueueSystemItProcessesUpdateImmediately(): void
@@ -128,7 +128,7 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->update_processor->expects(self::once())->method('processProgramIncrementUpdate');
         $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
-        $this->getRunner()->scheduleUpdate($this->program_increment_update, ...$this->iteration_creations);
+        $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
         self::assertTrue(
             $this->logger->hasError('Unable to queue program increment mirrors update for program increment #83')
@@ -145,7 +145,7 @@ final class ProgramIncrementUpdateRunnerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->update_processor->expects(self::once())->method('processProgramIncrementUpdate');
         $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
-        $this->getRunner()->scheduleUpdate($this->program_increment_update, ...$this->iteration_creations);
+        $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
         self::assertTrue(
             $this->logger->hasError('Unable to queue program increment mirrors update for program increment #83')

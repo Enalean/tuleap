@@ -22,23 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 
-final class ProgramIncrementUpdateScheduler
+final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUpdate
 {
     public function __construct(
-        private StoreProgramIncrementUpdate $update_store,
-        private IterationCreationDetector $iteration_creation_detector,
-        private StoreIterationCreations $iteration_store,
-        private DispatchProgramIncrementUpdate $update_dispatcher
+        private LoggerInterface $logger
     ) {
     }
 
-    public function replicateProgramIncrementUpdate(ProgramIncrementUpdate $update): void
+    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void
     {
-        $this->update_store->storeUpdate($update);
-        $creations = $this->iteration_creation_detector->detectNewIterationCreations($update);
-        $this->iteration_store->storeCreations(...$creations);
-        $this->update_dispatcher->dispatchUpdate($update, ...$creations);
+        $program_increment_id = $update->program_increment->getId();
+        $user_id              = $update->user->getId();
+        $this->logger->debug(
+            "Processing program increment update with program increment #$program_increment_id for user #$user_id"
+        );
     }
 }
