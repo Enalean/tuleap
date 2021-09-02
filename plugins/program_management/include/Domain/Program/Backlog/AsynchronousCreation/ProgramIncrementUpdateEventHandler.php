@@ -119,8 +119,8 @@ final class ProgramIncrementUpdateEventHandler implements ProcessProgramIncremen
             );
             $this->iteration_deleter->deletePendingIterationCreationsByProgramIncrementId($program_increment_id);
             return;
-        }
-        if (! $iteration_creation) {
+        } catch (StoredChangesetNotFoundException | StoredUserNotFoundException $e) {
+            $this->logger->error('Invalid data found in the database, skipping pending creation', ['exception' => $e]);
             return;
         }
         $this->processIterationCreation($iteration_creation);

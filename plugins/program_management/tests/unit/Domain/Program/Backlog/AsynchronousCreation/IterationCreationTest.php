@@ -145,18 +145,17 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FIRST_CHANGESET_ID, $iteration_creation->changeset->getId());
     }
 
-    public function testItReturnsNullWhenStoredUserIsNotValid(): void
+    public function testItThrowsWhenStoredUserIsNotValid(): void
     {
         // It's not supposed to happen as users cannot be deleted in Tuleap. They change status.
-        self::assertNull(
-            IterationCreation::fromPendingIterationCreation(
-                VerifyIsUserStub::withNotValidUser(),
-                $this->iteration_verifier,
-                $this->visibility_verifier,
-                $this->program_increment_verifier,
-                $this->changeset_verifier,
-                $this->pending_iteration
-            )
+        $this->expectException(StoredUserNotFoundException::class);
+        IterationCreation::fromPendingIterationCreation(
+            VerifyIsUserStub::withNotValidUser(),
+            $this->iteration_verifier,
+            $this->visibility_verifier,
+            $this->program_increment_verifier,
+            $this->changeset_verifier,
+            $this->pending_iteration
         );
     }
 
@@ -190,18 +189,17 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsNullWhenStoredChangesetIsNotValid(): void
+    public function testItThrowsWhenStoredChangesetIsNotValid(): void
     {
         // It's not supposed to happen as changesets cannot be deleted in Tuleap.
-        self::assertNull(
-            IterationCreation::fromPendingIterationCreation(
-                $this->user_verifier,
-                $this->iteration_verifier,
-                $this->visibility_verifier,
-                $this->program_increment_verifier,
-                VerifyIsChangesetStub::withNotValidChangeset(),
-                $this->pending_iteration
-            )
+        $this->expectException(StoredChangesetNotFoundException::class);
+        IterationCreation::fromPendingIterationCreation(
+            $this->user_verifier,
+            $this->iteration_verifier,
+            $this->visibility_verifier,
+            $this->program_increment_verifier,
+            VerifyIsChangesetStub::withNotValidChangeset(),
+            $this->pending_iteration
         );
     }
 }
