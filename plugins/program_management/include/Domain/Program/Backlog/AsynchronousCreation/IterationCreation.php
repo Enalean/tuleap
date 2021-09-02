@@ -89,6 +89,8 @@ final class IterationCreation
     /**
      * @throws StoredIterationNoLongerValidException
      * @throws StoredProgramIncrementNoLongerValidException
+     * @throws StoredUserNotFoundException
+     * @throws StoredChangesetNotFoundException
      */
     public static function fromPendingIterationCreation(
         VerifyIsUser $user_verifier,
@@ -97,10 +99,11 @@ final class IterationCreation
         VerifyIsProgramIncrement $program_increment_verifier,
         VerifyIsChangeset $changeset_verifier,
         PendingIterationCreation $pending_creation
-    ): ?self {
-        $user = DomainUser::fromId($user_verifier, $pending_creation->getUserId());
+    ): self {
+        $user_id = $pending_creation->getUserId();
+        $user    = DomainUser::fromId($user_verifier, $user_id);
         if (! $user) {
-            return null;
+            throw new StoredUserNotFoundException($user_id);
         }
         $iteration_id = $pending_creation->getIterationId();
         $iteration    = IterationIdentifier::fromId(
@@ -123,9 +126,10 @@ final class IterationCreation
         } catch (ProgramIncrementNotFoundException $e) {
             throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
         }
-        $changeset = DomainChangeset::fromId($changeset_verifier, $pending_creation->getIterationChangesetId());
+        $changeset_id = $pending_creation->getIterationChangesetId();
+        $changeset    = DomainChangeset::fromId($changeset_verifier, $changeset_id);
         if (! $changeset) {
-            return null;
+            throw new StoredChangesetNotFoundException($changeset_id);
         }
         return new self($iteration, $program_increment, $user, $changeset);
     }
