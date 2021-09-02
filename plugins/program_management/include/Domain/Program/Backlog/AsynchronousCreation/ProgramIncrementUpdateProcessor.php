@@ -24,11 +24,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 
 final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUpdate
 {
     public function __construct(
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private GatherSynchronizedFields $fields_gatherer
     ) {
     }
 
@@ -39,5 +42,11 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         $this->logger->debug(
             "Processing program increment update with program increment #$program_increment_id for user #$user_id"
         );
+        $source_fields = SynchronizedFieldReferences::fromProgramIncrementTracker(
+            $this->fields_gatherer,
+            $update->tracker
+        );
+
+        $this->logger->debug(sprintf('Title field id #%d', $source_fields->title->getId()));
     }
 }

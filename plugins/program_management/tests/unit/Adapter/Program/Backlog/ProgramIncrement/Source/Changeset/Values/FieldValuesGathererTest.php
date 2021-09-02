@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 
-final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SynchronizedFields $fields;
     /**
@@ -76,51 +76,26 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->changeset            = $this->createMock(\Tracker_Artifact_Changeset::class);
     }
 
-    private function getRetrieverWithFactory(\Tracker_Artifact_Changeset $changeset, \Tracker_FormElementFactory $form_element_factory): ArtifactFieldValuesRetriever
+    private function getGatherer(): FieldValuesGatherer
     {
-        return new ArtifactFieldValuesRetriever($changeset, $form_element_factory);
-    }
-
-    private function getRetriever(\Tracker_Artifact_Changeset $changeset): ArtifactFieldValuesRetriever
-    {
-        return new ArtifactFieldValuesRetriever($changeset, $this->form_element_factory);
+        return new FieldValuesGatherer($this->changeset, $this->form_element_factory);
     }
 
     public function dataProviderMethodUnderTest(): array
     {
         return [
-            'when title value is not found'       => [fn(
-                \Tracker_Artifact_Changeset $changeset,
-                SynchronizedFields $fields,
-                \Tracker_FormElementFactory $form_element_factory
-            ) => $this->getRetrieverWithFactory($changeset, $form_element_factory)->getTitleValue($fields)],
-            'when description value is not found' => [fn(
-                \Tracker_Artifact_Changeset $changeset,
-                SynchronizedFields $fields,
-                \Tracker_FormElementFactory $form_element_factory
-            ) => $this->getRetrieverWithFactory($changeset, $form_element_factory)->getDescriptionValue($fields)],
-            'when start date value is not found'  => [fn(
-                \Tracker_Artifact_Changeset $changeset,
-                SynchronizedFields $fields,
-                \Tracker_FormElementFactory $form_element_factory
-            ) => $this->getRetrieverWithFactory($changeset, $form_element_factory)->getStartDateValue($fields)],
-            'when end period value is not found'  => [fn(
-                \Tracker_Artifact_Changeset $changeset,
-                SynchronizedFields $fields,
-                \Tracker_FormElementFactory $form_element_factory
-            ) => $this->getRetrieverWithFactory($changeset, $form_element_factory)->getEndPeriodValue($fields)],
-            'when status value is not found'      => [fn(
-                \Tracker_Artifact_Changeset $changeset,
-                SynchronizedFields $fields,
-                \Tracker_FormElementFactory $form_element_factory
-            ) => $this->getRetrieverWithFactory($changeset, $form_element_factory)->getStatusValues($fields)]
+            'when title value is not found'       => ['getTitleValue'],
+            'when description value is not found' => ['getDescriptionValue'],
+            'when start date value is not found'  => ['getStartDateValue'],
+            'when end period value is not found'  => ['getEndPeriodValue'],
+            'when status value is not found'      => ['getStatusValues']
         ];
     }
 
     /**
      * @dataProvider dataProviderMethodUnderTest
      */
-    public function testItThrowsWhenChangesetValuesAreNotFound(callable $method_under_test): void
+    public function testItThrowsWhenChangesetValuesAreNotFound(string $method_under_test): void
     {
         $this->changeset->method('getValue')->willReturn(null);
         $this->changeset->method('getId')->willReturn(1);
@@ -128,7 +103,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->form_element_factory->method('getFieldById')->willReturn($this->createStub(\Tracker_FormElement_Field::class));
 
         $this->expectException(ChangesetValueNotFoundException::class);
-        $method_under_test($this->changeset, $this->fields, $this->form_element_factory);
+        call_user_func([$this->getGatherer(), $method_under_test], $this->fields);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
@@ -139,7 +114,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->form_element_factory->method('getFieldById')->willReturn($this->title_field);
 
         $this->expectException(UnsupportedTitleFieldException::class);
-        $this->getRetriever($this->changeset)->getTitleValue($this->fields);
+        $this->getGatherer()->getTitleValue($this->fields);
     }
 
     public function testItReturnsTitleValue(): void
@@ -151,7 +126,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->title_field);
 
-        self::assertSame('My title', $this->getRetriever($this->changeset)->getTitleValue($fields));
+        self::assertSame('My title', $this->getGatherer()->getTitleValue($fields));
     }
 
     public function testItReturnsDescriptionValue(): void
@@ -163,7 +138,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->description_field);
 
-        $text_value = $this->getRetriever($this->changeset)->getDescriptionValue($this->fields);
+        $text_value = $this->getGatherer()->getDescriptionValue($this->fields);
         self::assertSame('My description', $text_value->getValue());
         self::assertSame('text', $text_value->getFormat());
     }
@@ -176,7 +151,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->start_date_field);
 
-        self::assertSame('2020-10-01', $this->getRetriever($this->changeset)->getStartDateValue($this->fields));
+        self::assertSame('2020-10-01', $this->getGatherer()->getStartDateValue($this->fields));
     }
 
     public function testItReturnsEndPeriodValueWithEndDate(): void
@@ -187,7 +162,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->end_period_field);
 
-        self::assertSame('2023-09-01', $this->getRetriever($this->changeset)->getEndPeriodValue($this->fields));
+        self::assertSame('2023-09-01', $this->getGatherer()->getEndPeriodValue($this->fields));
     }
 
     public function testItReturnsEndPeriodValueWithDuration(): void
@@ -198,7 +173,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->end_period_field);
 
-        self::assertSame('34', $this->getRetriever($this->changeset)->getEndPeriodValue($this->fields));
+        self::assertSame('34', $this->getGatherer()->getEndPeriodValue($this->fields));
     }
 
     public function testItReturnsStatusValuesWithStaticBind(): void
@@ -211,7 +186,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->status_field);
 
-        $values = $this->getRetriever($this->changeset)->getStatusValues($this->fields);
+        $values = $this->getGatherer()->getStatusValues($this->fields);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('Planned', $labels);
         self::assertContains('Current', $labels);
@@ -227,7 +202,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->status_field);
 
-        $values = $this->getRetriever($this->changeset)->getStatusValues($this->fields);
+        $values = $this->getGatherer()->getStatusValues($this->fields);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('Meridith Gregg', $labels);
         self::assertContains('Mildred Mantel', $labels);
@@ -251,7 +226,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->status_field);
 
-        $values = $this->getRetriever($this->changeset)->getStatusValues($this->fields);
+        $values = $this->getGatherer()->getStatusValues($this->fields);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('project_members', $labels);
         self::assertContains('bicyanide benzothiopyran', $labels);

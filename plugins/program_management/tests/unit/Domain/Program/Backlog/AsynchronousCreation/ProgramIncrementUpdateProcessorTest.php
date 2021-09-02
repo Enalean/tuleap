@@ -25,11 +25,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 
 final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 63;
-    private const USER_ID              = 122;
+    private const PROGRAM_INCREMENT_ID         = 63;
+    private const USER_ID                      = 122;
+    private const PROGRAM_INCREMENT_TRACKER_ID = 74;
+    private const TITLE_ID                     = 994;
     private TestLogger $logger;
     private ProgramIncrementUpdate $update;
 
@@ -38,7 +41,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->update = ProgramIncrementUpdateBuilder::buildWithIds(
             self::USER_ID,
             self::PROGRAM_INCREMENT_ID,
-            74,
+            self::PROGRAM_INCREMENT_TRACKER_ID,
             '3882'
         );
         $this->logger = new TestLogger();
@@ -46,14 +49,24 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
 
     private function getProcessor(): ProgramIncrementUpdateProcessor
     {
-        return new ProgramIncrementUpdateProcessor($this->logger);
+        return new ProgramIncrementUpdateProcessor(
+            $this->logger,
+            GatherSynchronizedFieldsStub::withFields(self::TITLE_ID, 'retroflex')
+        );
     }
 
     public function testItProcessesProgramIncrementUpdate(): void
     {
         $this->getProcessor()->processProgramIncrementUpdate($this->update);
         self::assertTrue(
-            $this->logger->hasDebug('Processing program increment update with program increment #63 for user #122')
+            $this->logger->hasDebug(
+                sprintf(
+                    'Processing program increment update with program increment #%d for user #%d',
+                    self::PROGRAM_INCREMENT_ID,
+                    self::USER_ID
+                )
+            )
         );
+        self::assertTrue($this->logger->hasDebug('Title field id #' . self::TITLE_ID));
     }
 }

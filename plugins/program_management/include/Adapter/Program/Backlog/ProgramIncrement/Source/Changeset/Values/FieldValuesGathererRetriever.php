@@ -51,6 +51,6 @@ final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
         if (! $full_changeset) {
             throw new PendingArtifactChangesetNotFoundException($program_increment_id, $changeset_id);
         }
-        return new ArtifactFieldValuesRetriever($full_changeset, $this->form_element_factory);
+        return new FieldValuesGatherer($full_changeset, $this->form_element_factory);
     }
 }
