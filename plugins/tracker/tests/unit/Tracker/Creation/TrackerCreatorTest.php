@@ -184,7 +184,7 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItDoesNotDuplicateSemanticTimeframeWhenTemplateTrackerComesFromAnotherProject(): void
+    public function testItAsksToDuplicateSemanticTimeframeWhenTemplateTrackerComesFromAnotherProjectAndIsBasedOnFields(): void
     {
         $from_project = Mockery::mock(\Project::class);
         $from_project->shouldReceive('getId')->andReturn("110");
@@ -223,6 +223,7 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($to_tracker);
 
         $this->semantic_timeframe_duplicator->shouldReceive('duplicateInSameProject')->never();
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateBasedOnFieldConfiguration')->once();
 
         $created_tracker = $this->creator->duplicateTracker(
             $to_project,
