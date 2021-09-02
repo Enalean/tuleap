@@ -55,22 +55,31 @@ class Planning_ArtifactParentsSelectorEventListener
     public function process(PossibleParentSelector $possible_parent_selector): void
     {
         $source_artifact = $this->getSourceArtifact();
-        if ($source_artifact) {
-            $possible_parents = $this->artifact_parents_selector->getPossibleParents($possible_parent_selector->parent_tracker, $source_artifact, $possible_parent_selector->user);
-            if ($possible_parents) {
-                $possible_parent_selector->setLabel(sprintf(dgettext('tuleap-agiledashboard', 'Available %1$s'), $possible_parent_selector->parent_tracker->getName()));
-                $possible_parent_selector->setPossibleParents(
-                    new Tracker_Artifact_PaginatedArtifacts(
-                        $possible_parents,
-                        count($possible_parents),
-                    )
-                );
-            }
+        if (! $source_artifact) {
+            return;
+        }
 
-            $we_are_linking_the_artifact_to_a_parent = ($possible_parents == [$source_artifact]);
-            if ($we_are_linking_the_artifact_to_a_parent) {
-                $possible_parent_selector->disableSelector();
-            }
+        $parent_tracker = $possible_parent_selector->tracker->getParentUserCanView($possible_parent_selector->user);
+        if (! $parent_tracker) {
+            return;
+        }
+
+        $possible_parents = $this->artifact_parents_selector->getPossibleParents($parent_tracker, $source_artifact, $possible_parent_selector->user);
+        if (! $possible_parents) {
+            return;
+        }
+
+        $possible_parent_selector->setLabel(sprintf(dgettext('tuleap-agiledashboard', 'Available %1$s'), $parent_tracker->getName()));
+        $possible_parent_selector->setPossibleParents(
+            new Tracker_Artifact_PaginatedArtifacts(
+                $possible_parents,
+                count($possible_parents),
+            )
+        );
+
+        $we_are_linking_the_artifact_to_a_parent = ($possible_parents == [$source_artifact]);
+        if ($we_are_linking_the_artifact_to_a_parent) {
+            $possible_parent_selector->disableSelector();
         }
     }
 

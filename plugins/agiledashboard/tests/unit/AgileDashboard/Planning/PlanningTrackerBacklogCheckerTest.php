@@ -75,7 +75,7 @@ class PlanningTrackerBacklogCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
-            ->andReturnNull();
+            ->andReturnFalse();
 
         $this->assertFalse($this->checker->isTrackerBacklogOfProjectRootPlanning(
             $this->tracker,

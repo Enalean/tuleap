@@ -136,7 +136,7 @@ class TopBacklogElementsToAddCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturnNull();
+            ->andReturnFalse();
 
         $this->expectException(NoRootPlanningException::class);
 

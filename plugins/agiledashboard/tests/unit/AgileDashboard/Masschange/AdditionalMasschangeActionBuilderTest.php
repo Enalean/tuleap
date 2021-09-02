@@ -171,7 +171,7 @@ final class AdditionalMasschangeActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->with($this->user, 101)
-            ->andReturnNull();
+            ->andReturnFalse();
 
         $this->template_renderer->shouldNotReceive('renderToString');
 

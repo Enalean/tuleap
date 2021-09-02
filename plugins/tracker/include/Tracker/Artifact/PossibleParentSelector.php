@@ -37,16 +37,18 @@ final class PossibleParentSelector implements Dispatchable
     /**
      * @readonly
      */
-    public \Tracker $parent_tracker;
+    public \Tracker $tracker;
 
     private ?Tracker_Artifact_PaginatedArtifacts $possible_parents = null;
     private string $label                                          = '';
     private bool $display_selector                                 = true;
+    private string $parent_label                                   = '';
+    private bool $can_create                                       = true;
 
-    public function __construct(\PFUser $user, \Tracker $parent_tracker)
+    public function __construct(\PFUser $user, \Tracker $tracker)
     {
-        $this->user           = $user;
-        $this->parent_tracker = $parent_tracker;
+        $this->user    = $user;
+        $this->tracker = $tracker;
     }
 
     public function getPossibleParents(): ?Tracker_Artifact_PaginatedArtifacts
@@ -77,5 +79,25 @@ final class PossibleParentSelector implements Dispatchable
     public function disableSelector(): void
     {
         $this->display_selector = false;
+    }
+
+    public function setParentLabel(string $parent_label): void
+    {
+        $this->parent_label = $parent_label;
+    }
+
+    public function getParentLabel(): string
+    {
+        return $this->parent_label;
+    }
+
+    public function canCreate(): bool
+    {
+        return $this->can_create;
+    }
+
+    public function disableCreate(): void
+    {
+        $this->can_create = false;
     }
 }

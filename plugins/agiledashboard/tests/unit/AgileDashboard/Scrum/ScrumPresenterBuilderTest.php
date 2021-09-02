@@ -103,7 +103,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
 
-        $root_planning = null;
+        $root_planning = false;
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($root_planning);
 
         $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnFalse();

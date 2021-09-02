@@ -22,9 +22,10 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_ArtifactFactory
+class Tracker_ArtifactFactory implements RetrieveArtifact
 {
 
     protected $artifacts;
@@ -78,10 +79,8 @@ class Tracker_ArtifactFactory
      * Return the artifact with the id $id, or null if not found
      *
      * @param int $id the id of the artifact to retrieve
-     *
-     * @return Artifact|null the artifact identified by id (null if not found)
      */
-    public function getArtifactById($id)
+    public function getArtifactById($id): ?Artifact
     {
         if (! isset($this->artifacts[$id])) {
             $this->artifacts[$id] = null;

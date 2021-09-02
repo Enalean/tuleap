@@ -79,6 +79,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionRepresentation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
@@ -95,6 +96,7 @@ use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
+use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
@@ -133,6 +135,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVer
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
 use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
+use Tuleap\ProgramManagement\Domain\Team\PossibleParentHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
@@ -167,6 +170,7 @@ use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
@@ -257,6 +261,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(\Tuleap\Glyph\GlyphLocationsCollector::NAME);
         $this->addHook(ImportXMLProjectTrackerDone::NAME);
+        $this->addHook(PossibleParentSelector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1228,6 +1233,38 @@ final class program_managementPlugin extends Plugin
             $event->getExtractionPath(),
             $event->getCreatedTrackersMapping(),
             $event->getUser()
+        );
+    }
+
+    public function trackerArtifactPossibleParentSelector(PossibleParentSelector $possible_parent_selector): void
+    {
+        $project_manager        = ProjectManager::instance();
+        $project_access_checker = new ProjectAccessChecker(
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+
+        $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
+
+        (new PossibleParentHandler(
+            new VerifyIsVisibleFeatureAdapter(
+                Tracker_ArtifactFactory::instance(),
+                $user_manager_adapter
+            ),
+            new ProgramAdapter(
+                $project_manager,
+                $project_access_checker,
+                new ProgramDao(),
+                $user_manager_adapter
+            ),
+            new TeamDao(),
+            new FeaturesDao(),
+        ))->handle(
+            PossibleParentSelectorProxy::fromEvent(
+                $possible_parent_selector,
+                PlanningFactory::build(),
+                Tracker_ArtifactFactory::instance(),
+            )
         );
     }
 }

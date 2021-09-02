@@ -141,7 +141,7 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
             ->andReturn([$burnup]);
         $this->planning_factory->shouldReceive('getRootPlanning')
-            ->andReturnNull();
+            ->andReturnFalse();
 
         $warning_presenter = new PlanningWarningPossibleMisconfigurationPresenter(
             '/some/configuration/url',
@@ -170,7 +170,7 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
             ->andReturn([]);
         $this->planning_factory->shouldReceive('getRootPlanning')
-            ->andReturnNull();
+            ->andReturnFalse();
 
         $presenter = $this->builder->build($planning, $user, $project);
 

@@ -93,7 +93,7 @@ class PlanningUpdater
     {
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,
-            $project->getID()
+            (int) $project->getID()
         );
 
         return $root_planning && (int) $root_planning->getId() === $updated_planning_id;

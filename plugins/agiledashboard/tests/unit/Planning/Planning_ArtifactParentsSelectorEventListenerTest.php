@@ -88,6 +88,7 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Te
         $this->epic_tracker->shouldReceive('getName')->andReturn('epic_tracker');
         $this->story_tracker = Mockery::mock(Tracker::class);
         $this->story_tracker->shouldReceive('getName')->andReturn('story_tracker');
+        $this->story_tracker->shouldReceive('getParentUserCanView')->andReturn($this->epic_tracker);
 
         $this->user    = Mockery::mock(PFUser::class);
         $this->request = \Mockery::spy(\Codendi_Request::class);
@@ -139,7 +140,7 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Te
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact-link');
         $this->request->shouldReceive('get')->with('id')->andReturns($this->sprint_id);
 
-        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $possible_parent = new PossibleParentSelector($this->user, $this->story_tracker);
         $this->event_listener->process($possible_parent);
 
         $this->assertEquals('Available epic_tracker', $possible_parent->getLabel());
@@ -152,7 +153,7 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Te
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact');
         $this->request->shouldReceive('get')->with('child_milestone')->andReturns($this->sprint_id);
 
-        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $possible_parent = new PossibleParentSelector($this->user, $this->story_tracker);
         $this->event_listener->process($possible_parent);
 
         $this->assertEquals('Available epic_tracker', $possible_parent->getLabel());
@@ -164,7 +165,7 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Te
     {
         $this->request->shouldReceive('get')->andReturns(false);
 
-        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $possible_parent = new PossibleParentSelector($this->user, $this->story_tracker);
         $possible_parent->setLabel('untouched');
         $already_there_artifacts = new Tracker_Artifact_PaginatedArtifacts([], 0);
         $possible_parent->setPossibleParents($already_there_artifacts);
@@ -181,7 +182,7 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Te
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact');
         $this->request->shouldReceive('get')->with('child_milestone')->andReturns($this->epic2_id);
 
-        $possible_parent = new PossibleParentSelector($this->user, $this->epic_tracker);
+        $possible_parent = new PossibleParentSelector($this->user, $this->story_tracker);
         $this->event_listener->process($possible_parent);
 
         $this->assertEquals([$this->epic2], $possible_parent->getPossibleParents()->getArtifacts());
