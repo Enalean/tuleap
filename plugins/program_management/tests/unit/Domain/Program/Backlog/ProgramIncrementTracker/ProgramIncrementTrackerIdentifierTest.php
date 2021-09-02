@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -42,6 +45,19 @@ final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\T
         $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             self::PROGRAM_INCREMENT_TRACKER_ID
+        );
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $program_increment_tracker->id);
+    }
+
+    public function testItBuildsFromProgramIncrement(): void
+    {
+        $program_increment         = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(
+            41,
+            UserIdentifierStub::buildGenericUser()
+        );
+        $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromProgramIncrement(
+            RetrieveProgramIncrementTrackerStub::withValidTracker(self::PROGRAM_INCREMENT_TRACKER_ID),
+            $program_increment
         );
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $program_increment_tracker->id);
     }

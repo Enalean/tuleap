@@ -22,15 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-/**
- * I am a storage row for a pending iteration creation. DO NOT trust my values: the iteration artifact could have been
- * deleted since its storage. The program increment artifact could have been deleted.
- * @psalm-immutable
- */
-interface PendingIterationCreation
+final class StoredChangesetNotFoundException extends \Exception
 {
-    public function getIterationId(): int;
-    public function getProgramIncrementId(): int;
-    public function getUserId(): int;
-    public function getIterationChangesetId(): int;
+    public function __construct(int $changeset_id)
+    {
+        parent::__construct(sprintf('Changeset with id #%d could not be found in database', $changeset_id));
+    }
 }

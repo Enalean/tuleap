@@ -45,7 +45,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
         $this->tracker_factory      = $this->createMock(\TrackerFactory::class);
         $this->user                 = UserTestBuilder::aUser()->build();
         $this->program              = ProgramIdentifierBuilder::build();
-        $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::buildValidTrackerId(1);
+        $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::withValidTracker(1);
     }
 
     public function testItThrowsAnExceptionIfProgramIncrementTrackerIsNotFound(): void
@@ -58,7 +58,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
 
     public function testItThrowsIfGivenProjectIsNotAProgram(): void
     {
-        $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::buildNoProgramIncrementTracker();
+        $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::withNoProgramIncrementTracker();
 
         $this->expectException(ProgramHasNoProgramIncrementTrackerException::class);
         $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user);

@@ -24,16 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 
-final class StoredUserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DomainUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromId(): void
     {
-        $user = StoredUser::fromId(VerifyIsUserStub::withValidUser(), 118);
+        $user = DomainUser::fromId(VerifyIsUserStub::withValidUser(), 118);
         self::assertSame(118, $user->getId());
     }
 
     public function testItReturnsNullWhenIdIsNotAUser(): void
     {
-        self::assertNull(StoredUser::fromId(VerifyIsUserStub::withNotValidUser(), -1));
+        self::assertNull(DomainUser::fromId(VerifyIsUserStub::withNotValidUser(), -1));
     }
 }

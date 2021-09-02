@@ -20,30 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-/**
- * @psalm-immutable
- */
-final class StoredUser implements UserIdentifier
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\SearchPendingProgramIncrementUpdates;
+
+final class SearchPendingProgramIncrementUpdatesStub implements SearchPendingProgramIncrementUpdates
 {
-    private int $id;
-
-    private function __construct(int $id)
+    private function __construct(private ?PendingProgramIncrementUpdate $update)
     {
-        $this->id = $id;
     }
 
-    public function getId(): int
+    public function searchUpdate(int $program_increment_id, int $user_id): ?PendingProgramIncrementUpdate
     {
-        return $this->id;
+        return $this->update;
     }
 
-    public static function fromId(VerifyIsUser $user_verifier, int $user_id): ?self
+    public static function withUpdate(PendingProgramIncrementUpdate $update): self
     {
-        if (! $user_verifier->isUser($user_id)) {
-            return null;
-        }
-        return new self($user_id);
+        return new self($update);
+    }
+
+    public static function withNoUpdate(): self
+    {
+        return new self(null);
     }
 }

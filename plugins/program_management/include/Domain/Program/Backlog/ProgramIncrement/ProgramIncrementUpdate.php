@@ -24,14 +24,23 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredChangesetNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredUserNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\DomainUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 /**
  * I hold all the information necessary to apply updates from a source Program Increment
  * to its Mirrored Program Increments.
- * I can be stored and retrieved from storage.
  * @psalm-immutable
  */
 final class ProgramIncrementUpdate
@@ -57,5 +66,46 @@ final class ProgramIncrementUpdate
             return null;
         }
         return new self($program_increment, $tracker, $event->getChangeset(), $event->getUser());
+    }
+
+    /**
+     * @throws StoredProgramIncrementNoLongerValidException
+     * @throws StoredUserNotFoundException
+     * @throws StoredChangesetNotFoundException
+     */
+    public static function fromPendingUpdate(
+        VerifyIsUser $user_verifier,
+        VerifyIsProgramIncrement $program_increment_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        VerifyIsChangeset $changeset_verifier,
+        RetrieveProgramIncrementTracker $program_increment_tracker_retriever,
+        PendingProgramIncrementUpdate $pending_update
+    ): self {
+        $user_id = $pending_update->getUserId();
+        $user    = DomainUser::fromId($user_verifier, $user_id);
+        if (! $user) {
+            throw new StoredUserNotFoundException($user_id);
+        }
+        $program_increment_id = $pending_update->getProgramIncrementId();
+        try {
+            $program_increment = ProgramIncrementIdentifier::fromId(
+                $program_increment_verifier,
+                $visibility_verifier,
+                $program_increment_id,
+                $user
+            );
+        } catch (ProgramIncrementNotFoundException $e) {
+            throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
+        }
+        $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromProgramIncrement(
+            $program_increment_tracker_retriever,
+            $program_increment
+        );
+        $changeset_id              = $pending_update->getChangesetId();
+        $changeset                 = DomainChangeset::fromId($changeset_verifier, $changeset_id);
+        if (! $changeset) {
+            throw new StoredChangesetNotFoundException($changeset_id);
+        }
+        return new self($program_increment, $program_increment_tracker, $changeset, $user);
     }
 }

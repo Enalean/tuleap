@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\Queue\NoQueueSystemAvailableException;
@@ -44,6 +45,7 @@ final class ProgramIncrementUpdateRunner implements RunProgramIncrementUpdate
     public function __construct(
         private LoggerInterface $logger,
         private QueueFactory $queue_factory,
+        private ProcessProgramIncrementUpdate $update_processor,
         private ProcessIterationCreation $iteration_processor,
     ) {
     }
@@ -74,6 +76,7 @@ final class ProgramIncrementUpdateRunner implements RunProgramIncrementUpdate
             "Unable to queue program increment mirrors update for program increment #{$program_increment_id}",
             ['exception' => $exception]
         );
+        $this->update_processor->processProgramIncrementUpdate($update);
         foreach ($creations as $iteration_creation) {
             $this->iteration_processor->processIterationCreation($iteration_creation);
         }

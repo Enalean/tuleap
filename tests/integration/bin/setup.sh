@@ -74,7 +74,8 @@ seed_data() {
         statistics \
         git \
         pullrequest \
-        oauth2_server
+        oauth2_server \
+        program_management
 }
 
 setup_tuleap
