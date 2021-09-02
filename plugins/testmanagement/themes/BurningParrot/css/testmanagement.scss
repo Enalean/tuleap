@@ -23,10 +23,55 @@
 @use 'includes/graph';
 @use 'includes/campaign';
 @use 'includes/execution-list';
+@use 'includes/campaign-progression';
 @use 'includes/presence';
 @use 'includes/execution-details-modal';
 @use 'includes/administration';
 @use 'includes/project-header-background';
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+body.testmanagement {
+    /* stylelint-disable-next-line selector-no-qualifying-type */
+    #main-container {
+        display: flex;
+        flex: 1 1 auto;
+        height: 100vh;
+        min-height: 0;
+
+        /* stylelint-disable-next-line selector-no-qualifying-type */
+        main[role="main"] {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+        }
+    }
+}
+
+#testmanagement-app {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+
+    > ui-view[data-test-management-main-content] {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+
+        > ui-view {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            height: 100%;
+        }
+    }
+}
+
+#testmanagement-breadcrumb {
+    flex: 0 0 auto;
+    padding-top: var(--tlp-large-spacing);
+}
 
 .loader {
     width: 26px;

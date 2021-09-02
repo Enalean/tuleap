@@ -1,125 +1,162 @@
 <div class="test-campaign-header">
-    <span class="tlp-badge-secondary test-campaign-header-status-badge" ng-if="! $ctrl.campaign_state.campaign.is_open">
-        {{ $ctrl.campaign_state.campaign.status }}
-    </span>
-    <h1 class="test-campaign-header-title">{{ $ctrl.campaign_state.campaign.label }}</h1>
-    <button type="button"
-            class="tlp-button-primary tlp-button-outline execution-header-button"
-            aria-haspopup="true"
-            aria-expanded="false"
-            onclick="this.blur();"
-            ng-click="$ctrl.openEditCampaignModal()"
-            ng-if="$ctrl.campaign_state.campaign.user_can_update"
-            ng-disabled="! $ctrl.campaign_state.campaign.is_open"
-            title="{{ ::'Select tests' | translate }}"
-            data-test="edit-campaign-button"
-            data-shortcut-select-tests
-    >
-        <i class="fas fa-tlp-select-test tlp-button-icon"></i> {{ 'Select tests' | translate }}
-    </button>
-    <button type="button"
-        class="tlp-button-primary tlp-button-outline execution-header-button"
-        ng-click="$ctrl.launchAutomatedTests()"
-        ng-if="$ctrl.isAutomatedTestButtonShown()"
-        ng-disabled="! $ctrl.campaign_state.campaign.is_open"
-    ><i class="fas fa-cogs tlp-button-icon"
-        ng-class="{ 'fa-spinner fa-spin': $ctrl.triggered }"
-    ></i> {{ ::'Launch automated tests' | translate }}</button>
-
-    <div class="tlp-dropdown execution-header-button" ng-if="$ctrl.campaign_state.campaign.user_can_update">
-        <button
-            type="button"
-            class="tlp-button-primary tlp-button-outline execution-header-button-edit"
-            aria-haspopup="true"
-            aria-controls="test-campaign-edit-menu"
-            id="test-campaign-edit-menu-trigger"
-            data-test="test-campaign-edit-menu-trigger"
-            title="{{ ::'Edit campaign' | translate }}"
-            open-tlp-dropdown
-        >
-            <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
-        </button>
-        <div class="tlp-dropdown-menu execution-header-button-edit-menu" role="menu" id="test-campaign-edit-menu">
-            <button
-                type="button"
-                ng-click="$ctrl.openEditCampaignLabelModal()"
-                class="tlp-dropdown-menu-item"
-                role="menuitem"
-                data-test="test-campaign-rename-campaign"
+    <div class="test-campaign-header-container">
+        <div class="test-campaign-header-title-container">
+            <span class="tlp-badge-secondary test-campaign-header-status-badge" ng-if="! $ctrl.campaign_state.campaign.is_open">
+                {{ $ctrl.campaign_state.campaign.status }}
+            </span>
+            <h1 class="test-campaign-header-title">{{ $ctrl.campaign_state.campaign.label }}</h1>
+        </div>
+        <div>
+            <button type="button"
+                    class="tlp-button-primary tlp-button-small tlp-button-outline execution-header-button"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    onclick="this.blur();"
+                    ng-click="$ctrl.openEditCampaignModal()"
+                    ng-if="$ctrl.campaign_state.campaign.user_can_update"
+                    ng-disabled="! $ctrl.campaign_state.campaign.is_open"
+                    title="{{ ::'Select tests' | translate }}"
+                    data-test="edit-campaign-button"
+                    data-shortcut-select-tests
             >
-                <i class="fas fa-pencil-alt tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-                {{ ::'Rename campaign' | translate }}
+                <i class="fas fa-tlp-select-test tlp-button-icon"></i>
+                {{ 'Select tests' | translate }}
             </button>
-            <button
-                type="button"
-                ng-click="$ctrl.openEditCampaignAutomatedModal()"
-                class="tlp-dropdown-menu-item"
-                role="menuitem"
-                ng-if="$ctrl.campaign_state.campaign.is_open"
+            <button type="button"
+                class="tlp-button-primary tlp-button-small tlp-button-outline execution-header-button"
+                ng-click="$ctrl.launchAutomatedTests()"
+                ng-if="$ctrl.isAutomatedTestButtonShown()"
+                ng-disabled="! $ctrl.campaign_state.campaign.is_open"
             >
-                <i class="fas fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-                {{ ::'Configure automated tests' | translate }}
+                <i class="fas fa-cogs tlp-button-icon" ng-class="{ 'fa-spinner fa-spin': $ctrl.triggered }"></i>
+                {{ ::'Launch automated tests' | translate }}
             </button>
-            <form method="post" action="{{ $ctrl.getCloseFormURL() }}">
-                <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
-                <input type="hidden"
-                       name="milestone_id"
-                       value="{{ $ctrl.getCurrentMilestone().id }}"
-                       ng-if="$ctrl.getCurrentMilestone().id !== undefined"
-                />
+            <div class="tlp-dropdown execution-header-button" ng-if="$ctrl.campaign_state.campaign.user_can_update">
                 <button
-                    type="submit"
-                    class="tlp-dropdown-menu-item testmanagement-button-update-status"
-                    role="menuitem"
-                    ng-if="$ctrl.campaign_state.campaign.is_open"
-                    data-test="test-campaign-close-campaign"
+                    type="button"
+                    class="tlp-button-primary tlp-button-outline execution-header-button-edit"
+                    aria-haspopup="true"
+                    aria-controls="test-campaign-edit-menu"
+                    id="test-campaign-edit-menu-trigger"
+                    data-test="test-campaign-edit-menu-trigger"
+                    title="{{ ::'Edit campaign' | translate }}"
+                    open-tlp-dropdown
                 >
-                    <i class="fas fa-times tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-                    {{ ::'Close campaign' | translate }}
+                    <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
                 </button>
-            </form>
-            <form method="post" action="{{ $ctrl.getOpenFormURL() }}">
-                <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
-                <input type="hidden"
-                       name="milestone_id"
-                       value="{{ $ctrl.getCurrentMilestone().id }}"
-                       ng-if="$ctrl.getCurrentMilestone().id !== undefined"
-                />
-                <button
-                    type="submit"
-                    class="tlp-dropdown-menu-item testmanagement-button-update-status"
-                    role="menuitem"
-                    ng-if="! $ctrl.campaign_state.campaign.is_open"
-                    data-test="test-campaign-open-campaign"
-                >
-                    <i class="fas fa-check tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-                    {{ ::'Open campaign' | translate }}
-                </button>
-            </form>
+                <div class="tlp-dropdown-menu tlp-dropdown-menu-right execution-header-button-edit-menu" role="menu" id="test-campaign-edit-menu">
+                    <button
+                        type="button"
+                        ng-click="$ctrl.openEditCampaignLabelModal()"
+                        class="tlp-dropdown-menu-item"
+                        role="menuitem"
+                        data-test="test-campaign-rename-campaign"
+                    >
+                        <i class="fas fa-pencil-alt tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        {{ ::'Rename campaign' | translate }}
+                    </button>
+                    <button
+                        type="button"
+                        ng-click="$ctrl.openEditCampaignAutomatedModal()"
+                        class="tlp-dropdown-menu-item"
+                        role="menuitem"
+                        ng-if="$ctrl.campaign_state.campaign.is_open"
+                    >
+                        <i class="fas fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        {{ ::'Configure automated tests' | translate }}
+                    </button>
+                    <form method="post" action="{{ $ctrl.getCloseFormURL() }}">
+                        <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
+                        <input type="hidden"
+                            name="milestone_id"
+                            value="{{ $ctrl.getCurrentMilestone().id }}"
+                            ng-if="$ctrl.getCurrentMilestone().id !== undefined"
+                        />
+                        <button
+                            type="submit"
+                            class="tlp-dropdown-menu-item testmanagement-button-update-status"
+                            role="menuitem"
+                            ng-if="$ctrl.campaign_state.campaign.is_open"
+                            data-test="test-campaign-close-campaign"
+                        >
+                            <i class="fas fa-times tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                            {{ ::'Close campaign' | translate }}
+                        </button>
+                    </form>
+                    <form method="post" action="{{ $ctrl.getOpenFormURL() }}">
+                        <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
+                        <input type="hidden"
+                            name="milestone_id"
+                            value="{{ $ctrl.getCurrentMilestone().id }}"
+                            ng-if="$ctrl.getCurrentMilestone().id !== undefined"
+                        />
+                        <button
+                            type="submit"
+                            class="tlp-dropdown-menu-item testmanagement-button-update-status"
+                            role="menuitem"
+                            ng-if="! $ctrl.campaign_state.campaign.is_open"
+                            data-test="test-campaign-open-campaign"
+                        >
+                            <i class="fas fa-check tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                            {{ ::'Open campaign' | translate }}
+                        </button>
+                    </form>
 
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="test-campaign-header-spacer"></div>
-    <div class="test-campaign-tester"
-         ng-if="$ctrl.isRealtimeEnabled()"
-         ng-repeat="presence in $ctrl.campaign_state.presences_on_campaign | orderBy:'-score' | limitTo:6"
-    >
-        <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
-            <img title="{{ presence.real_name }}"
-                 ng-src="{{ presence.avatar_url }}"
-                 onerror="this.src='/themes/common/images/avatar_default.png'"
-                 alt="avatar">
-        </div>
-        <span ng-if="$ctrl.positiveScore(presence.score)"
-            class="tlp-badge-primary">{{ $ctrl.positiveScore(presence.score) }}</span>
-    </div>
-    <button class="test-campaign-header-trophy"
+    <div class="test-campaign-header-container">
+        <div class="test-campaign-testers"
             title="{{ 'Show test campaign scores' | translate }}"
             ng-if="$ctrl.isRealtimeEnabled()"
             ng-click="$ctrl.showPresencesModal()"
             data-shortcut-campaign-scores
-    >
-        <i class="fa fa-trophy"></i>
-    </button>
+        >
+            <div class="test-campaign-tester"
+                ng-repeat="presence in $ctrl.campaign_state.presences_on_campaign | orderBy:'-score' | limitTo:5"
+            >
+                <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
+                    <img title="{{ presence.real_name }}"
+                        ng-src="{{ presence.avatar_url }}"
+                        onerror="this.src='/themes/common/images/avatar_default.png'"
+                        alt="avatar">
+                </div>
+                <span ng-if="$ctrl.positiveScore(presence.score)"
+                    class="tlp-badge-primary">{{ $ctrl.positiveScore(presence.score) }}
+                </span>
+            </div>
+            <i class="fas fa-expand-alt test-campaign-testers-more" aria-hidden="true"></i>
+        </div>
+        <div class="test-campaign-progressions">
+            <div class="test-campaign-progression passed"
+                ng-if="$ctrl.campaign_state.campaign.nb_of_passed"
+            >
+                <div class="test-campaign-progression-value">{{ $ctrl.campaign_state.campaign.nb_of_passed }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression failed"
+                style="width: {{ $ctrl.campaign_state.campaign.nb_of_failed * 100 / $ctrl.campaign_state.campaign.total }}%"
+                ng-if="$ctrl.campaign_state.campaign.nb_of_failed"
+            >
+                <div class="test-campaign-progression-value">{{ $ctrl.campaign_state.campaign.nb_of_failed }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression blocked"
+                style="width: {{ $ctrl.campaign_state.campaign.nb_of_blocked * 100 / $ctrl.campaign_state.campaign.total }}%"
+                ng-if="$ctrl.campaign_state.campaign.nb_of_blocked"
+            >
+                <div class="test-campaign-progression-value">{{ $ctrl.campaign_state.campaign.nb_of_blocked }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression notrun"
+                style="width: {{ $ctrl.campaign_state.campaign.nb_of_notrun * 100 / $ctrl.campaign_state.campaign.total }}%"
+                ng-if="$ctrl.campaign_state.campaign.nb_of_notrun"
+            >
+                <div class="test-campaign-progression-value">{{ $ctrl.campaign_state.campaign.nb_of_notrun }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+        </div>
+    </div>
 </div>

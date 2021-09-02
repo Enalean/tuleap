@@ -1,26 +1,9 @@
 <execution-list-header handle-removed-executions-callback="hideDetailsForRemovedTestExecution()"
 ></execution-list-header>
 
-<div class="tlp-framed test-campaign">
+<div class="test-campaign">
     <socket-disconnect></socket-disconnect>
     <feedback-message></feedback-message>
-
-    <div class="test-campaign-current-progression-container">
-        <div class="test-campaign-current-progression">
-            <div class="tests-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">
-                {{ campaign.nb_of_passed }}
-            </div>
-            <div class="tests-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">
-                {{ campaign.nb_of_failed }}
-            </div>
-            <div class="tests-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">
-                {{ campaign.nb_of_blocked }}
-            </div>
-            <div class="tests-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">
-                {{ campaign.nb_of_notrun }}
-            </div>
-        </div>
-    </div>
 
     <div class="test-campaign-tests">
         <section class="tlp-pane tests-pane">

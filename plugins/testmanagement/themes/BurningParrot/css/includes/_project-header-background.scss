@@ -33,6 +33,70 @@
         @include background.background-for-links();
         box-shadow: none;
     }
+
+    .test-campaign-header {
+        margin: 0 0 var(--tlp-medium-spacing);
+    }
+
+    .test-campaign-testers {
+        &:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        > .test-campaign-testers-more {
+            color: var(--tlp-white-color);
+        }
+    }
+
+    .test-campaign-progressions > .test-campaign-progression {
+        > .test-campaign-progression-bar {
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+        }
+
+        > .test-campaign-progression-value {
+            text-shadow: 0 0 3px rgb(0, 0, 0);
+        }
+
+        &.passed {
+            > .test-campaign-progression-bar {
+                background: var(--tlp-success-color-lighter-60);
+            }
+
+            > .test-campaign-progression-value {
+                color: var(--tlp-success-color-lighter-60);
+            }
+        }
+
+        &.failed {
+            > .test-campaign-progression-bar {
+                background: var(--tlp-danger-color-lighter-60);
+            }
+
+            > .test-campaign-progression-value {
+                color: var(--tlp-danger-color-lighter-60);
+            }
+        }
+
+        &.blocked {
+            > .test-campaign-progression-bar {
+                background: var(--tlp-info-color-lighter-60);
+            }
+
+            > .test-campaign-progression-value {
+                color: var(--tlp-info-color-lighter-60);
+            }
+        }
+
+        &.notrun {
+            > .test-campaign-progression-bar {
+                background: var(--tlp-neutral-normal-color);
+            }
+
+            > .test-campaign-progression-value {
+                color: var(--tlp-neutral-light-color);
+            }
+        }
+    }
 }
 
 body {
