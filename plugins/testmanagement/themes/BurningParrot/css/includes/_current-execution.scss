@@ -77,6 +77,10 @@
     box-shadow: unset;
 }
 
+.current-test-header-container > .loader {
+    margin-top: var(--tlp-x-large-spacing);
+}
+
 .current-test-header {
     display: flex;
     flex: 0 0 auto;
