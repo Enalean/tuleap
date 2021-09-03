@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,26 +16,38 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Queue\Noop;
+declare(strict_types=1);
 
-use Tuleap\Queue\PersistentQueueStatistics;
+namespace Tuleap\Queue;
 
-class PersistentQueue implements \Tuleap\Queue\PersistentQueue
+/**
+ * @psalm-immutable
+ */
+final class PersistentQueueStatistics
 {
-
-    public function pushSinglePersistentMessage(string $topic, $content): void
+    /**
+     * @psalm-param positive-int|0 $size
+     */
+    private function __construct(public int $size, public ?\DateTimeImmutable $oldest_message)
     {
     }
 
-    public function listen($queue_id, $topic, callable $callback)
+    /**
+     * @psalm-pure
+     */
+    public static function emptyQueue(): self
     {
+        return new self(0, null);
     }
 
-    public function getStatistics(): PersistentQueueStatistics
+    /**
+     * @psalm-pure
+     * @psalm-param positive-int $size
+     */
+    public static function queueWithMessageToProcess(int $size, \DateTimeImmutable $oldest_message): self
     {
-        return PersistentQueueStatistics::emptyQueue();
+        return new self($size, $oldest_message);
     }
 }

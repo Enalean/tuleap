@@ -32,4 +32,6 @@ interface PersistentQueue
      * @psalm-param callable(string): void $callback
      */
     public function listen($queue_id, $topic, callable $callback);
+
+    public function getStatistics(): PersistentQueueStatistics;
 }

@@ -92,9 +92,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\AsynchronousArtifactsDeletionActionsRunner;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunnerDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\ChangesetsForDiffRetriever;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\DiffProcessor;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\TextDiffRetriever;
@@ -380,17 +378,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
 
         $file_manager->purgeOldTemporaryFiles();
-
-        $this->getAsynchronousSupervisor($params['logger'])->runSystemCheck();
-    }
-
-    private function getAsynchronousSupervisor(\Psr\Log\LoggerInterface $logger)
-    {
-        return new AsynchronousSupervisor(
-            $logger,
-            new ActionsRunnerDao(),
-            new \Tuleap\Queue\WorkerAvailability()
-        );
     }
 
     /**

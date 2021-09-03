@@ -67,10 +67,6 @@ class ActionsRunner
      */
     private $logger;
     /**
-     * @var ActionsRunnerDao
-     */
-    private $actions_runner_dao;
-    /**
      * @var QueueFactory
      */
     private $queue_factory;
@@ -85,13 +81,11 @@ class ActionsRunner
 
     public function __construct(
         LoggerInterface $logger,
-        ActionsRunnerDao $actions_runner_dao,
         QueueFactory $queue_factory,
         WorkerAvailability $worker_availability,
         PostCreationTask ...$post_creation_tasks
     ) {
         $this->logger              = new WrapperLogger($logger, self::class);
-        $this->actions_runner_dao  = $actions_runner_dao;
         $this->queue_factory       = $queue_factory;
         $this->worker_availability = $worker_availability;
         $this->post_creation_tasks = $post_creation_tasks;
@@ -105,7 +99,6 @@ class ActionsRunner
 
         return new ActionsRunner(
             $logger,
-            new ActionsRunnerDao(),
             new QueueFactory($logger),
             new WorkerAvailability(),
             new ClearArtifactChangesetCacheTask(),
@@ -174,15 +167,12 @@ class ActionsRunner
      */
     public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
-        $this->actions_runner_dao->addStartDate($changeset->getId());
         $this->processPostCreationActions($changeset, $send_notifications);
-        $this->actions_runner_dao->addEndDate($changeset->getId());
     }
 
     private function queuePostCreationEvent(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
         try {
-            $this->actions_runner_dao->addNewPostCreationEvent($changeset->getId());
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
                 AsynchronousActionsRunner::TOPIC,
@@ -195,7 +185,6 @@ class ActionsRunner
         } catch (Exception $exception) {
             $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif", ['exception' => $exception]);
             $this->processPostCreationActions($changeset, $send_notifications);
-            $this->actions_runner_dao->addEndDate($changeset->getId());
         }
     }
 
