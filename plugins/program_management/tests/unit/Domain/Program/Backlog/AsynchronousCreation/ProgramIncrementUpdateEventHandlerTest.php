@@ -106,6 +106,8 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
                 self::PROGRAM_INCREMENT_TRACKER_ID
             ),
             $this->update_deleter,
+            new ProgramIncrementUpdateProcessor($this->logger),
+            new IterationCreationProcessor($this->logger)
         );
     }
 

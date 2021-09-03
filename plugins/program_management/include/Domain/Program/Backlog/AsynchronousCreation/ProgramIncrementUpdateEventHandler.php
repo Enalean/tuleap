@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
-final class ProgramIncrementUpdateEventHandler implements ProcessProgramIncrementUpdate, ProcessIterationCreation
+final class ProgramIncrementUpdateEventHandler
 {
     public function __construct(
         private LoggerInterface $logger,
@@ -44,7 +44,9 @@ final class ProgramIncrementUpdateEventHandler implements ProcessProgramIncremen
         private DeletePendingIterations $iteration_deleter,
         private SearchPendingProgramIncrementUpdates $update_searcher,
         private RetrieveProgramIncrementTracker $tracker_retriever,
-        private DeletePendingProgramIncrementUpdates $pending_update_deleter
+        private DeletePendingProgramIncrementUpdates $pending_update_deleter,
+        private ProcessProgramIncrementUpdate $update_processor,
+        private ProcessIterationCreation $iteration_processor
     ) {
     }
 
@@ -88,7 +90,7 @@ final class ProgramIncrementUpdateEventHandler implements ProcessProgramIncremen
             $this->logger->error('Invalid data found in the database, skipping pending update', ['exception' => $e]);
             return;
         }
-        $this->processProgramIncrementUpdate($update);
+        $this->update_processor->processProgramIncrementUpdate($update);
     }
 
     private function buildAndProcessIterationCreation(PendingIterationCreation $pending_creation): void
@@ -123,22 +125,6 @@ final class ProgramIncrementUpdateEventHandler implements ProcessProgramIncremen
             $this->logger->error('Invalid data found in the database, skipping pending creation', ['exception' => $e]);
             return;
         }
-        $this->processIterationCreation($iteration_creation);
-    }
-
-    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void
-    {
-        $program_increment_id = $update->program_increment->getId();
-        $user_id              = $update->user->getId();
-        $this->logger->debug(
-            "Processing program increment update with program increment #$program_increment_id for user #$user_id"
-        );
-    }
-
-    public function processIterationCreation(IterationCreation $iteration_creation): void
-    {
-        $iteration_id = $iteration_creation->iteration->id;
-        $user_id      = $iteration_creation->user->getId();
-        $this->logger->debug("Processing iteration creation with iteration #$iteration_id for user #$user_id");
+        $this->iteration_processor->processIterationCreation($iteration_creation);
     }
 }

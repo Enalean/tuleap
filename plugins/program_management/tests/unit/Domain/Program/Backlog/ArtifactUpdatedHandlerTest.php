@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreIterationCreations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
@@ -106,8 +106,8 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                         // Side effects
                     }
                 },
-                new class implements RunProgramIncrementUpdate {
-                    public function scheduleUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
+                new class implements DispatchProgramIncrementUpdate {
+                    public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
                     {
                         // Side effects
                     }

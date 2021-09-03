@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 
-interface RunProgramIncrementUpdate
+interface DispatchProgramIncrementUpdate
 {
-    public function scheduleUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void;
+    public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void;
 }

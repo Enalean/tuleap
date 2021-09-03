@@ -45,7 +45,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastCh
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateRunner;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
@@ -117,7 +117,9 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateEventHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
@@ -537,7 +539,9 @@ final class program_managementPlugin extends Plugin
             $iteration_creation_DAO,
             $pending_updates_dao,
             $program_increments_DAO,
-            $pending_updates_dao
+            $pending_updates_dao,
+            new ProgramIncrementUpdateProcessor($logger),
+            new IterationCreationProcessor($logger),
         );
         $handler->handle(ProgramIncrementUpdateEventProxy::fromWorkerEvent($logger, $event));
     }
@@ -566,21 +570,6 @@ final class program_managementPlugin extends Plugin
         $iteration_creation_DAO         = new PendingIterationCreationDAO();
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $program_increments_DAO         = new ProgramIncrementsDAO();
-        $pending_updates_dao            = new PendingProgramIncrementUpdateDAO();
-
-        $update_processor = new ProgramIncrementUpdateEventHandler(
-            $logger,
-            $iteration_creation_DAO,
-            $user_retriever,
-            new IterationsDAO(),
-            $visibility_verifier,
-            $program_increments_DAO,
-            new ChangesetDAO(),
-            $iteration_creation_DAO,
-            $pending_updates_dao,
-            $program_increments_DAO,
-            $pending_updates_dao
-        );
 
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
@@ -606,11 +595,11 @@ final class program_managementPlugin extends Plugin
                     new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
                 ),
                 $iteration_creation_DAO,
-                new ProgramIncrementUpdateRunner(
+                new ProgramIncrementUpdateDispatcher(
                     $logger,
                     new QueueFactory($logger),
-                    $update_processor,
-                    $update_processor
+                    new ProgramIncrementUpdateProcessor($logger),
+                    new IterationCreationProcessor($logger),
                 )
             )
         );

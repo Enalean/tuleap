@@ -63,8 +63,8 @@ final class ProgramIncrementUpdateSchedulerTest extends \Tuleap\Test\PHPUnit\Tes
                     // Side effects
                 }
             },
-            new class implements RunProgramIncrementUpdate {
-                public function scheduleUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
+            new class implements DispatchProgramIncrementUpdate {
+                public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
                 {
                     // Side effects
                 }
@@ -75,6 +75,6 @@ final class ProgramIncrementUpdateSchedulerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItSchedulesAnUpdateAndIterationCreations(): void
     {
         $this->getScheduler()->replicateProgramIncrementUpdate($this->update);
-        $this->addToAssertionCount(1);
+        $this->expectNotToPerformAssertions();
     }
 }
