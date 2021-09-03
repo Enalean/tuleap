@@ -1,0 +1,169 @@
+execution-list-header {
+    flex: 0 0 auto;
+}
+
+.test-campaign-header {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+}
+
+.test-campaign-header-container {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+
+    &:first-child {
+        flex-wrap: wrap;
+        margin: 0 var(--tlp-jumbo-spacing) 0 0;
+    }
+}
+
+.test-campaign-header-title-container {
+    display: flex;
+    align-items: center;
+}
+
+.test-campaign-header-status-badge {
+    display: flex;
+    align-items: center;
+    margin: 0 var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
+    border-radius: var(--tlp-x-large-spacing);
+    font-size: 1rem;
+    line-height: 1.1875rem;
+}
+
+.test-campaign-header-title {
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    font-size: 1.8rem;
+    line-height: 2rem;
+}
+
+.execution-header-button {
+    margin: 0 var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
+}
+
+.execution-header-button-edit.tlp-button-outline {
+    position: relative;
+    top: calc((-1) * var(--tlp-small-spacing));
+    height: auto;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+
+    &:focus,
+    &:hover {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    &:focus-visible {
+        box-shadow: var(--tlp-shadow-focus);
+    }
+}
+
+.tlp-dropdown-menu-right.execution-header-button-edit-menu {
+    // magic value to adjust the menu just at the middle of the ellipsis
+    right: -9px;
+}
+
+$testers-padding: 4px;
+
+.test-campaign-testers {
+    display: flex;
+    position: relative;
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0 var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
+    padding: $testers-padding;
+    border-radius: var(--tlp-medium-radius);
+
+    &:hover {
+        background: var(--tlp-neutral-dark-color);
+        cursor: pointer;
+
+        > .test-campaign-tester {
+            position: relative;
+            top: 0;
+            right: 0;
+        }
+
+        > .test-campaign-testers-more {
+            visibility: visible;
+        }
+    }
+
+    > .test-campaign-testers-more {
+        visibility: hidden;
+        margin: 0 4px 0 8px;
+        color: var(--tlp-dimmed-color);
+        font-size: 0.75rem;
+    }
+}
+
+.test-campaign-tester {
+    position: relative;
+    z-index: 3;
+    flex: 0 0 auto;
+    margin: 0 0 0 4px;
+
+    &:first-child {
+        margin: 0;
+    }
+
+    > .tlp-avatar-small {
+        border: 1px solid var(--tlp-background-color);
+    }
+
+    > .tlp-badge-primary {
+        position: absolute;
+        top: -8px;
+        right: -6px;
+        padding: 1px 4px 0;
+        border-color: var(--tlp-background-color);
+        background: var(--tlp-dark-color);
+        font-size: 0.6rem;
+    }
+
+    &:nth-child(4) {
+        position: absolute;
+        z-index: 2;
+        top: $testers-padding;
+        right: -8px; // not related to --tlp-medium-spacing
+
+        > .tlp-badge-primary {
+            display: none;
+        }
+    }
+
+    &:nth-child(5) {
+        position: absolute;
+        z-index: 1;
+        top: $testers-padding;
+        right: -20px; // -avatar.width / 2 - right position of nth-child(4)
+
+        > .tlp-badge-primary {
+            display: none;
+        }
+    }
+}
+
+.test-campaign-header-container > .test-campaign-progressions {
+    position: relative;
+    top: 6px; // allows to visually center the bar + values with the avatars
+    min-width: 150px;
+    margin: 0 0 var(--tlp-medium-spacing);
+
+    > .test-campaign-progression {
+        flex-direction: column-reverse;
+
+        .test-campaign-progression-value {
+            margin: 2px 0 0;
+            font-size: 0.75rem;
+        }
+    }
+}
