@@ -212,12 +212,13 @@
     ul,
     ol {
         font-size: 0.875rem;
-        line-height: 1.25rem;
+        line-height: 1.125rem;
     }
 }
 
 .current-test-footer-section {
     border-top: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 0;
     background: var(--tlp-fade-background-color);
 }
 
@@ -248,31 +249,29 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 0 0 var(--tlp-small-spacing) 0;
+    margin: 0 0 var(--tlp-small-spacing);
 
     > label {
         margin: 0;
     }
 
-    > .tlp-button-secondary.tlp-button-outline {
+    > .current-comment-header-modal-trigger {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: calc(0.75rem + 2px * var(--tlp-small-spacing));
+        width: var(--tlp-large-spacing);
+        height: var(--tlp-large-spacing);
         margin: calc(-1 * var(--tlp-small-spacing)) calc(-1 * var(--tlp-small-spacing)) 0 0;
-        padding: var(--tlp-small-spacing);
-        transition: opacity 100ms ease-in-out, color 100ms ease-in-out;
+        padding: 0;
         border: 0;
         border-radius: 50%;
-        opacity: 0.8;
         background: none;
         box-shadow: none;
         color: var(--tlp-dimmed-color);
 
         &:focus,
         &:hover {
-            opacity: 1;
-            color: var(--tlp-main-color);
+            background: var(--tlp-neutral-normal-color);
         }
 
         &:focus {
@@ -301,32 +300,24 @@
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-    background: var(--tlp-white-color);
 }
 
 .current-test-comment {
-    width: 100%;
-    min-height: 50px;
-    max-height: 200px;
-    padding: 8px 12px;
+    max-height: calc(14 * 1.125rem);
+    padding: var(--tlp-small-spacing) 12px;
     overflow: auto;
     transition: border-color ease-out 150ms;
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: var(--tlp-medium-radius);
+    background: var(--tlp-white-color);
 
     // stylelint-disable selector-class-pattern
     &:focus,
     &.cke_focus {
         // stylelint-enable
-        min-height: 64px; // magic value to display 2 line of text (padding + 2 line-height of <p>)
+        min-height: calc(8 * 1.125rem);
         border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
         border-color: var(--tlp-main-color);
-    }
-
-    p {
-        margin: 0 0 5px;
-        font-size: 14px;
-        line-height: normal;
     }
 
     img {
@@ -335,21 +326,29 @@
 }
 
 .current-test-comment-displayer {
-    max-height: 120px;
-    padding: 0;
-    overflow: hidden;
+    max-height: calc(8 * 1.125rem);
+    margin: 0 0 var(--tlp-medium-spacing);
+    overflow: auto;
     border: 0;
-    background: var(--tlp-fade-background-color);
-    font-size: 14px;
-    line-height: 22px;
-    word-break: normal;
-
-    p {
-        font-size: inherit;
-    }
 
     img {
-        max-height: 2rem;
+        max-height: 3rem;
+        border-radius: var(--tlp-small-radius);
+    }
+}
+
+.current-test-comment,
+.current-test-comment-displayer {
+    width: 100%;
+
+    p {
+        margin: 0 0 var(--tlp-medium-spacing);
+        font-size: 0.875rem;
+        line-height: 1.125rem;
+
+        &:last-child {
+            margin: 0;
+        }
     }
 }
 
@@ -359,22 +358,26 @@
 
 .current-test-result {
     flex: 0 0 auto;
-    width: 50px;
-    height: 50px;
+    width: calc(5 * var(--tlp-small-spacing));
+    height: calc(5 * var(--tlp-small-spacing));
     margin: 0 0 0 var(--tlp-small-spacing);
     padding: 0;
     border-radius: 50%;
-    font-size: 25px;
+    font-size: 1rem;
+
+    &.tlp-button-info,
+    &.tlp-button-secondary {
+        font-size: 0.8rem;
+    }
 
     &.tlp-button-secondary {
         border-color: var(--tlp-dimmed-color);
         background: var(--tlp-dimmed-color);
         color: var(--tlp-white-color);
 
-        &:disabled {
-            border-color: transparent;
-            background: var(--tlp-dimmed-color-lighter-30);
-            color: var(--tlp-white-color-transparent-40);
+        &:hover {
+            border-color: var(--tlp-dimmed-color-darker-10);
+            background: var(--tlp-dimmed-color-darker-10);
         }
     }
 
@@ -391,24 +394,24 @@
     margin: 0 5px 0 0;
 }
 
-.tlp-alert-warning.current-test-message-warning {
-    margin: 0 0 var(--tlp-medium-spacing) 0;
+.current-test-message-warning {
+    margin: 0 0 var(--tlp-medium-spacing);
+    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-x-large-spacing);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
 
     &::before {
-        top: 35%;
+        top: calc(var(--tlp-small-spacing) + 1px);
+        left: var(--tlp-small-spacing);
+        font-size: 0.9rem;
     }
 }
 
-.current-test-should-be-reloaded-button {
-    margin: 0 0 0 var(--tlp-small-spacing);
-    vertical-align: baseline;
-}
-
-.current-test-comment-has-changed-buttons {
+.current-test-message-warning-actions {
     display: flex;
+    flex: 0 0 auto;
     gap: var(--tlp-small-spacing);
-    flex-wrap: wrap;
-    margin: var(--tlp-small-spacing) 0 0 0;
+    margin: var(--tlp-small-spacing) 0 0;
 }
 
 .current-test-automated-message {
