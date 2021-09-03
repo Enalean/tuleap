@@ -21,7 +21,7 @@
          id="{{ execution.definition.id }}-tabpanel"
          aria-labelledby="{{ execution.definition.id }}-tab"
     >
-    <section class="current-test-header-container">
+        <section class="current-test-header-container">
             <div class="loader" ng-if="! execution.id"></div>
 
             <div class="current-test-header">
@@ -144,13 +144,17 @@
             </section>
         </section>
 
-        <section class="tlp-pane-section current-test-content" ng-if="! execution.definition.steps.length && execution.is_automated === false">
+        <section class="tlp-pane-section current-test-content"
+            ng-if="! execution.definition.steps.length && execution.is_automated === false"
+            ng-class="{'empty-state-pane': execution.definition.description.length === 0}"
+        >
             <execution-detail-just-updated></execution-detail-just-updated>
-            <h2>Steps</h2>
-            <p class="current-test-description-empty-state"
+            <p class="empty-state-text"
                ng-if="execution.definition.description.length === 0"
                translate
-            >This test has no description. Please edit it.</p>
+            >
+                This test has no description. Please edit it.
+            </p>
             <div ng-bind-html="execution.definition.description"></div>
         </section>
 

@@ -1,4 +1,4 @@
-.steps execution-detail-just-updated > .feedback-info {
+execution-detail-just-updated > .feedback-info {
     margin: 20px;
 }
 
@@ -8,14 +8,11 @@
     border-bottom: 1px solid var(--tlp-neutral-light-color);
 }
 
-.steps-step {
+/* stylelint-disable selector-no-qualifying-type */
+step {
     display: flex;
     align-items: baseline;
     border-bottom: 1px solid var(--tlp-neutral-light-color);
-
-    &:last-child {
-        border-bottom: 0;
-    }
 
     &.passed {
         background: var(--tlp-success-color-transparent-90);
@@ -25,7 +22,7 @@
                 color: var(--tlp-success-color);
             }
 
-            > .steps-step-expected-arrow {
+            > .steps-step-expected-arrow > path {
                 fill: var(--tlp-success-color);
             }
         }
@@ -39,7 +36,7 @@
                 color: var(--tlp-danger-color);
             }
 
-            > .steps-step-expected-arrow {
+            > .steps-step-expected-arrow > path {
                 fill: var(--tlp-danger-color);
             }
         }
@@ -53,7 +50,7 @@
                 color: var(--tlp-info-color);
             }
 
-            > .steps-step-expected-arrow {
+            > .steps-step-expected-arrow > path {
                 fill: var(--tlp-info-color);
             }
         }
@@ -67,10 +64,15 @@
                 color: var(--tlp-dimmed-color);
             }
 
-            > .steps-step-expected-arrow {
+            > .steps-step-expected-arrow > path {
                 fill: var(--tlp-dimmed-color);
             }
         }
+    }
+
+    &:last-child {
+        padding-bottom: 80px; // used to prevent y-scroll when opening last step dropdown
+        border-bottom: 0;
     }
 }
 
@@ -79,7 +81,7 @@
 }
 
 .steps-step-description {
-    flex-grow: 1;
+    flex: 1 1 auto;
     margin: var(--tlp-medium-spacing) 0;
 }
 
@@ -91,7 +93,7 @@
 .steps-step-expected {
     display: flex;
     align-items: baseline;
-    margin: var(--tlp-small-spacing) 0 0 5px;
+    margin: var(--tlp-small-spacing) 0 0 1px;
 
     > .steps-step-expected-content {
         margin: 0 0 0 var(--tlp-medium-spacing);
@@ -100,12 +102,13 @@
 
 .steps-step-expected-arrow {
     flex: 0 0 auto;
-    margin: 0 5px 0 0;
+    margin: 0 4px 0 0;
 }
 
 .steps-step-expected-title {
-    margin: 0 0 10px;
-    font-weight: bold;
+    margin: 0 0 var(--tlp-small-spacing);
+    font-size: 0.8125rem;
+    font-weight: 500;
 }
 
 .steps-step-action {
