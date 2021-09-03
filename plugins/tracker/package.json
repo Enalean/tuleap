@@ -6,6 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
+    "@tuleap/core": "file:../../src",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
     "@tuleap/list-picker": "file:../../src/scripts/lib/list-picker",
     "@tuleap/mention": "file:../../src/scripts/lib/mention",

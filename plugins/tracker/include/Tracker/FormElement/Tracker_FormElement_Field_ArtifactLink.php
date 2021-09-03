@@ -36,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RequestDataAugmentor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
@@ -461,10 +462,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         PFUser $user,
         bool $can_create
     ): string {
-        $purifier                  = Codendi_HTMLPurifier::instance();
         $possible_parents_getr     = new PossibleParentsRetriever($this->getArtifactFactory(), EventManager::instance());
-        $html                      = '';
-        $html                     .= '<div class="tracker-artlink-add-parent">';
         $possible_parents_selector = $possible_parents_getr->getPossibleArtifactParents(
             $this->getTracker(),
             $user,
@@ -472,41 +470,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             0,
             $can_create,
         );
-        $possible_parents          = $possible_parents_selector->getPossibleParents()?->getArtifacts();
-        if ($possible_parents_selector->isSelectorDisplayed()) {
-            $html .= '<label>';
-            $html .= sprintf(dgettext('tuleap-tracker', 'Select %1$s parent:'), $purifier->purify($possible_parents_selector->getParentLabel()));
-            $html .= '<select name="' . $purifier->purify($name) . '[parent]">';
-            $html .= '<option value="">' . $GLOBALS['Language']->getText('global', 'please_choose_dashed') . '</option>';
-            if ($possible_parents_selector->canCreate()) {
-                $html .= '<option value="' . self::CREATE_NEW_PARENT_VALUE . '">' . dgettext('tuleap-tracker', 'Create a new one') . '</option>';
-            }
-            $html .= $this->fetchArtifactParentsOptions($prefill_parent, $possible_parents_selector->getLabel(), $possible_parents ?? []);
-            $html .= '</select>';
-            $html .= '</label>';
-        } elseif ($possible_parents !== null && count($possible_parents) > 0) {
-            $html .= sprintf(dgettext('tuleap-tracker', 'Will have %1$s as parent.'), $possible_parents[0]->fetchDirectLinkToArtifactWithTitle());
-        }
-        $html .= '</div>';
-        return $html;
-    }
-
-    private function fetchArtifactParentsOptions($prefill_parent, $label, array $possible_parents)
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        if ($possible_parents) {
-            $html .= '<optgroup label="' . $purifier->purify($label) . '">';
-            foreach ($possible_parents as $possible_parent) {
-                $selected = '';
-                if ($possible_parent->getId() == $prefill_parent) {
-                    $selected = ' selected="selected"';
-                }
-                $html .= '<option value="' . $possible_parent->getId() . '"' . $selected . '>' . $possible_parent->getXRefAndTitle() . '</option>';
-            }
-            $html .= '</optgroup>';
-        }
-        return $html;
+        $renderer                  = new PossibleParentSelectorRenderer(TemplateRendererFactory::build()->getRenderer(__DIR__ . '/Field/ArtifactLink/templates'));
+        return $renderer->render($this->getTrackerId(), $name, $prefill_parent, $possible_parents_selector);
     }
 
     /**

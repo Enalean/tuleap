@@ -1088,6 +1088,9 @@ msgstr "Créer une nouvelle réponse"
 msgid "Create a new tracker"
 msgstr "Créer un nouvel outil de suivi"
 
+msgid "Create a new {{ parent_label }}"
+msgstr "Créer un nouveau {{ parent_label }}"
+
 msgid "Create artifact by email"
 msgstr "Créer un artéfact par courriel"
 
@@ -1113,6 +1116,9 @@ msgid ""
 msgstr ""
 "Créer des réponses type peut vous économiser beaucoup de temps si vous "
 "postez couramment les mêmes réponses aux utilisateurs."
+
+msgid "Creation"
+msgstr "Creation"
 
 msgid "Criteria"
 msgstr "Critères"
@@ -2599,9 +2605,8 @@ msgstr ""
 "Voir la configuration de l'outil de suivi "
 "{{ tracker_name_from_which_we_imply_the_semantic }}"
 
-#, php-format
-msgid "Select %1$s parent:"
-msgstr "Sélectionner un parent %1$s :"
+msgid "Select %s parent"
+msgstr "Sélectionner un parent %1$s"
 
 msgid "Select Box"
 msgstr "boîte de sélection simple"
