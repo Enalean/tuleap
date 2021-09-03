@@ -62,6 +62,10 @@
             color: var(--tlp-dimmed-color);
         }
     }
+
+    > .tlp-pane-container {
+        min-height: 0;
+    }
 }
 
 .linked-issue-alert {
@@ -202,19 +206,13 @@
 .current-test-content {
     flex: 1 1 auto;
     overflow-y: auto;
-
-    h2 {
-        margin: 0 0 10px;
-        font-size: 18px;
-        font-weight: 600;
-    }
+    border-bottom: 0;
 
     p,
     ul,
     ol {
-        margin: 0 0 10px;
-        font-size: 14px;
-        line-height: 18px;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
     }
 }
 
@@ -411,11 +409,6 @@
     gap: var(--tlp-small-spacing);
     flex-wrap: wrap;
     margin: var(--tlp-small-spacing) 0 0 0;
-}
-
-.current-test-description-empty-state {
-    color: var(--tlp-dimmed-color);
-    font-style: italic;
 }
 
 .current-test-automated-message {
