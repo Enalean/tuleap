@@ -180,8 +180,13 @@ class DocmanWithMetadataActivatedDataBuilder
         $value_two = new \Docman_MetadataListOfValuesElement();
         $value_two->setName("value 2");
 
+        $value_three = new \Docman_MetadataListOfValuesElement();
+        $value_three->setName("value 3");
+        $value_three->setStatus("D");
+
         $love_factory->create($value);
         $love_factory->create($value_two);
+        $love_factory->create($value_three);
 
         $custom_metadata = new \Docman_Metadata();
 

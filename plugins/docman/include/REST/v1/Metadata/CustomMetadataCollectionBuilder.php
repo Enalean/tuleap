@@ -73,7 +73,7 @@ class CustomMetadataCollectionBuilder
             return null;
         }
 
-        $list_of_values = $this->list_of_value_builder->build((int) $metadata->getId(), false);
+        $list_of_values = $this->list_of_value_builder->build((int) $metadata->getId(), true);
 
         $possible_values_representation = [];
         foreach ($list_of_values as $value) {
