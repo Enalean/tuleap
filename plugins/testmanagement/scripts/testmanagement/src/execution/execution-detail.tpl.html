@@ -21,103 +21,118 @@
          id="{{ execution.definition.id }}-tabpanel"
          aria-labelledby="{{ execution.definition.id }}-tab"
     >
-        <section class="tlp-pane-header current-test-header">
+    <section class="current-test-header-container">
             <div class="loader" ng-if="! execution.id"></div>
-            <h1 class="current-test-header-title" data-test="current-test-header-title">
-                <i ng-if="execution.is_automated" class="fa current-test-title-icon-auto" ng-class="{
-                    'fa-tlp-robot notrun': execution.status === 'notrun',
-                    'fa-tlp-robot blocked': execution.status === 'blocked',
-                    'fa-tlp-robot-happy passed': execution.status ===  'passed',
-                    'fa-tlp-robot-unhappy failed': execution.status ===  'failed'
-                }"></i>
-                {{ execution.definition.summary }}
-            </h1>
 
-            <div class="current-test-header-actions">
-                <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
+            <div class="current-test-header">
+                <h1 class="current-test-header-title" data-test="current-test-header-title">
+                    <i ng-if="execution.is_automated" class="fa current-test-title-icon-auto" ng-class="{
+                        'fa-tlp-robot notrun': execution.status === 'notrun',
+                        'fa-tlp-robot blocked': execution.status === 'blocked',
+                        'fa-tlp-robot-happy passed': execution.status ===  'passed',
+                        'fa-tlp-robot-unhappy failed': execution.status ===  'failed'
+                    }"></i>
+                    {{ execution.definition.summary }}
+                </h1>
+
+                <div class="current-test-header-actions">
+                    <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
+                        <button class="current-test-header-action tlp-button-secondary"
+                                type="button"
+                                id="dropdown-link-bug"
+                                title="{{ 'Open bug options dropdown' | translate }}"
+                                open-tlp-dropdown
+                        >
+                            <i class="fa fa-fw fa-bug" aria-hidden="true"></i>
+                        </button>
+                        <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
+                            <button class="tlp-dropdown-menu-item"
+                                    type="button"
+                                    role="menuitem"
+                                    ng-if="canCreateIssue"
+                                    ng-click="showLinkToNewBugModal()"
+                                    data-shortcut-new-bug
+                            >
+                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus" aria-hidden="true"></i>
+                                <span translate>Create a new bug</span>
+                            </button>
+                            <button class="tlp-dropdown-menu-item"
+                                    type="button"
+                                    role="menuitem"
+                                    ng-if="canLinkIssue"
+                                    ng-click="showLinkToExistingBugModal()"
+                                    data-shortcut-link-bug
+                            >
+                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link" aria-hidden="true"></i>
+                                <span translate>Link to an existing bug</span>
+                            </button>
+                            <span
+                                    ng-if="execution.linked_bugs.length > 0"
+                                    class="tlp-dropdown-menu-title"
+                                    role="menuitem"
+                                    translate
+                            >Linked bugs</span>
+                            <a class="tlp-dropdown-menu-item"
+                            role="menuitem"
+                            href="/plugins/tracker/?aid={{ bug.id }}"
+                            ng-repeat="bug in execution.linked_bugs track by bug.id"
+                            >
+                                <span ng-class="['tlp-badge-outline', 'tlp-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
+                                    {{ bug.xref }}
+                                </span> {{ bug.title }}
+                            </a>
+                        </div>
+                    </div>
+
                     <button class="current-test-header-action tlp-button-secondary"
                             type="button"
-                            id="dropdown-link-bug"
-                            title="{{ 'Open bug options dropdown' | translate }}"
-                            open-tlp-dropdown
+                            ng-if="! linkMenuIsVisible && canCreateIssue"
+                            ng-click="showLinkToNewBugModal()"
+                            title="{{ 'Create a new bug' | translate }}"
+                            data-shortcut-new-bug
                     >
                         <i class="fa fa-fw fa-bug" aria-hidden="true"></i>
                     </button>
-                    <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
-                        <button class="tlp-dropdown-menu-item"
-                                type="button"
-                                role="menuitem"
-                                ng-if="canCreateIssue"
-                                ng-click="showLinkToNewBugModal()"
-                                data-shortcut-new-bug
-                        >
-                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus" aria-hidden="true"></i>
-                            <span translate>Create a new bug</span>
-                        </button>
-                        <button class="tlp-dropdown-menu-item"
-                                type="button"
-                                role="menuitem"
-                                ng-if="canLinkIssue"
-                                ng-click="showLinkToExistingBugModal()"
-                                data-shortcut-link-bug
-                        >
-                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link" aria-hidden="true"></i>
-                            <span translate>Link to an existing bug</span>
-                        </button>
-                        <span
-                                ng-if="execution.linked_bugs.length > 0"
-                                class="tlp-dropdown-menu-title"
-                                role="menuitem"
-                                translate
-                        >Linked bugs</span>
-                        <a class="tlp-dropdown-menu-item"
-                           role="menuitem"
-                           href="/plugins/tracker/?aid={{ bug.id }}"
-                           ng-repeat="bug in execution.linked_bugs track by bug.id"
-                        >
-                            <span ng-class="['tlp-badge-outline', 'tlp-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
-                                {{ bug.xref }}
-                            </span> {{ bug.title }}
-                        </a>
-                    </div>
+
+                    <a href="/plugins/tracker/?aid={{ execution.definition.id }}"
+                    class="current-test-header-action tlp-button-secondary"
+                    data-test="current-test-edit"
+                    ng-click="showEditArtifactModal($event, execution.definition)"
+                    title="{{ 'Edit this test' | translate }}"
+                    data-shortcut-edit-test
+                    >
+                        <i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i>
+                    </a>
+
+                    <button class="current-test-header-action tlp-button-secondary"
+                            type="button"
+                            ng-click="showArtifactLinksGraphModal(execution)"
+                            title="{{ 'Show dependencies graph for this test' | translate }}"
+                            data-shortcut-dependency-graph
+                    >
+                        <i class="fa fa-tlp-dependencies-graph" aria-hidden="true"></i>
+                    </button>
                 </div>
-
-                <button class="current-test-header-action tlp-button-secondary"
-                        type="button"
-                        ng-if="! linkMenuIsVisible && canCreateIssue"
-                        ng-click="showLinkToNewBugModal()"
-                        title="{{ 'Create a new bug' | translate }}"
-                        data-shortcut-new-bug
-                >
-                    <i class="fa fa-fw fa-bug" aria-hidden="true"></i>
-                </button>
-
-                <a href="/plugins/tracker/?aid={{ execution.definition.id }}"
-                   class="current-test-header-action tlp-button-secondary"
-                   data-test="current-test-edit"
-                   ng-click="showEditArtifactModal($event, execution.definition)"
-                   title="{{ 'Edit this test' | translate }}"
-                   data-shortcut-edit-test
-                >
-                    <i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i>
-                </a>
-
-                <button class="current-test-header-action tlp-button-secondary"
-                        type="button"
-                        ng-click="showArtifactLinksGraphModal(execution)"
-                        title="{{ 'Show dependencies graph for this test' | translate }}"
-                        data-shortcut-dependency-graph
-                >
-                    <i class="fa fa-tlp-dependencies-graph" aria-hidden="true"></i>
-                </button>
             </div>
-        </section>
 
-        <section class="tlp-pane-section current-test-latest-result" ng-if="execution.previous_result.has_been_run_at_least_once">
-            <i class="fa fa-check-circle current-test-status" ng-if="execution.status === 'passed'"></i>
-            <i class="fa fa-times-circle current-test-status" ng-if="execution.status === 'failed'"></i>
-            <i class="fa fa-exclamation-circle current-test-status" ng-if="execution.status === 'blocked'"></i>
-            <div class="current-test-latest-result-description">
+            <section ng-if="execution.definition.requirement && execution.is_automated === false"
+                class="current-test-requirement"
+            >
+                <i class="fas fa-long-arrow-alt-right current-test-requirement-arrow"></i>
+                <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
+                    <span ng-class="['current-test-requirement-badge', 'tlp-badge-outline', 'tlp-badge-' + execution.definition.requirement.tracker.color_name]">
+                        {{ execution.definition.requirement.xref }}
+                    </span>
+                    <span>{{ execution.definition.requirement.title }}</span>
+                </a>
+            </section>
+
+            <section ng-if="execution.previous_result.has_been_run_at_least_once"
+                class="current-test-latest-result"
+            >
+                <i class="fa fa-check-circle current-test-status" ng-if="execution.status === 'passed'"></i>
+                <i class="fa fa-times-circle current-test-status" ng-if="execution.status === 'failed'"></i>
+                <i class="fa fa-exclamation-circle current-test-status" ng-if="execution.status === 'blocked'"></i>
                 <div class="current-test-header-who">
                     <span ng-if="execution.previous_result.submitted_on">
                         {{ execution.previous_result.submitted_on | amCalendar }}
@@ -126,18 +141,7 @@
                         <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
                     </span>
                 </div>
-            </div>
-        </section>
-
-        <section ng-if="execution.definition.requirement && execution.is_automated === false" class="tlp-pane-section current-test-requirement">
-            <div>
-                <i class="fas fa-long-arrow-alt-right current-test-requirement-arrow"></i>
-                <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
-                    <span ng-class="['current-test-requirement-badge', 'tlp-badge-outline', 'tlp-badge-' + execution.definition.requirement.tracker.color_name]">
-                        {{ execution.definition.requirement.xref }}
-                    </span> {{ execution.definition.requirement.title }}
-                </a>
-            </div>
+            </section>
         </section>
 
         <section class="tlp-pane-section current-test-content" ng-if="! execution.definition.steps.length && execution.is_automated === false">
