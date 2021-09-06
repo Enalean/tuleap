@@ -22,25 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 
 final class RetrieveTitleValueStub implements RetrieveTitleValue
 {
-    private string $value;
-
-    private function __construct(string $value)
+    private function __construct(private string $value, private bool $has_error)
     {
-        $this->value = $value;
     }
 
     public static function withValue(string $value): self
     {
-        return new self($value);
+        return new self($value, false);
+    }
+
+    public static function withError(): self
+    {
+        return new self('', true);
     }
 
     public function getTitleValue(SynchronizedFields $fields): string
     {
+        if ($this->has_error) {
+            throw new ChangesetValueNotFoundException(1, 404, 'title');
+        }
         return $this->value;
     }
 }

@@ -22,19 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndPeriodValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
 final class SourceChangesetValuesCollectionBuilder
 {
@@ -76,41 +67,19 @@ final class SourceChangesetValuesCollectionBuilder
         string $end_date,
         int $source_program_increment_id
     ): SourceChangesetValuesCollection {
-        $replication_data    = ReplicationDataBuilder::buildWithArtifactId($source_program_increment_id);
-        $synchronized_fields = SynchronizedFieldsBuilder::build();
-
-        $title_value         = TitleValue::fromSynchronizedFields(
-            RetrieveTitleValueStub::withValue($title),
-            $synchronized_fields
-        );
-        $description_value   = DescriptionValue::fromSynchronizedFields(
-            RetrieveDescriptionValueStub::withValue($description_content, $description_format),
-            $synchronized_fields
-        );
-        $status_values       = StatusValue::fromSynchronizedFields(
-            RetrieveStatusValuesStub::withValues(...$status),
-            $synchronized_fields
-        );
-        $start_date_value    = StartDateValue::fromSynchronizedFields(
-            RetrieveStartDateValueStub::withValue($start_date),
-            $synchronized_fields
-        );
-        $end_period_value    = EndPeriodValue::fromSynchronizedFields(
-            RetrieveEndPeriodValueStub::withValue($end_date),
-            $synchronized_fields
-        );
-        $artifact_link_value = ArtifactLinkValue::fromReplicationData($replication_data);
-        $submission_date     = new SubmissionDate(1234567890);
-
-        return new SourceChangesetValuesCollection(
-            $source_program_increment_id,
-            $title_value,
-            $description_value,
-            $status_values,
-            $submission_date,
-            $start_date_value,
-            $end_period_value,
-            $artifact_link_value
+        return SourceChangesetValuesCollection::fromReplication(
+            BuildSynchronizedFieldsStub::withDefault(),
+            RetrieveFieldValuesGathererStub::withGatherer(
+                GatherFieldValuesStub::withValues(
+                    $title,
+                    $description_content,
+                    $description_format,
+                    $start_date,
+                    $end_date,
+                    $status
+                )
+            ),
+            ReplicationDataBuilder::buildWithArtifactId($source_program_increment_id)
         );
     }
 }
