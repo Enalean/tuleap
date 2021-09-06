@@ -26,5 +26,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Prog
 
 interface RetrieveStatusField
 {
+    /**
+     * @throws FieldRetrievalException
+     */
     public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference;
 }

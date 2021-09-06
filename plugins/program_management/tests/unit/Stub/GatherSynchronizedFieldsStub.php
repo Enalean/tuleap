@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
@@ -33,7 +34,8 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     private function __construct(
         private RetrieveTitleFieldStub $title_stub,
         private RetrieveDescriptionFieldStub $description_stub,
-        private RetrieveStatusFieldStub $status_stub
+        private RetrieveStatusFieldStub $status_stub,
+        private RetrieveStartDateFieldStub $start_date_stub
     ) {
     }
 
@@ -43,12 +45,15 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         int $description_field_id,
         string $description_field_label,
         int $status_field_id,
-        string $status_field_label
+        string $status_field_label,
+        int $start_date_field_id,
+        string $start_date_field_label
     ): self {
         return new self(
             RetrieveTitleFieldStub::withField($title_field_id, $title_field_label),
             RetrieveDescriptionFieldStub::withField($description_field_id, $description_field_label),
-            RetrieveStatusFieldStub::withField($status_field_id, $status_field_label)
+            RetrieveStatusFieldStub::withField($status_field_id, $status_field_label),
+            RetrieveStartDateFieldStub::withField($start_date_field_id, $start_date_field_label)
         );
     }
 
@@ -65,5 +70,10 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference
     {
         return $this->status_stub->getStatusField($program_increment);
+    }
+
+    public function getStartDateField(ProgramIncrementTrackerIdentifier $program_increment): StartDateFieldReference
+    {
+        return $this->start_date_stub->getStartDateField($program_increment);
     }
 }

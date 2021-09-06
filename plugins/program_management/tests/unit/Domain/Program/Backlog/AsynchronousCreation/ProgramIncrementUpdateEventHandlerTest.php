@@ -116,6 +116,8 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
                     'covellite',
                     381,
                     'unreflected',
+                    163,
+                    'undisposedness'
                 )
             ),
             new IterationCreationProcessor($this->logger)

@@ -20,14 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 
-interface RetrieveDescriptionField
+/**
+ * @psalm-immutable
+ */
+final class StartDateFieldReferenceProxy implements StartDateFieldReference
 {
-    /**
-     * @throws FieldRetrievalException
-     */
-    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference;
+    private function __construct(private int $id, private string $label)
+    {
+    }
+
+    public static function fromTrackerField(\Tracker_FormElement_Field_Date $start_date): self
+    {
+        return new self($start_date->getId(), $start_date->getLabel());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
 }

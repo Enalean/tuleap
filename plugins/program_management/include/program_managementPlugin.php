@@ -532,6 +532,7 @@ final class program_managementPlugin extends Plugin
         $pending_updates_dao    = new PendingProgramIncrementUpdateDAO();
         $program_increments_DAO = new ProgramIncrementsDAO();
         $tracker_factory        = \TrackerFactory::instance();
+        $form_element_factory   = \Tracker_FormElementFactory::instance();
 
         $handler = new ProgramIncrementUpdateEventHandler(
             $logger,
@@ -551,7 +552,16 @@ final class program_managementPlugin extends Plugin
                     $tracker_factory,
                     new \Tracker_Semantic_TitleFactory(),
                     new \Tracker_Semantic_DescriptionFactory(),
-                    new \Tracker_Semantic_StatusFactory()
+                    new \Tracker_Semantic_StatusFactory(),
+                    new SemanticTimeframeBuilder(
+                        new SemanticTimeframeDao(),
+                        $form_element_factory,
+                        $tracker_factory,
+                        new LinksRetriever(
+                            new ArtifactLinkFieldValueDao(),
+                            $artifact_factory
+                        )
+                    )
                 )
             ),
             new IterationCreationProcessor($logger),
@@ -618,7 +628,16 @@ final class program_managementPlugin extends Plugin
                             $tracker_factory,
                             new \Tracker_Semantic_TitleFactory(),
                             new \Tracker_Semantic_DescriptionFactory(),
-                            new \Tracker_Semantic_StatusFactory()
+                            new \Tracker_Semantic_StatusFactory(),
+                            new SemanticTimeframeBuilder(
+                                new SemanticTimeframeDao(),
+                                $form_element_factory,
+                                $tracker_factory,
+                                new LinksRetriever(
+                                    new ArtifactLinkFieldValueDao(),
+                                    $artifact_factory
+                                )
+                            )
                         )
                     ),
                     new IterationCreationProcessor($logger),

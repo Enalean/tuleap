@@ -24,10 +24,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 
-interface RetrieveDescriptionField
+interface RetrieveStartDateField
 {
     /**
-     * @throws FieldRetrievalException
+     * @throws MissingTimeFrameFieldException
      */
-    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference;
+    public function getStartDateField(ProgramIncrementTrackerIdentifier $program_increment): StartDateFieldReference;
 }

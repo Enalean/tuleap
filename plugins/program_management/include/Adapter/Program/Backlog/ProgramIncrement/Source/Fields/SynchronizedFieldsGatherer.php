@@ -25,10 +25,13 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 {
@@ -36,7 +39,8 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         private \TrackerFactory $tracker_factory,
         private \Tracker_Semantic_TitleFactory $title_factory,
         private \Tracker_Semantic_DescriptionFactory $description_factory,
-        private \Tracker_Semantic_StatusFactory $status_factory
+        private \Tracker_Semantic_StatusFactory $status_factory,
+        private SemanticTimeframeBuilder $timeframe_builder
     ) {
     }
 
@@ -71,6 +75,16 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             throw new FieldRetrievalException($program_increment->id, 'status');
         }
         return StatusFieldReferenceProxy::fromTrackerField($status_field);
+    }
+
+    public function getStartDateField(ProgramIncrementTrackerIdentifier $program_increment): StartDateFieldReference
+    {
+        $full_tracker     = $this->getFullTracker($program_increment);
+        $start_date_field = $this->timeframe_builder->getSemantic($full_tracker)->getStartDateField();
+        if (! $start_date_field) {
+            throw new MissingTimeFrameFieldException($program_increment->id, 'start date');
+        }
+        return StartDateFieldReferenceProxy::fromTrackerField($start_date_field);
     }
 
     private function getFullTracker(ProgramIncrementTrackerIdentifier $program_increment): \Tracker
