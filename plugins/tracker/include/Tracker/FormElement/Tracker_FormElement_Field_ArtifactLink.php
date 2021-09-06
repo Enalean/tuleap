@@ -470,8 +470,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             0,
             $can_create,
         );
-        $renderer                  = new PossibleParentSelectorRenderer(TemplateRendererFactory::build()->getRenderer(__DIR__ . '/Field/ArtifactLink/templates'));
-        return $renderer->render($this->getTrackerId(), $name, $prefill_parent, $possible_parents_selector);
+        $renderer                  = PossibleParentSelectorRenderer::buildWithDefaultTemplateRenderer();
+        return $renderer->render($name, $prefill_parent, $possible_parents_selector);
     }
 
     /**
