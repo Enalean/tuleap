@@ -34,7 +34,6 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -74,13 +73,12 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $user                  = UserTestBuilder::aUser()->build();
-        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(1)->build()),
             ProgramIdentifierBuilder::build(),
             $this->trackers,
-            $user
+            $user_identifier
         );
 
         $this->title_dao               = $this->createMock(\Tracker_Semantic_TitleDao::class);

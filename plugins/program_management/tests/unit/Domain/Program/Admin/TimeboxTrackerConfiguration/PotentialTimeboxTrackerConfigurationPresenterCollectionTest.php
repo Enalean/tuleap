@@ -27,21 +27,22 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \PFUser $user;
+    private UserIdentifier $user;
     private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
     {
-        $this->user    = UserTestBuilder::aUser()->build();
+        $this->user    = UserIdentifierStub::buildGenericUser();
         $this->program = ProgramForAdministrationIdentifierBuilder::build();
     }
 

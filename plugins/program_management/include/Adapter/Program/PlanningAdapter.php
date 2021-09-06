@@ -32,17 +32,13 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanning
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneTracker
 {
-    /**
-     * @var \PlanningFactory
-     */
-    private $planning_factory;
-
-    public function __construct(\PlanningFactory $planning_factory)
+    public function __construct(private \PlanningFactory $planning_factory, private RetrieveUser $retrieve_user)
     {
-        $this->planning_factory = $planning_factory;
     }
 
     /**
@@ -72,8 +68,9 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         return ProgramManagementProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
     }
 
-    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker
+    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): \Tracker
     {
+        $user          = $this->retrieve_user->getUserWithId($user_identifier);
         $root_planning = $this->getRootPlanning($user, $project->getId());
         return $root_planning->getPlanningTracker();
     }
@@ -82,8 +79,9 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
      * @throws PlanningNotFoundException
      * @throws TrackerRetrievalException
      */
-    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker
+    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): \Tracker
     {
+        $user          = $this->retrieve_user->getUserWithId($user_identifier);
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,
             $project->getId()

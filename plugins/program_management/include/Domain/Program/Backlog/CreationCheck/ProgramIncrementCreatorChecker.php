@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 class ProgramIncrementCreatorChecker
 {
@@ -64,7 +65,8 @@ class ProgramIncrementCreatorChecker
         ProgramTracker $tracker,
         ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
+        UserIdentifier $user_identifier
     ): bool {
         if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getTrackerId())) {
             return true;
@@ -75,7 +77,7 @@ class ProgramIncrementCreatorChecker
                 'Checking if Program Increment can be created in top planning of program #%s by user %s (#%s)',
                 $program->getId(),
                 $user->getName(),
-                $user->getId()
+                $user_identifier->getId()
             )
         );
 
@@ -88,13 +90,13 @@ class ProgramIncrementCreatorChecker
             $team_trackers             = TrackerCollection::buildRootPlanningMilestoneTrackers(
                 $this->milestone_retriever,
                 $team_projects_collection,
-                $user
+                $user_identifier
             );
             $program_and_team_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
                 $this->program_increment_tracker_retriever,
                 $program,
                 $team_trackers,
-                $user
+                $user_identifier
             );
         } catch (PlanningNotFoundException | TrackerRetrievalException | ProgramTrackerNotFoundException $exception) {
             $this->logger->error('Cannot retrieve all milestones', ['exception' => $exception]);
@@ -105,7 +107,7 @@ class ProgramIncrementCreatorChecker
             $tracker,
             $program_and_team_trackers,
             $team_trackers,
-            $user,
+            $user_identifier,
             $errors_collector
         );
 
@@ -115,7 +117,7 @@ class ProgramIncrementCreatorChecker
                     'Program increment cannot be created in program #%s by user %s (#%s)',
                     $program->getId(),
                     $user->getName(),
-                    $user->getId()
+                    $user_identifier->getId()
                 )
             );
         }

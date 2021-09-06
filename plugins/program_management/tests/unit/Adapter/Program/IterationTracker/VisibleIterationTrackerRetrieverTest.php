@@ -25,9 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\IterationTracker;
 use TrackerFactory;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,36 +37,38 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
      * @var \PHPUnit\Framework\MockObject\Stub|TrackerFactory
      */
     private $tracker_factory;
-    private \PFUser $user;
+    private UserIdentifier $user_identifier;
     private RetrieveIterationTrackerStub $tracker_id_retriever;
     private ProgramIdentifier $program;
+    private RetrieveUserStub $retrieve_user;
 
     protected function setUp(): void
     {
         $this->tracker_factory      = $this->createStub(TrackerFactory::class);
-        $this->user                 = UserTestBuilder::aUser()->build();
+        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
         $this->program              = ProgramIdentifierBuilder::build();
         $this->tracker_id_retriever = RetrieveIterationTrackerStub::buildValidTrackerId(1);
+        $this->retrieve_user        = RetrieveUserStub::withGenericUser();
     }
 
     public function testGetNullIfNoTrackerIdFoundInConfiguration(): void
     {
         $this->tracker_id_retriever = RetrieveIterationTrackerStub::buildNoIterationTracker();
         self::assertNull(
-            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user)
+            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)
         );
     }
 
     private function getRetriever(): VisibleIterationTrackerRetriever
     {
-        return new VisibleIterationTrackerRetriever($this->tracker_id_retriever, $this->tracker_factory);
+        return new VisibleIterationTrackerRetriever($this->tracker_id_retriever, $this->tracker_factory, $this->retrieve_user);
     }
 
     public function testThrowExceptionIfTrackerIdIsNotATracker(): void
     {
         $this->tracker_factory->method('getTrackerById')->willReturn(null);
         $this->expectException(ProgramTrackerNotFoundException::class);
-        $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user);
+        $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier);
     }
 
     public function testGetNullIfUserCanNotSeeTracker(): void
@@ -75,7 +79,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
         self::assertNull(
-            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user)
+            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)
         );
     }
 
@@ -88,7 +92,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         self::assertSame(
             $tracker,
-            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user)
+            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)
         );
     }
 }

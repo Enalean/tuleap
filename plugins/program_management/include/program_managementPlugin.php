@@ -343,7 +343,7 @@ final class program_managementPlugin extends Plugin
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             $this->getProgramAdapter(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
-            $this->getVisibleProgramIncrementTrackerRetriever(),
+            $this->getVisibleProgramIncrementTrackerRetriever($retrieve_user),
             $program_increments_dao,
             new TeamDao(),
             $retrieve_user,
@@ -373,7 +373,7 @@ final class program_managementPlugin extends Plugin
         $timeframe_dao               = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory     = new Tracker_Semantic_StatusFactory();
         $logger                      = $this->getLogger();
-        $planning_adapter            = new PlanningAdapter(\PlanningFactory::build());
+        $planning_adapter            = new PlanningAdapter(\PlanningFactory::build(), $user_manager_adapter);
         $program_increments_dao      = new ProgramIncrementsDAO();
         $iteration_dao               = new IterationsDAO();
         $retrieve_tracker_from_field = new TrackerFromFieldRetriever($form_element_factory);
@@ -416,7 +416,8 @@ final class program_managementPlugin extends Plugin
                 new Tracker_Rule_List_Dao(),
                 $tracker_factory
             ),
-            $retrieve_tracker_from_field
+            $retrieve_tracker_from_field,
+            $user_manager_adapter
         );
 
         return new DisplayAdminProgramManagementController(
@@ -435,8 +436,8 @@ final class program_managementPlugin extends Plugin
                 $program_dao,
                 $user_manager_adapter
             ),
-            $this->getVisibleProgramIncrementTrackerRetriever(),
-            $this->getVisibleIterationTrackerRetriever(),
+            $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
+            $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
             new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
                 new UGroupManagerAdapter($project_manager, new UGroupManager()),
@@ -456,13 +457,13 @@ final class program_managementPlugin extends Plugin
                         $checker,
                         $program_increments_dao,
                         $planning_adapter,
-                        $this->getVisibleProgramIncrementTrackerRetriever(),
+                        $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
                         $logger
                     ),
                     new IterationCreatorChecker(
                         $planning_adapter,
                         $iteration_dao,
-                        $this->getVisibleIterationTrackerRetriever(),
+                        $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
                         $checker,
                         $logger
                     ),
@@ -847,7 +848,7 @@ final class program_managementPlugin extends Plugin
             new FeaturesRankOrderer($priority_manager),
             new UserStoryLinkedToFeatureChecker(
                 new ArtifactsLinkedToParentDao(),
-                new PlanningAdapter(\PlanningFactory::build()),
+                new PlanningAdapter(\PlanningFactory::build(), $user_manager_adapter),
                 $artifact_factory,
                 $user_manager_adapter
             ),
@@ -1048,16 +1049,16 @@ final class program_managementPlugin extends Plugin
 
     private function getCanSubmitNewArtifactHandler(): CanSubmitNewArtifactHandler
     {
+        $retrieve_user               = new UserManagerAdapter(UserManager::instance());
         $form_element_factory        = \Tracker_FormElementFactory::instance();
         $timeframe_dao               = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory     = new Tracker_Semantic_StatusFactory();
         $logger                      = $this->getLogger();
-        $planning_adapter            = new PlanningAdapter(\PlanningFactory::build());
+        $planning_adapter            = new PlanningAdapter(\PlanningFactory::build(), $retrieve_user);
         $program_increments_dao      = new ProgramIncrementsDAO();
         $tracker_factory             = \TrackerFactory::instance();
         $iteration_dao               = new IterationsDAO();
         $retrieve_tracker_from_field = new TrackerFromFieldRetriever($form_element_factory);
-        $retrieve_user               = new UserManagerAdapter(UserManager::instance());
 
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             new SynchronizedFieldsAdapter(
@@ -1097,7 +1098,8 @@ final class program_managementPlugin extends Plugin
                 new Tracker_Rule_List_Dao(),
                 $tracker_factory
             ),
-            $retrieve_tracker_from_field
+            $retrieve_tracker_from_field,
+            $retrieve_user
         );
 
 
@@ -1108,13 +1110,13 @@ final class program_managementPlugin extends Plugin
                     $checker,
                     $program_increments_dao,
                     $planning_adapter,
-                    $this->getVisibleProgramIncrementTrackerRetriever(),
+                    $this->getVisibleProgramIncrementTrackerRetriever($retrieve_user),
                     $logger
                 ),
                 new IterationCreatorChecker(
                     $planning_adapter,
                     $iteration_dao,
-                    $this->getVisibleIterationTrackerRetriever(),
+                    $this->getVisibleIterationTrackerRetriever($retrieve_user),
                     $checker,
                     $logger
                 ),
@@ -1125,20 +1127,22 @@ final class program_managementPlugin extends Plugin
         );
     }
 
-    private function getVisibleProgramIncrementTrackerRetriever(): VisibleProgramIncrementTrackerRetriever
+    private function getVisibleProgramIncrementTrackerRetriever(UserManagerAdapter $retrieve_user): VisibleProgramIncrementTrackerRetriever
     {
         return new VisibleProgramIncrementTrackerRetriever(
             new ProgramIncrementsDAO(),
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            $retrieve_user
         );
     }
 
 
-    private function getVisibleIterationTrackerRetriever(): VisibleIterationTrackerRetriever
+    private function getVisibleIterationTrackerRetriever(UserManagerAdapter $retrieve_user): VisibleIterationTrackerRetriever
     {
         return new VisibleIterationTrackerRetriever(
             new IterationsDAO(),
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            $retrieve_user
         );
     }
 

@@ -64,14 +64,13 @@ final class ProgramIncrementTrackerConfiguration
         UserIdentifier $user_identifier,
         RetrieveUser $retrieve_user
     ): self {
-        $user                      =  $retrieve_user->getUserWithId($user_identifier);
         $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
             $retrieve_tracker,
             $program,
-            $user
+            $user_identifier
         );
 
-        $can_create_program_increment = $program_increment_tracker->userCanSubmitArtifact($user);
+        $can_create_program_increment = $program_increment_tracker->userCanSubmitArtifact($retrieve_user, $user_identifier);
         $has_plan_permissions         = $prioritize_features_permission->canUserPrioritizeFeatures($program, $user_identifier, null);
 
         $program_increments_labels = ProgramIncrementLabels::fromProgramIncrementTracker(

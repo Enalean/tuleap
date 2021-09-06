@@ -26,9 +26,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,14 +38,14 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
      * @var \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory
      */
     private $tracker_factory;
-    private \PFUser $user;
+    private UserIdentifier $user;
     private ProgramIdentifier $program;
     private RetrieveProgramIncrementTracker $tracker_id_retriever;
 
     protected function setUp(): void
     {
         $this->tracker_factory      = $this->createMock(\TrackerFactory::class);
-        $this->user                 = UserTestBuilder::aUser()->build();
+        $this->user                 = UserIdentifierStub::buildGenericUser();
         $this->program              = ProgramIdentifierBuilder::build();
         $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::withValidTracker(1);
     }
@@ -90,6 +92,6 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
 
     private function getRetriever(): VisibleProgramIncrementTrackerRetriever
     {
-        return new VisibleProgramIncrementTrackerRetriever($this->tracker_id_retriever, $this->tracker_factory);
+        return new VisibleProgramIncrementTrackerRetriever($this->tracker_id_retriever, $this->tracker_factory, RetrieveUserStub::withGenericUser());
     }
 }

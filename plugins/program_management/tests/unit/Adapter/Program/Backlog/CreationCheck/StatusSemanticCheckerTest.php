@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -85,23 +85,23 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_increment         = TrackerTestBuilder::aTracker()->withId(104)->build();
         $this->program_increment_tracker = new ProgramTracker($this->program_increment);
 
-        $user      = UserTestBuilder::aUser()->build();
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
+        $user_identifier = UserIdentifierStub::buildGenericUser();
+        $teams           = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
             ProgramIdentifierBuilder::build()
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $retriever       = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             $this->tracker_team_01,
             $this->tracker_team_02
         );
 
-        $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_tracker),
             ProgramIdentifierBuilder::build(),
             $this->collection,
-            $user
+            $user_identifier
         );
     }
 
@@ -132,7 +132,12 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(['open', 'in progress', 'review']);
 
         $this->semantic_status_factory->method('getByTracker')
-            ->withConsecutive([$this->program_increment], [$this->timebox_tracker], [$this->tracker_team_01], [$this->tracker_team_02])
+            ->withConsecutive(
+                [$this->program_increment],
+                [$this->timebox_tracker],
+                [$this->tracker_team_01],
+                [$this->tracker_team_02]
+            )
             ->willReturnOnConsecutiveCalls(
                 $top_planning_tracker_semantic_status,
                 $this->timebox_tracker_semantic_status,
@@ -220,7 +225,11 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_01_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->method('getByTracker')
             ->withConsecutive([$this->program_increment], [$this->timebox_tracker], [$this->tracker_team_01])
-            ->willReturnOnConsecutiveCalls($top_planning_tracker_semantic_status, $this->timebox_tracker_semantic_status, $tracker_01_semantic_status);
+            ->willReturnOnConsecutiveCalls(
+                $top_planning_tracker_semantic_status,
+                $this->timebox_tracker_semantic_status,
+                $tracker_01_semantic_status
+            );
 
         $tracker_01_semantic_status->expects(self::once())
             ->method('getOpenLabels')

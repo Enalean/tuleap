@@ -38,7 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -90,8 +90,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->method('getTrackerById')
             ->with(123)
             ->willReturn(TrackerTestBuilder::aTracker()->withId(123)->withName('tracker')->build());
-        $user     = UserTestBuilder::aUser()->build();
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger(), $this->retrieve_user, $this->retrieve_tracker_from_field);
@@ -121,8 +120,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->method('getTrackerById')
             ->with(758)
             ->willReturn(TrackerTestBuilder::aTracker()->withId(758)->withName('tracker')->build());
-        $user     = UserTestBuilder::aUser()->build();
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger(), $this->retrieve_user, $this->retrieve_tracker_from_field);
@@ -151,8 +149,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->method('getTrackerById')
             ->with(758)
             ->willReturn(TrackerTestBuilder::aTracker()->withId(758)->withName('tracker')->build());
-        $user     = UserTestBuilder::aUser()->build();
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger(), $this->retrieve_user, $this->retrieve_tracker_from_field);
@@ -182,8 +179,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->method('getTrackerById')
             ->with(758)
             ->willReturn(TrackerTestBuilder::aTracker()->withId(758)->withName('tracker')->build());
-        $user     = UserTestBuilder::aUser()->build();
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger(), $this->retrieve_user, $this->retrieve_tracker_from_field);
@@ -218,8 +214,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 TrackerTestBuilder::aTracker()->withId(123)->withName('tracker B')->build(),
                 TrackerTestBuilder::aTracker()->withId(758)->withName('tracker A')->build(),
             );
-        $user     = UserTestBuilder::aUser()->build();
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger(), $this->retrieve_user, $this->retrieve_tracker_from_field);

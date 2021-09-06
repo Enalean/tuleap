@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -53,11 +54,13 @@ final class IterationCreatorCheckerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|TimeboxCreatorChecker
      */
     private $timebox_creator_checker;
+    private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
         $this->logger            = new TestLogger();
         $this->user              = UserTestBuilder::aUser()->build();
+        $this->user_identifier   = UserIdentifierStub::buildGenericUser();
         $this->program           = ProgramIdentifierBuilder::build();
         $first_milestone_tracker = $this->createStub(Tracker::class);
         $first_milestone_tracker->method('getId')->willReturn(1);
@@ -87,7 +90,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
         self::assertFalse($this->logger->hasDebugRecords());
@@ -105,7 +109,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -124,7 +129,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
 
@@ -145,7 +151,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -164,7 +171,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -183,7 +191,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }

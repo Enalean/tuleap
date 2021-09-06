@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -77,7 +78,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
     private function getTask(): CreateProgramIncrementsTask
     {
         return new CreateProgramIncrementsTask(
-            new PlanningAdapter($this->planning_factory),
+            new PlanningAdapter($this->planning_factory, RetrieveUserStub::withGenericUser()),
             $this->mirror_creator,
             $this->logger,
             $this->pending_artifact_creation_store,

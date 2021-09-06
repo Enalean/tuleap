@@ -27,21 +27,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisibleProgramIncrementTracker
 {
-    private RetrieveProgramIncrementTracker $program_increment_tracker_retriever;
-    private \TrackerFactory $tracker_factory;
-
     public function __construct(
-        RetrieveProgramIncrementTracker $program_increment_tracker_retriever,
-        \TrackerFactory $tracker_factory
+        private RetrieveProgramIncrementTracker $program_increment_tracker_retriever,
+        private \TrackerFactory $tracker_factory,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
-        $this->tracker_factory                     = $tracker_factory;
     }
 
-    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, \PFUser $user): \Tracker
+    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): \Tracker
     {
         $program_id                   = $program->getId();
         $program_increment_tracker_id = $this->program_increment_tracker_retriever->getProgramIncrementTrackerId(
@@ -54,6 +52,7 @@ final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisiblePr
             $program_increment_tracker_id
         );
 
+        $user = $this->retrieve_user->getUserWithId($user_identifier);
         if (! $program_increment_tracker->userCanView($user)) {
             throw new ProgramTrackerNotFoundException($program_increment_tracker_id);
         }

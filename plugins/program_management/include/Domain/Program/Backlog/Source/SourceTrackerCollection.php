@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTra
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I contain the Timebox tracker and all its Mirrored Timebox trackers from
@@ -58,9 +59,9 @@ final class SourceTrackerCollection
         RetrieveVisibleProgramIncrementTracker $retriever,
         ProgramIdentifier $program,
         TrackerCollection $team_trackers,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): self {
-        $trackers = [ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user)];
+        $trackers = [ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user_identifier)];
         foreach ($team_trackers->getTrackers() as $team_tracker) {
             $trackers[] = $team_tracker;
         }
@@ -74,9 +75,9 @@ final class SourceTrackerCollection
         RetrieveVisibleIterationTracker $retriever,
         ProgramIdentifier $program,
         TrackerCollection $team_trackers,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): ?self {
-        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
+        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user_identifier);
 
         if ($iteration_tracker === null) {
             return null;

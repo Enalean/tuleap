@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
@@ -36,6 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -53,6 +55,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private SourceChangesetValuesCollection $field_values;
     private TrackerCollection $mirrored_program_increment_trackers;
     private \PFUser $user;
+    private UserIdentifier $user_identifier;
 
     protected function setUp(): void
     {
@@ -65,8 +68,9 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_creator
         );
 
-        $this->user         = UserTestBuilder::aUser()->build();
-        $this->field_values = SourceChangesetValuesCollectionBuilder::build();
+        $this->user            = UserTestBuilder::aUser()->build();
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->field_values    = SourceChangesetValuesCollectionBuilder::build();
 
         $teams = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
@@ -77,7 +81,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mirrored_program_increment_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048),
             $teams,
-            $this->user
+            $this->user_identifier
         );
     }
 

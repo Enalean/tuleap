@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface RetrievePlanningMilestoneTracker
 {
@@ -34,11 +35,11 @@ interface RetrievePlanningMilestoneTracker
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoProgramIncrementException
      */
-    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker;
+    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): \Tracker;
 
     /**
      * @throws PlanningNotFoundException
      * @throws TrackerRetrievalException
      */
-    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker;
+    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): \Tracker;
 }

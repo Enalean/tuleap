@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use PFUser;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
@@ -31,6 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 class TimeboxCreatorChecker
 {
@@ -39,7 +39,8 @@ class TimeboxCreatorChecker
         private CheckSemantic $semantic_checker,
         private CheckRequiredField $required_field_checker,
         private CheckWorkflow $workflow_checker,
-        private RetrieveTrackerFromField $retrieve_tracker_from_field
+        private RetrieveTrackerFromField $retrieve_tracker_from_field,
+        private RetrieveUser $retrieve_user
     ) {
     }
 
@@ -47,7 +48,7 @@ class TimeboxCreatorChecker
         ProgramTracker $tracker_data,
         SourceTrackerCollection $program_and_milestone_trackers,
         TrackerCollection $team_trackers,
-        PFUser $user,
+        UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $configuration_errors
     ): bool {
         $can_be_created = true;
@@ -58,9 +59,7 @@ class TimeboxCreatorChecker
             }
         }
 
-        $user_identifier = UserProxy::buildFromPFUser($user);
-
-        if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors)) {
+        if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($this->retrieve_user, $user_identifier, $configuration_errors)) {
             $can_be_created = false;
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return $can_be_created;

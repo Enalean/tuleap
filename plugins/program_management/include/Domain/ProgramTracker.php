@@ -30,6 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramTracker
 {
@@ -50,9 +52,9 @@ final class ProgramTracker
     public static function buildMilestoneTrackerFromRootPlanning(
         RetrievePlanningMilestoneTracker $retriever,
         ProgramManagementProject $project,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): self {
-        return new self($retriever->retrieveRootPlanningMilestoneTracker($project, $user));
+        return new self($retriever->retrieveRootPlanningMilestoneTracker($project, $user_identifier));
     }
 
     /**
@@ -62,9 +64,9 @@ final class ProgramTracker
     public static function buildSecondPlanningMilestoneTracker(
         RetrievePlanningMilestoneTracker $retriever,
         ProgramManagementProject $project,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): self {
-        return new self($retriever->retrieveSecondPlanningMilestoneTracker($project, $user));
+        return new self($retriever->retrieveSecondPlanningMilestoneTracker($project, $user_identifier));
     }
 
     /**
@@ -74,9 +76,9 @@ final class ProgramTracker
     public static function buildProgramIncrementTrackerFromProgram(
         RetrieveVisibleProgramIncrementTracker $retriever,
         ProgramIdentifier $program,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): self {
-        return new self($retriever->retrieveVisibleProgramIncrementTracker($program, $user));
+        return new self($retriever->retrieveVisibleProgramIncrementTracker($program, $user_identifier));
     }
 
     /**
@@ -85,9 +87,9 @@ final class ProgramTracker
     public static function buildIterationTrackerFromProgram(
         RetrieveVisibleIterationTracker $retriever,
         ProgramIdentifier $program,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): ?self {
-        $tracker = $retriever->retrieveVisibleIterationTracker($program, $user);
+        $tracker = $retriever->retrieveVisibleIterationTracker($program, $user_identifier);
 
         if ($tracker === null) {
             return null;
@@ -128,8 +130,9 @@ final class ProgramTracker
         return $this->tracker;
     }
 
-    public function userCanSubmitArtifact(\PFUser $user): bool
+    public function userCanSubmitArtifact(RetrieveUser $retrieve_user, UserIdentifier $user_identifier): bool
     {
+        $user = $retrieve_user->getUserWithId($user_identifier);
         return $this->tracker->userCanSubmitArtifact($user);
     }
 }
