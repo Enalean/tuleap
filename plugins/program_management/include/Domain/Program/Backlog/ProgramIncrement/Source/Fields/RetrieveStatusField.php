@@ -24,26 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 
-/**
- * I hold all synchronized field references (identifier + label) for a given Timebox or Mirrored Timebox.
- * Synchronized fields are: Artifact link field, Title semantic field, Description semantic field,
- * Status semantic field, Timeframe semantic fields
- * @psalm-immutable
- */
-final class SynchronizedFieldReferences
+interface RetrieveStatusField
 {
-    private function __construct(
-        public TitleFieldReference $title,
-        public StatusFieldReference $status
-    ) {
-    }
-
-    public static function fromProgramIncrementTracker(
-        GatherSynchronizedFields $gatherer,
-        ProgramIncrementTrackerIdentifier $program_increment
-    ): self {
-        $title  = $gatherer->getTitleField($program_increment);
-        $status = $gatherer->getStatusField($program_increment);
-        return new self($title, $status);
-    }
+    public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference;
 }

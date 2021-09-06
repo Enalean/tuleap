@@ -22,38 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReferenceProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveStatusField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 
-final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
+final class RetrieveStatusFieldStub implements RetrieveStatusField
 {
-    private function __construct(
-        private RetrieveTitleFieldStub $title_stub,
-        private RetrieveStatusFieldStub $status_stub
-    ) {
-    }
-
-    public static function withFields(
-        int $title_field_id,
-        string $title_field_label,
-        int $status_field_id,
-        string $status_field_label
-    ): self {
-        return new self(
-            RetrieveTitleFieldStub::withField($title_field_id, $title_field_label),
-            RetrieveStatusFieldStub::withField($status_field_id, $status_field_label)
-        );
-    }
-
-    public function getTitleField(ProgramIncrementTrackerIdentifier $program_increment): TitleFieldReference
+    private function __construct(private StatusFieldReference $status)
     {
-        return $this->title_stub->getTitleField($program_increment);
+    }
+
+    public static function withField(int $field_id, string $field_label): self
+    {
+        return new self(
+            StatusFieldReferenceProxy::fromTrackerField(
+                new \Tracker_FormElement_Field_Selectbox(
+                    $field_id,
+                    1,
+                    null,
+                    'irrelevant',
+                    $field_label,
+                    'Irrelevant',
+                    true,
+                    'P',
+                    true,
+                    '',
+                    1
+                )
+            )
+        );
     }
 
     public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference
     {
-        return $this->status_stub->getStatusField($program_increment);
+        return $this->status;
     }
 }

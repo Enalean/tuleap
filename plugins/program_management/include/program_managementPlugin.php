@@ -545,7 +545,11 @@ final class program_managementPlugin extends Plugin
             $pending_updates_dao,
             new ProgramIncrementUpdateProcessor(
                 $logger,
-                new SynchronizedFieldsGatherer($tracker_factory, new \Tracker_Semantic_TitleFactory())
+                new SynchronizedFieldsGatherer(
+                    $tracker_factory,
+                    new \Tracker_Semantic_TitleFactory(),
+                    new \Tracker_Semantic_StatusFactory()
+                )
             ),
             new IterationCreationProcessor($logger),
         );
@@ -607,7 +611,11 @@ final class program_managementPlugin extends Plugin
                     new QueueFactory($logger),
                     new ProgramIncrementUpdateProcessor(
                         $logger,
-                        new SynchronizedFieldsGatherer($tracker_factory, new \Tracker_Semantic_TitleFactory())
+                        new SynchronizedFieldsGatherer(
+                            $tracker_factory,
+                            new \Tracker_Semantic_TitleFactory(),
+                            new \Tracker_Semantic_StatusFactory()
+                        )
                     ),
                     new IterationCreationProcessor($logger),
                 )

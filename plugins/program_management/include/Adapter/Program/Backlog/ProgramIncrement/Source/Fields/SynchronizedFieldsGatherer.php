@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
@@ -32,20 +33,15 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 {
     public function __construct(
         private \TrackerFactory $tracker_factory,
-        private \Tracker_Semantic_TitleFactory $title_factory
+        private \Tracker_Semantic_TitleFactory $title_factory,
+        private \Tracker_Semantic_StatusFactory $status_factory
     ) {
     }
 
     public function getTitleField(ProgramIncrementTrackerIdentifier $program_increment): TitleFieldReference
     {
-        $full_tracker = $this->tracker_factory->getTrackerById($program_increment->id);
-        if (! $full_tracker) {
-            throw new \RuntimeException(
-                sprintf('Program Increment tracker with id #%s could not be found', $program_increment->id)
-            );
-        }
-
-        $title_field = $this->title_factory->getByTracker($full_tracker)->getField();
+        $full_tracker = $this->getFullTracker($program_increment);
+        $title_field  = $this->title_factory->getByTracker($full_tracker)->getField();
         if (! $title_field) {
             throw new FieldRetrievalException($program_increment->id, 'title');
         }
@@ -53,5 +49,26 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             throw new TitleFieldHasIncorrectTypeException($program_increment->id, $title_field->getId());
         }
         return TitleFieldReferenceProxy::fromTrackerField($title_field);
+    }
+
+    public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference
+    {
+        $full_tracker = $this->getFullTracker($program_increment);
+        $status_field = $this->status_factory->getByTracker($full_tracker)->getField();
+        if (! $status_field) {
+            throw new FieldRetrievalException($program_increment->id, 'status');
+        }
+        return StatusFieldReferenceProxy::fromTrackerField($status_field);
+    }
+
+    private function getFullTracker(ProgramIncrementTrackerIdentifier $program_increment): \Tracker
+    {
+        $full_tracker = $this->tracker_factory->getTrackerById($program_increment->id);
+        if (! $full_tracker) {
+            throw new \RuntimeException(
+                sprintf('Program Increment tracker with id #%s could not be found', $program_increment->id)
+            );
+        }
+        return $full_tracker;
     }
 }
