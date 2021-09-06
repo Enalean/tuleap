@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
@@ -85,6 +86,21 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             throw new MissingTimeFrameFieldException($program_increment->id, 'start date');
         }
         return StartDateFieldReferenceProxy::fromTrackerField($start_date_field);
+    }
+
+    public function getEndPeriodField(ProgramIncrementTrackerIdentifier $program_increment): EndPeriodFieldReference
+    {
+        $full_tracker   = $this->getFullTracker($program_increment);
+        $semantic       = $this->timeframe_builder->getSemantic($full_tracker);
+        $duration_field = $semantic->getDurationField();
+        if ($duration_field !== null) {
+            return EndPeriodFieldReferenceProxy::fromTrackerField($duration_field);
+        }
+        $end_date_field = $semantic->getEndDateField();
+        if ($end_date_field !== null) {
+            return EndPeriodFieldReferenceProxy::fromTrackerField($end_date_field);
+        }
+        throw new MissingTimeFrameFieldException($program_increment->id, 'end date or duration');
     }
 
     private function getFullTracker(ProgramIncrementTrackerIdentifier $program_increment): \Tracker

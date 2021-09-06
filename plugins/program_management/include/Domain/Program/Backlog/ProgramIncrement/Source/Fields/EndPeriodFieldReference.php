@@ -22,6 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField, RetrieveStartDateField, RetrieveEndPeriodField
+/**
+ * I am a reference to the Time Frame Semantic's end period field. I am either an End date field
+ * or a duration (numeric) field. I hold a field identifier and a label.
+ * @psalm-immutable
+ */
+interface EndPeriodFieldReference
 {
+    public function getId(): int;
+    public function getLabel(): string;
 }

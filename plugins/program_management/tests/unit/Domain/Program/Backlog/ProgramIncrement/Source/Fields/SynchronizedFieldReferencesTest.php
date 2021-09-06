@@ -32,6 +32,7 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
     private const DESCRIPTION_ID = 843;
     private const STATUS_ID      = 946;
     private const START_DATE_ID  = 213;
+    private const END_PERIOD_ID  = 126;
     private GatherSynchronizedFieldsStub $gatherer;
     private ProgramIncrementTrackerIdentifier $program_increment_tracker;
 
@@ -45,7 +46,9 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             self::STATUS_ID,
             'desolating',
             self::START_DATE_ID,
-            'ungenuine'
+            'ungenuine',
+            self::END_PERIOD_ID,
+            'Kadu'
         );
 
         $this->program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
@@ -64,5 +67,6 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertSame(self::DESCRIPTION_ID, $fields->description->getId());
         self::assertSame(self::STATUS_ID, $fields->status->getId());
         self::assertSame(self::START_DATE_ID, $fields->start_date->getId());
+        self::assertSame(self::END_PERIOD_ID, $fields->end_period->getId());
     }
 }

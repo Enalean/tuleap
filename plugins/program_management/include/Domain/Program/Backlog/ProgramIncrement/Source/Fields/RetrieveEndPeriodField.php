@@ -22,6 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField, RetrieveStartDateField, RetrieveEndPeriodField
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+
+interface RetrieveEndPeriodField
 {
+    /**
+     * @throws MissingTimeFrameFieldException
+     */
+    public function getEndPeriodField(ProgramIncrementTrackerIdentifier $program_increment): EndPeriodFieldReference;
 }

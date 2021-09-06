@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use PHPUnit\Framework\MockObject\Stub\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
@@ -29,33 +30,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Prog
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
-use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 37;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\TrackerFactory
-     */
-    private mixed $tracker_factory;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker_Semantic_TitleFactory
-     */
-    private mixed $title_factory;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker_Semantic_DescriptionFactory
-     */
-    private mixed $description_factory;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker_Semantic_StatusFactory
-     */
-    private mixed $status_factory;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|SemanticTimeframeBuilder
-     */
-    private mixed $timeframe_builder;
+    private Stub|\TrackerFactory $tracker_factory;
+    private Stub|\Tracker_Semantic_TitleFactory $title_factory;
+    private Stub|\Tracker_Semantic_DescriptionFactory $description_factory;
+    private Stub|\Tracker_Semantic_StatusFactory $status_factory;
+    private Stub|SemanticTimeframeBuilder $timeframe_builder;
     private ProgramIncrementTrackerIdentifier $program_increment;
     private \Tracker $tracker;
 
@@ -91,7 +78,8 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
             'when getting title field'       => ['getTitleField'],
             'when getting description field' => ['getDescriptionField'],
             'when getting status field'      => ['getStatusField'],
-            'when getting start date field'  => ['getStartDateField']
+            'when getting start date field'  => ['getStartDateField'],
+            'when getting end period field'  => ['getEndPeriodField']
         ];
     }
 
@@ -182,7 +170,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenDateFieldCantBeFound(): void
     {
         $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
-        $timeframe_semantic = new SemanticTimeframe($this->tracker, new TimeframeConfigInvalid());
+        $timeframe_semantic = new SemanticTimeframe($this->tracker, new TimeframeNotConfigured());
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
         $this->expectException(MissingTimeFrameFieldException::class);
@@ -201,6 +189,44 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date = $this->getGatherer()->getStartDateField($this->program_increment);
         self::assertSame(101, $start_date->getId());
         self::assertSame('hebetate', $start_date->getLabel());
+    }
+
+    public function testItThrowsWhenNeitherEndDateNorDurationFieldCanBeFound(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $timeframe_semantic = new SemanticTimeframe($this->tracker, new TimeframeNotConfigured());
+        $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
+
+        $this->expectException(MissingTimeFrameFieldException::class);
+        $this->getGatherer()->getEndPeriodField($this->program_increment);
+    }
+
+    public function testItReturnsEndPeriodReferenceWithDuration(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $timeframe_semantic = new SemanticTimeframe(
+            $this->tracker,
+            new TimeframeWithDuration($this->getDateField(942, 'micher'), $this->getIntField(429, 'Maclura'))
+        );
+        $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
+
+        $end_period = $this->getGatherer()->getEndPeriodField($this->program_increment);
+        self::assertSame(429, $end_period->getId());
+        self::assertSame('Maclura', $end_period->getLabel());
+    }
+
+    public function testItReturnsEndPeriodReferenceWithEndDate(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $timeframe_semantic = new SemanticTimeframe(
+            $this->tracker,
+            new TimeframeWithEndDate($this->getDateField(591, 'privy'), $this->getDateField(754, 'block'))
+        );
+        $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
+
+        $end_period = $this->getGatherer()->getEndPeriodField($this->program_increment);
+        self::assertSame(754, $end_period->getId());
+        self::assertSame('block', $end_period->getLabel());
     }
 
     private function getStringField(int $id, string $label): \Tracker_FormElement_Field_String
@@ -258,7 +284,24 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new \Tracker_FormElement_Field_Date(
             $id,
-            10,
+            self::PROGRAM_INCREMENT_TRACKER_ID,
+            null,
+            'irrelevant',
+            $label,
+            'Irrelevant',
+            true,
+            'P',
+            true,
+            '',
+            1
+        );
+    }
+
+    private function getIntField(int $id, string $label): \Tracker_FormElement_Field_Integer
+    {
+        return new \Tracker_FormElement_Field_Integer(
+            $id,
+            self::PROGRAM_INCREMENT_TRACKER_ID,
             null,
             'irrelevant',
             $label,

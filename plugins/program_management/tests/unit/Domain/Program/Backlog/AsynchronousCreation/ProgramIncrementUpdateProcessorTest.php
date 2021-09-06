@@ -36,6 +36,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private const DESCRIPTION_ID               = 938;
     private const STATUS_ID                    = 198;
     private const START_DATE_ID                = 295;
+    private const END_PERIOD_ID                = 332;
     private TestLogger $logger;
     private ProgramIncrementUpdate $update;
 
@@ -62,7 +63,9 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 self::STATUS_ID,
                 'innocuous',
                 self::START_DATE_ID,
-                'virtuosa'
+                'virtuosa',
+                self::END_PERIOD_ID,
+                'layback'
             )
         );
     }
@@ -79,6 +82,6 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 )
             )
         );
-        self::assertTrue($this->logger->hasDebug('Start date field id #' . self::START_DATE_ID));
+        self::assertTrue($this->logger->hasDebug('End period field id #' . self::END_PERIOD_ID));
     }
 }
