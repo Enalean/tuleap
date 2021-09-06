@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
@@ -40,7 +41,8 @@ class TimeboxCreatorChecker
         private CheckRequiredField $required_field_checker,
         private CheckWorkflow $workflow_checker,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
+        private RetrieveProjectFromTracker $retrieve_project_from_tracker
     ) {
     }
 
@@ -81,7 +83,8 @@ class TimeboxCreatorChecker
                     $team_trackers,
                     $synchronized_fields_data_collection,
                     $configuration_errors,
-                    $this->retrieve_tracker_from_field
+                    $this->retrieve_tracker_from_field,
+                    $this->retrieve_project_from_tracker
                 )
             ) {
                 $can_be_created = false;

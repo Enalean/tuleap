@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -50,7 +51,7 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenAFieldIsRequired(): void
     {
-        $this->collector->addRequiredFieldError(TrackerReferenceBuilder::buildWithId(1), 100, 'My field');
+        $this->collector->addRequiredFieldError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
         self::assertTrue($this->collector->hasError());
     }
 

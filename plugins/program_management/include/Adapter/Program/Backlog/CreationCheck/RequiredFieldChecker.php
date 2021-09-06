@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckRequiredField;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -34,14 +35,18 @@ final class RequiredFieldChecker implements CheckRequiredField
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
         ConfigurationErrorsCollector $errors_collector,
-        RetrieveTrackerFromField $retrieve_tracker_from_field
+        RetrieveTrackerFromField $retrieve_tracker_from_field,
+        RetrieveProjectFromTracker $retrieve_project_from_tracker
     ): bool {
         $are_fields_ok = true;
         foreach ($trackers->getTrackers() as $program_increment_tracker) {
             foreach ($program_increment_tracker->getFullTracker()->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {
+                    $tracker_reference = $retrieve_tracker_from_field->fromFieldId($field->getId());
+                    $project_reference = $retrieve_project_from_tracker->fromTrackerReference($tracker_reference);
                     $errors_collector->addRequiredFieldError(
-                        $retrieve_tracker_from_field->fromFieldId($field->getId()),
+                        $tracker_reference,
+                        $project_reference,
                         $field->getId(),
                         $field->getLabel(),
                     );
