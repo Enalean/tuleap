@@ -28,24 +28,29 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 
 final class GatherFieldValuesStub implements GatherFieldValues
 {
-    private RetrieveTitleValueStub $title_stub;
-    private RetrieveDescriptionValueStub $description_stub;
-    private RetrieveStartDateValueStub $start_date_stub;
-    private RetrieveEndPeriodValueStub $end_period_stub;
-    private RetrieveStatusValuesStub $status_stub;
-
-    public function __construct(
-        RetrieveTitleValueStub $title_stub,
-        RetrieveDescriptionValueStub $description_stub,
-        RetrieveStartDateValueStub $start_date_stub,
-        RetrieveEndPeriodValueStub $end_period_stub,
-        RetrieveStatusValuesStub $status_stub
+    private function __construct(
+        private RetrieveTitleValueStub $title_stub,
+        private RetrieveDescriptionValueStub $description_stub,
+        private RetrieveStartDateValueStub $start_date_stub,
+        private RetrieveEndPeriodValueStub $end_period_stub,
+        private RetrieveStatusValuesStub $status_stub
     ) {
-        $this->title_stub       = $title_stub;
-        $this->description_stub = $description_stub;
-        $this->start_date_stub  = $start_date_stub;
-        $this->end_period_stub  = $end_period_stub;
-        $this->status_stub      = $status_stub;
+    }
+
+    public static function withDefault(): self
+    {
+        return self::withValues('tariff', 'enfasten', 'text', '2024-05-24', '2031-01-15', ['Planned']);
+    }
+
+    public static function withError(): self
+    {
+        return new self(
+            RetrieveTitleValueStub::withError(),
+            RetrieveDescriptionValueStub::withValue('enfasten', 'text'),
+            RetrieveStartDateValueStub::withValue('2024-05-24'),
+            RetrieveEndPeriodValueStub::withValue('2031-01-15'),
+            RetrieveStatusValuesStub::withValues('Planned')
+        );
     }
 
     /**

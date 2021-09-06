@@ -22,64 +22,62 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 
 /**
+ * I hold all field values for a given changeset for a source Timebox
  * @psalm-immutable
  */
 final class SourceChangesetValuesCollection
 {
-    /**
-     * @var EndPeriodValue
-     */
-    private $end_period_value;
-    /**
-     * @var StartDateValue
-     */
-    private $start_date_value;
-    /**
-     * @var int
-     */
-    private $source_artifact_id;
-    /**
-     * @var SubmissionDate
-     */
-    private $submitted_on;
-    /**
-     * @var StatusValue
-     */
-    private $status_value;
-    /**
-     * @var DescriptionValue
-     */
-    private $description_value;
-    /**
-     * @var TitleValue
-     */
-    private $title_value;
-    /**
-     * @var ArtifactLinkValue
-     */
-    private $artifact_link_value_data;
-
-    public function __construct(
-        int $source_artifact_id,
-        TitleValue $title_value,
-        DescriptionValue $description_value,
-        StatusValue $status_value,
-        SubmissionDate $submitted_on,
-        StartDateValue $start_date_value,
-        EndPeriodValue $end_period_value,
-        ArtifactLinkValue $artifact_link_value_data
+    private function __construct(
+        private int $source_artifact_id,
+        private TitleValue $title_value,
+        private DescriptionValue $description_value,
+        private StatusValue $status_value,
+        private SubmissionDate $submitted_on,
+        private StartDateValue $start_date_value,
+        private EndPeriodValue $end_period_value,
+        private ArtifactLinkValue $artifact_link_value
     ) {
-        $this->title_value              = $title_value;
-        $this->description_value        = $description_value;
-        $this->status_value             = $status_value;
-        $this->submitted_on             = $submitted_on;
-        $this->source_artifact_id       = $source_artifact_id;
-        $this->start_date_value         = $start_date_value;
-        $this->end_period_value         = $end_period_value;
-        $this->artifact_link_value_data = $artifact_link_value_data;
+    }
+
+    /**
+     * @throws FieldSynchronizationException
+     * @throws PendingArtifactNotFoundException
+     * @throws PendingArtifactChangesetNotFoundException
+     * @throws ChangesetValueNotFoundException
+     * @throws UnsupportedTitleFieldException
+     */
+    public static function fromReplication(
+        BuildSynchronizedFields $fields_builder,
+        RetrieveFieldValuesGatherer $field_values_retriever,
+        ReplicationData $replication
+    ): self {
+        $fields              = $fields_builder->build($replication->getTracker());
+        $values_gatherer     = $field_values_retriever->getFieldValuesGatherer($replication);
+        $title_value         = TitleValue::fromSynchronizedFields($values_gatherer, $fields);
+        $description_value   = DescriptionValue::fromSynchronizedFields($values_gatherer, $fields);
+        $status_value        = StatusValue::fromSynchronizedFields($values_gatherer, $fields);
+        $start_date_value    = StartDateValue::fromSynchronizedFields($values_gatherer, $fields);
+        $end_period_value    = EndPeriodValue::fromSynchronizedFields($values_gatherer, $fields);
+        $artifact_link_value = ArtifactLinkValue::fromReplicationData($replication);
+
+        return new self(
+            $replication->getArtifact()->getId(),
+            $title_value,
+            $description_value,
+            $status_value,
+            new SubmissionDate($replication->getArtifact()->getSubmittedOn()),
+            $start_date_value,
+            $end_period_value,
+            $artifact_link_value
+        );
     }
 
     public function getTitleValue(): TitleValue
@@ -111,6 +109,7 @@ final class SourceChangesetValuesCollection
     {
         return $this->start_date_value;
     }
+
     public function getEndPeriodValue(): EndPeriodValue
     {
         return $this->end_period_value;
@@ -118,6 +117,6 @@ final class SourceChangesetValuesCollection
 
     public function getArtifactLinkValue(): ArtifactLinkValue
     {
-        return $this->artifact_link_value_data;
+        return $this->artifact_link_value;
     }
 }

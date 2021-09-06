@@ -20,17 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
-final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SourceChangesetValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_VALUE                         = 'pseudographeme';
     private const DESCRIPTION_VALUE                   = '<p>chondrofibroma overfeel</p>';
@@ -41,10 +38,14 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
     private const END_PERIOD_VALUE                    = '2016-10-17';
     private const STATUS_VALUE                        = 'Ongoing';
 
-    private function getAdapter(): SourceChangesetValuesCollectionAdapter
+    public function testItBuildsFromReplicationData(): void
     {
-        return new SourceChangesetValuesCollectionAdapter(
-            $this->getFieldsGatherer(),
+        $replication = ReplicationDataBuilder::buildWithArtifactIdAndSubmissionDate(
+            self::SOURCE_TIMEBOX_ID,
+            self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP
+        );
+        $values      = SourceChangesetValuesCollection::fromReplication(
+            BuildSynchronizedFieldsStub::withDefault(),
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
                     self::TITLE_VALUE,
@@ -55,16 +56,9 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
                     [self::STATUS_VALUE]
                 )
             ),
+            $replication
         );
-    }
 
-    public function testItBuildsFromReplicationData(): void
-    {
-        $replication = ReplicationDataBuilder::buildWithArtifactIdAndSubmissionDate(
-            self::SOURCE_TIMEBOX_ID,
-            self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP
-        );
-        $values      = $this->getAdapter()->buildCollection($replication);
         self::assertSame(self::TITLE_VALUE, $values->getTitleValue()->getValue());
         self::assertContains(self::DESCRIPTION_VALUE, $values->getDescriptionValue()->getValue());
         self::assertContains(self::DESCRIPTION_FORMAT, $values->getDescriptionValue()->getValue());
@@ -74,15 +68,5 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
         self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceArtifactId());
         self::assertSame(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP, $values->getSubmittedOn()->getValue());
         self::assertContainsEquals(self::SOURCE_TIMEBOX_ID, $values->getArtifactLinkValue()->getValues());
-    }
-
-    private function getFieldsGatherer(): BuildSynchronizedFields
-    {
-        return new class implements BuildSynchronizedFields {
-            public function build(ProgramTracker $source_tracker): SynchronizedFields
-            {
-                return SynchronizedFieldsBuilder::buildWithIds(3001, 9041, 1635, 4382, 2729, 1995);
-            }
-        };
     }
 }

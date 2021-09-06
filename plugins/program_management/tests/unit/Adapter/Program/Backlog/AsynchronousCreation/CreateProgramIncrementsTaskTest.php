@@ -28,20 +28,16 @@ use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|BuildFieldValues
-     */
-    private $changeset_values_adapter;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
      */
@@ -64,69 +60,66 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
     private $user_stories_planner;
     private TestLogger $logger;
     private SearchTeamsOfProgram $teams_searcher;
+    private GatherFieldValuesStub $values_gatherer;
 
     protected function setUp(): void
     {
-        $this->changeset_values_adapter        = $this->createStub(BuildFieldValues::class);
         $this->teams_searcher                  = SearchTeamsOfProgramStub::buildTeams(102);
         $this->project_manager                 = $this->createStub(\ProjectManager::class);
         $this->planning_factory                = $this->createStub(\PlanningFactory::class);
         $this->mirror_creator                  = $this->createMock(ProgramIncrementsCreator::class);
         $this->logger                          = new TestLogger();
         $this->pending_artifact_creation_store = $this->createMock(PendingArtifactCreationStore::class);
-        $this->user_stories_planner            = $this->createMock(
-            PlanUserStoriesInMirroredProgramIncrements::class
-        );
+        $this->user_stories_planner            = $this->createMock(PlanUserStoriesInMirroredProgramIncrements::class);
+        $this->values_gatherer                 = GatherFieldValuesStub::withDefault();
     }
 
     private function getTask(): CreateProgramIncrementsTask
     {
         return new CreateProgramIncrementsTask(
-            $this->changeset_values_adapter,
             new PlanningAdapter($this->planning_factory),
             $this->mirror_creator,
             $this->logger,
             $this->pending_artifact_creation_store,
             $this->user_stories_planner,
             $this->teams_searcher,
-            new ProgramManagementProjectAdapter($this->project_manager)
+            new ProgramManagementProjectAdapter($this->project_manager),
+            BuildSynchronizedFieldsStub::withDefault(),
+            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer)
         );
     }
 
     public function testItCreateMirrors(): void
     {
-        $replication_data = ReplicationDataBuilder::build();
-        $copied_values    = SourceChangesetValuesCollectionBuilder::build();
-        $this->changeset_values_adapter->method('buildCollection')->willReturn($copied_values);
+        $replication = ReplicationDataBuilder::build();
 
         $team_project_id = 102;
         $team_project    = ProjectTestBuilder::aProject()->withId($team_project_id)->build();
         $this->project_manager->method('getProject')->willReturn($team_project);
 
         $planning = new \Planning(1, 'Root planning', $team_project_id, '', '');
-        $planning->setPlanningTracker($replication_data->getTracker()->getFullTracker());
+        $planning->setPlanningTracker($replication->getTracker()->getFullTracker());
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $this->mirror_creator->expects(self::once())->method('createProgramIncrements');
 
         $this->pending_artifact_creation_store->expects(self::once())
             ->method('deleteArtifactFromPendingCreation')
-            ->with($replication_data->getArtifact()->getId(), (int) $replication_data->getUser()->getId());
+            ->with($replication->getArtifact()->getId(), (int) $replication->getUser()->getId());
 
         $this->user_stories_planner->expects(self::once())->method('plan');
 
-        $this->getTask()->createProgramIncrements($replication_data);
+        $this->getTask()->createProgramIncrements($replication);
     }
 
     public function testItLogsWhenAnExceptionOccurs(): void
     {
-        $replication_data = ReplicationDataBuilder::build();
-        $this->changeset_values_adapter->method('buildCollection')
-            ->willThrowException(new FieldRetrievalException(1, 'title'));
+        $this->values_gatherer = GatherFieldValuesStub::withError();
+        $replication           = ReplicationDataBuilder::build();
 
         $this->user_stories_planner->expects(self::never())->method('plan');
 
-        $this->getTask()->createProgramIncrements($replication_data);
+        $this->getTask()->createProgramIncrements($replication);
         self::assertTrue($this->logger->hasErrorRecords());
     }
 }

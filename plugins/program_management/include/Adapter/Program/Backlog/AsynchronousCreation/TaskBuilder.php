@@ -37,7 +37,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactCr
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
@@ -105,17 +104,18 @@ class TaskBuilder
         );
 
         return new CreateProgramIncrementsTask(
-            new SourceChangesetValuesCollectionAdapter(
-                $synchronized_fields_gatherer,
-                new FieldValuesGathererRetriever($tracker_artifact_factory, $form_element_factory),
-            ),
             new PlanningAdapter(\PlanningFactory::build()),
             $mirror_creator,
             $logger,
             new PendingArtifactCreationDao(),
             $user_stories_planner,
             $program_dao,
-            new ProgramManagementProjectAdapter(ProjectManager::instance())
+            new ProgramManagementProjectAdapter(ProjectManager::instance()),
+            $synchronized_fields_gatherer,
+            new FieldValuesGathererRetriever(
+                $tracker_artifact_factory,
+                $form_element_factory
+            )
         );
     }
 }
