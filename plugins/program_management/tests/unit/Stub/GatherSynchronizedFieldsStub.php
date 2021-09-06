@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
@@ -31,6 +32,7 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
 {
     private function __construct(
         private RetrieveTitleFieldStub $title_stub,
+        private RetrieveDescriptionFieldStub $description_stub,
         private RetrieveStatusFieldStub $status_stub
     ) {
     }
@@ -38,11 +40,14 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     public static function withFields(
         int $title_field_id,
         string $title_field_label,
+        int $description_field_id,
+        string $description_field_label,
         int $status_field_id,
         string $status_field_label
     ): self {
         return new self(
             RetrieveTitleFieldStub::withField($title_field_id, $title_field_label),
+            RetrieveDescriptionFieldStub::withField($description_field_id, $description_field_label),
             RetrieveStatusFieldStub::withField($status_field_id, $status_field_label)
         );
     }
@@ -50,6 +55,11 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     public function getTitleField(ProgramIncrementTrackerIdentifier $program_increment): TitleFieldReference
     {
         return $this->title_stub->getTitleField($program_increment);
+    }
+
+    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference
+    {
+        return $this->description_stub->getDescriptionField($program_increment);
     }
 
     public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference

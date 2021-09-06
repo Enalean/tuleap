@@ -112,8 +112,10 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
                 GatherSynchronizedFieldsStub::withFields(
                     370,
                     'papyritious',
+                    921,
+                    'covellite',
                     381,
-                    'unreflected'
+                    'unreflected',
                 )
             ),
             new IterationCreationProcessor($this->logger)

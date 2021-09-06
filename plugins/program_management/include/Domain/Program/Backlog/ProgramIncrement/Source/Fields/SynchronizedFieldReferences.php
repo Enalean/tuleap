@@ -34,6 +34,7 @@ final class SynchronizedFieldReferences
 {
     private function __construct(
         public TitleFieldReference $title,
+        public DescriptionFieldReference $description,
         public StatusFieldReference $status
     ) {
     }
@@ -42,8 +43,9 @@ final class SynchronizedFieldReferences
         GatherSynchronizedFields $gatherer,
         ProgramIncrementTrackerIdentifier $program_increment
     ): self {
-        $title  = $gatherer->getTitleField($program_increment);
-        $status = $gatherer->getStatusField($program_increment);
-        return new self($title, $status);
+        $title       = $gatherer->getTitleField($program_increment);
+        $description = $gatherer->getDescriptionField($program_increment);
+        $status      = $gatherer->getStatusField($program_increment);
+        return new self($title, $description, $status);
     }
 }
