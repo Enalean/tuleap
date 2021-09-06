@@ -96,7 +96,7 @@ class CustomMetadataCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [$value_representation, $value_two_representation]
         );
 
-        $this->list_of_value_builder->shouldReceive('build')->withArgs([$list_metadata->getId(), false])->andReturn([$element, $element_two]);
+        $this->list_of_value_builder->shouldReceive('build')->withArgs([$list_metadata->getId(), true])->andReturn([$element, $element_two]);
 
         $metadata_representation = new ProjectConfiguredMetadataRepresentation();
         $metadata_representation->build(

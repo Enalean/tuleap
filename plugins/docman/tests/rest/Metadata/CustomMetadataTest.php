@@ -71,12 +71,14 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals("list metadata", $list_metadata["name"]);
         $this->assertEquals("list", $list_metadata["type"]);
 
-        $list_values = $list_metadata["allowed_list_values"];
-        $value       = $this->findValueByValueName($list_values, "value 1");
-        $value_two   = $this->findValueByValueName($list_values, "value 2");
+        $list_values   = $list_metadata["allowed_list_values"];
+        $value         = $this->findValueByValueName($list_values, "value 1");
+        $value_two     = $this->findValueByValueName($list_values, "value 2");
+        $value_deleted = $this->findValueByValueName($list_values, "value 3");
 
         $this->assertEquals("value 1", $value["value"]);
         $this->assertEquals("value 2", $value_two["value"]);
+        $this->assertNull($value_deleted);
     }
 
     /**
