@@ -29,6 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFou
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I contain all the Teams' Mirrored Program Increment trackers.
@@ -56,11 +58,11 @@ final class TrackerCollection
     public static function buildRootPlanningMilestoneTrackers(
         RetrievePlanningMilestoneTracker $retriever,
         TeamProjectsCollection $teams,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
-            $trackers[] = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $team, $user);
+            $trackers[] = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $team, $user_identifier);
         }
         return new self($trackers);
     }
@@ -72,11 +74,11 @@ final class TrackerCollection
     public static function buildSecondPlanningMilestoneTracker(
         RetrievePlanningMilestoneTracker $retriever,
         TeamProjectsCollection $teams,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
-            $trackers[] = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $team, $user);
+            $trackers[] = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $team, $user_identifier);
         }
         return new self($trackers);
     }
@@ -102,11 +104,11 @@ final class TrackerCollection
         return $this->mirrored_timebox_trackers;
     }
 
-    public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user, ConfigurationErrorsCollector $configuration_errors): bool
+    public function canUserSubmitAnArtifactInAllTrackers(RetrieveUser $retrieve_user, UserIdentifier $user_identifier, ConfigurationErrorsCollector $configuration_errors): bool
     {
         $can_submit = true;
         foreach ($this->mirrored_timebox_trackers as $milestone_tracker) {
-            if (! $milestone_tracker->userCanSubmitArtifact($user)) {
+            if (! $milestone_tracker->userCanSubmitArtifact($retrieve_user, $user_identifier)) {
                 $configuration_errors->userCanNotSubmitInTeam($milestone_tracker);
                 $can_submit = false;
                 if (! $configuration_errors->shouldCollectAllIssues()) {

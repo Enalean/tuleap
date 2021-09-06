@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFou
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 class IterationCreatorChecker
 {
@@ -63,7 +64,8 @@ class IterationCreatorChecker
         ProgramTracker $tracker,
         ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
+        UserIdentifier $user_identifier
     ): bool {
         if (! $this->verify_is_iteration->isIterationTracker($tracker->getTrackerId())) {
             return true;
@@ -74,7 +76,7 @@ class IterationCreatorChecker
                 'Checking if Iteration can be created in second planning of program #%s by user %s (#%s)',
                 $program->getId(),
                 $user->getName(),
-                $user->getId()
+                $user_identifier->getId()
             )
         );
 
@@ -87,14 +89,14 @@ class IterationCreatorChecker
             $team_trackers = TrackerCollection::buildSecondPlanningMilestoneTracker(
                 $this->root_milestone_retriever,
                 $team_projects_collection,
-                $user
+                $user_identifier
             );
 
             $iteration_and_team_trackers = SourceTrackerCollection::fromIterationAndTeamTrackers(
                 $this->iteration_tracker_retriever,
                 $program,
                 $team_trackers,
-                $user
+                $user_identifier
             );
         } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
             $this->logger->error('Cannot retrieve all milestones', ['exception' => $exception]);
@@ -109,7 +111,7 @@ class IterationCreatorChecker
             $tracker,
             $iteration_and_team_trackers,
             $team_trackers,
-            $user,
+            $user_identifier,
             $errors_collector
         );
 
@@ -119,7 +121,7 @@ class IterationCreatorChecker
                     'Iteration cannot be created in program #%s by user %s (#%s)',
                     $program->getId(),
                     $user->getName(),
-                    $user->getId()
+                    $user_identifier->getId()
                 )
             );
         }

@@ -109,10 +109,11 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
             ProgramIdentifier::fromReplicationData($replication_data)
         );
 
+        $user_identifier            = UserProxy::buildFromPFUser($replication_data->getUser());
         $root_planning_tracker_team = TrackerCollection::buildRootPlanningMilestoneTrackers(
             $this->root_milestone_retriever,
             $team_projects,
-            $replication_data->getUser()
+            $user_identifier
         );
 
         $this->program_increment_creator->createProgramIncrements(
@@ -123,10 +124,9 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 
         $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(
             $replication_data->getArtifact()->getId(),
-            (int) $replication_data->getUser()->getId()
+            $user_identifier->getId()
         );
 
-        $user_identifier           = UserProxy::buildFromPFUser($replication_data->getUser());
         $program_increment_changed = new ProgramIncrementChanged(
             $replication_data->getArtifact()->getId(),
             $replication_data->getTracker()->getTrackerId(),

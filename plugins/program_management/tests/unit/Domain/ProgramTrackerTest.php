@@ -24,21 +24,28 @@ namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramTrackerTest extends TestCase
 {
+    private UserIdentifierStub $user_identifier;
+
+    protected function setUp(): void
+    {
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+    }
+
     public function testItBuildsMilestoneTrackerFromRootPlanning(): void
     {
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(101);
         $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
-        $user      = UserTestBuilder::aUser()->build();
 
-        $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $user);
+        $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $this->user_identifier);
         self::assertSame(101, $tracker->getTrackerId());
     }
 
@@ -46,9 +53,8 @@ final class ProgramTrackerTest extends TestCase
     {
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(76);
         $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
-        $user      = UserTestBuilder::aUser()->build();
 
-        $tracker = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $project, $user);
+        $tracker = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $project, $this->user_identifier);
         self::assertSame(76, $tracker->getTrackerId());
     }
 
@@ -56,10 +62,9 @@ final class ProgramTrackerTest extends TestCase
     {
         $tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
         $retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($tracker);
-        $user      = UserTestBuilder::aUser()->build();
         $program   = ProgramIdentifierBuilder::build();
 
-        $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user);
+        $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $this->user_identifier);
         self::assertSame(78, $program_increment_tracker->getTrackerId());
     }
 
@@ -67,33 +72,31 @@ final class ProgramTrackerTest extends TestCase
     {
         $tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
         $retriever = RetrieveVisibleIterationTrackerStub::withValidTracker($tracker);
-        $user      = UserTestBuilder::aUser()->build();
         $program   = ProgramIdentifierBuilder::build();
 
-        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
+        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $this->user_identifier);
         self::assertSame(78, $iteration_tracker->getTrackerId());
     }
 
     public function testItReturnsNullIfNoIterationTracker(): void
     {
         $retriever = RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker();
-        $user      = UserTestBuilder::aUser()->build();
         $program   = ProgramIdentifierBuilder::build();
 
-        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
+        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $this->user_identifier);
         self::assertNull($iteration_tracker);
     }
 
     public function testItDelegatesPermissionCheckToWrappedTracker(): void
     {
-        $user         = UserTestBuilder::aUser()->build();
-        $project      = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
-        $base_tracker = $this->createMock(\Tracker::class);
-        $base_tracker->method('userCanSubmitArtifact')->with($user)->willReturn(true);
+        $retrieve_user = RetrieveUserStub::withGenericUser();
+        $project       = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
+        $base_tracker  = $this->createMock(\Tracker::class);
+        $base_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($base_tracker);
 
-        $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $user);
-        self::assertTrue($tracker->userCanSubmitArtifact($user));
+        $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $this->user_identifier);
+        self::assertTrue($tracker->userCanSubmitArtifact($retrieve_user, $this->user_identifier));
         self::assertSame($base_tracker, $tracker->getFullTracker());
     }
 }

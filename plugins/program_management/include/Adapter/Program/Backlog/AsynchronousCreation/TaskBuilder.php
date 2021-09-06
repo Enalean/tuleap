@@ -68,6 +68,7 @@ class TaskBuilder
 
         $tracker_artifact_factory       = Tracker_ArtifactFactory::instance();
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $retrieve_user                  = new UserManagerAdapter($user_manager);
         $user_stories_planner           = new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             $artifacts_linked_to_parent_dao,
@@ -75,7 +76,7 @@ class TaskBuilder
             new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
             new ContentDao(),
             $logger,
-            new UserManagerAdapter($user_manager),
+            $retrieve_user,
             $artifacts_linked_to_parent_dao
         );
         $artifact_creator               = new ArtifactCreatorAdapter(
@@ -104,7 +105,7 @@ class TaskBuilder
         );
 
         return new CreateProgramIncrementsTask(
-            new PlanningAdapter(\PlanningFactory::build()),
+            new PlanningAdapter(\PlanningFactory::build(), $retrieve_user),
             $mirror_creator,
             $logger,
             new PendingArtifactCreationDao(),

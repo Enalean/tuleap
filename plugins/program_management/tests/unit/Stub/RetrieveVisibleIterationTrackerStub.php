@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveVisibleIterationTrackerStub implements RetrieveVisibleIterationTracker
 {
@@ -38,7 +39,7 @@ final class RetrieveVisibleIterationTrackerStub implements RetrieveVisibleIterat
         $this->is_visible = $is_visible;
     }
 
-    public function retrieveVisibleIterationTracker(ProgramIdentifier $program, \PFUser $user): ?\Tracker
+    public function retrieveVisibleIterationTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): ?\Tracker
     {
         if (! $this->is_visible) {
             return null;

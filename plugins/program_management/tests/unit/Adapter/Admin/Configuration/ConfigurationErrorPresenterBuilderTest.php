@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -62,7 +63,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->program_tracker           = ProgramTracker::buildIterationTrackerFromProgram(
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
             $this->program_identifier,
-            $this->user
+            UserIdentifierStub::buildGenericUser()
         );
 
         $this->configuration_error_builder = new ConfigurationErrorPresenterBuilder(

@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -51,6 +52,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
     private VerifyIsProgramIncrementTracker $program_verifier;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
+    private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
@@ -71,8 +73,9 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $first_milestone_tracker
         );
 
-        $this->user    = UserTestBuilder::aUser()->build();
-        $this->program = ProgramIdentifierBuilder::build();
+        $this->user            = UserTestBuilder::aUser()->build();
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->program         = ProgramIdentifierBuilder::build();
     }
 
     public function testDisallowArtifactCreationWhenItIsAProgramIncrementTrackerAndOtherChecksDoNotPass(): void
@@ -89,7 +92,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -109,7 +113,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -128,7 +133,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -147,7 +153,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -167,7 +174,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     new BuildProjectStub(),
                     $this->program
                 ),
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(true),
+                $this->user_identifier
             )
         );
     }
@@ -185,7 +193,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 new BuildProjectStub(),
                 $this->program
             ),
-            new ConfigurationErrorsCollector(true)
+            new ConfigurationErrorsCollector(true),
+            $this->user_identifier
         ));
     }
 

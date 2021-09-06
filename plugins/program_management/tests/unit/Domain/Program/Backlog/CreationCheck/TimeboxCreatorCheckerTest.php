@@ -40,6 +40,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
@@ -47,8 +48,8 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -69,7 +70,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Stub|CheckWorkflow
      */
     private $workflow_checker;
-    private \PFUser $user;
+    private UserIdentifier $user;
     private ProgramTracker $program_increment_tracker;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
     private RetrieveTrackerFromFieldStub $retrieve_tracker_from_field;
@@ -84,7 +85,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->user = UserTestBuilder::aUser()->build();
+        $this->user = UserIdentifierStub::buildGenericUser();
         $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
 
         $this->program_increment_tracker = new ProgramTracker($tracker);
@@ -309,7 +310,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->semantic_checker,
             $this->required_field_checker,
             $this->workflow_checker,
-            $this->retrieve_tracker_from_field
+            $this->retrieve_tracker_from_field,
+            RetrieveUserStub::withGenericUser()
         );
     }
 

@@ -90,7 +90,8 @@ final class ConfigurationErrorsGatherer
             $tracker,
             $program,
             $team_projects_collection,
-            $errors_collector
+            $errors_collector,
+            $user_identifier
         );
 
         if ($errors_collector->hasError() && ! $errors_collector->shouldCollectAllIssues()) {
@@ -102,7 +103,8 @@ final class ConfigurationErrorsGatherer
             $tracker,
             $program,
             $team_projects_collection,
-            $errors_collector
+            $errors_collector,
+            $user_identifier
         );
     }
 }

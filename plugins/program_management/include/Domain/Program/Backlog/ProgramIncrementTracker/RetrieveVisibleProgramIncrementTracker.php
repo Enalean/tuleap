@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracke
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface RetrieveVisibleProgramIncrementTracker
 {
@@ -34,6 +35,6 @@ interface RetrieveVisibleProgramIncrementTracker
      */
     public function retrieveVisibleProgramIncrementTracker(
         ProgramIdentifier $program,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): \Tracker;
 }

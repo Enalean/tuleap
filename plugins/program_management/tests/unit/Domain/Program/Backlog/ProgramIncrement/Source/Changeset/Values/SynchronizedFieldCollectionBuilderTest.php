@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -66,7 +66,7 @@ final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testBuildFromMilestoneTrackersReturnsACollection(): void
     {
-        $user           = UserTestBuilder::aUser()->build();
+        $user           = UserIdentifierStub::buildGenericUser();
         $program        = ProgramIdentifierBuilder::build();
         $teams          = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(102, 104),

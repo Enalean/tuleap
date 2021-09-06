@@ -26,22 +26,22 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIte
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VisibleIterationTrackerRetriever implements RetrieveVisibleIterationTracker
 {
-    private RetrieveIterationTracker $iteration_tracker_retriever;
-    private \TrackerFactory $tracker_factory;
-
     public function __construct(
-        RetrieveIterationTracker $iteration_tracker_retriever,
-        \TrackerFactory $tracker_factory
+        private RetrieveIterationTracker $iteration_tracker_retriever,
+        private \TrackerFactory $tracker_factory,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->iteration_tracker_retriever = $iteration_tracker_retriever;
-        $this->tracker_factory             = $tracker_factory;
     }
 
-    public function retrieveVisibleIterationTracker(ProgramIdentifier $program, \PFUser $user): ?\Tracker
-    {
+    public function retrieveVisibleIterationTracker(
+        ProgramIdentifier $program,
+        UserIdentifier $user_identifier
+    ): ?\Tracker {
         $program_id           = $program->getId();
         $iteration_tracker_id = $this->iteration_tracker_retriever->getIterationTrackerId(
             $program_id
@@ -55,6 +55,7 @@ final class VisibleIterationTrackerRetriever implements RetrieveVisibleIteration
             $iteration_tracker_id
         );
 
+        $user = $this->retrieve_user->getUserWithId($user_identifier);
         if (! $iteration_tracker->userCanView($user)) {
             return null;
         }

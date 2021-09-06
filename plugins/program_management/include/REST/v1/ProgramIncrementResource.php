@@ -95,7 +95,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
-                    new PlanningAdapter(\PlanningFactory::build()),
+                    new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
                     $artifact_factory,
                     $this->user_manager_adapter
                 )
@@ -194,7 +194,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
-                    new PlanningAdapter(\PlanningFactory::build()),
+                    new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
                     $artifact_factory,
                     $this->user_manager_adapter
                 ),

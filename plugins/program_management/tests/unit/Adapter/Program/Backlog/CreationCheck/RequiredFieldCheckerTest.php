@@ -38,7 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -81,8 +81,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $tracker,
             $other_tracker_with_no_required_field
         );
-        $user      = UserTestBuilder::aUser()->build();
-        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(
             $required_title,
@@ -147,8 +146,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->add($synchronized_field);
 
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($tracker);
-        $user      = UserTestBuilder::aUser()->build();
-        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $errors_collector         = new ConfigurationErrorsCollector(true);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(

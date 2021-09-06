@@ -26,19 +26,20 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TeamProjectsCollection $teams;
-    private \PFUser $user;
+    private UserIdentifier $user;
     private ProgramIdentifier $program;
     private \Tracker $timebox_tracker;
     private \Tracker $blue_team_tracker;
@@ -47,7 +48,7 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->user    = UserTestBuilder::aUser()->build();
+        $this->user    = UserIdentifierStub::buildGenericUser();
         $this->program = ProgramIdentifierBuilder::build();
 
         $this->teams = TeamProjectsCollection::fromProgramIdentifier(
