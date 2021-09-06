@@ -24,15 +24,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
 {
     public function __construct(
         private BuildSynchronizedFields $fields_adapter,
         private LoggerInterface $logger,
-        private RetrieveUser $retrieve_user,
-        private RetrieveTrackerFromField $retrieve_tracker_from_field
+        private RetrieveTrackerFromField $retrieve_tracker_from_field,
+        private VerifyFieldPermissions $retrieve_field_permission
     ) {
     }
 
@@ -44,8 +43,8 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
     ): SynchronizedFieldFromProgramAndTeamTrackersCollection {
         $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             $this->logger,
-            $this->retrieve_user,
-            $this->retrieve_tracker_from_field
+            $this->retrieve_tracker_from_field,
+            $this->retrieve_field_permission
         );
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $collection->add(

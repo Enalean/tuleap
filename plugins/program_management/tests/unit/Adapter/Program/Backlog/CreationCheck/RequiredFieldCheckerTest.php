@@ -25,17 +25,17 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -44,13 +44,13 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RequiredFieldChecker $checker;
     private RetrieveTrackerFromField $retrieve_tracker_from_field;
-    private RetrieveUser $retrieve_user;
+    private VerifyFieldPermissions $retrieve_field_permissions;
 
     protected function setUp(): void
     {
         $this->checker                     = new RequiredFieldChecker();
         $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
-        $this->retrieve_user               = RetrieveUserStub::withGenericUser();
+        $this->retrieve_field_permissions  = VerifyFieldPermissionsStub::withValidField();
     }
 
     public function testAllowsCreationWhenOnlySynchronizedFieldsAreRequired(): void
@@ -91,8 +91,8 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             new NullLogger(),
-            $this->retrieve_user,
             $this->retrieve_tracker_from_field,
+            $this->retrieve_field_permissions
         );
         $collection->add($synchronized_field);
         $errors_collector         = new ConfigurationErrorsCollector(false);
@@ -139,7 +139,11 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $required_title,
             $required_artifact_link
         );
-        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger(), $this->retrieve_user, $this->retrieve_tracker_from_field);
+        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
+            new NullLogger(),
+            $this->retrieve_tracker_from_field,
+            $this->retrieve_field_permissions
+        );
         $collection->add($synchronized_field);
 
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($tracker);

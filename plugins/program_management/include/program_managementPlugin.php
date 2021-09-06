@@ -59,6 +59,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Descriptio
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
@@ -399,8 +400,8 @@ final class program_managementPlugin extends Plugin
                 )
             ),
             $logger,
-            $user_manager_adapter,
-            $retrieve_tracker_from_field
+            $retrieve_tracker_from_field,
+            new FieldPermissionsVerifier($user_manager_adapter, $form_element_factory)
         );
 
         $checker = new TimeboxCreatorChecker(
@@ -1088,8 +1089,8 @@ final class program_managementPlugin extends Plugin
                 )
             ),
             $logger,
-            $retrieve_user,
-            $retrieve_tracker_from_field
+            $retrieve_tracker_from_field,
+            new FieldPermissionsVerifier($retrieve_user, $form_element_factory)
         );
 
         $checker = new TimeboxCreatorChecker(
