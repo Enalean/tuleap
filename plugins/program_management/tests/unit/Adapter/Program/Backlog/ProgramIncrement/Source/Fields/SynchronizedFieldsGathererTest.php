@@ -39,6 +39,10 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker_Semantic_TitleFactory
      */
     private mixed $title_factory;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker_Semantic_StatusFactory
+     */
+    private mixed $status_factory;
     private ProgramIncrementTrackerIdentifier $program_increment;
     private \Tracker $tracker;
 
@@ -46,6 +50,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->tracker_factory = $this->createStub(\TrackerFactory::class);
         $this->title_factory   = $this->createStub(\Tracker_Semantic_TitleFactory::class);
+        $this->status_factory  = $this->createStub(\Tracker_Semantic_StatusFactory::class);
 
         $this->program_increment = ProgramIncrementTrackerIdentifier::fromId(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
@@ -56,18 +61,33 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function getGatherer(): SynchronizedFieldsGatherer
     {
-        return new SynchronizedFieldsGatherer($this->tracker_factory, $this->title_factory);
+        return new SynchronizedFieldsGatherer(
+            $this->tracker_factory,
+            $this->title_factory,
+            $this->status_factory
+        );
     }
 
-    public function testItThrowsWhenTrackerCantBeFound(): void
+    public function dataProviderMethodUnderTest(): array
+    {
+        return [
+            'when getting title field'  => ['getTitleField'],
+            'when getting status field' => ['getStatusField']
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderMethodUnderTest
+     */
+    public function testItThrowsWhenTrackerCantBeFound(string $method_under_test): void
     {
         $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
         $this->expectException(\RuntimeException::class);
-        $this->getGatherer()->getTitleField($this->program_increment);
+        call_user_func([$this->getGatherer(), $method_under_test], $this->program_increment);
     }
 
-    public function testItThrowsWhenFieldCantBeFound(): void
+    public function testItThrowsWhenTitleFieldCantBeFound(): void
     {
         $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $title_semantic = new \Tracker_Semantic_Title($this->tracker);
@@ -89,14 +109,34 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTitleReference(): void
     {
-        $tracker = TrackerTestBuilder::aTracker()->withId(self::PROGRAM_INCREMENT_TRACKER_ID)->build();
-        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getStringField(832, 'Semiacquaintance'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
         $title = $this->getGatherer()->getTitleField($this->program_increment);
         self::assertSame(832, $title->getId());
         self::assertSame('Semiacquaintance', $title->getLabel());
+    }
+
+    public function testItThrowsWhenStatusFieldCantBeFound(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $status_semantic = new \Tracker_Semantic_Status($this->tracker);
+        $this->status_factory->method('getByTracker')->willReturn($status_semantic);
+
+        $this->expectException(FieldRetrievalException::class);
+        $this->getGatherer()->getStatusField($this->program_increment);
+    }
+
+    public function testItReturnsStatusReference(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $status_semantic = new \Tracker_Semantic_Status($this->tracker, $this->getSelectboxField(525, 'Kettle'));
+        $this->status_factory->method('getByTracker')->willReturn($status_semantic);
+
+        $status = $this->getGatherer()->getStatusField($this->program_increment);
+        self::assertSame(525, $status->getId());
+        self::assertSame('Kettle', $status->getLabel());
     }
 
     private function getStringField(int $id, string $label): \Tracker_FormElement_Field_String
@@ -119,6 +159,23 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getTextField(int $id, string $label): \Tracker_FormElement_Field_Text
     {
         return new \Tracker_FormElement_Field_Text(
+            $id,
+            self::PROGRAM_INCREMENT_TRACKER_ID,
+            null,
+            'irrelevant',
+            $label,
+            'Irrelevant',
+            true,
+            'P',
+            true,
+            '',
+            1
+        );
+    }
+
+    private function getSelectboxField(int $id, string $label): \Tracker_FormElement_Field_Selectbox
+    {
+        return new \Tracker_FormElement_Field_Selectbox(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
             null,

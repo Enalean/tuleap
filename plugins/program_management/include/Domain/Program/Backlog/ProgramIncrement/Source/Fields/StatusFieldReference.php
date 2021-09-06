@@ -22,6 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveStatusField
+/**
+ * I am a reference to the Status Semantic's field. I hold a field identifier and a label.
+ * @psalm-immutable
+ */
+interface StatusFieldReference
 {
+    public function getId(): int;
+    public function getLabel(): string;
 }

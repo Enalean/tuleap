@@ -33,6 +33,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private const USER_ID                      = 122;
     private const PROGRAM_INCREMENT_TRACKER_ID = 74;
     private const TITLE_ID                     = 994;
+    private const STATUS_ID                    = 198;
     private TestLogger $logger;
     private ProgramIncrementUpdate $update;
 
@@ -51,7 +52,12 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     {
         return new ProgramIncrementUpdateProcessor(
             $this->logger,
-            GatherSynchronizedFieldsStub::withFields(self::TITLE_ID, 'retroflex')
+            GatherSynchronizedFieldsStub::withFields(
+                self::TITLE_ID,
+                'retroflex',
+                self::STATUS_ID,
+                'innocuous'
+            )
         );
     }
 
@@ -67,6 +73,6 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 )
             )
         );
-        self::assertTrue($this->logger->hasDebug('Title field id #' . self::TITLE_ID));
+        self::assertTrue($this->logger->hasDebug('Status field id #' . self::STATUS_ID));
     }
 }

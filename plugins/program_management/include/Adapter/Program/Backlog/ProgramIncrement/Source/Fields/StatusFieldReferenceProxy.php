@@ -20,8 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveStatusField
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
+
+/**
+ * @psalm-immutable
+ */
+final class StatusFieldReferenceProxy implements StatusFieldReference
 {
+    private function __construct(private int $id, private string $label)
+    {
+    }
+
+    public static function fromTrackerField(\Tracker_FormElement_Field_List $field): self
+    {
+        return new self($field->getId(), $field->getLabel());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
 }
