@@ -22,6 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField
+/**
+ * I am a reference to the Description Semantic's field. I hold a field identifier and a label.
+ * @psalm-immutable
+ */
+interface DescriptionFieldReference
 {
+    public function getId(): int;
+    public function getLabel(): string;
 }

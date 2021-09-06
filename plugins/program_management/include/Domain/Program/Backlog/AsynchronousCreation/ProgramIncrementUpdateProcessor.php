@@ -47,6 +47,6 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
             $update->tracker
         );
 
-        $this->logger->debug(sprintf('Status field id #%d', $source_fields->status->getId()));
+        $this->logger->debug(sprintf('Description field id #%d', $source_fields->description->getId()));
     }
 }

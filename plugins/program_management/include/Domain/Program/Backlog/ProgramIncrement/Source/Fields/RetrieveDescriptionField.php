@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+
+interface RetrieveDescriptionField
 {
+    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference;
 }

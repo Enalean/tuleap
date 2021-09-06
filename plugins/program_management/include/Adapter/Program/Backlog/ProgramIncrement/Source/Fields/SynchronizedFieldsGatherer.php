@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
@@ -34,6 +35,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
     public function __construct(
         private \TrackerFactory $tracker_factory,
         private \Tracker_Semantic_TitleFactory $title_factory,
+        private \Tracker_Semantic_DescriptionFactory $description_factory,
         private \Tracker_Semantic_StatusFactory $status_factory
     ) {
     }
@@ -49,6 +51,16 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             throw new TitleFieldHasIncorrectTypeException($program_increment->id, $title_field->getId());
         }
         return TitleFieldReferenceProxy::fromTrackerField($title_field);
+    }
+
+    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference
+    {
+        $full_tracker      = $this->getFullTracker($program_increment);
+        $description_field = $this->description_factory->getByTracker($full_tracker)->getField();
+        if (! $description_field) {
+            throw new FieldRetrievalException($program_increment->id, 'description');
+        }
+        return DescriptionFieldReferenceProxy::fromTrackerField($description_field);
     }
 
     public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference

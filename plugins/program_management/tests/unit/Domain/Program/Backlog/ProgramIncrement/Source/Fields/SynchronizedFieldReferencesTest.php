@@ -28,8 +28,9 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TITLE_ID  = 615;
-    private const STATUS_ID = 946;
+    private const TITLE_ID       = 615;
+    private const DESCRIPTION_ID = 843;
+    private const STATUS_ID      = 946;
     private GatherSynchronizedFieldsStub $gatherer;
     private ProgramIncrementTrackerIdentifier $program_increment_tracker;
 
@@ -38,6 +39,8 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->gatherer = GatherSynchronizedFieldsStub::withFields(
             self::TITLE_ID,
             'tetraonid',
+            self::DESCRIPTION_ID,
+            'syncryptic',
             self::STATUS_ID,
             'desolating'
         );
@@ -55,6 +58,7 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->program_increment_tracker
         );
         self::assertSame(self::TITLE_ID, $fields->title->getId());
+        self::assertSame(self::DESCRIPTION_ID, $fields->description->getId());
         self::assertSame(self::STATUS_ID, $fields->status->getId());
     }
 }

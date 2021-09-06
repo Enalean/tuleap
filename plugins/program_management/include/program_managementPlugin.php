@@ -550,6 +550,7 @@ final class program_managementPlugin extends Plugin
                 new SynchronizedFieldsGatherer(
                     $tracker_factory,
                     new \Tracker_Semantic_TitleFactory(),
+                    new \Tracker_Semantic_DescriptionFactory(),
                     new \Tracker_Semantic_StatusFactory()
                 )
             ),
@@ -616,6 +617,7 @@ final class program_managementPlugin extends Plugin
                         new SynchronizedFieldsGatherer(
                             $tracker_factory,
                             new \Tracker_Semantic_TitleFactory(),
+                            new \Tracker_Semantic_DescriptionFactory(),
                             new \Tracker_Semantic_StatusFactory()
                         )
                     ),
