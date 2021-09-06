@@ -58,6 +58,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\Fe
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
@@ -186,6 +187,7 @@ use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
@@ -370,7 +372,7 @@ final class program_managementPlugin extends Plugin
         $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
 
         $form_element_factory        = \Tracker_FormElementFactory::instance();
-        $timeframe_dao               = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $timeframe_dao               = new SemanticTimeframeDao();
         $semantic_status_factory     = new Tracker_Semantic_StatusFactory();
         $logger                      = $this->getLogger();
         $planning_adapter            = new PlanningAdapter(\PlanningFactory::build());
@@ -527,6 +529,7 @@ final class program_managementPlugin extends Plugin
         $iteration_creation_DAO = new PendingIterationCreationDAO();
         $pending_updates_dao    = new PendingProgramIncrementUpdateDAO();
         $program_increments_DAO = new ProgramIncrementsDAO();
+        $tracker_factory        = \TrackerFactory::instance();
 
         $handler = new ProgramIncrementUpdateEventHandler(
             $logger,
@@ -540,7 +543,10 @@ final class program_managementPlugin extends Plugin
             $pending_updates_dao,
             $program_increments_DAO,
             $pending_updates_dao,
-            new ProgramIncrementUpdateProcessor($logger),
+            new ProgramIncrementUpdateProcessor(
+                $logger,
+                new SynchronizedFieldsGatherer($tracker_factory, new \Tracker_Semantic_TitleFactory())
+            ),
             new IterationCreationProcessor($logger),
         );
         $handler->handle(ProgramIncrementUpdateEventProxy::fromWorkerEvent($logger, $event));
@@ -561,15 +567,16 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $logger           = $this->getLogger();
-
+        $logger                         = $this->getLogger();
+        $artifact_factory               = Tracker_ArtifactFactory::instance();
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
         $user_retriever                 = new UserManagerAdapter(UserManager::instance());
         $iterations_linked_dao          = new IterationsLinkedToProgramIncrementDAO();
         $iteration_creation_DAO         = new PendingIterationCreationDAO();
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $program_increments_DAO         = new ProgramIncrementsDAO();
+        $form_element_factory           = \Tracker_FormElementFactory::instance();
+        $tracker_factory                = \TrackerFactory::instance();
 
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
@@ -598,7 +605,10 @@ final class program_managementPlugin extends Plugin
                 new ProgramIncrementUpdateDispatcher(
                     $logger,
                     new QueueFactory($logger),
-                    new ProgramIncrementUpdateProcessor($logger),
+                    new ProgramIncrementUpdateProcessor(
+                        $logger,
+                        new SynchronizedFieldsGatherer($tracker_factory, new \Tracker_Semantic_TitleFactory())
+                    ),
                     new IterationCreationProcessor($logger),
                 )
             )
@@ -1049,7 +1059,7 @@ final class program_managementPlugin extends Plugin
     private function getCanSubmitNewArtifactHandler(): CanSubmitNewArtifactHandler
     {
         $form_element_factory        = \Tracker_FormElementFactory::instance();
-        $timeframe_dao               = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $timeframe_dao               = new SemanticTimeframeDao();
         $semantic_status_factory     = new Tracker_Semantic_StatusFactory();
         $logger                      = $this->getLogger();
         $planning_adapter            = new PlanningAdapter(\PlanningFactory::build());

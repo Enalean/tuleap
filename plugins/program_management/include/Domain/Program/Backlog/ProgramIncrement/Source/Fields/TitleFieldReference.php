@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
-
-final class FieldNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+/**
+ * I am a reference to the Title Semantic's field. I hold a field identifier and a label.
+ * @psalm-immutable
+ */
+interface TitleFieldReference
 {
-    public function __construct(int $field_id)
-    {
-        parent::__construct("Field #$field_id not found in database");
-    }
+    public function getId(): int;
+    public function getLabel(): string;
 }
