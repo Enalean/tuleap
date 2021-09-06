@@ -151,10 +151,6 @@ msgstr ""
 "L'artéfact #%d n'a pas été supprimé de la planification générale car il est "
 "déjà présent dans un sous jalon."
 
-#, php-format
-msgid "Available %1$s"
-msgstr "%1$s disponible(s)"
-
 msgid "Backlog title"
 msgstr "Titre du backlog"
 

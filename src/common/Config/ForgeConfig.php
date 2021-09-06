@@ -199,4 +199,9 @@ class ForgeConfig
     {
         return self::get(self::FEATURE_FLAG_PREFIX . $key);
     }
+
+    public static function setFeatureFlag(string $name, mixed $value): void
+    {
+        self::set(self::FEATURE_FLAG_PREFIX . $name, $value);
+    }
 }
