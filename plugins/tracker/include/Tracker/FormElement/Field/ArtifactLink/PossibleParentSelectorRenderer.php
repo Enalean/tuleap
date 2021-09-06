@@ -28,24 +28,23 @@ use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 
 class PossibleParentSelectorRenderer
 {
-    private function __construct(private \TemplateRenderer $renderer)
+    public function __construct(private \TemplateRenderer $renderer)
     {
     }
 
-    public static function buildWithDefaultTemplateRenderer(): self
+    public function render(int $tracker_id, string $form_name_prefix, string $prefill_parent, PossibleParentSelector $possible_parent_selector): string
     {
-        return new self(\TemplateRendererFactory::build()->getRenderer(__DIR__ . '/templates'));
-    }
-
-    public function render(string $form_name_prefix, string $prefill_parent, PossibleParentSelector $possible_parent_selector): string
-    {
+        $possible_parents_artifacts = $possible_parent_selector->getPossibleParents()?->getArtifacts();
         if (! $possible_parent_selector->isSelectorDisplayed()) {
+            if ($possible_parents_artifacts !== null && count($possible_parents_artifacts) > 0) {
+                return sprintf(dgettext('tuleap-tracker', 'Will have %1$s as parent.'), $possible_parents_artifacts[0]->fetchDirectLinkToArtifactWithTitle());
+            }
             return '';
         }
 
         $possible_parent_presenters = [];
-        if ($possible_parent_selector->getPossibleParents()) {
-            foreach ($possible_parent_selector->getPossibleParents()->getArtifacts() as $possible_parent) {
+        if ($possible_parents_artifacts !== null) {
+            foreach ($possible_parents_artifacts as $possible_parent) {
                 $possible_parent_presenters[] = new PossibleParentPresenter(
                     $possible_parent->getId(),
                     $possible_parent->getXRef(),
@@ -55,7 +54,7 @@ class PossibleParentSelectorRenderer
             }
         }
 
-        ListPickerIncluder::includeArtifactLinksListPickerAssets($possible_parent_selector->tracker->getId());
+        ListPickerIncluder::includeArtifactLinksListPickerAssets($tracker_id);
         return $this->renderer->renderToString(
             'possible-parent-selector',
             new PossibleParentSelectorPresenter(
