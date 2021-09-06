@@ -46,24 +46,26 @@ context("Suspended users", function () {
                 "&ugroup_id=" +
                 project_admin_group_id
         );
-        cy.contains("Suspended")
+        cy.get("[data-test=project-admin-ugroups-members-list]")
+            .contains("Suspended")
             .should("have.attr", "data-user-id")
             .as("user_id")
             .then((user_id) => {
                 cy.get(`[data-test=remove-user-${user_id}]`).click();
                 cy.get("[data-test=remove-from-ugroup]").click();
             });
-        cy.should("not.contain", "Suspended");
+        cy.get("[data-test=project-admin-ugroups-members-list]").should("not.contain", "Suspended");
 
         cy.get("[data-test=admin-nav-members]").click();
-        cy.contains("Suspended")
+        cy.get("[data-test=project-admin-members-list]")
+            .contains("Suspended")
             .should("have.attr", "data-user-id")
             .as("user_id")
             .then((user_id) => {
                 cy.get(`[data-test=remove-user-${user_id}]`).click();
                 cy.get("[data-test=remove-from-member]").click();
             });
-        cy.should("not.contain", "Suspended");
+        cy.get("[data-test=project-admin-members-list]").should("not.contain", "Suspended");
     });
 });
 
@@ -186,9 +188,12 @@ describe("Project admin", function () {
             cy.get(".select2-result-user").click();
             cy.get('[data-test="project-admin-submit-add-member"]').click();
 
-            cy.contains("SecondProjectAdministrator", {
-                timeout: 40000,
-            });
+            cy.get("[data-test=project-admin-ugroups-members-list]").contains(
+                "SecondProjectAdministrator",
+                {
+                    timeout: 40000,
+                }
+            );
         });
 
         it("should verify that icon for project visibility is correct", function () {
@@ -239,7 +244,7 @@ describe("Project admin", function () {
             cy.get("[data-test=feedback]").contains("User added", {
                 timeout: 40000,
             });
-            cy.contains("Heisenberg");
+            cy.get("[data-test=project-admin-ugroups-members-list]").contains("Heisenberg");
         });
     });
 });
@@ -339,7 +344,7 @@ context("Membership management", function () {
         cy.restrictedRegularUserLogin();
         cy.visit(`/project/${project_id}/admin/members`);
         cy.get("[data-test=admin-nav-members]").click();
-        cy.should("not.contain", "Data");
+        cy.get("[data-test=project-administration-navigation]").should("not.contain", "Data");
 
         cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
         // ignore rule for select2
@@ -349,7 +354,8 @@ context("Membership management", function () {
         cy.get(".select2-result-user").click();
         cy.get('[data-test="project-admin-submit-add-member"]').click();
 
-        cy.contains("RestrictedMember (RestrictedMember)")
+        cy.get("[data-test=project-admin-members-list]")
+            .contains("RestrictedMember (RestrictedMember)")
             .should("have.attr", "data-user-id")
             .as("user_id")
             .then((user_id) => {
