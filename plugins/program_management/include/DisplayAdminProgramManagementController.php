@@ -214,7 +214,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                         $this->teams_searcher,
                         $this->all_program_searcher,
                         $admin_program,
-                        $user
+                        $user_identifier
                     )->getPotentialTeams()
                 ),
                 TeamsPresenterBuilder::buildTeamsPresenter(

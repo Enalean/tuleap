@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveProjectStub implements RetrieveProject
 {
@@ -58,7 +59,7 @@ final class RetrieveProjectStub implements RetrieveProject
         throw new \LogicException('No project configured');
     }
 
-    public function getProjectsUserIsAdmin(\PFUser $user): array
+    public function getProjectsUserIsAdmin(UserIdentifier $user_identifier): array
     {
         return $this->projects;
     }

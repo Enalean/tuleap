@@ -114,7 +114,7 @@ final class ProjectResource extends AuthenticatedResource
         $program_dao                 = new ProgramDao();
         $explicit_backlog_dao        = new ExplicitBacklogDao();
         $this->user_manager_adapter  = new UserManagerAdapter($this->user_manager);
-        $project_retriever           = new ProjectManagerAdapter($project_manager);
+        $project_retriever           = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);
         $project_permission_verifier = new ProjectPermissionVerifier($this->user_manager_adapter);
 
         $project_access_checker = new ProjectAccessChecker(

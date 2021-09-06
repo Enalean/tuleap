@@ -178,7 +178,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $plan_dao               = new PlanDao();
         $modifier               = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter(\ProjectManager::instance()),
+                new ProjectManagerAdapter(\ProjectManager::instance(), $this->user_manager_adapter),
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
