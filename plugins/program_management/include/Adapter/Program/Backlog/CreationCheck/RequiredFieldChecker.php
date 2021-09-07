@@ -31,6 +31,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
 final class RequiredFieldChecker implements CheckRequiredField
 {
+    private \TrackerFactory $tracker_factory;
+
+    public function __construct(\TrackerFactory $tracker_factory)
+    {
+        $this->tracker_factory = $tracker_factory;
+    }
+
     public function areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
@@ -40,7 +47,11 @@ final class RequiredFieldChecker implements CheckRequiredField
     ): bool {
         $are_fields_ok = true;
         foreach ($trackers->getTrackers() as $program_increment_tracker) {
-            foreach ($program_increment_tracker->getFullTracker()->getFormElementFields() as $field) {
+            $full_tracker = $this->tracker_factory->getTrackerById($program_increment_tracker->getTrackerId());
+            if (! $full_tracker) {
+                throw new \RuntimeException("Tracker with id #" . $program_increment_tracker->getTrackerId() . " is not found.");
+            }
+            foreach ($full_tracker->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {
                     $tracker_reference = $retrieve_tracker_from_field->fromFieldId($field->getId());
                     $project_reference = $retrieve_project_from_tracker->fromTrackerReference($tracker_reference);

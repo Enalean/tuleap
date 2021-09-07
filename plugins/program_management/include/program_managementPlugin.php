@@ -412,9 +412,9 @@ final class program_managementPlugin extends Plugin
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
-                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
+                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
             ),
-            new RequiredFieldChecker(),
+            new RequiredFieldChecker($tracker_factory),
             new WorkflowChecker(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
@@ -1135,9 +1135,9 @@ final class program_managementPlugin extends Plugin
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
-                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
+                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
             ),
-            new RequiredFieldChecker(),
+            new RequiredFieldChecker($tracker_factory),
             new WorkflowChecker(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),

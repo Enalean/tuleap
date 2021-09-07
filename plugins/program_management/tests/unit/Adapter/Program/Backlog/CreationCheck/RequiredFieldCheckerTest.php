@@ -46,10 +46,12 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private RequiredFieldChecker $checker;
     private RetrieveTrackerFromField $retrieve_tracker_from_field;
     private VerifyFieldPermissions $retrieve_field_permissions;
+    private \PHPUnit\Framework\MockObject\Stub|\TrackerFactory $tracker_factory;
 
     protected function setUp(): void
     {
-        $this->checker                     = new RequiredFieldChecker();
+        $this->tracker_factory             = $this->createStub(\TrackerFactory::class);
+        $this->checker                     = new RequiredFieldChecker($this->tracker_factory);
         $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
         $this->retrieve_field_permissions  = VerifyFieldPermissionsStub::withValidField();
     }
@@ -71,9 +73,11 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$required_title, $non_required_artifact_link]);
+        $tracker->method('getId')->willReturn(1);
 
         $other_tracker_with_no_required_field = $this->createMock(\Tracker::class);
-        $other_non_required_field             = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $other_tracker_with_no_required_field->method('getId')->willReturn(2);
+        $other_non_required_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $other_non_required_field->method('isRequired')->willReturn(false);
         $other_tracker_with_no_required_field->method('getFormElementFields')->willReturn(
             [$other_non_required_field]
@@ -83,6 +87,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $other_tracker_with_no_required_field
         );
         $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
+        $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker, $other_tracker_with_no_required_field);
 
         $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(
             $required_title,
@@ -149,6 +154,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($tracker);
         $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
+        $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker);
 
         $errors_collector         = new ConfigurationErrorsCollector(true);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(

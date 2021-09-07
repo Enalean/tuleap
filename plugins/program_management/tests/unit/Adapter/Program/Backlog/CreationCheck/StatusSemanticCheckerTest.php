@@ -43,36 +43,28 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusSemanticChecker $checker;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_StatusDao
-     */
-    private $semantic_status_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_StatusFactory
-     */
-    private $semantic_status_factory;
-
+    private \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_StatusDao $semantic_status_dao;
+    private \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_StatusFactory $semantic_status_factory;
     private TrackerCollection $collection;
     private Tracker $tracker_team_01;
     private Tracker $tracker_team_02;
     private SourceTrackerCollection $source_trackers;
     private Tracker $timebox_tracker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_Status
-     */
-    private $timebox_tracker_semantic_status;
+    private \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_Status $timebox_tracker_semantic_status;
     private Tracker $program_increment;
     private ProgramTracker $program_increment_tracker;
+    private \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory $tracker_factory;
 
     protected function setUp(): void
     {
         $this->semantic_status_dao     = $this->createMock(Tracker_Semantic_StatusDao::class);
         $this->semantic_status_factory = $this->createMock(Tracker_Semantic_StatusFactory::class);
+        $this->tracker_factory         = $this->createMock(\TrackerFactory::class);
 
         $this->checker = new StatusSemanticChecker(
             $this->semantic_status_dao,
-            $this->semantic_status_factory
+            $this->semantic_status_factory,
+            $this->tracker_factory
         );
 
         $this->tracker_team_01 = TrackerTestBuilder::aTracker()->withId(123)->build();
@@ -145,6 +137,14 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $tracker_02_semantic_status
             );
 
+        $this->tracker_factory->method('getTrackerById')
+            ->willReturnOnConsecutiveCalls(
+                $this->program_increment,
+                $this->timebox_tracker,
+                $this->tracker_team_01,
+                $this->tracker_team_02
+            );
+
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertTrue(
             $this->checker->isStatusWellConfigured(
@@ -168,6 +168,8 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn(null);
+
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->program_increment);
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
@@ -194,6 +196,8 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_status_dao->method('getTrackerIdsWithoutSemanticStatusDefined')
             ->with([1, 123, 124])
             ->willReturn([1]);
+
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->program_increment);
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
@@ -234,6 +238,12 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_01_semantic_status->expects(self::once())
             ->method('getOpenLabels')
             ->willReturn(['open']);
+
+        $this->tracker_factory->method('getTrackerById')->willReturn(
+            $this->program_increment,
+            $this->timebox_tracker,
+            $this->tracker_team_01
+        );
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(

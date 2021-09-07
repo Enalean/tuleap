@@ -83,8 +83,9 @@ class TaskBuilder
             TrackerArtifactCreator::build(
                 Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
                 Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
-                $logger
-            )
+                $logger,
+            ),
+            \TrackerFactory::instance()
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
