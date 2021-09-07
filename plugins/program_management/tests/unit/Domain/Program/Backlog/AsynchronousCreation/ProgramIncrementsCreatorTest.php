@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -54,7 +55,6 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $artifact_creator;
     private SourceChangesetValuesCollection $field_values;
     private TrackerCollection $mirrored_program_increment_trackers;
-    private \PFUser $user;
     private UserIdentifier $user_identifier;
 
     protected function setUp(): void
@@ -65,7 +65,8 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             $this->synchronized_fields_adapter,
             MapStatusByValueStub::withValues(5000),
-            $this->artifact_creator
+            $this->artifact_creator,
+            RetrieveUserStub::withGenericUser()
         );
 
         $this->user            = UserTestBuilder::aUser()->build();
@@ -100,13 +101,13 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     $first_tracker,
                     self::isInstanceOf(MirroredProgramIncrementChangeset::class),
-                    $this->user,
+                    self::isInstanceOf(\PFUser::class),
                     $this->field_values->getSubmittedOn()
                 ],
                 [
                     $second_tracker,
                     self::isInstanceOf(MirroredProgramIncrementChangeset::class),
-                    $this->user,
+                    self::isInstanceOf(\PFUser::class),
                     $this->field_values->getSubmittedOn()
                 ]
             );
@@ -114,7 +115,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mirrors_creator->createProgramIncrements(
             $this->field_values,
             $this->mirrored_program_increment_trackers,
-            $this->user
+            $this->user_identifier
         );
     }
 
@@ -128,7 +129,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mirrors_creator->createProgramIncrements(
             $this->field_values,
             $this->mirrored_program_increment_trackers,
-            $this->user
+            $this->user_identifier
         );
     }
 }

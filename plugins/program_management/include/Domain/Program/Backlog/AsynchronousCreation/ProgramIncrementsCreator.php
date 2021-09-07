@@ -31,24 +31,18 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 class ProgramIncrementsCreator
 {
-    private DBTransactionExecutor $transaction_executor;
-    private BuildSynchronizedFields $synchronized_fields_adapter;
-    private MapStatusByValue $status_mapper;
-    private CreateArtifact $artifact_creator;
-
     public function __construct(
-        DBTransactionExecutor $transaction_executor,
-        BuildSynchronizedFields $synchronized_fields_adapter,
-        MapStatusByValue $status_mapper,
-        CreateArtifact $artifact_creator
+        private DBTransactionExecutor $transaction_executor,
+        private BuildSynchronizedFields $synchronized_fields_adapter,
+        private MapStatusByValue $status_mapper,
+        private CreateArtifact $artifact_creator,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->transaction_executor        = $transaction_executor;
-        $this->synchronized_fields_adapter = $synchronized_fields_adapter;
-        $this->status_mapper               = $status_mapper;
-        $this->artifact_creator            = $artifact_creator;
     }
 
     /**
@@ -59,8 +53,9 @@ class ProgramIncrementsCreator
     public function createProgramIncrements(
         SourceChangesetValuesCollection $copied_values,
         TrackerCollection $program_increments_tracker_collection,
-        \PFUser $current_user
+        UserIdentifier $user_identifier
     ): void {
+        $current_user = $this->retrieve_user->getUserWithId($user_identifier);
         $this->transaction_executor->execute(
             function () use ($copied_values, $program_increments_tracker_collection, $current_user) {
                 foreach ($program_increments_tracker_collection->getTrackers() as $program_increment_tracker) {
