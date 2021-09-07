@@ -49,7 +49,6 @@ import {
     TableCell,
     TableRow,
     TextRun,
-    VerticalAlign,
     WidthType,
 } from "docx";
 import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
@@ -60,9 +59,52 @@ import { triggerBlobDownload } from "../trigger-blob-download";
 import { loadImage } from "./Image/image-loader";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
-const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
+const HEADER_STYLE_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
 const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
 const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
+const TABLE_LABEL_SHADING = {
+    val: ShadingType.CLEAR,
+    color: "auto",
+    fill: "EEEEEE",
+};
+const TABLE_MARGINS = {
+    top: convertInchesToTwip(0.05),
+    bottom: convertInchesToTwip(0.05),
+    left: convertInchesToTwip(0.05),
+    right: convertInchesToTwip(0.05),
+};
+const TABLE_BORDERS = {
+    top: {
+        style: BorderStyle.NONE,
+        size: 0,
+        color: "FFFFFF",
+    },
+    right: {
+        style: BorderStyle.NONE,
+        size: 0,
+        color: "FFFFFF",
+    },
+    bottom: {
+        style: BorderStyle.NONE,
+        size: 0,
+        color: "FFFFFF",
+    },
+    left: {
+        style: BorderStyle.NONE,
+        size: 0,
+        color: "FFFFFF",
+    },
+    insideHorizontal: {
+        style: BorderStyle.NONE,
+        size: 0,
+        color: "FFFFFF",
+    },
+    insideVertical: {
+        style: BorderStyle.NONE,
+        size: 0,
+        color: "FFFFFF",
+    },
+};
 
 export async function downloadDocx(
     document: ExportDocument,
@@ -74,6 +116,7 @@ export async function downloadDocx(
         datetime_locale_information.locale,
         { timeZone: datetime_locale_information.timezone }
     );
+
     const footers = {
         default: buildFooter(gettext_provider, global_export_properties, exported_formatted_date),
     };
@@ -177,6 +220,7 @@ export async function downloadDocx(
                     run: {
                         size: 64,
                         bold: true,
+                        color: "000000",
                     },
                     paragraph: {
                         alignment: AlignmentType.CENTER,
@@ -202,21 +246,51 @@ export async function downloadDocx(
                     },
                 },
                 {
-                    id: "cover_table_header",
-                    name: "cover_table_header",
+                    id: "table_header_label",
+                    name: "table_header_label",
                     basedOn: "Normal",
                     next: "Normal",
                     run: {
                         size: 20,
-                        color: "545454",
+                        color: "333333",
+                        allCaps: true,
+                        bold: true,
                     },
                     paragraph: {
                         alignment: AlignmentType.RIGHT,
                     },
                 },
                 {
-                    id: "cover_table_value",
-                    name: "cover_table_value",
+                    id: "table_header_value",
+                    name: "table_header_value",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        size: 20,
+                        color: "333333",
+                        allCaps: true,
+                        bold: true,
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.LEFT,
+                    },
+                },
+                {
+                    id: "table_label",
+                    name: "table_label",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        size: 20,
+                        color: "333333",
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.RIGHT,
+                    },
+                },
+                {
+                    id: "table_value",
+                    name: "table_value",
                     basedOn: "Normal",
                     next: "Normal",
                     run: {
@@ -224,44 +298,6 @@ export async function downloadDocx(
                     },
                     paragraph: {
                         alignment: AlignmentType.LEFT,
-                    },
-                },
-                {
-                    id: HEADER_STYLE_ARTIFACT_TITLE,
-                    name: HEADER_STYLE_ARTIFACT_TITLE,
-                    basedOn: HEADER_LEVEL_ARTIFACT_TITLE,
-                    next: HEADER_LEVEL_ARTIFACT_TITLE,
-                    quickFormat: true,
-                },
-                {
-                    id: "table_header",
-                    name: "table_header",
-                    basedOn: "Normal",
-                    next: "Normal",
-                    run: {
-                        bold: true,
-                        allCaps: true,
-                        size: 18,
-                    },
-                    paragraph: {
-                        alignment: AlignmentType.CENTER,
-                        spacing: {
-                            before: 200,
-                            after: 200,
-                        },
-                    },
-                },
-                {
-                    id: "table_content",
-                    name: "table_content",
-                    basedOn: "Normal",
-                    next: "Normal",
-                    paragraph: {
-                        alignment: AlignmentType.LEFT,
-                        spacing: {
-                            before: 50,
-                            after: 50,
-                        },
                     },
                 },
             ],
@@ -351,13 +387,15 @@ function buildFooter(
         children: [
             new Paragraph({
                 children: [
-                    new TextRun(
-                        sprintf(
-                            gettext_provider.gettext("Exported on %s by %s"),
-                            exported_formatted_date,
-                            global_export_properties.user_display_name
-                        )
-                    ),
+                    new TextRun({
+                        children: [
+                            sprintf(
+                                gettext_provider.gettext("Exported on %s by %s"),
+                                exported_formatted_date,
+                                global_export_properties.user_display_name
+                            ),
+                        ],
+                    }),
                     new TextRun({
                         children: ["\t", PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES],
                     }),
@@ -428,6 +466,7 @@ function buildCoverTable(
             size: 0,
             type: WidthType.AUTO,
         },
+        borders: TABLE_BORDERS,
         columnWidths: [2000, 7638],
         rows: [
             buildCoverTableRow(gettext_provider.gettext("Platform"), new TextRun(platform_name)),
@@ -450,66 +489,8 @@ function buildCoverTable(
 }
 
 function buildCoverTableRow(label: string, value: TextRun | ExternalHyperlink): TableRow {
-    const cover_table_header_shading = {
-        type: ShadingType.SOLID,
-        color: "auto",
-        fill: "EEEEEE",
-    };
-
-    const margins = {
-        top: convertInchesToTwip(0.1),
-        bottom: convertInchesToTwip(0.1),
-        left: convertInchesToTwip(0.1),
-        right: convertInchesToTwip(0.1),
-    };
-
-    const no_border = {
-        top: {
-            style: BorderStyle.NONE,
-            size: 0,
-            color: "FFFFFF",
-        },
-        right: {
-            style: BorderStyle.NONE,
-            size: 0,
-            color: "FFFFFF",
-        },
-        bottom: {
-            style: BorderStyle.NONE,
-            size: 0,
-            color: "FFFFFF",
-        },
-        left: {
-            style: BorderStyle.NONE,
-            size: 0,
-            color: "FFFFFF",
-        },
-    };
-
     return new TableRow({
-        children: [
-            new TableCell({
-                children: [
-                    new Paragraph({
-                        text: label,
-                        style: "cover_table_header",
-                    }),
-                ],
-                borders: no_border,
-                margins: margins,
-                shading: cover_table_header_shading,
-            }),
-            new TableCell({
-                children: [
-                    new Paragraph({
-                        children: [value],
-                        style: "cover_table_value",
-                    }),
-                ],
-                borders: no_border,
-                margins: margins,
-            }),
-        ],
+        children: [buildTableCellLabel(label), buildTableCellContent(value)],
     });
 }
 
@@ -546,8 +527,8 @@ function buildReportCriteriaDisplayZone(
     const fields_rows = [
         new TableRow({
             children: [
-                buildTableCellHeader(gettext_provider.gettext("Search criteria")),
-                buildTableCellHeader(gettext_provider.gettext("Value")),
+                buildTableCellHeaderLabel(gettext_provider.gettext("Search criteria")),
+                buildTableCellHeaderValue(gettext_provider.gettext("Value")),
             ],
             tableHeader: true,
         }),
@@ -557,8 +538,8 @@ function buildReportCriteriaDisplayZone(
         if (criterion_value.criterion_type === "classic") {
             const table_row = new TableRow({
                 children: [
-                    buildTableCellContent(criterion_value.criterion_name),
-                    buildTableCellContent(criterion_value.criterion_value),
+                    buildTableCellLabel(criterion_value.criterion_name),
+                    buildTableCellContent(new TextRun(criterion_value.criterion_value)),
                 ],
             });
 
@@ -609,8 +590,8 @@ function buildDateReportCriterionValue(
 
         return new TableRow({
             children: [
-                buildTableCellContent(date_criterion_value.criterion_name),
-                buildTableCellContent(table_cell_date_criterion_content),
+                buildTableCellLabel(date_criterion_value.criterion_name),
+                buildTableCellContent(new TextRun(table_cell_date_criterion_content)),
             ],
         });
     }
@@ -666,8 +647,8 @@ function buildDateReportCriterionValue(
 
     return new TableRow({
         children: [
-            buildTableCellContent(date_criterion_value.criterion_name),
-            buildTableCellContent(table_cell_date_criterion_content),
+            buildTableCellLabel(date_criterion_value.criterion_name),
+            buildTableCellContent(new TextRun(table_cell_date_criterion_content)),
         ],
     });
 }
@@ -678,8 +659,8 @@ function buildFieldValuesDisplayZone(artifact_values: ReadonlyArray<ArtifactFiel
     for (const artifact_value of artifact_values) {
         const table_row = new TableRow({
             children: [
-                buildTableCellContent(artifact_value.field_name),
-                buildTableCellContent(artifact_value.field_value),
+                buildTableCellLabel(artifact_value.field_name),
+                buildTableCellContent(new TextRun(artifact_value.field_value)),
             ],
         });
 
@@ -692,63 +673,78 @@ function buildFieldValuesDisplayZone(artifact_values: ReadonlyArray<ArtifactFiel
 function buildTable(fields_rows: TableRow[]): Table {
     return new Table({
         rows: fields_rows,
-        alignment: AlignmentType.CENTER,
         // Some readers such as Google Docs does not deal properly with automatic table column widths.
         // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
         // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
-        // we set the size of each columns to (9638 / 2) = 4619 DXA
+        // we set the size of the labels column 3000 and the size of the values column to 6638 so
+        // (3000 + 6638) = 9638 DXA
         width: {
             size: 0,
             type: WidthType.AUTO,
         },
-        columnWidths: [4619, 4619],
+        borders: TABLE_BORDERS,
+        columnWidths: [3000, 6638],
     });
 }
 
-function buildTableCellHeader(name: string): TableCell {
+function buildTableCellHeaderLabel(name: string): TableCell {
     return new TableCell({
         children: [
             new Paragraph({
                 text: name,
-                style: "table_header",
+                style: "table_header_label",
             }),
         ],
-        verticalAlign: VerticalAlign.CENTER,
-        borders: {
-            top: {
-                size: 0,
-                style: BorderStyle.NONE,
-                color: "ffffff",
-            },
-            left: {
-                size: 0,
-                style: BorderStyle.NONE,
-                color: "ffffff",
-            },
-            right: {
-                size: 0,
-                style: BorderStyle.NONE,
-                color: "ffffff",
-            },
+        margins: TABLE_MARGINS,
+        shading: {
+            val: ShadingType.CLEAR,
+            color: "auto",
+            fill: "DDDDDD",
         },
     });
 }
 
-function buildTableCellContent(content: string): TableCell {
+function buildTableCellHeaderValue(name: string): TableCell {
     return new TableCell({
         children: [
             new Paragraph({
-                text: content,
-                style: "table_content",
+                text: name,
+                style: "table_header_value",
             }),
         ],
-        verticalAlign: VerticalAlign.CENTER,
-        margins: {
-            left: 50,
+        margins: TABLE_MARGINS,
+        shading: {
+            val: ShadingType.CLEAR,
+            color: "auto",
+            fill: "DDDDDD",
         },
     });
 }
 
+function buildTableCellLabel(name: string): TableCell {
+    return new TableCell({
+        children: [
+            new Paragraph({
+                text: name,
+                style: "table_label",
+            }),
+        ],
+        margins: TABLE_MARGINS,
+        shading: TABLE_LABEL_SHADING,
+    });
+}
+
+function buildTableCellContent(content: TextRun | ExternalHyperlink): TableCell {
+    return new TableCell({
+        children: [
+            new Paragraph({
+                children: [content],
+                style: "table_value",
+            }),
+        ],
+        margins: TABLE_MARGINS,
+    });
+}
 function generateMainTitlesNumberingLevelConfiguration(): ILevelsOptions[] {
     const levels: ILevelsOptions[] = [];
     let text_level = "";
