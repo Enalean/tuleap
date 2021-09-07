@@ -109,18 +109,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
             $this->update_deleter,
             new ProgramIncrementUpdateProcessor(
                 $this->logger,
-                GatherSynchronizedFieldsStub::withFields(
-                    370,
-                    'papyritious',
-                    921,
-                    'covellite',
-                    381,
-                    'unreflected',
-                    163,
-                    'undisposedness',
-                    631,
-                    'harebottle'
-                )
+                GatherSynchronizedFieldsStub::withDefaults()
             ),
             new IterationCreationProcessor($this->logger)
         );

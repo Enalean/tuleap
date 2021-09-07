@@ -22,6 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField, RetrieveStartDateField, RetrieveEndPeriodField, RetrieveArtifactLinkField
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+
+interface RetrieveArtifactLinkField
 {
+    /**
+     * @throws NoArtifactLinkFieldException
+     */
+    public function getArtifactLinkField(ProgramIncrementTrackerIdentifier $program_increment): ArtifactLinkFieldReference;
 }

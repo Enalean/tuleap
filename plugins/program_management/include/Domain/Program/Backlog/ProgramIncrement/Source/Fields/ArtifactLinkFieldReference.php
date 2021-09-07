@@ -22,6 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField, RetrieveStartDateField, RetrieveEndPeriodField, RetrieveArtifactLinkField
+/**
+ * I am a reference to the Artifact Link field. I hold a field identifier and a label.
+ * @psalm-immutable
+ */
+interface ArtifactLinkFieldReference
 {
+    public function getId(): int;
+    public function getLabel(): string;
 }

@@ -47,6 +47,6 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
             $update->tracker
         );
 
-        $this->logger->debug(sprintf('End period field id #%d', $source_fields->end_period->getId()));
+        $this->logger->debug(sprintf('Artifact link field id #%d', $source_fields->artifact_link->getId()));
     }
 }

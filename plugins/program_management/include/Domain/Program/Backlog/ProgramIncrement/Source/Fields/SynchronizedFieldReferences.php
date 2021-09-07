@@ -37,7 +37,8 @@ final class SynchronizedFieldReferences
         public DescriptionFieldReference $description,
         public StatusFieldReference $status,
         public StartDateFieldReference $start_date,
-        public EndPeriodFieldReference $end_period
+        public EndPeriodFieldReference $end_period,
+        public ArtifactLinkFieldReference $artifact_link
     ) {
     }
 
@@ -45,11 +46,12 @@ final class SynchronizedFieldReferences
         GatherSynchronizedFields $gatherer,
         ProgramIncrementTrackerIdentifier $program_increment
     ): self {
-        $title       = $gatherer->getTitleField($program_increment);
-        $description = $gatherer->getDescriptionField($program_increment);
-        $status      = $gatherer->getStatusField($program_increment);
-        $start_date  = $gatherer->getStartDateField($program_increment);
-        $end_period  = $gatherer->getEndPeriodField($program_increment);
-        return new self($title, $description, $status, $start_date, $end_period);
+        $title         = $gatherer->getTitleField($program_increment);
+        $description   = $gatherer->getDescriptionField($program_increment);
+        $status        = $gatherer->getStatusField($program_increment);
+        $start_date    = $gatherer->getStartDateField($program_increment);
+        $end_period    = $gatherer->getEndPeriodField($program_increment);
+        $artifact_link = $gatherer->getArtifactLinkField($program_increment);
+        return new self($title, $description, $status, $start_date, $end_period, $artifact_link);
     }
 }

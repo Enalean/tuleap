@@ -37,6 +37,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private const STATUS_ID                    = 198;
     private const START_DATE_ID                = 295;
     private const END_PERIOD_ID                = 332;
+    private const ARTIFACT_LINK_ID             = 633;
     private TestLogger $logger;
     private ProgramIncrementUpdate $update;
 
@@ -55,17 +56,13 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     {
         return new ProgramIncrementUpdateProcessor(
             $this->logger,
-            GatherSynchronizedFieldsStub::withFields(
+            GatherSynchronizedFieldsStub::withFieldIds(
                 self::TITLE_ID,
-                'retroflex',
                 self::DESCRIPTION_ID,
-                'premillennial',
                 self::STATUS_ID,
-                'innocuous',
                 self::START_DATE_ID,
-                'virtuosa',
                 self::END_PERIOD_ID,
-                'layback'
+                self::ARTIFACT_LINK_ID
             )
         );
     }
@@ -82,6 +79,6 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 )
             )
         );
-        self::assertTrue($this->logger->hasDebug('End period field id #' . self::END_PERIOD_ID));
+        self::assertTrue($this->logger->hasDebug('Artifact link field id #' . self::ARTIFACT_LINK_ID));
     }
 }
