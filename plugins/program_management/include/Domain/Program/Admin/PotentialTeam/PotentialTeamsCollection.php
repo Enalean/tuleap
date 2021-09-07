@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class PotentialTeamsCollection
 {
@@ -45,11 +46,11 @@ final class PotentialTeamsCollection
         SearchTeamsOfProgram $teams_of_program_searcher,
         AllProgramSearcher $all_program_searcher,
         ProgramForAdministrationIdentifier $program,
-        \PFUser $user
+        UserIdentifier $user_identifier
     ): self {
         $aggregated_teams_id    = $teams_of_program_searcher->searchTeamIdsOfProgram($program->id);
         $existing_programs_id   = $all_program_searcher->getAllPrograms();
-        $projects_user_is_admin = $project_manager->getProjectsUserIsAdmin($user);
+        $projects_user_is_admin = $project_manager->getProjectsUserIsAdmin($user_identifier);
 
         $potential_teams = [];
 

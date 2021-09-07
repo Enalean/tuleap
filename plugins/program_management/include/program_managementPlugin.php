@@ -351,7 +351,7 @@ final class program_managementPlugin extends Plugin
             new TeamDao(),
             $retrieve_user,
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter(\ProjectManager::instance()),
+                new ProjectManagerAdapter(\ProjectManager::instance(), $retrieve_user),
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -424,7 +424,7 @@ final class program_managementPlugin extends Plugin
         );
 
         return new DisplayAdminProgramManagementController(
-            new ProjectManagerAdapter($project_manager),
+            new ProjectManagerAdapter($project_manager, $user_manager_adapter),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             new ProgramManagementBreadCrumbsBuilder(),
             $program_dao,
@@ -747,7 +747,7 @@ final class program_managementPlugin extends Plugin
                 $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter($project_manager),
+                new ProjectManagerAdapter($project_manager, $user_manager_adapter),
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
                 $user_manager_adapter
@@ -792,7 +792,7 @@ final class program_managementPlugin extends Plugin
                 $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter($project_manager),
+                new ProjectManagerAdapter($project_manager, $user_manager_adapter),
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
                 $user_manager_adapter
@@ -856,7 +856,7 @@ final class program_managementPlugin extends Plugin
 
         return new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter(ProjectManager::instance()),
+                new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter),
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -978,7 +978,7 @@ final class program_managementPlugin extends Plugin
     {
         $program_dao       = new ProgramDao();
         $team_dao          = new TeamDao();
-        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance());
+        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), new UserManagerAdapter(UserManager::instance()));
         $handler           = new CollectLinkedProjectsHandler(
             $program_dao,
             new TeamsSearcher($program_dao, $project_retriever),
@@ -1224,7 +1224,7 @@ final class program_managementPlugin extends Plugin
                 new TrackerFactoryAdapter(\TrackerFactory::instance()),
                 new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
                 new PlanDao(),
-                new ProjectManagerAdapter(\ProjectManager::instance()),
+                new ProjectManagerAdapter(\ProjectManager::instance(), $retrieve_user),
                 new TeamDao(),
                 new ProjectPermissionVerifier($retrieve_user),
                 $retrieve_user

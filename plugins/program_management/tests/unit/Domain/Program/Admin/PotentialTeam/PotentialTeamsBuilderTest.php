@@ -23,16 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SearchTeamsOfProgramStub $teams_of_program_searcher;
-    private \PFUser $user;
+    private UserIdentifier $user_identifier;
     private AllProgramSearcherStub $all_program_searcher;
     private ProgramForAdministrationIdentifier $program;
 
@@ -40,7 +41,7 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(123);
         $this->all_program_searcher      = AllProgramSearcherStub::buildPrograms(126);
-        $this->user                      = UserTestBuilder::aUser()->build();
+        $this->user_identifier           = UserIdentifierStub::buildGenericUser();
         $this->program                   = ProgramForAdministrationIdentifierBuilder::build();
     }
 
@@ -53,7 +54,7 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->teams_of_program_searcher,
                 $this->all_program_searcher,
                 $this->program,
-                $this->user
+                $this->user_identifier
             )->getPotentialTeams()
         );
     }
@@ -66,7 +67,7 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->teams_of_program_searcher,
                 $this->all_program_searcher,
                 $this->program,
-                $this->user
+                $this->user_identifier
             )->getPotentialTeams()
         );
     }
@@ -85,7 +86,7 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->teams_of_program_searcher,
             $this->all_program_searcher,
             ProgramForAdministrationIdentifierBuilder::buildWithId(125),
-            $this->user
+            $this->user_identifier
         );
 
         self::assertCount(1, $potential_teams->getPotentialTeams());
