@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Subm
  * I hold all field values for a given changeset for a source Timebox
  * @psalm-immutable
  */
-final class SourceChangesetValuesCollection
+final class SourceTimeboxChangesetValues
 {
     private function __construct(
         private int $source_artifact_id,
@@ -42,8 +42,7 @@ final class SourceChangesetValuesCollection
         private StatusValue $status_value,
         private SubmissionDate $submitted_on,
         private StartDateValue $start_date_value,
-        private EndPeriodValue $end_period_value,
-        private ArtifactLinkValue $artifact_link_value
+        private EndPeriodValue $end_period_value
     ) {
     }
 
@@ -59,14 +58,13 @@ final class SourceChangesetValuesCollection
         RetrieveFieldValuesGatherer $field_values_retriever,
         ReplicationData $replication
     ): self {
-        $fields              = $fields_builder->build($replication->getTracker());
-        $values_gatherer     = $field_values_retriever->getFieldValuesGatherer($replication);
-        $title_value         = TitleValue::fromSynchronizedFields($values_gatherer, $fields);
-        $description_value   = DescriptionValue::fromSynchronizedFields($values_gatherer, $fields);
-        $status_value        = StatusValue::fromSynchronizedFields($values_gatherer, $fields);
-        $start_date_value    = StartDateValue::fromSynchronizedFields($values_gatherer, $fields);
-        $end_period_value    = EndPeriodValue::fromSynchronizedFields($values_gatherer, $fields);
-        $artifact_link_value = ArtifactLinkValue::fromReplicationData($replication);
+        $fields            = $fields_builder->build($replication->getTracker());
+        $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
+        $title_value       = TitleValue::fromSynchronizedFields($values_gatherer, $fields);
+        $description_value = DescriptionValue::fromSynchronizedFields($values_gatherer, $fields);
+        $status_value      = StatusValue::fromSynchronizedFields($values_gatherer, $fields);
+        $start_date_value  = StartDateValue::fromSynchronizedFields($values_gatherer, $fields);
+        $end_period_value  = EndPeriodValue::fromSynchronizedFields($values_gatherer, $fields);
 
         return new self(
             $replication->getArtifact()->getId(),
@@ -75,8 +73,7 @@ final class SourceChangesetValuesCollection
             $status_value,
             new SubmissionDate($replication->getArtifact()->getSubmittedOn()),
             $start_date_value,
-            $end_period_value,
-            $artifact_link_value
+            $end_period_value
         );
     }
 
@@ -113,10 +110,5 @@ final class SourceChangesetValuesCollection
     public function getEndPeriodValue(): EndPeriodValue
     {
         return $this->end_period_value;
-    }
-
-    public function getArtifactLinkValue(): ArtifactLinkValue
-    {
-        return $this->artifact_link_value;
     }
 }

@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -41,10 +43,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SUBMISSION_TIMESTAMP        = 1234567890;
 
     private ArtifactCreatorAdapter $adapter;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|TrackerArtifactCreator
-     */
-    private $creator;
+    private MockObject|TrackerArtifactCreator $creator;
     private ProgramTracker $tracker;
     private \PFUser $user;
     private SubmissionDate $submission_date;
@@ -93,7 +92,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildProgramIncrementChangeset(): MirroredProgramIncrementChangeset
     {
-        $source_values = SourceChangesetValuesCollectionBuilder::buildWithValues(
+        $source_values       = SourceTimeboxChangesetValuesBuilder::buildWithValues(
             'Program Increment',
             'Super important',
             'text',
@@ -102,10 +101,12 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             '2020-11-06',
             self::SOURCE_PROGRAM_INCREMENT_ID
         );
-        $target_fields = SynchronizedFieldsBuilder::buildWithIds(1000, 1001, 1002, 1003, 1004, 1005);
+        $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($source_values);
+        $target_fields       = SynchronizedFieldsBuilder::buildWithIds(1000, 1001, 1002, 1003, 1004, 1005);
         return MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
             MapStatusByValueStub::withValues(10001),
             $source_values,
+            $artifact_link_value,
             $target_fields
         );
     }

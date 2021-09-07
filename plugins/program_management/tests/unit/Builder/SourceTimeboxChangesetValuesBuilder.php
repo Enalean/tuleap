@@ -22,14 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
-final class SourceChangesetValuesCollectionBuilder
+final class SourceTimeboxChangesetValuesBuilder
 {
-    public static function build(): SourceChangesetValuesCollection
+    public static function build(): SourceTimeboxChangesetValues
+    {
+        return self::buildWithSourceTimeboxId(112);
+    }
+
+    public static function buildWithSourceTimeboxId(int $source_timebox_id): SourceTimeboxChangesetValues
     {
         return self::buildWithValues(
             'Program Release',
@@ -38,11 +43,11 @@ final class SourceChangesetValuesCollectionBuilder
             ['Planned'],
             '2020-10-01',
             '2020-10-10',
-            112
+            $source_timebox_id
         );
     }
 
-    public static function buildWithStatusValues(string ...$status_values): SourceChangesetValuesCollection
+    public static function buildWithStatusValues(string ...$status_values): SourceTimeboxChangesetValues
     {
         return self::buildWithValues(
             'Program Increment',
@@ -65,9 +70,9 @@ final class SourceChangesetValuesCollectionBuilder
         array $status,
         string $start_date,
         string $end_date,
-        int $source_program_increment_id
-    ): SourceChangesetValuesCollection {
-        return SourceChangesetValuesCollection::fromReplication(
+        int $source_timebox_id
+    ): SourceTimeboxChangesetValues {
+        return SourceTimeboxChangesetValues::fromReplication(
             BuildSynchronizedFieldsStub::withDefault(),
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
@@ -79,7 +84,7 @@ final class SourceChangesetValuesCollectionBuilder
                     $status
                 )
             ),
-            ReplicationDataBuilder::buildWithArtifactId($source_program_increment_id)
+            ReplicationDataBuilder::buildWithArtifactId($source_timebox_id)
         );
     }
 }

@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 
@@ -81,7 +81,8 @@ final class MirroredProgramIncrementChangeset
 
     public static function fromSourceChangesetValuesAndSynchronizedFields(
         MapStatusByValue $status_mapper,
-        SourceChangesetValuesCollection $field_values,
+        SourceTimeboxChangesetValues $field_values,
+        ArtifactLinkValue $artifact_link_value,
         SynchronizedFields $target_fields
     ): self {
         $mapped_status = MappedStatusValue::fromStatusValueAndListField(
@@ -91,7 +92,7 @@ final class MirroredProgramIncrementChangeset
         );
         return new self(
             $target_fields->getArtifactLinkField()->getId(),
-            $field_values->getArtifactLinkValue(),
+            $artifact_link_value,
             $target_fields->getTitleField()->getId(),
             $field_values->getTitleValue(),
             $target_fields->getDescriptionField()->getId(),
