@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
-final class SourceChangesetValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_VALUE                         = 'pseudographeme';
     private const DESCRIPTION_VALUE                   = '<p>chondrofibroma overfeel</p>';
@@ -38,13 +38,13 @@ final class SourceChangesetValuesCollectionTest extends \Tuleap\Test\PHPUnit\Tes
     private const END_PERIOD_VALUE                    = '2016-10-17';
     private const STATUS_VALUE                        = 'Ongoing';
 
-    public function testItBuildsFromReplicationData(): void
+    public function testItBuildsFromReplication(): void
     {
         $replication = ReplicationDataBuilder::buildWithArtifactIdAndSubmissionDate(
             self::SOURCE_TIMEBOX_ID,
             self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP
         );
-        $values      = SourceChangesetValuesCollection::fromReplication(
+        $values      = SourceTimeboxChangesetValues::fromReplication(
             BuildSynchronizedFieldsStub::withDefault(),
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
@@ -67,6 +67,5 @@ final class SourceChangesetValuesCollectionTest extends \Tuleap\Test\PHPUnit\Tes
         self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());
         self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceArtifactId());
         self::assertSame(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP, $values->getSubmittedOn()->getValue());
-        self::assertContainsEquals(self::SOURCE_TIMEBOX_ID, $values->getArtifactLinkValue()->getValues());
     }
 }

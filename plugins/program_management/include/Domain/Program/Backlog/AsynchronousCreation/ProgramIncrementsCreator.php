@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
@@ -51,30 +52,32 @@ class ProgramIncrementsCreator
      * @throws FieldSynchronizationException
      */
     public function createProgramIncrements(
-        SourceChangesetValuesCollection $copied_values,
-        TrackerCollection $program_increments_tracker_collection,
+        SourceTimeboxChangesetValues $values,
+        TrackerCollection $mirrored_timeboxes,
         UserIdentifier $user_identifier
     ): void {
-        $current_user = $this->retrieve_user->getUserWithId($user_identifier);
+        $current_user        = $this->retrieve_user->getUserWithId($user_identifier);
+        $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
         $this->transaction_executor->execute(
-            function () use ($copied_values, $program_increments_tracker_collection, $current_user) {
-                foreach ($program_increments_tracker_collection->getTrackers() as $program_increment_tracker) {
-                    $synchronized_fields = $this->synchronized_fields_adapter->build($program_increment_tracker);
+            function () use ($values, $artifact_link_value, $mirrored_timeboxes, $current_user) {
+                foreach ($mirrored_timeboxes->getTrackers() as $mirrored_timebox_tracker) {
+                    $synchronized_fields = $this->synchronized_fields_adapter->build($mirrored_timebox_tracker);
 
                     $mirrored_program_increment_changeset = MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
                         $this->status_mapper,
-                        $copied_values,
+                        $values,
+                        $artifact_link_value,
                         $synchronized_fields
                     );
                     try {
                         $this->artifact_creator->create(
-                            $program_increment_tracker,
+                            $mirrored_timebox_tracker,
                             $mirrored_program_increment_changeset,
                             $current_user,
-                            $copied_values->getSubmittedOn(),
+                            $values->getSubmittedOn(),
                         );
                     } catch (ArtifactCreationException $e) {
-                        throw new ProgramIncrementArtifactCreationException($copied_values->getSourceArtifactId());
+                        throw new ProgramIncrementArtifactCreationException($values->getSourceArtifactId());
                     }
                 }
             }

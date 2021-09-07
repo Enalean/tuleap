@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
-use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 
@@ -46,8 +47,8 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
     {
-        $status_mapper = MapStatusByValueStub::withValues(self::MAPPED_STATUS_BIND_VALUE_ID);
-        $copied_values = SourceChangesetValuesCollectionBuilder::buildWithValues(
+        $status_mapper       = MapStatusByValueStub::withValues(self::MAPPED_STATUS_BIND_VALUE_ID);
+        $values              = SourceTimeboxChangesetValuesBuilder::buildWithValues(
             self::TITLE_VALUE,
             self::DESCRIPTION_CONTENT,
             self::DESCRIPTION_FORMAT,
@@ -56,7 +57,8 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
             self::END_DATE_VALUE,
             self::SOURCE_PROGRAM_INCREMENT_ID
         );
-        $target_fields = SynchronizedFieldsBuilder::buildWithIds(
+        $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
+        $target_fields       = SynchronizedFieldsBuilder::buildWithIds(
             self::ARTIFACT_LINK_ID,
             self::TITLE_ID,
             self::DESCRIPTION_ID,
@@ -67,7 +69,8 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
 
         $changeset = MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
             $status_mapper,
-            $copied_values,
+            $values,
+            $artifact_link_value,
             $target_fields
         );
 

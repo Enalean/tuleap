@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
@@ -96,7 +96,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      */
     private function create(ReplicationData $replication_data): void
     {
-        $copied_values = SourceChangesetValuesCollection::fromReplication(
+        $source_values = SourceTimeboxChangesetValues::fromReplication(
             $this->fields_builder,
             $this->values_retriever,
             $replication_data
@@ -116,7 +116,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         );
 
         $this->program_increment_creator->createProgramIncrements(
-            $copied_values,
+            $source_values,
             $root_planning_tracker_team,
             $replication_data->getUserIdentifier()
         );

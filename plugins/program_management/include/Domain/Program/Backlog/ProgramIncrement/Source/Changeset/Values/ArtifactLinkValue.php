@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
 /**
@@ -40,9 +39,9 @@ final class ArtifactLinkValue
         $this->source_artifact_id = $source_artifact_id;
     }
 
-    public static function fromReplicationData(ReplicationData $replication): self
+    public static function fromSourceTimeboxValues(SourceTimeboxChangesetValues $values): self
     {
-        return new self($replication->getArtifact()->getId());
+        return new self($values->getSourceArtifactId());
     }
 
     /**
