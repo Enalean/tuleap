@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveStatusField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveStatusFieldStub implements RetrieveStatusField
 {
@@ -54,7 +54,7 @@ final class RetrieveStatusFieldStub implements RetrieveStatusField
         );
     }
 
-    public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference
+    public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference
     {
         return $this->status;
     }

@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 interface RetrieveStartDateField
 {
     /**
      * @throws MissingTimeFrameFieldException
      */
-    public function getStartDateField(ProgramIncrementTrackerIdentifier $program_increment): StartDateFieldReference;
+    public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference;
 }

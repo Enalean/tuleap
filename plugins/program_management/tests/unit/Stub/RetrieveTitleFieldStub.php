@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTitleField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveTitleFieldStub implements RetrieveTitleField
 {
@@ -50,7 +50,7 @@ final class RetrieveTitleFieldStub implements RetrieveTitleField
         )));
     }
 
-    public function getTitleField(ProgramIncrementTrackerIdentifier $program_increment): TitleFieldReference
+    public function getTitleField(TrackerIdentifier $tracker_identifier): TitleFieldReference
     {
         return $this->title;
     }

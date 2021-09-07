@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
@@ -35,7 +36,7 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
     private const END_PERIOD_ID    = 126;
     private const ARTIFACT_LINK_ID = 128;
     private GatherSynchronizedFieldsStub $gatherer;
-    private ProgramIncrementTrackerIdentifier $program_increment_tracker;
+    private TrackerIdentifier $program_increment_tracker;
 
     protected function setUp(): void
     {

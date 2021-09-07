@@ -57,7 +57,7 @@ final class ArtifactUpdatedHandler
     {
         $program_increment_changed = new ProgramIncrementChanged(
             $program_increment_update->program_increment->getId(),
-            $program_increment_update->tracker->id,
+            $program_increment_update->tracker->getId(),
             $program_increment_update->user
         );
         $this->user_stories_planner->plan($program_increment_changed);

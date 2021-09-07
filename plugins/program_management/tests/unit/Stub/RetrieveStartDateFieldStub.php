@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveStartDateField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveStartDateFieldStub implements RetrieveStartDateField
 {
@@ -54,7 +54,7 @@ final class RetrieveStartDateFieldStub implements RetrieveStartDateField
         );
     }
 
-    public function getStartDateField(ProgramIncrementTrackerIdentifier $program_increment): StartDateFieldReference
+    public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference
     {
         return $this->start_date;
     }
