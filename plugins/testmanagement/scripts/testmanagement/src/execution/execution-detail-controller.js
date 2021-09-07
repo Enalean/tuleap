@@ -20,9 +20,7 @@
 import { has, remove } from "lodash";
 
 import "./execution-link-issue.tpl.html";
-import "./execution-details-modal.tpl.html";
 import ExecutionLinkIssueCtrl from "./execution-link-issue-controller.js";
-import ExecutionDetailsModalCtrl from "./execution-details-modal-controller.js";
 import { theTestHasJustBeenUpdated } from "./execution-detail-just-updated-state.js";
 import {
     PASSED_STATUS,
@@ -79,7 +77,8 @@ function ExecutionDetailCtrl(
     $scope.canCreateIssue = issue_config.permissions.create;
     $scope.canLinkIssue = issue_config.permissions.link;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
-    $scope.showExecutionDetailsModal = showExecutionDetailsModal;
+    $scope.toggleCommentArea = toggleCommentArea;
+    $scope.isCommentAreaExpanded = false;
     $scope.showEditArtifactModal = showEditArtifactModal;
     $scope.closeLinkedIssueAlert = closeLinkedIssueAlert;
     $scope.linkedIssueId = null;
@@ -252,17 +251,8 @@ function ExecutionDetailCtrl(
         ArtifactLinksGraphService.showGraphModal(execution);
     }
 
-    function showExecutionDetailsModal() {
-        TlpModalService.open({
-            templateUrl: "execution-details-modal.tpl.html",
-            controller: ExecutionDetailsModalCtrl,
-            controllerAs: "modal",
-            resolve: {
-                modal_model: {
-                    test_execution: $scope.execution,
-                },
-            },
-        });
+    function toggleCommentArea() {
+        $scope.isCommentAreaExpanded = !$scope.isCommentAreaExpanded;
     }
 
     function showEditArtifactModal($event, definition) {

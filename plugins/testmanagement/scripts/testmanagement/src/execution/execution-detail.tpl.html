@@ -15,7 +15,16 @@
     </button>
 </div>
 
-<section id="test" class="tlp-pane current-test" ng-class="execution.status" data-test="current-test">
+<section id="test"
+    class="tlp-pane current-test"
+    ng-class="{
+        'passed': execution.status === 'passed',
+        'failed': execution.status === 'failed',
+        'blocked': execution.status === 'blocked',
+        'notrun': execution.status === 'notrun',
+        'comment-expanded': isCommentAreaExpanded }"
+    data-test="current-test"
+>
     <div class="tlp-pane-container"
          role="tabpanel"
          id="{{ execution.definition.id }}-tabpanel"
@@ -166,76 +175,75 @@
         ></execution-with-steps>
 
         <section
-            class="tlp-pane-section current-test-footer-section"
+            class="tlp-pane-section current-test-footer-section current-test-footer-section-comment"
             ng-class="{'current-test-footer-section-readonly-comment-container': ! displayTestCommentEditor }"
-            ng-if="shouldCommentSectionBeDisplayed() && execution.is_automated === false"
+            ng-if="shouldCommentSectionBeDisplayed() && execution.is_automated === false && ! execution.userCanReloadTestBecauseDefinitionIsUpdated"
             data-test="comment-footer-section"
         >
-            <div class="tlp-form-element" ng-show="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
-                <div class="tlp-alert-warning current-test-message-warning"
-                        ng-if="onlyStatusHasBeenChanged"
-                        data-test="warning-status-changed"
-                >
-                    <span translate>Only the test status has changed, not the comment. Maybe you should have a look at it.</span>
-                    <div class="current-test-message-warning-actions">
-                        <button
-                            type="button"
-                            class="tlp-button-warning tlp-button-small"
-                            ng-click="userIsAcceptingThatOnlyStatusHasBeenChanged()"
-                        >
-                            <i class="fas fa-check tlp-button-icon" aria-hidden="true"></i>
-                            <span translate>Ok, got it</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="tlp-alert-warning current-test-message-warning"
-                        ng-if="displayTestCommentWarningOveriding">
-                    {{ getWarningTestCommentHasBeenUpdatedMessage(execution) }}
-                    <div class="current-test-message-warning-actions">
-                        <button type="button"
-                                class="tlp-button-warning tlp-button-small"
-                                ng-click="onLoadNewComment(execution)">
-                            <span translate>Load the new comment</span>
-                        </button>
-                        <button type="button"
-                                class="tlp-button-warning tlp-button-small"
-                                ng-click="onContinueToEditComment()">
-                            <span translate>Continue to edit your comment</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="current-comment-header-section">
-                    <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
+            <div class="tlp-alert-warning current-test-message-warning"
+                    ng-if="onlyStatusHasBeenChanged"
+                    data-test="warning-status-changed"
+            >
+                <span translate>Only the test status has changed, not the comment. Maybe you should have a look at it.</span>
+                <div class="current-test-message-warning-actions">
                     <button
                         type="button"
-                        ng-if="execution.previous_result.result"
-                        class="current-comment-header-modal-trigger tlp-button-secondary tlp-button-outline"
-                        data-test="expand-details-button"
-                        ng-click="showExecutionDetailsModal()"
-                        title="{{ 'View details' | translate }}"
+                        class="tlp-button-warning tlp-button-small"
+                        ng-click="userIsAcceptingThatOnlyStatusHasBeenChanged()"
                     >
-                        <i
-                            class="fas fa-expand-alt tlp-button-icon"
-                            aria-hidden="true"
-                        ></i>
+                        <i class="fas fa-check tlp-button-icon" aria-hidden="true"></i>
+                        <span translate>Ok, got it</span>
                     </button>
                 </div>
-                <div class="current-test-results-container">
-                    <div
-                        ng-show="displayTestCommentEditor && campaign.is_open"
-                        class="current-test-comment"
-                        id="execution_{{execution.id}}"
-                        data-test="current-test-comment"
-                        data-shortcut-current-test-comment
-                    >
-                    </div>
-                    <div
-                        ng-if="! displayTestCommentEditor"
-                        class="current-test-comment-displayer"
-                        data-test="current-test-comment-preview"
-                        ng-bind-html="execution.previous_result.result"
-                    >
-                    </div>
+            </div>
+            <div class="tlp-alert-warning current-test-message-warning"
+                    ng-if="displayTestCommentWarningOveriding">
+                {{ getWarningTestCommentHasBeenUpdatedMessage(execution) }}
+                <div class="current-test-message-warning-actions">
+                    <button type="button"
+                            class="tlp-button-warning tlp-button-small"
+                            ng-click="onLoadNewComment(execution)">
+                        <span translate>Load the new comment</span>
+                    </button>
+                    <button type="button"
+                            class="tlp-button-warning tlp-button-small"
+                            ng-click="onContinueToEditComment()">
+                        <span translate>Continue to edit your comment</span>
+                    </button>
+                </div>
+            </div>
+            <div class="current-comment-header-section">
+                <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
+                <button
+                    type="button"
+                    ng-if="execution.previous_result.result"
+                    class="current-comment-header-toggler tlp-button-secondary tlp-button-outline"
+                    data-test="expand-details-button"
+                    ng-click="toggleCommentArea()"
+                    title="{{ 'View details' | translate }}"
+                >
+                    <i
+                        class="fas tlp-button-icon"
+                        ng-class="{'fa-compress-alt': isCommentAreaExpanded, 'fa-expand-alt': !isCommentAreaExpanded}"
+                        aria-hidden="true"
+                    ></i>
+                </button>
+            </div>
+            <div class="current-test-results-container">
+                <div
+                    ng-show="displayTestCommentEditor && campaign.is_open"
+                    class="current-test-comment"
+                    id="execution_{{execution.id}}"
+                    data-test="current-test-comment"
+                    data-shortcut-current-test-comment
+                >
+                </div>
+                <div
+                    ng-if="! displayTestCommentEditor"
+                    class="current-test-comment-displayer"
+                    data-test="current-test-comment-preview"
+                    ng-bind-html="execution.previous_result.result"
+                >
                 </div>
             </div>
         </section>

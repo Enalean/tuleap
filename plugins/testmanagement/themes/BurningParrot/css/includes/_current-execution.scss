@@ -70,6 +70,30 @@
     > .tlp-pane-container {
         min-height: 0;
     }
+
+    &.comment-expanded {
+        .current-test-content {
+            flex: 0;
+            padding: 0;
+        }
+
+        .current-test-footer-section-comment {
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        .current-test-comment {
+            max-height: none;
+        }
+
+        .current-test-comment-displayer {
+            max-height: none;
+
+            img {
+                max-height: none;
+            }
+        }
+    }
 }
 
 .linked-issue-alert {
@@ -230,6 +254,11 @@
     background: var(--tlp-fade-background-color);
 }
 
+.current-test-footer-section-comment {
+    display: flex;
+    flex-direction: column;
+}
+
 .current-test-warning-status-changed {
     margin: 0 var(--tlp-small-spacing) 0 0;
 }
@@ -255,6 +284,7 @@
 
 .current-comment-header-section {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: space-between;
     margin: 0 0 var(--tlp-small-spacing);
@@ -263,7 +293,7 @@
         margin: 0;
     }
 
-    > .current-comment-header-modal-trigger {
+    > .current-comment-header-toggler {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -306,14 +336,14 @@
 
 .current-test-results-container {
     display: flex;
-    flex: 0 0 auto;
-    align-items: center;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .current-test-comment {
     max-height: calc(14 * 1.125rem);
     padding: var(--tlp-small-spacing) 12px;
-    overflow: auto;
+    overflow-y: auto;
     transition: border-color ease-out 150ms;
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: var(--tlp-medium-radius);
@@ -336,7 +366,8 @@
 .current-test-comment-displayer {
     max-height: calc(8 * 1.125rem);
     margin: 0 0 var(--tlp-medium-spacing);
-    overflow: auto;
+    padding: 0 var(--tlp-medium-spacing) 0 0;
+    overflow-y: auto;
     border: 0;
 
     img {
