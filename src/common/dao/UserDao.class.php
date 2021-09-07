@@ -176,7 +176,6 @@ class UserDao extends DataAccessObject
      * create a row in the table user
      * @param $user_name
      * @param $email
-     * @param $realname
      * @param $register_purpose
      * @param $status
      * @param $shell
@@ -197,7 +196,7 @@ class UserDao extends DataAccessObject
      * @param $last_pwd_update
      * @return false|int id(auto_increment) if there is no error
      */
-    public function create($user_name, $email, ?ConcealedString $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update)
+    public function create($user_name, $email, ?ConcealedString $user_pw, ?string $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update)
     {
         $columns = [];
         $values  = [];
@@ -222,10 +221,8 @@ class UserDao extends DataAccessObject
                 $values[]  = self::NOT_VALID_UNIX_PASSWORD_HASH;
             }
         }
-        if ($realname !== null) {
-            $columns[] = 'realname';
-            $values[]  = $realname;
-        }
+        $columns[] = 'realname';
+        $values[]  = $realname ?? '';
         if ($register_purpose !== null) {
             $columns[] = 'register_purpose';
             $values[]  = $register_purpose;

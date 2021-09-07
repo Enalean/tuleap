@@ -90,11 +90,11 @@ CREATE TABLE IF NOT EXISTS plugin_git_housekeeping(
 );
 
 -- Enable service for project 100
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
        VALUES      ( 100, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'plugin_git', '/plugins/git/?group_id=$group_id', 1, 0, 'system', 230 );
 
 -- Create service for all other projects (but disabled)
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
   SELECT DISTINCT group_id, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'plugin_git', CONCAT('/plugins/git/?group_id=', group_id), 1, 0, 'system', 230
         FROM service
         WHERE group_id NOT IN (SELECT group_id
@@ -106,13 +106,13 @@ INSERT INTO reference (id, keyword, description, link, scope, service_short_name
 VALUES (30, 'git', 'plugin_git:reference_commit_desc_key', '/plugins/git/index.php/$group_id/view/$1/?a=commit&h=$2', 'S', 'plugin_git', 'git_commit');
 
 INSERT INTO reference_group (reference_id, group_id, is_active)
-SELECT 30, group_id, 1 FROM groups WHERE group_id;
+SELECT 30, group_id, 1 FROM `groups` WHERE group_id;
 
 INSERT INTO reference (id, keyword, description, link, scope, service_short_name, nature)
 VALUES (33, 'git_tag', 'plugin_git:reference_tag_desc_key', '/plugins/git/index.php/$group_id/view/$1/?a=tag&h=$2', 'S', 'plugin_git', 'git_tag');
 
 INSERT INTO reference_group (reference_id, group_id, is_active)
-SELECT 33, group_id, 1 FROM groups WHERE group_id;
+SELECT 33, group_id, 1 FROM `groups` WHERE group_id;
 
 INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
 VALUES ('PLUGIN_GIT_READ', 2, 1),
