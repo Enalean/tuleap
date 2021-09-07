@@ -64,11 +64,11 @@ final class SourceTimeboxChangesetValues
         }
         $fields            = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $replication->getTracker());
         $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
-        $title_value       = TitleValue::fromSynchronizedFields($values_gatherer, $fields);
-        $description_value = DescriptionValue::fromSynchronizedFields($values_gatherer, $fields);
-        $status_value      = StatusValue::fromSynchronizedFields($values_gatherer, $fields);
-        $start_date_value  = StartDateValue::fromSynchronizedFields($values_gatherer, $fields);
-        $end_period_value  = EndPeriodValue::fromSynchronizedFields($values_gatherer, $fields);
+        $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
+        $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);
+        $status_value      = StatusValue::fromStatusReference($values_gatherer, $fields->status);
+        $start_date_value  = StartDateValue::fromStartDateReference($values_gatherer, $fields->start_date);
+        $end_period_value  = EndPeriodValue::fromEndPeriodReference($values_gatherer, $fields->end_period);
 
         return new self(
             $replication->getArtifact()->getId(),

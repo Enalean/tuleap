@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveDescriptionField;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
@@ -33,25 +32,9 @@ final class RetrieveDescriptionFieldStub implements RetrieveDescriptionField
     {
     }
 
-    public static function withField(int $field_id, string $field_label): self
+    public static function withField(DescriptionFieldReference $field): self
     {
-        return new self(
-            DescriptionFieldReferenceProxy::fromTrackerField(
-                new \Tracker_FormElement_Field_Text(
-                    $field_id,
-                    1,
-                    null,
-                    'irrelevant',
-                    $field_label,
-                    'Irrelevant',
-                    true,
-                    'P',
-                    true,
-                    '',
-                    1
-                )
-            )
-        );
+        return new self($field);
     }
 
     public function getDescriptionField(TrackerIdentifier $tracker_identifier): DescriptionFieldReference

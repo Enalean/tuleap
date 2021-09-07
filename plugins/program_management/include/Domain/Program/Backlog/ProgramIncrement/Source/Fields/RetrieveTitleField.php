@@ -30,5 +30,5 @@ interface RetrieveTitleField
      * @throws FieldRetrievalException
      * @throws TitleFieldHasIncorrectTypeException
      */
-    public function getTitleField(TrackerIdentifier $program_increment): TitleFieldReference;
+    public function getTitleField(TrackerIdentifier $tracker_identifier): TitleFieldReference;
 }

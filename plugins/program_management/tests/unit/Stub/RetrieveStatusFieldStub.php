@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveStatusField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
@@ -33,25 +32,9 @@ final class RetrieveStatusFieldStub implements RetrieveStatusField
     {
     }
 
-    public static function withField(int $field_id, string $field_label): self
+    public static function withField(StatusFieldReference $field): self
     {
-        return new self(
-            StatusFieldReferenceProxy::fromTrackerField(
-                new \Tracker_FormElement_Field_Selectbox(
-                    $field_id,
-                    1,
-                    null,
-                    'irrelevant',
-                    $field_label,
-                    'Irrelevant',
-                    true,
-                    'P',
-                    true,
-                    '',
-                    1
-                )
-            )
-        );
+        return new self($field);
     }
 
     public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference

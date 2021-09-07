@@ -22,21 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\DescriptionFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class DescriptionValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const DESCRIPTION_VALUE  = 'unrosed adhamant';
     private const DESCRIPTION_FORMAT = 'text';
 
-    public function testItBuildsFromSynchronizedFields(): void
+    public function testItBuildsFromDescriptionReference(): void
     {
-        $value = DescriptionValue::fromSynchronizedFields(
+        $value = DescriptionValue::fromDescriptionReference(
             RetrieveDescriptionValueStub::withValue(self::DESCRIPTION_VALUE, self::DESCRIPTION_FORMAT),
-            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
+            DescriptionFieldReferenceStub::withDefaults()
         );
         self::assertEquals(
             ['content' => self::DESCRIPTION_VALUE, 'format' => self::DESCRIPTION_FORMAT],

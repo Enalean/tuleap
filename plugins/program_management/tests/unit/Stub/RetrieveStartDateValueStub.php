@@ -39,7 +39,7 @@ final class RetrieveStartDateValueStub implements RetrieveStartDateValue
         return new self($value);
     }
 
-    public function getStartDateValue(StartDateFieldReference $fields): string
+    public function getStartDateValue(StartDateFieldReference $start_date): string
     {
         return $this->value;
     }

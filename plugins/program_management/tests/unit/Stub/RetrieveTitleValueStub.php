@@ -42,7 +42,7 @@ final class RetrieveTitleValueStub implements RetrieveTitleValue
         return new self('', true);
     }
 
-    public function getTitleValue(TitleFieldReference $fields): string
+    public function getTitleValue(TitleFieldReference $title): string
     {
         if ($this->has_error) {
             throw new ChangesetValueNotFoundException(1, 404, 'title');

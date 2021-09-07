@@ -22,18 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \PHPUnit\Framework\MockObject\Stub|\Tracker_Artifact_Changeset $changeset;
-    private \PHPUnit\Framework\MockObject\Stub|\Tracker_FormElementFactory $form_element_factory;
     private SynchronizedFieldReferences $fields;
+    private Stub|\Tracker_Artifact_Changeset $changeset;
+    private Stub|\Tracker_FormElementFactory $form_element_factory;
     private \Tracker_FormElement_Field_String $title_field;
     private \Tracker_FormElement_Field_Text $description_field;
     private \Tracker_FormElement_Field_Selectbox $status_field;
@@ -43,19 +45,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->title_field       = new \Tracker_FormElement_Field_String(1376, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2);
-        $this->description_field = new \Tracker_FormElement_Field_Text(
-            1412,
-            89,
-            1000,
-            'description',
-            'Description',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            3
-        );
+        $this->description_field = new \Tracker_FormElement_Field_Text(1412, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3);
         $this->status_field      = new \Tracker_FormElement_Field_Selectbox(1499, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4);
         $this->start_date_field  = new \Tracker_FormElement_Field_Date(1784, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5);
         $this->end_period_field  = new \Tracker_FormElement_Field_Date(1368, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6);
@@ -74,27 +64,46 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new FieldValuesGatherer($this->changeset, $this->form_element_factory);
     }
 
-    public function testItThrowsWhenChangesetValuesAreNotFound(): void
+    public function dataProviderMethodUnderTest(): array
     {
+        return [
+            'when title value is not found'       => ['getTitleValue', 'title'],
+            'when description value is not found' => ['getDescriptionValue', 'description'],
+            'when start date value is not found'  => ['getStartDateValue', 'start_date'],
+            'when end period value is not found'  => ['getEndPeriodValue', 'end_period'],
+            'when status value is not found'      => ['getStatusValues', 'status']
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderMethodUnderTest
+     */
+    public function testItThrowsWhenFieldMatchingReferenceIsNotFound(
+        string $method_under_test,
+        string $property_to_call
+    ): void {
+        $this->form_element_factory->method('getFieldById')->willReturn(null);
+
+        $this->expectException(FieldNotFoundException::class);
+        call_user_func([$this->getGatherer(), $method_under_test], $this->fields->{$property_to_call});
+    }
+
+    /**
+     * @dataProvider dataProviderMethodUnderTest
+     */
+    public function testItThrowsWhenChangesetValuesAreNotFound(
+        string $method_under_test,
+        string $property_to_call
+    ): void {
         $this->changeset->method('getValue')->willReturn(null);
         $this->changeset->method('getId')->willReturn(1);
 
-        $this->form_element_factory->method('getFieldById')->willReturn($this->createStub(\Tracker_FormElement_Field::class));
+        $this->form_element_factory->method('getFieldById')->willReturn(
+            $this->createStub(\Tracker_FormElement_Field::class)
+        );
 
         $this->expectException(ChangesetValueNotFoundException::class);
-        $this->getGatherer()->getTitleValue($this->fields->title);
-
-        $this->expectException(ChangesetValueNotFoundException::class);
-        $this->getGatherer()->getDescriptionValue($this->fields->description);
-
-        $this->expectException(ChangesetValueNotFoundException::class);
-        $this->getGatherer()->getStartDateValue($this->fields->start_date);
-
-        $this->expectException(ChangesetValueNotFoundException::class);
-        $this->getGatherer()->getEndPeriodValue($this->fields->end_period);
-
-        $this->expectException(ChangesetValueNotFoundException::class);
-        $this->getGatherer()->getStatusValues($this->fields->status);
+        call_user_func([$this->getGatherer(), $method_under_test], $this->fields->{$property_to_call});
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void

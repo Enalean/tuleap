@@ -43,7 +43,7 @@ final class RetrieveStatusValuesStub implements RetrieveStatusValues
         return new self(...$labels);
     }
 
-    public function getStatusValues(StatusFieldReference $fields): array
+    public function getStatusValues(StatusFieldReference $status): array
     {
         return array_map(
             static fn(string $label): BindValueLabel => BindValueLabelStub::withLabel($label),

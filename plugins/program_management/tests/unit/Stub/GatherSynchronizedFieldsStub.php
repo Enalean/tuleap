@@ -57,12 +57,12 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         int $artifact_link_field_id
     ): self {
         return new self(
-            RetrieveTitleFieldStub::withField($title_field_id, 'papyritious'),
-            RetrieveDescriptionFieldStub::withField($description_field_id, 'covellite'),
-            RetrieveStatusFieldStub::withField($status_field_id, 'unreflected'),
-            RetrieveStartDateFieldStub::withField($start_date_field_id, 'undisposedness'),
-            RetrieveEndPeriodFieldStub::withField($end_period_field_id, 'harebottle'),
-            RetrieveArtifactLinkFieldStub::withField($artifact_link_field_id, 'forethoughtless')
+            RetrieveTitleFieldStub::withField(TitleFieldReferenceStub::withId($title_field_id)),
+            RetrieveDescriptionFieldStub::withField(DescriptionFieldReferenceStub::withId($description_field_id)),
+            RetrieveStatusFieldStub::withField(StatusFieldReferenceStub::withId($status_field_id)),
+            RetrieveStartDateFieldStub::withField(StartDateFieldReferenceStub::withId($start_date_field_id)),
+            RetrieveEndPeriodFieldStub::withField(EndPeriodFieldReferenceStub::withId($end_period_field_id)),
+            RetrieveArtifactLinkFieldStub::withField(ArtifactLinkFieldReferenceStub::withId($artifact_link_field_id))
         );
     }
 
@@ -70,11 +70,11 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     {
         return new self(
             RetrieveTitleFieldStub::withError(),
-            RetrieveDescriptionFieldStub::withField(921, 'covellite'),
-            RetrieveStatusFieldStub::withField(381, 'unreflected'),
-            RetrieveStartDateFieldStub::withField(163, 'undisposedness'),
-            RetrieveEndPeriodFieldStub::withField(631, 'harebottle'),
-            RetrieveArtifactLinkFieldStub::withField(102, 'forethoughtless')
+            RetrieveDescriptionFieldStub::withField(DescriptionFieldReferenceStub::withDefaults()),
+            RetrieveStatusFieldStub::withField(StatusFieldReferenceStub::withDefaults()),
+            RetrieveStartDateFieldStub::withField(StartDateFieldReferenceStub::withDefaults()),
+            RetrieveEndPeriodFieldStub::withField(EndPeriodFieldReferenceStub::withDefaults()),
+            RetrieveArtifactLinkFieldStub::withField(ArtifactLinkFieldReferenceStub::withDefaults())
         );
     }
 
