@@ -333,21 +333,21 @@
             <span translate>The campaign is closed.</span>
             <span translate>You cannot execute the tests anymore.</span>
         </section>
-        <div ng-if="execution.is_automated === true" class="current-test-automated-message">
-            <robot-svg-displayer test-status="execution.status"></robot-svg-displayer>
+        <div ng-if="execution.is_automated === true" class="empty-state-page current-test-automated-message">
+            <robot-svg-displayer class="empty-state-icon "test-status="execution.status"></robot-svg-displayer>
 
-            <span>{{ "This is an automated test." | translate }}</span>
+            <h1 class="empty-state-title">{{ "This is an automated test" | translate }}</h1>
 
-            <span ng-if="execution.status === 'notrun'">
+            <span ng-if="execution.status === 'notrun'" class="empty-state-text">
                 {{ "Please come back later to see the result." | translate }}
             </span>
-            <span ng-if="execution.status === 'passed'">
+            <span ng-if="execution.status === 'passed'" class="empty-state-text">
                 {{ "Its status is passed." | translate }}
             </span>
-            <span ng-if="execution.status === 'failed'">
+            <span ng-if="execution.status === 'failed'" class="empty-state-text">
                 {{ "Its status is failed." | translate }}
             </span>
-            <span ng-if="execution.status === 'blocked'">
+            <span ng-if="execution.status === 'blocked'" class="empty-state-text">
                 {{ "Its status is blocked." | translate }}
             </span>
         </div>

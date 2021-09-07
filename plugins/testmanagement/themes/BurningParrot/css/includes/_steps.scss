@@ -15,6 +15,7 @@ step {
     border-bottom: 1px solid var(--tlp-neutral-light-color);
 
     &.passed {
+        border-color: var(--tlp-success-color-transparent-85);
         background: var(--tlp-success-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
@@ -29,6 +30,7 @@ step {
     }
 
     &.failed {
+        border-color: var(--tlp-danger-color-transparent-85);
         background: var(--tlp-danger-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
@@ -43,6 +45,7 @@ step {
     }
 
     &.blocked {
+        border-color: var(--tlp-info-color-transparent-85);
         background: var(--tlp-info-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {

@@ -52,7 +52,7 @@
                         role="menuitem"
                         data-test="test-campaign-rename-campaign"
                     >
-                        <i class="fas fa-pencil-alt tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-pencil-alt tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                         {{ ::'Rename campaign' | translate }}
                     </button>
                     <button
@@ -62,7 +62,7 @@
                         role="menuitem"
                         ng-if="$ctrl.campaign_state.campaign.is_open"
                     >
-                        <i class="fas fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                         {{ ::'Configure automated tests' | translate }}
                     </button>
                     <form method="post" action="{{ $ctrl.getCloseFormURL() }}">
@@ -79,7 +79,7 @@
                             ng-if="$ctrl.campaign_state.campaign.is_open"
                             data-test="test-campaign-close-campaign"
                         >
-                            <i class="fas fa-times tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                            <i class="fas fa-fw fa-times tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                             {{ ::'Close campaign' | translate }}
                         </button>
                     </form>
@@ -97,7 +97,7 @@
                             ng-if="! $ctrl.campaign_state.campaign.is_open"
                             data-test="test-campaign-open-campaign"
                         >
-                            <i class="fas fa-check tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                            <i class="fas fa-fw fa-check tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                             {{ ::'Open campaign' | translate }}
                         </button>
                     </form>

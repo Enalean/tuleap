@@ -16,7 +16,8 @@
             }
         }
 
-        > .current-test-automated-message {
+        > .current-test-automated-message > .empty-state-title,
+        > .current-test-automated-message > .empty-state-text {
             color: var(--tlp-success-color);
         }
     }
@@ -30,7 +31,8 @@
             }
         }
 
-        > .current-test-automated-message {
+        > .current-test-automated-message > .empty-state-title,
+        > .current-test-automated-message > .empty-state-text {
             color: var(--tlp-danger-color);
         }
     }
@@ -44,7 +46,8 @@
             }
         }
 
-        > .current-test-automated-message {
+        > .current-test-automated-message > .empty-state-title,
+        > .current-test-automated-message > .empty-state-text {
             color: var(--tlp-info-color);
         }
     }
@@ -58,7 +61,8 @@
             }
         }
 
-        > .current-test-automated-message {
+        > .current-test-automated-message > .empty-state-title,
+        > .current-test-automated-message > .empty-state-text {
             color: var(--tlp-dimmed-color);
         }
     }
@@ -91,6 +95,10 @@
     align-items: flex-start;
     justify-content: space-between;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
+
+    &:only-child {
+        padding: var(--tlp-medium-spacing);
+    }
 
     + .current-test-latest-result {
         margin-top: 0;
@@ -412,19 +420,4 @@
     flex: 0 0 auto;
     gap: var(--tlp-small-spacing);
     margin: var(--tlp-small-spacing) 0 0;
-}
-
-.current-test-automated-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    margin: 75px 0 0;
-    opacity: 0.7;
-    font-size: 18px;
-    line-height: 28px;
-}
-
-.svg-robot {
-    margin: 0 0 var(--tlp-medium-spacing);
 }

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "1 test will be added"
@@ -380,9 +380,6 @@ msgstr "Cet artéfact est déjà lié à ce test."
 
 msgid "This is an automated test"
 msgstr "Ceci est un test automatisé"
-
-msgid "This is an automated test."
-msgstr "Ceci est un test automatisé."
 
 msgid "This test has no description. Please edit it."
 msgstr "Ce test n'a pas de description. Veuillez l'éditer."
