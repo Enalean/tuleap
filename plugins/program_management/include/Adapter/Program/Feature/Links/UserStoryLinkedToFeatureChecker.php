@@ -55,11 +55,10 @@ final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNo
         UserIdentifier $user_identifier,
         FeatureIdentifier $feature
     ): bool {
-        $user                 = $this->retrieve_user->getUserWithId($user_identifier);
         $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {
             try {
-                $planning = Planning::buildPlanning($this->planning_adapter, $user, $user_story['project_id']);
+                $planning = Planning::buildPlanning($this->planning_adapter, $this->retrieve_user, $user_identifier, $user_story['project_id']);
             } catch (TopPlanningNotFoundInProjectException $e) {
                 continue;
             }
