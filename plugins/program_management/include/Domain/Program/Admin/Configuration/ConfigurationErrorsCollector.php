@@ -108,19 +108,31 @@ final class ConfigurationErrorsCollector
         $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker_reference, $project_reference);
     }
 
-    public function addWorkflowTransitionRulesError(TrackerReference $tracker_reference): void
+    public function addWorkflowTransitionRulesError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
     {
-        $this->transition_rule_error[] = new WorkFlowErrorPresenter($tracker_reference);
+        $this->transition_rule_error[] = new WorkFlowErrorPresenter(
+            $tracker_reference,
+            $project_reference,
+            '/plugins/tracker/workflow/' . urlencode((string) $tracker_reference->id) . '/transitions'
+        );
     }
 
-    public function addWorkflowTransitionDateRulesError(TrackerReference $tracker_reference): void
+    public function addWorkflowTransitionDateRulesError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
     {
-        $this->transition_rule_date_error[] = new WorkFlowErrorPresenter($tracker_reference);
+        $this->transition_rule_date_error[] = new WorkFlowErrorPresenter(
+            $tracker_reference,
+            $project_reference,
+            '/plugins/tracker/?tracker=' . urlencode((string) $tracker_reference->id) . '&func=admin-workflow'
+        );
     }
 
-    public function addWorkflowDependencyError(TrackerReference $tracker_reference): void
+    public function addWorkflowDependencyError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
     {
-        $this->field_dependency_error[] = new WorkFlowErrorPresenter($tracker_reference);
+        $this->field_dependency_error[] = new WorkFlowErrorPresenter(
+            $tracker_reference,
+            $project_reference,
+            '/plugins/tracker/?tracker=' . urlencode((string) $tracker_reference->id) . '&func=admin-dependencies'
+        );
     }
 
     public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker): void
