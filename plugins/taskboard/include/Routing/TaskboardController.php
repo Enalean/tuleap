@@ -136,6 +136,8 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             $header_options['main_classes'][] = 'fluid-main';
         }
 
+        $header_options['body_class'][] = 'reduce-help-button';
+
         return $header_options;
     }
 }
