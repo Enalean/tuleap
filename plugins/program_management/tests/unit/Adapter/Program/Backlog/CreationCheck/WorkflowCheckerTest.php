@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
@@ -32,9 +31,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
@@ -245,10 +243,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildSynchronizedFieldsCollectionFromProgramAndTeam(): SynchronizedFieldFromProgramAndTeamTrackers
     {
-        $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
-            GatherSynchronizedFieldsStub::withFieldIds(1002, 1003, 1004, 1005, 1006, 1001),
-            TrackerIdentifierStub::buildWithDefault()
-        );
+        $synchronized_fields = SynchronizedFieldReferencesBuilder::build();
 
         return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_fields);
     }

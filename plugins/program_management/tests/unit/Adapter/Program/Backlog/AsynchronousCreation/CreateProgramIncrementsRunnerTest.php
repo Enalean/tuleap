@@ -35,7 +35,6 @@ use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Queue\PersistentQueue;
@@ -68,9 +67,8 @@ final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->createStub(PlanUserStoriesInMirroredProgramIncrements::class),
             SearchTeamsOfProgramStub::buildTeams(163, 120),
             new BuildProjectStub(),
-            RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
-            RetrieveTrackerStub::buildValidTrackerWithProjectId(155),
             GatherSynchronizedFieldsStub::withDefaults(),
+            RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
         );
         $this->task_builder->method('build')->willReturn($task);
 

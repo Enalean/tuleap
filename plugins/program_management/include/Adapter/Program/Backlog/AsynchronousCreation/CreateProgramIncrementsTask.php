@@ -43,7 +43,6 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -54,9 +53,8 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner;
     private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_builder;
-    private GatherSynchronizedFields $fields_builder;
+    private GatherSynchronizedFields $fields_gatherer;
     private RetrieveFieldValuesGatherer $values_retriever;
-    private RetrieveTracker $tracker_retriever;
 
     public function __construct(
         RetrievePlanningMilestoneTracker $root_milestone_retriever,
@@ -66,9 +64,8 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_builder,
+        GatherSynchronizedFields $fields_gatherer,
         RetrieveFieldValuesGatherer $values_retriever,
-        RetrieveTracker $tracker_retriever,
-        GatherSynchronizedFields $fields_builder
     ) {
         $this->root_milestone_retriever        = $root_milestone_retriever;
         $this->program_increment_creator       = $program_increment_creator;
@@ -77,9 +74,8 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $this->user_stories_planner            = $user_stories_planner;
         $this->teams_searcher                  = $teams_searcher;
         $this->project_builder                 = $project_builder;
-        $this->fields_builder                  = $fields_builder;
+        $this->fields_gatherer                 = $fields_gatherer;
         $this->values_retriever                = $values_retriever;
-        $this->tracker_retriever               = $tracker_retriever;
     }
 
     public function createProgramIncrements(ReplicationData $replication_data): void
@@ -101,9 +97,8 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     private function create(ReplicationData $replication_data): void
     {
         $source_values = SourceTimeboxChangesetValues::fromReplication(
-            $this->fields_builder,
+            $this->fields_gatherer,
             $this->values_retriever,
-            $this->tracker_retriever,
             $replication_data
         );
 

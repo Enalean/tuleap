@@ -28,16 +28,22 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private const ARTIFACT_LINK_ID = 1;
+    private const TITLE_ID         = 2;
+    private const DESCRIPTION_ID   = 3;
+    private const STATUS_ID        = 4;
+    private const START_DATE_ID    = 5;
+    private const END_PERIOD_ID    = 6;
     private TestLogger $logger;
     private UserIdentifier $user_identifier;
 
@@ -73,7 +79,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         );
 
         self::assertGreaterThan(1, $errors_collector->getNonSubmittableFields());
-        self::assertSame(1, $errors_collector->getNonSubmittableFields()[0]->field_id);
+        self::assertSame(self::ARTIFACT_LINK_ID, $errors_collector->getNonSubmittableFields()[0]->field_id);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
@@ -88,7 +94,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
             $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
         self::assertGreaterThan(1, $errors_collector->getNonUpdatableFields());
-        self::assertSame(1, $errors_collector->getNonUpdatableFields()[0]->field_id);
+        self::assertSame(self::ARTIFACT_LINK_ID, $errors_collector->getNonUpdatableFields()[0]->field_id);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
@@ -123,7 +129,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     public function testCanDetermineIfAFieldIsSynchronized(): void
     {
         $field = M::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn('1');
+        $field->shouldReceive('getId')->andReturn((string) self::ARTIFACT_LINK_ID);
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
@@ -142,14 +148,24 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
         $collection->add($synchronized_field_data);
-        $this->assertEquals([1, 2, 3, 4, 5, 6], $collection->getSynchronizedFieldIDs());
+        $this->assertEquals(
+            [self::ARTIFACT_LINK_ID, self::TITLE_ID, self::DESCRIPTION_ID, self::STATUS_ID, self::START_DATE_ID, self::END_PERIOD_ID],
+            $collection->getSynchronizedFieldIDs()
+        );
     }
 
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(): SynchronizedFieldFromProgramAndTeamTrackers
     {
         return new SynchronizedFieldFromProgramAndTeamTrackers(
             SynchronizedFieldReferences::fromTrackerIdentifier(
-                GatherSynchronizedFieldsStub::withFieldIds(2, 3, 4, 5, 6, 1),
+                GatherSynchronizedFieldsStub::withFieldIds(
+                    self::TITLE_ID,
+                    self::DESCRIPTION_ID,
+                    self::STATUS_ID,
+                    self::START_DATE_ID,
+                    self::END_PERIOD_ID,
+                    self::ARTIFACT_LINK_ID
+                ),
                 TrackerIdentifierStub::buildWithDefault()
             )
         );

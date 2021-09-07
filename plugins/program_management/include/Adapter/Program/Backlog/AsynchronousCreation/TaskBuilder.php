@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use BackendLogger;
-use ProjectManager;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
-use Tracker_ArtifactFactory;
-use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
@@ -41,7 +37,6 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -49,42 +44,41 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use UserManager;
 
 class TaskBuilder
 {
     public function build(): CreateProgramIncrementsTask
     {
-        $user_manager = UserManager::instance();
-        $program_dao  = new ProgramDao();
-
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-        $logger               = BackendLogger::getDefaultLogger("program_management_syslog");
-
-        $tracker_artifact_factory       = Tracker_ArtifactFactory::instance();
+        $user_manager                   = \UserManager::instance();
+        $program_dao                    = new ProgramDao();
+        $form_element_factory           = \Tracker_FormElementFactory::instance();
+        $logger                         = \BackendLogger::getDefaultLogger("program_management_syslog");
+        $artifact_factory               = \Tracker_ArtifactFactory::instance();
+        $tracker_factory                = \TrackerFactory::instance();
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
         $retrieve_user                  = new UserManagerAdapter($user_manager);
-        $user_stories_planner           = new UserStoriesInMirroredProgramIncrementsPlanner(
+
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
+        $user_stories_planner = new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             $artifacts_linked_to_parent_dao,
-            $tracker_artifact_factory,
+            $artifact_factory,
             new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
             new ContentDao(),
             $logger,
             $retrieve_user,
             $artifacts_linked_to_parent_dao
         );
-        $artifact_creator               = new ArtifactCreatorAdapter(
+
+        $artifact_creator = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
                 Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
                 Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
-                $logger,
+                $logger
             ),
-            \TrackerFactory::instance()
+            $tracker_factory
         );
-
-        $tracker_factory = \TrackerFactory::instance();
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_factory,
@@ -97,7 +91,7 @@ class TaskBuilder
                 $tracker_factory,
                 new LinksRetriever(
                     new ArtifactLinkFieldValueDao(),
-                    $tracker_artifact_factory
+                    $artifact_factory
                 )
             ),
             $form_element_factory
@@ -118,13 +112,12 @@ class TaskBuilder
             new PendingArtifactCreationDao(),
             $user_stories_planner,
             $program_dao,
-            new ProgramManagementProjectAdapter(ProjectManager::instance()),
+            new ProgramManagementProjectAdapter(\ProjectManager::instance()),
+            $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever(
-                $tracker_artifact_factory,
+                $artifact_factory,
                 $form_element_factory
             ),
-            new TrackerFactoryAdapter(\TrackerFactory::instance()),
-            $synchronized_fields_gatherer,
         );
     }
 }

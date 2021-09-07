@@ -20,15 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
-interface RetrieveTitleValue
+final class SynchronizedFieldReferencesBuilder
 {
-    /**
-     * @throws ChangesetValueNotFoundException
-     * @throws UnsupportedTitleFieldException
-     */
-    public function getTitleValue(TitleFieldReference $title): string;
+    public static function build(): SynchronizedFieldReferences
+    {
+        return SynchronizedFieldReferences::fromTrackerIdentifier(
+            GatherSynchronizedFieldsStub::withDefaults(),
+            TrackerIdentifierStub::buildWithDefault()
+        );
+    }
 }

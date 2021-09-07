@@ -26,13 +26,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -107,10 +105,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             self::SOURCE_PROGRAM_INCREMENT_ID
         );
         $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($source_values);
-        $target_fields       = SynchronizedFieldReferences::fromTrackerIdentifier(
-            GatherSynchronizedFieldsStub::withFieldIds(1002, 1003, 1004, 1005, 1006, 1001),
-            TrackerIdentifierStub::buildWithDefault()
-        );
+        $target_fields       = SynchronizedFieldReferencesBuilder::build();
 
         return MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
             MapStatusByValueStub::withValues(10001),

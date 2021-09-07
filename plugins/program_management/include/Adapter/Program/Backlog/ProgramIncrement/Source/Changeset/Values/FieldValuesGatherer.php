@@ -36,62 +36,64 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 
 final class FieldValuesGatherer implements GatherFieldValues
 {
-    public function __construct(private \Tracker_Artifact_Changeset $changeset, private \Tracker_FormElementFactory $form_element_factory)
-    {
+    public function __construct(
+        private \Tracker_Artifact_Changeset $changeset,
+        private \Tracker_FormElementFactory $form_element_factory
+    ) {
     }
 
-    public function getTitleValue(TitleFieldReference $title_field): string
+    public function getTitleValue(TitleFieldReference $title): string
     {
-        $full_field = $this->form_element_factory->getFieldById($title_field->getId());
+        $full_field = $this->form_element_factory->getFieldById($title->getId());
         if (! $full_field) {
-            throw new FieldNotFoundException($title_field->getId());
+            throw new FieldNotFoundException($title->getId());
         }
 
         $title_value = $this->changeset->getValue($full_field);
         if (! $title_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
-                $title_field->getId(),
+                $title->getId(),
                 'title'
             );
         }
         if (! ($title_value instanceof \Tracker_Artifact_ChangesetValue_String)) {
-            throw new UnsupportedTitleFieldException($title_field->getId());
+            throw new UnsupportedTitleFieldException($title->getId());
         }
         return $title_value->getValue();
     }
 
-    public function getDescriptionValue(DescriptionFieldReference $description_field_reference): TextFieldValue
+    public function getDescriptionValue(DescriptionFieldReference $description): TextFieldValue
     {
-        $full_field = $this->form_element_factory->getFieldById($description_field_reference->getId());
+        $full_field = $this->form_element_factory->getFieldById($description->getId());
         if (! $full_field) {
-            throw new FieldNotFoundException($description_field_reference->getId());
+            throw new FieldNotFoundException($description->getId());
         }
 
         $description_value = $this->changeset->getValue($full_field);
         if (! $description_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
-                $description_field_reference->getId(),
+                $description->getId(),
                 'description'
             );
         }
         assert($description_value instanceof \Tracker_Artifact_ChangesetValue_Text);
-        return new TextFieldValueProxy($description_value->getValue(), $description_value->getFormat());
+        return TextFieldValueProxy::fromChangesetValue($description_value);
     }
 
-    public function getStartDateValue(StartDateFieldReference $start_date_field_reference): string
+    public function getStartDateValue(StartDateFieldReference $start_date): string
     {
-        $full_field = $this->form_element_factory->getFieldById($start_date_field_reference->getId());
+        $full_field = $this->form_element_factory->getFieldById($start_date->getId());
         if (! $full_field) {
-            throw new FieldNotFoundException($start_date_field_reference->getId());
+            throw new FieldNotFoundException($start_date->getId());
         }
 
         $start_date_value = $this->changeset->getValue($full_field);
         if (! $start_date_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
-                $start_date_field_reference->getId(),
+                $start_date->getId(),
                 'timeframe start date'
             );
         }
@@ -99,36 +101,36 @@ final class FieldValuesGatherer implements GatherFieldValues
         return $start_date_value->getDate();
     }
 
-    public function getEndPeriodValue(EndPeriodFieldReference $end_period_field_reference): string
+    public function getEndPeriodValue(EndPeriodFieldReference $end_period): string
     {
-        $full_field = $this->form_element_factory->getFieldById($end_period_field_reference->getId());
+        $full_field = $this->form_element_factory->getFieldById($end_period->getId());
         if (! $full_field) {
-            throw new FieldNotFoundException($end_period_field_reference->getId());
+            throw new FieldNotFoundException($end_period->getId());
         }
 
         $end_period_value = $this->changeset->getValue($full_field);
         if (! $end_period_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
-                $end_period_field_reference->getId(),
-                'time frame end period'
+                $end_period->getId(),
+                'timeframe end period'
             );
         }
         return (string) $end_period_value->getValue();
     }
 
-    public function getStatusValues(StatusFieldReference $status_field_reference): array
+    public function getStatusValues(StatusFieldReference $status): array
     {
-        $full_field = $this->form_element_factory->getFieldById($status_field_reference->getId());
+        $full_field = $this->form_element_factory->getFieldById($status->getId());
         if (! $full_field) {
-            throw new FieldNotFoundException($status_field_reference->getId());
+            throw new FieldNotFoundException($status->getId());
         }
 
         $status_value = $this->changeset->getValue($full_field);
         if (! $status_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $this->changeset->getId(),
-                $status_field_reference->getId(),
+                $status->getId(),
                 'status'
             );
         }

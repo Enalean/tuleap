@@ -22,12 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 final class TextFieldValueProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItHoldsValueAndFormat(): void
+    public function testItBuildsFromChangesetValue(): void
     {
-        $value = new TextFieldValueProxy('osmosis connatural', 'text');
+        $artifact        = ArtifactTestBuilder::anArtifact(82)->build();
+        $changeset       = new \Tracker_Artifact_Changeset(6095, $artifact, 110, 1234567890, null);
+        $changeset_value = new \Tracker_Artifact_ChangesetValue_Text(
+            7094,
+            $changeset,
+            $this->getTextField(),
+            true,
+            'osmosis connatural',
+            'text'
+        );
+
+        $value = TextFieldValueProxy::fromChangesetValue($changeset_value);
         self::assertSame('osmosis connatural', $value->getValue());
         self::assertSame('text', $value->getFormat());
+    }
+
+    private function getTextField(): \Tracker_FormElement_Field_Text
+    {
+        $project = ProjectTestBuilder::aProject()->withId(115)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $field   = new \Tracker_FormElement_Field_Text(
+            168,
+            84,
+            null,
+            'irrelevant',
+            'Irrelevant',
+            'Irrelevant',
+            true,
+            'P',
+            true,
+            '',
+            1
+        );
+        $field->setTracker($tracker);
+        return $field;
     }
 }

@@ -29,5 +29,5 @@ interface RetrieveStartDateValue
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function getStartDateValue(StartDateFieldReference $start_date_field_reference): string;
+    public function getStartDateValue(StartDateFieldReference $start_date): string;
 }
