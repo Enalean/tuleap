@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
-
-interface RetrieveDescriptionField
+/**
+ * I am a reference to the Time Frame Semantic's start date field. I hold a field identifier and a label
+ * @psalm-immutable
+ */
+interface StartDateFieldReference
 {
-    /**
-     * @throws FieldRetrievalException
-     */
-    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference;
+    public function getId(): int;
+    public function getLabel(): string;
 }

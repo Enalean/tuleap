@@ -22,6 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField
+interface GatherSynchronizedFields extends RetrieveTitleField, RetrieveDescriptionField, RetrieveStatusField, RetrieveStartDateField
 {
 }
