@@ -159,7 +159,7 @@
                                        tabindex="{{ checkActiveClassOnExecution(execution) ? 0 : -1 }}"
                                        data-navigation-test-link
                                     >
-                                        <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
+                                        <div class="tlp-avatar-mini tlp-tooltip tlp-tooltip-top"
                                              data-tlp-tooltip="{{ presence.real_name }}"
                                              ng-if="execution.viewed_by"
                                              ng-repeat="user in execution.viewed_by">
@@ -168,14 +168,12 @@
                                                  onerror="this.src='/themes/common/images/avatar_default.png'"
                                                  alt="avatar">
                                         </div>
+                                        <span class="tests-list-test-id">#{{ execution.definition.id }}</span>
                                         <span class="tests-list-test-title"
                                               data-test="test-title"
                                               id="{{ execution.definition.id}}-tab"
                                         >
-                                            <span class="tests-list-test-id">
-                                                #{{ execution.definition.id }}
-                                            </span>
-                                            {{ execution.definition.summary}}
+                                              {{ execution.definition.summary}}
                                         </span>
                                         <i class="fa test-automated-icon"
                                            ng-class="{

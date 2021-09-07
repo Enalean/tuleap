@@ -178,41 +178,45 @@
 
 .tests-list-category {
     margin: 0;
-    padding: 5px 10px;
+    padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing);
     background: var(--tlp-background-color);
     color: var(--tlp-main-color);
-    font-size: 13px;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.3px;
+    line-height: 1.5rem;
     text-transform: uppercase;
 }
 
 .tests-list-test {
+    $border-width: 3px;
+
     display: flex;
     align-items: baseline;
-    padding: 7px 10px;
+    padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) - #{$border-width});
+    line-height: 1.5rem;
     cursor: pointer;
 
     &.passed {
-        border-left: 3px solid var(--tlp-success-color);
+        border-left: $border-width solid var(--tlp-success-color);
         background: var(--tlp-success-color-transparent-90);
         color: var(--tlp-success-color);
     }
 
     &.failed {
-        border-left: 3px solid var(--tlp-danger-color);
+        border-left: $border-width solid var(--tlp-danger-color);
         background: var(--tlp-danger-color-transparent-90);
         color: var(--tlp-danger-color);
     }
 
     &.blocked {
-        border-left: 3px solid var(--tlp-info-color);
+        border-left: $border-width solid var(--tlp-info-color);
         background: var(--tlp-info-color-transparent-90);
         color: var(--tlp-info-color);
     }
 
     &.notrun {
-        border-left: 3px solid transparent;
+        border-left: $border-width solid transparent;
         background: transparent;
         color: var(--tlp-dimmed-color);
     }
@@ -227,9 +231,9 @@
         }
     }
 
-    > .tlp-avatar-small {
+    > .tlp-avatar-mini {
         align-self: center;
-        margin: 0 5px 0 0;
+        margin: 0 var(--tlp-small-spacing) 0 0;
     }
 
     &.current-test-highlight {
@@ -238,12 +242,13 @@
 }
 
 .tests-list-test-id {
-    font-size: 11px;
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
 }
 
 .tests-list-test-title {
     flex: 1 1 auto;
-    margin: 0 5px;
+    margin: 0 var(--tlp-small-spacing);
 }
 
 @keyframes test-is-back-in-viewport {
