@@ -45,6 +45,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
@@ -293,7 +294,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_milestone_tracker = $this->createStub(\Tracker::class);
         $first_milestone_tracker->method('userCanSubmitArtifact')->willReturn($user_can_submit_artifact_in_team);
         $first_milestone_tracker->method('getId')->willReturn(1);
-
         return RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
     }
 
@@ -312,7 +312,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->required_field_checker,
             $this->workflow_checker,
             $this->retrieve_tracker_from_field,
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withGenericUser(),
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
     }
 

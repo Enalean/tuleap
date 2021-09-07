@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
@@ -99,7 +100,8 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trackers,
             $collection,
             $errors_collector,
-            $this->retrieve_tracker_from_field
+            $this->retrieve_tracker_from_field,
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
         self::assertTrue($no_other_required_fields);
         self::assertCount(0, $errors_collector->getRequiredFieldsErrors());
@@ -153,7 +155,8 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trackers,
             $collection,
             $errors_collector,
-            $this->retrieve_tracker_from_field
+            $this->retrieve_tracker_from_field,
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
         self::assertFalse($no_other_required_fields);
         self::assertCount(1, $errors_collector->getRequiredFieldsErrors());

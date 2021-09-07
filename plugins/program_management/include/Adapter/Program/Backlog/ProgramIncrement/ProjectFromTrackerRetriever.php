@@ -21,31 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-/**
- * @psalm-immutable
- */
-final class RequiredErrorPresenter
+final class ProjectFromTrackerRetriever implements RetrieveProjectFromTracker
 {
-    public string $field_admin_url;
-    public string $tracker_name;
-    public string $team_project_label;
+    public function __construct(private \TrackerFactory $tracker_factory)
+    {
+    }
 
-    public function __construct(
-        private int $field_id,
-        public string $field_label,
-        TrackerReference $tracker,
-        ProjectReference $project_reference
-    ) {
-        $this->field_admin_url    = '/plugins/tracker/?' .
-            http_build_query(
-                ['tracker' => $tracker->id, 'func' => 'admin-formElement-update', 'formElement' => $this->field_id]
-            );
-        $this->tracker_name       = $tracker->label;
-        $this->team_project_label = $project_reference->getProjectLabel();
+    public function fromTrackerReference(TrackerReference $tracker_reference): ProjectReference
+    {
+        $full_tracker = $this->tracker_factory->getTrackerById($tracker_reference->id);
+        if (! $full_tracker) {
+            throw new \RuntimeException("Tracker with id #" . $tracker_reference->id . " not found");
+        }
+
+        return ProjectReferenceProxy::buildFromProject($full_tracker->getProject());
     }
 }

@@ -2,12 +2,11 @@
     <li>
         {{# dgettext }}
             tuleap-program_management |
-            Field <a href='%s'>%s</a> (#%s) of tracker %s (#%s) is required but cannot be synchronized |
+            Field <a href='%s'>%s</a> of tracker %s of project %s is required but cannot be synchronized |
             {{ field_admin_url }} |
             {{ field_label }} |
-            {{ field_id }} |
             {{ tracker_name }} |
-            {{ tracker_id }}
+            {{ team_project_label }} |
         {{/ dgettext }}
     </li>
 {{/ required_field_errors }}

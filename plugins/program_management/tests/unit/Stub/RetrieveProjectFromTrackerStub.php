@@ -21,31 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 
-/**
- * @psalm-immutable
- */
-final class RequiredErrorPresenter
+final class RetrieveProjectFromTrackerStub implements RetrieveProjectFromTracker
 {
-    public string $field_admin_url;
-    public string $tracker_name;
-    public string $team_project_label;
+    private function __construct(private ProjectReference $project_reference)
+    {
+    }
 
-    public function __construct(
-        private int $field_id,
-        public string $field_label,
-        TrackerReference $tracker,
-        ProjectReference $project_reference
-    ) {
-        $this->field_admin_url    = '/plugins/tracker/?' .
-            http_build_query(
-                ['tracker' => $tracker->id, 'func' => 'admin-formElement-update', 'formElement' => $this->field_id]
-            );
-        $this->tracker_name       = $tracker->label;
-        $this->team_project_label = $project_reference->getProjectLabel();
+    public static function buildGeneric(): self
+    {
+        return new self(ProjectReferenceBuilder::buildGeneric());
+    }
+
+    public function fromTrackerReference(TrackerReference $tracker_reference): ProjectReference
+    {
+        return $this->project_reference;
     }
 }

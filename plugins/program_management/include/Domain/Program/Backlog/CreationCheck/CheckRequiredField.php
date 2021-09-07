@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -33,6 +34,7 @@ interface CheckRequiredField
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
         ConfigurationErrorsCollector $errors_collector,
-        RetrieveTrackerFromField $retrieve_tracker_from_field
+        RetrieveTrackerFromField $retrieve_tracker_from_field,
+        RetrieveProjectFromTracker $retrieve_project_from_tracker
     ): bool;
 }

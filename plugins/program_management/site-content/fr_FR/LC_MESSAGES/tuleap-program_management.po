@@ -126,10 +126,10 @@ msgid "Feature cannot be ranked with itself"
 msgstr "La fonctionnalité ne peut pas être réordonnée avec elle-même"
 
 msgid ""
-"Field <a href='%s'>%s</a> (#%s) of tracker %s (#%s) is required but cannot "
+"Field <a href='%s'>%s</a> of tracker %s of project %s is required but cannot "
 "be synchronized"
 msgstr ""
-"Le champ <a href='%s'>%s</a> (#%s) de l'outil de suivi %s (#%s) est requis "
+"Le champ <a href='%s'>%s</a> de l'outil de suivi %s du projet  %s est requis "
 "mais ne peut pas être synchronisé"
 
 msgid ""
