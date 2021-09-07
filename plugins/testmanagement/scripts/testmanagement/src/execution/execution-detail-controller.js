@@ -138,9 +138,14 @@ function ExecutionDetailCtrl(
     });
 
     function shouldCommentSectionBeDisplayed() {
+        if (!$scope.campaign || !$scope.execution) {
+            return false;
+        }
+
         if ($scope.campaign.is_open) {
             return true;
         }
+
         return $scope.execution.previous_result.result !== "";
     }
 
