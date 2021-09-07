@@ -36,7 +36,8 @@ final class SynchronizedFieldReferences
         public TitleFieldReference $title,
         public DescriptionFieldReference $description,
         public StatusFieldReference $status,
-        public StartDateFieldReference $start_date
+        public StartDateFieldReference $start_date,
+        public EndPeriodFieldReference $end_period
     ) {
     }
 
@@ -48,6 +49,7 @@ final class SynchronizedFieldReferences
         $description = $gatherer->getDescriptionField($program_increment);
         $status      = $gatherer->getStatusField($program_increment);
         $start_date  = $gatherer->getStartDateField($program_increment);
-        return new self($title, $description, $status, $start_date);
+        $end_period  = $gatherer->getEndPeriodField($program_increment);
+        return new self($title, $description, $status, $start_date, $end_period);
     }
 }
