@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
@@ -109,7 +108,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
             ProgramIdentifier::fromReplicationData($replication_data)
         );
 
-        $user_identifier            = UserProxy::buildFromPFUser($replication_data->getUser());
+        $user_identifier            = $replication_data->getUserIdentifier();
         $root_planning_tracker_team = TrackerCollection::buildRootPlanningMilestoneTrackers(
             $this->root_milestone_retriever,
             $team_projects,
@@ -119,7 +118,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $this->program_increment_creator->createProgramIncrements(
             $copied_values,
             $root_planning_tracker_team,
-            $replication_data->getUser()
+            $replication_data->getUserIdentifier()
         );
 
         $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(

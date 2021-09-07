@@ -101,7 +101,8 @@ class TaskBuilder
             $transaction_executor,
             $synchronized_fields_gatherer,
             new StatusValueMapper($form_element_factory),
-            $artifact_creator
+            $artifact_creator,
+            $retrieve_user
         );
 
         return new CreateProgramIncrementsTask(

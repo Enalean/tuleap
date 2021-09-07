@@ -44,7 +44,7 @@ final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
         $program_increment_id = $replication->getArtifact()->getId();
         $full_artifact        = $this->artifact_factory->getArtifactById($program_increment_id);
         if (! $full_artifact) {
-            throw new PendingArtifactNotFoundException($program_increment_id, (int) $replication->getUser()->getId());
+            throw new PendingArtifactNotFoundException($program_increment_id, $replication->getUserIdentifier()->getId());
         }
         $changeset_id   = $replication->getChangeset()->getId();
         $full_changeset = $full_artifact->getChangeset($changeset_id);

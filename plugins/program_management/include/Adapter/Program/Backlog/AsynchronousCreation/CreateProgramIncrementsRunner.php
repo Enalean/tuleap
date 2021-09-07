@@ -99,8 +99,8 @@ final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
             $queue->pushSinglePersistentMessage(
                 self::TOPIC,
                 [
-                    'artifact_id' => (int) $artifact_id,
-                    'user_id'     => (int) $replication_data->getUser()->getId(),
+                    'artifact_id' => $artifact_id,
+                    'user_id'     => $replication_data->getUserIdentifier()->getId(),
                 ]
             );
         } catch (Exception $exception) {

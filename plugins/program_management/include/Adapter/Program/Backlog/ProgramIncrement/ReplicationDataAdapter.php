@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetProxy;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
@@ -98,11 +99,12 @@ final class ReplicationDataAdapter implements BuildReplicationData
         \PFUser $user,
         \Tracker_Artifact_Changeset $source_changeset
     ): ReplicationData {
-        $artifact_data = new Artifact((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
-        $tracker_data  = new ProgramTracker($source_artifact->getTracker());
-        $changeset     = ChangesetProxy::fromChangeset($source_changeset);
-        $project_data  = ProgramManagementProjectAdapter::build($source_artifact->getTracker()->getProject());
+        $artifact_data   = new Artifact((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
+        $tracker_data    = new ProgramTracker($source_artifact->getTracker());
+        $changeset       = ChangesetProxy::fromChangeset($source_changeset);
+        $project_data    = ProgramManagementProjectAdapter::build($source_artifact->getTracker()->getProject());
+        $user_identifier = UserProxy::buildFromPFUser($user);
 
-        return new ReplicationData($tracker_data, $changeset, $user, $artifact_data, $project_data);
+        return new ReplicationData($tracker_data, $changeset, $artifact_data, $project_data, $user_identifier);
     }
 }
