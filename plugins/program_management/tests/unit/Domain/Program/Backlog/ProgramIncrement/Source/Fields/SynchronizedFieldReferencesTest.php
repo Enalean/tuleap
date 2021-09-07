@@ -28,27 +28,24 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TITLE_ID       = 615;
-    private const DESCRIPTION_ID = 843;
-    private const STATUS_ID      = 946;
-    private const START_DATE_ID  = 213;
-    private const END_PERIOD_ID  = 126;
+    private const TITLE_ID         = 615;
+    private const DESCRIPTION_ID   = 843;
+    private const STATUS_ID        = 946;
+    private const START_DATE_ID    = 213;
+    private const END_PERIOD_ID    = 126;
+    private const ARTIFACT_LINK_ID = 128;
     private GatherSynchronizedFieldsStub $gatherer;
     private ProgramIncrementTrackerIdentifier $program_increment_tracker;
 
     protected function setUp(): void
     {
-        $this->gatherer = GatherSynchronizedFieldsStub::withFields(
+        $this->gatherer = GatherSynchronizedFieldsStub::withFieldIds(
             self::TITLE_ID,
-            'tetraonid',
             self::DESCRIPTION_ID,
-            'syncryptic',
             self::STATUS_ID,
-            'desolating',
             self::START_DATE_ID,
-            'ungenuine',
             self::END_PERIOD_ID,
-            'Kadu'
+            self::ARTIFACT_LINK_ID
         );
 
         $this->program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
@@ -68,5 +65,6 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertSame(self::STATUS_ID, $fields->status->getId());
         self::assertSame(self::START_DATE_ID, $fields->start_date->getId());
         self::assertSame(self::END_PERIOD_ID, $fields->end_period->getId());
+        self::assertSame(self::ARTIFACT_LINK_ID, $fields->artifact_link->getId());
     }
 }

@@ -564,7 +564,8 @@ final class program_managementPlugin extends Plugin
                             new ArtifactLinkFieldValueDao(),
                             $artifact_factory
                         )
-                    )
+                    ),
+                    $form_element_factory
                 )
             ),
             new IterationCreationProcessor($logger),
@@ -640,7 +641,8 @@ final class program_managementPlugin extends Plugin
                                     new ArtifactLinkFieldValueDao(),
                                     $artifact_factory
                                 )
-                            )
+                            ),
+                            $form_element_factory
                         )
                     ),
                     new IterationCreationProcessor($logger),

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
@@ -37,28 +38,31 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         private RetrieveDescriptionFieldStub $description_stub,
         private RetrieveStatusFieldStub $status_stub,
         private RetrieveStartDateFieldStub $start_date_stub,
-        private RetrieveEndPeriodFieldStub $end_period_stub
+        private RetrieveEndPeriodFieldStub $end_period_stub,
+        private RetrieveArtifactLinkFieldStub $artifact_link_stub
     ) {
     }
 
-    public static function withFields(
+    public static function withDefaults(): self
+    {
+        return self::withFieldIds(370, 921, 381, 163, 631, 102);
+    }
+
+    public static function withFieldIds(
         int $title_field_id,
-        string $title_field_label,
         int $description_field_id,
-        string $description_field_label,
         int $status_field_id,
-        string $status_field_label,
         int $start_date_field_id,
-        string $start_date_field_label,
         int $end_period_field_id,
-        string $end_period_field_label
+        int $artifact_link_field_id
     ): self {
         return new self(
-            RetrieveTitleFieldStub::withField($title_field_id, $title_field_label),
-            RetrieveDescriptionFieldStub::withField($description_field_id, $description_field_label),
-            RetrieveStatusFieldStub::withField($status_field_id, $status_field_label),
-            RetrieveStartDateFieldStub::withField($start_date_field_id, $start_date_field_label),
-            RetrieveEndPeriodFieldStub::withField($end_period_field_id, $end_period_field_label)
+            RetrieveTitleFieldStub::withField($title_field_id, 'papyritious'),
+            RetrieveDescriptionFieldStub::withField($description_field_id, 'covellite'),
+            RetrieveStatusFieldStub::withField($status_field_id, 'unreflected'),
+            RetrieveStartDateFieldStub::withField($start_date_field_id, 'undisposedness'),
+            RetrieveEndPeriodFieldStub::withField($end_period_field_id, 'harebottle'),
+            RetrieveArtifactLinkFieldStub::withField($artifact_link_field_id, 'forethoughtless')
         );
     }
 
@@ -85,5 +89,11 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     public function getEndPeriodField(ProgramIncrementTrackerIdentifier $program_increment): EndPeriodFieldReference
     {
         return $this->end_period_stub->getEndPeriodField($program_increment);
+    }
+
+    public function getArtifactLinkField(
+        ProgramIncrementTrackerIdentifier $program_increment
+    ): ArtifactLinkFieldReference {
+        return $this->artifact_link_stub->getArtifactLinkField($program_increment);
     }
 }

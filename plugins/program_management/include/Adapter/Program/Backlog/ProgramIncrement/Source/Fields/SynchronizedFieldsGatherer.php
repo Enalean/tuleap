@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
@@ -41,7 +43,8 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         private \Tracker_Semantic_TitleFactory $title_factory,
         private \Tracker_Semantic_DescriptionFactory $description_factory,
         private \Tracker_Semantic_StatusFactory $status_factory,
-        private SemanticTimeframeBuilder $timeframe_builder
+        private SemanticTimeframeBuilder $timeframe_builder,
+        private \Tracker_FormElementFactory $form_element_factory
     ) {
     }
 
@@ -101,6 +104,17 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             return EndPeriodFieldReferenceProxy::fromTrackerField($end_date_field);
         }
         throw new MissingTimeFrameFieldException($program_increment->id, 'end date or duration');
+    }
+
+    public function getArtifactLinkField(
+        ProgramIncrementTrackerIdentifier $program_increment
+    ): ArtifactLinkFieldReference {
+        $full_tracker         = $this->getFullTracker($program_increment);
+        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($full_tracker);
+        if (count($artifact_link_fields) > 0) {
+            return ArtifactLinkFieldReferenceProxy::fromTrackerField(($artifact_link_fields[0]));
+        }
+        throw new NoArtifactLinkFieldException($program_increment->id);
     }
 
     private function getFullTracker(ProgramIncrementTrackerIdentifier $program_increment): \Tracker
