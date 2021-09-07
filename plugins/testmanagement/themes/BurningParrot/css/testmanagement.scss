@@ -29,16 +29,14 @@
 @use 'includes/administration';
 @use 'includes/project-header-background';
 
-/* stylelint-disable-next-line selector-no-qualifying-type */
+/* stylelint-disable selector-no-qualifying-type */
 body.testmanagement {
-    /* stylelint-disable-next-line selector-no-qualifying-type */
     #main-container {
         display: flex;
         flex: 1 1 auto;
         height: 100vh;
         min-height: 0;
 
-        /* stylelint-disable-next-line selector-no-qualifying-type */
         main[role="main"] {
             display: flex;
             flex: 1 1 auto;
