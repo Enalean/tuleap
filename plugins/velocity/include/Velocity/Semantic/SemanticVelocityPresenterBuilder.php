@@ -71,7 +71,7 @@ class SemanticVelocityPresenterBuilder
         return new SemanticVelocityPresenter(
             $semantic_done->isSemanticDefined(),
             $tracker,
-            $semantic_done->getSemanticStatus()->getField()->isMultiple(),
+            $semantic_done->getSemanticStatus()->getField()?->isMultiple(),
             $backlog_required_trackers_collection,
             $children_required_trackers_collection,
             $has_at_least_on_tracker_correctly_configured,
