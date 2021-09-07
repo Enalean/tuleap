@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
@@ -106,7 +107,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
     public function testItCollectProgramIncrementErrors(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(false);
-        $errors_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1));
+        $errors_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
 
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
         $this->iteration_checker->expects(self::never())->method('canCreateAnIteration');
@@ -122,7 +123,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
     public function testItCollectProgramIncrementAndIterationErrors(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1));
+        $errors_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
 
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
         $this->iteration_checker->expects(self::once())->method('canCreateAnIteration');

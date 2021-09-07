@@ -129,7 +129,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $this->tracker_factory->method('getTrackerById')
             ->with(758)
-            ->willReturn(TrackerTestBuilder::aTracker()->withId(758)->withName('tracker')->build());
+            ->willReturn($this->getTrackerWithIdWithGenericProject(758, 'tracker'));
         $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
@@ -157,7 +157,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $this->tracker_factory->method('getTrackerById')
             ->with(758)
-            ->willReturn(TrackerTestBuilder::aTracker()->withId(758)->withName('tracker')->build());
+            ->willReturn($this->getTrackerWithIdWithGenericProject(758, 'tracker'));
         $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
@@ -186,7 +186,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $this->tracker_factory->method('getTrackerById')
             ->with(758)
-            ->willReturn(TrackerTestBuilder::aTracker()->withId(758)->withName('tracker')->build());
+            ->willReturn($this->getTrackerWithIdWithGenericProject(758, 'tracker'));
         $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
@@ -217,9 +217,9 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $this->tracker_factory->method('getTrackerById')
             ->willReturnOnConsecutiveCalls(
-                TrackerTestBuilder::aTracker()->withId(758)->withName('tracker A')->build(),
-                TrackerTestBuilder::aTracker()->withId(123)->withName('tracker B')->build(),
-                TrackerTestBuilder::aTracker()->withId(758)->withName('tracker A')->build(),
+                $this->getTrackerWithIdWithGenericProject(758, 'tracker A'),
+                $this->getTrackerWithIdWithGenericProject(123, 'tracker B'),
+                $this->getTrackerWithIdWithGenericProject(758, 'tracker A')
             );
         $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
 
@@ -264,5 +264,11 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_fields);
+    }
+
+    protected function getTrackerWithIdWithGenericProject(int $tracker_id, string $tracker_name): \Tracker
+    {
+        $project = new \Project(['group_id' => 101, 'group_name' => "My project"]);
+        return TrackerTestBuilder::aTracker()->withId($tracker_id)->withName($tracker_name)->withProject($project)->build();
     }
 }

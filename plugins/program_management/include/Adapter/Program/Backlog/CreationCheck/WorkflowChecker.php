@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
@@ -93,7 +94,10 @@ final class WorkflowChecker implements CheckWorkflow
             foreach ($workflow_transition_rules as $rule) {
                 $tracker = $this->tracker_factory->getTrackerById($rule['tracker_id']);
                 if ($tracker) {
-                    $errors_collector->addWorkflowTransitionRulesError(TrackerReference::fromTracker($tracker));
+                    $errors_collector->addWorkflowTransitionRulesError(
+                        TrackerReference::fromTracker($tracker),
+                        ProjectReferenceProxy::buildFromProject($tracker->getProject())
+                    );
                 }
             }
             $is_valid = false;
@@ -120,7 +124,10 @@ final class WorkflowChecker implements CheckWorkflow
             foreach ($tracker_ids_with_date_rules as $tracker_id) {
                 $tracker = $this->tracker_factory->getTrackerById($tracker_id);
                 if ($tracker) {
-                    $errors_collector->addWorkflowTransitionDateRulesError(TrackerReference::fromTracker($tracker));
+                    $errors_collector->addWorkflowTransitionDateRulesError(
+                        TrackerReference::fromTracker($tracker),
+                        ProjectReferenceProxy::buildFromProject($tracker->getProject())
+                    );
                 }
             }
             $is_valid = false;
@@ -147,7 +154,10 @@ final class WorkflowChecker implements CheckWorkflow
             foreach ($tracker_ids_with_list_rules as $tracker_id) {
                 $tracker = $this->tracker_factory->getTrackerById($tracker_id);
                 if ($tracker) {
-                    $errors_collector->addWorkflowDependencyError(TrackerReference::fromTracker($tracker));
+                    $errors_collector->addWorkflowDependencyError(
+                        TrackerReference::fromTracker($tracker),
+                        ProjectReferenceProxy::buildFromProject($tracker->getProject())
+                    );
                 }
             }
             $is_valid = false;

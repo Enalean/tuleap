@@ -57,19 +57,19 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenWorkFlowHasTransition(): void
     {
-        $this->collector->addWorkflowTransitionRulesError(TrackerReferenceBuilder::buildWithId(1));
+        $this->collector->addWorkflowTransitionRulesError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasGlobalRules(): void
     {
-        $this->collector->addWorkflowTransitionDateRulesError(TrackerReferenceBuilder::buildWithId(1));
+        $this->collector->addWorkflowTransitionDateRulesError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasFieldDependency(): void
     {
-        $this->collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1));
+        $this->collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
