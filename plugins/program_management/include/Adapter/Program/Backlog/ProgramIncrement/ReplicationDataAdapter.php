@@ -26,31 +26,25 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Change
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactUserNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Artifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 
 final class ReplicationDataAdapter implements BuildReplicationData
 {
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private \UserManager $user_manager;
-    private PendingArtifactCreationStore $pending_artifact_creation_store;
-    private \Tracker_Artifact_ChangesetFactory $changeset_factory;
-
     public function __construct(
-        \Tracker_ArtifactFactory $artifact_factory,
-        \UserManager $user_manager,
-        PendingArtifactCreationStore $pending_artifact_creation_store,
-        \Tracker_Artifact_ChangesetFactory $changeset_factory
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private \UserManager $user_manager,
+        private PendingArtifactCreationStore $pending_artifact_creation_store,
+        private \Tracker_Artifact_ChangesetFactory $changeset_factory,
+        private VerifyIsProgramIncrementTracker $program_increment_verifier
     ) {
-        $this->artifact_factory                = $artifact_factory;
-        $this->user_manager                    = $user_manager;
-        $this->pending_artifact_creation_store = $pending_artifact_creation_store;
-        $this->changeset_factory               = $changeset_factory;
     }
 
     public function buildFromArtifactAndUserId(int $artifact_id, int $user_id): ?ReplicationData
@@ -64,18 +58,27 @@ final class ReplicationDataAdapter implements BuildReplicationData
             return null;
         }
 
-        $source_artifact = $this->artifact_factory->getArtifactById($pending_artifact['program_artifact_id']);
+        $program_increment_id = $pending_artifact['program_artifact_id'];
+        $source_artifact      = $this->artifact_factory->getArtifactById($program_increment_id);
         if (! $source_artifact) {
             throw new PendingArtifactNotFoundException(
-                $pending_artifact['program_artifact_id'],
+                $program_increment_id,
                 $pending_artifact['user_id']
             );
+        }
+
+        $tracker = ProgramIncrementTrackerIdentifier::fromId(
+            $this->program_increment_verifier,
+            $source_artifact->getTrackerId()
+        );
+        if (! $tracker) {
+            throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
         }
 
         $user = $this->user_manager->getUserById($pending_artifact['user_id']);
         if (! $user) {
             throw new PendingArtifactUserNotFoundException(
-                $pending_artifact['program_artifact_id'],
+                $program_increment_id,
                 $pending_artifact['user_id']
             );
         }
@@ -86,25 +89,25 @@ final class ReplicationDataAdapter implements BuildReplicationData
         );
         if (! $source_changeset) {
             throw new PendingArtifactChangesetNotFoundException(
-                $pending_artifact['program_artifact_id'],
+                $program_increment_id,
                 $pending_artifact['changeset_id']
             );
         }
 
-        return self::build($source_artifact, $user, $source_changeset);
+        return self::build($source_artifact, $user, $source_changeset, $tracker);
     }
 
     public static function build(
         \Tuleap\Tracker\Artifact\Artifact $source_artifact,
         \PFUser $user,
-        \Tracker_Artifact_Changeset $source_changeset
+        \Tracker_Artifact_Changeset $source_changeset,
+        ProgramIncrementTrackerIdentifier $source_tracker
     ): ReplicationData {
         $artifact_data   = new Artifact((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
-        $tracker_data    = new ProgramTracker($source_artifact->getTracker());
         $changeset       = ChangesetProxy::fromChangeset($source_changeset);
         $project_data    = ProgramManagementProjectAdapter::build($source_artifact->getTracker()->getProject());
         $user_identifier = UserProxy::buildFromPFUser($user);
 
-        return new ReplicationData($tracker_data, $changeset, $artifact_data, $project_data, $user_identifier);
+        return new ReplicationData($source_tracker, $changeset, $artifact_data, $project_data, $user_identifier);
     }
 }

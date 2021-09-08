@@ -22,97 +22,101 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Mockery;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
-use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetFactory;
-use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use UserManager;
 
 final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var CreateProgramIncrementsRunner
-     */
-    private $runner;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|QueueFactory
-     */
-    private $queue_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingArtifactCreationStore
-     */
-    private $pending_creation_store;
+    private const ARTIFACT_ID = 18;
+    private const USER_ID     = 120;
+    private Stub|QueueFactory $queue_factory;
+    private Stub|PendingArtifactCreationStore $pending_creation_store;
+    private MockObject|TaskBuilder $task_builder;
 
     protected function setUp(): void
     {
-        $logger                       = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->queue_factory          = Mockery::mock(QueueFactory::class);
-        $this->pending_creation_store = Mockery::mock(PendingArtifactCreationStore::class);
-        $replication_adapter          = new ReplicationDataAdapter(
-            Mockery::mock(Tracker_ArtifactFactory::class),
-            Mockery::mock(UserManager::class),
+        $this->queue_factory          = $this->createStub(QueueFactory::class);
+        $this->pending_creation_store = $this->createStub(PendingArtifactCreationStore::class);
+        $this->task_builder           = $this->createMock(TaskBuilder::class);
+    }
+
+    private function getRunner(): CreateProgramIncrementsRunner
+    {
+        $logger = new NullLogger();
+        $task   = new CreateProgramIncrementsTask(
+            RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(51),
+            $this->createStub(ProgramIncrementsCreator::class),
+            $logger,
             $this->pending_creation_store,
-            Mockery::mock(Tracker_Artifact_ChangesetFactory::class)
+            $this->createStub(PlanUserStoriesInMirroredProgramIncrements::class),
+            SearchTeamsOfProgramStub::buildTeams(163, 120),
+            new BuildProjectStub(),
+            BuildSynchronizedFieldsStub::withDefault(),
+            RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
+            RetrieveTrackerStub::buildValidTrackerWithProjectId(155)
         );
-        $this->runner                 = new CreateProgramIncrementsRunner(
+        $this->task_builder->method('build')->willReturn($task);
+
+        return new CreateProgramIncrementsRunner(
             $logger,
             $this->queue_factory,
-            $replication_adapter,
-            Mockery::mock(TaskBuilder::class)
+            new ReplicationDataAdapter(
+                $this->createStub(\Tracker_ArtifactFactory::class),
+                $this->createStub(\UserManager::class),
+                $this->pending_creation_store,
+                $this->createStub(\Tracker_Artifact_ChangesetFactory::class),
+                VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement()
+            ),
+            $this->task_builder
         );
     }
 
     public function testItExecuteMirrorsCreation(): void
     {
-        $project  = new Project(['group_id' => 123, 'group_name' => 'Project', 'unix_group_name' => 'project']);
-        $tracker  = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
-        $user     = UserTestBuilder::aUser()->withId(10)->build();
-        $artifact = new Artifact(1, 10, $user->getId(), 123456789, true);
-        $artifact->setTracker($tracker);
+        $queue = $this->createMock(PersistentQueue::class);
+        $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 
-        $changeset = new Tracker_Artifact_Changeset(
-            1,
-            $artifact,
-            $user->getId(),
-            12345678,
-            "usermail@example.com"
-        );
+        $queue->expects(self::once())
+            ->method('pushSinglePersistentMessage')
+            ->with(
+                'tuleap.program_management.program_increment.creation',
+                ['artifact_id' => self::ARTIFACT_ID, 'user_id' => self::USER_ID]
+            );
 
-        $queue = \Mockery::mock(PersistentQueue::class);
-        $this->queue_factory->shouldReceive('getPersistentQueue')->andReturn($queue);
+        $replication_data = ReplicationDataBuilder::buildWithArtifactIdAndUserId(self::ARTIFACT_ID, self::USER_ID);
 
-        $queue->shouldReceive('pushSinglePersistentMessage')
-            ->withArgs(
-                ['tuleap.program_management.program_increment.creation', ['artifact_id' => $artifact->getId(), 'user_id' => $user->getId()]]
-            )
-            ->once();
-
-        $replication_data = ReplicationDataAdapter::build($artifact, $user, $changeset);
-
-        $this->runner->executeProgramIncrementsCreation($replication_data);
+        $this->getRunner()->executeProgramIncrementsCreation($replication_data);
     }
 
     public function testSkipsEventWhenReplicationDataDoesNotExist(): void
     {
         $event = new WorkerEvent(
             new NullLogger(),
-            ['event_name' => 'tuleap.program_management.program_increment.creation', 'payload' => ['artifact_id' => 123, 'user_id' => 101]]
+            [
+                'event_name' => 'tuleap.program_management.program_increment.creation',
+                'payload'    => ['artifact_id' => self::ARTIFACT_ID, 'user_id' => self::USER_ID]
+            ]
         );
+        $this->pending_creation_store->method('getPendingArtifactById')->willReturn(null);
 
-        $this->pending_creation_store->shouldReceive('getPendingArtifactById')->andReturn(null);
-
-        $this->runner->addListener($event);
+        $this->task_builder->expects(self::never())->method('build');
+        $this->getRunner()->addListener($event);
     }
 }

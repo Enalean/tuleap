@@ -43,6 +43,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
@@ -80,18 +81,14 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
             $this->artifact_factory,
             $user_manager,
             $this->pending_program_increments_dao,
-            $changeset_factory
+            $changeset_factory,
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement()
         );
 
         $this->runner = new CreateProgramIncrementsRunner(
             new NullLogger(),
             new QueueFactory(new NullLogger()),
-            new ReplicationDataAdapter(
-                $this->artifact_factory,
-                $user_manager,
-                $this->pending_program_increments_dao,
-                $changeset_factory
-            ),
+            $this->replication_data_adapter,
             new TaskBuilder()
         );
 

@@ -49,6 +49,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -117,7 +118,8 @@ class TaskBuilder
             new FieldValuesGathererRetriever(
                 $tracker_artifact_factory,
                 $form_element_factory
-            )
+            ),
+            new TrackerFactoryAdapter(\TrackerFactory::instance())
         );
     }
 }

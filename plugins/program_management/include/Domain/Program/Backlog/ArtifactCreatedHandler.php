@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
@@ -36,7 +37,7 @@ final class ArtifactCreatedHandler
     private VerifyIsProgram $program_verifier;
     private RunProgramIncrementCreation $run_program_increment_creation;
     private PendingArtifactCreationStore $pending_artifact_creation_store;
-    private VerifyIsProgramIncrementTracker $verify_is_program_increment;
+    private VerifyIsProgramIncrementTracker $program_increment_verifier;
     private RemovePlannedFeaturesFromTopBacklog $feature_remover;
     private LoggerInterface $logger;
 
@@ -44,14 +45,14 @@ final class ArtifactCreatedHandler
         VerifyIsProgram $program_verifier,
         RunProgramIncrementCreation $run_program_increment_creation,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        VerifyIsProgramIncrementTracker $verify_is_program_increment,
+        VerifyIsProgramIncrementTracker $program_increment_verifier,
         RemovePlannedFeaturesFromTopBacklog $feature_remover,
         LoggerInterface $logger
     ) {
         $this->program_verifier                = $program_verifier;
         $this->run_program_increment_creation  = $run_program_increment_creation;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
-        $this->verify_is_program_increment     = $verify_is_program_increment;
+        $this->program_increment_verifier      = $program_increment_verifier;
         $this->feature_remover                 = $feature_remover;
         $this->logger                          = $logger;
     }
@@ -78,7 +79,11 @@ final class ArtifactCreatedHandler
             )
         );
 
-        if (! $this->verify_is_program_increment->isProgramIncrementTracker($source_tracker->getId())) {
+        $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
+            $this->program_increment_verifier,
+            $source_tracker->getId()
+        );
+        if (! $program_increment_tracker) {
             return;
         }
         $this->pending_artifact_creation_store->addArtifactToPendingCreation(
@@ -87,7 +92,12 @@ final class ArtifactCreatedHandler
             (int) $event->getChangeset()->getId()
         );
 
-        $replication_data = ReplicationDataAdapter::build($source_artifact, $current_user, $event->getChangeset());
+        $replication_data = ReplicationDataAdapter::build(
+            $source_artifact,
+            $current_user,
+            $event->getChangeset(),
+            $program_increment_tracker
+        );
         $this->run_program_increment_creation->executeProgramIncrementsCreation($replication_data);
     }
 }

@@ -22,13 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIdentifierTest extends TestCase
 {
@@ -48,14 +44,8 @@ final class ProgramIdentifierTest extends TestCase
 
     public function testItBuildsAProgramIdentifierFromReplicationData(): void
     {
-        $project          = ProjectTestBuilder::aProject()->withId(102)->build();
-        $tracker          = TrackerTestBuilder::aTracker()->withId(76)->withProject($project)->build();
-        $artifact         = ArtifactTestBuilder::anArtifact(7)->inTracker($tracker)->build();
-        $changeset        = new \Tracker_Artifact_Changeset(90, $artifact, 110, 1234567890, null);
-        $user             = UserTestBuilder::aUser()->build();
-        $replication_data = ReplicationDataAdapter::build($artifact, $user, $changeset);
-
-        $program = ProgramIdentifier::fromReplicationData($replication_data);
+        $replication_data = ReplicationDataBuilder::buildWithProjectId(102);
+        $program          = ProgramIdentifier::fromReplicationData($replication_data);
         self::assertSame(102, $program->getId());
     }
 }

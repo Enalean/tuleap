@@ -43,6 +43,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -55,6 +56,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     private BuildProject $project_builder;
     private BuildSynchronizedFields $fields_builder;
     private RetrieveFieldValuesGatherer $values_retriever;
+    private RetrieveTracker $tracker_retriever;
 
     public function __construct(
         RetrievePlanningMilestoneTracker $root_milestone_retriever,
@@ -65,7 +67,8 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_builder,
         BuildSynchronizedFields $fields_builder,
-        RetrieveFieldValuesGatherer $values_retriever
+        RetrieveFieldValuesGatherer $values_retriever,
+        RetrieveTracker $tracker_retriever
     ) {
         $this->root_milestone_retriever        = $root_milestone_retriever;
         $this->program_increment_creator       = $program_increment_creator;
@@ -76,6 +79,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $this->project_builder                 = $project_builder;
         $this->fields_builder                  = $fields_builder;
         $this->values_retriever                = $values_retriever;
+        $this->tracker_retriever               = $tracker_retriever;
     }
 
     public function createProgramIncrements(ReplicationData $replication_data): void
@@ -99,6 +103,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $source_values = SourceTimeboxChangesetValues::fromReplication(
             $this->fields_builder,
             $this->values_retriever,
+            $this->tracker_retriever,
             $replication_data
         );
 
@@ -128,7 +133,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 
         $program_increment_changed = new ProgramIncrementChanged(
             $replication_data->getArtifact()->getId(),
-            $replication_data->getTracker()->getTrackerId(),
+            $replication_data->getTracker()->getId(),
             $user_identifier
         );
 

@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 
 final class SourceTimeboxChangesetValuesBuilder
 {
@@ -84,6 +85,7 @@ final class SourceTimeboxChangesetValuesBuilder
                     $status
                 )
             ),
+            RetrieveTrackerStub::buildValidTrackerWithProjectId(150),
             ReplicationDataBuilder::buildWithArtifactId($source_timebox_id)
         );
     }

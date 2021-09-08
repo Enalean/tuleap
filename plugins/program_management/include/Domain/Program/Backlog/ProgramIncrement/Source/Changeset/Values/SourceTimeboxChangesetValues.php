@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
+use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 
 /**
  * I hold all field values for a given changeset for a source Timebox
@@ -48,17 +48,20 @@ final class SourceTimeboxChangesetValues
 
     /**
      * @throws FieldSynchronizationException
-     * @throws PendingArtifactNotFoundException
-     * @throws PendingArtifactChangesetNotFoundException
      * @throws ChangesetValueNotFoundException
      * @throws UnsupportedTitleFieldException
      */
     public static function fromReplication(
         BuildSynchronizedFields $fields_builder,
         RetrieveFieldValuesGatherer $field_values_retriever,
+        RetrieveTracker $tracker_retriever,
         ReplicationData $replication
     ): self {
-        $fields            = $fields_builder->build($replication->getTracker());
+        $tracker = $tracker_retriever->getTrackerById($replication->getTracker()->getId());
+        if (! $tracker) {
+            throw new TrackerNotFoundException($replication->getTracker()->getId());
+        }
+        $fields            = $fields_builder->build($tracker);
         $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
         $title_value       = TitleValue::fromSynchronizedFields($values_gatherer, $fields);
         $description_value = DescriptionValue::fromSynchronizedFields($values_gatherer, $fields);
