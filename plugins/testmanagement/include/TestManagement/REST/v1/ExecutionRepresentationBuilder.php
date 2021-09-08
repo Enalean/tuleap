@@ -125,12 +125,12 @@ class ExecutionRepresentationBuilder
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,
         Artifact $artifact,
-        $execution_tracker_id,
+        \Tracker $execution_tracker,
         int $limit,
         int $offset
     ) {
-        $executions      = $this->getSlicedExecutionsForCampaign($artifact, $user, (int) $execution_tracker_id, $limit, $offset);
-        $representations = $this->getListOfRepresentations($user, $executions);
+        $executions      = $this->getSlicedExecutionsForCampaign($artifact, $user, $execution_tracker, $limit, $offset);
+        $representations = $this->getListOfRepresentations($user, $executions, $execution_tracker);
 
         return new SlicedExecutionRepresentations($representations, $executions->getTotalSize());
     }
@@ -143,12 +143,14 @@ class ExecutionRepresentationBuilder
     public function getExecutionRepresentation(PFUser $user, Artifact $execution)
     {
         $definitions_changeset_ids = $this->getDefinitionsChangesetIdsForExecutions([$execution->getId()]);
+        $file_fields               = $this->tracker_form_element_factory->getUsedFileFields($execution->getTracker());
 
-        return $this->getExecutionRepresentationWithSpecificChangesetForDefinition($user, $execution, $definitions_changeset_ids);
+        return $this->getExecutionRepresentationWithSpecificChangesetForDefinition($user, $execution, $definitions_changeset_ids, $file_fields);
     }
 
     /**
      * @param array            $definitions_changeset_ids
+     * @param \Tracker_FormElement_Field_File[] $file_fields
      *
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
      * @throws DefinitionNotFoundException
@@ -156,7 +158,8 @@ class ExecutionRepresentationBuilder
     private function getExecutionRepresentationWithSpecificChangesetForDefinition(
         PFUser $user,
         Artifact $execution,
-        array $definitions_changeset_ids
+        array $definitions_changeset_ids,
+        array $file_fields
     ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
 
@@ -169,7 +172,8 @@ class ExecutionRepresentationBuilder
             $definition,
             $definitions_changeset_ids
         );
-        $execution_representation  = new ExecutionRepresentation(
+
+        $execution_representation = new ExecutionRepresentation(
             $execution->getId(),
             $execution->getStatus(),
             $this->getExecutionResult($user, $execution),
@@ -180,26 +184,61 @@ class ExecutionRepresentationBuilder
             $this->getLinkedBugsRepresentationForExecution($user, $execution),
             (int) $this->getExecutionTime($user, $execution),
             $this->steps_results_representation_builder->build($user, $execution, $definition),
-            $file_field_data
+            $file_field_data,
+            $this->getAttachmentsRepresentations($file_fields, $execution),
         );
         return $execution_representation;
+    }
+
+    /**
+     * @param \Tracker_FormElement_Field_File[] $file_fields
+     *
+     * @return AttachmentRepresentation[]
+     */
+    private function getAttachmentsRepresentations(array $file_fields, Artifact $execution): array
+    {
+        $last_changeset = $execution->getLastChangeset();
+        if (! $last_changeset) {
+            return [];
+        }
+
+        $files = [];
+        foreach ($file_fields as $field) {
+            $value = $last_changeset->getValue($field);
+            if (! $value) {
+                continue;
+            }
+
+            assert($value instanceof \Tracker_Artifact_ChangesetValue_File);
+            foreach ($value->getFiles() as $file_info) {
+                $files[] = new AttachmentRepresentation(
+                    $file_info->getId(),
+                    $file_info->getFilename(),
+                    $field->getFileHTMLUrl($file_info)
+                );
+            }
+        }
+
+        return $files;
     }
 
     /**
      *
      * @return array
      */
-    private function getListOfRepresentations(PFUser $user, PaginatedExecutions $executions)
+    private function getListOfRepresentations(PFUser $user, PaginatedExecutions $executions, \Tracker $execution_tracker)
     {
         $executions_representations = [];
         $definitions_changeset_ids  = $executions->getDefinitionsChangesetIds();
+        $file_fields                = $this->tracker_form_element_factory->getUsedFileFields($execution_tracker);
 
         foreach ($executions->getArtifacts() as $execution) {
             try {
                 $executions_representations[] = $this->getExecutionRepresentationWithSpecificChangesetForDefinition(
                     $user,
                     $execution,
-                    $definitions_changeset_ids
+                    $definitions_changeset_ids,
+                    $file_fields
                 );
             } catch (DefinitionNotFoundException $e) {
                 // Ignore, the user may not be allowed to read the Definition
@@ -215,13 +254,13 @@ class ExecutionRepresentationBuilder
     private function getSlicedExecutionsForCampaign(
         Artifact $campaign_artifact,
         PFUser $user,
-        int $execution_tracker_id,
+        \Tracker $execution_tracker,
         int $limit,
         int $offset
     ) {
         $artifact_links_data = $this->artifact_dao->searchPaginatedExecutionArtifactsForCampaign(
             $campaign_artifact->getId(),
-            $execution_tracker_id,
+            $execution_tracker->getId(),
             $limit,
             $offset
         );

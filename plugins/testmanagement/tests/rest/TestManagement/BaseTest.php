@@ -31,8 +31,10 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 abstract class BaseTest extends RestBase
 {
     protected $project_id;
+    protected $project_with_attachment_id;
     protected $closed_71_campaign = null;
     protected $valid_73_campaign  = null;
+    protected $valid_130_campaign = null;
 
     /**
      * @var Cache
@@ -54,6 +56,10 @@ abstract class BaseTest extends RestBase
             $this->project_id = $this->getProjectId(TestManagementDataBuilder::PROJECT_TEST_MGMT_SHORTNAME);
         }
 
+        if ($this->project_with_attachment_id === null) {
+            $this->project_with_attachment_id = $this->getProjectId(TestManagementDataBuilder::PROJECT_TEST_MGMT_WITH_ATTACHMENTS_SHORTNAME);
+        }
+
         $this->valid_73_campaign = $this->ttm_cache->getValidCampaign();
         if ($this->valid_73_campaign === null) {
             $this->valid_73_campaign = $this->getValid73Campaign();
@@ -64,6 +70,12 @@ abstract class BaseTest extends RestBase
         if ($this->closed_71_campaign === null) {
             $this->closed_71_campaign = $this->getClosed71Campaign();
             $this->ttm_cache->setClosedCampaign($this->closed_71_campaign);
+        }
+
+        $this->valid_130_campaign = $this->ttm_cache->getValidWithAttachmentsCampaign();
+        if ($this->valid_130_campaign === null) {
+            $this->valid_130_campaign = $this->getValid130Campaign();
+            $this->ttm_cache->setValidWithAttachmentsCampaign($this->valid_130_campaign);
         }
     }
 
@@ -76,6 +88,19 @@ abstract class BaseTest extends RestBase
         $index_of_valid73_when_sorted_by_id = 0;
         $campaign                           = $campaigns[$index_of_valid73_when_sorted_by_id];
         $this->assertEquals($campaign['label'], 'Tuleap 7.3');
+
+        return $campaign;
+    }
+
+    private function getValid130Campaign()
+    {
+        $all_campaigns_request  = $this->request_factory->createRequest('GET', "projects/$this->project_with_attachment_id/testmanagement_campaigns");
+        $all_campaigns_response = $this->getResponse($all_campaigns_request);
+        $campaigns              = json_decode($all_campaigns_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $index_of_valid130_when_sorted_by_id = 0;
+        $campaign                            = $campaigns[$index_of_valid130_when_sorted_by_id];
+        $this->assertEquals($campaign['label'], 'Tuleap 13.0');
 
         return $campaign;
     }

@@ -67,7 +67,9 @@ class Config
      */
     public function getCampaignTrackerId(Project $project)
     {
-        return $this->getTrackerID($project, 'campaign_tracker_id');
+        $tracker = $this->getTracker($project, 'campaign_tracker_id');
+
+        return $tracker ? $tracker->getId() : false;
     }
 
     /**
@@ -75,7 +77,14 @@ class Config
      */
     public function getTestExecutionTrackerId(Project $project)
     {
-        return $this->getTrackerID($project, 'test_execution_tracker_id');
+        $tracker = $this->getTestExecutionTracker($project);
+
+        return $tracker ? $tracker->getId() : false;
+    }
+
+    public function getTestExecutionTracker(Project $project): ?\Tracker
+    {
+        return $this->getTracker($project, 'test_execution_tracker_id');
     }
 
     /**
@@ -83,7 +92,9 @@ class Config
      */
     public function getTestDefinitionTrackerId(Project $project)
     {
-        return $this->getTrackerID($project, 'test_definition_tracker_id');
+        $tracker = $this->getTracker($project, 'test_definition_tracker_id');
+
+        return $tracker ? $tracker->getId() : false;
     }
 
     /**
@@ -91,37 +102,31 @@ class Config
      */
     public function getIssueTrackerId(Project $project)
     {
-        $tacker_id =  $this->getTrackerID($project, 'issue_tracker_id');
-        if (! $tacker_id) {
-            return null;
-        }
+        $tracker = $this->getTracker($project, 'issue_tracker_id');
 
-        return $tacker_id;
+        return $tracker ? $tracker->getId() : null;
     }
 
-    /**
-     * @return int|false
-     */
-    private function getTrackerID(Project $project, string $key)
+    private function getTracker(Project $project, string $key): ?\Tracker
     {
         $id = $this->getProperty($project, $key);
         if ($id === false) {
-            return $id;
+            return null;
         }
 
         $tracker = $this->tracker_factory->getTrackerById($id);
         if ($tracker !== null && $tracker->isActive()) {
-            return (int) $id;
+            return $tracker;
         }
 
-        return false;
+        return null;
     }
 
     public function isConfigNeeded(Project $project): bool
     {
         return (! $this->getCampaignTrackerId($project)) ||
             (! $this->getTestDefinitionTrackerId($project)) ||
-            (! $this->getTestExecutionTrackerId($project));
+            (! $this->getTestExecutionTracker($project));
     }
 
     /**

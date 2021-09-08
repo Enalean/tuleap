@@ -27,27 +27,12 @@ use Tuleap\Tracker\TrackerColor;
 
 final class TrackerTestBuilder
 {
-    /**
-     * @var TrackerColor
-     */
-    private $color;
-    /**
-     * @var string
-     */
-    private $name = 'Irrelevant';
-    /**
-     * @var string
-     */
-    private $short_name = 'irrelevant';
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var int
-     */
-    private $tracker_id = 0;
+    private ?TrackerColor $color = null;
+    private string $name         = 'Irrelevant';
+    private string $short_name   = 'irrelevant';
+    private ?Project $project    = null;
+    private int $tracker_id      = 0;
+    private ?int $deletion_date  = null;
 
     public static function aTracker(): self
     {
@@ -79,6 +64,13 @@ final class TrackerTestBuilder
     public function withShortName(string $name): self
     {
         $this->short_name = $name;
+
+        return $this;
+    }
+
+    public function withDeletionDate(int $deletion_date): self
+    {
+        $this->deletion_date = $deletion_date;
 
         return $this;
     }
@@ -120,7 +112,7 @@ final class TrackerTestBuilder
             null,
             null,
             null,
-            null,
+            $this->deletion_date,
             true,
             false,
             \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,

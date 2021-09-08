@@ -455,11 +455,16 @@ class CampaignsResource
             $artifact->getTracker()->getProject()
         );
 
+        $execution_tracker = $this->config->getTestExecutionTracker($artifact->getTracker()->getProject());
+        if (! $execution_tracker) {
+            throw new RestException(400, "There isn't any execution tracker configured");
+        }
+
         $execution_representations = $this->execution_representation_builder
             ->getPaginatedExecutionsRepresentationsForCampaign(
                 $user,
                 $artifact,
-                $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject()),
+                $execution_tracker,
                 $limit,
                 $offset
             );
@@ -501,6 +506,11 @@ class CampaignsResource
 
         if (! $artifact->isOpen()) {
             throw new I18NRestException(400, dgettext('plugin-testmanagement', 'The campaign is closed.'));
+        }
+
+        $execution_tracker = $this->config->getTestExecutionTracker($project);
+        if (! $execution_tracker) {
+            throw new RestException(400, "There isn't any execution tracker configured");
         }
 
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject());
@@ -560,7 +570,7 @@ class CampaignsResource
                 $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
                     $user,
                     $artifact,
-                    $this->config->getTestExecutionTrackerId($project),
+                    $execution_tracker,
                     $limit,
                     $offset
                 );
