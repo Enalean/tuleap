@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "1 test will be added"
@@ -98,6 +98,9 @@ msgstr "Fermer"
 msgid "Close campaign"
 msgstr "Fermer la campagne"
 
+msgid "Collapse"
+msgstr "Réduire"
+
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -148,6 +151,9 @@ msgstr ""
 
 msgid "Error while refreshing the list of linked bugs"
 msgstr "Erreur pendant la récupération des bugs liés"
+
+msgid "Expand"
+msgstr "Agrandir"
 
 msgid "Expected results"
 msgstr "Résultats attendus"
@@ -398,9 +404,6 @@ msgstr "Ouvrir ou fermer la liste de filtres"
 
 msgid "Unable to upload the image"
 msgstr "Impossible d'inserer l'image"
-
-msgid "View details"
-msgstr "Voir les détails"
 
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."

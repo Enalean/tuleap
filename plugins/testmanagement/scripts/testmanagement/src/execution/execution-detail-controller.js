@@ -78,6 +78,7 @@ function ExecutionDetailCtrl(
     $scope.canLinkIssue = issue_config.permissions.link;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
     $scope.toggleCommentArea = toggleCommentArea;
+    $scope.getToggleTitle = getToggleTitle;
     $scope.isCommentAreaExpanded = false;
     $scope.showEditArtifactModal = showEditArtifactModal;
     $scope.closeLinkedIssueAlert = closeLinkedIssueAlert;
@@ -258,6 +259,12 @@ function ExecutionDetailCtrl(
 
     function toggleCommentArea() {
         $scope.isCommentAreaExpanded = !$scope.isCommentAreaExpanded;
+    }
+
+    function getToggleTitle() {
+        return $scope.isCommentAreaExpanded
+            ? gettextCatalog.getString("Collapse")
+            : gettextCatalog.getString("Expand");
     }
 
     function showEditArtifactModal($event, definition) {
