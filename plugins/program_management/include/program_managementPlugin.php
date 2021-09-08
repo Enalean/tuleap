@@ -1262,17 +1262,18 @@ final class program_managementPlugin extends Plugin
             $event->getLogger()
         );
 
+        $user_identifier = UserProxy::buildFromPFUser($event->getUser());
         $importer->import(
             ProgramForAdministrationIdentifier::fromProject(
                 new TeamDao(),
                 new ProjectPermissionVerifier($retrieve_user),
                 $retrieve_user,
-                UserProxy::buildFromPFUser($event->getUser()),
+                $user_identifier,
                 ProjectProxy::buildFromProject($event->getProject())
             ),
             $event->getExtractionPath(),
             $event->getCreatedTrackersMapping(),
-            $event->getUser()
+            $user_identifier
         );
     }
 

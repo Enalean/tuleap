@@ -23,25 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\XML;
 
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CreatePlanStub;
 use Tuleap\ProgramManagement\Tests\Stub\ExtractXMLConfigStub;
 use Tuleap\ProgramManagement\Tests\Stub\ParseXMLConfigStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class ProgramManagementConfigXMLImporterTest extends TestCase
+final class ProgramManagementConfigXMLImporterTest extends TestCase
 {
     private CreatePlanStub $plan_creator;
-
     private TestLogger $logger;
-
-    private \PFUser $current_user;
+    private UserIdentifier $current_user;
 
     protected function setUp(): void
     {
         $this->plan_creator = CreatePlanStub::build();
-        $this->current_user = UserTestBuilder::aUser()->build();
+        $this->current_user = UserIdentifierStub::buildGenericUser();
         $this->logger       = new TestLogger();
     }
 
@@ -78,7 +77,7 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
         self::assertEquals("Crémants d'Alsace", $last_plan_creation_args->program_increment_change->label);
         self::assertEquals('Crémant', $last_plan_creation_args->program_increment_change->sub_label);
 
-        self::assertEquals($this->current_user, $last_plan_creation_args->user);
+        self::assertEquals($this->current_user, $last_plan_creation_args->user_identifier);
         self::assertEquals(101, $last_plan_creation_args->project_id);
         self::assertEquals([12, 13], $last_plan_creation_args->tracker_ids_that_can_be_planned);
         self::assertEquals(['101_3'], $last_plan_creation_args->can_possibly_prioritize_ugroups);

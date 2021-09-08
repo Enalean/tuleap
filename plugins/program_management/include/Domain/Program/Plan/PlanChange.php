@@ -22,50 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
 /**
  * @psalm-immutable
  */
 final class PlanChange
 {
     /**
-     * @var PlanProgramIncrementChange
-     */
-    public $program_increment_change;
-    /**
-     * @var \PFUser
-     */
-    public $user;
-    /**
-     * @var int
-     */
-    public $project_id;
-    /**
-     * @var array
-     */
-    public $tracker_ids_that_can_be_planned;
-    /**
-     * @var array
-     */
-    public $can_possibly_prioritize_ugroups;
-    /**
-     * @var ?PlanIterationChange
-     */
-    public $iteration;
-
+    * @param int[]                  $tracker_ids_that_can_be_planned
+    * @param non-empty-list<string> $can_possibly_prioritize_ugroups
+    */
     private function __construct(
-        PlanProgramIncrementChange $program_increment_change,
-        \PFUser $user,
-        int $project_id,
-        array $tracker_ids_that_can_be_planned,
-        array $can_possibly_prioritize_ugroups,
-        ?PlanIterationChange $iteration
+        public PlanProgramIncrementChange $program_increment_change,
+        public UserIdentifier $user_identifier,
+        public int $project_id,
+        public array $tracker_ids_that_can_be_planned,
+        public array $can_possibly_prioritize_ugroups,
+        public ?PlanIterationChange $iteration
     ) {
-        $this->program_increment_change        = $program_increment_change;
-        $this->user                            = $user;
-        $this->project_id                      = $project_id;
-        $this->tracker_ids_that_can_be_planned = $tracker_ids_that_can_be_planned;
-        $this->can_possibly_prioritize_ugroups = $can_possibly_prioritize_ugroups;
-        $this->iteration                       = $iteration;
     }
 
     /**
@@ -77,7 +52,7 @@ final class PlanChange
      */
     public static function fromProgramIncrementAndRaw(
         PlanProgramIncrementChange $program_increment_change,
-        \PFUser $user,
+        UserIdentifier $user_identifier,
         int $project_id,
         array $tracker_ids_that_can_be_planned,
         array $can_possibly_prioritize_ugroups,
@@ -97,7 +72,7 @@ final class PlanChange
 
         return new self(
             $program_increment_change,
-            $user,
+            $user_identifier,
             $project_id,
             $tracker_ids_that_can_be_planned,
             $can_possibly_prioritize_ugroups,
