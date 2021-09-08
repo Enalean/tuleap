@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 
-final class ChangesetValueNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+final class ChangesetValueNotFoundException extends \Exception implements ProgramIncrementCreationException
 {
     public function __construct(int $source_changeset_id, int $field_id, string $field_type)
     {

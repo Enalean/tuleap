@@ -42,6 +42,12 @@ final class SynchronizedFieldReferences
     ) {
     }
 
+    /**
+     * @throws NoArtifactLinkFieldException
+     * @throws FieldRetrievalException
+     * @throws MissingTimeFrameFieldException
+     * @throws TitleFieldHasIncorrectTypeException
+     */
     public static function fromTrackerIdentifier(
         GatherSynchronizedFields $gatherer,
         TrackerIdentifier $tracker_reference

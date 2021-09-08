@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 
-final class UnsupportedTitleFieldException extends \RuntimeException implements ProgramIncrementCreationException
+final class UnsupportedTitleFieldException extends \Exception implements ProgramIncrementCreationException
 {
     public function __construct(int $title_field_id)
     {

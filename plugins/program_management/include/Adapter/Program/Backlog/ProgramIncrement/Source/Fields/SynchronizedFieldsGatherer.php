@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
+use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -122,9 +123,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
     {
         $full_tracker = $this->tracker_factory->getTrackerById($tracker_identifier->getId());
         if (! $full_tracker) {
-            throw new \RuntimeException(
-                sprintf('Program Increment tracker with id #%s could not be found', $tracker_identifier->getId())
-            );
+            throw new TrackerNotFoundException($tracker_identifier->getId());
         }
         return $full_tracker;
     }

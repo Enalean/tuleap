@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use LogicException;
 use Tracker_FormElementFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -47,7 +47,7 @@ final class TrackerFromFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->form_element_factory->method('getFieldById')->willReturn(null);
 
-        $this->expectException(LogicException::class);
+        $this->expectException(FieldNotFoundException::class);
         $this->retriever->fromFieldId(1);
     }
 
