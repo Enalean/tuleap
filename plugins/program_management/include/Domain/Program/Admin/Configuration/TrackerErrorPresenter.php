@@ -80,6 +80,10 @@ final class TrackerErrorPresenter
     public bool $has_status_field_not_defined;
     public bool $has_status_missing_in_teams;
     public bool $has_status_missing_values;
+    /**
+     * @var TitleHasIncorrectTypePresenter[]
+     */
+    public array $title_has_incorrect_type_error;
 
     /**
      * @param SemanticErrorPresenter[]               $semantic_errors
@@ -93,6 +97,7 @@ final class TrackerErrorPresenter
      * @param ProgramTracker[]                       $status_missing_in_teams
      * @param SemanticStatusNoFieldPresenter[]       $semantic_status_no_field
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
+     * @param TitleHasIncorrectTypePresenter[]       $title_has_incorrect_type_error
      */
     private function __construct(
         array $semantic_errors,
@@ -105,7 +110,8 @@ final class TrackerErrorPresenter
         array $team_tracker_id_errors,
         array $status_missing_in_teams,
         array $semantic_status_no_field,
-        array $semantic_status_missing_values
+        array $semantic_status_missing_values,
+        array $title_has_incorrect_type_error
     ) {
         $has_semantic_errors   = count($semantic_errors) > 0;
         $this->semantic_errors = $semantic_errors;
@@ -137,13 +143,15 @@ final class TrackerErrorPresenter
         $has_semantic_status_errors           = count($status_missing_in_teams) > 0
             || count($semantic_status_no_field) > 0
             || count($semantic_status_missing_values) > 0;
+        $this->title_has_incorrect_type_error = $title_has_incorrect_type_error;
 
         $this->has_presenter_errors = $has_semantic_errors
             || $has_required_field_errors
             || $has_workflow_error
             || $has_field_permission_errors
             || $user_can_not_submit_in_team
-            || $has_semantic_status_errors;
+            || $has_semantic_status_errors
+            || $title_has_incorrect_type_error;
     }
 
     public static function fromTracker(
@@ -169,7 +177,8 @@ final class TrackerErrorPresenter
             $errors_collector->getTeamTrackerIdErrors(),
             $errors_collector->getStatusMissingInTeams(),
             $errors_collector->getSemanticStatusNoField(),
-            $errors_collector->getSemanticStatusMissingValues()
+            $errors_collector->getSemanticStatusMissingValues(),
+            $errors_collector->getTitleHasIncorrectTypeError()
         );
     }
 }

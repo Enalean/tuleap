@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use PHPUnit\Framework\MockObject\Stub\Stub;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
@@ -61,7 +62,11 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             self::PROGRAM_INCREMENT_TRACKER_ID
         );
-        $this->tracker            = TrackerTestBuilder::aTracker()->withId(self::PROGRAM_INCREMENT_TRACKER_ID)->build();
+        $project                  = new \Project(['group_id' => 101, 'group_name' => "My project"]);
+        $this->tracker            = TrackerTestBuilder::aTracker()
+            ->withId(self::PROGRAM_INCREMENT_TRACKER_ID)
+            ->withProject($project)
+            ->build();
     }
 
     private function getGatherer(): SynchronizedFieldsGatherer
@@ -79,7 +84,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function dataProviderMethodUnderTest(): array
     {
         return [
-            'when getting title field'         => ['getTitleField'],
             'when getting description field'   => ['getDescriptionField'],
             'when getting status field'        => ['getStatusField'],
             'when getting start date field'    => ['getStartDateField'],
@@ -106,7 +110,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
         $this->expectException(FieldRetrievalException::class);
-        $this->getGatherer()->getTitleField($this->tracker_identifier);
+        $this->getGatherer()->getTitleField($this->tracker_identifier, null);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
@@ -116,7 +120,19 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
         $this->expectException(TitleFieldHasIncorrectTypeException::class);
-        $this->getGatherer()->getTitleField($this->tracker_identifier);
+        $this->getGatherer()->getTitleField($this->tracker_identifier, null);
+    }
+
+    public function testItCollectsErrorWhenTitleIsNotAString(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getTextField(1, 'Title'));
+        $this->title_factory->method('getByTracker')->willReturn($title_semantic);
+
+        $this->expectException(TitleFieldHasIncorrectTypeException::class);
+        $errors_collector = new ConfigurationErrorsCollector(false);
+        $this->getGatherer()->getTitleField($this->tracker_identifier, $errors_collector);
+        $this->assertCount(1, $errors_collector->getTitleHasIncorrectTypeError());
     }
 
     public function testItReturnsTitleReference(): void
@@ -125,7 +141,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getStringField(832, 'Semiacquaintance'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
-        $title = $this->getGatherer()->getTitleField($this->tracker_identifier);
+        $title = $this->getGatherer()->getTitleField($this->tracker_identifier, null);
         self::assertSame(832, $title->getId());
         self::assertSame('Semiacquaintance', $title->getLabel());
     }

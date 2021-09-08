@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
@@ -78,9 +79,9 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         );
     }
 
-    public function getTitleField(TrackerIdentifier $program_increment): TitleFieldReference
+    public function getTitleField(TrackerIdentifier $program_increment, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
-        return $this->title_stub->getTitleField($program_increment);
+        return $this->title_stub->getTitleField($program_increment, $errors_collector);
     }
 
     public function getDescriptionField(TrackerIdentifier $program_increment): DescriptionFieldReference

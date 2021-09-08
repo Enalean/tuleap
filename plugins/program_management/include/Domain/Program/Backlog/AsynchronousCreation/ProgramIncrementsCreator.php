@@ -64,7 +64,8 @@ class ProgramIncrementsCreator
                 foreach ($mirrored_timeboxes->getTrackers() as $mirrored_timebox_tracker) {
                     $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
                         $this->gather_synchronized_fields,
-                        $mirrored_timebox_tracker
+                        $mirrored_timebox_tracker,
+                        null
                     );
 
                     $mirrored_program_increment_changeset = MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(

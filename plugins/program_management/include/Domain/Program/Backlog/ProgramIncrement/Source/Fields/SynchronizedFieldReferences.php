@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 /**
@@ -50,9 +51,10 @@ final class SynchronizedFieldReferences
      */
     public static function fromTrackerIdentifier(
         GatherSynchronizedFields $gatherer,
-        TrackerIdentifier $tracker_identifier
+        TrackerIdentifier $tracker_identifier,
+        ?ConfigurationErrorsCollector $errors_collector
     ): self {
-        $title         = $gatherer->getTitleField($tracker_identifier);
+        $title         = $gatherer->getTitleField($tracker_identifier, $errors_collector);
         $description   = $gatherer->getDescriptionField($tracker_identifier);
         $status        = $gatherer->getStatusField($tracker_identifier);
         $start_date    = $gatherer->getStartDateField($tracker_identifier);
