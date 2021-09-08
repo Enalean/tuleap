@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
 {
@@ -66,33 +66,33 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         );
     }
 
-    public function getTitleField(ProgramIncrementTrackerIdentifier $program_increment): TitleFieldReference
+    public function getTitleField(TrackerIdentifier $program_increment): TitleFieldReference
     {
         return $this->title_stub->getTitleField($program_increment);
     }
 
-    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference
+    public function getDescriptionField(TrackerIdentifier $program_increment): DescriptionFieldReference
     {
         return $this->description_stub->getDescriptionField($program_increment);
     }
 
-    public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference
+    public function getStatusField(TrackerIdentifier $program_increment): StatusFieldReference
     {
         return $this->status_stub->getStatusField($program_increment);
     }
 
-    public function getStartDateField(ProgramIncrementTrackerIdentifier $program_increment): StartDateFieldReference
+    public function getStartDateField(TrackerIdentifier $program_increment): StartDateFieldReference
     {
         return $this->start_date_stub->getStartDateField($program_increment);
     }
 
-    public function getEndPeriodField(ProgramIncrementTrackerIdentifier $program_increment): EndPeriodFieldReference
+    public function getEndPeriodField(TrackerIdentifier $program_increment): EndPeriodFieldReference
     {
         return $this->end_period_stub->getEndPeriodField($program_increment);
     }
 
     public function getArtifactLinkField(
-        ProgramIncrementTrackerIdentifier $program_increment
+        TrackerIdentifier $program_increment
     ): ArtifactLinkFieldReference {
         return $this->artifact_link_stub->getArtifactLinkField($program_increment);
     }

@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveDescriptionField;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveDescriptionFieldStub implements RetrieveDescriptionField
 {
@@ -54,7 +54,7 @@ final class RetrieveDescriptionFieldStub implements RetrieveDescriptionField
         );
     }
 
-    public function getDescriptionField(ProgramIncrementTrackerIdentifier $program_increment): DescriptionFieldReference
+    public function getDescriptionField(TrackerIdentifier $tracker_identifier): DescriptionFieldReference
     {
         return $this->description;
     }

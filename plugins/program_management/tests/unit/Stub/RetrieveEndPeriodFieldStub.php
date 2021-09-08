@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveEndPeriodField;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveEndPeriodFieldStub implements RetrieveEndPeriodField
 {
@@ -54,7 +54,7 @@ final class RetrieveEndPeriodFieldStub implements RetrieveEndPeriodField
         );
     }
 
-    public function getEndPeriodField(ProgramIncrementTrackerIdentifier $program_increment): EndPeriodFieldReference
+    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndPeriodFieldReference
     {
         return $this->end_period;
     }

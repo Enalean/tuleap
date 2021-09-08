@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveArtifactLinkField;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
 {
@@ -55,7 +55,7 @@ final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
     }
 
     public function getArtifactLinkField(
-        ProgramIncrementTrackerIdentifier $program_increment
+        TrackerIdentifier $tracker_identifier
     ): ArtifactLinkFieldReference {
         return $this->artifact_link;
     }

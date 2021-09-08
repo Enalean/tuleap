@@ -46,7 +46,7 @@ final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\T
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             self::PROGRAM_INCREMENT_TRACKER_ID
         );
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $program_increment_tracker->id);
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $program_increment_tracker->getId());
     }
 
     public function testItBuildsFromProgramIncrement(): void
@@ -59,6 +59,6 @@ final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\T
             RetrieveProgramIncrementTrackerStub::withValidTracker(self::PROGRAM_INCREMENT_TRACKER_ID),
             $program_increment
         );
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $program_increment_tracker->id);
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $program_increment_tracker->getId());
     }
 }

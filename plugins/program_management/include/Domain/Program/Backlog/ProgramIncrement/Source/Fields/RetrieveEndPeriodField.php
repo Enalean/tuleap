@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 interface RetrieveEndPeriodField
 {
     /**
      * @throws MissingTimeFrameFieldException
      */
-    public function getEndPeriodField(ProgramIncrementTrackerIdentifier $program_increment): EndPeriodFieldReference;
+    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndPeriodFieldReference;
 }

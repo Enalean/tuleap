@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 /**
  * I hold all synchronized field references (identifier + label) for a given Timebox or Mirrored Timebox.
@@ -44,7 +44,7 @@ final class SynchronizedFieldReferences
 
     public static function fromProgramIncrementTracker(
         GatherSynchronizedFields $gatherer,
-        ProgramIncrementTrackerIdentifier $program_increment
+        TrackerIdentifier $program_increment
     ): self {
         $title         = $gatherer->getTitleField($program_increment);
         $description   = $gatherer->getDescriptionField($program_increment);

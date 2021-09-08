@@ -90,7 +90,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_updated
         );
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->program_increment->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->tracker->id);
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->tracker->getId());
         self::assertSame(self::CHANGESET_ID, $update->changeset->getId());
         self::assertSame(self::USER_ID, $update->user->getId());
     }
@@ -115,7 +115,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->pending_update
         );
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->program_increment->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->tracker->id);
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->tracker->getId());
         self::assertSame(self::USER_ID, $update->user->getId());
         self::assertSame(self::CHANGESET_ID, $update->changeset->getId());
     }

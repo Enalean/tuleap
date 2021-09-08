@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 interface RetrieveStatusField
 {
     /**
      * @throws FieldRetrievalException
      */
-    public function getStatusField(ProgramIncrementTrackerIdentifier $program_increment): StatusFieldReference;
+    public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference;
 }

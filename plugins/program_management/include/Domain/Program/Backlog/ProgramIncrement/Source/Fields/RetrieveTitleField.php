@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 interface RetrieveTitleField
 {
@@ -30,5 +30,5 @@ interface RetrieveTitleField
      * @throws FieldRetrievalException
      * @throws TitleFieldHasIncorrectTypeException
      */
-    public function getTitleField(ProgramIncrementTrackerIdentifier $program_increment): TitleFieldReference;
+    public function getTitleField(TrackerIdentifier $program_increment): TitleFieldReference;
 }
