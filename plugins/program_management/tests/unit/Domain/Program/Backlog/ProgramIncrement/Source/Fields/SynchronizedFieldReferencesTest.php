@@ -57,7 +57,7 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItBuildsFromProgramIncrementTracker(): void
     {
-        $fields = SynchronizedFieldReferences::fromProgramIncrementTracker(
+        $fields = SynchronizedFieldReferences::fromTrackerIdentifier(
             $this->gatherer,
             $this->program_increment_tracker
         );

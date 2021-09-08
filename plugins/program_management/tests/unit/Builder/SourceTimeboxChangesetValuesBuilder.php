@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 
@@ -74,7 +74,7 @@ final class SourceTimeboxChangesetValuesBuilder
         int $source_timebox_id
     ): SourceTimeboxChangesetValues {
         return SourceTimeboxChangesetValues::fromReplication(
-            BuildSynchronizedFieldsStub::withDefault(),
+            GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
                     $title,

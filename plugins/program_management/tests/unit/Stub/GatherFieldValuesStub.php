@@ -24,7 +24,11 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 
 final class GatherFieldValuesStub implements GatherFieldValues
 {
@@ -73,28 +77,28 @@ final class GatherFieldValuesStub implements GatherFieldValues
         );
     }
 
-    public function getTitleValue(SynchronizedFields $fields): string
+    public function getTitleValue(TitleFieldReference $fields): string
     {
         return $this->title_stub->getTitleValue($fields);
     }
 
     public function getDescriptionValue(
-        SynchronizedFields $fields
+        DescriptionFieldReference $fields
     ): TextFieldValue {
         return $this->description_stub->getDescriptionValue($fields);
     }
 
-    public function getStartDateValue(SynchronizedFields $fields): string
+    public function getStartDateValue(StartDateFieldReference $fields): string
     {
         return $this->start_date_stub->getStartDateValue($fields);
     }
 
-    public function getEndPeriodValue(SynchronizedFields $fields): string
+    public function getEndPeriodValue(EndPeriodFieldReference $fields): string
     {
         return $this->end_period_stub->getEndPeriodValue($fields);
     }
 
-    public function getStatusValues(SynchronizedFields $fields): array
+    public function getStatusValues(StatusFieldReference $fields): array
     {
         return $this->status_stub->getStatusValues($fields);
     }

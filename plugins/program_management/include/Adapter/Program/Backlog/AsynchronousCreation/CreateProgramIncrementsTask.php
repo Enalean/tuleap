@@ -32,9 +32,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMir
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -54,7 +54,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner;
     private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_builder;
-    private BuildSynchronizedFields $fields_builder;
+    private GatherSynchronizedFields $fields_builder;
     private RetrieveFieldValuesGatherer $values_retriever;
     private RetrieveTracker $tracker_retriever;
 
@@ -66,9 +66,9 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_builder,
-        BuildSynchronizedFields $fields_builder,
         RetrieveFieldValuesGatherer $values_retriever,
-        RetrieveTracker $tracker_retriever
+        RetrieveTracker $tracker_retriever,
+        GatherSynchronizedFields $fields_builder
     ) {
         $this->root_milestone_retriever        = $root_milestone_retriever;
         $this->program_increment_creator       = $program_increment_creator;

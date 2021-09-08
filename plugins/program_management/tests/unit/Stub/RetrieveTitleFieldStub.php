@@ -24,34 +24,51 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTitleField;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveTitleFieldStub implements RetrieveTitleField
 {
-    private function __construct(private TitleFieldReference $title)
+    private function __construct(private TitleFieldReference $title, private bool $has_error)
     {
     }
 
     public static function withField(int $field_id, string $field_label): self
     {
-        return new self(TitleFieldReferenceProxy::fromTrackerField(new \Tracker_FormElement_Field_String(
-            $field_id,
-            1,
-            null,
-            'irrelevant',
-            $field_label,
-            'Irrelevant',
-            true,
-            'P',
-            true,
-            '',
-            1
-        )));
+        return new self(self::getFieldReference($field_id, $field_label), false);
+    }
+
+    public static function withError(): self
+    {
+        return new self(self::getFieldReference(1, "My field"), true);
+    }
+
+    protected static function getFieldReference(int $field_id, string $field_label): TitleFieldReferenceProxy
+    {
+        return TitleFieldReferenceProxy::fromTrackerField(
+            new \Tracker_FormElement_Field_String(
+                $field_id,
+                1,
+                null,
+                'irrelevant',
+                $field_label,
+                'Irrelevant',
+                true,
+                'P',
+                true,
+                '',
+                1
+            )
+        );
     }
 
     public function getTitleField(TrackerIdentifier $tracker_identifier): TitleFieldReference
     {
+        if ($this->has_error) {
+            throw new TitleFieldHasIncorrectTypeException($tracker_identifier->getId(), 1);
+        }
+
         return $this->title;
     }
 }

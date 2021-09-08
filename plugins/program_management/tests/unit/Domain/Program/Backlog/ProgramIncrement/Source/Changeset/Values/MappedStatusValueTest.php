@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReferenceProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,7 +39,7 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field  = $this->buildStatusField();
         $status_value  = StatusValue::fromSynchronizedFields(
             RetrieveStatusValuesStub::withValues('Planned', 'Current'),
-            SynchronizedFieldsBuilder::build()
+            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
         );
         $mapped_status = MappedStatusValue::fromStatusValueAndListField(
             MapStatusByValueStub::withValues(self::FIRST_BIND_VALUE_ID, self::SECOND_BIND_VALUE_ID),
@@ -49,22 +51,20 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertContains(self::SECOND_BIND_VALUE_ID, $mapped_values);
     }
 
-    private function buildStatusField(): Field
+    private function buildStatusField(): StatusFieldReferenceProxy
     {
-        return new Field(
-            new \Tracker_FormElement_Field_Selectbox(
-                344,
-                29,
-                340,
-                'status',
-                'Status',
-                'Irrelevant',
-                true,
-                'P',
-                false,
-                '',
-                1
-            )
-        );
+        return StatusFieldReferenceProxy::fromTrackerField(new \Tracker_FormElement_Field_Selectbox(
+            344,
+            29,
+            340,
+            'status',
+            'Status',
+            'Irrelevant',
+            true,
+            'P',
+            false,
+            '',
+            1
+        ));
     }
 }

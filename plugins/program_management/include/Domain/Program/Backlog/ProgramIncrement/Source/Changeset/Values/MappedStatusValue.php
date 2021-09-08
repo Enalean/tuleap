@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 
 /**
  * I hold the mapped Tracker List field Bind values for the Status Semantic of a Mirrored Timebox tracker.
@@ -46,13 +46,12 @@ final class MappedStatusValue
     }
 
     /**
-     * @psalm-param Field<\Tracker_FormElement_Field_List> $target_field
      * @throws NoDuckTypedMatchingValueException
      */
     public static function fromStatusValueAndListField(
         MapStatusByValue $status_mapper,
         StatusValue $source_value,
-        Field $target_field
+        StatusFieldReference $target_field
     ): self {
         $identifiers = $status_mapper->mapStatusValueByDuckTyping($source_value, $target_field);
         return new self(...$identifiers);

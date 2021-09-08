@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 
 /**
  * I hold the value of the Description semantic field of the source Timebox.
@@ -45,9 +45,9 @@ final class DescriptionValue
      */
     public static function fromSynchronizedFields(
         RetrieveDescriptionValue $description_retriever,
-        SynchronizedFields $fields
+        SynchronizedFieldReferences $fields
     ): self {
-        $text_value = $description_retriever->getDescriptionValue($fields);
+        $text_value = $description_retriever->getDescriptionValue($fields->description);
         return new self($text_value->getValue(), $text_value->getFormat());
     }
 

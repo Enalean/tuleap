@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 
 interface RetrieveStatusValues
 {
@@ -30,5 +30,5 @@ interface RetrieveStatusValues
      * @throws ChangesetValueNotFoundException
      * @return BindValueLabel[]
      */
-    public function getStatusValues(SynchronizedFields $fields): array;
+    public function getStatusValues(StatusFieldReference $status_field_reference): array;
 }

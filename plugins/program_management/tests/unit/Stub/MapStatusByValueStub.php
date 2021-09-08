@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 
 final class MapStatusByValueStub implements MapStatusByValue
 {
@@ -48,7 +48,7 @@ final class MapStatusByValueStub implements MapStatusByValue
         return new self(...$identifiers);
     }
 
-    public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array
+    public function mapStatusValueByDuckTyping(StatusValue $source_value, StatusFieldReference $target_field): array
     {
         return $this->values;
     }

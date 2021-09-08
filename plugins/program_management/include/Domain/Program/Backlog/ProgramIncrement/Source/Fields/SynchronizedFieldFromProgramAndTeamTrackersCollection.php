@@ -33,7 +33,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
      */
     private array $synchronized_fields_ids = [];
     /**
-     * @var Field[]
+     * @var TitleFieldReference[]|DescriptionFieldReference[]|StatusFieldReference[]|StartDateFieldReference[]|EndPeriodFieldReference[]|ArtifactLinkFieldReference[]
      */
     private array $synchronized_fields = [];
 
@@ -54,7 +54,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
             if (! $this->retrieve_field_permission->canUserSubmit($user_identifier, $synchronized_field)) {
                 $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
                 $errors_collector->addSubmitFieldPermissionError(
-                    $synchronized_field->getId(),
+                    $tracker_reference->id,
                     $synchronized_field->getLabel(),
                     $tracker_reference
                 );

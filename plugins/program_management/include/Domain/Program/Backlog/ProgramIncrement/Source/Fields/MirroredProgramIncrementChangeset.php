@@ -83,25 +83,25 @@ final class MirroredProgramIncrementChangeset
         MapStatusByValue $status_mapper,
         SourceTimeboxChangesetValues $field_values,
         ArtifactLinkValue $artifact_link_value,
-        SynchronizedFields $target_fields
+        SynchronizedFieldReferences $target_fields
     ): self {
         $mapped_status = MappedStatusValue::fromStatusValueAndListField(
             $status_mapper,
             $field_values->getStatusValue(),
-            $target_fields->getStatusField()
+            $target_fields->status
         );
         return new self(
-            $target_fields->getArtifactLinkField()->getId(),
+            $target_fields->artifact_link->getId(),
             $artifact_link_value,
-            $target_fields->getTitleField()->getId(),
+            $target_fields->title->getId(),
             $field_values->getTitleValue(),
-            $target_fields->getDescriptionField()->getId(),
+            $target_fields->description->getId(),
             $field_values->getDescriptionValue(),
-            $target_fields->getStatusField()->getId(),
+            $target_fields->status->getId(),
             $mapped_status,
-            $target_fields->getStartDateField()->getId(),
+            $target_fields->start_date->getId(),
             $field_values->getStartDateValue(),
-            $target_fields->getEndPeriodField()->getId(),
+            $target_fields->end_period->getId(),
             $field_values->getEndPeriodValue()
         );
     }

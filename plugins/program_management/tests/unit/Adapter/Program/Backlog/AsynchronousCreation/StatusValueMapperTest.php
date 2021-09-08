@@ -23,12 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tracker_FormElementFactory;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
-use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -143,7 +145,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_value = $this->buildStatusValueWithLabels($source_label);
         $status_field = $this->buildStatusFieldWithBindValues(...$values);
 
-        $result         = $this->getMapper()->mapStatusValueByDuckTyping($status_value, new Field($status_field));
+        $result         = $this->getMapper()->mapStatusValueByDuckTyping($status_value, StatusFieldReferenceProxy::fromTrackerField($status_field));
         $bind_value_ids = array_map(static fn(BindValueIdentifier $identifier): int => $identifier->getId(), $result);
         self::assertContains($expected_bind_value_id, $bind_value_ids);
     }
@@ -153,7 +155,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_value = $this->buildStatusValueWithLabels('Not found', 'Planned');
         $status_field = $this->buildStatusFieldWithLabels('Planned', 'Not found', 'Other value');
 
-        $result         = $this->getMapper()->mapStatusValueByDuckTyping($status_value, new Field($status_field));
+        $result         = $this->getMapper()->mapStatusValueByDuckTyping($status_value, StatusFieldReferenceProxy::fromTrackerField($status_field));
         $bind_value_ids = array_map(static fn(BindValueIdentifier $identifier): int => $identifier->getId(), $result);
         self::assertContains(self::FIRST_BIND_VALUE_ID, $bind_value_ids);
         self::assertContains(self::SECOND_BIND_VALUE_ID, $bind_value_ids);
@@ -166,14 +168,14 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = $this->buildStatusFieldWithLabels('NOT MATCHING', 'not matching either', 'Nope');
 
         $this->expectException(NoDuckTypedMatchingValueException::class);
-        $this->getMapper()->mapStatusValueByDuckTyping($status_value, new Field($status_field));
+        $this->getMapper()->mapStatusValueByDuckTyping($status_value, StatusFieldReferenceProxy::fromTrackerField($status_field));
     }
 
     private function buildStatusValueWithLabels(string ...$values): StatusValue
     {
         return StatusValue::fromSynchronizedFields(
             RetrieveStatusValuesStub::withValues(...$values),
-            SynchronizedFieldsBuilder::build()
+            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
         );
     }
 
@@ -210,6 +212,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field->method('getBind')->willReturn($static_bind);
         $status_field->method('getId')->willReturn(1984);
         $status_field->method('getTrackerId')->willReturn(54);
+        $status_field->method('getLabel')->willReturn("Status");
 
         $this->form_element_factory->method('getFieldById')->with(1984)->willReturn($status_field);
 
@@ -224,6 +227,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = $this->createStub(\Tracker_FormElement_Field_List::class);
         $status_field->method('getBind')->willReturn($static_bind);
         $status_field->method('getId')->willReturn(101);
+        $status_field->method('getLabel')->willReturn("Status");
 
         $this->form_element_factory->method('getFieldById')->with(101)->willReturn($status_field);
 

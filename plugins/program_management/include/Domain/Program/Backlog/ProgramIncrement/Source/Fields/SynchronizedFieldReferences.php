@@ -42,16 +42,43 @@ final class SynchronizedFieldReferences
     ) {
     }
 
-    public static function fromProgramIncrementTracker(
+    public static function fromTrackerIdentifier(
         GatherSynchronizedFields $gatherer,
-        TrackerIdentifier $program_increment
+        TrackerIdentifier $tracker_reference
     ): self {
-        $title         = $gatherer->getTitleField($program_increment);
-        $description   = $gatherer->getDescriptionField($program_increment);
-        $status        = $gatherer->getStatusField($program_increment);
-        $start_date    = $gatherer->getStartDateField($program_increment);
-        $end_period    = $gatherer->getEndPeriodField($program_increment);
-        $artifact_link = $gatherer->getArtifactLinkField($program_increment);
+        $title         = $gatherer->getTitleField($tracker_reference);
+        $description   = $gatherer->getDescriptionField($tracker_reference);
+        $status        = $gatherer->getStatusField($tracker_reference);
+        $start_date    = $gatherer->getStartDateField($tracker_reference);
+        $end_period    = $gatherer->getEndPeriodField($tracker_reference);
+        $artifact_link = $gatherer->getArtifactLinkField($tracker_reference);
         return new self($title, $description, $status, $start_date, $end_period, $artifact_link);
+    }
+
+    /**
+     * @return array<int, true>
+     */
+    public function getSynchronizedFieldIDsAsKeys(): array
+    {
+        return [
+            $this->artifact_link->getId() => true,
+            $this->title->getId()         => true,
+            $this->description->getId()   => true,
+            $this->status->getId()        => true,
+            $this->start_date->getId()    => true,
+            $this->end_period->getId()    => true,
+        ];
+    }
+
+    public function getAllFields(): array
+    {
+        return [
+            $this->artifact_link,
+            $this->title,
+            $this->description,
+            $this->status,
+            $this->start_date,
+            $this->end_period,
+        ];
     }
 }

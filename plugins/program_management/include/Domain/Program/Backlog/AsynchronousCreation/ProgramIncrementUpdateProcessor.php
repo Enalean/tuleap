@@ -42,7 +42,7 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         $this->logger->debug(
             "Processing program increment update with program increment #$program_increment_id for user #$user_id"
         );
-        $source_fields = SynchronizedFieldReferences::fromProgramIncrementTracker(
+        $source_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
             $this->fields_gatherer,
             $update->tracker
         );

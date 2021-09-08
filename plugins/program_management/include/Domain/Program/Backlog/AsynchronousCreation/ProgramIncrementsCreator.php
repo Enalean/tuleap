@@ -27,10 +27,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCre
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -39,10 +40,10 @@ class ProgramIncrementsCreator
 {
     public function __construct(
         private DBTransactionExecutor $transaction_executor,
-        private BuildSynchronizedFields $synchronized_fields_adapter,
         private MapStatusByValue $status_mapper,
         private CreateArtifact $artifact_creator,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
+        private GatherSynchronizedFields $gather_synchronized_fields
     ) {
     }
 
@@ -61,7 +62,10 @@ class ProgramIncrementsCreator
         $this->transaction_executor->execute(
             function () use ($values, $artifact_link_value, $mirrored_timeboxes, $current_user) {
                 foreach ($mirrored_timeboxes->getTrackers() as $mirrored_timebox_tracker) {
-                    $synchronized_fields = $this->synchronized_fields_adapter->build($mirrored_timebox_tracker);
+                    $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
+                        $this->gather_synchronized_fields,
+                        $mirrored_timebox_tracker
+                    );
 
                     $mirrored_program_increment_changeset = MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
                         $this->status_mapper,

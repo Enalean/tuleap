@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -87,9 +87,9 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->user_stories_planner,
             $this->teams_searcher,
             new ProgramManagementProjectAdapter($this->project_manager),
-            BuildSynchronizedFieldsStub::withDefault(),
             RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
-            RetrieveTrackerStub::buildValidTrackerWithProjectId(119)
+            RetrieveTrackerStub::buildValidTrackerWithProjectId(119),
+            GatherSynchronizedFieldsStub::withDefaults()
         );
     }
 

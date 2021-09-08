@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 
 interface RetrieveStartDateValue
 {
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function getStartDateValue(SynchronizedFields $fields): string;
+    public function getStartDateValue(StartDateFieldReference $start_date_field_reference): string;
 }

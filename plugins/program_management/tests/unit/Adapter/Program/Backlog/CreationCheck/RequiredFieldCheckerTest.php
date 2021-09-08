@@ -24,16 +24,17 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
@@ -64,12 +65,14 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ProgramIdentifierBuilder::build()
         );
 
-        $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(789);
+        $required_title->method('getLabel')->willReturn("Title");
         $non_required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
         $non_required_artifact_link->method('isRequired')->willReturn(false);
         $non_required_artifact_link->method('getId')->willReturn(987);
+        $non_required_artifact_link->method('getLabel')->willReturn("artlink");
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$required_title, $non_required_artifact_link]);
@@ -89,10 +92,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser());
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker, $other_tracker_with_no_required_field);
 
-        $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(
-            $required_title,
-            $non_required_artifact_link
-        );
+        $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             new NullLogger(),
@@ -120,13 +120,15 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ProgramIdentifierBuilder::build()
         );
 
-        $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(789);
+        $required_title->method('getLabel')->willReturn("Title");
         $required_title->method('getTrackerId')->willReturn(412);
         $required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
         $required_artifact_link->method('isRequired')->willReturn(true);
         $required_artifact_link->method('getId')->willReturn(790);
+        $required_artifact_link->method('getLabel')->willReturn("artlink");
         $required_artifact_link->method('getTrackerId')->willReturn(412);
 
         $other_required_field = $this->createMock(\Tracker_FormElement_Field_String::class);
@@ -141,10 +143,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             [$required_title, $required_artifact_link, $other_required_field]
         );
 
-        $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(
-            $required_title,
-            $required_artifact_link
-        );
+        $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
         $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             new NullLogger(),
             $this->retrieve_tracker_from_field,
@@ -168,61 +167,11 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(1, $errors_collector->getRequiredFieldsErrors());
     }
 
-    private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(
-        \Tracker_FormElement_Field_Text $title_field,
-        \Tracker_FormElement_Field_ArtifactLink $artifact_link_field
-    ): SynchronizedFieldFromProgramAndTeamTrackers {
-        $artifact_link_field_data = new Field($artifact_link_field);
-
-        $title_field_data = new Field($title_field);
-
-        $description_field_data = new Field(
-            new \Tracker_FormElement_Field_Text(
-                3,
-                89,
-                1000,
-                'description',
-                'Description',
-                'Irrelevant',
-                true,
-                'P',
-                false,
-                '',
-                3
-            )
-        );
-
-        $status_field_data = new Field(
-            new \Tracker_FormElement_Field_Selectbox(
-                4,
-                89,
-                1000,
-                'status',
-                'Status',
-                'Irrelevant',
-                true,
-                'P',
-                false,
-                '',
-                4
-            )
-        );
-
-        $start_date_field_data = new Field(
-            new \Tracker_FormElement_Field_Date(5, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5)
-        );
-
-        $end_date_field_data = new Field(
-            new \Tracker_FormElement_Field_Date(6, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6)
-        );
-
-        $synchronized_fields = new SynchronizedFields(
-            $artifact_link_field_data,
-            $title_field_data,
-            $description_field_data,
-            $status_field_data,
-            $start_date_field_data,
-            $end_date_field_data
+    private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(): SynchronizedFieldFromProgramAndTeamTrackers
+    {
+        $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
+            GatherSynchronizedFieldsStub::withFieldIds(789, 3, 4, 5, 6, 987),
+            TrackerIdentifierStub::buildWithDefault()
         );
 
         return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_fields);

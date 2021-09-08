@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 
 final class RetrieveTitleValueStub implements RetrieveTitleValue
 {
@@ -42,7 +42,7 @@ final class RetrieveTitleValueStub implements RetrieveTitleValue
         return new self('', true);
     }
 
-    public function getTitleValue(SynchronizedFields $fields): string
+    public function getTitleValue(TitleFieldReference $fields): string
     {
         if ($this->has_error) {
             throw new ChangesetValueNotFoundException(1, 404, 'title');

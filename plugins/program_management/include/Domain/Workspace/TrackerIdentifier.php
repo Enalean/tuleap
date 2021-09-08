@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 /**
  * I am the ID (identifier) of a Tracker.
- * @psalm-immutable
  */
 interface TrackerIdentifier
 {

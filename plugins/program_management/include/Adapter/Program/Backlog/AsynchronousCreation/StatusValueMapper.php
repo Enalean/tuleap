@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 
 final class StatusValueMapper implements MapStatusByValue
 {
@@ -37,7 +37,7 @@ final class StatusValueMapper implements MapStatusByValue
     {
     }
 
-    public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array
+    public function mapStatusValueByDuckTyping(StatusValue $source_value, StatusFieldReference $target_field): array
     {
         $matching_values = [];
         $status_field    = $this->form_element_factory->getFieldById($target_field->getId());

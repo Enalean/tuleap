@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class DescriptionValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,7 +36,7 @@ final class DescriptionValueTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = DescriptionValue::fromSynchronizedFields(
             RetrieveDescriptionValueStub::withValue(self::DESCRIPTION_VALUE, self::DESCRIPTION_FORMAT),
-            SynchronizedFieldsBuilder::build()
+            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
         );
         self::assertEquals(
             ['content' => self::DESCRIPTION_VALUE, 'format' => self::DESCRIPTION_FORMAT],

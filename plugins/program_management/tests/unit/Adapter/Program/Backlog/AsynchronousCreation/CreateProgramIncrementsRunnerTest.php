@@ -31,8 +31,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
@@ -68,9 +68,9 @@ final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->createStub(PlanUserStoriesInMirroredProgramIncrements::class),
             SearchTeamsOfProgramStub::buildTeams(163, 120),
             new BuildProjectStub(),
-            BuildSynchronizedFieldsStub::withDefault(),
             RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
-            RetrieveTrackerStub::buildValidTrackerWithProjectId(155)
+            RetrieveTrackerStub::buildValidTrackerWithProjectId(155),
+            GatherSynchronizedFieldsStub::withDefaults(),
         );
         $this->task_builder->method('build')->willReturn($task);
 
