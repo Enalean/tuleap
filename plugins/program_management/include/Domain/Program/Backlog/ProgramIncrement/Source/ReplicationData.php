@@ -23,17 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
+ * I hold all the information necessary to create Mirrored Program Increments from a source Program Increment
  * @psalm-immutable
  */
 final class ReplicationData
 {
     public function __construct(
-        private ProgramTracker $tracker,
+        private ProgramIncrementTrackerIdentifier $tracker,
         private ChangesetIdentifier $changeset,
         private Artifact $artifact,
         private ProgramManagementProject $project,
@@ -41,7 +42,7 @@ final class ReplicationData
     ) {
     }
 
-    public function getTracker(): ProgramTracker
+    public function getTracker(): ProgramIncrementTrackerIdentifier
     {
         return $this->tracker;
     }

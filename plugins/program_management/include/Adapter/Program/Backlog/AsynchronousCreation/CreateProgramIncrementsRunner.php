@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Exception;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\Queue\QueueFactory;
@@ -72,10 +73,14 @@ final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
         if ((string) $event->getEventName() === self::TOPIC) {
             $message = $event->getPayload();
 
-            $replication_data = $this->replication_data_adapter->buildFromArtifactAndUserId(
-                $message['artifact_id'],
-                $message['user_id']
-            );
+            try {
+                $replication_data = $this->replication_data_adapter->buildFromArtifactAndUserId(
+                    $message['artifact_id'],
+                    $message['user_id']
+                );
+            } catch (StoredProgramIncrementNoLongerValidException $e) {
+                return;
+            }
 
             if ($replication_data === null) {
                 return;

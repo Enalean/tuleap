@@ -1037,7 +1037,8 @@ final class program_managementPlugin extends Plugin
                 Tracker_ArtifactFactory::instance(),
                 UserManager::instance(),
                 new PendingArtifactCreationDao(),
-                Tracker_Artifact_ChangesetFactoryBuilder::build()
+                Tracker_Artifact_ChangesetFactoryBuilder::build(),
+                new ProgramIncrementsDAO()
             ),
             new TaskBuilder()
         );

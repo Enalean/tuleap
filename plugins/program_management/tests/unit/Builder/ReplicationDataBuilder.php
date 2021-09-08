@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -42,25 +44,52 @@ final class ReplicationDataBuilder
         return self::buildWithArtifactIdAndSubmissionDate($artifact_id, 1234567890);
     }
 
-    public static function buildWithArtifactIdAndSubmissionDate(int $artifact_id, int $submission_timestamp): ReplicationData
+    public static function buildWithArtifactIdAndUserId(int $artifact_id, int $user_id): ReplicationData
     {
-        $source_timebox_artifact = self::buildArtifact($artifact_id, $submission_timestamp);
-        $user                    = UserTestBuilder::aUser()->withId(101)->build();
-        $source_changeset        = new \Tracker_Artifact_Changeset(
+        $source_program_increment = self::buildArtifact($artifact_id, 1234567890, 578);
+        return self::buildFromArtifact($source_program_increment, 1234567890, $user_id);
+    }
+
+    public static function buildWithProjectId(int $project_id): ReplicationData
+    {
+        $source_program_increment = self::buildArtifact(311, 1234567890, $project_id);
+        return self::buildFromArtifact($source_program_increment, 1234567890, 101);
+    }
+
+    public static function buildWithArtifactIdAndSubmissionDate(
+        int $artifact_id,
+        int $submission_timestamp
+    ): ReplicationData {
+        $source_program_increment = self::buildArtifact($artifact_id, $submission_timestamp, 578);
+        return self::buildFromArtifact($source_program_increment, $submission_timestamp, 101);
+    }
+
+    private static function buildFromArtifact(
+        Artifact $source_program_increment,
+        int $submission_timestamp,
+        int $user_id
+    ): ReplicationData {
+        $user             = UserTestBuilder::aUser()->withId($user_id)->build();
+        $source_changeset = new \Tracker_Artifact_Changeset(
             2604,
-            $source_timebox_artifact,
+            $source_program_increment,
             $user->getId(),
             $submission_timestamp,
             null
         );
-        return ReplicationDataAdapter::build($source_timebox_artifact, $user, $source_changeset);
+
+        $tracker = ProgramIncrementTrackerIdentifier::fromId(
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+            1
+        );
+        return ReplicationDataAdapter::build($source_program_increment, $user, $source_changeset, $tracker);
     }
 
-    private static function buildArtifact(int $artifact_id, int $submission_timestamp): Artifact
+    private static function buildArtifact(int $artifact_id, int $submission_timestamp, int $project_id): Artifact
     {
-        $program_project        = ProjectTestBuilder::aProject()->withId(578)
-            ->build();
-        $source_timebox_tracker = TrackerTestBuilder::aTracker()->withId(1)
+        $program_project        = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        $source_timebox_tracker = TrackerTestBuilder::aTracker()
+            ->withId(1)
             ->withProject($program_project)
             ->build();
         return ArtifactTestBuilder::anArtifact($artifact_id)

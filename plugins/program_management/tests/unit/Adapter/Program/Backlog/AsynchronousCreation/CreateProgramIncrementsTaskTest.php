@@ -33,9 +33,11 @@ use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -86,7 +88,8 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->teams_searcher,
             new ProgramManagementProjectAdapter($this->project_manager),
             BuildSynchronizedFieldsStub::withDefault(),
-            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer)
+            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
+            RetrieveTrackerStub::buildValidTrackerWithProjectId(119)
         );
     }
 
@@ -99,7 +102,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->project_manager->method('getProject')->willReturn($team_project);
 
         $planning = new \Planning(1, 'Root planning', $team_project_id, '', '');
-        $planning->setPlanningTracker($replication->getTracker()->getFullTracker());
+        $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->build());
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $this->mirror_creator->expects(self::once())->method('createProgramIncrements');

@@ -22,132 +22,138 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Mockery;
-use Tracker_Artifact_ChangesetFactory;
-use Tracker_ArtifactFactory;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactUserNotFoundException;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use UserManager;
 
 final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private const ARTIFACT_ID          = 1;
+    private const USER_ID              = 101;
+    private const SUBMISSION_TIMESTAMP = 1234567890;
+    private const TRACKER_ID           = 10;
+    private const CHANGESET_ID         = 666;
+    private const PROJECT_ID           = 158;
 
-    /**
-     * @var ReplicationDataAdapter
-     */
-    private $adapter;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingArtifactCreationStore
-     */
-    private $pending_artifact_creation_store;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private Stub|\Tracker_Artifact_ChangesetFactory $changeset_factory;
+    private Stub|PendingArtifactCreationStore $pending_artifact_creation_store;
+    private Stub|\UserManager $user_manager;
+    private Stub|\Tracker_ArtifactFactory $artifact_factory;
+    private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
+    private array $pending_row;
+    private Artifact $artifact;
+    private \PFUser $user;
+    private \Tracker_Artifact_Changeset $changeset;
 
     protected function setUp(): void
     {
-        $this->artifact_factory                = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->user_manager                    = Mockery::mock(UserManager::class);
-        $this->pending_artifact_creation_store = Mockery::mock(PendingArtifactCreationStore::class);
-        $this->changeset_factory               = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
+        $this->artifact_factory                = $this->createStub(\Tracker_ArtifactFactory::class);
+        $this->user_manager                    = $this->createStub(\UserManager::class);
+        $this->pending_artifact_creation_store = $this->createStub(PendingArtifactCreationStore::class);
+        $this->changeset_factory               = $this->createStub(\Tracker_Artifact_ChangesetFactory::class);
+        $this->program_increment_verifier      = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
 
-        $this->adapter = new ReplicationDataAdapter(
+        $this->pending_row = ['program_artifact_id' => self::ARTIFACT_ID, 'user_id' => self::USER_ID, 'changeset_id' => self::CHANGESET_ID];
+        $project           = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $tracker           = TrackerTestBuilder::aTracker()
+            ->withId(self::TRACKER_ID)
+            ->withProject($project)
+            ->build();
+        $this->artifact    = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
+            ->withSubmissionTimestamp(self::SUBMISSION_TIMESTAMP)
+            ->inTracker($tracker)
+            ->build();
+        $this->user        = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
+
+        $this->changeset = new \Tracker_Artifact_Changeset(
+            self::CHANGESET_ID,
+            $this->artifact,
+            self::USER_ID,
+            self::SUBMISSION_TIMESTAMP,
+            null
+        );
+    }
+
+    private function getAdapter(): ReplicationDataAdapter
+    {
+        return new ReplicationDataAdapter(
             $this->artifact_factory,
             $this->user_manager,
             $this->pending_artifact_creation_store,
-            $this->changeset_factory
+            $this->changeset_factory,
+            $this->program_increment_verifier
         );
     }
 
     public function testReturnsNullWhenPendingArtifactIsNotFoundInDB(): void
     {
-        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')->once()->andReturnNull();
+        $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn(null);
 
-        self::assertNull($this->adapter->buildFromArtifactAndUserId(1, 101));
+        self::assertNull($this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID));
     }
 
-    public function testItThrowErrorWhenPendingArtifactIsNotFound(): void
+    public function testItThrowsWhenPendingArtifactIsNotFound(): void
     {
-        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
-
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->once()->andReturnNull();
+        $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
+        $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
         $this->expectException(PendingArtifactNotFoundException::class);
+        $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
+    }
 
-        $this->adapter->buildFromArtifactAndUserId(1, 101);
+    public function testItThrowsWhenArtifactIsNotAProgramIncrement(): void
+    {
+        $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
+        $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
+
+        $this->expectException(StoredProgramIncrementNoLongerValidException::class);
+        $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
     }
 
     public function testItThrowsWhenUserIsNotFound(): void
     {
-        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
-
-        $artifact = new Artifact(1, 10, 101, 123456789, true);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->once()->andReturn($artifact);
-
-        $this->user_manager->shouldReceive('getUserById')->once()->andReturnNull();
+        $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
+        $this->user_manager->method('getUserById')->willReturn(null);
 
         $this->expectException(PendingArtifactUserNotFoundException::class);
-
-        $this->adapter->buildFromArtifactAndUserId(1, 101);
+        $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
     }
 
     public function testItThrowsWhenChangesetIsNotFound(): void
     {
-        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
-
-        $artifact = new Artifact(1, 10, 101, 123456789, true);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->once()->andReturn($artifact);
-
-        $user = UserTestBuilder::aUser()->withId(101)->build();
-        $this->user_manager->shouldReceive('getUserById')->once()->andReturn($user);
-
-        $this->changeset_factory->shouldReceive('getChangeset')->once()->with($artifact, 666)->andReturnNull();
+        $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
+        $this->user_manager->method('getUserById')->willReturn($this->user);
+        $this->changeset_factory->method('getChangeset')->willReturn(null);
 
         $this->expectException(PendingArtifactChangesetNotFoundException::class);
-
-        $this->adapter->buildFromArtifactAndUserId(1, 101);
+        $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
     }
 
     public function testItBuildsReplicationData(): void
     {
-        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
+        $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
+        $this->user_manager->method('getUserById')->willReturn($this->user);
+        $this->changeset_factory->method('getChangeset')->willReturn($this->changeset);
 
-        $artifact = new Artifact(1, 10, 101, 123456789, true);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->once()->andReturn($artifact);
-
-        $project = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
-        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
-        $artifact->setTracker($tracker);
-
-        $user = UserTestBuilder::aUser()->withId(101)->build();
-        $this->user_manager->shouldReceive('getUserById')->once()->andReturn($user);
-
-        $changeset = new \Tracker_Artifact_Changeset(666, $artifact, $user->getId(), 123456789, "user@example.com");
-        $this->changeset_factory->shouldReceive('getChangeset')->once()->with($artifact, 666)->andReturn($changeset);
-
-        $this->adapter->buildFromArtifactAndUserId(1, 101);
+        $replication = $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
+        self::assertSame(self::ARTIFACT_ID, $replication->getArtifact()->getId());
+        self::assertSame(self::SUBMISSION_TIMESTAMP, $replication->getArtifact()->getSubmittedOn());
+        self::assertSame(self::USER_ID, $replication->getUserIdentifier()->getId());
+        self::assertSame(self::CHANGESET_ID, $replication->getChangeset()->getId());
+        self::assertSame(self::TRACKER_ID, $replication->getTracker()->getId());
+        self::assertSame(self::PROJECT_ID, $replication->getProject()->getId());
     }
 }
