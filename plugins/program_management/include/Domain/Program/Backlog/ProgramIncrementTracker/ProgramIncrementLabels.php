@@ -45,7 +45,7 @@ final class ProgramIncrementLabels
         if (! $tracker) {
             return new self(null, null);
         }
-        $labels = $label_retriever->getProgramIncrementLabels($tracker->getTrackerId());
+        $labels = $label_retriever->getProgramIncrementLabels($tracker->getId());
         if ($labels === null) {
             return new self(null, null);
         }

@@ -68,7 +68,7 @@ class ProgramIncrementCreatorChecker
         ConfigurationErrorsCollector $errors_collector,
         UserIdentifier $user_identifier
     ): bool {
-        if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getTrackerId())) {
+        if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getId())) {
             return true;
         }
 

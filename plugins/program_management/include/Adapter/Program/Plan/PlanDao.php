@@ -167,7 +167,7 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
                 LEFT JOIN plugin_program_management_program ON (plugin_program_management_plan.project_id = plugin_program_management_program.program_project_id)
                 WHERE plannable_tracker_id = ? OR program_increment_tracker_id = ? OR iteration_tracker_id = ?';
 
-        return $this->getDB()->exists($sql, $tracker_data->getTrackerId(), $tracker_data->getTrackerId(), $tracker_data->getTrackerId());
+        return $this->getDB()->exists($sql, $tracker_data->getId(), $tracker_data->getId(), $tracker_data->getId());
     }
 
     public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool

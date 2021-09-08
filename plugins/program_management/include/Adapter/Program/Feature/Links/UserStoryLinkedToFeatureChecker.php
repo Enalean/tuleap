@@ -65,7 +65,7 @@ final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNo
 
             $is_linked_to_a_sprint_in_mirrored_program_increments = $this->stories_linked_to_feature_dao->isLinkedToASprintInMirroredProgramIncrement(
                 $user_story['user_story_id'],
-                $planning->getPlanningTracker()->getTrackerId(),
+                $planning->getPlanningTracker()->getId(),
                 $user_story['project_id']
             );
             if ($is_linked_to_a_sprint_in_mirrored_program_increments) {

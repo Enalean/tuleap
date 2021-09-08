@@ -45,7 +45,7 @@ final class IterationLabels
         if (! $tracker) {
             return new self(null, null);
         }
-        $labels = $label_retriever->getIterationLabels($tracker->getTrackerId());
+        $labels = $label_retriever->getIterationLabels($tracker->getId());
         if ($labels === null) {
             return new self(null, null);
         }

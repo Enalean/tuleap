@@ -105,7 +105,7 @@ final class SourceTrackerCollection
     public function getSourceTrackerIds(): array
     {
         return array_map(
-            static fn(ProgramTracker $tracker) => $tracker->getTrackerId(),
+            static fn(ProgramTracker $tracker) => $tracker->getId(),
             $this->source_trackers
         );
     }

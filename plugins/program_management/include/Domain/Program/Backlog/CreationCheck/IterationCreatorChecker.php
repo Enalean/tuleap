@@ -67,7 +67,7 @@ class IterationCreatorChecker
         ConfigurationErrorsCollector $errors_collector,
         UserIdentifier $user_identifier
     ): bool {
-        if (! $this->verify_is_iteration->isIterationTracker($tracker->getTrackerId())) {
+        if (! $this->verify_is_iteration->isIterationTracker($tracker->getId())) {
             return true;
         }
 

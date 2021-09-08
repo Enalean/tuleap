@@ -90,7 +90,7 @@ final class TrackerCollection
     public function getTrackerIds(): array
     {
         return array_map(
-            static fn(ProgramTracker $tracker) => $tracker->getTrackerId(),
+            static fn(ProgramTracker $tracker) => $tracker->getId(),
             $this->mirrored_timebox_trackers
         );
     }

@@ -79,7 +79,7 @@ final class ProgramIncrementTrackerConfiguration
         );
 
         return new self(
-            $program_increment_tracker->getTrackerId(),
+            $program_increment_tracker->getId(),
             $can_create_program_increment,
             $has_plan_permissions,
             $program_increments_labels

@@ -46,7 +46,7 @@ final class ProgramTrackerTest extends TestCase
         $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
 
         $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $this->user_identifier);
-        self::assertSame(101, $tracker->getTrackerId());
+        self::assertSame(101, $tracker->getId());
     }
 
     public function testItBuildsMilestoneTrackerFromSecondPlanning(): void
@@ -55,7 +55,7 @@ final class ProgramTrackerTest extends TestCase
         $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
 
         $tracker = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $project, $this->user_identifier);
-        self::assertSame(76, $tracker->getTrackerId());
+        self::assertSame(76, $tracker->getId());
     }
 
     public function testItBuildsProgramIncrementTracker(): void
@@ -65,7 +65,7 @@ final class ProgramTrackerTest extends TestCase
         $program   = ProgramIdentifierBuilder::build();
 
         $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $this->user_identifier);
-        self::assertSame(78, $program_increment_tracker->getTrackerId());
+        self::assertSame(78, $program_increment_tracker->getId());
     }
 
     public function testItBuildsIterationTracker(): void
@@ -75,7 +75,7 @@ final class ProgramTrackerTest extends TestCase
         $program   = ProgramIdentifierBuilder::build();
 
         $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $this->user_identifier);
-        self::assertSame(78, $iteration_tracker->getTrackerId());
+        self::assertSame(78, $iteration_tracker->getId());
     }
 
     public function testItReturnsNullIfNoIterationTracker(): void
@@ -98,6 +98,6 @@ final class ProgramTrackerTest extends TestCase
 
         $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $this->user_identifier);
         self::assertTrue($tracker->userCanSubmitArtifact($retrieve_user, $this->user_identifier));
-        self::assertSame($base_tracker->getId(), $tracker->getTrackerId());
+        self::assertSame($base_tracker->getId(), $tracker->getId());
     }
 }
