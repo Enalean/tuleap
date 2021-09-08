@@ -58,6 +58,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProgramTracker $program_increment_tracker;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
     private RetrieveTrackerFromFieldStub $retrieve_tracker_from_field;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
@@ -68,10 +69,10 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->user = UserIdentifierStub::buildGenericUser();
-        $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $this->user    = UserIdentifierStub::buildGenericUser();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
 
-        $this->program_increment_tracker = new ProgramTracker($tracker);
+        $this->program_increment_tracker = new ProgramTracker($this->tracker);
     }
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
@@ -277,6 +278,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_milestone_tracker = $this->createStub(\Tracker::class);
         $first_milestone_tracker->method('userCanSubmitArtifact')->willReturn($user_can_submit_artifact_in_team);
         $first_milestone_tracker->method('getId')->willReturn(1);
+
         return RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
     }
 
@@ -323,9 +325,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildProgramAndTeamTrackers(TrackerCollection $team_trackers): SourceTrackerCollection
     {
         return SourceTrackerCollection::fromProgramAndTeamTrackers(
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
-                $this->program_increment_tracker->getFullTracker()
-            ),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->tracker),
             ProgramIdentifierBuilder::build(),
             $team_trackers,
             $this->user

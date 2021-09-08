@@ -123,14 +123,6 @@ final class ProgramTracker implements TrackerIdentifier
         return (int) $this->tracker->getGroupId();
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function getFullTracker(): \Tracker
-    {
-        return $this->tracker;
-    }
-
     public function userCanSubmitArtifact(RetrieveUser $retrieve_user, UserIdentifier $user_identifier): bool
     {
         $user = $retrieve_user->getUserWithId($user_identifier);
