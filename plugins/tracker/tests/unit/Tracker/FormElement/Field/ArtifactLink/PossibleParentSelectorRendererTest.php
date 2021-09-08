@@ -62,7 +62,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
 
     public function testItProposeToCreateNewArtifactByDefault(): void
     {
-        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker);
+        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
 
         $xml = simplexml_load_string($this->renderer->render('artifact[155]', '', $possible_parent_selector));
 
@@ -73,7 +73,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
 
     public function testCanCreateIsDisabled(): void
     {
-        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker);
+        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
         $possible_parent_selector->disableCreate();
 
         $xml = simplexml_load_string($this->renderer->render('artifact[155]', '', $possible_parent_selector));
@@ -83,7 +83,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
 
     public function testItProposeAPossibleParent(): void
     {
-        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker);
+        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
         $possible_parent_selector->disableCreate();
         $possible_parent_selector->setPossibleParents(
             new \Tracker_Artifact_PaginatedArtifacts(
@@ -118,7 +118,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
 
     public function testItProposePossibleParentsInDifferentTrackersAndProjects(): void
     {
-        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker);
+        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
         $possible_parent_selector->setPossibleParents(
             new \Tracker_Artifact_PaginatedArtifacts(
                 [

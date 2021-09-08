@@ -39,6 +39,7 @@ use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
@@ -110,7 +111,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
     public function testUserStoryTrackerIsPartOfScrumTopBacklog(): void
     {
         $event_proxy = PossibleParentSelectorProxy::fromEvent(
-            new PossibleParentSelector($this->user, $this->user_story_tracker),
+            new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0),
             $this->retrieve_root_planning,
             $this->retrieve_artifact,
         );
@@ -121,7 +122,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
     public function testBugTrackerIsNotPartOfScrumTopBacklog(): void
     {
         $event_proxy = PossibleParentSelectorProxy::fromEvent(
-            new PossibleParentSelector($this->user, $this->bug_tracker),
+            new PossibleParentSelector($this->user, $this->bug_tracker, 0, 0),
             $this->retrieve_root_planning,
             $this->retrieve_artifact,
         );
@@ -131,23 +132,21 @@ final class PossibleParentSelectorProxyTest extends TestCase
 
     public function testItReturnsArtifactsWhenFeaturesGiven(): void
     {
-        $event       = new PossibleParentSelector($this->user, $this->user_story_tracker);
+        $event       = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
         $event_proxy = PossibleParentSelectorProxy::fromEvent(
             $event,
             $this->retrieve_root_planning,
             $this->retrieve_artifact,
         );
 
-        $event_proxy->setPossibleParents(
-            $this->feature_53,
-        );
+        $event_proxy->setPossibleParents(1, $this->feature_53);
 
         self::assertEquals([$this->feature_53->id], array_map(static fn (Artifact $artifact) => $artifact->getId(), $event->getPossibleParents()->getArtifacts()));
     }
 
     public function testItThrowsExceptionWhenFeatureCannotBeMappedToAnArtifact(): void
     {
-        $event = new PossibleParentSelector($this->user, $this->user_story_tracker);
+        $event = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
 
         $retrieve_artifact = new class implements RetrieveArtifact
         {
@@ -165,8 +164,23 @@ final class PossibleParentSelectorProxyTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
 
+        $event_proxy->setPossibleParents(1, $this->feature_53);
+    }
+
+    public function testItReturnsPaginatedArtifactsWithStoreSize(): void
+    {
+        $event       = new PossibleParentSelector($this->user, $this->user_story_tracker, 1, 1);
+        $event_proxy = PossibleParentSelectorProxy::fromEvent(
+            $event,
+            $this->retrieve_root_planning,
+            $this->retrieve_artifact,
+        );
+
         $event_proxy->setPossibleParents(
+            75,
             $this->feature_53,
         );
+
+        assertEquals($event->getPossibleParents()->getTotalSize(), 75);
     }
 }

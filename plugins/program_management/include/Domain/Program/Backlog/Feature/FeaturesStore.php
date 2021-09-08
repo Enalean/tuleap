@@ -24,18 +24,17 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-/**
- * @psalm-type ArtifactFeature=array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}
- */
 interface FeaturesStore
 {
     /**
-     * @psalm-return ArtifactFeature[]
+     * @psalm-return list<array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}>
      */
     public function searchPlannableFeatures(ProgramIdentifier $program): array;
 
     /**
-     * @psalm-return ArtifactFeature[]
+     * @psalm-return list<array{artifact_id: int, program_id: int}>
      */
-    public function searchOpenFeatures(ProgramIdentifier $program): array;
+    public function searchOpenFeatures(int $offset, int $limit, ProgramIdentifier ...$program_identifiers): array;
+
+    public function searchOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int;
 }

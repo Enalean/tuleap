@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class FeaturesDao extends DataAccessObject implements FeaturesStore
 {
-    /**
-     * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
-     */
     public function searchPlannableFeatures(ProgramIdentifier $program): array
     {
         $sql = '
@@ -62,10 +60,62 @@ final class FeaturesDao extends DataAccessObject implements FeaturesStore
         return $this->getDB()->run($sql, $program->getId());
     }
 
-    public function searchOpenFeatures(ProgramIdentifier $program): array
+    public function searchOpenFeatures(int $offset, int $limit, ProgramIdentifier ...$program_identifiers): array
     {
+        if (count($program_identifiers) === 0) {
+            return [];
+        }
+
+        $limit_parameters = [];
+        $limit_statement  = '';
+        if ($offset !== 0 || $limit !== 0) {
+            $limit_statement  = 'LIMIT ? OFFSET ?';
+            $limit_parameters = [$limit, $offset];
+        }
+
+        $project_ids_condition = $this->getProjectIdsCondition(...$program_identifiers);
+        $query                 = $this->getOpenFeaturesQuery(
+            'artifact.id AS artifact_id, tracker.group_id AS program_id',
+            $project_ids_condition,
+        );
+
         $sql = <<<SQL
-            SELECT artifact.id AS artifact_id
+            $query
+            ORDER BY tracker.id, artifact_id DESC
+            $limit_statement
+            SQL;
+
+        return $this->getDB()->safeQuery($sql, array_merge($project_ids_condition->values(), [\Project::STATUS_ACTIVE], $limit_parameters));
+    }
+
+    /**
+     * SQL_CALC_FOUND_ROWS is not used because it's deprecated and slower than just count
+     *
+     * @see https://dev.mysql.com/worklog/task/?id=12615
+     */
+    public function searchOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
+    {
+        if (count($program_identifiers) === 0) {
+            return 0;
+        }
+
+        $project_ids_condition = $this->getProjectIdsCondition(...$program_identifiers);
+        $sql                   = $this->getOpenFeaturesQuery(
+            'COUNT(*) AS count',
+            $project_ids_condition,
+        );
+
+        $rows = $this->getDB()->safeQuery($sql, array_merge($project_ids_condition->values(), [\Project::STATUS_ACTIVE]));
+        if (is_array($rows) && count($rows) === 1) {
+            return $rows[0]['count'];
+        }
+        return 0;
+    }
+
+    private function getOpenFeaturesQuery(string $selected_fields, EasyStatement $project_ids_condition): string
+    {
+        return <<<SQL
+            SELECT $selected_fields
                 FROM `groups` AS project
                     INNER JOIN tracker ON tracker.group_id = project.group_id
                     INNER JOIN plugin_program_management_plan AS plan
@@ -79,9 +129,17 @@ final class FeaturesDao extends DataAccessObject implements FeaturesStore
                         INNER JOIN tracker_changeset_value_list AS status_value
                             ON (status_changeset.id = status_value.changeset_value_id AND status.open_value_id = status_value.bindvalue_id)
                     ) ON (tracker.id = status.tracker_id AND tracker_changeset.id = status_changeset.changeset_id)
-            WHERE project.group_id = ?
-            ORDER BY tracker.id, artifact_id DESC
+            WHERE project.group_id IN ($project_ids_condition)
+                AND project.status = ?
+                AND tracker.deletion_date IS NULL
             SQL;
-        return $this->getDB()->run($sql, $program->getId());
+    }
+
+    private function getProjectIdsCondition(ProgramIdentifier ...$program_identifiers): EasyStatement
+    {
+        return EasyStatement::open()->in(
+            '?*',
+            array_map(static fn (ProgramIdentifier $program) => $program->getId(), $program_identifiers)
+        );
     }
 }

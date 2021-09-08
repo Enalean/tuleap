@@ -69,7 +69,7 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
         $this->inner_event->disableCreate();
     }
 
-    public function setPossibleParents(FeatureIdentifier ...$features): void
+    public function setPossibleParents(int $total_size, FeatureIdentifier ...$features): void
     {
         $artifacts = [];
         foreach ($features as $feature) {
@@ -80,7 +80,23 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
             $artifacts[] = $artifact;
         }
         $this->inner_event->setPossibleParents(
-            new \Tracker_Artifact_PaginatedArtifacts($artifacts, count($artifacts))
+            new \Tracker_Artifact_PaginatedArtifacts($artifacts, $total_size)
         );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getLimit(): int
+    {
+        return $this->inner_event->limit;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getOffset(): int
+    {
+        return $this->inner_event->offset;
     }
 }
