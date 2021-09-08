@@ -43,28 +43,50 @@ class PossibleParentSelectorRenderer
             return '';
         }
 
-        $possible_parent_presenters = [];
-        if ($possible_parent_selector->getPossibleParents()) {
-            foreach ($possible_parent_selector->getPossibleParents()->getArtifacts() as $possible_parent) {
-                $possible_parent_presenters[] = new PossibleParentPresenter(
-                    $possible_parent->getId(),
-                    $possible_parent->getXRef(),
-                    $possible_parent->getTitle() ?? '',
-                    $prefill_parent !== '' && $possible_parent->getId() === (int) $prefill_parent,
-                );
-            }
-        }
-
         ListPickerIncluder::includeArtifactLinksListPickerAssets($possible_parent_selector->tracker->getId());
         return $this->renderer->renderToString(
             'possible-parent-selector',
             new PossibleParentSelectorPresenter(
                 $possible_parent_selector->getParentLabel(),
-                $possible_parent_selector->getLabel(),
                 $form_name_prefix,
                 $possible_parent_selector->canCreate(),
-                ...$possible_parent_presenters,
+                ...$this->getPossibleParentsWithTheirCategories($possible_parent_selector, $prefill_parent),
             )
         );
+    }
+
+    /**
+     * @return PossibleParentCategoryPresenter[]
+     */
+    private function getPossibleParentsWithTheirCategories(PossibleParentSelector $possible_parent_selector, string $prefill_parent): array
+    {
+        $possible_parents = $possible_parent_selector->getPossibleParents();
+        if (! $possible_parents) {
+            return [];
+        }
+        $possible_parent_categories = [];
+        $trackers                   = [];
+        $presenter_tracker          = [];
+        foreach ($possible_parents->getArtifacts() as $possible_parent) {
+            $tracker                                = $possible_parent->getTracker();
+            $presenter_tracker[$tracker->getId()][] = new PossibleParentPresenter(
+                $possible_parent->getId(),
+                $possible_parent->getXRef(),
+                $possible_parent->getTitle() ?? '',
+                $prefill_parent !== '' && $possible_parent->getId() === (int) $prefill_parent,
+            );
+            $trackers[$tracker->getId()]            = $tracker;
+        }
+        foreach ($presenter_tracker as $tracker_id => $artifacts) {
+            $possible_parent_categories[] = new PossibleParentCategoryPresenter(
+                sprintf(
+                    dgettext('tuleap-tracker', '%1s - open %2s'),
+                    $trackers[$tracker_id]->getProject()->getPublicName(),
+                    $trackers[$tracker_id]->getName(),
+                ),
+                ...$artifacts
+            );
+        }
+        return $possible_parent_categories;
     }
 }

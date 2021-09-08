@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
@@ -84,10 +85,24 @@ final class PossibleParentSelectorRendererTest extends TestCase
     {
         $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker);
         $possible_parent_selector->disableCreate();
-        $possible_parent_selector->setLabel('Open epics');
         $possible_parent_selector->setPossibleParents(
             new \Tracker_Artifact_PaginatedArtifacts(
-                [ArtifactTestBuilder::anArtifact(123)->withTitle('fuu bar')->build()],
+                [
+                    ArtifactTestBuilder::anArtifact(123)
+                        ->withTitle('fuu bar')
+                        ->inTracker(
+                            TrackerTestBuilder::aTracker()
+                                ->withId(888)
+                                ->withName('epics')
+                                ->withProject(
+                                    ProjectTestBuilder::aProject()
+                                        ->withPublicName('Guinea Pig')
+                                        ->build()
+                                )
+                                ->build()
+                        )
+                        ->build()
+                ],
                 1
             )
         );
@@ -95,9 +110,65 @@ final class PossibleParentSelectorRendererTest extends TestCase
         $xml = simplexml_load_string($this->renderer->render('artifact[155]', '', $possible_parent_selector));
 
         self::assertCount(1, $xml->select->optgroup);
-        self::assertEquals('Open epics', $xml->select->optgroup['label']);
+        self::assertEquals('Guinea Pig - open epics', $xml->select->optgroup['label']);
         self::assertCount(1, $xml->select->optgroup->option);
         self::assertEquals('123', (string) $xml->select->optgroup->option[0]['value']);
         self::assertStringContainsString('fuu bar', (string) $xml->select->optgroup->option[0]);
+    }
+
+    public function testItProposePossibleParentsInDifferentTrackersAndProjects(): void
+    {
+        $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker);
+        $possible_parent_selector->setPossibleParents(
+            new \Tracker_Artifact_PaginatedArtifacts(
+                [
+                    ArtifactTestBuilder::anArtifact(123)
+                        ->withTitle('fuu bar')
+                        ->inTracker(
+                            TrackerTestBuilder::aTracker()
+                                ->withId(888)
+                                ->withName('epics')
+                                ->withProject(
+                                    ProjectTestBuilder::aProject()
+                                        ->withPublicName('Guinea Pig')
+                                        ->build()
+                                )
+                                ->build()
+                        )
+                        ->build(),
+                    ArtifactTestBuilder::anArtifact(456)
+                        ->withTitle('miaou')
+                        ->inTracker(
+                            TrackerTestBuilder::aTracker()
+                                ->withId(777)
+                                ->withName('stories')
+                                ->withProject(
+                                    ProjectTestBuilder::aProject()
+                                        ->withPublicName('Cat')
+                                        ->build()
+                                )
+                                ->build()
+                        )
+                        ->build()
+                ],
+                2
+            )
+        );
+
+
+        $xml = simplexml_load_string($this->renderer->render('artifact[155]', '', $possible_parent_selector));
+
+
+
+        self::assertCount(3, $xml->select->optgroup);
+        self::assertEquals('Creation', $xml->select->optgroup[0]['label']);
+        self::assertEquals('Guinea Pig - open epics', $xml->select->optgroup[1]['label']);
+        self::assertCount(1, $xml->select->optgroup[1]->option);
+        self::assertEquals('123', (string) $xml->select->optgroup[1]->option[0]['value']);
+        self::assertStringContainsString('fuu bar', (string) $xml->select->optgroup[1]->option[0]);
+        self::assertEquals('Cat - open stories', $xml->select->optgroup[2]['label']);
+        self::assertCount(1, $xml->select->optgroup[2]->option);
+        self::assertEquals('456', (string) $xml->select->optgroup[2]->option[0]['value']);
+        self::assertStringContainsString('miaou', (string) $xml->select->optgroup[2]->option[0]);
     }
 }

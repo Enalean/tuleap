@@ -39,14 +39,11 @@ use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
 final class PossibleParentSelectorProxyTest extends TestCase
 {
-    private const FEATURE_ID = 53;
-
     private PFUser $user;
     private Tracker $bug_tracker;
     private Tracker $user_story_tracker;
@@ -94,26 +91,16 @@ final class PossibleParentSelectorProxyTest extends TestCase
 
         $this->retrieve_artifact = new class implements RetrieveArtifact
         {
-            public string $tracker_name = '';
-            public string $short_name   = '';
-
-
             public function getArtifactById($id): ?Artifact
             {
                 return ArtifactTestBuilder::anArtifact((int) $id)
-                    ->inTracker(
-                        TrackerTestBuilder::aTracker()
-                        ->withName($this->tracker_name)
-                        ->withShortName($this->short_name)
-                        ->build()
-                    )
                     ->build();
             }
         };
 
         $this->feature_53 = FeatureIdentifier::fromId(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            self::FEATURE_ID,
+            53,
             UserProxy::buildFromPFUser($this->user),
             ProgramIdentifierBuilder::build(),
             null,
@@ -155,7 +142,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
             $this->feature_53,
         );
 
-        self::assertEquals([self::FEATURE_ID], array_map(static fn (Artifact $artifact) => $artifact->getId(), $event->getPossibleParents()->getArtifacts()));
+        self::assertEquals([$this->feature_53->id], array_map(static fn (Artifact $artifact) => $artifact->getId(), $event->getPossibleParents()->getArtifacts()));
     }
 
     public function testItThrowsExceptionWhenFeatureCannotBeMappedToAnArtifact(): void
@@ -181,41 +168,5 @@ final class PossibleParentSelectorProxyTest extends TestCase
         $event_proxy->setPossibleParents(
             $this->feature_53,
         );
-    }
-
-    public function testLabelIsSetWithProgramBacklogTrackersWhenInTheContextOfTeamAttachedToProgram(): void
-    {
-        $this->retrieve_artifact->tracker_name = 'Features';
-
-        $event       = new PossibleParentSelector($this->user, $this->user_story_tracker);
-        $event_proxy = PossibleParentSelectorProxy::fromEvent(
-            $event,
-            $this->retrieve_root_planning,
-            $this->retrieve_artifact,
-        );
-
-        $event_proxy->setPossibleParents(
-            $this->feature_53,
-        );
-
-        assertEquals('Open Features', $event->getLabel());
-    }
-
-    public function testParentLabelIsSetWithProgramBacklogTrackersWhenInTheContextOfTeamAttachedToProgram(): void
-    {
-        $this->retrieve_artifact->short_name = 'feature';
-
-        $event       = new PossibleParentSelector($this->user, $this->user_story_tracker);
-        $event_proxy = PossibleParentSelectorProxy::fromEvent(
-            $event,
-            $this->retrieve_root_planning,
-            $this->retrieve_artifact,
-        );
-
-        $event_proxy->setPossibleParents(
-            $this->feature_53,
-        );
-
-        assertEquals('feature', $event->getParentLabel());
     }
 }

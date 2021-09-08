@@ -52,7 +52,6 @@ class PossibleParentsRetriever
             return $possible_parents;
         }
 
-        $possible_parents->setLabel(sprintf(dgettext('tuleap-tracker', 'Open %1$s'), $parent_tracker->getName()));
         $possible_parents->setParentLabel($parent_tracker->getItemName());
         $possible_parents->setPossibleParents(
             $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(

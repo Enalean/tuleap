@@ -100,6 +100,10 @@ msgstr ""
 msgid "%1$s: %2$s is not an artifact id."
 msgstr "%1$s : %2$s n'est pas un id d'artefact."
 
+#, php-format
+msgid "%1s - open %2s"
+msgstr "%1s - %2s ouvert·e·s"
+
 msgid "%s administration"
 msgstr "Administration de %s"
 
@@ -2236,10 +2240,6 @@ msgstr ""
 msgid "Open"
 msgstr "Ouvert"
 
-#, php-format
-msgid "Open %1$s"
-msgstr "%1$s ouvert(es)"
-
 msgid "Open List"
 msgstr "Liste ouverte"
 
@@ -2605,11 +2605,11 @@ msgstr ""
 "Voir la configuration de l'outil de suivi "
 "{{ tracker_name_from_which_we_imply_the_semantic }}"
 
-msgid "Select %s parent"
-msgstr "Sélectionner un parent %1$s"
-
 msgid "Select Box"
 msgstr "boîte de sélection simple"
+
+msgid "Select a parent"
+msgstr "Sélectionner un parent"
 
 msgid ""
 "Select a source field and a target field to edit dependencies between them."

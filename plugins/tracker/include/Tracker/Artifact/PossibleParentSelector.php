@@ -40,7 +40,6 @@ final class PossibleParentSelector implements Dispatchable
     public \Tracker $tracker;
 
     private ?Tracker_Artifact_PaginatedArtifacts $possible_parents = null;
-    private string $label                                          = '';
     private bool $display_selector                                 = true;
     private string $parent_label                                   = '';
     private bool $can_create                                       = true;
@@ -56,19 +55,9 @@ final class PossibleParentSelector implements Dispatchable
         return $this->possible_parents;
     }
 
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
     public function isSelectorDisplayed(): bool
     {
         return $this->display_selector;
-    }
-
-    public function setLabel(string $label): void
-    {
-        $this->label = $label;
     }
 
     public function setPossibleParents(Tracker_Artifact_PaginatedArtifacts $possible_parents): void
