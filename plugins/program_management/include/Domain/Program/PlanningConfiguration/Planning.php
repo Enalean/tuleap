@@ -26,46 +26,21 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHas
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
  */
 final class Planning
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var ProgramTracker
-     */
-    private $planning_tracker;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var array
-     */
-    private $backlog_tracker_ids = [];
-    /**
-     * @var ProgramManagementProject
-     */
-    private $project_data;
-
     private function __construct(
-        ProgramTracker $planning_tracker,
-        int $id,
-        string $name,
-        array $backlog_tracker_ids,
-        ProgramManagementProject $project_data
+        private ProgramTracker $planning_tracker,
+        private int $id,
+        private string $name,
+        private array $backlog_tracker_ids,
+        private ProgramManagementProject $project_data
     ) {
-        $this->id                  = $id;
-        $this->planning_tracker    = $planning_tracker;
-        $this->name                = $name;
-        $this->backlog_tracker_ids = $backlog_tracker_ids;
-        $this->project_data        = $project_data;
     }
 
     public function getId(): int
@@ -97,8 +72,9 @@ final class Planning
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoProgramIncrementException
      */
-    public static function buildPlanning(BuildPlanning $build_planning, \PFUser $user, int $project_id): self
+    public static function buildPlanning(BuildPlanning $build_planning, RetrieveUser $retrieve_user, UserIdentifier $user_identifier, int $project_id): self
     {
+        $user          = $retrieve_user->getUserWithId($user_identifier);
         $root_planning = $build_planning->getRootPlanning(
             $user,
             $project_id
