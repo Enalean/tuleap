@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -160,7 +161,8 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         return new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             $this->logger,
             $retrieve_tracker_from_field,
-            $retrieve_field_permissions
+            $retrieve_field_permissions,
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
     }
 }

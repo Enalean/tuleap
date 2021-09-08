@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollection
@@ -38,8 +39,12 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
     private array $synchronized_fields = [];
 
 
-    public function __construct(private LoggerInterface $logger, private RetrieveTrackerFromField $retrieve_tracker_from_field, private VerifyFieldPermissions $retrieve_field_permission)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+        private RetrieveTrackerFromField $retrieve_tracker_from_field,
+        private VerifyFieldPermissions $retrieve_field_permission,
+        private RetrieveProjectFromTracker $retrieve_project_from_tracker
+    ) {
     }
 
     /**
@@ -53,10 +58,12 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
         foreach ($this->synchronized_fields as $synchronized_field) {
             if (! $this->retrieve_field_permission->canUserSubmit($user_identifier, $synchronized_field)) {
                 $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
+                $project_reference = $this->retrieve_project_from_tracker->fromTrackerReference($tracker_reference);
                 $errors_collector->addSubmitFieldPermissionError(
                     $tracker_reference->id,
                     $synchronized_field->getLabel(),
-                    $tracker_reference
+                    $tracker_reference,
+                    $project_reference
                 );
                 $can_submit = false;
                 if (! $errors_collector->shouldCollectAllIssues()) {
@@ -73,10 +80,12 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
             }
             if (! $this->retrieve_field_permission->canUserUpdate($user_identifier, $synchronized_field)) {
                 $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
+                $project_reference = $this->retrieve_project_from_tracker->fromTrackerReference($tracker_reference);
                 $errors_collector->addUpdateFieldPermissionError(
                     $synchronized_field->getId(),
                     $synchronized_field->getLabel(),
-                    $tracker_reference
+                    $tracker_reference,
+                    $project_reference
                 );
                 $can_submit = false;
                 if (! $errors_collector->shouldCollectAllIssues()) {

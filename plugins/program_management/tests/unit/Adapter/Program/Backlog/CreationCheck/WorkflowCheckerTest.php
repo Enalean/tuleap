@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -82,7 +83,8 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->collection                  = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             new NullLogger(),
             $this->retrieve_tracker_from_field,
-            $this->retrieve_field_permissions
+            $this->retrieve_field_permissions,
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
     }
 

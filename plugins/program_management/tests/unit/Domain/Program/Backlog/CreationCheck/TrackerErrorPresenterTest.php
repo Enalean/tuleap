@@ -163,7 +163,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasPermissionErrorsWhenNotSubmittable(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1));
+        $errors_collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
@@ -180,7 +180,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasPermissionErrorsWhenNotEditable(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1));
+        $errors_collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
