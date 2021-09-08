@@ -93,10 +93,11 @@ final class ProgramTrackerTest extends TestCase
         $project       = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
         $base_tracker  = $this->createMock(\Tracker::class);
         $base_tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $base_tracker->method('getId')->willReturn(1);
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($base_tracker);
 
         $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $this->user_identifier);
         self::assertTrue($tracker->userCanSubmitArtifact($retrieve_user, $this->user_identifier));
-        self::assertSame($base_tracker, $tracker->getFullTracker());
+        self::assertSame($base_tracker->getId(), $tracker->getTrackerId());
     }
 }

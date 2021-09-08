@@ -50,11 +50,14 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
+        $tracker_factory       = $this->createStub(\TrackerFactory::class);
         $this->creator         = $this->createMock(TrackerArtifactCreator::class);
-        $this->adapter         = new ArtifactCreatorAdapter($this->creator);
-        $this->tracker         = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
+        $this->adapter         = new ArtifactCreatorAdapter($this->creator, $tracker_factory);
+        $full_tracker          = TrackerTestBuilder::aTracker()->build();
+        $this->tracker         = new ProgramTracker($full_tracker);
         $this->user            = UserTestBuilder::aUser()->build();
         $this->submission_date = new SubmissionDate(self::SUBMISSION_TIMESTAMP);
+        $tracker_factory->method('getTrackerById')->willReturn($full_tracker);
     }
 
     public function testItCreatesAnArtifact(): void

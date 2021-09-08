@@ -89,8 +89,8 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers(RetrieveUserStub::withGenericUser(), $this->user_identifier, new ConfigurationErrorsCollector(false)));
 
         $trackers = $collection->getTrackers();
-        self::assertEquals($first_tracker, $trackers[0]->getFullTracker());
-        self::assertEquals($second_tracker, $trackers[1]->getFullTracker());
+        self::assertEquals($first_tracker->getId(), $trackers[0]->getTrackerId());
+        self::assertEquals($second_tracker->getId(), $trackers[1]->getTrackerId());
 
         $ids = $collection->getTrackerIds();
         self::assertContains(78, $ids);
@@ -116,8 +116,8 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers(RetrieveUserStub::withGenericUser(), $this->user_identifier, new ConfigurationErrorsCollector(false)));
 
         $trackers = $collection->getTrackers();
-        self::assertEquals($first_tracker, $trackers[0]->getFullTracker());
-        self::assertEquals($second_tracker, $trackers[1]->getFullTracker());
+        self::assertEquals($first_tracker->getId(), $trackers[0]->getTrackerId());
+        self::assertEquals($second_tracker->getId(), $trackers[1]->getTrackerId());
     }
 
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllRootPlanningTrackers(): void

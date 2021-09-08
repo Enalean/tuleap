@@ -33,11 +33,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext
 
 final class ArtifactCreatorAdapter implements CreateArtifact
 {
-    private TrackerArtifactCreator $artifact_creator;
-
-    public function __construct(TrackerArtifactCreator $artifact_creator)
+    public function __construct(private TrackerArtifactCreator $artifact_creator, private \TrackerFactory $tracker_factory)
     {
-        $this->artifact_creator = $artifact_creator;
     }
 
     /**
@@ -49,8 +46,12 @@ final class ArtifactCreatorAdapter implements CreateArtifact
         \PFUser $user,
         SubmissionDate $submission_date
     ): void {
+        $full_tracker = $this->tracker_factory->getTrackerById($tracker->getTrackerId());
+        if (! $full_tracker) {
+            throw new \RuntimeException("Tracker with id #" . $tracker->getTrackerId() . " is not found.");
+        }
         $artifact = $this->artifact_creator->create(
-            $tracker->getFullTracker(),
+            $full_tracker,
             $mirrored_program_increment_changeset->toFieldsDataArray(),
             $user,
             $submission_date->getValue(),
