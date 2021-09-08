@@ -48,52 +48,52 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
     ) {
     }
 
-    public function getTitleField(TrackerIdentifier $program_increment): TitleFieldReference
+    public function getTitleField(TrackerIdentifier $tracker_identifier): TitleFieldReference
     {
-        $full_tracker = $this->getFullTracker($program_increment);
+        $full_tracker = $this->getFullTracker($tracker_identifier);
         $title_field  = $this->title_factory->getByTracker($full_tracker)->getField();
         if (! $title_field) {
-            throw new FieldRetrievalException($program_increment->getId(), 'title');
+            throw new FieldRetrievalException($tracker_identifier->getId(), 'title');
         }
         if (! $title_field instanceof \Tracker_FormElement_Field_String) {
-            throw new TitleFieldHasIncorrectTypeException($program_increment->getId(), $title_field->getId());
+            throw new TitleFieldHasIncorrectTypeException($tracker_identifier->getId(), $title_field->getId());
         }
         return TitleFieldReferenceProxy::fromTrackerField($title_field);
     }
 
-    public function getDescriptionField(TrackerIdentifier $program_increment): DescriptionFieldReference
+    public function getDescriptionField(TrackerIdentifier $tracker_identifier): DescriptionFieldReference
     {
-        $full_tracker      = $this->getFullTracker($program_increment);
+        $full_tracker      = $this->getFullTracker($tracker_identifier);
         $description_field = $this->description_factory->getByTracker($full_tracker)->getField();
         if (! $description_field) {
-            throw new FieldRetrievalException($program_increment->getId(), 'description');
+            throw new FieldRetrievalException($tracker_identifier->getId(), 'description');
         }
         return DescriptionFieldReferenceProxy::fromTrackerField($description_field);
     }
 
-    public function getStatusField(TrackerIdentifier $program_increment): StatusFieldReference
+    public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference
     {
-        $full_tracker = $this->getFullTracker($program_increment);
+        $full_tracker = $this->getFullTracker($tracker_identifier);
         $status_field = $this->status_factory->getByTracker($full_tracker)->getField();
         if (! $status_field) {
-            throw new FieldRetrievalException($program_increment->getId(), 'status');
+            throw new FieldRetrievalException($tracker_identifier->getId(), 'status');
         }
         return StatusFieldReferenceProxy::fromTrackerField($status_field);
     }
 
-    public function getStartDateField(TrackerIdentifier $program_increment): StartDateFieldReference
+    public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference
     {
-        $full_tracker     = $this->getFullTracker($program_increment);
+        $full_tracker     = $this->getFullTracker($tracker_identifier);
         $start_date_field = $this->timeframe_builder->getSemantic($full_tracker)->getStartDateField();
         if (! $start_date_field) {
-            throw new MissingTimeFrameFieldException($program_increment->getId(), 'start date');
+            throw new MissingTimeFrameFieldException($tracker_identifier->getId(), 'start date');
         }
         return StartDateFieldReferenceProxy::fromTrackerField($start_date_field);
     }
 
-    public function getEndPeriodField(TrackerIdentifier $program_increment): EndPeriodFieldReference
+    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndPeriodFieldReference
     {
-        $full_tracker   = $this->getFullTracker($program_increment);
+        $full_tracker   = $this->getFullTracker($tracker_identifier);
         $semantic       = $this->timeframe_builder->getSemantic($full_tracker);
         $duration_field = $semantic->getDurationField();
         if ($duration_field !== null) {
@@ -103,26 +103,27 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         if ($end_date_field !== null) {
             return EndPeriodFieldReferenceProxy::fromTrackerField($end_date_field);
         }
-        throw new MissingTimeFrameFieldException($program_increment->getId(), 'end date or duration');
+
+        throw new MissingTimeFrameFieldException($tracker_identifier->getId(), 'end date or duration');
     }
 
     public function getArtifactLinkField(
-        TrackerIdentifier $program_increment
+        TrackerIdentifier $tracker_identifier
     ): ArtifactLinkFieldReference {
-        $full_tracker         = $this->getFullTracker($program_increment);
+        $full_tracker         = $this->getFullTracker($tracker_identifier);
         $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($full_tracker);
         if (count($artifact_link_fields) > 0) {
             return ArtifactLinkFieldReferenceProxy::fromTrackerField(($artifact_link_fields[0]));
         }
-        throw new NoArtifactLinkFieldException($program_increment->getId());
+        throw new NoArtifactLinkFieldException($tracker_identifier->getId());
     }
 
-    private function getFullTracker(TrackerIdentifier $program_increment): \Tracker
+    private function getFullTracker(TrackerIdentifier $tracker_identifier): \Tracker
     {
-        $full_tracker = $this->tracker_factory->getTrackerById($program_increment->getId());
+        $full_tracker = $this->tracker_factory->getTrackerById($tracker_identifier->getId());
         if (! $full_tracker) {
             throw new \RuntimeException(
-                sprintf('Program Increment tracker with id #%s could not be found', $program_increment->getId())
+                sprintf('Program Increment tracker with id #%s could not be found', $tracker_identifier->getId())
             );
         }
         return $full_tracker;

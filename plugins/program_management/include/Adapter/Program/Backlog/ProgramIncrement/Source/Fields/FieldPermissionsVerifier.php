@@ -24,8 +24,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -36,8 +41,10 @@ final class FieldPermissionsVerifier implements VerifyFieldPermissions
     {
     }
 
-    public function canUserSubmit(UserIdentifier $user_identifier, Field $field): bool
-    {
+    public function canUserSubmit(
+        UserIdentifier $user_identifier,
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field
+    ): bool {
         $user       = $this->retrieve_user->getUserWithId($user_identifier);
         $full_field = $this->form_element_factory->getFieldById($field->getId());
 
@@ -48,8 +55,10 @@ final class FieldPermissionsVerifier implements VerifyFieldPermissions
         return $full_field->userCanSubmit($user);
     }
 
-    public function canUserUpdate(UserIdentifier $user_identifier, Field $field): bool
-    {
+    public function canUserUpdate(
+        UserIdentifier $user_identifier,
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field
+    ): bool {
         $user       = $this->retrieve_user->getUserWithId($user_identifier);
         $full_field = $this->form_element_factory->getFieldById($field->getId());
 

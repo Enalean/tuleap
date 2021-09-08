@@ -24,17 +24,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_ArtifactLink;
-use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Selectbox;
-use Tracker_FormElement_Field_Text;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -43,6 +36,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilesto
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
@@ -56,22 +50,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var Stub|BuildSynchronizedFields
-     */
-    private $fields_adapter;
-    /**
-     * @var Stub|CheckSemantic
-     */
-    private $semantic_checker;
-    /**
-     * @var Stub|CheckRequiredField
-     */
-    private $required_field_checker;
-    /**
-     * @var Stub|CheckWorkflow
-     */
-    private $workflow_checker;
+    private GatherSynchronizedFields $fields_adapter;
+    private Stub|CheckSemantic $semantic_checker;
+    private Stub|CheckRequiredField $required_field_checker;
+    private Stub|CheckWorkflow $workflow_checker;
     private UserIdentifier $user;
     private ProgramTracker $program_increment_tracker;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
@@ -79,7 +61,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->fields_adapter              = $this->createStub(BuildSynchronizedFields::class);
         $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
         $this->semantic_checker            = $this->createStub(CheckSemantic::class);
         $this->required_field_checker      = $this->createStub(CheckRequiredField::class);
@@ -103,7 +84,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
 
-        $this->buildSynchronizedFields(true);
+        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(true);
@@ -127,6 +108,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $team_trackers                  = $this->buildTeamTrackers();
         $program_and_team_trackers      = $this->buildProgramAndTeamTrackers($team_trackers);
 
+        $this->fields_adapter = GatherSynchronizedFieldsStub::withDefaults();
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')
             ->willReturn(false);
 
@@ -147,6 +129,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $team_trackers                  = $this->buildTeamTrackers();
         $program_and_team_trackers      = $this->buildProgramAndTeamTrackers($team_trackers);
 
+        $this->fields_adapter = GatherSynchronizedFieldsStub::withDefaults();
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')->willReturn(true);
 
         self::assertFalse(
@@ -169,7 +152,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
 
-        $this->fields_adapter->method('build')->willThrowException(new FieldRetrievalException(1, 'title'));
+        $this->fields_adapter = GatherSynchronizedFieldsStub::withError();
 
         self::assertFalse(
             $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
@@ -190,7 +173,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')->willReturn(true);
 
-        $this->buildSynchronizedFields(false);
+        $this->buildSynchronizedFields();
 
         self::assertFalse(
             $this->getChecker(VerifyFieldPermissionsStub::userCantSubmit())->canTimeboxBeCreated(
@@ -213,7 +196,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
 
-        $this->buildSynchronizedFields(true);
+        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(false);
@@ -239,7 +222,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
 
-        $this->buildSynchronizedFields(true);
+        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(true);
@@ -267,7 +250,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(false);
 
-        $this->buildSynchronizedFields(false);
+        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(false);
@@ -276,7 +259,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(
+            $this->getChecker(VerifyFieldPermissionsStub::userCantSubmit())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
@@ -317,50 +300,9 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function buildSynchronizedFields(bool $submittable): void
+    private function buildSynchronizedFields(): void
     {
-        $title_field = $this->createStub(\Tracker_FormElement_Field_Text::class);
-        $this->mockField($title_field, 6, true, true);
-        $title_field_data = new Field($title_field);
-
-        $artifact_link = $this->createStub(Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link->method("getLabel")->willReturn('Link');
-        $artifact_link->method("getTrackerId")->willReturn(49);
-        $this->mockField($artifact_link, 1, $submittable, true);
-        $artifact_link_field_data = new Field($artifact_link);
-
-        $description_field = $this->createStub(Tracker_FormElement_Field_Text::class);
-        $this->mockField($description_field, 2, true, true);
-        $description_field_data = new Field($description_field);
-
-        $status_field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
-        $this->mockField($status_field, 3, true, true);
-        $status_field_data = new Field($status_field);
-
-        $field_start_date = $this->createStub(Tracker_FormElement_Field_Date::class);
-        $this->mockField($field_start_date, 4, true, true);
-        $start_date_field_data = new Field($field_start_date);
-
-        $field_end_date = $this->createStub(Tracker_FormElement_Field_Date::class);
-        $this->mockField($field_end_date, 5, true, true);
-        $end_date_field_data = new Field($field_end_date);
-
-        $synchronized_fields = new SynchronizedFields(
-            $artifact_link_field_data,
-            $title_field_data,
-            $description_field_data,
-            $status_field_data,
-            $start_date_field_data,
-            $end_date_field_data
-        );
-        $this->fields_adapter->method('build')->willReturn($synchronized_fields);
-    }
-
-    private function mockField(Stub $field, int $id, bool $submittable, bool $updatable): void
-    {
-        $field->method('getId')->willReturn($id);
-        $field->method('userCanSubmit')->willReturn($submittable);
-        $field->method('userCanUpdate')->willReturn($updatable);
+        $this->fields_adapter = GatherSynchronizedFieldsStub::withFieldIds(6, 2, 3, 4, 5, 1);
     }
 
     private function buildTeamTrackers(): TrackerCollection

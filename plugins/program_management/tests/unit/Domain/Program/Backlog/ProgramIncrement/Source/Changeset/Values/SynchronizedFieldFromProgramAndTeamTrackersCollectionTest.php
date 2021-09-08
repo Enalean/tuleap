@@ -24,14 +24,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use Psr\Log\Test\TestLogger;
-use Tracker_FormElement_Field_ArtifactLink;
-use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Selectbox;
-use Tracker_FormElement_Field_Text;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -51,7 +48,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testCanUserSubmitAndUpdateAllFieldsReturnsTrue(): void
     {
-        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
         $collection->add($synchronized_field_data);
@@ -65,7 +62,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testItReturnsFalseWhenUserCantSubmitFields(): void
     {
-        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantSubmit());
         $collection->add($synchronized_field_data);
@@ -81,7 +78,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testItReturnsFalseWhenUserCantUpdateFields(): void
     {
-        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantUpdate());
         $collection->add($synchronized_field_data);
@@ -96,7 +93,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testItLogsErrorsForSubmission(): void
     {
-        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantSubmit());
         $collection->add($synchronized_field_data);
@@ -110,7 +107,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testItLogsErrorsForUpdate(): void
     {
-        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantUpdate());
         $collection->add($synchronized_field_data);
@@ -127,7 +124,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         $field = M::mock(\Tracker_FormElement_Field::class);
         $field->shouldReceive('getId')->andReturn('1');
 
-        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
         $collection->add($synchronized_field_data);
@@ -140,61 +137,21 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testCanObtainsTheSynchronizedFieldIDs(): void
     {
-        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
         $collection->add($synchronized_field_data);
         $this->assertEquals([1, 2, 3, 4, 5, 6], $collection->getSynchronizedFieldIDs());
     }
 
-    private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(
-        bool $submitable,
-        bool $updatable
-    ): SynchronizedFieldFromProgramAndTeamTrackers {
-        $artifact_link = M::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link->shouldReceive('getLabel')->andReturn('Link');
-        $artifact_link->shouldReceive('getTrackerId')->andReturn(49);
-        $this->mockField($artifact_link, 1, $submitable, $updatable);
-        $artifact_link_field_data = new Field($artifact_link);
-
-        $title_field = M::mock(\Tracker_FormElement_Field_Text::class);
-        $this->mockField($title_field, 2, true, true);
-        $title_field_data = new Field($title_field);
-
-        $description_field = M::mock(Tracker_FormElement_Field_Text::class);
-        $this->mockField($description_field, 3, true, true);
-        $description_field_data = new Field($description_field);
-
-        $status_field = M::mock(Tracker_FormElement_Field_Selectbox::class);
-        $this->mockField($status_field, 4, true, true);
-        $status_field_data = new Field($status_field);
-
-        $field_start_date = M::mock(Tracker_FormElement_Field_Date::class);
-        $this->mockField($field_start_date, 5, true, true);
-        $start_date_field_data = new Field($field_start_date);
-
-        $field_end_date = M::mock(Tracker_FormElement_Field_Date::class);
-        $this->mockField($field_end_date, 6, true, true);
-        $end_date_field_data = new Field($field_end_date);
-
-        $synchronized_field_data = new SynchronizedFields(
-            $artifact_link_field_data,
-            $title_field_data,
-            $description_field_data,
-            $status_field_data,
-            $start_date_field_data,
-            $end_date_field_data
-        );
-
-        return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_field_data);
-    }
-
-    private function mockField(MockInterface $field, int $id, bool $submitable, bool $updatable): void
+    private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(): SynchronizedFieldFromProgramAndTeamTrackers
     {
-        $field->shouldReceive('getId')->andReturn($id);
-        $field->shouldReceive('getLabel')->andReturn("A field");
-        $field->shouldReceive('userCanSubmit')->andReturn($submitable);
-        $field->shouldReceive('userCanUpdate')->andReturn($updatable);
+        return new SynchronizedFieldFromProgramAndTeamTrackers(
+            SynchronizedFieldReferences::fromTrackerIdentifier(
+                GatherSynchronizedFieldsStub::withFieldIds(2, 3, 4, 5, 6, 1),
+                TrackerIdentifierStub::buildWithDefault()
+            )
+        );
     }
 
     private function getCollection(VerifyFieldPermissions $retrieve_field_permissions): SynchronizedFieldFromProgramAndTeamTrackersCollection

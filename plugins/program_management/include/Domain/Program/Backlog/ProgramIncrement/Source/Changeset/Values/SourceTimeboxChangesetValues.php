@@ -22,8 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
@@ -52,7 +53,7 @@ final class SourceTimeboxChangesetValues
      * @throws UnsupportedTitleFieldException
      */
     public static function fromReplication(
-        BuildSynchronizedFields $fields_builder,
+        GatherSynchronizedFields $fields_gatherer,
         RetrieveFieldValuesGatherer $field_values_retriever,
         RetrieveTracker $tracker_retriever,
         ReplicationData $replication
@@ -61,7 +62,7 @@ final class SourceTimeboxChangesetValues
         if (! $tracker) {
             throw new TrackerNotFoundException($replication->getTracker()->getId());
         }
-        $fields            = $fields_builder->build($tracker);
+        $fields            = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $replication->getTracker());
         $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
         $title_value       = TitleValue::fromSynchronizedFields($values_gatherer, $fields);
         $description_value = DescriptionValue::fromSynchronizedFields($values_gatherer, $fields);

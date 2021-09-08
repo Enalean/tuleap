@@ -25,20 +25,15 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private SynchronizedFields $fields;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Artifact_Changeset
-     */
-    private $changeset;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private \PHPUnit\Framework\MockObject\Stub|\Tracker_Artifact_Changeset $changeset;
+    private \PHPUnit\Framework\MockObject\Stub|\Tracker_FormElementFactory $form_element_factory;
+    private SynchronizedFieldReferences $fields;
     private \Tracker_FormElement_Field_String $title_field;
     private \Tracker_FormElement_Field_Text $description_field;
     private \Tracker_FormElement_Field_Selectbox $status_field;
@@ -65,14 +60,12 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field  = new \Tracker_FormElement_Field_Date(1784, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5);
         $this->end_period_field  = new \Tracker_FormElement_Field_Date(1368, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6);
 
-        $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
-        $this->fields               = SynchronizedFieldsBuilder::buildWithFields(
-            $this->title_field,
-            $this->description_field,
-            $this->status_field,
-            $this->start_date_field,
-            $this->end_period_field
+        $this->fields = SynchronizedFieldReferences::fromTrackerIdentifier(
+            GatherSynchronizedFieldsStub::withFieldIds(1376, 1412, 1499, 1784, 1368, 1001),
+            TrackerIdentifierStub::buildWithDefault()
         );
+
+        $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
         $this->changeset            = $this->createMock(\Tracker_Artifact_Changeset::class);
     }
 
@@ -81,21 +74,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new FieldValuesGatherer($this->changeset, $this->form_element_factory);
     }
 
-    public function dataProviderMethodUnderTest(): array
-    {
-        return [
-            'when title value is not found'       => ['getTitleValue'],
-            'when description value is not found' => ['getDescriptionValue'],
-            'when start date value is not found'  => ['getStartDateValue'],
-            'when end period value is not found'  => ['getEndPeriodValue'],
-            'when status value is not found'      => ['getStatusValues']
-        ];
-    }
-
-    /**
-     * @dataProvider dataProviderMethodUnderTest
-     */
-    public function testItThrowsWhenChangesetValuesAreNotFound(string $method_under_test): void
+    public function testItThrowsWhenChangesetValuesAreNotFound(): void
     {
         $this->changeset->method('getValue')->willReturn(null);
         $this->changeset->method('getId')->willReturn(1);
@@ -103,7 +82,19 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->method('getFieldById')->willReturn($this->createStub(\Tracker_FormElement_Field::class));
 
         $this->expectException(ChangesetValueNotFoundException::class);
-        call_user_func([$this->getGatherer(), $method_under_test], $this->fields);
+        $this->getGatherer()->getTitleValue($this->fields->title);
+
+        $this->expectException(ChangesetValueNotFoundException::class);
+        $this->getGatherer()->getDescriptionValue($this->fields->description);
+
+        $this->expectException(ChangesetValueNotFoundException::class);
+        $this->getGatherer()->getStartDateValue($this->fields->start_date);
+
+        $this->expectException(ChangesetValueNotFoundException::class);
+        $this->getGatherer()->getEndPeriodValue($this->fields->end_period);
+
+        $this->expectException(ChangesetValueNotFoundException::class);
+        $this->getGatherer()->getStatusValues($this->fields->status);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
@@ -114,19 +105,18 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->method('getFieldById')->willReturn($this->title_field);
 
         $this->expectException(UnsupportedTitleFieldException::class);
-        $this->getGatherer()->getTitleValue($this->fields);
+        $this->getGatherer()->getTitleValue($this->fields->title);
     }
 
     public function testItReturnsTitleValue(): void
     {
-        $fields          = SynchronizedFieldsBuilder::build();
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_String::class);
         $changeset_value->method('getValue')->willReturn('My title');
         $this->changeset->method('getValue')->willReturn($changeset_value);
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->title_field);
 
-        self::assertSame('My title', $this->getGatherer()->getTitleValue($fields));
+        self::assertSame('My title', $this->getGatherer()->getTitleValue($this->fields->title));
     }
 
     public function testItReturnsDescriptionValue(): void
@@ -138,7 +128,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->description_field);
 
-        $text_value = $this->getGatherer()->getDescriptionValue($this->fields);
+        $text_value = $this->getGatherer()->getDescriptionValue($this->fields->description);
         self::assertSame('My description', $text_value->getValue());
         self::assertSame('text', $text_value->getFormat());
     }
@@ -151,7 +141,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->start_date_field);
 
-        self::assertSame('2020-10-01', $this->getGatherer()->getStartDateValue($this->fields));
+        self::assertSame('2020-10-01', $this->getGatherer()->getStartDateValue($this->fields->start_date));
     }
 
     public function testItReturnsEndPeriodValueWithEndDate(): void
@@ -162,7 +152,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->end_period_field);
 
-        self::assertSame('2023-09-01', $this->getGatherer()->getEndPeriodValue($this->fields));
+        self::assertSame('2023-09-01', $this->getGatherer()->getEndPeriodValue($this->fields->end_period));
     }
 
     public function testItReturnsEndPeriodValueWithDuration(): void
@@ -173,7 +163,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->end_period_field);
 
-        self::assertSame('34', $this->getGatherer()->getEndPeriodValue($this->fields));
+        self::assertSame('34', $this->getGatherer()->getEndPeriodValue($this->fields->end_period));
     }
 
     public function testItReturnsStatusValuesWithStaticBind(): void
@@ -186,7 +176,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->status_field);
 
-        $values = $this->getGatherer()->getStatusValues($this->fields);
+        $values = $this->getGatherer()->getStatusValues($this->fields->status);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('Planned', $labels);
         self::assertContains('Current', $labels);
@@ -202,7 +192,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->status_field);
 
-        $values = $this->getGatherer()->getStatusValues($this->fields);
+        $values = $this->getGatherer()->getStatusValues($this->fields->status);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('Meridith Gregg', $labels);
         self::assertContains('Mildred Mantel', $labels);
@@ -226,7 +216,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->method('getFieldById')->willReturn($this->status_field);
 
-        $values = $this->getGatherer()->getStatusValues($this->fields);
+        $values = $this->getGatherer()->getStatusValues($this->fields->status);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('project_members', $labels);
         self::assertContains('bicyanide benzothiopyran', $labels);

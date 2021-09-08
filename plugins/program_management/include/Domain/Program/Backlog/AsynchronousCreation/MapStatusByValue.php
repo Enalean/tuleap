@@ -22,18 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 
 interface MapStatusByValue
 {
     /**
-     * @psalm-param Field<Tracker_FormElement_Field_List> $target_field
      * @return BindValueIdentifier[]
      * @throws NoDuckTypedMatchingValueException
      */
-    public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array;
+    public function mapStatusValueByDuckTyping(StatusValue $source_value, StatusFieldReference $target_field): array;
 }

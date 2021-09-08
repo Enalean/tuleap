@@ -66,6 +66,18 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         );
     }
 
+    public static function withError(): self
+    {
+        return new self(
+            RetrieveTitleFieldStub::withError(),
+            RetrieveDescriptionFieldStub::withField(921, 'covellite'),
+            RetrieveStatusFieldStub::withField(381, 'unreflected'),
+            RetrieveStartDateFieldStub::withField(163, 'undisposedness'),
+            RetrieveEndPeriodFieldStub::withField(631, 'harebottle'),
+            RetrieveArtifactLinkFieldStub::withField(102, 'forethoughtless')
+        );
+    }
+
     public function getTitleField(TrackerIdentifier $program_increment): TitleFieldReference
     {
         return $this->title_stub->getTitleField($program_increment);

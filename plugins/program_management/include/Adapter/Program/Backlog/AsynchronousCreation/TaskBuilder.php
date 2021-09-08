@@ -28,19 +28,11 @@ use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_DescriptionFactory;
-use Tracker_Semantic_StatusFactory;
-use Tracker_Semantic_TitleFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
@@ -53,7 +45,10 @@ use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use UserManager;
 
 class TaskBuilder
@@ -89,22 +84,31 @@ class TaskBuilder
             \TrackerFactory::instance()
         );
 
-        $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
-            new ArtifactLinkFieldAdapter($form_element_factory),
-            new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
-            new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
-            new StatusFieldAdapter(new Tracker_Semantic_StatusFactory()),
-            new TimeFrameFieldsAdapter(
-                SemanticTimeframeBuilder::build()
-            )
+        $tracker_factory = \TrackerFactory::instance();
+
+        $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
+            $tracker_factory,
+            new \Tracker_Semantic_TitleFactory(),
+            new \Tracker_Semantic_DescriptionFactory(),
+            new \Tracker_Semantic_StatusFactory(),
+            new SemanticTimeframeBuilder(
+                new SemanticTimeframeDao(),
+                $form_element_factory,
+                $tracker_factory,
+                new LinksRetriever(
+                    new ArtifactLinkFieldValueDao(),
+                    $tracker_artifact_factory
+                )
+            ),
+            $form_element_factory
         );
 
         $mirror_creator = new ProgramIncrementsCreator(
             $transaction_executor,
-            $synchronized_fields_gatherer,
             new StatusValueMapper($form_element_factory),
             $artifact_creator,
-            $retrieve_user
+            $retrieve_user,
+            $synchronized_fields_gatherer
         );
 
         return new CreateProgramIncrementsTask(
@@ -115,12 +119,12 @@ class TaskBuilder
             $user_stories_planner,
             $program_dao,
             new ProgramManagementProjectAdapter(ProjectManager::instance()),
-            $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever(
                 $tracker_artifact_factory,
                 $form_element_factory
             ),
-            new TrackerFactoryAdapter(\TrackerFactory::instance())
+            new TrackerFactoryAdapter(\TrackerFactory::instance()),
+            $synchronized_fields_gatherer,
         );
     }
 }

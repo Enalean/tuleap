@@ -25,15 +25,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -45,28 +44,20 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramIncrementsCreator $mirrors_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|BuildSynchronizedFields
-     */
-    private $synchronized_fields_adapter;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|CreateArtifact
-     */
-    private $artifact_creator;
+    private \PHPUnit\Framework\MockObject\MockObject|CreateArtifact $artifact_creator;
     private SourceTimeboxChangesetValues $field_values;
     private TrackerCollection $mirrored_program_increment_trackers;
     private UserIdentifier $user_identifier;
 
     protected function setUp(): void
     {
-        $this->synchronized_fields_adapter = $this->createMock(BuildSynchronizedFields::class);
-        $this->artifact_creator            = $this->createMock(CreateArtifact::class);
-        $this->mirrors_creator             = new ProgramIncrementsCreator(
+        $this->artifact_creator = $this->createMock(CreateArtifact::class);
+        $this->mirrors_creator  = new ProgramIncrementsCreator(
             new DBTransactionExecutorPassthrough(),
-            $this->synchronized_fields_adapter,
             MapStatusByValueStub::withValues(5000),
             $this->artifact_creator,
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withGenericUser(),
+            GatherSynchronizedFieldsStub::withDefaults()
         );
 
         $this->user            = UserTestBuilder::aUser()->build();
@@ -89,11 +80,6 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesMirrorProgramIncrements(): void
     {
         [$first_tracker, $second_tracker] = $this->mirrored_program_increment_trackers->getTrackers();
-
-        $first_synchronized_fields  = SynchronizedFieldsBuilder::buildWithIds(1001, 1002, 1003, 1004, 1005, 1006);
-        $second_synchronized_fields = SynchronizedFieldsBuilder::buildWithIds(2001, 2002, 2003, 2004, 2005, 2006);
-        $this->synchronized_fields_adapter->method('build')
-            ->willReturnOnConsecutiveCalls($first_synchronized_fields, $second_synchronized_fields);
 
         $this->artifact_creator->expects(self::atLeast(2))
             ->method('create')
@@ -121,8 +107,6 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
-        $this->synchronized_fields_adapter->method('build')
-            ->willReturn(SynchronizedFieldsBuilder::buildWithIds(1001, 1002, 1003, 1004, 1005, 1006));
         $this->artifact_creator->method('create')->willThrowException(new ArtifactCreationException());
 
         $this->expectException(ProgramIncrementArtifactCreationException::class);

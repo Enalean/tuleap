@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 
 /**
  * I hold the original (unmapped) list value labels of the Status semantic field of the source Timebox.
@@ -48,9 +48,9 @@ final class StatusValue
      */
     public static function fromSynchronizedFields(
         RetrieveStatusValues $status_retriever,
-        SynchronizedFields $fields
+        SynchronizedFieldReferences $fields
     ): self {
-        $labels = $status_retriever->getStatusValues($fields);
+        $labels = $status_retriever->getStatusValues($fields->status);
         return new self(...$labels);
     }
 

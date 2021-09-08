@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-
-interface BuildTimeFrameFields
+final class TrackerIdentifierStub implements \Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier
 {
-    /**
-     * @throws MissingTimeFrameFieldException
-     */
-    public function build(ProgramTracker $replication_tracker_data): TimeFrameFields;
+    private function __construct(private int $id)
+    {
+    }
+
+    public static function buildWithDefault(): self
+    {
+        return new self(1);
+    }
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

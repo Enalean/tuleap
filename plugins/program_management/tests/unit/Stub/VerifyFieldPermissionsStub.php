@@ -24,7 +24,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -49,12 +54,12 @@ final class VerifyFieldPermissionsStub implements VerifyFieldPermissions
         return new self(true, false);
     }
 
-    public function canUserSubmit(UserIdentifier $user_identifier, Field $field): bool
+    public function canUserSubmit(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field): bool
     {
         return $this->is_submittable;
     }
 
-    public function canUserUpdate(UserIdentifier $user_identifier, Field $field): bool
+    public function canUserUpdate(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field): bool
     {
         return $this->is_updatable;
     }

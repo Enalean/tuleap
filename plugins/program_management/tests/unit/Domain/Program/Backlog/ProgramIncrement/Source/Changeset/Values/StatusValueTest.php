@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class StatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,7 +36,7 @@ final class StatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value  = StatusValue::fromSynchronizedFields(
             RetrieveStatusValuesStub::withValues(self::FIRST_LABEL, self::SECOND_LABEL),
-            SynchronizedFieldsBuilder::build()
+            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
         );
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $value->getListValues());
         self::assertContains(self::FIRST_LABEL, $labels);

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 
 /**
  * I hold the value of the end period (end date or duration) field from the Timeframe semantic of the source Timebox.
@@ -43,9 +43,9 @@ final class EndPeriodValue
      */
     public static function fromSynchronizedFields(
         RetrieveEndPeriodValue $end_period_retriever,
-        SynchronizedFields $fields
+        SynchronizedFieldReferences $fields
     ): self {
-        return new self($end_period_retriever->getEndPeriodValue($fields));
+        return new self($end_period_retriever->getEndPeriodValue($fields->end_period));
     }
 
     public function getValue(): string

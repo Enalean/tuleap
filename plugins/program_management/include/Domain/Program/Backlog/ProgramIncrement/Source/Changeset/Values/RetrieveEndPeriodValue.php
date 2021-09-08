@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
 
 interface RetrieveEndPeriodValue
 {
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function getEndPeriodValue(SynchronizedFields $fields): string;
+    public function getEndPeriodValue(EndPeriodFieldReference $end_period_field_reference): string;
 }

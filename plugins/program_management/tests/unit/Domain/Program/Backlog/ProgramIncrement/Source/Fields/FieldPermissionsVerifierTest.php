@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tracker_FormElementFactory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -38,8 +37,8 @@ final class FieldPermissionsVerifierTest extends TestCase
     private mixed $form_element_factory;
     private FieldPermissionsVerifier $permission_verifier;
     private UserIdentifierStub $user_identifier;
-    private Field $field;
     private \Tracker_FormElement_Field_String $full_field;
+    private TitleFieldReferenceProxy $field;
 
     protected function setUp(): void
     {
@@ -62,7 +61,7 @@ final class FieldPermissionsVerifierTest extends TestCase
             '',
             2
         );
-        $this->field               = new Field($this->full_field);
+        $this->field               = TitleFieldReferenceProxy::fromTrackerField($this->full_field);
     }
 
     public function testItThrowsExceptionWhenFieldCanNotBeFoundInSubmitContext(): void

@@ -22,28 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
+/**
+ * @psalm-immutable
+ */
 final class SynchronizedFieldFromProgramAndTeamTrackers
 {
     /**
      * @var array<int, true>
-     * @psalm-readonly
      */
-    private $synchronized_field_data_ids;
-    /**
-     * @var SynchronizedFields
-     * @psalm-readonly
-     */
-    private $synchronized_fields_data;
+    private array $synchronized_field_data_ids;
 
-    public function __construct(SynchronizedFields $synchronized_fields)
+    public function __construct(public SynchronizedFieldReferences $synchronized_fields)
     {
-        $this->synchronized_fields_data    = $synchronized_fields;
         $this->synchronized_field_data_ids = $synchronized_fields->getSynchronizedFieldIDsAsKeys();
     }
 
-    public function getSynchronizedFieldsData(): SynchronizedFields
+    public function getSynchronizedFieldsData(): SynchronizedFieldReferences
     {
-        return $this->synchronized_fields_data;
+        return $this->synchronized_fields;
     }
 
     /**

@@ -30,10 +30,16 @@ interface VerifyFieldPermissions
     /**
      * @throws FieldNotFoundException
      */
-    public function canUserSubmit(UserIdentifier $user_identifier, Field $field): bool;
+    public function canUserSubmit(
+        UserIdentifier $user_identifier,
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field
+    ): bool;
 
     /**
      * @throws FieldNotFoundException
      */
-    public function canUserUpdate(UserIdentifier $user_identifier, Field $field): bool;
+    public function canUserUpdate(
+        UserIdentifier $user_identifier,
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field
+    ): bool;
 }

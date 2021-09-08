@@ -53,9 +53,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusSemanti
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
@@ -63,10 +61,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fie
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
@@ -382,25 +376,25 @@ final class program_managementPlugin extends Plugin
         $iteration_dao                 = new IterationsDAO();
         $retrieve_tracker_from_field   = new TrackerFromFieldRetriever($form_element_factory);
         $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_factory);
-
-        $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-            new SynchronizedFieldsAdapter(
-                new ArtifactLinkFieldAdapter($form_element_factory),
-                new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
-                new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
-                new StatusFieldAdapter($semantic_status_factory),
-                new TimeFrameFieldsAdapter(
-                    new SemanticTimeframeBuilder(
-                        $timeframe_dao,
-                        $form_element_factory,
-                        $tracker_factory,
-                        new LinksRetriever(
-                            new ArtifactLinkFieldValueDao(),
-                            \Tracker_ArtifactFactory::instance()
-                        )
-                    )
+        $gatherer                      = new SynchronizedFieldsGatherer(
+            $tracker_factory,
+            new \Tracker_Semantic_TitleFactory(),
+            new \Tracker_Semantic_DescriptionFactory(),
+            $semantic_status_factory,
+            new SemanticTimeframeBuilder(
+                $timeframe_dao,
+                $form_element_factory,
+                $tracker_factory,
+                new LinksRetriever(
+                    new ArtifactLinkFieldValueDao(),
+                    Tracker_ArtifactFactory::instance()
                 )
             ),
+            $form_element_factory
+        );
+
+        $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+            $gatherer,
             $logger,
             $retrieve_tracker_from_field,
             new FieldPermissionsVerifier($user_manager_adapter, $form_element_factory)
@@ -1107,24 +1101,25 @@ final class program_managementPlugin extends Plugin
         $retrieve_tracker_from_field   = new TrackerFromFieldRetriever($form_element_factory);
         $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_factory);
 
-        $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-            new SynchronizedFieldsAdapter(
-                new ArtifactLinkFieldAdapter($form_element_factory),
-                new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
-                new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
-                new StatusFieldAdapter($semantic_status_factory),
-                new TimeFrameFieldsAdapter(
-                    new SemanticTimeframeBuilder(
-                        $timeframe_dao,
-                        $form_element_factory,
-                        $tracker_factory,
-                        new LinksRetriever(
-                            new ArtifactLinkFieldValueDao(),
-                            \Tracker_ArtifactFactory::instance()
-                        )
-                    )
+        $gatherer = new SynchronizedFieldsGatherer(
+            $tracker_factory,
+            new \Tracker_Semantic_TitleFactory(),
+            new \Tracker_Semantic_DescriptionFactory(),
+            $semantic_status_factory,
+            new SemanticTimeframeBuilder(
+                $timeframe_dao,
+                $form_element_factory,
+                $tracker_factory,
+                new LinksRetriever(
+                    new ArtifactLinkFieldValueDao(),
+                    Tracker_ArtifactFactory::instance()
                 )
             ),
+            $form_element_factory
+        );
+
+        $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+            $gatherer,
             $logger,
             $retrieve_tracker_from_field,
             new FieldPermissionsVerifier($retrieve_user, $form_element_factory)

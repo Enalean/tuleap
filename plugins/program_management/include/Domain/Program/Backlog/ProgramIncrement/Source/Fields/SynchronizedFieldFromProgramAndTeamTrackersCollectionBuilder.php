@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
 {
     public function __construct(
-        private BuildSynchronizedFields $fields_adapter,
+        private GatherSynchronizedFields $gatherer,
         private LoggerInterface $logger,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
         private VerifyFieldPermissions $retrieve_field_permission
@@ -48,7 +48,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
         );
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $collection->add(
-                new SynchronizedFieldFromProgramAndTeamTrackers($this->fields_adapter->build($source_tracker))
+                new SynchronizedFieldFromProgramAndTeamTrackers(SynchronizedFieldReferences::fromTrackerIdentifier($this->gatherer, $source_tracker))
             );
         }
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveStartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 
 final class RetrieveStartDateValueStub implements RetrieveStartDateValue
 {
@@ -39,7 +39,7 @@ final class RetrieveStartDateValueStub implements RetrieveStartDateValue
         return new self($value);
     }
 
-    public function getStartDateValue(SynchronizedFields $fields): string
+    public function getStartDateValue(StartDateFieldReference $fields): string
     {
         return $this->value;
     }

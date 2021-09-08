@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 
 interface RetrieveTitleValue
 {
@@ -30,5 +30,5 @@ interface RetrieveTitleValue
      * @throws ChangesetValueNotFoundException
      * @throws UnsupportedTitleFieldException
      */
-    public function getTitleValue(SynchronizedFields $fields): string;
+    public function getTitleValue(TitleFieldReference $title_field): string;
 }

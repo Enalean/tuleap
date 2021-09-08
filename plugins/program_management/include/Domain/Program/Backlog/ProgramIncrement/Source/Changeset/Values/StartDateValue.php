@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 
 /**
  * I hold the value of the start date field from the Timeframe semantic of the source Timebox.
@@ -43,9 +43,9 @@ final class StartDateValue
      */
     public static function fromSynchronizedFields(
         RetrieveStartDateValue $start_date_retriever,
-        SynchronizedFields $fields
+        SynchronizedFieldReferences $fields
     ): self {
-        return new self($start_date_retriever->getStartDateValue($fields));
+        return new self($start_date_retriever->getStartDateValue($fields->start_date));
     }
 
     public function getValue(): string
