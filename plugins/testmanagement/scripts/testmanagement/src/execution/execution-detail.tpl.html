@@ -216,11 +216,10 @@
                 <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
                 <button
                     type="button"
-                    ng-if="execution.previous_result.result"
                     class="current-comment-header-toggler tlp-button-secondary tlp-button-outline"
                     data-test="expand-details-button"
                     ng-click="toggleCommentArea()"
-                    title="{{ 'View details' | translate }}"
+                    title="{{ getToggleTitle() }}"
                 >
                     <i
                         class="fas tlp-button-icon"
