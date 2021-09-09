@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -46,36 +47,18 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilesto
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
-    private ProgramIncrementsCreator $program_increment_creator;
-    private RetrievePlanningMilestoneTracker $root_milestone_retriever;
-    private LoggerInterface $logger;
-    private PendingArtifactCreationStore $pending_artifact_creation_store;
-    private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner;
-    private SearchTeamsOfProgram $teams_searcher;
-    private BuildProject $project_builder;
-    private GatherSynchronizedFields $fields_gatherer;
-    private RetrieveFieldValuesGatherer $values_retriever;
-
     public function __construct(
-        RetrievePlanningMilestoneTracker $root_milestone_retriever,
-        ProgramIncrementsCreator $program_increment_creator,
-        LoggerInterface $logger,
-        PendingArtifactCreationStore $pending_artifact_creation_store,
-        PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
-        SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_builder,
-        GatherSynchronizedFields $fields_gatherer,
-        RetrieveFieldValuesGatherer $values_retriever,
+        private RetrievePlanningMilestoneTracker $root_milestone_retriever,
+        private ProgramIncrementsCreator $program_increment_creator,
+        private LoggerInterface $logger,
+        private PendingArtifactCreationStore $pending_artifact_creation_store,
+        private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
+        private SearchTeamsOfProgram $teams_searcher,
+        private BuildProject $project_builder,
+        private GatherSynchronizedFields $fields_gatherer,
+        private RetrieveFieldValuesGatherer $values_retriever,
+        private RetrieveChangesetSubmissionDate $submission_date_retriever,
     ) {
-        $this->root_milestone_retriever        = $root_milestone_retriever;
-        $this->program_increment_creator       = $program_increment_creator;
-        $this->logger                          = $logger;
-        $this->pending_artifact_creation_store = $pending_artifact_creation_store;
-        $this->user_stories_planner            = $user_stories_planner;
-        $this->teams_searcher                  = $teams_searcher;
-        $this->project_builder                 = $project_builder;
-        $this->fields_gatherer                 = $fields_gatherer;
-        $this->values_retriever                = $values_retriever;
     }
 
     public function createProgramIncrements(ReplicationData $replication_data): void
@@ -99,6 +82,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $source_values = SourceTimeboxChangesetValues::fromReplication(
             $this->fields_gatherer,
             $this->values_retriever,
+            $this->submission_date_retriever,
             $replication_data
         );
 
@@ -118,7 +102,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $this->program_increment_creator->createProgramIncrements(
             $source_values,
             $root_planning_tracker_team,
-            $replication_data->getUserIdentifier()
+            $user_identifier
         );
 
         $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(

@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
 final class SourceTimeboxChangesetValuesBuilder
@@ -84,6 +85,7 @@ final class SourceTimeboxChangesetValuesBuilder
                     $status
                 )
             ),
+            RetrieveChangesetSubmissionDateStub::withDefaults(),
             ReplicationDataBuilder::buildWithArtifactId($source_timebox_id)
         );
     }

@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 
 /**
  * I hold all field values for a given changeset for a source Timebox
@@ -53,9 +54,18 @@ final class SourceTimeboxChangesetValues
     public static function fromReplication(
         GatherSynchronizedFields $fields_gatherer,
         RetrieveFieldValuesGatherer $field_values_retriever,
+        RetrieveChangesetSubmissionDate $submission_retriever,
         ReplicationData $replication
     ): self {
-        $fields = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $replication->getTracker());
+        $program_increment_id = $replication->getArtifact()->getId();
+        $fields               = SynchronizedFieldReferences::fromTrackerIdentifier(
+            $fields_gatherer,
+            $replication->getTracker()
+        );
+        $submission_date      = $submission_retriever->getSubmissionDate(
+            $program_increment_id,
+            $replication->getChangeset()
+        );
 
         $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
         $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
@@ -65,11 +75,11 @@ final class SourceTimeboxChangesetValues
         $end_period_value  = EndPeriodValue::fromEndPeriodReference($values_gatherer, $fields->end_period);
 
         return new self(
-            $replication->getArtifact()->getId(),
+            $program_increment_id,
             $title_value,
             $description_value,
             $status_value,
-            new SubmissionDate($replication->getArtifact()->getSubmittedOn()),
+            $submission_date,
             $start_date_value,
             $end_period_value
         );

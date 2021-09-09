@@ -103,7 +103,7 @@ final class ReplicationDataAdapter implements BuildReplicationData
         \Tracker_Artifact_Changeset $source_changeset,
         ProgramIncrementTrackerIdentifier $source_tracker
     ): ReplicationData {
-        $artifact_data   = new Artifact((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
+        $artifact_data   = new Artifact((int) $source_artifact->getId());
         $changeset       = ChangesetProxy::fromChangeset($source_changeset);
         $project_data    = ProgramManagementProjectAdapter::build($source_artifact->getTracker()->getProject());
         $user_identifier = UserProxy::buildFromPFUser($user);

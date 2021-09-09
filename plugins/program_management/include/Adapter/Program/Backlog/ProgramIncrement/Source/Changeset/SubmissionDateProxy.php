@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-interface CreateArtifact
+/**
+ * @psalm-immutable
+ */
+final class SubmissionDateProxy implements SubmissionDate
 {
-    public function create(
-        ProgramTracker $tracker,
-        MirroredProgramIncrementChangeset $mirrored_program_increment_changeset,
-        \PFUser $user,
-        SubmissionDate $submission_date
-    ): void;
+    /**
+     * @param int $value UNIX Timestamp
+     */
+    private function __construct(private int $value)
+    {
+    }
+
+    public static function fromChangeset(\Tracker_Artifact_Changeset $changeset): self
+    {
+        return new self((int) $changeset->getSubmittedOn());
+    }
+
+    public function getValue(): int
+    {
+        return $this->value;
+    }
 }

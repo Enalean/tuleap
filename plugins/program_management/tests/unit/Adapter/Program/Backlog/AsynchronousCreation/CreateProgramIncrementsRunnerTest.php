@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -69,6 +70,7 @@ final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestC
             new BuildProjectStub(),
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
+            RetrieveChangesetSubmissionDateStub::withDefaults()
         );
         $this->task_builder->method('build')->willReturn($task);
 

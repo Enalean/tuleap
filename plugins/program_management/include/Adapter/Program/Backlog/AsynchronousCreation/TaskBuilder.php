@@ -27,6 +27,7 @@ use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
@@ -118,6 +119,7 @@ class TaskBuilder
                 $artifact_factory,
                 $form_element_factory
             ),
+            new ChangesetRetriever($artifact_factory, \Tracker_Artifact_ChangesetFactoryBuilder::build())
         );
     }
 }

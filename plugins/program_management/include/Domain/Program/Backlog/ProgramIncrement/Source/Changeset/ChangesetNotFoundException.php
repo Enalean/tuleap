@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset;
 
-/**
- * @psalm-immutable
- */
-final class SubmissionDate
+final class ChangesetNotFoundException extends \RuntimeException
 {
-    /**
-     * @var int
-     */
-    private $value;
-
-    /**
-     * @param int $value UNIX Timestamp
-     */
-    public function __construct(int $value)
+    public function __construct(int $changeset_id)
     {
-        $this->value = $value;
-    }
-
-    /**
-     * @return int UNIX Timestamp
-     */
-    public function getValue(): int
-    {
-        return $this->value;
+        parent::__construct("Could not find changeset with id #$changeset_id in database");
     }
 }
