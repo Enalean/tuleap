@@ -92,11 +92,11 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         self::assertSame(
-            $tracker,
+            $tracker->getId(),
             $this->adapter->retrieveRootPlanningMilestoneTracker(
                 $wrapper_project,
                 UserIdentifierStub::buildGenericUser()
-            )
+            )->getId()
         );
     }
 
@@ -154,11 +154,11 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         self::assertSame(
-            $second_tracker,
+            $second_tracker->getId(),
             $this->adapter->retrieveSecondPlanningMilestoneTracker(
                 $wrapper_project,
                 UserIdentifierStub::buildGenericUser()
-            )
+            )->getId()
         );
     }
 }

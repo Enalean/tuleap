@@ -62,7 +62,7 @@ final class TrackerCollection
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
-            $trackers[] = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $team, $user_identifier);
+            $trackers[] = $retriever->retrieveRootPlanningMilestoneTracker($team, $user_identifier);
         }
         return new self($trackers);
     }
@@ -78,7 +78,7 @@ final class TrackerCollection
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
-            $trackers[] = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $team, $user_identifier);
+            $trackers[] = $retriever->retrieveSecondPlanningMilestoneTracker($team, $user_identifier);
         }
         return new self($trackers);
     }

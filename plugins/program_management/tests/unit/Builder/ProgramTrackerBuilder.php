@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
+use Tracker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -32,5 +33,18 @@ final class ProgramTrackerBuilder
     public static function buildWithId(int $id): ProgramTracker
     {
         return new ProgramTracker(TrackerTestBuilder::aTracker()->withId($id)->build());
+    }
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub|Tracker $tracker
+     */
+    public static function buildWithMockedTracker($tracker): ProgramTracker
+    {
+        return new ProgramTracker($tracker);
+    }
+
+    public static function buildWithTracker(Tracker $tracker_team_01): ProgramTracker
+    {
+        return new ProgramTracker($tracker_team_01);
     }
 }
