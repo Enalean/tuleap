@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset;
 
-/**
- * @psalm-immutable
- */
-final class Artifact
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
+final class SubmissionDateProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private const SUBMISSION_TIMESTAMP = 1631178060;
 
-    public function __construct(int $id)
+    public function testItBuildsFromChangeset(): void
     {
-        $this->id = $id;
-    }
+        $artifact  = ArtifactTestBuilder::anArtifact(709)->build();
+        $changeset = new \Tracker_Artifact_Changeset(4042, $artifact, 120, (string) self::SUBMISSION_TIMESTAMP, null);
 
-    public function getId(): int
-    {
-        return $this->id;
+        $date = SubmissionDateProxy::fromChangeset($changeset);
+        self::assertSame(self::SUBMISSION_TIMESTAMP, $date->getValue());
     }
 }

@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
 final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -40,10 +41,7 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsFromReplication(): void
     {
-        $replication = ReplicationDataBuilder::buildWithArtifactIdAndSubmissionDate(
-            self::SOURCE_TIMEBOX_ID,
-            self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP
-        );
+        $replication = ReplicationDataBuilder::buildWithArtifactId(self::SOURCE_TIMEBOX_ID);
         $values      = SourceTimeboxChangesetValues::fromReplication(
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer(
@@ -56,6 +54,7 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
                     [self::STATUS_VALUE]
                 )
             ),
+            RetrieveChangesetSubmissionDateStub::withDate(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP),
             $replication
         );
 

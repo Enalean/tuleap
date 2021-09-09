@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
@@ -32,6 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -40,26 +43,11 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ProgramIncrementsCreator
-     */
-    private $mirror_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PendingArtifactCreationStore
-     */
-    private $pending_artifact_creation_store;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PlanUserStoriesInMirroredProgramIncrements
-     */
-    private $user_stories_planner;
+    private Stub|\ProjectManager $project_manager;
+    private Stub|\PlanningFactory $planning_factory;
+    private MockObject|ProgramIncrementsCreator $mirror_creator;
+    private MockObject|PendingArtifactCreationStore $pending_artifact_creation_store;
+    private MockObject|PlanUserStoriesInMirroredProgramIncrements $user_stories_planner;
     private TestLogger $logger;
     private SearchTeamsOfProgram $teams_searcher;
     private GatherFieldValuesStub $values_gatherer;
@@ -87,7 +75,8 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->teams_searcher,
             new ProgramManagementProjectAdapter($this->project_manager),
             GatherSynchronizedFieldsStub::withDefaults(),
-            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer)
+            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
+            RetrieveChangesetSubmissionDateStub::withDefaults()
         );
     }
 

@@ -37,12 +37,11 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID          = 1;
-    private const USER_ID              = 101;
-    private const SUBMISSION_TIMESTAMP = 1234567890;
-    private const TRACKER_ID           = 10;
-    private const CHANGESET_ID         = 666;
-    private const PROJECT_ID           = 158;
+    private const ARTIFACT_ID  = 1;
+    private const USER_ID      = 101;
+    private const TRACKER_ID   = 10;
+    private const CHANGESET_ID = 666;
+    private const PROJECT_ID   = 158;
 
     private Stub|\Tracker_Artifact_ChangesetFactory $changeset_factory;
     private Stub|PendingArtifactCreationStore $pending_artifact_creation_store;
@@ -69,7 +68,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withProject($project)
             ->build();
         $this->artifact    = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
-            ->withSubmissionTimestamp(self::SUBMISSION_TIMESTAMP)
+            ->withSubmissionTimestamp(1234567890)
             ->inTracker($tracker)
             ->build();
         $this->user        = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
@@ -78,7 +77,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             self::CHANGESET_ID,
             $this->artifact,
             self::USER_ID,
-            self::SUBMISSION_TIMESTAMP,
+            1234567890,
             null
         );
     }
@@ -150,7 +149,6 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $replication = $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
         self::assertSame(self::ARTIFACT_ID, $replication->getArtifact()->getId());
-        self::assertSame(self::SUBMISSION_TIMESTAMP, $replication->getArtifact()->getSubmittedOn());
         self::assertSame(self::USER_ID, $replication->getUserIdentifier()->getId());
         self::assertSame(self::CHANGESET_ID, $replication->getChangeset()->getId());
         self::assertSame(self::TRACKER_ID, $replication->getTracker()->getId());

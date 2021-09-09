@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-interface CreateArtifact
+final class SubmissionDateStub implements SubmissionDate
 {
-    public function create(
-        ProgramTracker $tracker,
-        MirroredProgramIncrementChangeset $mirrored_program_increment_changeset,
-        \PFUser $user,
-        SubmissionDate $submission_date
-    ): void;
+    private function __construct(private int $submission_date)
+    {
+    }
+
+    public static function withDate(int $submission_date): self
+    {
+        return new self($submission_date);
+    }
+
+    public function getValue(): int
+    {
+        return $this->submission_date;
+    }
 }
