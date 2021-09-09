@@ -32,7 +32,7 @@ interface FeaturesStore
     public function searchPlannableFeatures(ProgramIdentifier $program): array;
 
     /**
-     * @psalm-return list<array{artifact_id: int, program_id: int}>
+     * @psalm-return list<array{artifact_id: int, program_id: int, title: string}>
      */
     public function searchOpenFeatures(int $offset, int $limit, ProgramIdentifier ...$program_identifiers): array;
 

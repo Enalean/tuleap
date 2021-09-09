@@ -75,7 +75,7 @@ final class FeaturesDao extends DataAccessObject implements FeaturesStore
 
         $project_ids_condition = $this->getProjectIdsCondition(...$program_identifiers);
         $query                 = $this->getOpenFeaturesQuery(
-            'artifact.id AS artifact_id, tracker.group_id AS program_id',
+            'artifact.id AS artifact_id, tracker.group_id AS program_id, title_value.value AS title',
             $project_ids_condition,
         );
 
@@ -129,6 +129,12 @@ final class FeaturesDao extends DataAccessObject implements FeaturesStore
                         INNER JOIN tracker_changeset_value_list AS status_value
                             ON (status_changeset.id = status_value.changeset_value_id AND status.open_value_id = status_value.bindvalue_id)
                     ) ON (tracker.id = status.tracker_id AND tracker_changeset.id = status_changeset.changeset_id)
+                    -- get title value
+                    INNER JOIN (
+                        tracker_semantic_title AS title
+                            INNER JOIN tracker_changeset_value AS title_changeset ON (title.field_id = title_changeset.field_id)
+                            INNER JOIN tracker_changeset_value_text AS title_value on title_changeset.id = title_value.changeset_value_id
+                    ) ON (tracker.id = title.tracker_id AND tracker_changeset.id = title_changeset.changeset_id)
             WHERE project.group_id IN ($project_ids_condition)
                 AND project.status = ?
                 AND tracker.deletion_date IS NULL

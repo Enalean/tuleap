@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Team\PossibleParentSelectorEvent;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
@@ -69,7 +69,7 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
         $this->inner_event->disableCreate();
     }
 
-    public function setPossibleParents(int $total_size, FeatureIdentifier ...$features): void
+    public function setPossibleParents(int $total_size, FeatureReference ...$features): void
     {
         $artifacts = [];
         foreach ($features as $feature) {
@@ -77,6 +77,7 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
             if (! $artifact) {
                 throw new \RuntimeException('Features must always have an artifact counter part');
             }
+            $artifact->setTitle($feature->title);
             $artifacts[] = $artifact;
         }
         $this->inner_event->setPossibleParents(

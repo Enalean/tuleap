@@ -44,7 +44,7 @@ final class FieldData
 
     /**
      * @param FeatureChange[] $user_stories_to_add
-     * @salm-param array{id: int}[] $user_stories_to_remove
+     * @psalm-param array{id: int}[] $user_stories_to_remove
      */
     public function __construct(array $user_stories_to_add, array $user_stories_to_remove, int $artifact_link_field)
     {
