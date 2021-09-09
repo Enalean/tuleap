@@ -45,8 +45,9 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoProgramIncrementException
      */
-    public function getRootPlanning(\PFUser $user, int $project_id): \Planning
+    public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): \Planning
     {
+        $user          = $this->retrieve_user->getUserWithId($user_identifier);
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,
             $project_id
@@ -70,8 +71,7 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
 
     public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): \Tracker
     {
-        $user          = $this->retrieve_user->getUserWithId($user_identifier);
-        $root_planning = $this->getRootPlanning($user, $project->getId());
+        $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
         return $root_planning->getPlanningTracker();
     }
 

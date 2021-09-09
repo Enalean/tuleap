@@ -31,42 +31,38 @@ use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PlanningAdapter $adapter;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\PlanningFactory
-     */
-    private $planning_factory;
+    private \PHPUnit\Framework\MockObject\Stub|\PlanningFactory $planning_factory;
+    private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
         $this->planning_factory = $this->createStub(\PlanningFactory::class);
         $this->adapter          = new PlanningAdapter($this->planning_factory, RetrieveUserStub::withGenericUser());
+        $this->user_identifier  = UserIdentifierStub::buildGenericUser();
     }
 
     public function testThrowExceptionIfRootPlanningDoesNotExist(): void
     {
-        $user       = UserTestBuilder::aUser()->build();
         $project_id = 101;
         $this->planning_factory->method('getRootPlanning')->willReturn(false);
 
         $this->expectException(TopPlanningNotFoundInProjectException::class);
-        $this->adapter->getRootPlanning($user, $project_id);
+        $this->adapter->getRootPlanning($this->user_identifier, $project_id);
     }
 
     public function testThrowExceptionIfRootPlanningHasNoPlanningTracker(): void
     {
         $project_id = 101;
         $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
-        $user       = UserTestBuilder::aUser()->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $this->expectException(PlanningHasNoProgramIncrementException::class);
-        $this->adapter->getRootPlanning($user, $project_id);
+        $this->adapter->getRootPlanning($this->user_identifier, $project_id);
     }
 
     public function testItBuildARootPlanning(): void
@@ -79,10 +75,9 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $user       = UserTestBuilder::aUser()->build();
         $project_id = 101;
 
-        self::assertEquals($planning, $this->adapter->getRootPlanning($user, $project_id));
+        self::assertEquals($planning, $this->adapter->getRootPlanning($this->user_identifier, $project_id));
     }
 
     public function testItRetrievesTheRootMilestoneTracker(): void
@@ -96,7 +91,13 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
-        self::assertSame($tracker, $this->adapter->retrieveRootPlanningMilestoneTracker($wrapper_project, UserIdentifierStub::buildGenericUser()));
+        self::assertSame(
+            $tracker,
+            $this->adapter->retrieveRootPlanningMilestoneTracker(
+                $wrapper_project,
+                UserIdentifierStub::buildGenericUser()
+            )
+        );
     }
 
     public function testItThrowErrorIfNoSecondPlanningMilestoneInProject(): void
@@ -112,7 +113,10 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         $this->expectException(SecondPlanningNotFoundInProjectException::class);
-        $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, UserIdentifierStub::buildGenericUser());
+        $this->adapter->retrieveSecondPlanningMilestoneTracker(
+            $wrapper_project,
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItThrowErrorIfNoTrackerInSecondPlanningMilestoneInProject(): void
@@ -130,7 +134,10 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         $this->expectException(PlanningHasNoMilestoneTrackerException::class);
-        $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, UserIdentifierStub::buildGenericUser());
+        $this->adapter->retrieveSecondPlanningMilestoneTracker(
+            $wrapper_project,
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItReturnSecondPlanningMilestoneTracker(): void
@@ -146,6 +153,12 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getChildrenPlanning')->willReturn($second_planning);
 
         $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
-        self::assertSame($second_tracker, $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, UserIdentifierStub::buildGenericUser()));
+        self::assertSame(
+            $second_tracker,
+            $this->adapter->retrieveSecondPlanningMilestoneTracker(
+                $wrapper_project,
+                UserIdentifierStub::buildGenericUser()
+            )
+        );
     }
 }

@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHas
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -72,11 +71,10 @@ final class Planning
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoProgramIncrementException
      */
-    public static function buildPlanning(BuildPlanning $build_planning, RetrieveUser $retrieve_user, UserIdentifier $user_identifier, int $project_id): self
+    public static function buildPlanning(BuildPlanning $build_planning, UserIdentifier $user_identifier, int $project_id): self
     {
-        $user          = $retrieve_user->getUserWithId($user_identifier);
         $root_planning = $build_planning->getRootPlanning(
-            $user,
+            $user_identifier,
             $project_id
         );
 

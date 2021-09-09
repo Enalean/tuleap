@@ -161,8 +161,7 @@ final class ProjectResource extends AuthenticatedResource
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
                     new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                    $artifact_factory,
-                    $this->user_manager_adapter
+                    $artifact_factory
                 )
             )
         );
@@ -413,8 +412,7 @@ final class ProjectResource extends AuthenticatedResource
             new UserStoryLinkedToFeatureChecker(
                 new ArtifactsLinkedToParentDao(),
                 new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                $artifact_factory,
-                $this->user_manager_adapter
+                $artifact_factory
             ),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             new FeatureRemovalProcessor(
