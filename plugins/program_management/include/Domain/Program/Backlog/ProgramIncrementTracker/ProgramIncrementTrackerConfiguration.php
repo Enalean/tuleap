@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -62,7 +62,7 @@ final class ProgramIncrementTrackerConfiguration
         ProgramIdentifier $program,
         VerifyPrioritizeFeaturesPermission $prioritize_features_permission,
         UserIdentifier $user_identifier,
-        RetrieveUser $retrieve_user
+        VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
     ): self {
         $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
             $retrieve_tracker,
@@ -70,7 +70,7 @@ final class ProgramIncrementTrackerConfiguration
             $user_identifier
         );
 
-        $can_create_program_increment = $program_increment_tracker->userCanSubmitArtifact($retrieve_user, $user_identifier);
+        $can_create_program_increment = $user_can_submit_in_tracker_verifier->canUserSubmitArtifact($user_identifier, $program_increment_tracker);
         $has_plan_permissions         = $prioritize_features_permission->canUserPrioritizeFeatures($program, $user_identifier, null);
 
         $program_increments_labels = ProgramIncrementLabels::fromProgramIncrementTracker(

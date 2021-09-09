@@ -25,11 +25,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrementTrack
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -46,7 +45,7 @@ final class ProgramIncrementTrackerConfigurationTest extends \Tuleap\Test\PHPUni
             $program,
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             UserIdentifierStub::buildGenericUser(),
-            RetrieveUserStub::withUser(UserTestBuilder::aUser()->build())
+            VerifyUserCanSubmitStub::userCanNotSubmit()
         );
         self::assertSame(101, $configuration->getProgramIncrementTrackerId());
         self::assertFalse($configuration->canCreateProgramIncrement());

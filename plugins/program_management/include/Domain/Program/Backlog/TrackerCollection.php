@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFou
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -104,11 +104,14 @@ final class TrackerCollection
         return $this->mirrored_timebox_trackers;
     }
 
-    public function canUserSubmitAnArtifactInAllTrackers(RetrieveUser $retrieve_user, UserIdentifier $user_identifier, ConfigurationErrorsCollector $configuration_errors): bool
-    {
+    public function canUserSubmitAnArtifactInAllTrackers(
+        UserIdentifier $user_identifier,
+        ConfigurationErrorsCollector $configuration_errors,
+        VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
+    ): bool {
         $can_submit = true;
         foreach ($this->mirrored_timebox_trackers as $milestone_tracker) {
-            if (! $milestone_tracker->userCanSubmitArtifact($retrieve_user, $user_identifier)) {
+            if (! $user_can_submit_in_tracker_verifier->canUserSubmitArtifact($user_identifier, $milestone_tracker)) {
                 $configuration_errors->userCanNotSubmitInTeam($milestone_tracker);
                 $can_submit = false;
                 if (! $configuration_errors->shouldCollectAllIssues()) {

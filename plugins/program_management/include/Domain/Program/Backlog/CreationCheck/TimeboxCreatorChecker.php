@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 class TimeboxCreatorChecker
@@ -41,8 +41,8 @@ class TimeboxCreatorChecker
         private CheckRequiredField $required_field_checker,
         private CheckWorkflow $workflow_checker,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
-        private RetrieveUser $retrieve_user,
-        private RetrieveProjectFromTracker $retrieve_project_from_tracker
+        private RetrieveProjectFromTracker $retrieve_project_from_tracker,
+        private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
     ) {
     }
 
@@ -61,7 +61,7 @@ class TimeboxCreatorChecker
             }
         }
 
-        if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($this->retrieve_user, $user_identifier, $configuration_errors)) {
+        if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user_identifier, $configuration_errors, $this->user_can_submit_in_tracker_verifier)) {
             $can_be_created = false;
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return $can_be_created;

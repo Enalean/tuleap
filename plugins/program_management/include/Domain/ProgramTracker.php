@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -113,12 +112,6 @@ final class ProgramTracker implements TrackerIdentifier
     public function getProjectId(): int
     {
         return (int) $this->tracker->getGroupId();
-    }
-
-    public function userCanSubmitArtifact(RetrieveUser $retrieve_user, UserIdentifier $user_identifier): bool
-    {
-        $user = $retrieve_user->getUserWithId($user_identifier);
-        return $this->tracker->userCanSubmitArtifact($user);
     }
 
     /**
