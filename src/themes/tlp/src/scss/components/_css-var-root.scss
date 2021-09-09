@@ -50,6 +50,7 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-background-color-lighter-10: #{mix($tlp-background-color, $tlp-white-color, 90%)};
     --tlp-background-color-lighter-50: #{mix($tlp-background-color, $tlp-white-color, 50%)};
 
+    --tlp-background-color-darker-02: #{darken($tlp-background-color, 2%)};
     --tlp-background-color-darker-05: #{darken($tlp-background-color, 5%)};
     --tlp-background-color-darker-20: #{darken($tlp-background-color, 20%)};
 
@@ -250,6 +251,9 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-shadow-focus: 0 0 0 2px #{transparentize($tlp-main-color, 0.65)};
     --tlp-shadow-main-color: #{transparentize($tlp-main-color, 0.15)};
     --tlp-shadow-danger-color: #{transparentize($tlp-danger-color, 0.15)};
+
+    --tlp-pane-shadow: 0 3px 4px #{transparentize($tlp-dark-color, 0.97)};
+    --tlp-card-shadow: 0 3px 4px #{transparentize($tlp-dark-color, 0.97)}, 0 1px 0 #{transparentize($tlp-neutral-normal-color, 0.25)};
 
     // radius
     --tlp-small-radius: 3px;

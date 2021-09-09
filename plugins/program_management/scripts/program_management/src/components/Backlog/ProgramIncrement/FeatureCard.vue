@@ -21,7 +21,7 @@
     <div
         v-bind:draggable="is_draggable"
         v-bind:data-element-id="feature.id"
-        class="element-backlog-items"
+        class="element-backlog-item"
     >
         <div
             v-bind:data-tlp-tooltip="reason_why_feature_is_not_draggable"

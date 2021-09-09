@@ -23,6 +23,7 @@
 
 .program-backlog {
     display: flex;
+    padding: 0 var(--tlp-medium-spacing);
 }
 
 .program-backlog-empty-state {
@@ -38,8 +39,10 @@
     flex: 1 1 50%;
 }
 
-.program-to-be-planned-title {
-    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+.program-to-be-planned-title,
+.program-increment-title {
     color: var(--tlp-typo-default-text-color);
+    font-size: 1.5rem;
     font-weight: 600;
+    line-height: 1.875rem;
 }

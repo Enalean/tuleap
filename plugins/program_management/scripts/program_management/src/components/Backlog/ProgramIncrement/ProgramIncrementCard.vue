@@ -33,13 +33,14 @@
                 />
                 {{ increment.title }}
             </span>
-            <div class="program-increment-header-spacer"></div>
-            <span class="program-increment-header-dates" v-if="increment.start_date !== null">
-                {{ formatDate(increment.start_date) }}
-                <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
-                {{ formatDate(increment.end_date) }}
-            </span>
-            <span class="tlp-badge-outline tlp-badge-primary">{{ increment.status }}</span>
+            <div>
+                <span class="program-increment-header-dates" v-if="increment.start_date !== null">
+                    {{ formatDate(increment.start_date) }}
+                    <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
+                    {{ formatDate(increment.end_date) }}
+                </span>
+                <span class="tlp-badge-outline tlp-badge-primary">{{ increment.status }}</span>
+            </div>
         </div>
         <div
             class="program-increment-info"

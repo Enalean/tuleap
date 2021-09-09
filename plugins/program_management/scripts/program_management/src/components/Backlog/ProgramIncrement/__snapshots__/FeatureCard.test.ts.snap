@@ -2,7 +2,7 @@
 
 exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = `
 <div
-  class="element-backlog-items"
+  class="element-backlog-item"
   data-element-id="100"
   draggable="true"
 >
@@ -50,7 +50,7 @@ exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = 
 
 exports[`FeatureCard Displays a not draggable card when user can not plan/unplan features 1`] = `
 <div
-  class="element-backlog-items"
+  class="element-backlog-item"
   data-element-id="100"
   draggable="false"
 >
@@ -96,7 +96,7 @@ exports[`FeatureCard Displays a not draggable card when user can not plan/unplan
 
 exports[`FeatureCard Displays a not draggable card without accessibility pattern 1`] = `
 <div
-  class="element-backlog-items"
+  class="element-backlog-item"
   data-element-id="100"
   draggable="false"
 >
