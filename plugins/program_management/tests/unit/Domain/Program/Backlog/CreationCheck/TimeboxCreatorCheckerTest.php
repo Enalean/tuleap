@@ -288,7 +288,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->fields_adapter,
             new NullLogger(),
             $this->retrieve_tracker_from_field,
-            $retrieve_field_permissions
+            $retrieve_field_permissions,
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
 
         return new TimeboxCreatorChecker(

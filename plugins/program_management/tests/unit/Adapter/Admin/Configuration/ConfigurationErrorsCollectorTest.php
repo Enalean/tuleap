@@ -75,13 +75,13 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenFieldIsNotSubmittable(): void
     {
-        $this->collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1));
+        $this->collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenFieldIsNotUpdatable(): void
     {
-        $this->collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1));
+        $this->collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 

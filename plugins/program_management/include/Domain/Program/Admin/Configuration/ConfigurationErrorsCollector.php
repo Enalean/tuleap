@@ -135,14 +135,14 @@ final class ConfigurationErrorsCollector
         );
     }
 
-    public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker): void
+    public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project_reference): void
     {
-        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker);
+        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project_reference);
     }
 
-    public function addUpdateFieldPermissionError(int $field_id, string $label, TrackerReference $tracker): void
+    public function addUpdateFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project_reference): void
     {
-        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker);
+        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project_reference);
     }
 
     public function userCanNotSubmitInTeam(ProgramTracker $team_tracker_id): void

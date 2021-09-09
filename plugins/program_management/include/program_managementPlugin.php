@@ -397,7 +397,8 @@ final class program_managementPlugin extends Plugin
             $gatherer,
             $logger,
             $retrieve_tracker_from_field,
-            new FieldPermissionsVerifier($user_manager_adapter, $form_element_factory)
+            new FieldPermissionsVerifier($user_manager_adapter, $form_element_factory),
+            $retrieve_project_from_tracker
         );
 
         $checker = new TimeboxCreatorChecker(
@@ -1122,7 +1123,8 @@ final class program_managementPlugin extends Plugin
             $gatherer,
             $logger,
             $retrieve_tracker_from_field,
-            new FieldPermissionsVerifier($retrieve_user, $form_element_factory)
+            new FieldPermissionsVerifier($retrieve_user, $form_element_factory),
+            $retrieve_project_from_tracker
         );
 
         $checker = new TimeboxCreatorChecker(

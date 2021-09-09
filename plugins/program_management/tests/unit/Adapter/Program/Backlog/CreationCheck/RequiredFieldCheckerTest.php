@@ -97,7 +97,8 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             new NullLogger(),
             $this->retrieve_tracker_from_field,
-            $this->retrieve_field_permissions
+            $this->retrieve_field_permissions,
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
         $collection->add($synchronized_field);
         $errors_collector         = new ConfigurationErrorsCollector(false);
@@ -147,7 +148,8 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             new NullLogger(),
             $this->retrieve_tracker_from_field,
-            $this->retrieve_field_permissions
+            $this->retrieve_field_permissions,
+            RetrieveProjectFromTrackerStub::buildGeneric()
         );
         $collection->add($synchronized_field);
 
