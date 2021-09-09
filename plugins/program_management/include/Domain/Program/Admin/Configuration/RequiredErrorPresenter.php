@@ -36,14 +36,14 @@ final class RequiredErrorPresenter
     public string $team_project_label;
 
     public function __construct(
-        private int $field_id,
+        int $field_id,
         public string $field_label,
         TrackerReference $tracker,
         ProjectReference $project_reference
     ) {
         $this->field_admin_url    = '/plugins/tracker/?' .
             http_build_query(
-                ['tracker' => $tracker->id, 'func' => 'admin-formElement-update', 'formElement' => $this->field_id]
+                ['tracker' => $tracker->id, 'func' => 'admin-formElement-update', 'formElement' => $field_id]
             );
         $this->tracker_name       = $tracker->label;
         $this->team_project_label = $project_reference->getProjectLabel();
