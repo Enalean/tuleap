@@ -26,19 +26,16 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RetrieveTrackerStub $tracker_builder;
     private RetrieveProgramUserGroupStub $ugroup_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PlanStore
-     */
-    private $plan_store;
+    private \PHPUnit\Framework\MockObject\MockObject|PlanStore $plan_store;
     private RetrieveProjectStub $project_retriever;
     private int $project_id;
 
@@ -55,15 +52,13 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plannable_tracker_id = 2;
 
-        $user = UserTestBuilder::aUser()->build();
-
         $this->plan_store = $this->createMock(PlanStore::class);
         $this->plan_store->expects(self::once())->method('save')->with(self::isInstanceOf(Plan::class));
         $plan_program_increment_change = new PlanProgramIncrementChange(1, 'Program Increments', 'program increment');
         $iteration_representation      = new PlanIterationChange(150, null, null);
         $plan_change                   = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
-            $user,
+            UserIdentifierStub::buildGenericUser(),
             $this->project_id,
             [$plannable_tracker_id],
             ['102_4'],

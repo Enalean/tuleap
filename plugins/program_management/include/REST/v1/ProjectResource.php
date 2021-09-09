@@ -248,7 +248,8 @@ final class ProjectResource extends AuthenticatedResource
      */
     protected function putPlan(int $id, ProjectResourcePutPlanRepresentation $representation): void
     {
-        $user = $this->user_manager->getCurrentUser();
+        $user            = $this->user_manager->getCurrentUser();
+        $user_identifier = UserProxy::buildFromPFUser($user);
 
         $plan_program_increment_change = new PlanProgramIncrementChange(
             $representation->program_increment_tracker_id,
@@ -266,7 +267,7 @@ final class ProjectResource extends AuthenticatedResource
         try {
             $plan_change = PlanChange::fromProgramIncrementAndRaw(
                 $plan_program_increment_change,
-                $user,
+                $user_identifier,
                 $id,
                 $representation->plannable_tracker_ids,
                 $representation->permissions->can_prioritize_features,

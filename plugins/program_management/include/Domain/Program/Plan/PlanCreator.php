@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
@@ -52,7 +51,7 @@ final class PlanCreator implements CreatePlan
             $this->team_verifier,
             $this->permission_verifier,
             $this->retrieve_user,
-            UserProxy::buildFromPFUser($plan_change->user),
+            $plan_change->user_identifier,
             ProjectProxy::buildFromProject($project)
         );
         $program_tracker   = ProgramIncrementTracker::buildProgramIncrementTracker(
