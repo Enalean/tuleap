@@ -1955,8 +1955,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 //beginning
                                 foreach ($columns as $id => $properties) {
                                     $columns[$id]['rank'] = $properties['rank'] + 1;
+                                    $this->report_session->set("{$this->id}.columns.{$id}.rank", $columns[$id]['rank']);
                                 }
                                 $columns[$column_id]['rank'] = 0;
+                                $this->report_session->set("{$this->id}.columns.{$column_id}.rank", $columns[$column_id]['rank']);
                             } elseif ($new_position == '-2') {
                                 //end
                                 $max = 0;
@@ -1964,16 +1966,24 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     if ($properties['rank'] > $max) {
                                         $max = $properties['rank'];
                                     }
+                                    $properties['rank'] = $properties['rank'] - 1;
+                                    $this->report_session->set("{$this->id}.columns.{$id}.rank", $properties['rank']);
                                 }
                                 $columns[$column_id]['rank'] = $max + 1;
+                                $this->report_session->set(
+                                    "{$this->id}.columns.{$column_id}.rank",
+                                    $columns[$column_id]['rank']
+                                );
                             } else {
                                 //other case
                                 $replaced_rank = $columns[$new_position]['rank'] + 1;   // rank of the element to shift right
                                 foreach ($columns as $id => $properties) {
                                     if ($properties['rank'] >= $replaced_rank && $id != $column_id) {
                                         $columns[$id]['rank'] += 1;
+                                        $this->report_session->set("{$this->id}.columns.{$id}.rank", $columns[$id]['rank']);
                                     }
                                 }
+                                $this->report_session->set("{$this->id}.columns.{$column_id}.rank", $replaced_rank);
                                 $columns[$column_id]['rank'] = $replaced_rank;
                             }
                             $this->report_session->setHasChanged();
