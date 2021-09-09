@@ -119,7 +119,7 @@ class TaskBuilder
                 $artifact_factory,
                 $form_element_factory
             ),
-            new ChangesetRetriever($artifact_factory, \Tracker_Artifact_ChangesetFactoryBuilder::build())
+            new ChangesetRetriever($artifact_factory)
         );
     }
 }

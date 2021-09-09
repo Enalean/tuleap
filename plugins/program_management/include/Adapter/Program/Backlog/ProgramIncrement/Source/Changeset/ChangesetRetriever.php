@@ -31,8 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 final class ChangesetRetriever implements RetrieveChangesetSubmissionDate
 {
     public function __construct(
-        private \Tracker_ArtifactFactory $artifact_factory,
-        private \Tracker_Artifact_ChangesetFactory $changeset_factory
+        private \Tracker_ArtifactFactory $artifact_factory
     ) {
     }
 
@@ -42,7 +41,7 @@ final class ChangesetRetriever implements RetrieveChangesetSubmissionDate
         if (! $artifact) {
             throw new ArtifactNotFoundException($artifact_id);
         }
-        $changeset = $this->changeset_factory->getChangeset($artifact, $changeset_identifier->getId());
+        $changeset = $artifact->getChangeset($changeset_identifier->getId());
         if (! $changeset) {
             throw new ChangesetNotFoundException($changeset_identifier->getId());
         }

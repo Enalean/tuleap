@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
@@ -37,10 +38,10 @@ final class SourceTimeboxChangesetValues
 {
     private function __construct(
         private int $source_artifact_id,
+        private SubmissionDate $submitted_on,
         private TitleValue $title_value,
         private DescriptionValue $description_value,
         private StatusValue $status_value,
-        private SubmissionDate $submitted_on,
         private StartDateValue $start_date_value,
         private EndPeriodValue $end_period_value
     ) {
@@ -76,10 +77,38 @@ final class SourceTimeboxChangesetValues
 
         return new self(
             $program_increment_id,
+            $submission_date,
             $title_value,
             $description_value,
             $status_value,
+            $start_date_value,
+            $end_period_value
+        );
+    }
+
+    public static function fromUpdate(
+        GatherSynchronizedFields $fields_gatherer,
+        RetrieveFieldValuesGatherer $field_values_retriever,
+        RetrieveChangesetSubmissionDate $submission_retriever,
+        ProgramIncrementUpdate $update
+    ): self {
+        $program_increment_id = $update->program_increment->getId();
+        $fields               = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $update->tracker);
+        $submission_date      = $submission_retriever->getSubmissionDate($program_increment_id, $update->changeset);
+
+        $values_gatherer   = $field_values_retriever->getGathererFromUpdate($update);
+        $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
+        $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);
+        $status_value      = StatusValue::fromStatusReference($values_gatherer, $fields->status);
+        $start_date_value  = StartDateValue::fromStartDateReference($values_gatherer, $fields->start_date);
+        $end_period_value  = EndPeriodValue::fromEndPeriodReference($values_gatherer, $fields->end_period);
+
+        return new self(
+            $program_increment_id,
             $submission_date,
+            $title_value,
+            $description_value,
+            $status_value,
             $start_date_value,
             $end_period_value
         );

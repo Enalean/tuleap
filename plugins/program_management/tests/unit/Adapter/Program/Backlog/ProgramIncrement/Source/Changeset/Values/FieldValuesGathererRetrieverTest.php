@@ -22,30 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tracker_FormElementFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private Stub|\Tracker_ArtifactFactory $artifact_factory;
+    private Stub|\Tracker_FormElementFactory $factory;
     private ReplicationData $replication;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElementFactory
-     */
-    private mixed $factory;
+    private ProgramIncrementUpdate $update;
 
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
-        $this->replication      = ReplicationDataBuilder::build();
-        $this->factory          =  $this->createStub(Tracker_FormElementFactory::class);
+        $this->factory          = $this->createStub(Tracker_FormElementFactory::class);
+
+        $this->replication = ReplicationDataBuilder::build();
+        $this->update      = ProgramIncrementUpdateBuilder::build();
     }
 
     private function getRetriever(): FieldValuesGathererRetriever
@@ -80,5 +80,34 @@ final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->expectException(PendingArtifactChangesetNotFoundException::class);
         $this->getRetriever()->getFieldValuesGatherer($this->replication);
+    }
+
+    public function testItReturnsAFieldValuesGathererForUpdate(): void
+    {
+        $changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $artifact  = $this->createStub(Artifact::class);
+        $artifact->method('getChangeset')->willReturn($changeset);
+        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+
+        $gatherer = $this->getRetriever()->getGathererFromUpdate($this->update);
+        self::assertNotNull($gatherer);
+    }
+
+    public function testItThrowsWhenFullArtifactCannotBeRetrievedForUpdate(): void
+    {
+        $this->artifact_factory->method('getArtifactById')->willReturn(null);
+
+        $this->expectException(PendingArtifactNotFoundException::class);
+        $this->getRetriever()->getGathererFromUpdate($this->update);
+    }
+
+    public function testItThrowsWhenChangesetCannotBeRetrievedForUpdate(): void
+    {
+        $artifact = $this->createStub(Artifact::class);
+        $artifact->method('getChangeset')->willReturn(null);
+        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+
+        $this->expectException(PendingArtifactChangesetNotFoundException::class);
+        $this->getRetriever()->getGathererFromUpdate($this->update);
     }
 }
