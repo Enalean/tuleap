@@ -39,29 +39,49 @@ use function PHPUnit\Framework\assertNull;
 
 final class PossibleParentHandlerTest extends TestCase
 {
-    private const FEATURE_ID = 123;
-    private const PROGRAM_ID = 899;
+    private const FEATURE_ID   = 123;
+    private const PROGRAM_ID_1 = 899;
+    private const PROGRAM_ID_2 = 741;
 
     private FeaturesStore $feature_store;
     private PossibleParentSelectorEvent $possible_parent_selector;
 
     protected function setUp(): void
     {
-        $this->feature_store = new class (self::FEATURE_ID) implements FeaturesStore
+        $this->feature_store = new class implements FeaturesStore
         {
-            public function __construct(private int $feature_id)
-            {
-            }
+            public int $offset     = 0;
+            public int $limit      = 0;
+            public int $found_rows = 0;
+            /**
+             * @var ProgramIdentifier[]
+             */
+            public array $program_identifiers = [];
+            public array $open_features       = [];
 
             public function searchPlannableFeatures(ProgramIdentifier $program): array
             {
                 return [];
             }
 
-            public function searchOpenFeatures(ProgramIdentifier $program): array
+            public function searchOpenFeatures(int $offset, int $limit, ProgramIdentifier ...$program_identifiers): array
             {
-                return [
-                    [ 'artifact_id' => $this->feature_id ]
+                $this->offset              = $offset;
+                $this->limit               = $limit;
+                $this->program_identifiers = $program_identifiers;
+                return $this->open_features;
+            }
+
+            public function searchOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
+            {
+                return $this->found_rows;
+            }
+
+            public function add(int $program_id, int $artifact_id): void
+            {
+                $this->open_features[] = [
+                    'artifact_id' => $artifact_id,
+                    'program_id'  => $program_id,
                 ];
             }
         };
@@ -71,6 +91,9 @@ final class PossibleParentHandlerTest extends TestCase
             public ?array $features                  = null;
             public bool $can_create                  = true;
             public bool $tracker_is_in_root_planning = true;
+            public int $offset                       = 0;
+            public int $limit                        = 0;
+            public int $total_size                   = 0;
 
             public function getUser(): UserIdentifier
             {
@@ -92,9 +115,20 @@ final class PossibleParentHandlerTest extends TestCase
                 $this->can_create = false;
             }
 
-            public function setPossibleParents(FeatureIdentifier ...$features): void
+            public function setPossibleParents(int $total_size, FeatureIdentifier ...$features): void
             {
-                $this->features = $features;
+                $this->total_size = $total_size;
+                $this->features   = $features;
+            }
+
+            public function getLimit(): int
+            {
+                return $this->limit;
+            }
+
+            public function getOffset(): int
+            {
+                return $this->offset;
             }
         };
     }
@@ -104,13 +138,35 @@ final class PossibleParentHandlerTest extends TestCase
         $possible_parent = new PossibleParentHandler(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
-            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID),
+            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->feature_store,
         );
+
+        $this->feature_store->add(self::PROGRAM_ID_1, self::FEATURE_ID);
 
         $possible_parent->handle($this->possible_parent_selector);
 
         assertEquals([self::FEATURE_ID], array_map(static fn (FeatureIdentifier $feature) => $feature->id, $this->possible_parent_selector->features));
+    }
+
+    public function testItHasOffsetAndLimit(): void
+    {
+        $possible_parent = new PossibleParentHandler(
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            BuildProgramStub::stubValidProgram(),
+            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
+            $this->feature_store,
+        );
+
+        $this->possible_parent_selector->offset = 100;
+        $this->possible_parent_selector->limit  = 50;
+        $this->feature_store->found_rows        = 200;
+
+        $possible_parent->handle($this->possible_parent_selector);
+
+        assertEquals(100, $this->feature_store->offset);
+        assertEquals(50, $this->feature_store->limit);
+        assertEquals(200, $this->possible_parent_selector->total_size);
     }
 
     public function testDisableCreateWhenInTheContextOfTeamAttachedToProgramToAvoidCrossProjectRedirections(): void
@@ -118,7 +174,7 @@ final class PossibleParentHandlerTest extends TestCase
         $possible_parent = new PossibleParentHandler(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
-            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID),
+            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->feature_store,
         );
 
@@ -146,7 +202,7 @@ final class PossibleParentHandlerTest extends TestCase
         $possible_parent = new PossibleParentHandler(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
-            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID),
+            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->feature_store,
         );
 
@@ -162,12 +218,26 @@ final class PossibleParentHandlerTest extends TestCase
         $possible_parent = new PossibleParentHandler(
             VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
-            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID),
+            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->feature_store,
         );
 
         $possible_parent->handle($this->possible_parent_selector);
 
         assertEquals([], $this->possible_parent_selector->features);
+    }
+
+    public function testItLooksForProgramsAtOnce(): void
+    {
+        $possible_parent = new PossibleParentHandler(
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            BuildProgramStub::stubValidProgram(),
+            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1, self::PROGRAM_ID_2),
+            $this->feature_store,
+        );
+
+        $possible_parent->handle($this->possible_parent_selector);
+
+        assertEquals([self::PROGRAM_ID_1, self::PROGRAM_ID_2], array_map(static fn (ProgramIdentifier $prgm_id) => $prgm_id->getId(), $this->feature_store->program_identifiers));
     }
 }

@@ -40,7 +40,7 @@ class PossibleParentsRetriever
         int $offset,
         bool $can_create
     ): PossibleParentSelector {
-        $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $tracker));
+        $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $tracker, $offset, $limit));
 
         if ($possible_parents->getPossibleParents()) {
             return $possible_parents;

@@ -50,30 +50,32 @@ final class PossibleParentHandler
             return;
         }
 
-        $features = [];
+        $programs = [];
         foreach ($program_ids as $program_id) {
-            $program = ProgramIdentifier::fromId(
+            $programs[$program_id] = ProgramIdentifier::fromId(
                 $this->program_builder,
                 $program_id,
                 $possible_parent_selector->getUser(),
                 null
             );
-            foreach ($this->features_store->searchOpenFeatures($program) as $feature) {
-                $feature_identifier = FeatureIdentifier::fromId(
-                    $this->visible_verifier,
-                    $feature['artifact_id'],
-                    $possible_parent_selector->getUser(),
-                    $program,
-                    null,
-                );
-                if (! $feature_identifier) {
-                    continue;
-                }
-                $features[] = $feature_identifier;
+        }
+
+        $features = [];
+        foreach ($this->features_store->searchOpenFeatures($possible_parent_selector->getOffset(), $possible_parent_selector->getLimit(), ...$programs) as $feature) {
+            $feature_identifier = FeatureIdentifier::fromId(
+                $this->visible_verifier,
+                $feature['artifact_id'],
+                $possible_parent_selector->getUser(),
+                $programs[$feature['program_id']],
+                null,
+            );
+            if (! $feature_identifier) {
+                continue;
             }
+            $features[] = $feature_identifier;
         }
 
         $possible_parent_selector->disableCreate();
-        $possible_parent_selector->setPossibleParents(...$features);
+        $possible_parent_selector->setPossibleParents($this->features_store->searchOpenFeaturesCount(...$programs), ...$features);
     }
 }

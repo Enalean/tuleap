@@ -69,6 +69,36 @@ final class PossibleParentsRetrieverTest extends TestCase
         assertEquals([ArtifactTestBuilder::anArtifact(123)->build()], $possible_parent_selector->getPossibleParents()->getArtifacts());
     }
 
+    public function testPluginsHaveThePaginationInfo(): void
+    {
+        $event_manager              = new class implements EventDispatcherInterface {
+            public int $limit  = 0;
+            public int $offset = 0;
+            public function dispatch(object $event)
+            {
+                assert($event instanceof PossibleParentSelector);
+                $this->limit  = $event->limit;
+                $this->offset = $event->offset;
+                $event->setPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
+                    [
+                        ArtifactTestBuilder::anArtifact(123)->build(),
+                    ],
+                    1
+                ));
+                return $event;
+            }
+        };
+        $possible_parents_retriever = new PossibleParentsRetriever(
+            $this->createStub(\Tracker_ArtifactFactory::class),
+            $event_manager,
+        );
+
+        $possible_parents_retriever->getPossibleArtifactParents($this->tracker, $this->user, 50, 100, true);
+
+        assertEquals(50, $event_manager->limit);
+        assertEquals(100, $event_manager->offset);
+    }
+
     public function testNoParentTrackerMeansNoNeedToDisplayTheSelector(): void
     {
         $possible_parents_retriever = new PossibleParentsRetriever(

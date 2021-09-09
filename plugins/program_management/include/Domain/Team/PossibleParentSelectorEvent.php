@@ -39,5 +39,15 @@ interface PossibleParentSelectorEvent
 
     public function disableCreate(): void;
 
-    public function setPossibleParents(FeatureIdentifier ...$features): void;
+    public function setPossibleParents(int $total_size, FeatureIdentifier ...$features): void;
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getLimit(): int;
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getOffset(): int;
 }

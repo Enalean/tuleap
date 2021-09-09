@@ -38,16 +38,26 @@ final class PossibleParentSelector implements Dispatchable
      * @readonly
      */
     public \Tracker $tracker;
+    /**
+     * @readonly
+     */
+    public int $limit = 0;
+    /**
+     * @readonly
+     */
+    public int $offset = 0;
 
     private ?Tracker_Artifact_PaginatedArtifacts $possible_parents = null;
     private bool $display_selector                                 = true;
     private string $parent_label                                   = '';
     private bool $can_create                                       = true;
 
-    public function __construct(\PFUser $user, \Tracker $tracker)
+    public function __construct(\PFUser $user, \Tracker $tracker, int $offset, int $limit)
     {
         $this->user    = $user;
         $this->tracker = $tracker;
+        $this->offset  = $offset;
+        $this->limit   = $limit;
     }
 
     public function getPossibleParents(): ?Tracker_Artifact_PaginatedArtifacts
