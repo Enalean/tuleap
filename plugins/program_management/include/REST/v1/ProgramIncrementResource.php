@@ -96,8 +96,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
                     new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                    $artifact_factory,
-                    $this->user_manager_adapter
+                    $artifact_factory
                 )
             ),
             $this->getProgramSearcher(),
@@ -195,8 +194,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
                     new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                    $artifact_factory,
-                    $this->user_manager_adapter
+                    $artifact_factory
                 ),
                 new FeatureRemovalProcessor(
                     $program_increments_dao,

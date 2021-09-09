@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class BuildPlanningStub implements BuildPlanning
@@ -36,7 +37,7 @@ class BuildPlanningStub implements BuildPlanning
         $this->valid_root_planning = $valid_root_planning;
     }
 
-    public function getRootPlanning(\PFUser $user, int $project_id): \Planning
+    public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): \Planning
     {
         if ($this->valid_root_planning) {
             $planning = new \Planning(1, 'Root planning', $project_id, '', '');
