@@ -1,3 +1,4 @@
+import { createListPicker } from "@tuleap/list-picker";
 import { canChooseArtifactsParent } from "./link-field-service.js";
 import { isInCreationMode } from "../../modal-creation-mode-state.js";
 import {
@@ -8,19 +9,21 @@ import {
 
 export default LinkFieldController;
 
-LinkFieldController.$inject = ["$q"];
+LinkFieldController.$inject = ["$q", "$element", "$scope", "gettextCatalog"];
 
-function LinkFieldController($q) {
+function LinkFieldController($q, $element, $scope, gettextCatalog) {
     const self = this;
 
     Object.assign(self, {
         $onInit: init,
+        $onDestroy: destroy,
         showParentArtifactChoice,
         loadParentArtifactsTitle,
         hasArtifactAlreadyAParent,
         is_loading: false,
         parent_artifact: null,
         possible_parent_artifacts: [],
+        destroy_list_picker_callback: () => {},
     });
 
     function init() {
@@ -37,6 +40,45 @@ function LinkFieldController($q) {
             .finally(() => {
                 self.is_loading = false;
             });
+
+        watchParentSelector();
+    }
+
+    function watchParentSelector() {
+        if (!self.is_list_picker_enabled) {
+            return;
+        }
+
+        $scope.$watch(hasSelectBeenRendered, (is_select_available) => {
+            if (!is_select_available) {
+                return;
+            }
+
+            initListPicker();
+        });
+    }
+
+    function hasSelectBeenRendered() {
+        return $element[0].querySelector("[data-select-type=list-picker]") !== null;
+    }
+
+    async function initListPicker() {
+        const select = $element[0].querySelector("[data-select-type=list-picker]");
+        const options = {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+            placeholder: gettextCatalog.getString("Please choose a parent…"),
+        };
+
+        self.destroy_list_picker_callback = await createListPicker(select, options).then(
+            (list_picker) => {
+                return list_picker.destroy;
+            }
+        );
+    }
+
+    function destroy() {
+        self.destroy_list_picker_callback();
     }
 
     function getParentArtifact() {

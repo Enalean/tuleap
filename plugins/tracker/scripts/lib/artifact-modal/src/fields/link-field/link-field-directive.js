@@ -13,6 +13,7 @@ export default function linkFieldDirective() {
             tracker: "=tracker",
             parent_artifact_id: "=parentArtifactId",
             parent_artifact: "=parentArtifact",
+            is_list_picker_enabled: "=isListPickerEnabled",
         },
         controller: LinkFieldController,
         controllerAs: "link_field",

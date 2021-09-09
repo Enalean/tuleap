@@ -6,22 +6,32 @@ import * as link_field_service from "./link-field-service.js";
 import * as modal_creation_mode_state from "../../modal-creation-mode-state.js";
 import * as rest_service from "../../rest/rest-service.js";
 import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
+import * as list_picker_lib from "@tuleap/list-picker";
+
+jest.mock("@tuleap/list-picker");
 
 describe("LinkFieldController -", () => {
     let $controller,
         $q,
         $rootScope,
+        $scope,
+        $element,
+        gettextCatalog,
         LinkFieldController,
         canChooseArtifactsParent,
         isInCreationMode;
 
     beforeEach(() => {
         angular.mock.module(tuleap_artifact_modal_module);
-        angular.mock.inject(function (_$controller_, _$q_, _$rootScope_) {
+        angular.mock.inject(function (_$controller_, _$q_, _$rootScope_, _gettextCatalog_) {
             $controller = _$controller_;
             $q = _$q_;
             $rootScope = _$rootScope_;
+            $scope = $rootScope.$new();
+            gettextCatalog = _gettextCatalog_;
         });
+
+        $element = angular.element('<div><select data-select-type="list-picker"</div>');
 
         canChooseArtifactsParent = jest.spyOn(link_field_service, "canChooseArtifactsParent");
 
@@ -29,7 +39,11 @@ describe("LinkFieldController -", () => {
             .spyOn(modal_creation_mode_state, "isInCreationMode")
             .mockReturnValue(true);
 
-        LinkFieldController = $controller(BaseController);
+        LinkFieldController = $controller(BaseController, {
+            $element,
+            $scope,
+            gettextCatalog,
+        });
     });
 
     describe("init() -", () => {
@@ -160,6 +174,51 @@ describe("LinkFieldController -", () => {
             const result = LinkFieldController.showParentArtifactChoice();
 
             expect(result).toBeFalsy();
+        });
+
+        describe("list-picker on parent selector", () => {
+            beforeEach(() => {
+                Object.assign(LinkFieldController, {
+                    tracker,
+                    parent_artifact,
+                    possible_parent_artifacts,
+                });
+            });
+
+            it("should not init list-picker when it is disabled", () => {
+                LinkFieldController.is_list_picker_enabled = false;
+
+                jest.spyOn(list_picker_lib, "createListPicker");
+
+                LinkFieldController.$onInit();
+
+                expect(list_picker_lib.createListPicker).not.toHaveBeenCalled();
+            });
+
+            it("should init list-picker when it is enabled and target select has been rendered", () => {
+                LinkFieldController.is_list_picker_enabled = true;
+
+                jest.spyOn(list_picker_lib, "createListPicker");
+
+                LinkFieldController.$onInit();
+
+                expect(list_picker_lib.createListPicker).not.toHaveBeenCalled();
+
+                LinkFieldController.is_loading = false;
+                $scope.$digest();
+
+                expect(list_picker_lib.createListPicker).toHaveBeenCalled();
+            });
+
+            it("list_picker_instance::destroy() callback should be called when there is a list-picker and the component is destroyed", () => {
+                LinkFieldController.$onInit();
+
+                jest.spyOn(LinkFieldController, "destroy_list_picker_callback");
+
+                LinkFieldController.$onDestroy();
+
+                expect(LinkFieldController.destroy_list_picker_callback).toHaveBeenCalled();
+            });
         });
     });
 
