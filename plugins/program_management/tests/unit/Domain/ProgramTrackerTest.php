@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -85,19 +84,5 @@ final class ProgramTrackerTest extends TestCase
 
         $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $this->user_identifier);
         self::assertNull($iteration_tracker);
-    }
-
-    public function testItDelegatesPermissionCheckToWrappedTracker(): void
-    {
-        $retrieve_user = RetrieveUserStub::withGenericUser();
-        $project       = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
-        $base_tracker  = $this->createMock(\Tracker::class);
-        $base_tracker->method('userCanSubmitArtifact')->willReturn(true);
-        $base_tracker->method('getId')->willReturn(1);
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($base_tracker);
-
-        $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $this->user_identifier);
-        self::assertTrue($tracker->userCanSubmitArtifact($retrieve_user, $this->user_identifier));
-        self::assertSame($base_tracker->getId(), $tracker->getId());
     }
 }

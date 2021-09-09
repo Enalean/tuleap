@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -52,36 +52,17 @@ use Tuleap\Request\NotFoundException;
 
 final class DisplayProgramBacklogController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    private \ProjectManager $project_manager;
-    private ProjectFlagsBuilder $project_flags_builder;
-    private \TemplateRenderer $template_renderer;
-    private BuildProgram $build_program;
-    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
-    private RetrieveProgramIncrementLabels $labels_retriever;
-    private VerifyIsTeam $verify_is_team;
-    private RetrieveUser $retrieve_user;
-    private VerifyPrioritizeFeaturesPermission $prioritize_features_permission;
-
     public function __construct(
-        \ProjectManager $project_manager,
-        ProjectFlagsBuilder $project_flags_builder,
-        BuildProgram $build_program,
-        \TemplateRenderer $template_renderer,
-        RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
-        RetrieveProgramIncrementLabels $labels_retriever,
-        VerifyIsTeam $verify_is_team,
-        RetrieveUser $retrieve_user,
-        VerifyPrioritizeFeaturesPermission $prioritize_features_permission
+        private \ProjectManager $project_manager,
+        private ProjectFlagsBuilder $project_flags_builder,
+        private BuildProgram $build_program,
+        private \TemplateRenderer $template_renderer,
+        private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
+        private RetrieveProgramIncrementLabels $labels_retriever,
+        private VerifyIsTeam $verify_is_team,
+        private VerifyPrioritizeFeaturesPermission $prioritize_features_permission,
+        private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
     ) {
-        $this->project_manager                     = $project_manager;
-        $this->project_flags_builder               = $project_flags_builder;
-        $this->build_program                       = $build_program;
-        $this->template_renderer                   = $template_renderer;
-        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
-        $this->labels_retriever                    = $labels_retriever;
-        $this->verify_is_team                      = $verify_is_team;
-        $this->retrieve_user                       = $retrieve_user;
-        $this->prioritize_features_permission      = $prioritize_features_permission;
     }
 
     /**
@@ -187,7 +168,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
             $program,
             $this->prioritize_features_permission,
             $user_identifier,
-            $this->retrieve_user
+            $this->user_can_submit_in_tracker_verifier
         );
 
         return new ProgramBacklogConfigurationPresenter(

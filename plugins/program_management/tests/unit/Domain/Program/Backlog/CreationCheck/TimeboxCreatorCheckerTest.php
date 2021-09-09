@@ -33,11 +33,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
@@ -59,6 +60,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
     private RetrieveTrackerFromFieldStub $retrieve_tracker_from_field;
     private \Tracker $tracker;
+    private VerifyUserCanSubmit $user_can_submit;
 
     protected function setUp(): void
     {
@@ -67,6 +69,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->required_field_checker      = $this->createStub(CheckRequiredField::class);
         $this->workflow_checker            = $this->createStub(CheckWorkflow::class);
         $this->fields_adapter              = GatherSynchronizedFieldsStub::withDefaults();
+        $this->user_can_submit             = VerifyUserCanSubmitStub::userCanSubmit();
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
@@ -92,8 +95,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->required_field_checker,
             $this->workflow_checker,
             $this->retrieve_tracker_from_field,
-            RetrieveUserStub::withGenericUser(),
-            RetrieveProjectFromTrackerStub::buildGeneric()
+            RetrieveProjectFromTrackerStub::buildGeneric(),
+            $this->user_can_submit
         );
     }
 
@@ -152,6 +155,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->fields_adapter = GatherSynchronizedFieldsStub::withDefaults();
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')->willReturn(true);
+
+        $this->user_can_submit = VerifyUserCanSubmitStub::userCanNotSubmit();
 
         self::assertFalse(
             $this->getChecker(VerifyFieldPermissionsStub::withValidField())->canTimeboxBeCreated(

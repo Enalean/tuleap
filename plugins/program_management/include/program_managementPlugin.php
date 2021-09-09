@@ -102,6 +102,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserCanSubmitInTrackerVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
@@ -333,7 +334,8 @@ final class program_managementPlugin extends Plugin
     {
         $program_increments_dao = new ProgramIncrementsDAO();
 
-        $retrieve_user   = new UserManagerAdapter(UserManager::instance());
+        $user_manager    = UserManager::instance();
+        $retrieve_user   = new UserManagerAdapter($user_manager);
         $project_manager = ProjectManager::instance();
 
         return new DisplayProgramBacklogController(
@@ -344,7 +346,6 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleProgramIncrementTrackerRetriever($retrieve_user),
             $program_increments_dao,
             new TeamDao(),
-            $retrieve_user,
             new PrioritizeFeaturesPermissionVerifier(
                 new ProjectManagerAdapter(\ProjectManager::instance(), $retrieve_user),
                 new ProjectAccessChecker(
@@ -354,6 +355,7 @@ final class program_managementPlugin extends Plugin
                 new CanPrioritizeFeaturesDAO(),
                 $retrieve_user
             ),
+            new UserCanSubmitInTrackerVerifier($user_manager, TrackerFactory::instance())
         );
     }
 
@@ -365,7 +367,8 @@ final class program_managementPlugin extends Plugin
 
         $tracker_factory = TrackerFactory::instance();
 
-        $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
+        $user_manager         = UserManager::instance();
+        $user_manager_adapter = new UserManagerAdapter($user_manager);
 
         $form_element_factory          = \Tracker_FormElementFactory::instance();
         $timeframe_dao                 = new SemanticTimeframeDao();
@@ -417,8 +420,8 @@ final class program_managementPlugin extends Plugin
                 $tracker_factory
             ),
             $retrieve_tracker_from_field,
-            $user_manager_adapter,
-            $retrieve_project_from_tracker
+            $retrieve_project_from_tracker,
+            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory)
         );
 
         return new DisplayAdminProgramManagementController(
@@ -1089,7 +1092,8 @@ final class program_managementPlugin extends Plugin
 
     private function getCanSubmitNewArtifactHandler(): CanSubmitNewArtifactHandler
     {
-        $retrieve_user                 = new UserManagerAdapter(UserManager::instance());
+        $user_manager                  = UserManager::instance();
+        $retrieve_user                 = new UserManagerAdapter($user_manager);
         $form_element_factory          = \Tracker_FormElementFactory::instance();
         $timeframe_dao                 = new SemanticTimeframeDao();
         $semantic_status_factory       = new Tracker_Semantic_StatusFactory();
@@ -1142,8 +1146,8 @@ final class program_managementPlugin extends Plugin
                 $tracker_factory
             ),
             $retrieve_tracker_from_field,
-            $retrieve_user,
-            $retrieve_project_from_tracker
+            $retrieve_project_from_tracker,
+            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory)
         );
 
 
