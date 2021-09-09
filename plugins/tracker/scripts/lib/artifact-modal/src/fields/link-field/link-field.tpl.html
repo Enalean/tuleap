@@ -30,6 +30,7 @@
     >Select parent</label>
     <select class="tlp-select"
         id="{{ ::('tracker_field_' + field.field_id + '_parent') }}"
+        data-select-type="list-picker"
         ng-model="link_field.value_model.parent.id"
         ng-disabled="::link_field.isDisabled(field)"
     >
