@@ -70,6 +70,6 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = $adapter->getTrackerById(85);
 
         self::assertInstanceOf(ProgramTracker::class, $tracker);
-        self::assertSame(85, $tracker->getTrackerId());
+        self::assertSame(85, $tracker->getId());
     }
 }

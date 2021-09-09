@@ -50,14 +50,14 @@ final class StatusSemanticChecker implements CheckStatus
         SourceTrackerCollection $source_tracker_collection,
         ConfigurationErrorsCollector $configuration_errors
     ): bool {
-        $full_tracker = $this->tracker_factory->getTrackerById($tracker->getTrackerId());
+        $full_tracker = $this->tracker_factory->getTrackerById($tracker->getId());
         if (! $full_tracker) {
-            throw new \RuntimeException("Tracker with id #" . $tracker->getTrackerId() . " is not found.");
+            throw new \RuntimeException("Tracker with id #" . $tracker->getId() . " is not found.");
         }
         $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker($full_tracker);
 
         if ($program_tracker_status_semantic->getField() === null) {
-            $configuration_errors->addSemanticNoStatusFieldError($tracker->getTrackerId());
+            $configuration_errors->addSemanticNoStatusFieldError($tracker->getId());
             return false;
         }
 
@@ -73,9 +73,9 @@ final class StatusSemanticChecker implements CheckStatus
         $program_open_values_labels = $program_tracker_status_semantic->getOpenLabels();
 
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
-            $source_full_tracker = $this->tracker_factory->getTrackerById($source_tracker->getTrackerId());
+            $source_full_tracker = $this->tracker_factory->getTrackerById($source_tracker->getId());
             if (! $source_full_tracker) {
-                throw new \RuntimeException("Tracker with id #" . $source_tracker->getTrackerId() . " is not found.");
+                throw new \RuntimeException("Tracker with id #" . $source_tracker->getId() . " is not found.");
             }
             $status_semantic = $this->semantic_status_factory->getByTracker($source_full_tracker);
             $array_diff      = array_diff($program_open_values_labels, $status_semantic->getOpenLabels());
@@ -100,7 +100,7 @@ final class StatusSemanticChecker implements CheckStatus
 
         $mapping = [];
         foreach ($source_tracker_collection->getSourceTrackers() as $program_tracker) {
-            $mapping[$program_tracker->getTrackerId()] = $program_tracker;
+            $mapping[$program_tracker->getId()] = $program_tracker;
         }
 
         $trackers_in_error = [];

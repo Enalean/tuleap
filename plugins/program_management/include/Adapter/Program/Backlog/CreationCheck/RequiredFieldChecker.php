@@ -47,9 +47,9 @@ final class RequiredFieldChecker implements CheckRequiredField
     ): bool {
         $are_fields_ok = true;
         foreach ($trackers->getTrackers() as $program_increment_tracker) {
-            $full_tracker = $this->tracker_factory->getTrackerById($program_increment_tracker->getTrackerId());
+            $full_tracker = $this->tracker_factory->getTrackerById($program_increment_tracker->getId());
             if (! $full_tracker) {
-                throw new \RuntimeException("Tracker with id #" . $program_increment_tracker->getTrackerId() . " is not found.");
+                throw new \RuntimeException("Tracker with id #" . $program_increment_tracker->getId() . " is not found.");
             }
             foreach ($full_tracker->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {

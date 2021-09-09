@@ -46,9 +46,9 @@ final class ArtifactCreatorAdapter implements CreateArtifact
         \PFUser $user,
         SubmissionDate $submission_date
     ): void {
-        $full_tracker = $this->tracker_factory->getTrackerById($tracker->getTrackerId());
+        $full_tracker = $this->tracker_factory->getTrackerById($tracker->getId());
         if (! $full_tracker) {
-            throw new \RuntimeException("Tracker with id #" . $tracker->getTrackerId() . " is not found.");
+            throw new \RuntimeException("Tracker with id #" . $tracker->getId() . " is not found.");
         }
         $artifact = $this->artifact_creator->create(
             $full_tracker,

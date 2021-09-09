@@ -102,14 +102,6 @@ final class ProgramTracker implements TrackerIdentifier
     /**
      * @psalm-mutation-free
      */
-    public function getTrackerId(): int
-    {
-        return $this->tracker->getId();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
     public function getTrackerName(): string
     {
         return $this->tracker->getName();
@@ -129,6 +121,9 @@ final class ProgramTracker implements TrackerIdentifier
         return $this->tracker->userCanSubmitArtifact($user);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId(): int
     {
         return $this->tracker->getId();

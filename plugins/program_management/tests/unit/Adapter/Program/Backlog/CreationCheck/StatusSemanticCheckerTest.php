@@ -207,7 +207,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $configuration_errors
             )
         );
-        self::assertSame(1, $configuration_errors->getStatusMissingInTeams()[0]->getTrackerId());
+        self::assertSame(1, $configuration_errors->getStatusMissingInTeams()[0]->getId());
     }
 
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoesNotContainTheProgramOpenValue(): void
