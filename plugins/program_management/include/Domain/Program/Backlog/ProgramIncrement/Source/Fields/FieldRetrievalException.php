@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-class FieldRetrievalException extends \RuntimeException implements FieldSynchronizationException
+final class FieldRetrievalException extends \Exception implements FieldSynchronizationException
 {
     private string $i18n_message;
 

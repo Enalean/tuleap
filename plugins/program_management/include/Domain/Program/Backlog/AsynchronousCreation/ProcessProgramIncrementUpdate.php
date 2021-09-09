@@ -23,8 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 
 interface ProcessProgramIncrementUpdate
 {
+    /**
+     * @throws FieldSynchronizationException
+     */
     public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
 }

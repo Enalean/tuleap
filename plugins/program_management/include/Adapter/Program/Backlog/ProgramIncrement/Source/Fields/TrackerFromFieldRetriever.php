@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use LogicException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
@@ -38,7 +38,7 @@ final class TrackerFromFieldRetriever implements RetrieveTrackerFromField
         $full_field = $this->form_element_factory->getFieldById($field_id);
 
         if (! $full_field) {
-            throw new LogicException("Can not found the field #" . $field_id);
+            throw new FieldNotFoundException($field_id);
         }
 
         return TrackerReference::fromTracker($full_field->getTracker());

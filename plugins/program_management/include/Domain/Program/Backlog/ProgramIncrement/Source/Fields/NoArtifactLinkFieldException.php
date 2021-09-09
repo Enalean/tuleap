@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-final class NoArtifactLinkFieldException extends \RuntimeException implements FieldSynchronizationException
+final class NoArtifactLinkFieldException extends \Exception implements FieldSynchronizationException
 {
     private string $i18n_message;
 
