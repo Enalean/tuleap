@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\StartDateFieldReferenceStub;
 
 final class StartDateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const VALUE = '2018-05-02';
 
-    public function testItBuildsFromSynchronizedFields(): void
+    public function testItBuildsFromStartDateReference(): void
     {
-        $value = StartDateValue::fromSynchronizedFields(
+        $value = StartDateValue::fromStartDateReference(
             RetrieveStartDateValueStub::withValue(self::VALUE),
-            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
+            StartDateFieldReferenceStub::withDefaults()
         );
         self::assertSame(self::VALUE, $value->getValue());
     }

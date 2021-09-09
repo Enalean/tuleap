@@ -22,21 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 
 final class StatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_LABEL  = 'diaster';
     private const SECOND_LABEL = 'tolter';
 
-    public function testItBuildsFromSynchronizedFields(): void
+    public function testItBuildsFromStatusReference(): void
     {
-        $value  = StatusValue::fromSynchronizedFields(
+        $value  = StatusValue::fromStatusReference(
             RetrieveStatusValuesStub::withValues(self::FIRST_LABEL, self::SECOND_LABEL),
-            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
+            StatusFieldReferenceStub::withDefaults()
         );
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $value->getListValues());
         self::assertContains(self::FIRST_LABEL, $labels);

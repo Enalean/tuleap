@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveStartDateField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
@@ -33,25 +32,9 @@ final class RetrieveStartDateFieldStub implements RetrieveStartDateField
     {
     }
 
-    public static function withField(int $field_id, string $field_label): self
+    public static function withField(StartDateFieldReference $field): self
     {
-        return new self(
-            StartDateFieldReferenceProxy::fromTrackerField(
-                new \Tracker_FormElement_Field_Date(
-                    $field_id,
-                    1,
-                    null,
-                    'irrelevant',
-                    $field_label,
-                    'Irrelevant',
-                    true,
-                    'P',
-                    true,
-                    '',
-                    1
-                )
-            )
-        );
+        return new self($field);
     }
 
     public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference

@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\EndPeriodFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndPeriodValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class EndPeriodValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const VALUE = '2023-09-01';
 
-    public function testItBuildsFromSynchronizedFields(): void
+    public function testItBuildsFromEndPeriodReference(): void
     {
-        $value = EndPeriodValue::fromSynchronizedFields(
+        $value = EndPeriodValue::fromEndPeriodReference(
             RetrieveEndPeriodValueStub::withValue(self::VALUE),
-            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
+            EndPeriodFieldReferenceStub::withDefaults()
         );
         self::assertSame(self::VALUE, $value->getValue());
     }

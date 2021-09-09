@@ -77,29 +77,28 @@ final class GatherFieldValuesStub implements GatherFieldValues
         );
     }
 
-    public function getTitleValue(TitleFieldReference $fields): string
+    public function getTitleValue(TitleFieldReference $title): string
     {
-        return $this->title_stub->getTitleValue($fields);
+        return $this->title_stub->getTitleValue($title);
     }
 
-    public function getDescriptionValue(
-        DescriptionFieldReference $fields
-    ): TextFieldValue {
-        return $this->description_stub->getDescriptionValue($fields);
+    public function getDescriptionValue(DescriptionFieldReference $description): TextFieldValue
+    {
+        return $this->description_stub->getDescriptionValue($description);
     }
 
-    public function getStartDateValue(StartDateFieldReference $fields): string
+    public function getStartDateValue(StartDateFieldReference $start_date): string
     {
-        return $this->start_date_stub->getStartDateValue($fields);
+        return $this->start_date_stub->getStartDateValue($start_date);
     }
 
-    public function getEndPeriodValue(EndPeriodFieldReference $fields): string
+    public function getEndPeriodValue(EndPeriodFieldReference $end_period): string
     {
-        return $this->end_period_stub->getEndPeriodValue($fields);
+        return $this->end_period_stub->getEndPeriodValue($end_period);
     }
 
-    public function getStatusValues(StatusFieldReference $fields): array
+    public function getStatusValues(StatusFieldReference $status): array
     {
-        return $this->status_stub->getStatusValues($fields);
+        return $this->status_stub->getStatusValues($status);
     }
 }

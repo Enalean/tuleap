@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 
 /**
  * I hold the value of the Title semantic field of the source Timebox.
@@ -31,22 +31,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
  */
 final class TitleValue
 {
-    private string $value;
-
-    private function __construct(string $value)
+    private function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
     /**
      * @throws ChangesetValueNotFoundException
      * @throws UnsupportedTitleFieldException
      */
-    public static function fromSynchronizedFields(
+    public static function fromTitleReference(
         RetrieveTitleValue $title_retriever,
-        SynchronizedFieldReferences $fields
+        TitleFieldReference $title
     ): self {
-        return new self($title_retriever->getTitleValue($fields->title));
+        return new self($title_retriever->getTitleValue($title));
     }
 
     public function getValue(): string

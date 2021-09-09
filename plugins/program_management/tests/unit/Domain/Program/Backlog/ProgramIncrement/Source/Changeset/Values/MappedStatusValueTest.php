@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReferenceProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 
 final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,35 +33,19 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromStatusValueAndListField(): void
     {
-        $status_field  = $this->buildStatusField();
-        $status_value  = StatusValue::fromSynchronizedFields(
+        $source_status_field = StatusFieldReferenceStub::withId(506);
+        $status_value        = StatusValue::fromStatusReference(
             RetrieveStatusValuesStub::withValues('Planned', 'Current'),
-            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
+            $source_status_field
         );
-        $mapped_status = MappedStatusValue::fromStatusValueAndListField(
+        $target_status_field = StatusFieldReferenceStub::withId(709);
+        $mapped_status       = MappedStatusValue::fromStatusValueAndListField(
             MapStatusByValueStub::withValues(self::FIRST_BIND_VALUE_ID, self::SECOND_BIND_VALUE_ID),
             $status_value,
-            $status_field
+            $target_status_field
         );
-        $mapped_values = $mapped_status->getValues();
+        $mapped_values       = $mapped_status->getValues();
         self::assertContains(self::FIRST_BIND_VALUE_ID, $mapped_values);
         self::assertContains(self::SECOND_BIND_VALUE_ID, $mapped_values);
-    }
-
-    private function buildStatusField(): StatusFieldReferenceProxy
-    {
-        return StatusFieldReferenceProxy::fromTrackerField(new \Tracker_FormElement_Field_Selectbox(
-            344,
-            29,
-            340,
-            'status',
-            'Status',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
-        ));
     }
 }

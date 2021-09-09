@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveArtifactLinkField;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
@@ -33,25 +32,9 @@ final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
     {
     }
 
-    public static function withField(int $field_id, string $field_label): self
+    public static function withField(ArtifactLinkFieldReference $field): self
     {
-        return new self(
-            ArtifactLinkFieldReferenceProxy::fromTrackerField(
-                new \Tracker_FormElement_Field_ArtifactLink(
-                    $field_id,
-                    1,
-                    null,
-                    'irrelevant',
-                    $field_label,
-                    'Irrelevant',
-                    true,
-                    'P',
-                    true,
-                    '',
-                    1
-                )
-            )
-        );
+        return new self($field);
     }
 
     public function getArtifactLinkField(

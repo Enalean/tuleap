@@ -22,25 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveEndPeriodValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 
-final class RetrieveEndPeriodValueStub implements RetrieveEndPeriodValue
+final class TextFieldValueStub implements TextFieldValue
 {
-    private string $value;
-
-    private function __construct(string $value)
+    private function __construct(private string $value, private string $format)
     {
-        $this->value = $value;
     }
 
-    public static function withValue(string $value): self
+    public static function withValue(string $value, string $format): self
     {
-        return new self($value);
+        return new self($value, $format);
     }
 
-    public function getEndPeriodValue(EndPeriodFieldReference $end_period): string
+    public function getValue(): string
     {
         return $this->value;
+    }
+
+    public function getFormat(): string
+    {
+        return $this->format;
     }
 }

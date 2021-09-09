@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\TitleFieldReferenceStub;
 
 final class TitleValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_VALUE = 'uncomprehended Sinupallialia';
 
-    public function testItBuildsFromSynchronizedFields(): void
+    public function testItBuildsFromTitleReference(): void
     {
-        $value = TitleValue::fromSynchronizedFields(
+        $value = TitleValue::fromTitleReference(
             RetrieveTitleValueStub::withValue(self::TITLE_VALUE),
-            SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withDefaults(), TrackerIdentifierStub::buildWithDefault())
+            TitleFieldReferenceStub::withDefaults()
         );
         self::assertSame(self::TITLE_VALUE, $value->getValue());
     }
