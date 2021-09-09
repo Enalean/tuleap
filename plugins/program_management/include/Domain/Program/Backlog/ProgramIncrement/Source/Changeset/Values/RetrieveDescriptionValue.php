@@ -29,5 +29,5 @@ interface RetrieveDescriptionValue
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function getDescriptionValue(DescriptionFieldReference $description_field_reference): TextFieldValue;
+    public function getDescriptionValue(DescriptionFieldReference $description): TextFieldValue;
 }

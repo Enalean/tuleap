@@ -24,26 +24,32 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 
 final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const TITLE_FIELD_ID         = 789;
+    private const DESCRIPTION_FIELD_ID   = 3;
+    private const STATUS_FIELD_ID        = 4;
+    private const START_DATE_FIELD_ID    = 5;
+    private const END_PERIOD_FIELD_ID    = 6;
+    private const ARTIFACT_LINK_FIELD_ID = 987;
     private RequiredFieldChecker $checker;
     private RetrieveTrackerFromField $retrieve_tracker_from_field;
     private VerifyFieldPermissions $retrieve_field_permissions;
@@ -67,11 +73,11 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
         $required_title->method('isRequired')->willReturn(true);
-        $required_title->method('getId')->willReturn(789);
+        $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
         $required_title->method('getLabel')->willReturn("Title");
         $non_required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
         $non_required_artifact_link->method('isRequired')->willReturn(false);
-        $non_required_artifact_link->method('getId')->willReturn(987);
+        $non_required_artifact_link->method('getId')->willReturn(self::ARTIFACT_LINK_FIELD_ID);
         $non_required_artifact_link->method('getLabel')->willReturn("artlink");
 
         $tracker = $this->createMock(\Tracker::class);
@@ -123,7 +129,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
         $required_title->method('isRequired')->willReturn(true);
-        $required_title->method('getId')->willReturn(789);
+        $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
         $required_title->method('getLabel')->willReturn("Title");
         $required_title->method('getTrackerId')->willReturn(412);
         $required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
@@ -134,7 +140,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $other_required_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $other_required_field->method('isRequired')->willReturn(true);
-        $other_required_field->method('getId')->willReturn(987);
+        $other_required_field->method('getId')->willReturn(self::ARTIFACT_LINK_FIELD_ID);
         $other_required_field->method('getLabel')->willReturn('some_label');
         $other_required_field->method('getTrackerId')->willReturn(412);
 
@@ -172,7 +178,14 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(): SynchronizedFieldFromProgramAndTeamTrackers
     {
         $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
-            GatherSynchronizedFieldsStub::withFieldIds(789, 3, 4, 5, 6, 987),
+            GatherSynchronizedFieldsStub::withFieldIds(
+                self::TITLE_FIELD_ID,
+                self::DESCRIPTION_FIELD_ID,
+                self::STATUS_FIELD_ID,
+                self::START_DATE_FIELD_ID,
+                self::END_PERIOD_FIELD_ID,
+                self::ARTIFACT_LINK_FIELD_ID
+            ),
             TrackerIdentifierStub::buildWithDefault()
         );
 

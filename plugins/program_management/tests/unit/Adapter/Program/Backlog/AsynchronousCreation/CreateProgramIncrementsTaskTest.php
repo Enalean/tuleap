@@ -33,7 +33,6 @@ use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -87,9 +86,8 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->user_stories_planner,
             $this->teams_searcher,
             new ProgramManagementProjectAdapter($this->project_manager),
-            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
-            RetrieveTrackerStub::buildValidTrackerWithProjectId(119),
-            GatherSynchronizedFieldsStub::withDefaults()
+            GatherSynchronizedFieldsStub::withDefaults(),
+            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer)
         );
     }
 

@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 
 final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -57,7 +56,6 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
                     [self::STATUS_VALUE]
                 )
             ),
-            RetrieveTrackerStub::buildValidTrackerWithProjectId(101),
             $replication
         );
 

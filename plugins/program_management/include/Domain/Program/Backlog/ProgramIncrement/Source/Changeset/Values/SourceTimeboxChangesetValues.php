@@ -27,8 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 
 /**
  * I hold all field values for a given changeset for a source Timebox
@@ -55,14 +53,10 @@ final class SourceTimeboxChangesetValues
     public static function fromReplication(
         GatherSynchronizedFields $fields_gatherer,
         RetrieveFieldValuesGatherer $field_values_retriever,
-        RetrieveTracker $tracker_retriever,
         ReplicationData $replication
     ): self {
-        $tracker = $tracker_retriever->getTrackerById($replication->getTracker()->getId());
-        if (! $tracker) {
-            throw new TrackerNotFoundException($replication->getTracker()->getId());
-        }
-        $fields            = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $replication->getTracker());
+        $fields = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $replication->getTracker());
+
         $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
         $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
         $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);

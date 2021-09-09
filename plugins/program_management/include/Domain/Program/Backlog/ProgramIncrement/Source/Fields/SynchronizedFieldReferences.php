@@ -50,14 +50,14 @@ final class SynchronizedFieldReferences
      */
     public static function fromTrackerIdentifier(
         GatherSynchronizedFields $gatherer,
-        TrackerIdentifier $tracker_reference
+        TrackerIdentifier $tracker_identifier
     ): self {
-        $title         = $gatherer->getTitleField($tracker_reference);
-        $description   = $gatherer->getDescriptionField($tracker_reference);
-        $status        = $gatherer->getStatusField($tracker_reference);
-        $start_date    = $gatherer->getStartDateField($tracker_reference);
-        $end_period    = $gatherer->getEndPeriodField($tracker_reference);
-        $artifact_link = $gatherer->getArtifactLinkField($tracker_reference);
+        $title         = $gatherer->getTitleField($tracker_identifier);
+        $description   = $gatherer->getDescriptionField($tracker_identifier);
+        $status        = $gatherer->getStatusField($tracker_identifier);
+        $start_date    = $gatherer->getStartDateField($tracker_identifier);
+        $end_period    = $gatherer->getEndPeriodField($tracker_identifier);
+        $artifact_link = $gatherer->getArtifactLinkField($tracker_identifier);
         return new self($title, $description, $status, $start_date, $end_period, $artifact_link);
     }
 

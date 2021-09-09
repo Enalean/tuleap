@@ -30,5 +30,5 @@ interface RetrieveStatusValues
      * @throws ChangesetValueNotFoundException
      * @return BindValueLabel[]
      */
-    public function getStatusValues(StatusFieldReference $status_field_reference): array;
+    public function getStatusValues(StatusFieldReference $status): array;
 }

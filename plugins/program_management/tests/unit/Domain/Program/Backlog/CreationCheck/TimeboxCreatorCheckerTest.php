@@ -66,6 +66,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_checker            = $this->createStub(CheckSemantic::class);
         $this->required_field_checker      = $this->createStub(CheckRequiredField::class);
         $this->workflow_checker            = $this->createStub(CheckWorkflow::class);
+        $this->fields_adapter              = GatherSynchronizedFieldsStub::withDefaults();
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
@@ -73,6 +74,27 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
 
         $this->program_increment_tracker = new ProgramTracker($this->tracker);
+    }
+
+    private function getChecker(VerifyFieldPermissions $retrieve_field_permissions): TimeboxCreatorChecker
+    {
+        $field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+            $this->fields_adapter,
+            new NullLogger(),
+            $this->retrieve_tracker_from_field,
+            $retrieve_field_permissions,
+            RetrieveProjectFromTrackerStub::buildGeneric()
+        );
+
+        return new TimeboxCreatorChecker(
+            $field_collection_builder,
+            $this->semantic_checker,
+            $this->required_field_checker,
+            $this->workflow_checker,
+            $this->retrieve_tracker_from_field,
+            RetrieveUserStub::withGenericUser(),
+            RetrieveProjectFromTrackerStub::buildGeneric()
+        );
     }
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
@@ -84,8 +106,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_checker->expects(self::once())
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
-
-        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(true);
@@ -174,8 +194,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')->willReturn(true);
 
-        $this->buildSynchronizedFields();
-
         self::assertFalse(
             $this->getChecker(VerifyFieldPermissionsStub::userCantSubmit())->canTimeboxBeCreated(
                 $this->program_increment_tracker,
@@ -196,8 +214,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_checker->expects(self::once())
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
-
-        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(false);
@@ -222,8 +238,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_checker->expects(self::once())
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
-
-        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(true);
@@ -250,8 +264,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_checker->expects(self::once())
             ->method('areTrackerSemanticsWellConfigured')
             ->willReturn(false);
-
-        $this->buildSynchronizedFields();
 
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(false);
@@ -280,32 +292,6 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_milestone_tracker->method('getId')->willReturn(1);
 
         return RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
-    }
-
-    private function getChecker(VerifyFieldPermissions $retrieve_field_permissions): TimeboxCreatorChecker
-    {
-        $field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-            $this->fields_adapter,
-            new NullLogger(),
-            $this->retrieve_tracker_from_field,
-            $retrieve_field_permissions,
-            RetrieveProjectFromTrackerStub::buildGeneric()
-        );
-
-        return new TimeboxCreatorChecker(
-            $field_collection_builder,
-            $this->semantic_checker,
-            $this->required_field_checker,
-            $this->workflow_checker,
-            $this->retrieve_tracker_from_field,
-            RetrieveUserStub::withGenericUser(),
-            RetrieveProjectFromTrackerStub::buildGeneric()
-        );
-    }
-
-    private function buildSynchronizedFields(): void
-    {
-        $this->fields_adapter = GatherSynchronizedFieldsStub::withFieldIds(6, 2, 3, 4, 5, 1);
     }
 
     private function buildTeamTrackers(): TrackerCollection

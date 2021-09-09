@@ -28,8 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 
 final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -50,12 +49,8 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field  = new \Tracker_FormElement_Field_Date(1784, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5);
         $this->end_period_field  = new \Tracker_FormElement_Field_Date(1368, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6);
 
-        $this->fields = SynchronizedFieldReferences::fromTrackerIdentifier(
-            GatherSynchronizedFieldsStub::withFieldIds(1376, 1412, 1499, 1784, 1368, 1001),
-            TrackerIdentifierStub::buildWithDefault()
-        );
-
         $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
+        $this->fields               = SynchronizedFieldReferencesBuilder::build();
         $this->changeset            = $this->createMock(\Tracker_Artifact_Changeset::class);
     }
 
