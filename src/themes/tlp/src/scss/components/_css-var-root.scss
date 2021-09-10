@@ -52,6 +52,7 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
 
     --tlp-background-color-darker-02: #{darken($tlp-background-color, 2%)};
     --tlp-background-color-darker-05: #{darken($tlp-background-color, 5%)};
+    --tlp-background-color-darker-10: #{darken($tlp-background-color, 10%)};
     --tlp-background-color-darker-20: #{darken($tlp-background-color, 20%)};
 
     --tlp-background-color-transparent-50: #{transparentize($tlp-background-color, 0.5)};

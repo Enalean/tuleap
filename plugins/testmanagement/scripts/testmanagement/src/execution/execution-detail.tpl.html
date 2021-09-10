@@ -248,21 +248,17 @@
                     ng-if="execution.attachments.length > 0"
                     class="current-test-comment-attachments"
                 >
-                    <div
+                    <a
                         ng-repeat="file in execution.attachments track by file.id"
+                        ng-href="{{ file.html_url }}"
                         class="current-test-comment-attachment"
+                        title="{{ file.filename }}"
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         <i class="fas fa-paperclip" aria-hidden="true"></i>
-                        <a
-                            ng-href="{{ file.html_url }}"
-                            class="current-test-comment-attachment-link"
-                            title="{{ file.filename }}"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            {{ file.filename }}
-                        </a>
-                    </div>
+                        <span class="current-test-comment-attachment-label">{{ file.filename }}</span>
+                    </a>
                 </div>
             </div>
         </section>
