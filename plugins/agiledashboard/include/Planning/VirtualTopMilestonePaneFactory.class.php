@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
+use Tuleap\Event\Events\HasCurrentProjectParentProjects;
 
 /**
  * I build panes for a Planning_Milestone
@@ -131,6 +132,9 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
         $project = $this->request->getProject();
         $user    = $this->request->getCurrentUser();
 
+        $event = new HasCurrentProjectParentProjects($project);
+        $this->event_manager->dispatch($event);
+
         $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $pane_info,
             new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
@@ -138,7 +142,8 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
                 $project,
                 $milestone_artifact_id,
                 $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()),
-                $allowed_additional_panes_to_display_collector->getIdentifiers()
+                $allowed_additional_panes_to_display_collector->getIdentifiers(),
+                $event->hasProjectAtLeastOneParentProject()
             )
         );
 

@@ -65,6 +65,11 @@ function MainCtrl(
         const is_list_picker_enabled = Boolean(JSON.parse(kanban_init_data.isListPickerEnabled));
         SharedPropertiesService.setIsListPickerEnabled(is_list_picker_enabled);
 
+        const has_current_project_parents = Boolean(
+            JSON.parse(kanban_init_data.hasCurrentProjectParents)
+        );
+        SharedPropertiesService.setHasCurrentProjectParents(has_current_project_parents);
+
         setAccessibilityMode(JSON.parse(kanban_init_data.userAccessibilityMode));
     }
 }

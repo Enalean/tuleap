@@ -225,6 +225,7 @@ function ExecutionDetailCtrl(
             null,
             callback,
             SharedPropertiesService.isListPickerUsedByTracker(issue_tracker_id),
+            SharedPropertiesService.hasCurrentProjectParents(),
             prefill_values
         );
     }
@@ -305,7 +306,8 @@ function ExecutionDetailCtrl(
                     artifact.tracker.id,
                     artifact.id,
                     callback,
-                    SharedPropertiesService.isListPickerUsedByTracker(artifact.tracker.id)
+                    SharedPropertiesService.isListPickerUsedByTracker(artifact.tracker.id),
+                    SharedPropertiesService.hasCurrentProjectParents()
                 );
             });
         }

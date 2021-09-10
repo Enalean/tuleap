@@ -69,6 +69,8 @@ class KanbanPresenter
     /** @var string */
     public $is_list_picker_enabled;
 
+    public string $has_current_project_parents;
+
     public function __construct(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
@@ -76,7 +78,8 @@ class KanbanPresenter
         $language,
         $project_id,
         $dashboard_widget_id,
-        $selected_tracker_report_id
+        $selected_tracker_report_id,
+        bool $has_current_project_parents
     ) {
         $user_preferences              = new AgileDashboard_KanbanUserPreferences();
         $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
@@ -135,5 +138,6 @@ class KanbanPresenter
         $this->is_list_picker_enabled            = json_encode(ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
             $kanban->getTrackerId()
         ));
+        $this->has_current_project_parents       = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
     }
 }
