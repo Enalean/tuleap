@@ -27,7 +27,10 @@ use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateProxy;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingProgramIncrementUpdatesStub;
@@ -109,7 +112,9 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
             $this->update_deleter,
             new ProgramIncrementUpdateProcessor(
                 $this->logger,
-                GatherSynchronizedFieldsStub::withDefaults()
+                GatherSynchronizedFieldsStub::withDefaults(),
+                RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
+                RetrieveChangesetSubmissionDateStub::withDefaults()
             ),
             new IterationCreationProcessor($this->logger)
         );

@@ -57,6 +57,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\Fe
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
@@ -564,7 +566,9 @@ final class program_managementPlugin extends Plugin
                         )
                     ),
                     $form_element_factory
-                )
+                ),
+                new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
+                new ChangesetRetriever($artifact_factory)
             ),
             new IterationCreationProcessor($logger),
         );
@@ -641,7 +645,9 @@ final class program_managementPlugin extends Plugin
                                 )
                             ),
                             $form_element_factory
-                        )
+                        ),
+                        new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
+                        new ChangesetRetriever($artifact_factory)
                     ),
                     new IterationCreationProcessor($logger),
                 )

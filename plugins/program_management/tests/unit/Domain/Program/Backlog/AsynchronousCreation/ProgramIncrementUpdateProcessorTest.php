@@ -25,19 +25,17 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
 final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_ID         = 63;
     private const USER_ID                      = 122;
     private const PROGRAM_INCREMENT_TRACKER_ID = 74;
-    private const TITLE_ID                     = 994;
-    private const DESCRIPTION_ID               = 938;
-    private const STATUS_ID                    = 198;
-    private const START_DATE_ID                = 295;
-    private const END_PERIOD_ID                = 332;
-    private const ARTIFACT_LINK_ID             = 633;
+    private const TITLE_VALUE                  = 'nocuously';
     private TestLogger $logger;
     private ProgramIncrementUpdate $update;
 
@@ -56,14 +54,18 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     {
         return new ProgramIncrementUpdateProcessor(
             $this->logger,
-            GatherSynchronizedFieldsStub::withFieldIds(
-                self::TITLE_ID,
-                self::DESCRIPTION_ID,
-                self::STATUS_ID,
-                self::START_DATE_ID,
-                self::END_PERIOD_ID,
-                self::ARTIFACT_LINK_ID
-            )
+            GatherSynchronizedFieldsStub::withDefaults(),
+            RetrieveFieldValuesGathererStub::withGatherer(
+                GatherFieldValuesStub::withValues(
+                    self::TITLE_VALUE,
+                    'unbowsome',
+                    'text',
+                    '2015-09-20',
+                    '2016-06-08',
+                    ['challote']
+                )
+            ),
+            RetrieveChangesetSubmissionDateStub::withDefaults()
         );
     }
 
@@ -79,6 +81,6 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 )
             )
         );
-        self::assertTrue($this->logger->hasDebug('Artifact link field id #' . self::ARTIFACT_LINK_ID));
+        self::assertTrue($this->logger->hasDebug('Title value: ' . self::TITLE_VALUE));
     }
 }

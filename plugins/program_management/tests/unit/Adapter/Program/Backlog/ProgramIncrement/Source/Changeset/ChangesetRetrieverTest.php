@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainC
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,13 +35,11 @@ final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const ARTIFACT_ID          = 470;
     private const CHANGESET_ID         = 5180;
     private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private Stub|\Tracker_Artifact_ChangesetFactory $changeset_factory;
     private DomainChangeset $changeset_identifier;
 
     protected function setUp(): void
     {
-        $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
-        $this->changeset_factory = $this->createStub(\Tracker_Artifact_ChangesetFactory::class);
+        $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
 
         $this->changeset_identifier = DomainChangeset::fromId(
             VerifyIsChangesetStub::withValidChangeset(),
@@ -51,13 +49,12 @@ final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function getRetriever(): ChangesetRetriever
     {
-        return new ChangesetRetriever($this->artifact_factory, $this->changeset_factory);
+        return new ChangesetRetriever($this->artifact_factory);
     }
 
     public function testItRetrievesTheChangesetsSubmissionDate(): void
     {
-        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+        $artifact  = $this->createStub(Artifact::class);
         $changeset = new \Tracker_Artifact_Changeset(
             self::CHANGESET_ID,
             $artifact,
@@ -65,7 +62,8 @@ final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             self::SUBMISSION_TIMESTAMP,
             null
         );
-        $this->changeset_factory->method('getChangeset')->willReturn($changeset);
+        $artifact->method('getChangeset')->willReturn($changeset);
+        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
 
         $date = $this->getRetriever()->getSubmissionDate(self::ARTIFACT_ID, $this->changeset_identifier);
         self::assertSame(self::SUBMISSION_TIMESTAMP, $date->getValue());
@@ -81,9 +79,9 @@ final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenChangesetCantBeFound(): void
     {
-        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
+        $artifact = $this->createStub(Artifact::class);
+        $artifact->method('getChangeset')->willReturn(null);
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-        $this->changeset_factory->method('getChangeset')->willReturn(null);
 
         $this->expectException(ChangesetNotFoundException::class);
         $this->getRetriever()->getSubmissionDate(self::ARTIFACT_ID, $this->changeset_identifier);

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface RetrieveFieldValuesGatherer
@@ -33,4 +34,10 @@ interface RetrieveFieldValuesGatherer
      * @throws PendingArtifactChangesetNotFoundException
      */
     public function getFieldValuesGatherer(ReplicationData $replication): GatherFieldValues;
+
+    /**
+     * @throws PendingArtifactNotFoundException
+     * @throws PendingArtifactChangesetNotFoundException
+     */
+    public function getGathererFromUpdate(ProgramIncrementUpdate $update): GatherFieldValues;
 }

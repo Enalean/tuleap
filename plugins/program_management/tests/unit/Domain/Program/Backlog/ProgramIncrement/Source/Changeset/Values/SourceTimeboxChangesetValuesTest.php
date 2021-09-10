@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
@@ -38,24 +39,48 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
     private const START_DATE_VALUE                    = '2013-07-24';
     private const END_PERIOD_VALUE                    = '2016-10-17';
     private const STATUS_VALUE                        = 'Ongoing';
+    private GatherFieldValuesStub $values_gatherer;
+
+    protected function setUp(): void
+    {
+        $this->values_gatherer = GatherFieldValuesStub::withValues(
+            self::TITLE_VALUE,
+            self::DESCRIPTION_VALUE,
+            self::DESCRIPTION_FORMAT,
+            self::START_DATE_VALUE,
+            self::END_PERIOD_VALUE,
+            [self::STATUS_VALUE]
+        );
+    }
 
     public function testItBuildsFromReplication(): void
     {
         $replication = ReplicationDataBuilder::buildWithArtifactId(self::SOURCE_TIMEBOX_ID);
         $values      = SourceTimeboxChangesetValues::fromReplication(
             GatherSynchronizedFieldsStub::withDefaults(),
-            RetrieveFieldValuesGathererStub::withGatherer(
-                GatherFieldValuesStub::withValues(
-                    self::TITLE_VALUE,
-                    self::DESCRIPTION_VALUE,
-                    self::DESCRIPTION_FORMAT,
-                    self::START_DATE_VALUE,
-                    self::END_PERIOD_VALUE,
-                    [self::STATUS_VALUE]
-                )
-            ),
+            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
             RetrieveChangesetSubmissionDateStub::withDate(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP),
             $replication
+        );
+
+        self::assertSame(self::TITLE_VALUE, $values->getTitleValue()->getValue());
+        self::assertContains(self::DESCRIPTION_VALUE, $values->getDescriptionValue()->getValue());
+        self::assertContains(self::DESCRIPTION_FORMAT, $values->getDescriptionValue()->getValue());
+        self::assertEquals(self::STATUS_VALUE, $values->getStatusValue()->getListValues()[0]->getLabel());
+        self::assertSame(self::START_DATE_VALUE, $values->getStartDateValue()->getValue());
+        self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());
+        self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceArtifactId());
+        self::assertSame(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP, $values->getSubmittedOn()->getValue());
+    }
+
+    public function testItBuildsFromUpdate(): void
+    {
+        $update = ProgramIncrementUpdateBuilder::buildWithIds(102, self::SOURCE_TIMEBOX_ID, 19, '9926');
+        $values = SourceTimeboxChangesetValues::fromUpdate(
+            GatherSynchronizedFieldsStub::withDefaults(),
+            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
+            RetrieveChangesetSubmissionDateStub::withDate(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP),
+            $update
         );
 
         self::assertSame(self::TITLE_VALUE, $values->getTitleValue()->getValue());

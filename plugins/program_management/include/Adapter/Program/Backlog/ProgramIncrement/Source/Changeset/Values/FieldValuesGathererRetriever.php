@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
@@ -47,6 +48,21 @@ final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
             throw new PendingArtifactNotFoundException($program_increment_id, $replication->getUserIdentifier()->getId());
         }
         $changeset_id   = $replication->getChangeset()->getId();
+        $full_changeset = $full_artifact->getChangeset($changeset_id);
+        if (! $full_changeset) {
+            throw new PendingArtifactChangesetNotFoundException($program_increment_id, $changeset_id);
+        }
+        return new FieldValuesGatherer($full_changeset, $this->form_element_factory);
+    }
+
+    public function getGathererFromUpdate(ProgramIncrementUpdate $update): GatherFieldValues
+    {
+        $program_increment_id = $update->program_increment->getId();
+        $full_artifact        = $this->artifact_factory->getArtifactById($program_increment_id);
+        if (! $full_artifact) {
+            throw new PendingArtifactNotFoundException($program_increment_id, $update->user->getId());
+        }
+        $changeset_id   = $update->changeset->getId();
         $full_changeset = $full_artifact->getChangeset($changeset_id);
         if (! $full_changeset) {
             throw new PendingArtifactChangesetNotFoundException($program_increment_id, $changeset_id);

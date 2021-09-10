@@ -24,14 +24,18 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 
 final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUpdate
 {
     public function __construct(
         private LoggerInterface $logger,
-        private GatherSynchronizedFields $fields_gatherer
+        private GatherSynchronizedFields $fields_gatherer,
+        private RetrieveFieldValuesGatherer $values_retriever,
+        private RetrieveChangesetSubmissionDate $submission_date_retriever
     ) {
     }
 
@@ -42,11 +46,13 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         $this->logger->debug(
             "Processing program increment update with program increment #$program_increment_id for user #$user_id"
         );
-        $source_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
+        $source_values = SourceTimeboxChangesetValues::fromUpdate(
             $this->fields_gatherer,
-            $update->tracker
+            $this->values_retriever,
+            $this->submission_date_retriever,
+            $update
         );
 
-        $this->logger->debug(sprintf('Artifact link field id #%d', $source_fields->artifact_link->getId()));
+        $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
     }
 }
