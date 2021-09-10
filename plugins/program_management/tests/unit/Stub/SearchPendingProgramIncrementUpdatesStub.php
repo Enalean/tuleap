@@ -31,7 +31,7 @@ final class SearchPendingProgramIncrementUpdatesStub implements SearchPendingPro
     {
     }
 
-    public function searchUpdate(int $program_increment_id, int $user_id): ?PendingProgramIncrementUpdate
+    public function searchUpdate(int $program_increment_id, int $user_id, int $changeset_id): ?PendingProgramIncrementUpdate
     {
         return $this->update;
     }

@@ -27,4 +27,5 @@ interface ProgramIncrementUpdateEvent
     public const TOPIC = 'tuleap.program_management.program_increment.update';
     public function getArtifactId(): int;
     public function getUserId(): int;
+    public function getChangesetId(): int;
 }

@@ -76,13 +76,13 @@ final class PendingProgramIncrementUpdateDAOTest extends \Tuleap\Test\PHPUnit\Te
         );
         $this->dao->storeUpdate($update);
 
-        $pending_update = $this->dao->searchUpdate(self::$active_artifact_id, self::USER_ID);
+        $pending_update = $this->dao->searchUpdate(self::$active_artifact_id, self::USER_ID, self::CHANGESET_ID);
         self::assertSame(self::$active_artifact_id, $pending_update->getProgramIncrementId());
         self::assertSame(self::USER_ID, $pending_update->getUserId());
         self::assertSame(self::CHANGESET_ID, $pending_update->getChangesetId());
 
         $this->dao->deletePendingProgramIncrementUpdatesByProgramIncrementId(self::$active_artifact_id);
-        self::assertNull($this->dao->searchUpdate(self::$active_artifact_id, self::USER_ID));
+        self::assertNull($this->dao->searchUpdate(self::$active_artifact_id, self::USER_ID, self::CHANGESET_ID));
     }
 
     public function testItDeletesPendingUpdateWhenSearchingDeletedArtifact(): void
@@ -96,7 +96,7 @@ final class PendingProgramIncrementUpdateDAOTest extends \Tuleap\Test\PHPUnit\Te
         );
         $this->dao->storeUpdate($update);
 
-        self::assertNull($this->dao->searchUpdate($program_increment_id, self::USER_ID));
+        self::assertNull($this->dao->searchUpdate($program_increment_id, self::USER_ID, self::CHANGESET_ID));
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         self::assertNull(
             $db->row(

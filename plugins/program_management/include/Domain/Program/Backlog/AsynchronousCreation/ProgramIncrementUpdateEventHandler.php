@@ -55,7 +55,7 @@ final class ProgramIncrementUpdateEventHandler
         if (! $event) {
             return;
         }
-        $pending_update = $this->update_searcher->searchUpdate($event->getArtifactId(), $event->getUserId());
+        $pending_update = $this->update_searcher->searchUpdate($event->getArtifactId(), $event->getUserId(), $event->getChangesetId());
         if ($pending_update) {
             $this->buildAndProcessProgramIncrementUpdate($pending_update);
         }

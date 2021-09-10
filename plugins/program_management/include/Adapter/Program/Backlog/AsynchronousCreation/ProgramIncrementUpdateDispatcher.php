@@ -24,10 +24,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
@@ -57,8 +57,9 @@ final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrement
             $queue->pushSinglePersistentMessage(
                 ProgramIncrementUpdateEvent::TOPIC,
                 [
-                    'artifact_id' => $update->program_increment->getId(),
-                    'user_id'     => $update->user->getId(),
+                    'artifact_id'  => $update->program_increment->getId(),
+                    'user_id'      => $update->user->getId(),
+                    'changeset_id' => $update->changeset->getId()
                 ]
             );
         } catch (NoQueueSystemAvailableException | QueueServerConnectionException $exception) {

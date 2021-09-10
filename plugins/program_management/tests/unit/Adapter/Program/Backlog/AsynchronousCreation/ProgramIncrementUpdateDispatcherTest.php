@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
@@ -44,19 +46,11 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
 {
     private const USER_ID              = 110;
     private const PROGRAM_INCREMENT_ID = 83;
+    private const CHANGESET_ID         = 6104;
     private TestLogger $logger;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|QueueFactory
-     */
-    private mixed $queue_factory;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|ProcessProgramIncrementUpdate
-     */
-    private mixed $update_processor;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|ProcessIterationCreation
-     */
-    private mixed $iteration_processor;
+    private Stub|QueueFactory $queue_factory;
+    private MockObject|ProcessProgramIncrementUpdate $update_processor;
+    private MockObject|ProcessIterationCreation $iteration_processor;
     private ProgramIncrementUpdate $program_increment_update;
     /**
      * @var IterationCreation[]
@@ -74,7 +68,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
             self::USER_ID,
             self::PROGRAM_INCREMENT_ID,
             17,
-            '6104'
+            (string) self::CHANGESET_ID
         );
 
         $iterations                = IterationIdentifier::buildCollectionFromProgramIncrement(
@@ -113,7 +107,11 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
             ->method('pushSinglePersistentMessage')
             ->with(
                 ProgramIncrementUpdateEvent::TOPIC,
-                ['artifact_id' => self::PROGRAM_INCREMENT_ID, 'user_id' => self::USER_ID]
+                [
+                    'artifact_id'  => self::PROGRAM_INCREMENT_ID,
+                    'user_id'      => self::USER_ID,
+                    'changeset_id' => self::CHANGESET_ID
+                ]
             );
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 

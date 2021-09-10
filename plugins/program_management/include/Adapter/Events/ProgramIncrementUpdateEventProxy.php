@@ -34,7 +34,7 @@ use Tuleap\Queue\WorkerEvent;
  */
 final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEvent
 {
-    private function __construct(private int $artifact_id, private int $user_id)
+    private function __construct(private int $artifact_id, private int $user_id, private int $changeset_id)
     {
     }
 
@@ -45,12 +45,12 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
             return null;
         }
         $payload = $event->getPayload();
-        if (! isset($payload['artifact_id'], $payload['user_id'])) {
+        if (! isset($payload['artifact_id'], $payload['user_id'], $payload['changeset_id'])) {
             $logger->warning("The payload for $event_name seems to be malformed, ignoring");
             $logger->debug("Malformed payload for $event_name: " . var_export($payload, true));
             return null;
         }
-        return new self($payload['artifact_id'], $payload['user_id']);
+        return new self($payload['artifact_id'], $payload['user_id'], $payload['changeset_id']);
     }
 
     public function getArtifactId(): int
@@ -61,5 +61,10 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
     public function getUserId(): int
     {
         return $this->user_id;
+    }
+
+    public function getChangesetId(): int
+    {
+        return $this->changeset_id;
     }
 }

@@ -41,14 +41,14 @@ final class PendingProgramIncrementUpdateDAO extends DataAccessObject implements
         ]);
     }
 
-    public function searchUpdate(int $program_increment_id, int $user_id): ?PendingProgramIncrementUpdate
+    public function searchUpdate(int $program_increment_id, int $user_id, int $changeset_id): ?PendingProgramIncrementUpdate
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($program_increment_id, $user_id) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($program_increment_id, $user_id, $changeset_id) {
             $this->cleanupDeletedProgramIncrementsFromPendingStore($program_increment_id);
             $sql = 'SELECT program_increment_id, user_id, changeset_id
                 FROM plugin_program_management_pending_program_increment_update
-                WHERE program_increment_id = ? AND user_id = ?';
-            $row = $this->getDB()->row($sql, $program_increment_id, $user_id);
+                WHERE program_increment_id = ? AND user_id = ? AND changeset_id = ?';
+            $row = $this->getDB()->row($sql, $program_increment_id, $user_id, $changeset_id);
             if ($row === null) {
                 return null;
             }
