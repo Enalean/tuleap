@@ -2,7 +2,7 @@
 
 exports[`ToBePlannedCard Displays a draggable card with accessibility pattern 1`] = `
 <div
-  class="element-backlog-items"
+  class="element-backlog-item"
   data-element-id="100"
 >
   <div
@@ -45,7 +45,7 @@ exports[`ToBePlannedCard Displays a draggable card with accessibility pattern 1`
 
 exports[`ToBePlannedCard Displays a not draggable card without accessibility pattern 1`] = `
 <div
-  class="element-backlog-items"
+  class="element-backlog-item"
   data-element-id="100"
 >
   <div

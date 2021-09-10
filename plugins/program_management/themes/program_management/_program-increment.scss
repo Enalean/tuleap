@@ -18,16 +18,10 @@
  */
 
 .program-increment-display {
-    margin: 0 var(--tlp-small-spacing) var(--tlp-large-spacing) 0;
+    margin: 0 0 var(--tlp-medium-spacing);
     border: 1px hidden;
     border-radius: var(--tlp-large-radius);
-    box-shadow: 0 3px 4px var(--tlp-neutral-normal-color-transparent-25);
-}
-
-.program-increment-title {
-    margin: 0 0 var(--tlp-medium-spacing) 0;
-    color: var(--tlp-typo-default-text-color);
-    font-weight: 600;
+    box-shadow: var(--tlp-pane-shadow);
 }
 
 .program-increment-title-with-button {
@@ -43,21 +37,25 @@
     position: sticky;
     z-index: 2;
     top: 44px;
+    flex-wrap: wrap;
     align-items: center;
-    transition: background 0.1s linear;
+    justify-content: space-between;
+    transition: background 100ms ease-in-out;
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: var(--tlp-large-radius);
     background: var(--tlp-white-color);
     cursor: pointer;
+    gap: var(--tlp-small-spacing);
 
     &:hover {
-        transition: background 0.1s linear;
+        transition: background 100ms ease-in-out;
         background: var(--tlp-white-color-darker-02);
     }
 
     &:not(:last-child) {
         border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
+        border-bottom-color: var(--tlp-neutral-light-color);
     }
 }
 
@@ -72,39 +70,36 @@
     font-size: 12px;
 }
 
-.program-increment-header-spacer {
-    flex: 1 1 auto;
-    min-width: var(--tlp-medium-spacing);
-}
-
 .program-increment-info {
     display: flex;
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
+    border-bottom-color: var(--tlp-neutral-light-color);
     background: var(--tlp-white-color);
 }
 
 .program-increment-content {
     position: relative;
+    padding: var(--tlp-small-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
     border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
-    background: var(--tlp-white-color-darker-02);
+    background: var(--tlp-fade-background-color);
 
     &:last-child {
         border-bottom: 1px solid var(--tlp-neutral-normal-color);
     }
 }
 
-.program-increment-content-items {
-    min-height: 70px;
+.program-increment-content-items > .element-backlog-item.drek-ghost ~ .program-increment-no-content {
+    visibility: hidden;
 }
 
 .program-increment-no-content {
     display: block;
-    margin: auto;
+    margin: var(--tlp-large-spacing) auto;
 }
 
 #program-increment-error {

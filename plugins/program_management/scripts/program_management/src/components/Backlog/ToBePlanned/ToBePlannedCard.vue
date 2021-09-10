@@ -19,7 +19,7 @@
 
 <template>
     <div
-        class="element-backlog-items"
+        class="element-backlog-item"
         v-bind:draggable="has_plan_permissions"
         v-bind:data-element-id="feature.id"
     >

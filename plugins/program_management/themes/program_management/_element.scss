@@ -22,6 +22,10 @@
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .element-card-#{$color-name} {
         --card-color: #{map-get($colors, "primary")};
+
+        + .backlog-items-container > .backlog-items-children-container-handle:only-child {
+            border-top: 0;
+        }
     }
 
     .element-card-xref-#{$color-name} {
@@ -38,12 +42,11 @@
 
 .element-card {
     position: relative;
-    margin: 0 0 var(--tlp-small-spacing) var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03);
+    box-shadow: var(--tlp-card-shadow);
 
     &[class*="element-card-background-"] {
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -135,8 +138,9 @@
 
 .element-card-xref {
     width: max-content;
-    margin: 0 0 var(--tlp-small-spacing) 0;
-    font-size: 0.65rem;
+    margin: 0 0 calc(var(--tlp-small-spacing) / 2);
+    font-size: 0.625rem;
+    line-height: 0.75rem;
 
     &:hover {
         text-decoration: none;
@@ -146,6 +150,11 @@
 .element-card-xref-label {
     display: flex;
     flex-direction: column;
+}
+
+.element-card-label {
+    font-size: 0.8125rem;
+    line-height: 1rem;
 }
 
 #element-skeleton {
@@ -171,52 +180,51 @@
     cursor: not-allowed;
 }
 
-.element-backlog-items {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 0 var(--tlp-small-spacing) var(--tlp-small-spacing);
+.element-backlog-item {
+    margin: 0 0 var(--tlp-small-spacing);
 
-    .element-card-container {
-        width: 100%;
-
-        > .element-card {
-            margin: 0;
-        }
-    }
-
-    .element-card {
-        width: 100%;
-        margin: 0 0 0 var(--tlp-small-spacing);
+    &:last-child {
+        margin: 0;
     }
 }
 
 .backlog-items-container {
     width: 95%;
-    margin: 0 0 0 var(--tlp-small-spacing);
-    background: var(--tlp-neutral-light-color);
+    margin: 0 auto var(--tlp-small-spacing);
+    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
+    background: var(--tlp-fade-background-color);
 }
 
 .backlog-items-children-container {
-    padding: 8px;
+    padding: var(--tlp-small-spacing);
     border-right: 1px solid var(--tlp-neutral-normal-color);
     border-left: 1px solid var(--tlp-neutral-normal-color);
 
     .element-card {
-        margin: var(--tlp-small-spacing) 0 0 0;
+        margin: 0 0 var(--tlp-small-spacing);
+
+        &:last-child {
+            margin: 0;
+        }
     }
 }
 
 .backlog-items-children-container-handle {
     position: relative;
-    height: 13px;
+    height: 20px;
     border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
     border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
+    background: var(--tlp-fade-background-color);
+    box-shadow: var(--tlp-pane-shadow);
     cursor: pointer;
 
     &:hover {
-        background: var(--tlp-background-color-lighter-03);
+        background: var(--tlp-background-color-darker-02);
+    }
+
+    &:only-child {
+        border-top: 1px solid var(--tlp-neutral-normal-color);
     }
 }
 
