@@ -32,12 +32,12 @@ use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerErrorPresenterTest extends TestCase
 {
@@ -53,8 +53,7 @@ final class TrackerErrorPresenterTest extends TestCase
         $teams_searcher            = SearchTeamsOfProgramStub::buildTeams(1);
         $project_builder           = new BuildProjectStub();
         $retrieve_user             = RetrieveUserStub::withUser(UserTestBuilder::aUser()->build());
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $this->program_tracker     = new ProgramTracker($tracker);
+        $this->program_tracker     = ProgramTrackerStub::withDefaults();
         $this->user_identifier     = UserIdentifierStub::buildGenericUser();
 
         $program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');

@@ -39,6 +39,9 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const BLUE_TEAM_TRACKER_ID = 79;
+    private const RED_TEAM_TRACKER_ID  = 80;
+
     private TeamProjectsCollection $teams;
     private UserIdentifier $user;
     private ProgramIdentifier $program;
@@ -59,8 +62,8 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timebox_tracker   = ProgramTrackerBuilder::buildWithId(78);
-        $this->blue_team_tracker = TrackerTestBuilder::aTracker()->withId(79)->build();
-        $this->red_team_tracker  = TrackerTestBuilder::aTracker()->withId(80)->build();
+        $this->blue_team_tracker = TrackerTestBuilder::aTracker()->withId(self::BLUE_TEAM_TRACKER_ID)->build();
+        $this->red_team_tracker  = TrackerTestBuilder::aTracker()->withId(self::RED_TEAM_TRACKER_ID)->build();
 
         $this->team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrievePlanningMilestoneTrackerStub::withValidTrackers(
@@ -81,9 +84,10 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         );
         $trackers   = $collection->getSourceTrackers();
+        $ids        = $collection->getSourceTrackerIds();
         self::assertContainsEquals($this->timebox_tracker, $trackers);
-        self::assertContainsEquals(new ProgramTracker($this->blue_team_tracker), $trackers);
-        self::assertContainsEquals(new ProgramTracker($this->red_team_tracker), $trackers);
+        self::assertContains(self::BLUE_TEAM_TRACKER_ID, $ids);
+        self::assertContains(self::RED_TEAM_TRACKER_ID, $ids);
     }
 
     public function testItBuildsValidCollectionFromIteration(): void
@@ -97,8 +101,9 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $trackers = $collection->getSourceTrackers();
         self::assertContainsEquals($this->timebox_tracker, $trackers);
-        self::assertContainsEquals(new ProgramTracker($this->blue_team_tracker), $trackers);
-        self::assertContainsEquals(new ProgramTracker($this->red_team_tracker), $trackers);
+        $ids = $collection->getSourceTrackerIds();
+        self::assertContains(self::BLUE_TEAM_TRACKER_ID, $ids);
+        self::assertContains(self::RED_TEAM_TRACKER_ID, $ids);
     }
 
     public function testItBuildsNullCollectionFromIteration(): void

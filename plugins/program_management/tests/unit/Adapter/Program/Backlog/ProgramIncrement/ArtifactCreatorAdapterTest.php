@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SubmissionDateStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -54,7 +55,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator         = $this->createMock(TrackerArtifactCreator::class);
         $this->adapter         = new ArtifactCreatorAdapter($this->creator, $tracker_factory);
         $full_tracker          = TrackerTestBuilder::aTracker()->build();
-        $this->tracker         = new ProgramTracker($full_tracker);
+        $this->tracker         = ProgramTrackerStub::withDefaults();
         $this->user            = UserTestBuilder::aUser()->build();
         $this->submission_date = SubmissionDateStub::withDate(self::SUBMISSION_TIMESTAMP);
         $tracker_factory->method('getTrackerById')->willReturn($full_tracker);

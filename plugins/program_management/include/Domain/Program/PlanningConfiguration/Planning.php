@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
@@ -79,7 +80,7 @@ final class Planning
         );
 
         return new self(
-            new ProgramTracker($root_planning->getPlanningTracker()),
+            TrackerProxy::fromTracker($root_planning->getPlanningTracker()),
             $root_planning->getId(),
             $root_planning->getName(),
             $root_planning->getBacklogTrackersIds(),

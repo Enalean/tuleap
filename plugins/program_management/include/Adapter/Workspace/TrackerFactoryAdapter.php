@@ -58,6 +58,6 @@ final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram, Retriev
         if (! $tracker) {
             return null;
         }
-        return new ProgramTracker($tracker);
+        return TrackerProxy::fromTracker($tracker);
     }
 }

@@ -24,39 +24,12 @@ namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
-final class ProgramTracker implements TrackerIdentifier
+/**
+ * @psalm-immutable
+ */
+interface ProgramTracker extends TrackerIdentifier
 {
-    /**
-     * @psalm-readonly
-     */
-    private \Tracker $tracker;
+    public function getTrackerName(): string;
 
-    public function __construct(\Tracker $tracker)
-    {
-        $this->tracker = $tracker;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getTrackerName(): string
-    {
-        return $this->tracker->getName();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getProjectId(): int
-    {
-        return (int) $this->tracker->getGroupId();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getId(): int
-    {
-        return $this->tracker->getId();
-    }
+    public function getProjectId(): int;
 }

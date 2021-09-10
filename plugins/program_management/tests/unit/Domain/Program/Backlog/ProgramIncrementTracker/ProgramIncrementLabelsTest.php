@@ -20,10 +20,9 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementLabelsTest extends TestCase
 {
@@ -42,8 +41,7 @@ final class ProgramIncrementLabelsTest extends TestCase
      */
     public function testItBuildsLabelsFromProgramIncrementTracker(?string $label, ?string $sub_label): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(87)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
+        $program_increment_tracker = ProgramTrackerStub::withDefaults();
         $labels                    = ProgramIncrementLabels::fromProgramIncrementTracker(
             RetrieveProgramIncrementLabelsStub::buildLabels($label, $sub_label),
             $program_increment_tracker

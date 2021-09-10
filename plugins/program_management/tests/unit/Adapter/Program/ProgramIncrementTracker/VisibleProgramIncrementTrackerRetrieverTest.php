@@ -78,6 +78,8 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
     {
         $tracker = $this->createStub(\Tracker::class);
         $tracker->method('getId')->willReturn(1);
+        $tracker->method('getName')->willReturn("Tracker");
+        $tracker->method('getGroupId')->willReturn(101);
         $tracker->method('userCanView')->willReturn(true);
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 

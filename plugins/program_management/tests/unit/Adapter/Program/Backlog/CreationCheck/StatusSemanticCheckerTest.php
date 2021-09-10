@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -78,7 +79,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timebox_tracker_semantic_status->method('getOpenLabels')->willReturn(['open', 'review']);
 
         $this->program_increment         = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $this->program_increment_tracker = new ProgramTracker($this->program_increment);
+        $this->program_increment_tracker = ProgramTrackerStub::withId(104);
 
         $user_identifier = UserIdentifierStub::buildGenericUser();
         $teams           = TeamProjectsCollection::fromProgramIdentifier(

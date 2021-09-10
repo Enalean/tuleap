@@ -24,8 +24,6 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class RetrieveTrackerStub implements RetrieveTracker
 {
@@ -42,12 +40,7 @@ final class RetrieveTrackerStub implements RetrieveTracker
             return null;
         }
 
-        return new ProgramTracker(
-            TrackerTestBuilder::aTracker()
-                ->withId($tracker_id)
-                ->withProject(ProjectTestBuilder::aProject()->withId($this->project_id)->build())
-            ->build()
-        );
+        return ProgramTrackerStub::withValues($tracker_id, "tracker", $this->project_id);
     }
 
     public static function buildValidTrackerWithProjectId(int $project_id): self

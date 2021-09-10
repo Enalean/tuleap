@@ -31,12 +31,12 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,8 +51,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $tracker                         = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $this->program_increment_tracker = new ProgramTracker($tracker);
+        $this->program_increment_tracker = ProgramTrackerStub::withDefaults();
 
         $user_identifier = UserIdentifierStub::buildGenericUser();
         $teams           = TeamProjectsCollection::fromProgramIdentifier(

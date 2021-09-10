@@ -21,13 +21,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
+
+use Tracker;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 /**
- * I am the ID (identifier) of a Tracker.
  * @psalm-immutable
  */
-interface TrackerIdentifier
+final class TrackerProxy implements ProgramTracker
 {
-    public function getId(): int;
+    private function __construct(private int $id, private string $tracker_name, private int $project_id)
+    {
+    }
+
+    public function getTrackerName(): string
+    {
+        return $this->tracker_name;
+    }
+
+    public function getProjectId(): int
+    {
+        return $this->project_id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public static function fromTracker(Tracker $tracker): self
+    {
+        return new self($tracker->getId(), $tracker->getName(), (int) $tracker->getGroupId());
+    }
 }
