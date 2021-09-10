@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveArtifactLinkField;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
@@ -43,7 +44,7 @@ final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
         return new self(...$artifact_links);
     }
 
-    public function getArtifactLinkField(TrackerIdentifier $tracker_identifier): ArtifactLinkFieldReference
+    public function getArtifactLinkField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): ArtifactLinkFieldReference
     {
         if (count($this->artifact_links) > 0) {
             return array_shift($this->artifact_links);

@@ -84,11 +84,12 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function dataProviderMethodUnderTest(): array
     {
         return [
+            'when getting title field'         => ['getDescriptionField', 'collector'],
             'when getting description field'   => ['getDescriptionField'],
             'when getting status field'        => ['getStatusField'],
             'when getting start date field'    => ['getStartDateField'],
             'when getting end period field'    => ['getEndPeriodField'],
-            'when getting artifact link field' => ['getArtifactLinkField'],
+            'when getting artifact link field' => ['getArtifactLinkField', 'collector'],
         ];
     }
 
@@ -100,17 +101,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
         $this->expectException(\RuntimeException::class);
-        call_user_func([$this->getGatherer(), $method_under_test], $this->tracker_identifier);
-    }
-
-    public function testItThrowsWhenTitleFieldCantBeFound(): void
-    {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
-        $title_semantic = new \Tracker_Semantic_Title($this->tracker);
-        $this->title_factory->method('getByTracker')->willReturn($title_semantic);
-
-        $this->expectException(FieldRetrievalException::class);
-        $this->getGatherer()->getTitleField($this->tracker_identifier, null);
+        call_user_func([$this->getGatherer(), $method_under_test], $this->tracker_identifier, null);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
@@ -256,7 +247,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([]);
 
         $this->expectException(NoArtifactLinkFieldException::class);
-        $this->getGatherer()->getArtifactLinkField($this->tracker_identifier);
+        $this->getGatherer()->getArtifactLinkField($this->tracker_identifier, null);
     }
 
     public function testItReturnsArtifactLinkReference(): void
@@ -265,7 +256,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->method('getUsedArtifactLinkFields')
             ->willReturn([$this->getArtifactLinkField(623, 'premanifest')]);
 
-        $artifact_link = $this->getGatherer()->getArtifactLinkField($this->tracker_identifier);
+        $artifact_link = $this->getGatherer()->getArtifactLinkField($this->tracker_identifier, null);
         self::assertSame(623, $artifact_link->getId());
         self::assertSame('premanifest', $artifact_link->getLabel());
     }

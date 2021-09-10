@@ -11,6 +11,18 @@
     </li>
 {{/ title_has_incorrect_type_error }}
 
+{{# missing_artifact_link_fields_errors }}
+  <li>
+    {{# dgettext }}
+      tuleap-program_management |
+      <a href='%s'>Tracker %s</a> of tracker %s of project does not have an artifact link field |
+      {{ field_administration_url }} |
+      {{ tracker_name }} |
+      {{ project_name }}
+    {{/ dgettext }}
+  </li>
+{{/ missing_artifact_link_fields_errors }}
+
 {{# has_field_synchronization_errors }}
   <li>{{# field_synchronisation_errors}}{{.}}{{/field_synchronisation_errors}}</li>
 {{/ has_field_synchronization_errors }}

@@ -23,6 +23,12 @@ msgstr ""
 "utilise le champ %s et a un type incorrect il doit être de type chaîne de "
 "caractères."
 
+msgid ""
+"<a href='%s'>Tracker %s</a> of tracker %s of project does not have an "
+"artifact link field"
+msgstr ""
+"<a href='%s'>L'outil de suivi %s</a> du projet %s n'a pas de champ lien entre artéfact"
+
 msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
 

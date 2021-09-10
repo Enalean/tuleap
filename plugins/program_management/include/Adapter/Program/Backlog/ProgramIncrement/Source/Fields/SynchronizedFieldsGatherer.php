@@ -115,13 +115,18 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         throw new MissingTimeFrameFieldException($tracker_identifier->getId(), 'end date or duration');
     }
 
-    public function getArtifactLinkField(TrackerIdentifier $tracker_identifier): ArtifactLinkFieldReference
+    public function getArtifactLinkField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): ArtifactLinkFieldReference
     {
         $full_tracker         = $this->getFullTracker($tracker_identifier);
         $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($full_tracker);
         if (count($artifact_link_fields) > 0) {
             return ArtifactLinkFieldReferenceProxy::fromTrackerField(($artifact_link_fields[0]));
         }
+        $errors_collector?->addMissingFieldArtifactLink(
+            "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-formElements",
+            $full_tracker->getName(),
+            $full_tracker->getProject()->getPublicName(),
+        );
         throw new NoArtifactLinkFieldException($tracker_identifier->getId());
     }
 
