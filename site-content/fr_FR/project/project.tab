@@ -743,6 +743,7 @@ project_privacy	email_visibility_change_title	Changement du niveau confidentiali
 project_privacy	email_visibility_change_body_private	Le projet $1 est désormais privé.
 project_privacy	email_visibility_change_body_public	Le projet $1 est désormais public.
 project_privacy	email_visibility_change_body_unrestricted	Le projet $1 est désormais public et accessible aux utilisateurs restreints.
+project_privacy	email_visibility_change_body_private_unrestricted	Le project $1 est désormais privé et accessible aux utilisateurs restreints.
 
 project_service	service_not_used	Le service $1 n'est pas activé
 project	does_not_exist	Le projet n'existe pas
