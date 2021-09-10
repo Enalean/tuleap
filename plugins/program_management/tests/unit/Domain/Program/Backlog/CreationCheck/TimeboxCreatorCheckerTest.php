@@ -298,7 +298,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildProgramAndTeamTrackers(TrackerCollection $team_trackers): SourceTrackerCollection
     {
         return SourceTrackerCollection::fromProgramAndTeamTrackers(
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->tracker),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(ProgramTrackerBuilder::buildWithTracker($this->tracker)),
             ProgramIdentifierBuilder::build(),
             $team_trackers,
             $this->user

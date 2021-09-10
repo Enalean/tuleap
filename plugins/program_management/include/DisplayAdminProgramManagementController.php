@@ -143,8 +143,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $program_increment_error_collector = new ConfigurationErrorsCollector(true);
             $iteration_error_collector         = new ConfigurationErrorsCollector(true);
 
-            $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
-                $this->program_increment_tracker_retriever,
+            $program_increment_tracker = $this->program_increment_tracker_retriever->retrieveVisibleProgramIncrementTracker(
                 $program,
                 $user_identifier
             );

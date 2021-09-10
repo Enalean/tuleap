@@ -34,10 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory
-     */
-    private $tracker_factory;
+    private \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory $tracker_factory;
     private UserIdentifier $user;
     private ProgramIdentifier $program;
     private RetrieveProgramIncrementTracker $tracker_id_retriever;
@@ -85,8 +82,8 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
         self::assertEquals(
-            $tracker,
-            $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user)
+            $tracker->getId(),
+            $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user)->getId()
         );
     }
 

@@ -55,6 +55,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $program_increment;
     private ProgramTracker $program_increment_tracker;
     private \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory $tracker_factory;
+    private ProgramTracker $timebox_program_tracker;
 
     protected function setUp(): void
     {
@@ -71,6 +72,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_team_01 = TrackerTestBuilder::aTracker()->withId(123)->build();
         $this->tracker_team_02 = TrackerTestBuilder::aTracker()->withId(124)->build();
 
+        $this->timebox_program_tracker         = ProgramTrackerBuilder::buildWithId(1);
         $this->timebox_tracker                 = TrackerTestBuilder::aTracker()->withId(1)->build();
         $this->timebox_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
         $this->timebox_tracker_semantic_status->method('getOpenLabels')->willReturn(['open', 'review']);
@@ -91,7 +93,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_tracker),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_program_tracker),
             ProgramIdentifierBuilder::build(),
             $this->collection,
             $user_identifier

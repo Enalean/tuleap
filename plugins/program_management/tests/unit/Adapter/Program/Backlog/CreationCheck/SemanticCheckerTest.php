@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -40,22 +41,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticChecker $checker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_Semantic_TitleDao
-     */
-    private $title_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_Semantic_DescriptionDao
-     */
-    private $description_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SemanticTimeframeDao
-     */
-    private $timeframe_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|CheckStatus
-     */
-    private $semantic_status_checker;
+    private \PHPUnit\Framework\MockObject\MockObject|\Tracker_Semantic_TitleDao $title_dao;
+    private \PHPUnit\Framework\MockObject\MockObject|\Tracker_Semantic_DescriptionDao $description_dao;
+    private \PHPUnit\Framework\MockObject\MockObject|SemanticTimeframeDao $timeframe_dao;
+    private \PHPUnit\Framework\MockObject\MockObject|CheckStatus $semantic_status_checker;
     private ProgramTracker $program_increment_tracker;
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;
@@ -75,7 +64,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(1)->build()),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(ProgramTrackerBuilder::buildWithId(1)),
             ProgramIdentifierBuilder::build(),
             $this->trackers,
             $user_identifier

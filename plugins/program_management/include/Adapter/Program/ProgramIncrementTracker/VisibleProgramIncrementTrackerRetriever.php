@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -39,7 +40,7 @@ final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisiblePr
     ) {
     }
 
-    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): \Tracker
+    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): ProgramTracker
     {
         $program_id                   = $program->getId();
         $program_increment_tracker_id = $this->program_increment_tracker_retriever->getProgramIncrementTrackerId(
@@ -57,7 +58,7 @@ final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisiblePr
             throw new ProgramTrackerNotFoundException($program_increment_tracker_id);
         }
 
-        return $program_increment_tracker;
+        return new ProgramTracker($program_increment_tracker);
     }
 
     /**

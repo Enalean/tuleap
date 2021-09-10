@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -38,18 +37,6 @@ final class ProgramTracker implements TrackerIdentifier
     public function __construct(\Tracker $tracker)
     {
         $this->tracker = $tracker;
-    }
-
-    /**
-     * @throws Program\ProgramTrackerNotFoundException
-     * @throws Program\Plan\ProgramHasNoProgramIncrementTrackerException
-     */
-    public static function buildProgramIncrementTrackerFromProgram(
-        RetrieveVisibleProgramIncrementTracker $retriever,
-        ProgramIdentifier $program,
-        UserIdentifier $user_identifier
-    ): self {
-        return new self($retriever->retrieveVisibleProgramIncrementTracker($program, $user_identifier));
     }
 
     /**

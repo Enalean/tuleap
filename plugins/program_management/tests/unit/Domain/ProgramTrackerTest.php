@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -36,16 +35,6 @@ final class ProgramTrackerTest extends TestCase
     protected function setUp(): void
     {
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
-    }
-
-    public function testItBuildsProgramIncrementTracker(): void
-    {
-        $tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
-        $retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($tracker);
-        $program   = ProgramIdentifierBuilder::build();
-
-        $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $this->user_identifier);
-        self::assertSame(78, $program_increment_tracker->getId());
     }
 
     public function testItBuildsIterationTracker(): void
