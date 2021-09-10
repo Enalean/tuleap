@@ -28,6 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 
 final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUpdate
 {
@@ -35,7 +37,8 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         private LoggerInterface $logger,
         private GatherSynchronizedFields $fields_gatherer,
         private RetrieveFieldValuesGatherer $values_retriever,
-        private RetrieveChangesetSubmissionDate $submission_date_retriever
+        private RetrieveChangesetSubmissionDate $submission_date_retriever,
+        private SearchMirroredTimeboxes $mirrored_timeboxes_searcher
     ) {
     }
 
@@ -46,6 +49,7 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         $this->logger->debug(
             "Processing program increment update with program increment #$program_increment_id for user #$user_id"
         );
+
         $source_values = SourceTimeboxChangesetValues::fromUpdate(
             $this->fields_gatherer,
             $this->values_retriever,
@@ -53,6 +57,16 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
             $update
         );
 
+        $mirrored_program_increments = $this->mirrored_timeboxes_searcher->searchMirroredTimeboxes(
+            $program_increment_id
+        );
+
+        $mirror_ids = array_map(
+            static fn(MirroredTimeboxIdentifier $mirror) => $mirror->getId(),
+            $mirrored_program_increments
+        );
+
         $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
+        $this->logger->debug(sprintf('Mirror ids: %s', implode(',', $mirror_ids)));
     }
 }

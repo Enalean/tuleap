@@ -22,25 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tracker_ArtifactFactory;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeboxFromMirroredTimeboxStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|MirroredTimeboxesDao
-     */
-    private $mirrored_timeboxes_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    private SourceArtifactNatureAnalyzer $analyser;
+    private const TIMEBOX_ID = 247;
+    private RetrieveTimeboxFromMirroredTimeboxStub $timebox_retriever;
+    private Stub|\Tracker_ArtifactFactory $artifact_factory;
     private \PFUser $user;
     private \Project $project;
 
@@ -49,46 +43,41 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->user    = UserTestBuilder::aUser()->build();
         $this->project = \Project::buildForTest();
 
-        $this->mirrored_timeboxes_dao = $this->createMock(MirroredTimeboxesDao::class);
-        $this->artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->timebox_retriever = RetrieveTimeboxFromMirroredTimeboxStub::withTimebox(self::TIMEBOX_ID);
+        $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
+    }
 
-        $this->analyser = new SourceArtifactNatureAnalyzer(
-            $this->mirrored_timeboxes_dao,
+    private function getAnalyzer(): SourceArtifactNatureAnalyzer
+    {
+        return new SourceArtifactNatureAnalyzer(
+            $this->timebox_retriever,
             $this->artifact_factory
         );
     }
 
     public function testItThrowsExceptionWhenProgramIncrementIdIsNotFound(): void
     {
-        $mirrored_timebox = $this->getMirroredTimebox();
-
-        $this->mirrored_timeboxes_dao->method('getTimeboxFromMirroredTimeboxId')->willReturn(null);
+        $this->timebox_retriever = RetrieveTimeboxFromMirroredTimeboxStub::withNoTimebox();
 
         $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
-        $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user);
+        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
     }
 
-    public function testItThrowsExceptionWhenProgramIncrementIsNotFound(): void
+    public function testItThrowsExceptionWhenProgramIncrementArtifactIsNotFound(): void
     {
-        $mirrored_timebox = $this->getMirroredTimebox();
-
-        $this->mirrored_timeboxes_dao->method('getTimeboxFromMirroredTimeboxId')->willReturn(100);
         $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
         $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
-        $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user);
+        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
     }
 
     public function testReturnsProjectWhenArtifactHaveMirroredMilestoneLink(): void
     {
-        $mirrored_timebox = $this->getMirroredTimebox();
-
         $timebox = $this->getTimebox(true);
         $this->artifact_factory->method('getArtifactById')->willReturn($timebox);
 
-        $this->mirrored_timeboxes_dao->method('getTimeboxFromMirroredTimeboxId')->willReturn(200);
-
-        self::assertEquals($this->project, $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user));
+        $result = $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
+        self::assertEquals($this->project, $result);
     }
 
     public function testItThrowsExceptionWhenUserCanNotSeeArtifact(): void
@@ -96,18 +85,11 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         $timebox = $this->getTimebox(false);
         $this->artifact_factory->method('getArtifactById')->willReturn($timebox);
 
-        $mirrored_timebox = $this->getMirroredTimebox();
-
-        $this->mirrored_timeboxes_dao->expects(self::once())->method('getTimeboxFromMirroredTimeboxId')->willReturn(200);
-
         $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
-        $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user);
+        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
     }
 
-    /**
-     * @return \PHPUnit\Framework\MockObject\Stub|Artifact
-     */
-    private function getMirroredTimebox()
+    private function getMirroredTimebox(): Stub|Artifact
     {
         $mirrored_timebox = $this->createStub(Artifact::class);
         $mirrored_timebox->method('getId')->willReturn(1);
@@ -116,10 +98,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         return $mirrored_timebox;
     }
 
-    /**
-     * @return \PHPUnit\Framework\MockObject\Stub|Artifact
-     */
-    private function getTimebox(bool $user_can_view)
+    private function getTimebox(bool $user_can_view): Stub|Artifact
     {
         $timebox = $this->createStub(Artifact::class);
         $timebox->method('userCanView')->willReturn($user_can_view);

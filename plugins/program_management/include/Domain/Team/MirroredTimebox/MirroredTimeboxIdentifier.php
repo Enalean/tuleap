@@ -20,16 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-
-interface ProcessProgramIncrementUpdate
+/**
+ * I hold the identifier of a Mirrored Timebox Artifact.
+ * @psalm-immutable
+ */
+interface MirroredTimeboxIdentifier
 {
-    /**
-     * @throws FieldSynchronizationException
-     * @throws ProgramIncrementCreationException
-     */
-    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
+    public function getId(): int;
 }

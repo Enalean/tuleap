@@ -20,16 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 
-interface ProcessProgramIncrementUpdate
+final class RetrieveTimeboxFromMirroredTimeboxStub implements RetrieveTimeboxFromMirroredTimebox
 {
-    /**
-     * @throws FieldSynchronizationException
-     * @throws ProgramIncrementCreationException
-     */
-    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
+    private function __construct(private ?int $timebox_id)
+    {
+    }
+
+    public static function withTimebox(int $timebox_id): self
+    {
+        return new self($timebox_id);
+    }
+
+    public static function withNoTimebox(): self
+    {
+        return new self(null);
+    }
+
+    public function getTimeboxFromMirroredTimeboxId(int $mirrored_timebox_id): ?int
+    {
+        return $this->timebox_id;
+    }
 }

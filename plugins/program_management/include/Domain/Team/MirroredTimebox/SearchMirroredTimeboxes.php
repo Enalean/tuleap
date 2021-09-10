@@ -18,18 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
-
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-
-interface ProcessProgramIncrementUpdate
+interface SearchMirroredTimeboxes
 {
     /**
-     * @throws FieldSynchronizationException
-     * @throws ProgramIncrementCreationException
+     * @return MirroredTimeboxIdentifier[]
      */
-    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
+    public function searchMirroredTimeboxes(int $timebox_id): array;
 }

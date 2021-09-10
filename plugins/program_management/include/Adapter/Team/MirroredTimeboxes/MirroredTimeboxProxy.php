@@ -22,22 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
 
-final class MirroredTimeboxRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * @psalm-immutable
+ */
+final class MirroredTimeboxProxy implements MirroredTimeboxIdentifier
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItBuildsAListOfMirroredArtifact(): void
+    public function __construct(private int $id)
     {
-        $dao       = \Mockery::mock(MirroredTimeboxesDao::class);
-        $retriever = new MirroredTimeboxRetriever($dao);
+    }
 
-        $dao->shouldReceive('getMirroredTimeboxes')->andReturn([['id' => 1], ['id' => 2]]);
-
-        $expected = [new MirroredTimebox(1), new MirroredTimebox(2)];
-
-        self::assertEquals($expected, $retriever->retrieveMilestonesLinkedTo(101));
+    public function getId(): int
+    {
+        return $this->id;
     }
 }
