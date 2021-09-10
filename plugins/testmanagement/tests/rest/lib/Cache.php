@@ -33,6 +33,10 @@ class Cache
      * @var null|array
      */
     private $closed_campaign = null;
+    /**
+     * @var null|array
+     */
+    private $valid_with_attachments_campaign = null;
 
     public static function instance()
     {
@@ -63,5 +67,15 @@ class Cache
     public function setClosedCampaign(array $closed_campaign): void
     {
         $this->closed_campaign = $closed_campaign;
+    }
+
+    public function getValidWithAttachmentsCampaign(): ?array
+    {
+        return $this->valid_with_attachments_campaign;
+    }
+
+    public function setValidWithAttachmentsCampaign(?array $valid_with_attachments_campaign): void
+    {
+        $this->valid_with_attachments_campaign = $valid_with_attachments_campaign;
     }
 }

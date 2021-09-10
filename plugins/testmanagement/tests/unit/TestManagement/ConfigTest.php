@@ -26,6 +26,7 @@ namespace Tuleap\TestManagement;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -94,10 +95,29 @@ final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $dar        = \TestHelper::arrayToDar($properties);
         $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('isActive')->once()->andReturnTrue();
+        $tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
         $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([10])->andReturn($tracker);
 
         $this->assertEquals(10, $this->config->getCampaignTrackerId($project));
+    }
+
+    public function testItDoesNotReturnTheTrackerIdIfTrackerIsDeleted(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+
+        $properties = [
+            'project_id' => 101,
+            'campaign_tracker_id' => 10,
+            'test_definition_tracker_id' => 11,
+            'test_execution_tracker_id' => 12,
+            'issue_tracker_id' => 13
+        ];
+        $dar        = \TestHelper::arrayToDar($properties);
+        $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
+
+        $tracker = TrackerTestBuilder::aTracker()->withId(10)->withDeletionDate(1234567890)->build();
+        $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([10])->andReturn($tracker);
+
+        $this->assertFalse($this->config->getCampaignTrackerId($project));
     }
 }

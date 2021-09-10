@@ -104,6 +104,14 @@ class ExecutionRepresentation
      */
     public $max_size_upload;
 
+    /**
+     * @var array {@type AttachmentRepresentation}
+     */
+    public $attachments;
+
+    /**
+     * @param AttachmentRepresentation[] $attachments
+     */
     public function __construct(
         int $artifact_id,
         string $status,
@@ -115,7 +123,8 @@ class ExecutionRepresentation
         array $linked_bug,
         int $time,
         array $steps_results,
-        ?FileUploadData $file_field_data
+        ?FileUploadData $file_field_data,
+        array $attachments
     ) {
         $this->id               = JsonCast::toInt($artifact_id);
         $this->uri              = self::ROUTE . '/' . $this->id;
@@ -128,6 +137,7 @@ class ExecutionRepresentation
         $this->time             = $time;
         $this->linked_bugs      = $linked_bug;
         $this->steps_results    = (array) JsonCast::toObject($steps_results);
+        $this->attachments      = $attachments;
 
         if ($file_field_data) {
             $this->upload_url      = $file_field_data->getUploadUrl();

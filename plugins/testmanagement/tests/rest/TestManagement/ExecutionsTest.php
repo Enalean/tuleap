@@ -84,6 +84,77 @@ final class ExecutionsTest extends BaseTest
         ]))));
     }
 
+    public function testPutExecutionsWithFileAttachment(): void
+    {
+        $initial_value = 'passed';
+        $new_value     = 'failed';
+
+        // Get the execution
+        $execution = $this->getLastExecutionForValid130Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
+        $this->assertEquals($initial_value, $execution['status']);
+        $this->assertCount(0, $execution['attachments']);
+
+        // initiate file upload
+        $file_size     = 15;
+        $file_resource = json_encode([
+            'file_size' => $file_size,
+            'file_type' => 'text/plain',
+            'name'      => 'aaaa.txt'
+        ]);
+
+        $new_file_response = $this->getResponseByName(
+            TestManagementDataBuilder::USER_TESTER_NAME,
+            $this->request_factory
+                ->createRequest('POST', $execution['upload_url'])
+                ->withBody($this->stream_factory->createStream($file_resource))
+        );
+
+        $this->assertEquals(201, $new_file_response->getStatusCode());
+        $new_file_response_json = json_decode($new_file_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertNotNull($new_file_response_json['upload_href']);
+
+        // upload the file via tus
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            TestManagementDataBuilder::USER_TESTER_NAME,
+            $this->request_factory->createRequest('PATCH', $new_file_response_json['upload_href'])
+                ->withHeader('Tus-Resumable', '1.0.0')
+                ->withHeader('Content-Type', 'application/offset+octet-stream')
+                ->withHeader('Upload-Offset', '0')
+                ->withBody($this->stream_factory->createStream($file_content))
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset'));
+
+        // Attach the uploaded file to the execution
+        $put_resource = [
+            'status'            => $new_value,
+            'time'              => 0,
+            'results'           => 'test result <img src="' . $new_file_response_json['download_href'] . '">',
+            'uploaded_file_ids' => [$new_file_response_json['id']],
+        ];
+        $response     = $this->getResponse(
+            $this->request_factory
+                ->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])
+                ->withBody($this->stream_factory->createStream(json_encode($put_resource)))
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Assert that the file is present when we get the updated execution
+        $updated_execution = $this->getLastExecutionForValid130Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
+        $this->assertEquals($new_value, $updated_execution['status']);
+        $this->assertCount(1, $updated_execution['attachments']);
+        $this->assertEquals('aaaa.txt', $updated_execution['attachments'][0]['filename']);
+        $this->assertEquals($new_file_response_json['download_href'], $updated_execution['attachments'][0]['html_url']);
+
+        $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
+            'status' => $initial_value,
+            'time'   => 0
+        ]))));
+    }
+
     public function testPutExecutionsReturnErrorIfWeAddFilesWithoutFileField(): void
     {
         $initial_value = 'failed';
@@ -160,6 +231,20 @@ final class ExecutionsTest extends BaseTest
         $executions     = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $last_execution = end($executions);
         $this->assertEquals('Import default template', $last_execution['definition']['summary']);
+
+        return $last_execution;
+    }
+
+    private function getLastExecutionForValid130Campaign(string $user_name)
+    {
+        $campaign = $this->valid_130_campaign;
+
+        $all_executions_request  = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
+        $all_executions_response = $this->getResponse($all_executions_request, $user_name);
+
+        $executions     = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $last_execution = end($executions);
+        $this->assertEquals('Create a repository', $last_execution['definition']['summary']);
 
         return $last_execution;
     }

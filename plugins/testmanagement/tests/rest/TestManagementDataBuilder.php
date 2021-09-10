@@ -24,9 +24,10 @@ use REST_TestDataBuilder;
 
 class TestManagementDataBuilder extends REST_TestDataBuilder
 {
-    public const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
-    public const ISSUE_TRACKER_SHORTNAME     = 'bugs';
-    public const TEST_DEF_TRACKER_SHORTNAME  = 'test_def';
+    public const PROJECT_TEST_MGMT_SHORTNAME                  = 'test-mgmt';
+    public const PROJECT_TEST_MGMT_WITH_ATTACHMENTS_SHORTNAME = 'test-mgmt-exec-attach';
+    public const ISSUE_TRACKER_SHORTNAME                      = 'bugs';
+    public const TEST_DEF_TRACKER_SHORTNAME                   = 'test_def';
 
     public const USER_TESTER_NAME = 'rest_api_ttm_1';
     public const USER_TESTER_PASS = 'welcome0';
