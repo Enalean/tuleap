@@ -55,7 +55,7 @@ class TeamTemplate implements CategorisedTemplate
         $this->description = AsciiRegisteredToUnicodeConvertor::convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(
             dgettext(
                 'tuleap-program_management',
-                'This Tuleap template helps cross-functional group of people to define, build, test, and deliver an increment of value in a short time box. This is a ready-to-use environment based on Scrum approach, linked with the above Agile Release Train and Program Increments. Scrum Master, Product Owner and other agile teammates can manage Team Events, Backlog and Team Artifacts, as Stories, Tasks and Tests. This template has to be used with the Tuleap template "Essential SAFe(R) - ART and Program Management"'
+                'Helps cross-functional teams to deliver an increment of value based on Scrum approach. This template has to be used with the Tuleap template "Essential SAFe(R) - Agile Release Train"'
             )
         );
 
