@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 
-class MirroredTimeboxesDao extends DataAccessObject
+final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox
 {
-    public function getMirroredTimeboxes(int $artifact_id, string $nature): array
+    public function searchMirroredTimeboxes(int $timebox_id): array
     {
         $sql = "SELECT parent_art.id AS id
                 FROM tracker_artifact parent_art
@@ -41,10 +44,12 @@ class MirroredTimeboxesDao extends DataAccessObject
                   AND t.deletion_date IS NULL
                   AND IFNULL(artlink.nature, '') = ?";
 
-        return $this->getDB()->run($sql, $artifact_id, $nature);
+        $rows = $this->getDB()->first($sql, $timebox_id, TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
+
+        return array_map(static fn(int $mirrored_timebox_id) => new MirroredTimeboxProxy($mirrored_timebox_id), $rows);
     }
 
-    public function getTimeboxFromMirroredTimeboxId(int $mirrored_timebox_id, string $nature): ?int
+    public function getTimeboxFromMirroredTimeboxId(int $mirrored_timebox_id): ?int
     {
         $sql = "SELECT linked_art.id
                 FROM tracker_artifact parent_art
@@ -58,7 +63,7 @@ class MirroredTimeboxesDao extends DataAccessObject
                   AND t.deletion_date IS NULL
                   AND IFNULL(artlink.nature, '') = ?;";
 
-        $timebox_id = $this->getDB()->cell($sql, $mirrored_timebox_id, $nature);
+        $timebox_id = $this->getDB()->cell($sql, $mirrored_timebox_id, TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
         if (! $timebox_id) {
             return null;
         }

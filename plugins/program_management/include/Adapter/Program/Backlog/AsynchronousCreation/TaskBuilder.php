@@ -37,7 +37,6 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -65,7 +64,7 @@ class TaskBuilder
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             $artifacts_linked_to_parent_dao,
             $artifact_factory,
-            new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
+            new MirroredTimeboxesDao(),
             new ContentDao(),
             $logger,
             $retrieve_user,

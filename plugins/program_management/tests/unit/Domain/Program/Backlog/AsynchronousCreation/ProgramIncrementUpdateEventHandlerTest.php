@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingProgramIncrementUpdatesStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
@@ -114,7 +115,8 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
                 $this->logger,
                 GatherSynchronizedFieldsStub::withDefaults(),
                 RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
-                RetrieveChangesetSubmissionDateStub::withDefaults()
+                RetrieveChangesetSubmissionDateStub::withDefaults(),
+                SearchMirroredTimeboxesStub::withIds(738, 633)
             ),
             new IterationCreationProcessor($this->logger)
         );

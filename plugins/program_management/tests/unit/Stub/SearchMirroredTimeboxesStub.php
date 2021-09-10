@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-/**
- * @psalm-immutable
- */
-final class MirroredTimebox
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxProxy;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
+
+final class SearchMirroredTimeboxesStub implements SearchMirroredTimeboxes
 {
     /**
-     * @var int
+     * @var int[]
      */
-    private $id;
+    private array $ids;
 
-    public function __construct(int $id)
+    private function __construct(int ...$ids)
     {
-        $this->id = $id;
+        $this->ids = $ids;
     }
 
-    public function getId(): int
+    public static function withIds(int ...$ids): self
     {
-        return $this->id;
+        return new self(...$ids);
+    }
+
+    public function searchMirroredTimeboxes(int $timebox_id): array
+    {
+        return array_map(static fn(int $id) => new MirroredTimeboxProxy($id), $this->ids);
     }
 }

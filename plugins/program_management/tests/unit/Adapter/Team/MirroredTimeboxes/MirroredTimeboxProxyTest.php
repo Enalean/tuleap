@@ -20,16 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-
-interface ProcessProgramIncrementUpdate
+final class MirroredTimeboxProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @throws FieldSynchronizationException
-     * @throws ProgramIncrementCreationException
-     */
-    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
+    private const MIRRORED_TIMEBOX_ID = 470;
+
+    public function testItBuildsFromId(): void
+    {
+        $identifier = new MirroredTimeboxProxy(self::MIRRORED_TIMEBOX_ID);
+        self::assertSame(self::MIRRORED_TIMEBOX_ID, $identifier->getId());
+    }
 }

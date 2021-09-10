@@ -19,27 +19,22 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
 
 use PFUser;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
+final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
 {
-    private MirroredTimeboxesDao $mirrored_timeboxes_dao;
-    private \Tracker_ArtifactFactory $artifact_factory;
-
     public function __construct(
-        MirroredTimeboxesDao $mirrored_timeboxes_dao,
-        \Tracker_ArtifactFactory $artifact_factory
+        private RetrieveTimeboxFromMirroredTimebox $timebox_retriever,
+        private \Tracker_ArtifactFactory $artifact_factory
     ) {
-        $this->mirrored_timeboxes_dao = $mirrored_timeboxes_dao;
-        $this->artifact_factory       = $artifact_factory;
     }
 
     /**
@@ -47,8 +42,7 @@ class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
      */
     public function retrieveProjectOfMirroredArtifact(Artifact $artifact, PFUser $user): \Project
     {
-        $program_increment_id = $this->mirrored_timeboxes_dao
-            ->getTimeboxFromMirroredTimeboxId($artifact->getId(), TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
+        $program_increment_id = $this->timebox_retriever->getTimeboxFromMirroredTimeboxId($artifact->getId());
 
         if (! $program_increment_id) {
             throw new TimeboxOfMirroredTimeboxNotFoundException((int) $artifact->getTracker()->getGroupId());

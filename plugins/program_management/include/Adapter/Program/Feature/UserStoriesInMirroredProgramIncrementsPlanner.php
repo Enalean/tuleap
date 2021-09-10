@@ -26,45 +26,27 @@ use Psr\Log\LoggerInterface;
 use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 
 final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserStoriesInMirroredProgramIncrements
 {
-
-    private DBTransactionExecutor $db_transaction_executor;
-    private \Tracker_ArtifactFactory $tracker_artifact_factory;
-    private MirroredTimeboxRetriever $mirrored_timebox_retriever;
-    private ContentStore $content_dao;
-    private LoggerInterface $logger;
-    private RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao;
-    private RetrieveUser $retrieve_user;
-    private ArtifactsLinkedToParentDao $artifacts_linked_to_parent_dao;
-
     public function __construct(
-        DBTransactionExecutor $db_transaction_executor,
-        ArtifactsLinkedToParentDao $artifacts_linked_to_parent_dao,
-        \Tracker_ArtifactFactory $tracker_artifact_factory,
-        MirroredTimeboxRetriever $mirrored_timebox_retriever,
-        ContentStore $content_dao,
-        LoggerInterface $logger,
-        RetrieveUser $retrieve_user,
-        RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao
+        private DBTransactionExecutor $db_transaction_executor,
+        private ArtifactsLinkedToParentDao $artifacts_linked_to_parent_dao,
+        private \Tracker_ArtifactFactory $tracker_artifact_factory,
+        private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
+        private ContentStore $content_dao,
+        private LoggerInterface $logger,
+        private RetrieveUser $retrieve_user,
+        private RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao
     ) {
-        $this->db_transaction_executor        = $db_transaction_executor;
-        $this->tracker_artifact_factory       = $tracker_artifact_factory;
-        $this->mirrored_timebox_retriever     = $mirrored_timebox_retriever;
-        $this->content_dao                    = $content_dao;
-        $this->logger                         = $logger;
-        $this->linked_to_parent_dao           = $linked_to_parent_dao;
-        $this->retrieve_user                  = $retrieve_user;
-        $this->artifacts_linked_to_parent_dao = $artifacts_linked_to_parent_dao;
     }
 
     public function plan(ProgramIncrementChanged $program_increment_changed): void
@@ -86,10 +68,10 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         $user = $this->retrieve_user->getUserWithId($user_identifier);
         $this->db_transaction_executor->execute(
             function () use ($feature_plan_change, $user, $program_increment_id) {
-                $program_increments = $this->mirrored_timebox_retriever->retrieveMilestonesLinkedTo(
+                $mirrored_program_increments = $this->mirrored_timeboxes_searcher->searchMirroredTimeboxes(
                     $program_increment_id
                 );
-                foreach ($program_increments as $mirrored_program_increment) {
+                foreach ($mirrored_program_increments as $mirrored_program_increment) {
                     $this->logger->info(sprintf("Found mirrored PI %d", $mirrored_program_increment->getId()));
                     $mirror_artifact = $this->tracker_artifact_factory->getArtifactById(
                         $mirrored_program_increment->getId()

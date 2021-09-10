@@ -94,7 +94,6 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
@@ -568,7 +567,8 @@ final class program_managementPlugin extends Plugin
                     $form_element_factory
                 ),
                 new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
-                new ChangesetRetriever($artifact_factory)
+                new ChangesetRetriever($artifact_factory),
+                new MirroredTimeboxesDao()
             ),
             new IterationCreationProcessor($logger),
         );
@@ -600,6 +600,7 @@ final class program_managementPlugin extends Plugin
         $program_increments_DAO         = new ProgramIncrementsDAO();
         $form_element_factory           = \Tracker_FormElementFactory::instance();
         $tracker_factory                = \TrackerFactory::instance();
+        $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
 
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
@@ -607,7 +608,7 @@ final class program_managementPlugin extends Plugin
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 $artifacts_linked_to_parent_dao,
                 $artifact_factory,
-                new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
+                $mirrored_timeboxes_dao,
                 new ContentDao(),
                 $logger,
                 $user_retriever,
@@ -647,7 +648,8 @@ final class program_managementPlugin extends Plugin
                             $form_element_factory
                         ),
                         new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
-                        new ChangesetRetriever($artifact_factory)
+                        new ChangesetRetriever($artifact_factory),
+                        $mirrored_timeboxes_dao
                     ),
                     new IterationCreationProcessor($logger),
                 )
