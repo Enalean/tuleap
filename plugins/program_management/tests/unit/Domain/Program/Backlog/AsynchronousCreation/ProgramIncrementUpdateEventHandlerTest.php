@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationProxy;
@@ -43,25 +44,20 @@ use Tuleap\Queue\WorkerEvent;
 
 final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ITERATION_ID           = 196;
-    private const SECOND_ITERATION_ID          = 532;
-    private const USER_ID                      = 108;
-    private const PROGRAM_INCREMENT_ID         = 58;
-    private const PROGRAM_INCREMENT_TRACKER_ID = 36;
+    private const FIRST_ITERATION_ID             = 196;
+    private const SECOND_ITERATION_ID            = 532;
+    private const USER_ID                        = 108;
+    private const PROGRAM_INCREMENT_ID           = 58;
+    private const PROGRAM_INCREMENT_TRACKER_ID   = 36;
+    private const PROGRAM_INCREMENT_CHANGESET_ID = 7383;
     private TestLogger $logger;
     private SearchPendingIterationsStub $iteration_searcher;
     private VerifyIsProgramIncrementStub $program_increment_verifier;
     private VerifyIsIterationStub $iteration_verifier;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingIterations
-     */
-    private mixed $iteration_deleter;
+    private MockObject|DeletePendingIterations $iteration_deleter;
     private VerifyIsUserStub $user_verifier;
     private SearchPendingProgramIncrementUpdatesStub $update_searcher;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingProgramIncrementUpdates
-     */
-    private mixed $update_deleter;
+    private MockObject|DeletePendingProgramIncrementUpdates $update_deleter;
     private VerifyIsChangesetStub $changeset_verifier;
 
     protected function setUp(): void
@@ -82,7 +78,11 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         );
 
         $this->update_searcher = SearchPendingProgramIncrementUpdatesStub::withUpdate(
-            new PendingProgramIncrementUpdateProxy(self::PROGRAM_INCREMENT_ID, self::USER_ID, 7383)
+            new PendingProgramIncrementUpdateProxy(
+                self::PROGRAM_INCREMENT_ID,
+                self::USER_ID,
+                self::PROGRAM_INCREMENT_CHANGESET_ID
+            )
         );
 
         $this->logger                     = new TestLogger();
@@ -214,8 +214,9 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         $worker_event = new WorkerEvent($this->logger, [
             'event_name' => ProgramIncrementUpdateEvent::TOPIC,
             'payload'    => [
-                'artifact_id' => self::PROGRAM_INCREMENT_ID,
-                'user_id'     => self::USER_ID,
+                'artifact_id'  => self::PROGRAM_INCREMENT_ID,
+                'user_id'      => self::USER_ID,
+                'changeset_id' => self::PROGRAM_INCREMENT_CHANGESET_ID
             ]
         ]);
         return ProgramIncrementUpdateEventProxy::fromWorkerEvent($this->logger, $worker_event);

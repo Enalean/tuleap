@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 interface SearchPendingProgramIncrementUpdates
 {
-    public function searchUpdate(int $program_increment_id, int $user_id): ?PendingProgramIncrementUpdate;
+    public function searchUpdate(int $program_increment_id, int $user_id, int $changeset_id): ?PendingProgramIncrementUpdate;
 }

@@ -41,13 +41,15 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
         $worker_event = new WorkerEvent($this->logger, [
             'event_name' => ProgramIncrementUpdateEvent::TOPIC,
             'payload'    => [
-                'artifact_id' => 29,
-                'user_id'     => 186,
+                'artifact_id'  => 29,
+                'user_id'      => 186,
+                'changeset_id' => 7806,
             ]
         ]);
         $event        = ProgramIncrementUpdateEventProxy::fromWorkerEvent($this->logger, $worker_event);
         self::assertSame(29, $event->getArtifactId());
         self::assertSame(186, $event->getUserId());
+        self::assertSame(7806, $event->getChangesetId());
     }
 
     public function testItReturnsNullWhenUnrelatedTopic(): void
