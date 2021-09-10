@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTra
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -64,8 +63,7 @@ final class ProgramIncrementTrackerConfiguration
         UserIdentifier $user_identifier,
         VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
     ): self {
-        $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
-            $retrieve_tracker,
+        $program_increment_tracker = $retrieve_tracker->retrieveVisibleProgramIncrementTracker(
             $program,
             $user_identifier
         );

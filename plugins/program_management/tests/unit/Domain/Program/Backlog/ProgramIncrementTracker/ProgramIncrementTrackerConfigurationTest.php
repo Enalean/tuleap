@@ -24,18 +24,18 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrementTrack
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAProgramIncrementTrackerConfiguration(): void
     {
-        $program_increment_tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $program_increment_tracker = ProgramTrackerBuilder::buildWithId(101);
 
         $program = ProgramIdentifierBuilder::build();
 

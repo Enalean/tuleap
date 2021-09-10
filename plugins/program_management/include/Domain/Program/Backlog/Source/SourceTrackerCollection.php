@@ -61,7 +61,7 @@ final class SourceTrackerCollection
         TrackerCollection $team_trackers,
         UserIdentifier $user_identifier
     ): self {
-        $trackers = [ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user_identifier)];
+        $trackers = [$retriever->retrieveVisibleProgramIncrementTracker($program, $user_identifier)];
         foreach ($team_trackers->getTrackers() as $team_tracker) {
             $trackers[] = $team_tracker;
         }

@@ -64,7 +64,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->tracker             = new ProgramTracker($program_increment_tracker);
 
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
-            $program_increment_tracker
+            $this->tracker
         );
 
         $this->root_milestone_retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(

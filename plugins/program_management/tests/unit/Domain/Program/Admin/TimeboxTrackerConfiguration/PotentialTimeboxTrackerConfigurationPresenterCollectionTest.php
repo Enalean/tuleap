@@ -27,35 +27,24 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private UserIdentifier $user;
     private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
     {
-        $this->user    = UserIdentifierStub::buildGenericUser();
         $this->program = ProgramForAdministrationIdentifierBuilder::build();
     }
 
     public function testBuildTrackerPresentersWithCheckedTrackerIfExist(): void
     {
         $presenters = $this->getPresenters(
-            ProgramTracker::buildProgramIncrementTrackerFromProgram(
-                RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
-                    TrackerTestBuilder::aTracker()->withId(300)->build()
-                ),
-                ProgramIdentifierBuilder::build(),
-                $this->user
-            )
+            ProgramTrackerBuilder::buildWithId(300)
         );
 
         self::assertCount(2, $presenters);

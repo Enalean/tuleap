@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement;
 
 use ForgeAccess;
 use ForgeConfig;
-use Tracker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -42,7 +42,6 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -69,10 +68,9 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->project_flags_builder = $this->createStub(ProjectFlagsBuilder::class);
         $this->build_program         = BuildProgramStub::stubValidProgram();
         $this->template_renderer     = $this->createMock(\TemplateRenderer::class);
-        $tracker                     = TrackerTestBuilder::aTracker()->withId(103)->build();
 
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
-            $tracker
+            ProgramTrackerBuilder::buildWithId(103)
         );
     }
 
@@ -152,12 +150,8 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->mockProject();
         $this->project_flags_builder->method('buildProjectFlags')->willReturn([]);
 
-        $tracker = $this->createStub(Tracker::class);
-        $tracker->method('userCanSubmitArtifact')->willReturn(true);
-        $tracker->method('getId')->willReturn(10);
-
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
-            $tracker
+            ProgramTrackerBuilder::buildWithId(10)
         );
 
         $user = $this->createMock(\PFUser::class);
