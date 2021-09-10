@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 
 final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUpdate
 {
@@ -38,7 +38,8 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         private GatherSynchronizedFields $fields_gatherer,
         private RetrieveFieldValuesGatherer $values_retriever,
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
-        private SearchMirroredTimeboxes $mirrored_timeboxes_searcher
+        private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
+        private RetrieveTrackerOfArtifact $tracker_retriever
     ) {
     }
 
@@ -61,12 +62,15 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
             $program_increment_id
         );
 
-        $mirror_ids = array_map(
-            static fn(MirroredTimeboxIdentifier $mirror) => $mirror->getId(),
-            $mirrored_program_increments
-        );
+        $mirror_tracker_ids = [];
+        foreach ($mirrored_program_increments as $mirrored_program_increment) {
+            $mirror_tracker       = $this->tracker_retriever->getTrackerOfArtifact(
+                $mirrored_program_increment->getId()
+            );
+            $mirror_tracker_ids[] = $mirror_tracker->getId();
+        }
 
         $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
-        $this->logger->debug(sprintf('Mirror ids: %s', implode(',', $mirror_ids)));
+        $this->logger->debug(sprintf('Mirror tracker ids: %s', implode(',', $mirror_tracker_ids)));
     }
 }

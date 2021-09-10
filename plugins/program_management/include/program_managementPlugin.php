@@ -100,6 +100,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -568,7 +569,8 @@ final class program_managementPlugin extends Plugin
                 ),
                 new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
                 new ChangesetRetriever($artifact_factory),
-                new MirroredTimeboxesDao()
+                new MirroredTimeboxesDao(),
+                new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory)
             ),
             new IterationCreationProcessor($logger),
         );
@@ -649,7 +651,8 @@ final class program_managementPlugin extends Plugin
                         ),
                         new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
                         new ChangesetRetriever($artifact_factory),
-                        $mirrored_timeboxes_dao
+                        $mirrored_timeboxes_dao,
+                        new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory)
                     ),
                     new IterationCreationProcessor($logger),
                 )
