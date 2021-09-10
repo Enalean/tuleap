@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFou
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -69,17 +70,17 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         return ProgramManagementProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
     }
 
-    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): \Tracker
+    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): ProgramTracker
     {
         $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
-        return $root_planning->getPlanningTracker();
+        return new ProgramTracker($root_planning->getPlanningTracker());
     }
 
     /**
      * @throws PlanningNotFoundException
      * @throws TrackerRetrievalException
      */
-    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): \Tracker
+    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): ProgramTracker
     {
         $user          = $this->retrieve_user->getUserWithId($user_identifier);
         $root_planning = $this->planning_factory->getRootPlanning(
@@ -98,6 +99,6 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         if ($children_planning->getPlanningTracker() instanceof \NullTracker) {
             throw new PlanningHasNoMilestoneTrackerException($children_planning->getId());
         }
-        return $children_planning->getPlanningTracker();
+        return new ProgramTracker($children_planning->getPlanningTracker());
     }
 }

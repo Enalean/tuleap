@@ -24,13 +24,13 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\Test\TestLogger;
-use Tracker;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
@@ -50,21 +50,16 @@ final class IterationCreatorCheckerTest extends TestCase
     private VerifyIsIterationTrackerStub $iteration_tracker_verifier;
     private ProgramTracker $program_tracker;
     private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TimeboxCreatorChecker
-     */
-    private $timebox_creator_checker;
+    private \PHPUnit\Framework\MockObject\MockObject|TimeboxCreatorChecker $timebox_creator_checker;
     private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
-        $this->logger            = new TestLogger();
-        $this->user              = UserTestBuilder::aUser()->build();
-        $this->user_identifier   = UserIdentifierStub::buildGenericUser();
-        $this->program           = ProgramIdentifierBuilder::build();
-        $first_milestone_tracker = $this->createStub(Tracker::class);
-        $first_milestone_tracker->method('getId')->willReturn(1);
-        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
+        $this->logger                     = new TestLogger();
+        $this->user                       = UserTestBuilder::aUser()->build();
+        $this->user_identifier            = UserIdentifierStub::buildGenericUser();
+        $this->program                    = ProgramIdentifierBuilder::build();
+        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerBuilder::buildWithId(1));
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
         $this->program_tracker            = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
 

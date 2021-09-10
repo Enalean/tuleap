@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -37,24 +36,6 @@ final class ProgramTrackerTest extends TestCase
     protected function setUp(): void
     {
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
-    }
-
-    public function testItBuildsMilestoneTrackerFromRootPlanning(): void
-    {
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(101);
-        $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
-
-        $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $this->user_identifier);
-        self::assertSame(101, $tracker->getId());
-    }
-
-    public function testItBuildsMilestoneTrackerFromSecondPlanning(): void
-    {
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(76);
-        $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
-
-        $tracker = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $project, $this->user_identifier);
-        self::assertSame(76, $tracker->getId());
     }
 
     public function testItBuildsProgramIncrementTracker(): void
