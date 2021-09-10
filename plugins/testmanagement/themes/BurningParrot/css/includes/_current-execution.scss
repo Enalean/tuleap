@@ -93,6 +93,14 @@
                 max-height: none;
             }
         }
+
+        .current-test-results-container {
+            flex-direction: column;
+        }
+
+        .current-test-comment-attachments {
+            width: 100%;
+        }
     }
 }
 
