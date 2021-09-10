@@ -65,7 +65,7 @@ final class IterationCreatorCheckerTest extends TestCase
 
         $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
 
-        $iteration_tracker = TrackerTestBuilder::aTracker()->withId(102)->build();
+        $iteration_tracker = ProgramTrackerBuilder::buildWithId(102);
 
         $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withValidTracker(
             $iteration_tracker

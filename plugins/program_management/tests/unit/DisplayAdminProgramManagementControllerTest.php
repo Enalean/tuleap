@@ -173,6 +173,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
     private function getController(RetrieveProject $retrieve_project): DisplayAdminProgramManagementController
     {
+        $program_tracker = ProgramTrackerBuilder::buildWithId(1);
+
         return new DisplayAdminProgramManagementController(
             $retrieve_project,
             $this->template_renderer,
@@ -181,8 +183,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->build_project,
             $this->team_verifier,
             $this->build_program,
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(ProgramTrackerBuilder::buildWithId(1)),
-            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_tracker),
+            RetrieveVisibleIterationTrackerStub::withValidTracker($program_tracker),
             $this->plannable_tracker_builder,
             BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
             $this->permission_verifier,

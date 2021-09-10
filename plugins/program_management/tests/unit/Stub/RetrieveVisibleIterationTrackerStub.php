@@ -25,21 +25,22 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveVisibleIterationTrackerStub implements RetrieveVisibleIterationTracker
 {
 
-    private ?\Tracker $tracker;
+    private ?ProgramTracker $tracker;
     private bool $is_visible;
 
-    private function __construct(?\Tracker $tracker, bool $is_visible)
+    private function __construct(?ProgramTracker $tracker, bool $is_visible)
     {
         $this->tracker    = $tracker;
         $this->is_visible = $is_visible;
     }
 
-    public function retrieveVisibleIterationTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): ?\Tracker
+    public function retrieveVisibleIterationTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): ?ProgramTracker
     {
         if (! $this->is_visible) {
             return null;
@@ -50,7 +51,7 @@ final class RetrieveVisibleIterationTrackerStub implements RetrieveVisibleIterat
         return $this->tracker;
     }
 
-    public static function withValidTracker(\Tracker $tracker): self
+    public static function withValidTracker(ProgramTracker $tracker): self
     {
         return new self($tracker, true);
     }

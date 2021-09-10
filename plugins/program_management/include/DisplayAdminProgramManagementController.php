@@ -59,7 +59,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
@@ -148,8 +147,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $user_identifier
             );
 
-            $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
-                $this->iteration_tracker_retriever,
+            $iteration_tracker = $this->iteration_tracker_retriever->retrieveVisibleIterationTracker(
                 $program,
                 $user_identifier
             );

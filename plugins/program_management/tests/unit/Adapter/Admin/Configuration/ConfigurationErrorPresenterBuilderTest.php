@@ -29,29 +29,21 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser $user;
     private ConfigurationErrorPresenterBuilder $configuration_error_builder;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker
-     */
-    private $program_increment_checker;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker
-     */
-    private $iteration_checker;
+    private \PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker $program_increment_checker;
+    private \PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker $iteration_checker;
     private ?ProgramTracker $program_tracker;
     private \Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier $program_identifier;
 
@@ -61,11 +53,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->program_increment_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
         $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
         $this->program_identifier        = ProgramIdentifierBuilder::build();
-        $this->program_tracker           = ProgramTracker::buildIterationTrackerFromProgram(
-            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
-            $this->program_identifier,
-            UserIdentifierStub::buildGenericUser()
-        );
+        $this->program_tracker           = ProgramTrackerBuilder::buildWithId(1);
 
         $this->configuration_error_builder = new ConfigurationErrorPresenterBuilder(
             new ConfigurationErrorsGatherer(
