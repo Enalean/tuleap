@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\IterationTracker;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -61,7 +62,7 @@ final class VisibleIterationTrackerRetriever implements RetrieveVisibleIteration
             return null;
         }
 
-        return new ProgramTracker($iteration_tracker);
+        return TrackerProxy::fromTracker($iteration_tracker);
     }
 
     /**

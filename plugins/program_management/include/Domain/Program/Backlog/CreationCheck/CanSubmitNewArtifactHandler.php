@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
@@ -41,7 +41,7 @@ final class CanSubmitNewArtifactHandler
         ConfigurationErrorsCollector $errors_collector,
         UserIdentifier $user_identifier
     ): void {
-        $tracker = new ProgramTracker($event->getTracker());
+        $tracker = TrackerProxy::fromTracker($event->getTracker());
 
         $this->configuration_errors_gatherer->gatherConfigurationErrors(
             $tracker,

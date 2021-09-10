@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
@@ -58,7 +59,7 @@ final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisiblePr
             throw new ProgramTrackerNotFoundException($program_increment_tracker_id);
         }
 
-        return new ProgramTracker($program_increment_tracker);
+        return TrackerProxy::fromTracker($program_increment_tracker);
     }
 
     /**

@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
@@ -75,7 +76,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user    = UserIdentifierStub::buildGenericUser();
         $this->tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
 
-        $this->program_increment_tracker = new ProgramTracker($this->tracker);
+        $this->program_increment_tracker = ProgramTrackerStub::withDefaults();
     }
 
     private function getChecker(VerifyFieldPermissions $retrieve_field_permissions): TimeboxCreatorChecker
@@ -298,7 +299,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildProgramAndTeamTrackers(TrackerCollection $team_trackers): SourceTrackerCollection
     {
         return SourceTrackerCollection::fromProgramAndTeamTrackers(
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(ProgramTrackerBuilder::buildWithTracker($this->tracker)),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->program_increment_tracker),
             ProgramIdentifierBuilder::build(),
             $team_trackers,
             $this->user

@@ -26,13 +26,16 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tracker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramTrackerBuilder
 {
     public static function buildWithId(int $id): ProgramTracker
     {
-        return new ProgramTracker(TrackerTestBuilder::aTracker()->withId($id)->build());
+        return ProgramTrackerStub::fromTracker(
+            TrackerTestBuilder::aTracker()->withId($id)->withName('Tracker')->withProject(new \Project(['group_id' => 101]))->build()
+        );
     }
 
     /**
@@ -40,11 +43,17 @@ final class ProgramTrackerBuilder
      */
     public static function buildWithMockedTracker($tracker): ProgramTracker
     {
-        return new ProgramTracker($tracker);
+        $tracker->method('getName')->willReturn("Tracker");
+        $tracker->method('getGroupId')->willReturn(101);
+        return ProgramTrackerStub::fromTracker(
+            $tracker
+        );
     }
 
     public static function buildWithTracker(Tracker $tracker_team_01): ProgramTracker
     {
-        return new ProgramTracker($tracker_team_01);
+        return ProgramTrackerStub::fromTracker(
+            $tracker_team_01
+        );
     }
 }

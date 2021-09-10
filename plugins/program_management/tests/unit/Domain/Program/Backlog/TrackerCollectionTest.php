@@ -81,9 +81,13 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_tracker = $this->createMock(\Tracker::class);
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $first_tracker->method('getId')->willReturn(78);
+        $first_tracker->method('getName')->willReturn("tracker");
+        $first_tracker->method('getGroupId')->willReturn(101);
         $second_tracker = $this->createMock(\Tracker::class);
         $second_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $second_tracker->method('getId')->willReturn(57);
+        $second_tracker->method('getName')->willReturn("tracker B");
+        $second_tracker->method('getGroupId')->willReturn(101);
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerBuilder::buildWithTracker($first_tracker), ProgramTrackerBuilder::buildWithTracker($second_tracker));
 
         $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user_identifier);
@@ -108,9 +112,13 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_tracker = $this->createMock(\Tracker::class);
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $first_tracker->method('getId')->willReturn(78);
+        $first_tracker->method('getName')->willReturn("tracker");
+        $first_tracker->method('getGroupId')->willReturn(101);
         $second_tracker = $this->createMock(\Tracker::class);
         $second_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $second_tracker->method('getId')->willReturn(57);
+        $second_tracker->method('getName')->willReturn("tracker B");
+        $second_tracker->method('getGroupId')->willReturn(101);
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerBuilder::buildWithTracker($first_tracker), ProgramTrackerBuilder::buildWithTracker($second_tracker));
 
         $collection = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier);

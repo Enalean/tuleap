@@ -33,13 +33,13 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilesto
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -60,8 +60,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
         $this->program_verifier        = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
 
-        $program_increment_tracker = TrackerTestBuilder::aTracker()->withId(102)->build();
-        $this->tracker             = new ProgramTracker($program_increment_tracker);
+        $this->tracker = ProgramTrackerStub::withDefaults();
 
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
             $this->tracker

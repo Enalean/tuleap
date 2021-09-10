@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMilestoneTracker
 {
@@ -63,7 +62,7 @@ final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMile
         }
         if (count($this->tracker_ids) > 0) {
             $tracker_id = array_shift($this->tracker_ids);
-            return new ProgramTracker(TrackerTestBuilder::aTracker()->withId($tracker_id)->build());
+            return ProgramTrackerStub::withId($tracker_id);
         }
 
         throw new \LogicException('No milestone tracker configured');
@@ -79,7 +78,7 @@ final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMile
         }
         if (count($this->tracker_ids) > 0) {
             $tracker_id = array_shift($this->tracker_ids);
-            return new ProgramTracker(TrackerTestBuilder::aTracker()->withId($tracker_id)->build());
+            return ProgramTrackerStub::withId($tracker_id);
         }
 
         throw new \LogicException('No milestone tracker configured');

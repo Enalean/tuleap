@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
@@ -73,7 +74,7 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
     public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): ProgramTracker
     {
         $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
-        return new ProgramTracker($root_planning->getPlanningTracker());
+        return TrackerProxy::fromTracker($root_planning->getPlanningTracker());
     }
 
     /**
@@ -99,6 +100,6 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         if ($children_planning->getPlanningTracker() instanceof \NullTracker) {
             throw new PlanningHasNoMilestoneTrackerException($children_planning->getId());
         }
-        return new ProgramTracker($children_planning->getPlanningTracker());
+        return TrackerProxy::fromTracker($children_planning->getPlanningTracker());
     }
 }
