@@ -77,7 +77,7 @@ final class SourceTrackerCollection
         TrackerCollection $team_trackers,
         UserIdentifier $user_identifier
     ): ?self {
-        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user_identifier);
+        $iteration_tracker = $retriever->retrieveVisibleIterationTracker($program, $user_identifier);
 
         if ($iteration_tracker === null) {
             return null;

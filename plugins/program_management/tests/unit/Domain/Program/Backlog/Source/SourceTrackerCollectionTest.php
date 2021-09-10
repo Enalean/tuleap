@@ -42,11 +42,10 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private TeamProjectsCollection $teams;
     private UserIdentifier $user;
     private ProgramIdentifier $program;
-    private \Tracker $timebox_tracker;
     private \Tracker $blue_team_tracker;
     private \Tracker $red_team_tracker;
     private TrackerCollection $team_trackers;
-    private ProgramTracker $timebox_program_tracker;
+    private ProgramTracker $timebox_tracker;
 
     protected function setUp(): void
     {
@@ -59,13 +58,15 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->program
         );
 
-        $this->timebox_program_tracker = ProgramTrackerBuilder::buildWithId(78);
-        $this->timebox_tracker         = TrackerTestBuilder::aTracker()->withId(78)->build();
-        $this->blue_team_tracker       = TrackerTestBuilder::aTracker()->withId(79)->build();
-        $this->red_team_tracker        = TrackerTestBuilder::aTracker()->withId(80)->build();
+        $this->timebox_tracker   = ProgramTrackerBuilder::buildWithId(78);
+        $this->blue_team_tracker = TrackerTestBuilder::aTracker()->withId(79)->build();
+        $this->red_team_tracker  = TrackerTestBuilder::aTracker()->withId(80)->build();
 
         $this->team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
-            RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerBuilder::buildWithTracker($this->blue_team_tracker), ProgramTrackerBuilder::buildWithTracker($this->red_team_tracker)),
+            RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+                ProgramTrackerBuilder::buildWithTracker($this->blue_team_tracker),
+                ProgramTrackerBuilder::buildWithTracker($this->red_team_tracker)
+            ),
             $this->teams,
             $this->user
         );
@@ -74,13 +75,13 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsValidCollectionFromProgramIncrement(): void
     {
         $collection = SourceTrackerCollection::fromProgramAndTeamTrackers(
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_program_tracker),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_tracker),
             $this->program,
             $this->team_trackers,
             $this->user
         );
         $trackers   = $collection->getSourceTrackers();
-        self::assertContainsEquals($this->timebox_program_tracker, $trackers);
+        self::assertContainsEquals($this->timebox_tracker, $trackers);
         self::assertContainsEquals(new ProgramTracker($this->blue_team_tracker), $trackers);
         self::assertContainsEquals(new ProgramTracker($this->red_team_tracker), $trackers);
     }
@@ -95,7 +96,7 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $trackers = $collection->getSourceTrackers();
-        self::assertContainsEquals(new ProgramTracker($this->timebox_tracker), $trackers);
+        self::assertContainsEquals($this->timebox_tracker, $trackers);
         self::assertContainsEquals(new ProgramTracker($this->blue_team_tracker), $trackers);
         self::assertContainsEquals(new ProgramTracker($this->red_team_tracker), $trackers);
     }

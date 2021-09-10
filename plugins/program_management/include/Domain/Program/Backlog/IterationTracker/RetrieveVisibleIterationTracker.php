@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface RetrieveVisibleIterationTracker
@@ -34,5 +35,5 @@ interface RetrieveVisibleIterationTracker
     public function retrieveVisibleIterationTracker(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier
-    ): ?\Tracker;
+    ): ?ProgramTracker;
 }

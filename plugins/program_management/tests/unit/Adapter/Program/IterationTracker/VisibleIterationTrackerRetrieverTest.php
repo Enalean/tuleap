@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -91,8 +92,8 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
         self::assertSame(
-            $tracker,
-            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)
+            ProgramTrackerBuilder::buildWithMockedTracker($tracker)->getId(),
+            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)->getId()
         );
     }
 }
