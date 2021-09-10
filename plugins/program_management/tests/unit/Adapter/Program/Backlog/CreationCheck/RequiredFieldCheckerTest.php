@@ -187,7 +187,8 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::END_PERIOD_FIELD_ID,
                 self::ARTIFACT_LINK_FIELD_ID
             ),
-            TrackerIdentifierStub::buildWithDefault()
+            TrackerIdentifierStub::buildWithDefault(),
+            null
         );
 
         return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_fields);

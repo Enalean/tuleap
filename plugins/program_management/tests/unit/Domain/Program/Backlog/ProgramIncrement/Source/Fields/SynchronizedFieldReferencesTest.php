@@ -59,7 +59,8 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $fields = SynchronizedFieldReferences::fromTrackerIdentifier(
             $this->gatherer,
-            $this->program_increment_tracker
+            $this->program_increment_tracker,
+            null
         );
         self::assertSame(self::TITLE_ID, $fields->title->getId());
         self::assertSame(self::DESCRIPTION_ID, $fields->description->getId());

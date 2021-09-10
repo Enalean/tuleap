@@ -32,7 +32,8 @@ final class SynchronizedFieldReferencesBuilder
     {
         return SynchronizedFieldReferences::fromTrackerIdentifier(
             GatherSynchronizedFieldsStub::withDefaults(),
-            TrackerIdentifierStub::buildWithDefault()
+            TrackerIdentifierStub::buildWithDefault(),
+            null
         );
     }
 }

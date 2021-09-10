@@ -1,0 +1,12 @@
+{{# title_has_incorrect_type_error }}
+    <li>
+        {{# dgettext }}
+            tuleap-program_management |
+             <a href='%s'>Title semantic</a> of tracker %s of project %s is using field %s and have an incorrect type it must be a string field. |
+            {{ semantic_title_url }} |
+            {{ tracker_name }} |
+            {{ project_name }} |
+            {{ field_name }}
+        {{/ dgettext }}
+    </li>
+{{/ title_has_incorrect_type_error }}

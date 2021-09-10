@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrievePro
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
@@ -69,7 +70,7 @@ class TimeboxCreatorChecker
         }
 
         try {
-            $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_milestone_trackers);
+            $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_milestone_trackers, $configuration_errors);
 
             if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user_identifier, $configuration_errors)) {
                 $can_be_created = false;
@@ -105,6 +106,8 @@ class TimeboxCreatorChecker
                     return $can_be_created;
                 }
             }
+        } catch (TitleFieldHasIncorrectTypeException $exception) {
+            // Ignore me already collected
         } catch (FieldSynchronizationException $exception) {
             $can_be_created = false;
             $configuration_errors->addFieldSynchronisationError($exception->getI18NExceptionMessage());

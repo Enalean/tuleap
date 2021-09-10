@@ -12,6 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0\n"
 
+msgid ""
+"<a href='%s'>Title semantic</a> of tracker %s of project %s is using field %s and have an "
+"incorrect type it must be a string field."
+msgstr ""
+"<a href='%s'>La sémantique titre</a> de l'outil de suivi %s projet %s utilise le champ %s et a un type incorrect "
+"il doit être de type chaîne de caractères."
+
 msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
 

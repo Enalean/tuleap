@@ -76,6 +76,10 @@ final class ConfigurationErrorsCollector
      * @var SemanticStatusMissingValuesPresenter[]
      */
     private array $semantic_status_missing_values = [];
+    /**
+     * @var TitleHasIncorrectTypePresenter[]
+     */
+    private array $title_has_incorrect_type_error = [];
 
 
     public function __construct(bool $should_collect_all_issues)
@@ -176,6 +180,11 @@ final class ConfigurationErrorsCollector
         $this->field_synchronisation_error[] = $message;
     }
 
+    public function addTitleHasIncorrectType(string $semantic_title_url, string $tracker_name, string $project_name, string $field_name): void
+    {
+        $this->title_has_incorrect_type_error[] =  new TitleHasIncorrectTypePresenter($semantic_title_url, $tracker_name, $project_name, $field_name);
+    }
+
     public function hasError(): bool
     {
         return count($this->semantic_errors) > 0 ||
@@ -189,7 +198,8 @@ final class ConfigurationErrorsCollector
             count($this->status_missing_in_teams) > 0 ||
             count($this->semantic_status_no_field) > 0 ||
             count($this->field_synchronisation_error) > 0 ||
-            count($this->semantic_status_missing_values) > 0;
+            count($this->semantic_status_missing_values) > 0 ||
+            count($this->title_has_incorrect_type_error) > 0;
     }
 
     /**
@@ -286,5 +296,13 @@ final class ConfigurationErrorsCollector
     public function getSemanticStatusMissingValues(): array
     {
         return $this->semantic_status_missing_values;
+    }
+
+    /**
+     * @return TitleHasIncorrectTypePresenter[]
+     */
+    public function getTitleHasIncorrectTypeError(): array
+    {
+        return $this->title_has_incorrect_type_error;
     }
 }

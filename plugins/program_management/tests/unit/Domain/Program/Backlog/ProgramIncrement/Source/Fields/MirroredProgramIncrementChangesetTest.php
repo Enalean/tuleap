@@ -60,14 +60,18 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
             self::SOURCE_PROGRAM_INCREMENT_ID
         );
         $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
-        $target_fields       = SynchronizedFieldReferences::fromTrackerIdentifier(GatherSynchronizedFieldsStub::withFieldIds(
-            self::TITLE_ID,
-            self::DESCRIPTION_ID,
-            self::STATUS_ID,
-            self::START_DATE_ID,
-            self::END_DATE_ID,
-            self::ARTIFACT_LINK_ID
-        ), TrackerIdentifierStub::buildWithDefault());
+        $target_fields       = SynchronizedFieldReferences::fromTrackerIdentifier(
+            GatherSynchronizedFieldsStub::withFieldIds(
+                self::TITLE_ID,
+                self::DESCRIPTION_ID,
+                self::STATUS_ID,
+                self::START_DATE_ID,
+                self::END_DATE_ID,
+                self::ARTIFACT_LINK_ID
+            ),
+            TrackerIdentifierStub::buildWithDefault(),
+            null
+        );
 
         $changeset = MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
             $status_mapper,
@@ -85,7 +89,10 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
                     ]
                 ],
                 self::TITLE_ID         => self::TITLE_VALUE,
-                self::DESCRIPTION_ID   => ['content' => self::DESCRIPTION_CONTENT, 'format' => self::DESCRIPTION_FORMAT],
+                self::DESCRIPTION_ID   => [
+                    'content' => self::DESCRIPTION_CONTENT,
+                    'format'  => self::DESCRIPTION_FORMAT
+                ],
                 self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
                 self::START_DATE_ID    => self::START_DATE_VALUE,
                 self::END_DATE_ID      => self::END_DATE_VALUE

@@ -166,7 +166,8 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
                     self::END_PERIOD_ID,
                     self::ARTIFACT_LINK_ID
                 ),
-                TrackerIdentifierStub::buildWithDefault()
+                TrackerIdentifierStub::buildWithDefault(),
+                null
             )
         );
     }

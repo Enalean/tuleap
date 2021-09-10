@@ -61,7 +61,8 @@ final class SourceTimeboxChangesetValues
         $program_increment_id = $replication->getArtifact()->getId();
         $fields               = SynchronizedFieldReferences::fromTrackerIdentifier(
             $fields_gatherer,
-            $replication->getTracker()
+            $replication->getTracker(),
+            null
         );
         $submission_date      = $submission_retriever->getSubmissionDate(
             $program_increment_id,
@@ -93,7 +94,7 @@ final class SourceTimeboxChangesetValues
         ProgramIncrementUpdate $update
     ): self {
         $program_increment_id = $update->program_increment->getId();
-        $fields               = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $update->tracker);
+        $fields               = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $update->tracker, null);
         $submission_date      = $submission_retriever->getSubmissionDate($program_increment_id, $update->changeset);
 
         $values_gatherer   = $field_values_retriever->getGathererFromUpdate($update);

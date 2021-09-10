@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
@@ -49,7 +50,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
     ) {
     }
 
-    public function getTitleField(TrackerIdentifier $tracker_identifier): TitleFieldReference
+    public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
         $full_tracker = $this->getFullTracker($tracker_identifier);
         $title_field  = $this->title_factory->getByTracker($full_tracker)->getField();
@@ -57,6 +58,12 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             throw new FieldRetrievalException($tracker_identifier->getId(), 'title');
         }
         if (! $title_field instanceof \Tracker_FormElement_Field_String) {
+            $errors_collector?->addTitleHasIncorrectType(
+                "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-semantic&semantic=title",
+                $full_tracker->getName(),
+                $full_tracker->getProject()->getPublicName(),
+                $title_field->getLabel()
+            );
             throw new TitleFieldHasIncorrectTypeException($tracker_identifier->getId(), $title_field->getId());
         }
         return TitleFieldReferenceProxy::fromTrackerField($title_field);

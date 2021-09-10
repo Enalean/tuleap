@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-interface RetrieveTitleField
+/**
+ * @psalm-immutable
+ */
+final class TitleHasIncorrectTypePresenter
 {
-    /**
-     * @throws FieldRetrievalException
-     * @throws TitleFieldHasIncorrectTypeException
-     */
-    public function getTitleField(TrackerIdentifier $program_increment, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference;
+    public function __construct(public string $semantic_title_url, public string $tracker_name, public string $project_name, public string $field_name)
+    {
+    }
 }

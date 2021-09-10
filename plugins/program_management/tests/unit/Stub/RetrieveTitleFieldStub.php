@@ -22,8 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTitleField;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
@@ -43,10 +44,10 @@ final class RetrieveTitleFieldStub implements RetrieveTitleField
         return new self(TitleFieldReferenceStub::withDefaults(), true);
     }
 
-    public function getTitleField(TrackerIdentifier $tracker_identifier): TitleFieldReference
+    public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
         if ($this->has_error) {
-            throw new TitleFieldHasIncorrectTypeException($tracker_identifier->getId(), 1);
+            throw new FieldRetrievalException($tracker_identifier->getId(), "title");
         }
 
         return $this->title;
