@@ -34,37 +34,32 @@ use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \PFUser $user;
-    private ConfigurationErrorPresenterBuilder $configuration_error_builder;
     private \PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker $program_increment_checker;
     private \PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker $iteration_checker;
     private ?ProgramTracker $program_tracker;
     private \Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier $program_identifier;
+    private UserIdentifierStub $user_identifier;
+    private VerifyTrackerSemanticsStub $verify_tracker_semantics;
+    private \PHPUnit\Framework\MockObject\Stub|\TrackerFactory $tracker_factory;
 
     protected function setUp(): void
     {
-        $this->user                      = UserTestBuilder::aUser()->build();
         $this->program_increment_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
         $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
+        $this->tracker_factory           = $this->createStub(\TrackerFactory::class);
         $this->program_identifier        = ProgramIdentifierBuilder::build();
+        $this->user_identifier           = UserIdentifierStub::buildGenericUser();
         $this->program_tracker           = ProgramTrackerBuilder::buildWithId(1);
-
-        $this->configuration_error_builder = new ConfigurationErrorPresenterBuilder(
-            new ConfigurationErrorsGatherer(
-                BuildProgramStub::stubValidProgram(),
-                $this->program_increment_checker,
-                $this->iteration_checker,
-                SearchTeamsOfProgramStub::buildTeams(),
-                new BuildProjectStub(),
-                RetrieveUserStub::withUser($this->user)
-            )
-        );
+        $this->verify_tracker_semantics  = VerifyTrackerSemanticsStub::withAllSemantics();
     }
 
     public function testItBuildsProgramIncrementErrorPresenter(): void
@@ -73,10 +68,10 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $error_collector = new ConfigurationErrorsCollector(false);
         $error_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
-        $this->configuration_error_builder->buildProgramIncrementErrorPresenter(
+        $this->getErrorBuilder()->buildProgramIncrementErrorPresenter(
             $this->program_tracker,
             $this->program_identifier,
-            $this->user,
+            $this->user_identifier,
             $error_collector
         );
 
@@ -86,10 +81,10 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     public function testItReturnsFalseWhenNoProgram(): void
     {
         $error_collector = new ConfigurationErrorsCollector(false);
-        $this->configuration_error_builder->buildProgramIncrementErrorPresenter(
+        $this->getErrorBuilder()->buildProgramIncrementErrorPresenter(
             $this->program_tracker,
             null,
-            $this->user,
+            $this->user_identifier,
             $error_collector
         );
 
@@ -103,9 +98,9 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $error_collector = new ConfigurationErrorsCollector(true);
         $error_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
-        $this->configuration_error_builder->buildIterationErrorPresenter(
+        $this->getErrorBuilder()->buildIterationErrorPresenter(
             $this->program_tracker,
-            $this->user,
+            $this->user_identifier,
             $error_collector
         );
 
@@ -115,12 +110,61 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     public function testItReturnsFalseWhenNoTrackerFound(): void
     {
         $error_collector = new ConfigurationErrorsCollector(true);
-        $this->configuration_error_builder->buildIterationErrorPresenter(
+        $this->getErrorBuilder()->buildIterationErrorPresenter(
             null,
-            $this->user,
+            $this->user_identifier,
             $error_collector
         );
 
         self::assertFalse($error_collector->hasError());
+    }
+
+    public function testItCollectTitleSemanticErrorForPlannableTrackers(): void
+    {
+        $program_identifier             = ProgramIdentifierBuilder::build();
+        $error_collector                = new ConfigurationErrorsCollector(true);
+        $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutTitleSemantic();
+        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(1)->withName('Tracker')->build());
+
+        $this->getErrorBuilder()->buildPlannableErrorPresenter($program_identifier, $error_collector);
+        self::assertCount(1, $error_collector->getSemanticErrors());
+    }
+
+    public function testItCollectStatusSemanticErrorForPlannableTrackers(): void
+    {
+        $program_identifier             = ProgramIdentifierBuilder::build();
+        $error_collector                = new ConfigurationErrorsCollector(true);
+        $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutStatusSemantic();
+        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(1)->withName('Tracker')->build());
+
+        $this->getErrorBuilder()->buildPlannableErrorPresenter($program_identifier, $error_collector);
+        self::assertCount(1, $error_collector->getSemanticErrors());
+    }
+
+    public function testPlannableTrackersDoesNotHaveError(): void
+    {
+        $program_identifier             = ProgramIdentifierBuilder::build();
+        $error_collector                = new ConfigurationErrorsCollector(true);
+        $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withAllSemantics();
+
+        $this->getErrorBuilder()->buildPlannableErrorPresenter($program_identifier, $error_collector);
+        self::assertCount(0, $error_collector->getSemanticErrors());
+    }
+
+    private function getErrorBuilder(): ConfigurationErrorPresenterBuilder
+    {
+        return new ConfigurationErrorPresenterBuilder(
+            new ConfigurationErrorsGatherer(
+                BuildProgramStub::stubValidProgram(),
+                $this->program_increment_checker,
+                $this->iteration_checker,
+                SearchTeamsOfProgramStub::buildTeams(),
+                new BuildProjectStub(),
+                RetrieveUserStub::withGenericUser()
+            ),
+            RetrievePlannableTrackersStub::buildIds(1),
+            $this->verify_tracker_semantics,
+            $this->tracker_factory
+        );
     }
 }

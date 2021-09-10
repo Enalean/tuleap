@@ -33,6 +33,13 @@
                 {{> configuration-errors/semantic-status-value-errors }}
             </ul>
         {{/ iteration_error_presenter }}
+        {{# plannable_error_presenter }}
+            <ul>
+                {{# dgettext }}tuleap-program_management | Some plannable tracker have incorrect configuration:{{/ dgettext }}
+
+                {{> configuration-errors/semantic-errors }}
+            </ul>
+        {{/ plannable_error_presenter }}
     </div>
 {{/ has_errors }}
 
