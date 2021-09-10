@@ -7,7 +7,7 @@
             {{ tracker_id }}
         {{/ dgettext }}
         {{# semantic_status_no_field }}
-            <a href='/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-semantic&semantic=status'>#{{ getTrackerId }} ({{ getTrackerName }})</a>
+            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>#{{ getId }} ({{ getTrackerName }})</a>
         {{/ semantic_status_no_field }}
     </li>
 {{/ has_status_field_not_defined }}
@@ -19,7 +19,7 @@
             Some tracker does not have status semantic defined, please check trackers
         {{/ dgettext }}
         {{# status_missing_in_teams }}
-            <a href='/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-semantic&semantic=status'>{{ getTrackerName }} (#{{ getTrackerId }})</a>
+            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>{{ getTrackerName }} (#{{ getId }})</a>
         {{/ status_missing_in_teams }}
     </li>
 {{/ has_status_missing_in_teams }}
@@ -33,7 +33,7 @@
                 {{ missing_values }}
             {{/ dgettext }}
             {{# trackers }}
-                <a href='/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-semantic&semantic=status'>{{ getTrackerName }} (#{{ getTrackerId }})</a>
+                <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>{{ getTrackerName }} (#{{ getId }})</a>
             {{/ trackers }}
         {{/ semantic_status_missing_values }}
     </li>

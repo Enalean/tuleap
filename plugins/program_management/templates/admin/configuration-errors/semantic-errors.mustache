@@ -6,7 +6,7 @@
             {{ semantic_name }}
         {{/ dgettext }}
         {{# potential_trackers_in_error }}
-            <a href='/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-semantic&semantic={{ semantic_short_name }}'>{{ getTrackerName }}  (#{{ getTrackerId }})</a>
+            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic={{ semantic_short_name }}'>{{ getTrackerName }}  (#{{ getId }})</a>
         {{/ potential_trackers_in_error }}
     </li>
 {{/ semantic_errors }}
