@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -59,13 +58,13 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->user                       = UserTestBuilder::aUser()->build();
         $this->user_identifier            = UserIdentifierStub::buildGenericUser();
         $this->program                    = ProgramIdentifierBuilder::build();
-        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerBuilder::buildWithId(1));
+        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::withDefaults());
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
         $this->program_tracker            = ProgramTrackerStub::withDefaults();
 
         $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
 
-        $iteration_tracker = ProgramTrackerBuilder::buildWithId(102);
+        $iteration_tracker = ProgramTrackerStub::withId(102);
 
         $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withValidTracker(
             $iteration_tracker

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 
 final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -32,7 +32,7 @@ final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->program_tracker = ProgramTrackerBuilder::buildWithId(1);
+        $this->program_tracker = ProgramTrackerStub::withDefaults();
     }
 
     public function testLabelsAreNullWhenNoProgramTracker(): void

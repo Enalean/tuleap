@@ -32,11 +32,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
@@ -174,7 +174,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
     private function getController(RetrieveProject $retrieve_project): DisplayAdminProgramManagementController
     {
-        $program_tracker = ProgramTrackerBuilder::buildWithId(1);
+        $program_tracker = ProgramTrackerStub::withDefaults();
 
         return new DisplayAdminProgramManagementController(
             $retrieve_project,
