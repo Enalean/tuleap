@@ -1006,7 +1006,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $none_is_selected = ($submitted_values_for_this_list == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
         }
 
-        if (! $this->fieldHasEnableWorkflow() && ! $this->isRequired()) {
+        if (! $this->fieldHasEnableWorkflow()) {
             $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
             $html      .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
