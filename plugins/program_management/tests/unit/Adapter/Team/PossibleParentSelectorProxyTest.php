@@ -29,6 +29,7 @@ use Tracker;
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -51,6 +52,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
     private RetrieveRootPlanning $retrieve_root_planning;
     private RetrieveArtifact $retrieve_artifact;
     private ?FeatureIdentifier $feature_53;
+    private ?FeatureReference $feature_53_reference;
 
     protected function setUp(): void
     {
@@ -99,13 +101,14 @@ final class PossibleParentSelectorProxyTest extends TestCase
             }
         };
 
-        $this->feature_53 = FeatureIdentifier::fromId(
+        $this->feature_53           = FeatureIdentifier::fromId(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             53,
             UserProxy::buildFromPFUser($this->user),
             ProgramIdentifierBuilder::build(),
             null,
         );
+        $this->feature_53_reference = new FeatureReference($this->feature_53, 'A fine feature');
     }
 
     public function testUserStoryTrackerIsPartOfScrumTopBacklog(): void
@@ -139,9 +142,10 @@ final class PossibleParentSelectorProxyTest extends TestCase
             $this->retrieve_artifact,
         );
 
-        $event_proxy->setPossibleParents(1, $this->feature_53);
+        $event_proxy->setPossibleParents(1, $this->feature_53_reference);
 
         self::assertEquals([$this->feature_53->id], array_map(static fn (Artifact $artifact) => $artifact->getId(), $event->getPossibleParents()->getArtifacts()));
+        self::assertEquals([$this->feature_53_reference->title], array_map(static fn (Artifact $artifact) => $artifact->getTitle(), $event->getPossibleParents()->getArtifacts()));
     }
 
     public function testItThrowsExceptionWhenFeatureCannotBeMappedToAnArtifact(): void
@@ -164,7 +168,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
 
-        $event_proxy->setPossibleParents(1, $this->feature_53);
+        $event_proxy->setPossibleParents(1, $this->feature_53_reference);
     }
 
     public function testItReturnsPaginatedArtifactsWithStoreSize(): void
@@ -178,7 +182,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
 
         $event_proxy->setPossibleParents(
             75,
-            $this->feature_53,
+            $this->feature_53_reference,
         );
 
         assertEquals($event->getPossibleParents()->getTotalSize(), 75);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -72,7 +73,10 @@ final class PossibleParentHandler
             if (! $feature_identifier) {
                 continue;
             }
-            $features[] = $feature_identifier;
+            $features[] = new FeatureReference(
+                $feature_identifier,
+                $feature['title']
+            );
         }
 
         $possible_parent_selector->disableCreate();

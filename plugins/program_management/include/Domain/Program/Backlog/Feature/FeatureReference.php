@@ -21,33 +21,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-interface PossibleParentSelectorEvent
+/**
+ * @psalm-immutable
+ */
+final class FeatureReference
 {
-    public function getUser(): UserIdentifier;
+    public int $id;
 
-    public function trackerIsInRootPlanning(): bool;
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getProjectId(): int;
-
-    public function disableCreate(): void;
-
-    public function setPossibleParents(int $total_size, FeatureReference ...$features): void;
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getLimit(): int;
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getOffset(): int;
+    public function __construct(FeatureIdentifier $feature_identifier, public string $title)
+    {
+        $this->id = $feature_identifier->id;
+    }
 }

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -82,6 +82,7 @@ final class PossibleParentHandlerTest extends TestCase
                 $this->open_features[] = [
                     'artifact_id' => $artifact_id,
                     'program_id'  => $program_id,
+                    'title'       => 'A fine feature',
                 ];
             }
         };
@@ -115,7 +116,7 @@ final class PossibleParentHandlerTest extends TestCase
                 $this->can_create = false;
             }
 
-            public function setPossibleParents(int $total_size, FeatureIdentifier ...$features): void
+            public function setPossibleParents(int $total_size, FeatureReference ...$features): void
             {
                 $this->total_size = $total_size;
                 $this->features   = $features;
@@ -146,7 +147,8 @@ final class PossibleParentHandlerTest extends TestCase
 
         $possible_parent->handle($this->possible_parent_selector);
 
-        assertEquals([self::FEATURE_ID], array_map(static fn (FeatureIdentifier $feature) => $feature->id, $this->possible_parent_selector->features));
+        assertEquals([self::FEATURE_ID], array_map(static fn (FeatureReference $feature) => $feature->id, $this->possible_parent_selector->features));
+        assertEquals(["A fine feature"], array_map(static fn (FeatureReference $feature) => $feature->title, $this->possible_parent_selector->features));
     }
 
     public function testItHasOffsetAndLimit(): void
