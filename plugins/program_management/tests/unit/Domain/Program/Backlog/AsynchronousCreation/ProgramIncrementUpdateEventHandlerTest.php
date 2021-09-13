@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Pendin
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
@@ -127,7 +128,8 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
                 RetrieveTrackerOfArtifactStub::withTrackers(
                     TrackerIdentifierStub::withId(45),
                     TrackerIdentifierStub::withId(33)
-                )
+                ),
+                MapStatusByValueStub::withValues(7423, 8416),
             ),
             new IterationCreationProcessor($this->logger)
         );

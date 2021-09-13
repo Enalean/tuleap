@@ -46,6 +46,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Pendin
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\StatusValueMapper;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
@@ -574,7 +575,8 @@ final class program_managementPlugin extends Plugin
                 new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
                 new ChangesetRetriever($artifact_factory),
                 new MirroredTimeboxesDao(),
-                new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory)
+                new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory),
+                new StatusValueMapper($form_element_factory),
             ),
             new IterationCreationProcessor($logger),
         );
@@ -656,7 +658,8 @@ final class program_managementPlugin extends Plugin
                         new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
                         new ChangesetRetriever($artifact_factory),
                         $mirrored_timeboxes_dao,
-                        new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory)
+                        new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory),
+                        new StatusValueMapper($form_element_factory),
                     ),
                     new IterationCreationProcessor($logger),
                 )

@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -84,12 +85,12 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function dataProviderMethodUnderTest(): array
     {
         return [
-            'when getting title field'         => ['getDescriptionField', 'collector'],
+            'when getting title field'         => ['getTitleField'],
             'when getting description field'   => ['getDescriptionField'],
             'when getting status field'        => ['getStatusField'],
             'when getting start date field'    => ['getStartDateField'],
             'when getting end period field'    => ['getEndPeriodField'],
-            'when getting artifact link field' => ['getArtifactLinkField', 'collector'],
+            'when getting artifact link field' => ['getArtifactLinkField'],
         ];
     }
 
@@ -100,8 +101,18 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(TrackerNotFoundException::class);
         call_user_func([$this->getGatherer(), $method_under_test], $this->tracker_identifier, null);
+    }
+
+    public function testItThrowsWhenTitleFieldCantBeFound(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
+        $title_semantic = new \Tracker_Semantic_Title($this->tracker);
+        $this->title_factory->method('getByTracker')->willReturn($title_semantic);
+
+        $this->expectException(FieldRetrievalException::class);
+        $this->getGatherer()->getTitleField($this->tracker_identifier, null);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void

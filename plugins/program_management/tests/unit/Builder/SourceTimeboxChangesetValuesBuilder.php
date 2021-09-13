@@ -48,6 +48,25 @@ final class SourceTimeboxChangesetValuesBuilder
         );
     }
 
+    public static function buildWithSubmissionDate(int $submission_date): SourceTimeboxChangesetValues
+    {
+        return SourceTimeboxChangesetValues::fromReplication(
+            GatherSynchronizedFieldsStub::withDefaults(),
+            RetrieveFieldValuesGathererStub::withGatherer(
+                GatherFieldValuesStub::withValues(
+                    'Program Release',
+                    'Description',
+                    'text',
+                    '2020-10-01',
+                    '2020-10-10',
+                    ['Planned']
+                )
+            ),
+            RetrieveChangesetSubmissionDateStub::withDate($submission_date),
+            ReplicationDataBuilder::buildWithArtifactId(112)
+        );
+    }
+
     public static function buildWithStatusValues(string ...$status_values): SourceTimeboxChangesetValues
     {
         return self::buildWithValues(
