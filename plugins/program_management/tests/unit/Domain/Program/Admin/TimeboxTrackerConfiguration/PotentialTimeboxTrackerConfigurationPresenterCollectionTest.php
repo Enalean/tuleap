@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
@@ -72,9 +71,9 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends 
     {
         return PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
             PotentialTrackerCollection::fromProgram(
-                RetrieveTrackerFromProgramStub::fromTrackerReference(
-                    TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
-                    TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build()),
+                RetrieveTrackerFromProgramStub::fromProgramReference(
+                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
+                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build()),
                 ),
                 $this->program
             ),

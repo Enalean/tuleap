@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
@@ -92,7 +91,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasRequiredErrors(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addRequiredFieldError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
+        $errors_collector->addRequiredFieldError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
@@ -109,7 +108,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForTransition(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowTransitionRulesError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowTransitionRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
 
 
         $presenter = TrackerErrorPresenter::fromTracker(
@@ -127,7 +126,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForGlobalRules(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowTransitionDateRulesError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowTransitionDateRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
@@ -144,7 +143,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForFieldDependency(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
@@ -161,7 +160,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasPermissionErrorsWhenNotSubmittable(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addSubmitFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
@@ -178,7 +177,7 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasPermissionErrorsWhenNotEditable(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addUpdateFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -33,16 +33,16 @@ final class PotentialTrackerCollectionTest extends TestCase
     public function testReturnCollection(): void
     {
         $collection = PotentialTrackerCollection::fromProgram(
-            RetrieveTrackerFromProgramStub::fromTrackerReference(
-                TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
-                TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(88)->withName('Feature')->build()),
+            RetrieveTrackerFromProgramStub::fromProgramReference(
+                ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
+                ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(88)->withName('Feature')->build()),
             ),
             ProgramForAdministrationIdentifierBuilder::build()
         );
         self::assertCount(2, $collection->trackers_reference);
-        self::assertSame(80, $collection->trackers_reference[0]->id);
-        self::assertSame('Sprint', $collection->trackers_reference[0]->label);
-        self::assertSame(88, $collection->trackers_reference[1]->id);
-        self::assertSame('Feature', $collection->trackers_reference[1]->label);
+        self::assertSame(80, $collection->trackers_reference[0]->getId());
+        self::assertSame('Sprint', $collection->trackers_reference[0]->getTrackerName());
+        self::assertSame(88, $collection->trackers_reference[1]->getId());
+        self::assertSame('Feature', $collection->trackers_reference[1]->getTrackerName());
     }
 }

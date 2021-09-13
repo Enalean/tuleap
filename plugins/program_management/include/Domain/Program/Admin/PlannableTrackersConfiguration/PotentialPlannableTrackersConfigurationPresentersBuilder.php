@@ -47,11 +47,11 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilder
         $potential_tracker_presenters = [];
 
         foreach ($all_potential_trackers->trackers_reference as $potential_tracker) {
-            $selected = \in_array($potential_tracker->id, $plannable_tracker_ids);
+            $selected = \in_array($potential_tracker->getId(), $plannable_tracker_ids);
 
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
-                $potential_tracker->id,
-                $potential_tracker->label,
+                $potential_tracker->getId(),
+                $potential_tracker->getTrackerName(),
                 $selected
             );
         }

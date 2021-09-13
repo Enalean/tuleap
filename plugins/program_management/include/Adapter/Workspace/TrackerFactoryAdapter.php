@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 
@@ -38,7 +37,7 @@ final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram, Retriev
     }
 
     /**
-     * @return TrackerReference[]
+     * @return ProgramTracker[]
      */
     public function retrieveAllTrackersFromProgramId(ProgramForAdministrationIdentifier $program): array
     {
@@ -46,7 +45,7 @@ final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram, Retriev
         $tracker_references = [];
 
         foreach ($trackers as $tracker) {
-            $tracker_references[] = TrackerReference::fromTracker($tracker);
+            $tracker_references[] = TrackerProxy::fromTracker($tracker);
         }
 
         return $tracker_references;

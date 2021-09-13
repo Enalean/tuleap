@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class RetrieveTrackerFromFieldStub implements RetrieveTrackerFromField
 {
@@ -47,8 +46,8 @@ final class RetrieveTrackerFromFieldStub implements RetrieveTrackerFromField
         return new self($id, $name);
     }
 
-    public function fromFieldId(int $field_id): TrackerReference
+    public function fromFieldId(int $field_id): ProgramTracker
     {
-        return TrackerReferenceBuilder::buildWithIdAndName($this->id, $this->name);
+        return ProgramTrackerStub::withValues($this->id, $this->name, 101, 'Project name');
     }
 }

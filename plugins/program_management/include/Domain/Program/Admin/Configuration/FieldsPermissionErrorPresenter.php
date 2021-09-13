@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -35,12 +35,12 @@ final class FieldsPermissionErrorPresenter
     public string $tracker_name;
     public string $project_name;
 
-    public function __construct(public int $field_id, public string $label, TrackerReference $tracker, ProjectReference $project_reference)
+    public function __construct(public int $field_id, public string $label, ProgramTracker $tracker, ProjectReference $project_reference)
     {
         $this->field_url    = '/plugins/tracker/permissions/fields-by-field/' .
-            urlencode((string) $tracker->id) . '?' .
+            urlencode((string) $tracker->getId()) . '?' .
             http_build_query(['selected_id' => $this->field_id]);
-        $this->tracker_name = $tracker->label;
+        $this->tracker_name = $tracker->getTrackerName();
         $this->project_name = $project_reference->getProjectLabel();
     }
 }

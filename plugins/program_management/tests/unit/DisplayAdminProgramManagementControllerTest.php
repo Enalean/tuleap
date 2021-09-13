@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
@@ -164,7 +163,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $this->breadcrumbs_builder->expects(self::once())->method('build');
 
-        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->withId(1)->withName('Tracker')->build());
         $this->program_increment_checker->method('canCreateAProgramIncrement');
         $this->iteration_checker->method('canCreateAnIteration');
 
@@ -190,8 +189,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
             $this->permission_verifier,
             RetrieveProgramIncrementLabelsStub::buildLabels(null, null),
-            RetrieveTrackerFromProgramStub::fromTrackerReference(
-                TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
+            RetrieveTrackerFromProgramStub::fromProgramReference(
+                ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
             ),
             RetrieveIterationLabelsStub::buildLabels(null, null),
             AllProgramSearcherStub::buildPrograms(),

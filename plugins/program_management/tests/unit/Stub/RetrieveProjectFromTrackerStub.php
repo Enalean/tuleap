@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 
 final class RetrieveProjectFromTrackerStub implements RetrieveProjectFromTracker
@@ -39,7 +39,7 @@ final class RetrieveProjectFromTrackerStub implements RetrieveProjectFromTracker
         return new self(ProjectReferenceBuilder::buildGeneric());
     }
 
-    public function fromTrackerReference(TrackerReference $tracker_reference): ProjectReference
+    public function fromTrackerReference(ProgramTracker $program_tracker): ProjectReference
     {
         return $this->project_reference;
     }
