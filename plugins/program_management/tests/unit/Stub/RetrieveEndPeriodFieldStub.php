@@ -28,17 +28,26 @@ use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveEndPeriodFieldStub implements RetrieveEndPeriodField
 {
-    private function __construct(private EndPeriodFieldReference $end_period)
+    /**
+     * @var EndPeriodFieldReference[]
+     */
+    private array $end_periods;
+
+    private function __construct(EndPeriodFieldReference ...$end_periods)
     {
+        $this->end_periods = $end_periods;
     }
 
-    public static function withField(EndPeriodFieldReference $field): self
+    public static function withFields(EndPeriodFieldReference ...$end_periods): self
     {
-        return new self($field);
+        return new self(...$end_periods);
     }
 
     public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndPeriodFieldReference
     {
-        return $this->end_period;
+        if (count($this->end_periods) > 0) {
+            return array_shift($this->end_periods);
+        }
+        throw new \LogicException('No end period field configured');
     }
 }

@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingProgramIncrementUpdatesStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
@@ -115,7 +116,11 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
             $this->update_deleter,
             new ProgramIncrementUpdateProcessor(
                 $this->logger,
-                GatherSynchronizedFieldsStub::withDefaults(),
+                GatherSynchronizedFieldsStub::withFieldsPreparations(
+                    new SynchronizedFieldsStubPreparation(531, 230, 645, 627, 156, 979),
+                    new SynchronizedFieldsStubPreparation(340, 984, 368, 817, 268, 678),
+                    new SynchronizedFieldsStubPreparation(238, 624, 580, 208, 113, 106),
+                ),
                 RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
                 RetrieveChangesetSubmissionDateStub::withDefaults(),
                 SearchMirroredTimeboxesStub::withIds(738, 633),

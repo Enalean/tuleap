@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 
@@ -62,15 +63,16 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
             $program_increment_id
         );
 
-        $mirror_tracker_ids = [];
         foreach ($mirrored_program_increments as $mirrored_program_increment) {
-            $mirror_tracker       = $this->tracker_retriever->getTrackerOfArtifact(
-                $mirrored_program_increment->getId()
+            $mirror_tracker = $this->tracker_retriever->getTrackerOfArtifact($mirrored_program_increment->getId());
+            $target_fields  = SynchronizedFieldReferences::fromTrackerIdentifier(
+                $this->fields_gatherer,
+                $mirror_tracker,
+                null
             );
-            $mirror_tracker_ids[] = $mirror_tracker->getId();
+            $this->logger->debug(sprintf('Mirror PI title field id: %s', $target_fields->title->getId()));
         }
 
         $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
-        $this->logger->debug(sprintf('Mirror tracker ids: %s', implode(',', $mirror_tracker_ids)));
     }
 }

@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -61,13 +62,15 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
         );
         $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
         $target_fields       = SynchronizedFieldReferences::fromTrackerIdentifier(
-            GatherSynchronizedFieldsStub::withFieldIds(
-                self::TITLE_ID,
-                self::DESCRIPTION_ID,
-                self::STATUS_ID,
-                self::START_DATE_ID,
-                self::END_DATE_ID,
-                self::ARTIFACT_LINK_ID
+            GatherSynchronizedFieldsStub::withFieldsPreparations(
+                new SynchronizedFieldsStubPreparation(
+                    self::TITLE_ID,
+                    self::DESCRIPTION_ID,
+                    self::STATUS_ID,
+                    self::START_DATE_ID,
+                    self::END_DATE_ID,
+                    self::ARTIFACT_LINK_ID
+                )
             ),
             TrackerIdentifierStub::buildWithDefault(),
             null

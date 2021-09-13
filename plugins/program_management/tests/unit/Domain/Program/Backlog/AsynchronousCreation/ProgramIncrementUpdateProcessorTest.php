@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -39,8 +40,8 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private const USER_ID                      = 122;
     private const PROGRAM_INCREMENT_TRACKER_ID = 74;
     private const TITLE_VALUE                  = 'nocuously';
-    private const FIRST_MIRROR_TRACKER_ID      = 72;
-    private const SECOND_MIRROR_TRACKER_ID     = 53;
+    private const FIRST_MIRROR_TITLE_ID        = 205;
+    private const SECOND_MIRROR_TITLE_ID       = 751;
     private TestLogger $logger;
     private ProgramIncrementUpdate $update;
 
@@ -59,7 +60,11 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     {
         return new ProgramIncrementUpdateProcessor(
             $this->logger,
-            GatherSynchronizedFieldsStub::withDefaults(),
+            GatherSynchronizedFieldsStub::withFieldsPreparations(
+                new SynchronizedFieldsStubPreparation(199, 885, 826, 351, 986, 536),
+                new SynchronizedFieldsStubPreparation(self::FIRST_MIRROR_TITLE_ID, 430, 472, 104, 844, 393),
+                new SynchronizedFieldsStubPreparation(self::SECOND_MIRROR_TITLE_ID, 586, 537, 629, 104, 762)
+            ),
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
                     self::TITLE_VALUE,
@@ -73,8 +78,8 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             RetrieveChangesetSubmissionDateStub::withDefaults(),
             SearchMirroredTimeboxesStub::withIds(137, 194),
             RetrieveTrackerOfArtifactStub::withTrackers(
-                TrackerIdentifierStub::withId(self::FIRST_MIRROR_TRACKER_ID),
-                TrackerIdentifierStub::withId(self::SECOND_MIRROR_TRACKER_ID)
+                TrackerIdentifierStub::withId(72),
+                TrackerIdentifierStub::withId(53)
             )
         );
     }
@@ -92,10 +97,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             )
         );
         self::assertTrue($this->logger->hasDebug('Title value: ' . self::TITLE_VALUE));
-        self::assertTrue(
-            $this->logger->hasDebug(
-                sprintf('Mirror tracker ids: %d,%d', self::FIRST_MIRROR_TRACKER_ID, self::SECOND_MIRROR_TRACKER_ID)
-            )
-        );
+        self::assertTrue($this->logger->hasDebug('Mirror PI title field id: ' . self::FIRST_MIRROR_TITLE_ID));
+        self::assertTrue($this->logger->hasDebug('Mirror PI title field id: ' . self::SECOND_MIRROR_TITLE_ID));
     }
 }

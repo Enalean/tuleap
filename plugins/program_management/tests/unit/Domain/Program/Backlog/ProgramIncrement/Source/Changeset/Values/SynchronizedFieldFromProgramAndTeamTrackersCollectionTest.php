@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
@@ -158,13 +159,15 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         return new SynchronizedFieldFromProgramAndTeamTrackers(
             SynchronizedFieldReferences::fromTrackerIdentifier(
-                GatherSynchronizedFieldsStub::withFieldIds(
-                    self::TITLE_ID,
-                    self::DESCRIPTION_ID,
-                    self::STATUS_ID,
-                    self::START_DATE_ID,
-                    self::END_PERIOD_ID,
-                    self::ARTIFACT_LINK_ID
+                GatherSynchronizedFieldsStub::withFieldsPreparations(
+                    new SynchronizedFieldsStubPreparation(
+                        self::TITLE_ID,
+                        self::DESCRIPTION_ID,
+                        self::STATUS_ID,
+                        self::START_DATE_ID,
+                        self::END_PERIOD_ID,
+                        self::ARTIFACT_LINK_ID
+                    )
                 ),
                 TrackerIdentifierStub::buildWithDefault(),
                 null

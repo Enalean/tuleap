@@ -30,26 +30,34 @@ use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveTitleFieldStub implements RetrieveTitleField
 {
-    private function __construct(private TitleFieldReference $title, private bool $has_error)
+    /**
+     * @var TitleFieldReference[]
+     */
+    private array $titles;
+
+    private function __construct(private bool $has_error, TitleFieldReference ...$titles)
     {
+        $this->titles = $titles;
     }
 
-    public static function withField(TitleFieldReference $title): self
+    public static function withFields(TitleFieldReference ...$titles): self
     {
-        return new self($title, false);
+        return new self(false, ...$titles);
     }
 
     public static function withError(): self
     {
-        return new self(TitleFieldReferenceStub::withDefaults(), true);
+        return new self(true);
     }
 
     public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
         if ($this->has_error) {
-            throw new FieldRetrievalException($tracker_identifier->getId(), "title");
+            throw new FieldRetrievalException($tracker_identifier->getId(), 'title');
         }
-
-        return $this->title;
+        if (count($this->titles) > 0) {
+            return array_shift($this->titles);
+        }
+        throw new \LogicException('No title field configured');
     }
 }

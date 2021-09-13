@@ -28,17 +28,26 @@ use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveStatusFieldStub implements RetrieveStatusField
 {
-    private function __construct(private StatusFieldReference $status)
+    /**
+     * @var StatusFieldReference[]
+     */
+    private array $statuses;
+
+    private function __construct(StatusFieldReference ...$statuses)
     {
+        $this->statuses = $statuses;
     }
 
-    public static function withField(StatusFieldReference $field): self
+    public static function withFields(StatusFieldReference ...$statuses): self
     {
-        return new self($field);
+        return new self(...$statuses);
     }
 
     public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference
     {
-        return $this->status;
+        if (count($this->statuses) > 0) {
+            return array_shift($this->statuses);
+        }
+        throw new \LogicException('No status field configured');
     }
 }

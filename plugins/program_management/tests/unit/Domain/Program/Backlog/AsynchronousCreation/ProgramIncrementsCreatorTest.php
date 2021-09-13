@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -57,7 +58,10 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MapStatusByValueStub::withValues(5000),
             $this->artifact_creator,
             RetrieveUserStub::withGenericUser(),
-            GatherSynchronizedFieldsStub::withDefaults()
+            GatherSynchronizedFieldsStub::withFieldsPreparations(
+                new SynchronizedFieldsStubPreparation(492, 244, 413, 959, 431, 921),
+                new SynchronizedFieldsStubPreparation(752, 242, 890, 705, 660, 182),
+            )
         );
 
         $this->user            = UserTestBuilder::aUser()->build();

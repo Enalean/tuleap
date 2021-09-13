@@ -28,18 +28,26 @@ use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
 {
-    private function __construct(private ArtifactLinkFieldReference $artifact_link)
+    /**
+     * @var ArtifactLinkFieldReference[]
+     */
+    private array $artifact_links;
+
+    private function __construct(ArtifactLinkFieldReference ...$artifact_links)
     {
+        $this->artifact_links = $artifact_links;
     }
 
-    public static function withField(ArtifactLinkFieldReference $field): self
+    public static function withFields(ArtifactLinkFieldReference ...$artifact_links): self
     {
-        return new self($field);
+        return new self(...$artifact_links);
     }
 
-    public function getArtifactLinkField(
-        TrackerIdentifier $tracker_identifier
-    ): ArtifactLinkFieldReference {
-        return $this->artifact_link;
+    public function getArtifactLinkField(TrackerIdentifier $tracker_identifier): ArtifactLinkFieldReference
+    {
+        if (count($this->artifact_links) > 0) {
+            return array_shift($this->artifact_links);
+        }
+        throw new \LogicException('No artifact link field configured');
     }
 }
