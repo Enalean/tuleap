@@ -64,6 +64,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     private SearchPendingProgramIncrementUpdatesStub $update_searcher;
     private MockObject|DeletePendingProgramIncrementUpdates $update_deleter;
     private VerifyIsChangesetStub $changeset_verifier;
+    private MockObject|AddChangeset $changeset_adder;
 
     protected function setUp(): void
     {
@@ -95,8 +96,11 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
         $this->iteration_deleter          = $this->createMock(DeletePendingIterations::class);
         $this->user_verifier              = VerifyIsUserStub::withValidUser();
-        $this->update_deleter             = $this->createMock(DeletePendingProgramIncrementUpdates::class);
         $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
+        $this->changeset_adder            = $this->createMock(AddChangeset::class);
+
+        $this->update_deleter = $this->createMock(DeletePendingProgramIncrementUpdates::class);
+        $this->update_deleter->method('deletePendingProgramIncrementUpdate');
     }
 
     private function getHandler(): ProgramIncrementUpdateEventHandler
@@ -130,6 +134,8 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
                     TrackerIdentifierStub::withId(33)
                 ),
                 MapStatusByValueStub::withValues(7423, 8416),
+                $this->changeset_adder,
+                $this->update_deleter
             ),
             new IterationCreationProcessor($this->logger)
         );
@@ -137,13 +143,19 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItProcessesValidEvent(): void
     {
+        $this->changeset_adder->expects(self::exactly(2))->method('addChangeset');
         $this->getHandler()->handle($this->buildValidEvent());
 
         self::assertTrue(
-            $this->logger->hasDebug('Processing program increment update with program increment #58 for user #108')
+            $this->logger->hasDebug(
+                sprintf('Processing iteration creation with iteration #%d for user #%d', self::FIRST_ITERATION_ID, self::USER_ID)
+            )
         );
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #196 for user #108'));
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #532 for user #108'));
+        self::assertTrue(
+            $this->logger->hasDebug(
+                sprintf('Processing iteration creation with iteration #%d for user #%d', self::SECOND_ITERATION_ID, self::USER_ID)
+            )
+        );
     }
 
     public function testItDoesNothingWhenEventIsNull(): void
@@ -173,6 +185,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     {
         // For example when iteration or program increment are deleted, the store will return an empty array
         $this->iteration_searcher = SearchPendingIterationsStub::withNoCreation();
+        $this->changeset_adder->method('addChangeset');
 
         $this->getHandler()->handle($this->buildValidEvent());
 
@@ -185,6 +198,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         // changed the Iteration tracker.
         $this->iteration_verifier = VerifyIsIterationStub::withNotIteration();
         $this->iteration_deleter->expects(self::atLeastOnce())->method('deletePendingIterationCreationsByIterationId');
+        $this->changeset_adder->method('addChangeset');
 
         $this->getHandler()->handle($this->buildValidEvent());
     }

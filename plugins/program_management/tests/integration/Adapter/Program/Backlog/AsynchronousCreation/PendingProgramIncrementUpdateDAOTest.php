@@ -27,9 +27,10 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 
 final class PendingProgramIncrementUpdateDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID   = 38;
-    private const USER_ID      = 148;
-    private const CHANGESET_ID = 1594;
+    private const TRACKER_ID          = 38;
+    private const USER_ID             = 148;
+    private const CHANGESET_ID        = 1594;
+    private const SECOND_CHANGESET_ID = 5729;
     private static int $active_artifact_id;
     private PendingProgramIncrementUpdateDAO $dao;
 
@@ -81,8 +82,30 @@ final class PendingProgramIncrementUpdateDAOTest extends \Tuleap\Test\PHPUnit\Te
         self::assertSame(self::USER_ID, $pending_update->getUserId());
         self::assertSame(self::CHANGESET_ID, $pending_update->getChangesetId());
 
+        $this->dao->deletePendingProgramIncrementUpdate($update);
+        self::assertNull($this->dao->searchUpdate(self::$active_artifact_id, self::USER_ID, self::CHANGESET_ID));
+    }
+
+    public function testThePendingUpdatesOfAProgramIncrementCanBeDeleted(): void
+    {
+        $first_update = ProgramIncrementUpdateBuilder::buildWithIds(
+            self::USER_ID,
+            self::$active_artifact_id,
+            self::TRACKER_ID,
+            (string) self::CHANGESET_ID
+        );
+        $this->dao->storeUpdate($first_update);
+        $second_update = ProgramIncrementUpdateBuilder::buildWithIds(
+            self::USER_ID,
+            self::$active_artifact_id,
+            self::TRACKER_ID,
+            (string) self::SECOND_CHANGESET_ID
+        );
+        $this->dao->storeUpdate($second_update);
+
         $this->dao->deletePendingProgramIncrementUpdatesByProgramIncrementId(self::$active_artifact_id);
         self::assertNull($this->dao->searchUpdate(self::$active_artifact_id, self::USER_ID, self::CHANGESET_ID));
+        self::assertNull($this->dao->searchUpdate(self::$active_artifact_id, self::USER_ID, self::SECOND_CHANGESET_ID));
     }
 
     public function testItDeletesPendingUpdateWhenSearchingDeletedArtifact(): void

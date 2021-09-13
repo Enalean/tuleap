@@ -78,4 +78,20 @@ final class PendingProgramIncrementUpdateDAO extends DataAccessObject implements
 
         $this->getDB()->run($sql, $program_increment_id);
     }
+
+    public function deletePendingProgramIncrementUpdate(ProgramIncrementUpdate $update): void
+    {
+        $sql = 'DELETE pending.*
+                FROM plugin_program_management_pending_program_increment_update AS pending
+                WHERE pending.program_increment_id = ?
+                  AND pending.user_id = ?
+                  AND pending.changeset_id = ?';
+
+        $this->getDB()->run(
+            $sql,
+            $update->program_increment->getId(),
+            $update->user->getId(),
+            $update->changeset->getId()
+        );
+    }
 }

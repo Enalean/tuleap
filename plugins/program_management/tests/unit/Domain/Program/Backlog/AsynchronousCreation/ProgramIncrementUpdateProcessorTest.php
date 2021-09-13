@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
@@ -40,11 +41,15 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private const PROGRAM_INCREMENT_ID         = 63;
     private const USER_ID                      = 122;
     private const PROGRAM_INCREMENT_TRACKER_ID = 74;
-    private const TITLE_VALUE                  = 'nocuously';
     private const FIRST_MIRRORED_ID            = 137;
     private const SECOND_MIRRORED_ID           = 194;
+    private const SUBMISSION_DATE              = 1408642745;
     private TestLogger $logger;
+    private GatherSynchronizedFieldsStub $fields_gatherer;
+    private SearchMirroredTimeboxesStub $mirror_searcher;
+    private MockObject|AddChangeset $changeset_adder;
     private ProgramIncrementUpdate $update;
+    private MockObject|DeletePendingProgramIncrementUpdates $pending_update_deleter;
 
     protected function setUp(): void
     {
@@ -54,21 +59,30 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             self::PROGRAM_INCREMENT_TRACKER_ID,
             '3882'
         );
-        $this->logger = new TestLogger();
+
+        $this->logger          = new TestLogger();
+        $this->fields_gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
+            new SynchronizedFieldsStubPreparation(199, 885, 826, 351, 986, 536),
+            new SynchronizedFieldsStubPreparation(205, 430, 472, 104, 844, 393),
+            new SynchronizedFieldsStubPreparation(751, 586, 537, 629, 104, 762)
+        );
+
+        $this->mirror_searcher        = SearchMirroredTimeboxesStub::withIds(
+            self::FIRST_MIRRORED_ID,
+            self::SECOND_MIRRORED_ID
+        );
+        $this->changeset_adder        = $this->createMock(AddChangeset::class);
+        $this->pending_update_deleter = $this->createMock(DeletePendingProgramIncrementUpdates::class);
     }
 
     private function getProcessor(): ProgramIncrementUpdateProcessor
     {
         return new ProgramIncrementUpdateProcessor(
             $this->logger,
-            GatherSynchronizedFieldsStub::withFieldsPreparations(
-                new SynchronizedFieldsStubPreparation(199, 885, 826, 351, 986, 536),
-                new SynchronizedFieldsStubPreparation(205, 430, 472, 104, 844, 393),
-                new SynchronizedFieldsStubPreparation(751, 586, 537, 629, 104, 762)
-            ),
+            $this->fields_gatherer,
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
-                    self::TITLE_VALUE,
+                    'nocuously',
                     'unbowsome',
                     'text',
                     '2015-09-20',
@@ -76,19 +90,38 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                     ['challote']
                 )
             ),
-            RetrieveChangesetSubmissionDateStub::withDefaults(),
-            SearchMirroredTimeboxesStub::withIds(self::FIRST_MIRRORED_ID, self::SECOND_MIRRORED_ID),
+            RetrieveChangesetSubmissionDateStub::withDate(self::SUBMISSION_DATE),
+            $this->mirror_searcher,
             RetrieveTrackerOfArtifactStub::withTrackers(
                 TrackerIdentifierStub::withId(72),
                 TrackerIdentifierStub::withId(53)
             ),
-            MapStatusByValueStub::withValues(1607, 8889)
+            MapStatusByValueStub::withValues(1607, 8889),
+            $this->changeset_adder,
+            $this->pending_update_deleter
         );
     }
 
     public function testItProcessesProgramIncrementUpdate(): void
     {
+        $this->changeset_adder->expects(self::exactly(2))
+            ->method('addChangeset')
+            ->with(
+                $this->callback(function (MirroredTimeboxChangeset $changeset): bool {
+                    $mirrored_timebox_id = $changeset->mirrored_timebox->getId();
+                    $timebox_ids_are_set = $mirrored_timebox_id === self::FIRST_MIRRORED_ID || $mirrored_timebox_id === self::SECOND_MIRRORED_ID;
+                    $values_are_set      = ! (empty($changeset->values->toFieldsDataArray()));
+
+                    return $changeset->user->getId() === self::USER_ID
+                        && $changeset->submission_date->getValue() === self::SUBMISSION_DATE
+                        && $timebox_ids_are_set
+                        && $values_are_set;
+                })
+            );
+        $this->pending_update_deleter->expects(self::once())->method('deletePendingProgramIncrementUpdate');
+
         $this->getProcessor()->processProgramIncrementUpdate($this->update);
+
         self::assertTrue(
             $this->logger->hasDebug(
                 sprintf(
@@ -98,8 +131,43 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 )
             )
         );
-        self::assertTrue($this->logger->hasDebug('Title value: ' . self::TITLE_VALUE));
-        self::assertTrue($this->logger->hasDebug('Mirror id: ' . self::FIRST_MIRRORED_ID));
-        self::assertTrue($this->logger->hasDebug('Mirror id: ' . self::SECOND_MIRRORED_ID));
+    }
+
+    public function testItLogsAnErrorIfProgramIncrementHasNoMirroredProgramIncrements(): void
+    {
+        $this->mirror_searcher = SearchMirroredTimeboxesStub::withNoMirrors();
+
+        $this->getProcessor()->processProgramIncrementUpdate($this->update);
+
+        self::assertTrue($this->logger->hasErrorRecords());
+    }
+
+    public function testItStopsExecutionIfThereIsAnIssueInTheSourceProgramIncrement(): void
+    {
+        $this->fields_gatherer = GatherSynchronizedFieldsStub::withError();
+        $this->changeset_adder->expects(self::never())->method('addChangeset');
+        $this->pending_update_deleter->expects(self::never())->method('deletePendingProgramIncrementUpdate');
+
+        $this->getProcessor()->processProgramIncrementUpdate($this->update);
+
+        self::assertTrue($this->logger->hasErrorRecords());
+    }
+
+    public function testItContinuesExecutionIfThereIsAnIssueInAMirroredProgramIncrement(): void
+    {
+        // We can fix the failing mirror by making another update to the source Program Increment.
+        // It will apply all values from this update too.
+        $this->changeset_adder->expects(self::exactly(2))->method('addChangeset')
+            ->willThrowException(
+                new NewChangesetCreationException(
+                    self::FIRST_MIRRORED_ID,
+                    new \Exception('Parent exception')
+                )
+            );
+        $this->pending_update_deleter->expects(self::once())->method('deletePendingProgramIncrementUpdate');
+
+        $this->getProcessor()->processProgramIncrementUpdate($this->update);
+
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 }

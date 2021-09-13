@@ -36,7 +36,7 @@ final class TextFieldValueProxy implements TextFieldValue
 
     public static function fromChangesetValue(\Tracker_Artifact_ChangesetValue_Text $changeset_value): self
     {
-        return new self($changeset_value->getValue(), $changeset_value->getFormat());
+        return new self($changeset_value->getText(), $changeset_value->getFormat());
     }
 
     public function getValue(): string

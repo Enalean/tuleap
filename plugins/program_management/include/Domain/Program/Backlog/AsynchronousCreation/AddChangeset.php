@@ -20,35 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxProxy;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
-
-final class SearchMirroredTimeboxesStub implements SearchMirroredTimeboxes
+interface AddChangeset
 {
     /**
-     * @var int[]
+     * @throws NewChangesetCreationException
      */
-    private array $ids;
-
-    private function __construct(int ...$ids)
-    {
-        $this->ids = $ids;
-    }
-
-    public static function withIds(int ...$ids): self
-    {
-        return new self(...$ids);
-    }
-
-    public static function withNoMirrors(): self
-    {
-        return new self();
-    }
-
-    public function searchMirroredTimeboxes(int $timebox_id): array
-    {
-        return array_map(static fn(int $id) => new MirroredTimeboxProxy($id), $this->ids);
-    }
+    public function addChangeset(MirroredTimeboxChangeset $changeset): void;
 }
