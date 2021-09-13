@@ -50,6 +50,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     private UserIdentifierStub $user_identifier;
     private VerifyTrackerSemanticsStub $verify_tracker_semantics;
     private \PHPUnit\Framework\MockObject\Stub|\TrackerFactory $tracker_factory;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
@@ -60,6 +61,10 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->user_identifier           = UserIdentifierStub::buildGenericUser();
         $this->program_tracker           = ProgramTrackerBuilder::buildWithId(1);
         $this->verify_tracker_semantics  = VerifyTrackerSemanticsStub::withAllSemantics();
+        $this->tracker                   = TrackerTestBuilder::aTracker()->withId(1)
+                                                                         ->withName('Tracker')
+            ->withProject(new \Project(['group_id' => 101, 'group_name' => 'A project']))
+                                                                         ->build();
     }
 
     public function testItBuildsProgramIncrementErrorPresenter(): void
@@ -124,7 +129,8 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $program_identifier             = ProgramIdentifierBuilder::build();
         $error_collector                = new ConfigurationErrorsCollector(true);
         $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutTitleSemantic();
-        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(1)->withName('Tracker')->build());
+
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
 
         $this->getErrorBuilder()->buildPlannableErrorPresenter($program_identifier, $error_collector);
         self::assertCount(1, $error_collector->getSemanticErrors());
@@ -135,7 +141,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $program_identifier             = ProgramIdentifierBuilder::build();
         $error_collector                = new ConfigurationErrorsCollector(true);
         $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutStatusSemantic();
-        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(1)->withName('Tracker')->build());
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
 
         $this->getErrorBuilder()->buildPlannableErrorPresenter($program_identifier, $error_collector);
         self::assertCount(1, $error_collector->getSemanticErrors());

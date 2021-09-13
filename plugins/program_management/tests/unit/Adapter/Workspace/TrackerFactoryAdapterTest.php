@@ -63,7 +63,9 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnProgramTracker(): void
     {
         $tracker_factory = $this->createStub(\TrackerFactory::class);
-        $tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(85)->build());
+        $tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(85)
+                                                 ->withProject(new \Project(['group_id' => 101, 'group_name' => "A project"]))
+                                                 ->build());
 
         $adapter = new TrackerFactoryAdapter($tracker_factory);
 

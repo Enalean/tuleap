@@ -85,11 +85,11 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
         $replication = ReplicationDataBuilder::build();
 
         $team_project_id = 102;
-        $team_project    = ProjectTestBuilder::aProject()->withId($team_project_id)->build();
+        $team_project    = ProjectTestBuilder::aProject()->withId($team_project_id)->withPublicName('A project')->build();
         $this->project_manager->method('getProject')->willReturn($team_project);
 
         $planning = new \Planning(1, 'Root planning', $team_project_id, '', '');
-        $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->build());
+        $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withProject($team_project)->build());
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $this->mirror_creator->expects(self::once())->method('createProgramIncrements');

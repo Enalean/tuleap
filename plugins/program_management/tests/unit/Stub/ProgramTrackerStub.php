@@ -27,13 +27,13 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class ProgramTrackerStub implements ProgramTracker
 {
-    private function __construct(private int $id, private string $name, private int $project_id)
+    private function __construct(private int $id, private string $name, private int $project_id, private $project_name)
     {
     }
 
     public static function fromTracker(\Tracker $tracker): self
     {
-        return new self($tracker->getId(), $tracker->getName(), (int) $tracker->getGroupId());
+        return new self($tracker->getId(), $tracker->getName(), (int) $tracker->getGroupId(), 'A project');
     }
 
     public static function withDefaults(): self
@@ -43,12 +43,12 @@ final class ProgramTrackerStub implements ProgramTracker
 
     public static function withId(int $id): self
     {
-        return self::withValues($id, 'tracker', 101);
+        return self::withValues($id, 'tracker', 101, 'A project');
     }
 
-    public static function withValues(int $id, string $name, int $project_id): self
+    public static function withValues(int $id, string $name, int $project_id, string $project_name): self
     {
-        return new self($id, $name, $project_id);
+        return new self($id, $name, $project_id, $project_name);
     }
 
     public function getTrackerName(): string
@@ -64,5 +64,10 @@ final class ProgramTrackerStub implements ProgramTracker
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getProjectName(): string
+    {
+        return $this->project_name;
     }
 }

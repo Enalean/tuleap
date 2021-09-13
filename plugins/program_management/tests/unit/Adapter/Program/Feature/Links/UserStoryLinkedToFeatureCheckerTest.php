@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -192,8 +191,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
         return new UserStoryLinkedToFeatureChecker(
             $this->feature_dao,
             $this->planning_builder,
-            $this->artifact_factory,
-            RetrieveUserStub::withUser($this->user)
+            $this->artifact_factory
         );
     }
 }

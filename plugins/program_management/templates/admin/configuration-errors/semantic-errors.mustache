@@ -6,7 +6,14 @@
             {{ semantic_name }}
         {{/ dgettext }}
         {{# potential_trackers_in_error }}
-            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic={{ semantic_short_name }}'>{{ getTrackerName }}  (#{{ getId }})</a>
+            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic={{ semantic_short_name }}'>
+              {{# dgettext }}
+                tuleap-program_management |
+                %s of project %s |
+                {{ getTrackerName }} |
+                {{ getProjectName }}
+              {{/ dgettext }}
+            </a>
         {{/ potential_trackers_in_error }}
     </li>
 {{/ semantic_errors }}

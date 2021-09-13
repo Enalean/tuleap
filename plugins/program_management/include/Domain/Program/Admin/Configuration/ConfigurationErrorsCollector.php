@@ -160,7 +160,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @param array ProgramTracker[] $trackers
+     * @param ProgramTracker[] $trackers
      */
     public function addMissingSemanticInTeamErrors(array $trackers): void
     {
@@ -168,7 +168,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @param array ProgramTracker[] $trackers
+     * @param ProgramTracker[] $trackers
      */
     public function addMissingValueInSemantic(array $missing_values, array $trackers): void
     {

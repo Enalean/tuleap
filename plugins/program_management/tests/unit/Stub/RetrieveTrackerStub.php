@@ -40,7 +40,7 @@ final class RetrieveTrackerStub implements RetrieveTracker
             return null;
         }
 
-        return ProgramTrackerStub::withValues($tracker_id, "tracker", $this->project_id);
+        return ProgramTrackerStub::withValues($tracker_id, "tracker", $this->project_id, 'A project name');
     }
 
     public static function buildValidTrackerWithProjectId(int $project_id): self
