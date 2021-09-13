@@ -46,24 +46,34 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
 
     public static function withDefaults(): self
     {
-        return self::withFieldIds(370, 921, 381, 163, 631, 102);
+        return self::withFieldsPreparations(
+            new SynchronizedFieldsStubPreparation(370, 921, 381, 163, 631, 102),
+        );
     }
 
-    public static function withFieldIds(
-        int $title_field_id,
-        int $description_field_id,
-        int $status_field_id,
-        int $start_date_field_id,
-        int $end_period_field_id,
-        int $artifact_link_field_id
-    ): self {
+    public static function withFieldsPreparations(SynchronizedFieldsStubPreparation ...$preparations): self
+    {
+        $titles         = [];
+        $descriptions   = [];
+        $statuses       = [];
+        $start_dates    = [];
+        $end_periods    = [];
+        $artifact_links = [];
+        foreach ($preparations as $preparation) {
+            $titles[]         = $preparation->title;
+            $descriptions[]   = $preparation->description;
+            $statuses[]       = $preparation->status;
+            $start_dates[]    = $preparation->start_date;
+            $end_periods[]    = $preparation->end_period;
+            $artifact_links[] = $preparation->artifact_link;
+        }
         return new self(
-            RetrieveTitleFieldStub::withField(TitleFieldReferenceStub::withId($title_field_id)),
-            RetrieveDescriptionFieldStub::withField(DescriptionFieldReferenceStub::withId($description_field_id)),
-            RetrieveStatusFieldStub::withField(StatusFieldReferenceStub::withId($status_field_id)),
-            RetrieveStartDateFieldStub::withField(StartDateFieldReferenceStub::withId($start_date_field_id)),
-            RetrieveEndPeriodFieldStub::withField(EndPeriodFieldReferenceStub::withId($end_period_field_id)),
-            RetrieveArtifactLinkFieldStub::withField(ArtifactLinkFieldReferenceStub::withId($artifact_link_field_id))
+            RetrieveTitleFieldStub::withFields(...$titles),
+            RetrieveDescriptionFieldStub::withFields(...$descriptions),
+            RetrieveStatusFieldStub::withFields(...$statuses),
+            RetrieveStartDateFieldStub::withFields(...$start_dates),
+            RetrieveEndPeriodFieldStub::withFields(...$end_periods),
+            RetrieveArtifactLinkFieldStub::withFields(...$artifact_links)
         );
     }
 
@@ -71,11 +81,11 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     {
         return new self(
             RetrieveTitleFieldStub::withError(),
-            RetrieveDescriptionFieldStub::withField(DescriptionFieldReferenceStub::withDefaults()),
-            RetrieveStatusFieldStub::withField(StatusFieldReferenceStub::withDefaults()),
-            RetrieveStartDateFieldStub::withField(StartDateFieldReferenceStub::withDefaults()),
-            RetrieveEndPeriodFieldStub::withField(EndPeriodFieldReferenceStub::withDefaults()),
-            RetrieveArtifactLinkFieldStub::withField(ArtifactLinkFieldReferenceStub::withDefaults())
+            RetrieveDescriptionFieldStub::withFields(DescriptionFieldReferenceStub::withDefaults()),
+            RetrieveStatusFieldStub::withFields(StatusFieldReferenceStub::withDefaults()),
+            RetrieveStartDateFieldStub::withFields(StartDateFieldReferenceStub::withDefaults()),
+            RetrieveEndPeriodFieldStub::withFields(EndPeriodFieldReferenceStub::withDefaults()),
+            RetrieveArtifactLinkFieldStub::withFields(ArtifactLinkFieldReferenceStub::withDefaults())
         );
     }
 

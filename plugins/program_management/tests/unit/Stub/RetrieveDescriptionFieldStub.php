@@ -28,17 +28,26 @@ use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveDescriptionFieldStub implements RetrieveDescriptionField
 {
-    private function __construct(private DescriptionFieldReference $description)
+    /**
+     * @var DescriptionFieldReference[]
+     */
+    private array $descriptions;
+
+    private function __construct(DescriptionFieldReference ...$descriptions)
     {
+        $this->descriptions = $descriptions;
     }
 
-    public static function withField(DescriptionFieldReference $field): self
+    public static function withFields(DescriptionFieldReference ...$descriptions): self
     {
-        return new self($field);
+        return new self(...$descriptions);
     }
 
     public function getDescriptionField(TrackerIdentifier $tracker_identifier): DescriptionFieldReference
     {
-        return $this->description;
+        if (count($this->descriptions) > 0) {
+            return array_shift($this->descriptions);
+        }
+        throw new \LogicException('No description field configured');
     }
 }

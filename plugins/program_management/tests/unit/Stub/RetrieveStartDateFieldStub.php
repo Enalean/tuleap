@@ -28,17 +28,26 @@ use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveStartDateFieldStub implements RetrieveStartDateField
 {
-    private function __construct(private StartDateFieldReference $start_date)
+    /**
+     * @var StartDateFieldReference[]
+     */
+    private array $start_dates;
+
+    private function __construct(StartDateFieldReference ...$start_dates)
     {
+        $this->start_dates = $start_dates;
     }
 
-    public static function withField(StartDateFieldReference $field): self
+    public static function withFields(StartDateFieldReference ...$start_dates): self
     {
-        return new self($field);
+        return new self(...$start_dates);
     }
 
     public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference
     {
-        return $this->start_date;
+        if (count($this->start_dates) > 0) {
+            return array_shift($this->start_dates);
+        }
+        throw new \LogicException('No start date field configured');
     }
 }

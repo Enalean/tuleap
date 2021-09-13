@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -40,13 +41,15 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     protected function setUp(): void
     {
-        $this->gatherer = GatherSynchronizedFieldsStub::withFieldIds(
-            self::TITLE_ID,
-            self::DESCRIPTION_ID,
-            self::STATUS_ID,
-            self::START_DATE_ID,
-            self::END_PERIOD_ID,
-            self::ARTIFACT_LINK_ID
+        $this->gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
+            new SynchronizedFieldsStubPreparation(
+                self::TITLE_ID,
+                self::DESCRIPTION_ID,
+                self::STATUS_ID,
+                self::START_DATE_ID,
+                self::END_PERIOD_ID,
+                self::ARTIFACT_LINK_ID
+            )
         );
 
         $this->program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
