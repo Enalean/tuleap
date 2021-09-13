@@ -71,4 +71,18 @@ class Tracker_Semantic_TitleDao extends DataAccessObject
 
         return $row['nb'];
     }
+
+    public function getTrackerIdsWithoutSemanticTitleDefined(array $trackers_id): array
+    {
+        $trackers_id = $this->da->escapeIntImplode($trackers_id);
+
+        $sql = "SELECT tracker.id as id
+                FROM tracker
+                    LEFT JOIN tracker_semantic_title AS title
+                    ON (tracker.id = title.tracker_id)
+                WHERE tracker.id IN ($trackers_id)
+                    AND title.tracker_id IS NULL";
+
+        return $this->retrieveIds($sql);
+    }
 }

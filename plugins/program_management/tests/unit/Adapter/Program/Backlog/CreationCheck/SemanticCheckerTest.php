@@ -120,6 +120,10 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(1);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->willReturn(1);
+        $this->title_dao->method('getTrackerIdsWithoutSemanticTitleDefined')
+            ->willReturn([101]);
+        $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
+            ->willReturn([101]);
         $this->semantic_status_checker->method('isStatusWellConfigured')
             ->willReturn(false);
         $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
@@ -149,6 +153,10 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(1);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->willReturn(1);
+        $this->title_dao->method('getTrackerIdsWithoutSemanticTitleDefined')
+            ->willReturn([101]);
+        $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
+            ->willReturn([101]);
         $this->semantic_status_checker->method('isStatusWellConfigured')
             ->willReturn(false);
         $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
