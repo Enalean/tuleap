@@ -101,6 +101,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -475,7 +476,10 @@ final class program_managementPlugin extends Plugin
                     new ProgramDao(),
                     $this->getProgramManagementProjectAdapter(),
                     $user_manager_adapter
-                )
+                ),
+                new PlanDao(),
+                new TrackerSemantics($tracker_factory),
+                $tracker_factory
             ),
             $user_manager_adapter
         );

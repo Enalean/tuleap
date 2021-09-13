@@ -112,6 +112,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $iteration_error_presenter = null;
         $program_increment_tracker = null;
         $iteration_tracker         = null;
+        $plannable_error_presenter = null;
         try {
             $admin_program = ProgramForAdministrationIdentifier::fromProject(
                 $this->verify_is_team,
@@ -141,6 +142,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 
             $program_increment_error_collector = new ConfigurationErrorsCollector(true);
             $iteration_error_collector         = new ConfigurationErrorsCollector(true);
+            $plannable_error_collector         = new ConfigurationErrorsCollector(true);
 
             $program_increment_tracker = $this->program_increment_tracker_retriever->retrieveVisibleProgramIncrementTracker(
                 $program,
@@ -155,13 +157,17 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $increment_error_presenter = $this->error_presenter_builder->buildProgramIncrementErrorPresenter(
                 $program_increment_tracker,
                 $program,
-                $user,
+                $user_identifier,
                 $program_increment_error_collector
             );
             $iteration_error_presenter = $this->error_presenter_builder->buildIterationErrorPresenter(
                 $iteration_tracker,
-                $user,
+                $user_identifier,
                 $iteration_error_collector
+            );
+            $plannable_error_presenter = $this->error_presenter_builder->buildPlannableErrorPresenter(
+                $program,
+                $plannable_error_collector
             );
         } catch (ProgramAccessException $e) {
             throw new ForbiddenException(
@@ -240,7 +246,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $iteration_labels->label,
                 $iteration_labels->sub_label,
                 $increment_error_presenter,
-                $iteration_error_presenter
+                $iteration_error_presenter,
+                $plannable_error_presenter
             )
         );
 

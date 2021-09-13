@@ -49,6 +49,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -203,9 +204,12 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
                     RetrieveUserStub::withUser($this->user)
-                )
+                ),
+                RetrievePlannableTrackersStub::buildIds(1, 2),
+                VerifyTrackerSemanticsStub::withAllSemantics(),
+                $this->tracker_factory
             ),
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withGenericUser(),
         );
     }
 

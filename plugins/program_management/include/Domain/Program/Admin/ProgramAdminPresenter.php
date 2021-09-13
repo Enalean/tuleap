@@ -65,6 +65,7 @@ final class ProgramAdminPresenter
     public ?string $iteration_sub_label;
     public ?TrackerErrorPresenter $program_increment_error_presenter;
     public ?TrackerErrorPresenter $iteration_error_presenter;
+    public ?TrackerErrorPresenter $plannable_error_presenter;
 
 
     /**
@@ -89,7 +90,8 @@ final class ProgramAdminPresenter
         ?string $iteration_label,
         ?string $iteration_sub_label,
         ?TrackerErrorPresenter $program_increment_error_presenter,
-        ?TrackerErrorPresenter $iteration_error_presenter
+        ?TrackerErrorPresenter $iteration_error_presenter,
+        ?TrackerErrorPresenter $plannable_error_presenter
     ) {
         $this->program_id                   = $program->id;
         $this->potential_teams              = $potential_teams;
@@ -105,8 +107,11 @@ final class ProgramAdminPresenter
         $this->iteration_label              = $iteration_label;
         $this->iteration_sub_label          = $iteration_sub_label;
 
-        $this->has_errors                        = ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors) || ($iteration_error_presenter && $iteration_error_presenter->has_presenter_errors);
+        $this->has_errors                        =  ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors)
+            || ($iteration_error_presenter && $iteration_error_presenter->has_presenter_errors)
+            || ($plannable_error_presenter && $plannable_error_presenter->has_presenter_errors);
         $this->program_increment_error_presenter = $program_increment_error_presenter;
         $this->iteration_error_presenter         = $iteration_error_presenter;
+        $this->plannable_error_presenter         = $plannable_error_presenter;
     }
 }

@@ -166,6 +166,15 @@ final class TrackerErrorPresenter
             return null;
         }
 
+        return self::fromAlreadyCollectedErrors($errors_collector);
+    }
+
+    public static function fromAlreadyCollectedErrors(ConfigurationErrorsCollector $errors_collector): ?self
+    {
+        if (! $errors_collector->hasError()) {
+            return null;
+        }
+
         return new self(
             $errors_collector->getSemanticErrors(),
             $errors_collector->getRequiredFieldsErrors(),
