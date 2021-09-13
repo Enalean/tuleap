@@ -115,8 +115,9 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     }
 
     public function getArtifactLinkField(
-        TrackerIdentifier $program_increment
+        TrackerIdentifier $program_increment,
+        ?ConfigurationErrorsCollector $errors_collector
     ): ArtifactLinkFieldReference {
-        return $this->artifact_link_stub->getArtifactLinkField($program_increment);
+        return $this->artifact_link_stub->getArtifactLinkField($program_increment, $errors_collector);
     }
 }

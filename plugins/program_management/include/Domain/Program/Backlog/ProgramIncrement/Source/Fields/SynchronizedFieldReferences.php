@@ -59,7 +59,7 @@ final class SynchronizedFieldReferences
         $status        = $gatherer->getStatusField($tracker_identifier);
         $start_date    = $gatherer->getStartDateField($tracker_identifier);
         $end_period    = $gatherer->getEndPeriodField($tracker_identifier);
-        $artifact_link = $gatherer->getArtifactLinkField($tracker_identifier);
+        $artifact_link = $gatherer->getArtifactLinkField($tracker_identifier, $errors_collector);
         return new self($title, $description, $status, $start_date, $end_period, $artifact_link);
     }
 

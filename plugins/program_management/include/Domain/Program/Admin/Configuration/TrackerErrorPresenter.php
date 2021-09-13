@@ -89,6 +89,10 @@ final class TrackerErrorPresenter
      */
     public array $field_synchronisation_errors;
     public bool $has_field_synchronization_errors;
+    /**
+     * @var MissingArtifactLinkFieldPresenter[]
+     */
+    public array $missing_artifact_link_fields_errors;
 
     /**
      * @param SemanticErrorPresenter[]               $semantic_errors
@@ -104,6 +108,7 @@ final class TrackerErrorPresenter
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
      * @param TitleHasIncorrectTypePresenter[]       $title_has_incorrect_type_error
      * @param string[] $field_synchronisation_errors
+     * @param MissingArtifactLinkFieldPresenter[]  $missing_artifact_link_fields_errors
      */
     private function __construct(
         array $semantic_errors,
@@ -118,7 +123,8 @@ final class TrackerErrorPresenter
         array $semantic_status_no_field,
         array $semantic_status_missing_values,
         array $title_has_incorrect_type_error,
-        array $field_synchronisation_errors
+        array $field_synchronisation_errors,
+        array $missing_artifact_link_fields_errors
     ) {
         $has_semantic_errors   = count($semantic_errors) > 0;
         $this->semantic_errors = $semantic_errors;
@@ -150,7 +156,12 @@ final class TrackerErrorPresenter
         $has_semantic_status_errors           = count($status_missing_in_teams) > 0
             || count($semantic_status_no_field) > 0
             || count($semantic_status_missing_values) > 0;
-        $this->title_has_incorrect_type_error = $title_has_incorrect_type_error;
+
+        $this->title_has_incorrect_type_error      = $title_has_incorrect_type_error;
+        $this->missing_artifact_link_fields_errors = $missing_artifact_link_fields_errors;
+
+        $has_synchronization_errors = count($title_has_incorrect_type_error) > 0 ||
+            count($missing_artifact_link_fields_errors) > 0;
 
         $this->has_field_synchronization_errors = count($field_synchronisation_errors) > 0;
         $this->field_synchronisation_errors     = $field_synchronisation_errors;
@@ -161,7 +172,7 @@ final class TrackerErrorPresenter
             || $has_field_permission_errors
             || $user_can_not_submit_in_team
             || $has_semantic_status_errors
-            || $title_has_incorrect_type_error
+            || $has_synchronization_errors
             || $this->has_field_synchronization_errors;
     }
 
@@ -199,7 +210,8 @@ final class TrackerErrorPresenter
             $errors_collector->getSemanticStatusNoField(),
             $errors_collector->getSemanticStatusMissingValues(),
             $errors_collector->getTitleHasIncorrectTypeError(),
-            $errors_collector->getFieldSynchronisationError()
+            $errors_collector->getFieldSynchronisationError(),
+            $errors_collector->getMissingArtifactLinkErrors()
         );
     }
 }
