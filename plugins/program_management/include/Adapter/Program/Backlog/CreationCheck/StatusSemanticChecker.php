@@ -88,6 +88,9 @@ final class StatusSemanticChecker implements CheckStatus
         return true;
     }
 
+    /**
+     * @return ProgramTracker[]
+     */
     private function getProgramTrackersWithoutStatusDefined(SourceTrackerCollection $source_tracker_collection): array
     {
         $trackers_ids_without_status = $this->semantic_status_dao->getTrackerIdsWithoutSemanticStatusDefined(

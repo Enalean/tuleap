@@ -7,7 +7,14 @@
             {{ tracker_id }}
         {{/ dgettext }}
         {{# semantic_status_no_field }}
-            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>#{{ getId }} ({{ getTrackerName }})</a>
+            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>
+              {{# dgettext }}
+                tuleap-program_management |
+                %s of project %s |
+                {{ getTrackerName }} |
+                {{ getProjectName }}
+              {{/ dgettext }}
+            </a>
         {{/ semantic_status_no_field }}
     </li>
 {{/ has_status_field_not_defined }}
@@ -16,10 +23,17 @@
     <li>
         {{# dgettext }}
             tuleap-program_management |
-            Some tracker does not have status semantic defined, please check trackers
+            Semantic 'status' is not well configured. Please check semantic of following trackers:
         {{/ dgettext }}
         {{# status_missing_in_teams }}
-            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>{{ getTrackerName }} (#{{ getId }})</a>
+            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>
+              {{# dgettext }}
+                tuleap-program_management |
+                %s of project %s |
+                {{ getTrackerName }} |
+                {{ getProjectName }}
+              {{/ dgettext }}
+            </a>
         {{/ status_missing_in_teams }}
     </li>
 {{/ has_status_missing_in_teams }}
@@ -33,7 +47,14 @@
                 {{ missing_values }}
             {{/ dgettext }}
             {{# trackers }}
-                <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>{{ getTrackerName }} (#{{ getId }})</a>
+                <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>
+                  {{# dgettext }}
+                    tuleap-program_management |
+                    %s of project %s |
+                    {{ getTrackerName }} |
+                    {{ getProjectName }}
+                  {{/ dgettext }}
+                </a>
             {{/ trackers }}
         {{/ semantic_status_missing_values }}
     </li>

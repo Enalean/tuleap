@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
  */
 final class TrackerProxy implements ProgramTracker
 {
-    private function __construct(private int $id, private string $tracker_name, private int $project_id)
+    private function __construct(private int $id, private string $tracker_name, private int $project_id, private string $project_name)
     {
     }
 
@@ -52,6 +52,11 @@ final class TrackerProxy implements ProgramTracker
 
     public static function fromTracker(Tracker $tracker): self
     {
-        return new self($tracker->getId(), $tracker->getName(), (int) $tracker->getGroupId());
+        return new self($tracker->getId(), $tracker->getName(), (int) $tracker->getGroupId(), $tracker->getProject()->getPublicName());
+    }
+
+    public function getProjectName(): string
+    {
+        return $this->project_name;
     }
 }

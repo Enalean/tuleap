@@ -43,29 +43,12 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildPlanning
-     */
-    private $build_planning;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
-     */
-    private $parent_dao;
-
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildPlanning $build_planning;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao $parent_dao;
     private FeatureRepresentationBuilder $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BackgroundColorRetriever
-     */
-    private $retrieve_background;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory $artifact_factory;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory $form_element_factory;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|BackgroundColorRetriever $retrieve_background;
     private \PFUser $user;
 
     protected function setUp(): void
@@ -83,7 +66,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->form_element_factory,
             $this->retrieve_background,
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
-            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory, $retrieve_user)
+            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory)
         );
     }
 
@@ -147,10 +130,12 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->parent_dao->shouldReceive('isLinkedToASprintInMirroredProgramIncrement')->andReturnTrue();
 
         $planning = new \Planning(1, "Root planning", 1, '', '', [50, 60], 20);
-        $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withId(20)->build());
+        $planning->setPlanningTracker(
+            TrackerTestBuilder::aTracker()->withId(20)->withProject(new Project(['group_id' => 1, 'group_name' => 'My project']))->build()
+        );
         $this->build_planning->shouldReceive("getRootPlanning")->andReturn($planning);
 
-        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Domain\ProgramManagementProject(1, 'my-porject', "My project", '/project'));
+        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Domain\ProgramManagementProject(1, 'my-project', "My project", '/project'));
 
         $expected = new FeatureRepresentation(
             1,

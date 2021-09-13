@@ -32,4 +32,6 @@ interface ProgramTracker extends TrackerIdentifier
     public function getTrackerName(): string;
 
     public function getProjectId(): int;
+
+    public function getProjectName(): string;
 }

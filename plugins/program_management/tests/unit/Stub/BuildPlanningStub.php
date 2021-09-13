@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Project;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
@@ -41,7 +42,11 @@ class BuildPlanningStub implements BuildPlanning
     {
         if ($this->valid_root_planning) {
             $planning = new \Planning(1, 'Root planning', $project_id, '', '');
-            $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withId(20)->build());
+            $planning->setPlanningTracker(
+                TrackerTestBuilder::aTracker()->withId(20)
+                                              ->withProject(new Project(['group_id' => 1, 'group_name' => 'My project']))
+                                              ->build()
+            );
             return $planning;
         }
 

@@ -89,6 +89,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $tracker = $this->createStub(\Tracker::class);
         $tracker->method('getId')->willReturn(1);
         $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getProject')->willReturn(new \Project(['group_id' => 101, 'group_name' => "A project"]));
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
         self::assertSame(
