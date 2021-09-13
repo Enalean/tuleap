@@ -255,7 +255,7 @@ describe("LinkFieldController -", () => {
     });
 
     describe("loadParentArtifactsTitle() -", () => {
-        it("will load all the possible parent artifacts and assign them to the controller, formatted", async () => {
+        it("will load all the possible parent artifacts and assign them to the controller, formatted and sorted by project trackers", async () => {
             LinkFieldController.tracker = {
                 id: 37,
             };
@@ -266,14 +266,34 @@ describe("LinkFieldController -", () => {
                     tracker: {
                         id: 30,
                         label: "flareboard",
+                        project: {
+                            id: 104,
+                            label: "Program 1",
+                        },
                     },
                 },
                 {
                     id: 634,
                     title: "viability",
                     tracker: {
-                        id: 30,
-                        label: "flareboard",
+                        id: 31,
+                        label: "skateboard",
+                        project: {
+                            id: 105,
+                            label: "Program 2",
+                        },
+                    },
+                },
+                {
+                    id: 636,
+                    title: "stability",
+                    tracker: {
+                        id: 32,
+                        label: "longboard",
+                        project: {
+                            id: 106,
+                            label: "Program 2",
+                        },
                     },
                 },
             ];
@@ -290,12 +310,31 @@ describe("LinkFieldController -", () => {
             expect(LinkFieldController.is_loading).toBe(false);
             expect(LinkFieldController.possible_parent_artifacts).toEqual([
                 {
-                    id: 747,
-                    formatted_ref: "flareboard #747 - forcipated",
+                    artifacts: [
+                        {
+                            formatted_ref: "flareboard #747 - forcipated",
+                            id: 747,
+                        },
+                    ],
+                    label: "Program 1 - open flareboard",
                 },
                 {
-                    id: 634,
-                    formatted_ref: "flareboard #634 - viability",
+                    artifacts: [
+                        {
+                            formatted_ref: "skateboard #634 - viability",
+                            id: 634,
+                        },
+                    ],
+                    label: "Program 2 - open skateboard",
+                },
+                {
+                    artifacts: [
+                        {
+                            formatted_ref: "longboard #636 - stability",
+                            id: 636,
+                        },
+                    ],
+                    label: "Program 2 - open longboard",
                 },
             ]);
         });

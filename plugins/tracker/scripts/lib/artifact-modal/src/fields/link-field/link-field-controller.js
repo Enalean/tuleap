@@ -109,18 +109,44 @@ function LinkFieldController($q, $element, $scope, gettextCatalog) {
     function loadParentArtifactsTitle() {
         return $q
             .when(getAllOpenParentArtifacts(self.tracker.id, 1000, 0))
-            .then((artifacts) => {
-                self.possible_parent_artifacts = artifacts.map((artifact) => {
-                    return {
-                        id: artifact.id,
-                        formatted_ref: formatArtifact(artifact),
-                    };
-                });
-            })
+            .then(buildCategorisedListOfPossibleParentArtifacts)
             .catch(() => {
                 // No trackers in parents project from which to select artifacts
                 return $q.when([]);
             });
+    }
+
+    function buildCategorisedListOfPossibleParentArtifacts(artifacts) {
+        const categories = artifacts.reduce((arts_by_projects_trackers, current_artifact) => {
+            const tracker = current_artifact.tracker;
+
+            if (arts_by_projects_trackers.has(tracker.id)) {
+                arts_by_projects_trackers.get(tracker.id).artifacts.push({
+                    id: current_artifact.id,
+                    formatted_ref: formatArtifact(current_artifact),
+                });
+            } else {
+                arts_by_projects_trackers.set(tracker.id, {
+                    label: gettextCatalog.getString(
+                        "{{ project_label }} - open {{ tracker_label }}",
+                        {
+                            project_label: current_artifact.tracker.project.label,
+                            tracker_label: tracker.label,
+                        }
+                    ),
+                    artifacts: [
+                        {
+                            id: current_artifact.id,
+                            formatted_ref: formatArtifact(current_artifact),
+                        },
+                    ],
+                });
+            }
+
+            return arts_by_projects_trackers;
+        }, new Map());
+
+        self.possible_parent_artifacts = Array.from(categories.values());
     }
 
     function hasArtifactAlreadyAParent() {
