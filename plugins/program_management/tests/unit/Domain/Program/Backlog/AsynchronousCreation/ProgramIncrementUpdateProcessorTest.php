@@ -29,7 +29,9 @@ use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,8 +39,8 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private const USER_ID                      = 122;
     private const PROGRAM_INCREMENT_TRACKER_ID = 74;
     private const TITLE_VALUE                  = 'nocuously';
-    private const FIRST_MIRROR_ID              = 137;
-    private const SECOND_MIRROR_ID             = 194;
+    private const FIRST_MIRROR_TRACKER_ID      = 72;
+    private const SECOND_MIRROR_TRACKER_ID     = 53;
     private TestLogger $logger;
     private ProgramIncrementUpdate $update;
 
@@ -69,7 +71,11 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 )
             ),
             RetrieveChangesetSubmissionDateStub::withDefaults(),
-            SearchMirroredTimeboxesStub::withIds(self::FIRST_MIRROR_ID, self::SECOND_MIRROR_ID)
+            SearchMirroredTimeboxesStub::withIds(137, 194),
+            RetrieveTrackerOfArtifactStub::withTrackers(
+                TrackerIdentifierStub::withId(self::FIRST_MIRROR_TRACKER_ID),
+                TrackerIdentifierStub::withId(self::SECOND_MIRROR_TRACKER_ID)
+            )
         );
     }
 
@@ -87,7 +93,9 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
         );
         self::assertTrue($this->logger->hasDebug('Title value: ' . self::TITLE_VALUE));
         self::assertTrue(
-            $this->logger->hasDebug(sprintf('Mirror ids: %d,%d', self::FIRST_MIRROR_ID, self::SECOND_MIRROR_ID))
+            $this->logger->hasDebug(
+                sprintf('Mirror tracker ids: %d,%d', self::FIRST_MIRROR_TRACKER_ID, self::SECOND_MIRROR_TRACKER_ID)
+            )
         );
     }
 }
