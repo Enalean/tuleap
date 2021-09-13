@@ -52,7 +52,7 @@ final class SemanticChecker implements CheckSemantic
         if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
             $this->buildSemanticError(
                 $configuration_errors,
-                $source_tracker_collection->getSourceTrackers(),
+                $this->getProgramTrackersWithoutTitleDefined($source_tracker_collection),
                 dgettext('tuleap-program_management', 'Title'),
                 \Tracker_Semantic_Title::NAME
             );
@@ -64,7 +64,7 @@ final class SemanticChecker implements CheckSemantic
         if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
             $this->buildSemanticError(
                 $configuration_errors,
-                $source_tracker_collection->getSourceTrackers(),
+                $this->getProgramTrackersWithoutDescriptionDefined($source_tracker_collection),
                 dgettext('tuleap-program_management', 'Description'),
                 \Tracker_Semantic_Description::NAME
             );
@@ -126,5 +126,54 @@ final class SemanticChecker implements CheckSemantic
         string $semantic_shortname
     ): void {
         $configuration_errors->addSemanticError($semantic_name, $semantic_shortname, $trackers);
+    }
+
+    private function getProgramTrackersWithoutTitleDefined(SourceTrackerCollection $source_tracker_collection): array
+    {
+        $trackers_ids_without_title = $this->semantic_title_dao->getTrackerIdsWithoutSemanticTitleDefined(
+            $source_tracker_collection->getSourceTrackerIds()
+        );
+
+        if (count($trackers_ids_without_title) === 0) {
+            return [];
+        }
+
+        return $this->getTrackersInError(
+            $source_tracker_collection,
+            $trackers_ids_without_title
+        );
+    }
+
+    private function getProgramTrackersWithoutDescriptionDefined(SourceTrackerCollection $source_tracker_collection): array
+    {
+        $trackers_ids_without_title = $this->semantic_description_dao->getTrackerIdsWithoutSemanticDescriptionDefined(
+            $source_tracker_collection->getSourceTrackerIds()
+        );
+
+        if (count($trackers_ids_without_title) === 0) {
+            return [];
+        }
+
+        return $this->getTrackersInError(
+            $source_tracker_collection,
+            $trackers_ids_without_title
+        );
+    }
+
+    private function getTrackersInError(SourceTrackerCollection $source_tracker_collection, array $tracker_ids): array
+    {
+        $mapping = [];
+        foreach ($source_tracker_collection->getSourceTrackers() as $program_tracker) {
+            $mapping[$program_tracker->getId()] = $program_tracker;
+        }
+
+        $trackers_in_error = [];
+        foreach ($tracker_ids as $tracker_id) {
+            if (array_key_exists($tracker_id, $mapping)) {
+                $trackers_in_error[] = $mapping[$tracker_id];
+            }
+        }
+
+        return $trackers_in_error;
     }
 }

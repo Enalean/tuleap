@@ -64,4 +64,18 @@ class Tracker_Semantic_DescriptionDao extends DataAccessObject
 
         return $row['nb'];
     }
+
+    public function getTrackerIdsWithoutSemanticDescriptionDefined(array $trackers_id): array
+    {
+        $trackers_id = $this->da->escapeIntImplode($trackers_id);
+
+        $sql = "SELECT tracker.id as id
+                FROM tracker
+                    LEFT JOIN tracker_semantic_description AS description
+                    ON (tracker.id = description.tracker_id)
+                WHERE tracker.id IN ($trackers_id)
+                    AND description.tracker_id IS NULL";
+
+        return $this->retrieveIds($sql);
+    }
 }
