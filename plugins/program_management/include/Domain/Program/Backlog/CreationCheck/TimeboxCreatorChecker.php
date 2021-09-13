@@ -25,10 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
@@ -107,11 +105,8 @@ class TimeboxCreatorChecker
                     return $can_be_created;
                 }
             }
-        } catch (TitleFieldHasIncorrectTypeException | NoArtifactLinkFieldException $exception) {
-            // Ignore me already collected
         } catch (FieldSynchronizationException $exception) {
             $can_be_created = false;
-            $configuration_errors->addFieldSynchronisationError($exception->getI18NExceptionMessage());
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return $can_be_created;
             }

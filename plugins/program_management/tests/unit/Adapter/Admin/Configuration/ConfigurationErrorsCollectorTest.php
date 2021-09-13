@@ -109,12 +109,6 @@ final class ConfigurationErrorsCollectorTest extends TestCase
         self::assertTrue($this->collector->hasError());
     }
 
-    public function testItHasErrorForFieldSynchronisation(): void
-    {
-        $this->collector->addFieldSynchronisationError("message");
-        self::assertTrue($this->collector->hasError());
-    }
-
     public function testItDoesNotHaveAnyError(): void
     {
         self::assertFalse($this->collector->hasError());
