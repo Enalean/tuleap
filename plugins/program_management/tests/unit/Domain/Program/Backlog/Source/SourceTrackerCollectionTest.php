@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
@@ -61,14 +61,14 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->program
         );
 
-        $this->timebox_tracker   = ProgramTrackerBuilder::buildWithId(78);
+        $this->timebox_tracker   = ProgramTrackerStub::withDefaults();
         $this->blue_team_tracker = TrackerTestBuilder::aTracker()->withId(self::BLUE_TEAM_TRACKER_ID)->build();
         $this->red_team_tracker  = TrackerTestBuilder::aTracker()->withId(self::RED_TEAM_TRACKER_ID)->build();
 
         $this->team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-                ProgramTrackerBuilder::buildWithTracker($this->blue_team_tracker),
-                ProgramTrackerBuilder::buildWithTracker($this->red_team_tracker)
+                ProgramTrackerStub::fromTracker($this->blue_team_tracker),
+                ProgramTrackerStub::fromTracker($this->red_team_tracker)
             ),
             $this->teams,
             $this->user

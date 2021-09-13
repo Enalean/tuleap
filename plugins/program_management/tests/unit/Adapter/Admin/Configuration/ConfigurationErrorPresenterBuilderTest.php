@@ -29,12 +29,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -59,7 +59,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->tracker_factory           = $this->createStub(\TrackerFactory::class);
         $this->program_identifier        = ProgramIdentifierBuilder::build();
         $this->user_identifier           = UserIdentifierStub::buildGenericUser();
-        $this->program_tracker           = ProgramTrackerBuilder::buildWithId(1);
+        $this->program_tracker           = ProgramTrackerStub::withDefaults();
         $this->verify_tracker_semantics  = VerifyTrackerSemanticsStub::withAllSemantics();
         $this->tracker                   = TrackerTestBuilder::aTracker()->withId(1)
                                                                          ->withName('Tracker')

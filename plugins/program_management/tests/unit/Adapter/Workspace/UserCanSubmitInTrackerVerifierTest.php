@@ -26,7 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 use Tracker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -48,7 +48,7 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
         $this->verifier = new UserCanSubmitInTrackerVerifier($this->user_manager, $this->tracker_factory);
 
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
-        $this->program_tracker = ProgramTrackerBuilder::buildWithId(1);
+        $this->program_tracker = ProgramTrackerStub::withDefaults();
     }
 
     public function testItReturnsFalseWhenTrackerIsNotFound(): void

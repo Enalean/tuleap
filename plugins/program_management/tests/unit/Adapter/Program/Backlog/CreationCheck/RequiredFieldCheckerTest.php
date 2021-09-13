@@ -32,9 +32,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
@@ -117,17 +117,21 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$required_title, $non_required_artifact_link]);
         $tracker->method('getId')->willReturn(1);
+        $tracker->method('getName')->willReturn("Tracker 1");
+        $tracker->method('getGroupId')->willReturn(101);
 
         $other_tracker_with_no_required_field = $this->createMock(\Tracker::class);
         $other_tracker_with_no_required_field->method('getId')->willReturn(2);
+        $other_tracker_with_no_required_field->method('getName')->willReturn("Tracker 2");
+        $other_tracker_with_no_required_field->method('getGroupId')->willReturn(101);
         $other_non_required_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $other_non_required_field->method('isRequired')->willReturn(false);
         $other_tracker_with_no_required_field->method('getFormElementFields')->willReturn(
             [$other_non_required_field]
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            ProgramTrackerBuilder::buildWithMockedTracker($tracker),
-            ProgramTrackerBuilder::buildWithMockedTracker($other_tracker_with_no_required_field)
+            ProgramTrackerStub::fromTracker($tracker),
+            ProgramTrackerStub::fromTracker($other_tracker_with_no_required_field)
         );
         $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $this->teams, $this->user);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls(
@@ -178,7 +182,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             [$required_title, $required_artifact_link, $other_required_field]
         );
 
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerBuilder::buildWithId(412));
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::withDefaults());
         $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker);
 

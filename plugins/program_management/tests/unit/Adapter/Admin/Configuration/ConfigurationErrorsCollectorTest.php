@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ConfigurationErrorsCollectorTest extends TestCase
@@ -44,7 +44,7 @@ final class ConfigurationErrorsCollectorTest extends TestCase
         $this->collector->addSemanticError(
             'Title',
             'title',
-            [ProgramTrackerBuilder::buildWithId(1), ProgramTrackerBuilder::buildWithId(2), ProgramTrackerBuilder::buildWithId(3)]
+            [ProgramTrackerStub::withId(1), ProgramTrackerStub::withId(2), ProgramTrackerStub::withId(3)]
         );
         self::assertTrue($this->collector->hasError());
     }
@@ -87,7 +87,7 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenUserCanNotEditTeams(): void
     {
-        $this->collector->userCanNotSubmitInTeam(ProgramTrackerBuilder::buildWithId(200));
+        $this->collector->userCanNotSubmitInTeam(ProgramTrackerStub::withId(200));
         self::assertTrue($this->collector->hasError());
     }
 

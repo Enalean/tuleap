@@ -29,8 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramTrackerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
@@ -47,18 +47,9 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|ProjectFlagsBuilder
-     */
-    private $project_flags_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer
-     */
-    private $template_renderer;
+    private \PHPUnit\Framework\MockObject\Stub|\ProjectManager $project_manager;
+    private \PHPUnit\Framework\MockObject\Stub|ProjectFlagsBuilder $project_flags_builder;
+    private \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer $template_renderer;
     private BuildProgram $build_program;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
 
@@ -70,7 +61,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->template_renderer     = $this->createMock(\TemplateRenderer::class);
 
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
-            ProgramTrackerBuilder::buildWithId(103)
+            ProgramTrackerStub::withDefaults()
         );
     }
 
@@ -151,7 +142,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->project_flags_builder->method('buildProjectFlags')->willReturn([]);
 
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
-            ProgramTrackerBuilder::buildWithId(10)
+            ProgramTrackerStub::withDefaults()
         );
 
         $user = $this->createMock(\PFUser::class);
