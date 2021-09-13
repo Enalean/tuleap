@@ -81,7 +81,7 @@ class ProgramTemplate implements CategorisedTemplate
 
     public function getGlyph(): Glyph
     {
-        return $this->glyph_finder->get('tuleap-program-management-' . $this->template_category->shortname);
+        return $this->glyph_finder->get('tuleap-program-management-' . self::NAME);
     }
 
     public function isBuiltIn(): bool
