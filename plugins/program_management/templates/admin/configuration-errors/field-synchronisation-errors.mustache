@@ -10,3 +10,7 @@
         {{/ dgettext }}
     </li>
 {{/ title_has_incorrect_type_error }}
+
+{{# has_field_synchronization_errors }}
+  <li>{{# field_synchronisation_errors}}{{.}}{{/field_synchronisation_errors}}</li>
+{{/ has_field_synchronization_errors }}
