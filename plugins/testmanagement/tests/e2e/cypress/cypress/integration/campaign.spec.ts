@@ -288,6 +288,9 @@ describe("TTM campaign", () => {
                 });
 
                 it("Paste an image on comment box", () => {
+                    // Expand the comment area so that cypress can see the field on its small viewport
+                    cy.get("[data-test=expand-details-button]").click();
+
                     cy.get("[data-test=current-test-comment]")
                         .trigger("focus")
                         .then(($element) => {
