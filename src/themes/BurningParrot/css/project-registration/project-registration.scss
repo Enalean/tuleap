@@ -90,7 +90,7 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
         animation: footerAppear ease-out 150ms;
         border-top: 0;
         background: var(--tlp-white-color-transparent-10);
-        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: var(--tlp-sticky-footer-shadow);
     }
 }
 

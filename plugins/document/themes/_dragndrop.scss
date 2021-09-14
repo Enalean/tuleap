@@ -28,26 +28,29 @@
     height: 100vh;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     transition: box-shadow 100ms ease-in-out;
-    box-shadow: inset 0 0 0 var(--tlp-small-spacing) transparent;
+    // 0.1px because esbuild removes the last zero when three zeros are used
+    box-shadow: inset 0 0 0.1px var(--tlp-small-spacing) transparent;
     color: var(--tlp-white-color);
     text-align: center;
     pointer-events: none;
 
     &.shown-success {
-        box-shadow: inset 0 0 0 var(--tlp-small-spacing) var(--tlp-shadow-main-color);
+        // 0.1px because esbuild removes the last zero when three zeros are used
+        box-shadow: inset 0 0 0.1px var(--tlp-small-spacing) var(--tlp-main-color-transparent-15);
 
         > .document-upload-to-current-folder-message {
             transform: translateY(calc(-1 * var(--tlp-small-spacing)));
-            background: var(--tlp-shadow-main-color);
+            background: var(--tlp-main-color-transparent-15);
         }
     }
 
     &.shown-error {
-        box-shadow: inset 0 0 0 var(--tlp-small-spacing) var(--tlp-shadow-danger-color);
+        // 0.1px because esbuild removes the last zero when three zeros are used
+        box-shadow: inset 0 0 0.1px var(--tlp-small-spacing) var(--tlp-danger-color-transparent-15);
 
         > .document-upload-to-current-folder-message {
             transform: translateY(calc(-1 * var(--tlp-small-spacing)));
-            background: var(--tlp-shadow-danger-color);
+            background: var(--tlp-danger-color-transparent-15);
         }
     }
 }

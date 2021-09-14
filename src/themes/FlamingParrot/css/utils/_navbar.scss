@@ -49,22 +49,24 @@ header {
 
     &.pinned {
         background: var(--tlp-white-color);
-        box-shadow: 0 1px 2px var(--tlp-dark-color-transparent-90);
+        box-shadow: var(--tlp-sticky-header-shadow);
 
         > .header-container {
             padding: 0 var(--tlp-medium-spacing) 0 0;
 
             .btn {
                 padding: 0 var(--tlp-small-spacing);
-                border: 0 !important;
+                border-color: transparent !important;
                 background: none !important;
                 box-shadow: none !important;
 
-                &:hover,
-                &:focus,
-                &:active {
+                &:hover:not(:disabled):not(.disabled):not(.active),
+                &:focus:not(:disabled):not(.disabled):not(.active),
+                &:active:not(:disabled):not(.disabled):not(.active) {
+                    border-color: transparent !important;
                     opacity: 0.7;
                     background: none !important;
+                    box-shadow: none !important;
                 }
             }
 
@@ -108,10 +110,10 @@ body.has-sidebar {
         padding: 0 var(--tlp-medium-spacing);
         overflow: hidden;
         transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out, padding 75ms ease-in-out;
-        border: 1px solid var(--tlp-white-color);
         border-radius: 30px;
+        border-color: var(--tlp-white-color) !important;
         background: var(--tlp-white-color) !important;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
+        box-shadow: var(--tlp-button-shadow) !important;
         color: var(--tlp-dark-color);
         font-family: var(--tlp-font-family);
         font-size: 0.875rem;
@@ -124,17 +126,18 @@ body.has-sidebar {
         white-space: nowrap;
         cursor: pointer;
 
-        &:hover,
-        &:active,
-        &:focus {
+        &:hover:not(:disabled):not(.disabled):not(.active),
+        &:active:not(:disabled):not(.disabled):not(.active),
+        &:focus:not(:disabled):not(.disabled):not(.active) {
             transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
-            background: #fcfcfc !important;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.08), 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
+            border-color: var(--tlp-white-color) !important;
+            background: #fafafa !important;
+            box-shadow: var(--tlp-button-shadow-hover) !important;
             text-decoration: none;
         }
 
-        &:active,
-        &:focus {
+        &:active:not(:disabled):not(.disabled):not(.active),
+        &:focus:not(:disabled):not(.disabled):not(.active) {
             background: var(--tlp-background-color-lighter-50) !important;
         }
 
@@ -268,12 +271,12 @@ body.has-sidebar {
         overflow: hidden;
         border: 1px solid var(--tlp-white-color);
         border-radius: 50%;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03);
+        box-shadow: var(--tlp-button-shadow);
         cursor: pointer;
 
         &:hover,
         &:focus {
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.08), 0 -1px 0 rgba(0, 0, 0, 0.03);
+            box-shadow: var(--tlp-button-shadow-hover);
         }
     }
 

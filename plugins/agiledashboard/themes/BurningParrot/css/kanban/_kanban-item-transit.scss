@@ -17,7 +17,7 @@
 
         > kanban-item {
             border: 0;
-            box-shadow: 0 7px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--tlp-flyover-shadow);
         }
 
         .kanban-item-content-expand-collapse {

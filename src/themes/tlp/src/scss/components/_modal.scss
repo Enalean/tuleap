@@ -21,7 +21,6 @@
 
 $tlp-modal-padding: var(--tlp-medium-spacing);
 $tlp-modal-radius: var(--tlp-x-large-radius);
-$tlp-modal-shadow: 0 10px 36px rgba(0, 0, 0, 0.2);
 $tlp-modal-transition: 100ms ease-out;
 
 .tlp-modal {
@@ -50,7 +49,7 @@ $tlp-modal-transition: 100ms ease-out;
     &.tlp-modal-shown {
         transform: translateY(0);
         opacity: 1;
-        box-shadow: $tlp-modal-shadow;
+        box-shadow: var(--tlp-flyover-shadow);
     }
 }
 

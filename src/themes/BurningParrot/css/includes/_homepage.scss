@@ -138,7 +138,7 @@ body.homepage > #main-container {
     border: 1px solid var(--tlp-main-color);
     border-radius: var(--tlp-large-radius);
     background: var(--tlp-white-color);
-    box-shadow: 0 8px 15px 0 transparentize(#000000, 0.95);
+    box-shadow: var(--tlp-pane-shadow);
 }
 
 .homepage-sign-in-form {

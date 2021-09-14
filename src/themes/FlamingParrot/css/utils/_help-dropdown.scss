@@ -95,7 +95,7 @@
     &.tlp-dropdown-shown {
         transform: translateY(0);
         opacity: 1;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.175);
+        box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
 
         &.dropdown-menu-top {

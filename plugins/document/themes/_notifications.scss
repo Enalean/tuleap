@@ -25,7 +25,7 @@
     margin: 0;
     opacity: 1;
     background: var(--tlp-success-color-lighter-90);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.175);
+    box-shadow: var(--tlp-flyover-shadow);
 }
 
 .document-notification-fadeout {

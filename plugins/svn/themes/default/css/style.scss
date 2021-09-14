@@ -179,18 +179,17 @@ body.viewvc-epel {
                 box-sizing: border-box;
                 width: 440px;
                 margin: 0;
-                border: 1px solid rgba(0, 0, 0, 0.15);
+                border: 1px solid var(--tlp-neutral-normal-color);
                 border-bottom: 0;
                 border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
-                background: #fcfcfc;
+                background: var(--tlp-background-color);
 
                 + pre {
                     width: 440px;
                     height: 435px;
                     overflow: auto;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+                    border-bottom: 1px solid var(--tlp-neutral-normal-color);
                     border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
-                    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
                 }
             }
 

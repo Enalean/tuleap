@@ -23,6 +23,7 @@
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: var(--tlp-large-radius);
     background: var(--tlp-white-color);
+    box-shadow: var(--tlp-pane-shadow);
 
     &:last-child {
         margin: 0;

@@ -15,7 +15,7 @@
         border: 1px solid var(--tlp-main-color);
         border-radius: var(--tlp-medium-radius);
         background: var(--tlp-white-color);
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: var-(--tlp-pane-shadow);
 
         .info {
             padding: 4px 6px;

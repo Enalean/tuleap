@@ -284,12 +284,4 @@
 
 .provider-admin-modal-provider-button {
     @extend %color-list;
-
-    transition: box-shadow 50ms linear;
-    box-shadow: inset 0 20px 40px -10px rgba(255, 255, 255, 0.2);
-
-    &:hover {
-        transition: box-shadow 50ms linear;
-        box-shadow: none;
-    }
 }

@@ -33,18 +33,7 @@ body.login-page {
     border: 1px solid #ededed;
     border-radius: var(--tlp-large-radius);
     background: #ffffff;
-
-    &::after {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        top: 30px;
-        right: 20px;
-        bottom: 10px;
-        left: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-    }
+    box-shadow: var(--tlp-pane-shadow);
 
     #login-help {
         position: absolute;

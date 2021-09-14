@@ -397,12 +397,12 @@ $tlp-form-element-select-small-background-size: 6px;
     border-right: 1px solid var(--tlp-main-color);
     border-bottom: 1px solid var(--tlp-main-color);
     border-left: 1px solid var(--tlp-main-color);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: var(--tlp-flyover-shadow);
 
     &.list-picker-dropdown-above {
         border-top: 1px solid var(--tlp-main-color);
         border-bottom: unset;
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.175);
+        box-shadow: var(--tlp-flyover-shadow-above);
     }
 
     .list-picker-dropdown-option-value-disabled {
@@ -630,7 +630,7 @@ $tlp-form-element-select-small-background-size: 6px;
         z-index: 2002;
         padding: 0;
         border-color: var(--tlp-main-color);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        box-shadow: var(--tlp-flyover-shadow);
 
         .select2-search--dropdown {
             padding: $tlp-form-element-padding-horizontal;

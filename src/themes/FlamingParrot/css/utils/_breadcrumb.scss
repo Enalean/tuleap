@@ -139,7 +139,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 .breadcrumb-switch-menu {
     border-radius: var(--tlp-medium-radius);
     background: $switch-menu-background;
-    box-shadow: 0 0 0 1px var(--tlp-dark-color-transparent-90), 0 6px 12px -5px var(--tlp-dark-color-transparent-85);
+    box-shadow: var(--tlp-flyover-shadow);
 }
 
 .breadcrumb-dropdown-item {
