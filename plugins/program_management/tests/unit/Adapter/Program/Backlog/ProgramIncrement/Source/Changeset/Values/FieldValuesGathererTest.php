@@ -126,7 +126,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsDescriptionValue(): void
     {
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Text::class);
-        $changeset_value->method('getValue')->willReturn('My description');
+        $changeset_value->method('getText')->willReturn('My description');
         $changeset_value->method('getFormat')->willReturn('text');
         $this->changeset->method('getValue')->willReturn($changeset_value);
 

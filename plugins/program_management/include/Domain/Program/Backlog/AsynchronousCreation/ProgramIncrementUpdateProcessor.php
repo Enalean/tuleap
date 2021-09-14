@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
@@ -41,7 +42,9 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
         private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
         private RetrieveTrackerOfArtifact $tracker_retriever,
-        private MapStatusByValue $status_mapper
+        private MapStatusByValue $status_mapper,
+        private AddChangeset $changeset_adder,
+        private DeletePendingProgramIncrementUpdates $pending_update_deleter
     ) {
     }
 
@@ -53,30 +56,42 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
             "Processing program increment update with program increment #$program_increment_id for user #$user_id"
         );
 
-        $source_values = SourceTimeboxChangesetValues::fromUpdate(
-            $this->fields_gatherer,
-            $this->values_retriever,
-            $this->submission_date_retriever,
-            $update
-        );
+        try {
+            $source_values = SourceTimeboxChangesetValues::fromUpdate(
+                $this->fields_gatherer,
+                $this->values_retriever,
+                $this->submission_date_retriever,
+                $update
+            );
+        } catch (FieldSynchronizationException | MirroredTimeboxReplicationException $exception) {
+            $this->logger->error('Error during update of program increments', ['exception' => $exception]);
+            return;
+        }
 
         $mirrored_program_increments = $this->mirrored_timeboxes_searcher->searchMirroredTimeboxes(
             $program_increment_id
         );
-
-        foreach ($mirrored_program_increments as $mirrored_program_increment) {
-            $changeset = MirroredTimeboxChangeset::fromMirroredTimebox(
-                $this->tracker_retriever,
-                $this->fields_gatherer,
-                $this->status_mapper,
-                $mirrored_program_increment,
-                $source_values,
-                ArtifactLinkValue::buildEmptyValue(),
-                $update->user
-            );
-            $this->logger->debug(sprintf('Mirror id: %s', $changeset->mirrored_timebox->getId()));
+        if (count($mirrored_program_increments) === 0) {
+            $this->logger->error("Could not find any mirrors for program increment #$program_increment_id");
+            return;
         }
 
-        $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
+        foreach ($mirrored_program_increments as $mirrored_program_increment) {
+            try {
+                $changeset = MirroredTimeboxChangeset::fromMirroredTimebox(
+                    $this->tracker_retriever,
+                    $this->fields_gatherer,
+                    $this->status_mapper,
+                    $mirrored_program_increment,
+                    $source_values,
+                    ArtifactLinkValue::buildEmptyValue(),
+                    $update->user
+                );
+                $this->changeset_adder->addChangeset($changeset);
+            } catch (FieldSynchronizationException | MirroredTimeboxReplicationException $exception) {
+                $this->logger->error('Error during update of program increments', ['exception' => $exception]);
+            }
+        }
+        $this->pending_update_deleter->deletePendingProgramIncrementUpdate($update);
     }
 }

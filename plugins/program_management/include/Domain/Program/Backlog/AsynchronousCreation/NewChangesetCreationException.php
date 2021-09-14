@@ -22,10 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-
-interface DeletePendingProgramIncrementUpdates
+final class NewChangesetCreationException extends \Exception implements MirroredTimeboxReplicationException
 {
-    public function deletePendingProgramIncrementUpdatesByProgramIncrementId(int $program_increment_id): void;
-    public function deletePendingProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
+    public function __construct(int $timebox_id, \Throwable $parent)
+    {
+        parent::__construct(
+            sprintf('Could not create a new changeset for mirrored timebox with id #%d', $timebox_id),
+            0,
+            $parent
+        );
+    }
 }

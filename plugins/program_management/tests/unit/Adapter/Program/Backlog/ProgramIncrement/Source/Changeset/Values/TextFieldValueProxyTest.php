@@ -30,19 +30,26 @@ final class TextFieldValueProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromChangesetValue(): void
     {
-        $artifact        = ArtifactTestBuilder::anArtifact(82)->build();
-        $changeset       = new \Tracker_Artifact_Changeset(6095, $artifact, 110, 1234567890, null);
+        $artifact  = ArtifactTestBuilder::anArtifact(82)->build();
+        $changeset = new \Tracker_Artifact_Changeset(6095, $artifact, 110, 1234567890, null);
+
+        $multiline_text = <<<EOT
+        osmosis connatural
+        ruptile recedent
+        EOT;
+
+
         $changeset_value = new \Tracker_Artifact_ChangesetValue_Text(
             7094,
             $changeset,
             $this->getTextField(),
             true,
-            'osmosis connatural',
-            'text'
+            $multiline_text,
+            \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
         );
 
         $value = TextFieldValueProxy::fromChangesetValue($changeset_value);
-        self::assertSame('osmosis connatural', $value->getValue());
+        self::assertSame($multiline_text, $value->getValue());
         self::assertSame('text', $value->getFormat());
     }
 

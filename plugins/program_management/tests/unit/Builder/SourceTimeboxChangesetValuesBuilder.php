@@ -108,4 +108,33 @@ final class SourceTimeboxChangesetValuesBuilder
             ReplicationDataBuilder::buildWithArtifactId($source_timebox_id)
         );
     }
+
+    /**
+     * @param string[] $status
+     */
+    public static function buildWithValuesAndSubmissionDate(
+        string $title,
+        string $description_content,
+        string $description_format,
+        array $status,
+        string $start_date,
+        string $end_date,
+        int $submission_date
+    ): SourceTimeboxChangesetValues {
+        return SourceTimeboxChangesetValues::fromReplication(
+            GatherSynchronizedFieldsStub::withDefaults(),
+            RetrieveFieldValuesGathererStub::withGatherer(
+                GatherFieldValuesStub::withValues(
+                    $title,
+                    $description_content,
+                    $description_format,
+                    $start_date,
+                    $end_date,
+                    $status
+                )
+            ),
+            RetrieveChangesetSubmissionDateStub::withDate($submission_date),
+            ReplicationDataBuilder::build()
+        );
+    }
 }
