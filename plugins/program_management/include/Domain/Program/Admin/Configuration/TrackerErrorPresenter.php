@@ -85,11 +85,6 @@ final class TrackerErrorPresenter
      */
     public array $title_has_incorrect_type_error;
     /**
-     * @var string[]
-     */
-    public array $field_synchronisation_errors;
-    public bool $has_field_synchronization_errors;
-    /**
      * @var MissingArtifactLinkFieldPresenter[]
      */
     public array $missing_artifact_link_fields_errors;
@@ -107,7 +102,6 @@ final class TrackerErrorPresenter
      * @param SemanticStatusNoFieldPresenter[]       $semantic_status_no_field
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
      * @param TitleHasIncorrectTypePresenter[]       $title_has_incorrect_type_error
-     * @param string[] $field_synchronisation_errors
      * @param MissingArtifactLinkFieldPresenter[]  $missing_artifact_link_fields_errors
      */
     private function __construct(
@@ -123,7 +117,6 @@ final class TrackerErrorPresenter
         array $semantic_status_no_field,
         array $semantic_status_missing_values,
         array $title_has_incorrect_type_error,
-        array $field_synchronisation_errors,
         array $missing_artifact_link_fields_errors
     ) {
         $has_semantic_errors   = count($semantic_errors) > 0;
@@ -163,17 +156,13 @@ final class TrackerErrorPresenter
         $has_synchronization_errors = count($title_has_incorrect_type_error) > 0 ||
             count($missing_artifact_link_fields_errors) > 0;
 
-        $this->has_field_synchronization_errors = count($field_synchronisation_errors) > 0;
-        $this->field_synchronisation_errors     = $field_synchronisation_errors;
-
         $this->has_presenter_errors = $has_semantic_errors
             || $has_required_field_errors
             || $has_workflow_error
             || $has_field_permission_errors
             || $user_can_not_submit_in_team
             || $has_semantic_status_errors
-            || $has_synchronization_errors
-            || $this->has_field_synchronization_errors;
+            || $has_synchronization_errors;
     }
 
     public static function fromTracker(
@@ -210,7 +199,6 @@ final class TrackerErrorPresenter
             $errors_collector->getSemanticStatusNoField(),
             $errors_collector->getSemanticStatusMissingValues(),
             $errors_collector->getTitleHasIncorrectTypeError(),
-            $errors_collector->getFieldSynchronisationError(),
             $errors_collector->getMissingArtifactLinkErrors()
         );
     }

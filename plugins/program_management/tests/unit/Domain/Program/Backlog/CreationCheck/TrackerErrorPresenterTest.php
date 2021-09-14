@@ -260,23 +260,6 @@ final class TrackerErrorPresenterTest extends TestCase
         self::assertNotEmpty($presenter->semantic_status_missing_values);
     }
 
-    public function testItHasErrorWhenFieldSynchronisationIsImpossible(): void
-    {
-        $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addFieldSynchronisationError("a random error");
-
-        $presenter = TrackerErrorPresenter::fromTracker(
-            $this->gatherer,
-            $this->program_tracker,
-            $this->user_identifier,
-            $errors_collector
-        );
-
-        self::assertTrue($presenter->has_presenter_errors);
-        self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->field_synchronisation_errors);
-    }
-
     public function testItDoesNotHaveAnyError(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);

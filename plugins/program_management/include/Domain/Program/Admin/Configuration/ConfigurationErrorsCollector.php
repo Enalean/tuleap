@@ -57,10 +57,6 @@ final class ConfigurationErrorsCollector
      */
     private array $non_updatable_fields = [];
     /**
-     * @var string[]
-     */
-    private array $field_synchronisation_error = [];
-    /**
      * @var ProgramTracker[]
      */
     private array $team_tracker_id_errors = [];
@@ -179,11 +175,6 @@ final class ConfigurationErrorsCollector
         $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($missing_values, $trackers);
     }
 
-    public function addFieldSynchronisationError(string $message): void
-    {
-        $this->field_synchronisation_error[] = $message;
-    }
-
     public function addTitleHasIncorrectType(string $semantic_title_url, string $tracker_name, string $project_name, string $field_name): void
     {
         $this->title_has_incorrect_type_error[] =  new TitleHasIncorrectTypePresenter($semantic_title_url, $tracker_name, $project_name, $field_name);
@@ -207,7 +198,6 @@ final class ConfigurationErrorsCollector
             count($this->team_tracker_id_errors) > 0 ||
             count($this->status_missing_in_teams) > 0 ||
             count($this->semantic_status_no_field) > 0 ||
-            count($this->field_synchronisation_error) > 0 ||
             count($this->semantic_status_missing_values) > 0 ||
             count($this->missing_artifact_link) > 0 ||
             count($this->title_has_incorrect_type_error) > 0;
@@ -267,14 +257,6 @@ final class ConfigurationErrorsCollector
     public function getNonUpdatableFields(): array
     {
         return $this->non_updatable_fields;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getFieldSynchronisationError(): array
-    {
-        return $this->field_synchronisation_error;
     }
 
     /**
