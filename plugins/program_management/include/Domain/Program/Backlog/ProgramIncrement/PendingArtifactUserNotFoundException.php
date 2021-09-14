@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
 
-class PendingArtifactUserNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+final class PendingArtifactUserNotFoundException extends \RuntimeException implements MirroredTimeboxReplicationException
 {
     public function __construct(int $artifact_id, int $user_id)
     {

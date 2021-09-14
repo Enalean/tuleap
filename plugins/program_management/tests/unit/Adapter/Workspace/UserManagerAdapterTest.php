@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -50,11 +51,11 @@ final class UserManagerAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($pfuser, $this->getAdapter()->getUserWithId(UserIdentifierStub::withId(self::USER_ID)));
     }
 
-    public function testItThrowsLogicExceptionWhenUserIdentifierDoesNotMatchUser(): void
+    public function testItThrowsExceptionWhenUserIdentifierDoesNotMatchUser(): void
     {
         // It should not happen as we should always verify a given id matches a user
         $this->user_manager->method('getUserById')->willReturn(null);
-        $this->expectException(\LogicException::class);
+        $this->expectException(UserNotFoundException::class);
         $this->getAdapter()->getUserWithId(UserIdentifierStub::withId(self::USER_ID));
     }
 

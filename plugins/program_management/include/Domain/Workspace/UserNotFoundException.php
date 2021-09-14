@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+declare(strict_types=1);
 
-interface ProgramIncrementCreationException extends \Throwable
+namespace Tuleap\ProgramManagement\Domain\Workspace;
+
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
+
+final class UserNotFoundException extends \RuntimeException implements MirroredTimeboxReplicationException
 {
+    public function __construct(int $user_id)
+    {
+        parent::__construct("Could not find user with id #$user_id in database");
+    }
 }

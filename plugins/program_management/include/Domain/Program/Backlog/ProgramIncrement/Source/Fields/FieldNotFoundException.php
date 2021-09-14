@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
 
-final class FieldNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+final class FieldNotFoundException extends \RuntimeException implements MirroredTimeboxReplicationException
 {
     public function __construct(int $field_id)
     {

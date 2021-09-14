@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-final class ProgramIncrementArtifactCreationException extends \RuntimeException implements ProgramIncrementCreationException
+final class ProgramIncrementArtifactCreationException extends \RuntimeException implements MirroredTimeboxReplicationException
 {
     public function __construct(int $source_artifact_id)
     {

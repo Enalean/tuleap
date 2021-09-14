@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
@@ -65,13 +65,13 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     {
         try {
             $this->create($replication_data);
-        } catch (TrackerRetrievalException | ProgramIncrementCreationException | FieldRetrievalException | FieldSynchronizationException $exception) {
+        } catch (TrackerRetrievalException | MirroredTimeboxReplicationException | FieldSynchronizationException $exception) {
             $this->logger->error('Error during creation of project increments ', ['exception' => $exception]);
         }
     }
 
     /**
-     * @throws ProgramIncrementCreationException
+     * @throws MirroredTimeboxReplicationException
      * @throws TrackerRetrievalException
      * @throws FieldRetrievalException
      * @throws FieldSynchronizationException

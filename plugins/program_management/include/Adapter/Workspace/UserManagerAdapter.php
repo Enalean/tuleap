@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 final class UserManagerAdapter implements RetrieveUser, VerifyIsUser
@@ -42,7 +43,7 @@ final class UserManagerAdapter implements RetrieveUser, VerifyIsUser
         $user    = $this->user_manager->getUserById($user_id);
 
         if (! $user) {
-            throw new \LogicException("User with id #$user_id is not found");
+            throw new UserNotFoundException($user_id);
         }
 
         return $user;

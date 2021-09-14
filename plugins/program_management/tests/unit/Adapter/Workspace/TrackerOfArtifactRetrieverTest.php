@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;

@@ -29,7 +29,7 @@ interface ProcessProgramIncrementUpdate
 {
     /**
      * @throws FieldSynchronizationException
-     * @throws ProgramIncrementCreationException
+     * @throws MirroredTimeboxReplicationException
      */
     public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
 }
