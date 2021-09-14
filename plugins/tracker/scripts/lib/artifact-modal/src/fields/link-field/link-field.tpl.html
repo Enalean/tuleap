@@ -25,19 +25,22 @@
     ng-if="link_field.showParentArtifactChoice()"
 >
     <label class="tlp-label"
-        for="{{ ::('tracker_field_' + field.field_id + '_parent') }}"
+        for="{{ ::('tracker_field_' + link_field.field_id + '_parent') }}"
         translate
     >Select parent</label>
     <select class="tlp-select"
-        id="{{ ::('tracker_field_' + field.field_id + '_parent') }}"
+        id="{{ ::('tracker_field_' + link_field.field_id + '_parent') }}"
         data-select-type="list-picker"
         ng-model="link_field.value_model.parent.id"
         ng-disabled="::link_field.isDisabled(field)"
     >
         <option value="" selected translate>Please choose a parent…</option>
-        <option ng-repeat="artifact in link_field.possible_parent_artifacts"
-            value="{{ artifact.id }}"
-        >{{ artifact.formatted_ref }}</option>
+        <optgroup
+            ng-repeat="category in link_field.possible_parent_artifacts"
+            label="{{ category.label }}"
+        >
+            <option ng-repeat="artifact in category.artifacts" value="{{ artifact.id }}">{{ artifact.formatted_ref }}</option>
+        </optgroup>
     </select>
 </div>
 <div class="tlp-property"
