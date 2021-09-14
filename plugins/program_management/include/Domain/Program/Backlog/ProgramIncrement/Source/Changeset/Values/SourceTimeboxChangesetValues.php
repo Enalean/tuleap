@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
@@ -50,7 +50,7 @@ final class SourceTimeboxChangesetValues
 
     /**
      * @throws FieldSynchronizationException
-     * @throws ProgramIncrementCreationException
+     * @throws MirroredTimeboxReplicationException
      */
     public static function fromReplication(
         GatherSynchronizedFields $fields_gatherer,
@@ -89,7 +89,7 @@ final class SourceTimeboxChangesetValues
 
     /**
      * @throws FieldSynchronizationException
-     * @throws ProgramIncrementCreationException
+     * @throws MirroredTimeboxReplicationException
      */
     public static function fromUpdate(
         GatherSynchronizedFields $fields_gatherer,

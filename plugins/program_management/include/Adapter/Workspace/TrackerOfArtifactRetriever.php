@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 

@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
 
-final class ChangesetValueNotFoundException extends \Exception implements ProgramIncrementCreationException
+final class ChangesetValueNotFoundException extends \Exception implements MirroredTimeboxReplicationException
 {
     public function __construct(int $source_changeset_id, int $field_id, string $field_type)
     {

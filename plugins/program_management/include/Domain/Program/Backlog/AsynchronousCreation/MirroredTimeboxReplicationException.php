@@ -18,16 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
-
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
-
-final class UnsupportedTitleFieldException extends \Exception implements MirroredTimeboxReplicationException
+interface MirroredTimeboxReplicationException extends \Throwable
 {
-    public function __construct(int $title_field_id)
-    {
-        parent::__construct("Expected field #$title_field_id to be a String field for title semantic, but it was not");
-    }
 }
