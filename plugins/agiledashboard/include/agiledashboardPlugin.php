@@ -642,7 +642,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                         $permission_manager,
                         $widget_config_retriever,
                         $widget_kanban_config_updater,
-                        Tracker_ReportFactory::instance()
+                        Tracker_ReportFactory::instance(),
+                        EventManager::instance()
                     )
                 );
                 break;
@@ -657,7 +658,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                         $permission_manager,
                         $widget_config_retriever,
                         $widget_kanban_config_updater,
-                        Tracker_ReportFactory::instance()
+                        Tracker_ReportFactory::instance(),
+                        EventManager::instance()
                     )
                 );
                 break;

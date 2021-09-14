@@ -28,10 +28,12 @@ use Codendi_Request;
 use Feedback;
 use KanbanPresenter;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
+use Tuleap\Event\Events\HasCurrentProjectParentProjects;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class ShowKanbanController extends BaseController
@@ -65,6 +67,8 @@ class ShowKanbanController extends BaseController
      */
     private $recently_visited_dao;
 
+    private EventDispatcherInterface $event_dispatcher;
+
     public function __construct(
         Codendi_Request $request,
         AgileDashboard_KanbanFactory $kanban_factory,
@@ -72,7 +76,8 @@ class ShowKanbanController extends BaseController
         AgileDashboard_PermissionsManager $permissions_manager,
         AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         BreadCrumbBuilder $kanban_crumb_builder,
-        RecentlyVisitedKanbanDao $recently_visited_dao
+        RecentlyVisitedKanbanDao $recently_visited_dao,
+        EventDispatcherInterface $event_dispatcher
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -83,6 +88,7 @@ class ShowKanbanController extends BaseController
         $this->agile_dashboard_crumb_builder = $agile_dashboard_crumb_builder;
         $this->kanban_crumb_builder          = $kanban_crumb_builder;
         $this->recently_visited_dao          = $recently_visited_dao;
+        $this->event_dispatcher              = $event_dispatcher;
     }
 
     /**
@@ -136,6 +142,9 @@ class ShowKanbanController extends BaseController
             $filter_tracker_report_id = $this->request->get('tracker_report_id');
             $dashboard_widget_id      = 0;
 
+            $event = new HasCurrentProjectParentProjects($tracker->getProject());
+            $this->event_dispatcher->dispatch($event);
+
             return $this->renderToString(
                 'kanban',
                 new KanbanPresenter(
@@ -145,7 +154,8 @@ class ShowKanbanController extends BaseController
                     $user->getShortLocale(),
                     $tracker->getGroupId(),
                     $dashboard_widget_id,
-                    $filter_tracker_report_id
+                    $filter_tracker_report_id,
+                    $event->hasProjectAtLeastOneParentProject()
                 )
             );
         } catch (AgileDashboard_KanbanNotFoundException $exception) {

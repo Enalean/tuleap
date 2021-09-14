@@ -142,11 +142,12 @@ describe("LinkFieldController -", () => {
                 tracker,
                 parent_artifact,
                 possible_parent_artifacts,
+                has_current_project_parents: false,
             });
 
             const result = LinkFieldController.showParentArtifactChoice();
 
-            expect(canChooseArtifactsParent).toHaveBeenCalledWith(tracker, parent_artifact);
+            expect(canChooseArtifactsParent).toHaveBeenCalledWith(tracker, parent_artifact, false);
             expect(result).toBeTruthy();
         });
 

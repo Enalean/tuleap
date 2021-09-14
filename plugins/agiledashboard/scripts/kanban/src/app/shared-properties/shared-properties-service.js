@@ -17,6 +17,7 @@ function SharedPropertiesService() {
         widget_id: 0,
         kanban_url: "",
         is_list_picker_enabled: false,
+        has_current_project_parents: false,
     };
 
     return {
@@ -117,6 +118,12 @@ function SharedPropertiesService() {
         },
         isListPickerEnabled() {
             return property.is_list_picker_enabled;
+        },
+        setHasCurrentProjectParents(has_current_project_parents) {
+            property.has_current_project_parents = has_current_project_parents;
+        },
+        hasCurrentProjectParents() {
+            return property.has_current_project_parents;
         },
     };
 }

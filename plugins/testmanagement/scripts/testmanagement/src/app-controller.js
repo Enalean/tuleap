@@ -53,6 +53,11 @@ function TestManagementCtrl(
         );
         SharedPropertiesService.setTrackersUsingListPicker(trackers_ids_using_list_picker);
 
+        const has_current_project_parents = JSON.parse(
+            testmanagement_init_data.hasCurrentProjectParents
+        );
+        SharedPropertiesService.setHasCurrentProjectParents(has_current_project_parents);
+
         const csrf_token = testmanagement_init_data.csrfTokenCampaignStatus;
         SharedPropertiesService.setCSRFTokenCampaignStatus(csrf_token);
 

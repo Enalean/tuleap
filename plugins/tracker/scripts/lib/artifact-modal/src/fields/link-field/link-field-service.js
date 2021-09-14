@@ -1,7 +1,7 @@
 export { canChooseArtifactsParent };
 
-function canChooseArtifactsParent(tracker, linked_artifact) {
-    if (!tracker.parent) {
+function canChooseArtifactsParent(tracker, linked_artifact, has_current_project_parents) {
+    if (!tracker.parent && !has_current_project_parents) {
         return false;
     }
 

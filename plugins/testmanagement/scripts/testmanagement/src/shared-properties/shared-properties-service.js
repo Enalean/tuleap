@@ -11,37 +11,40 @@ function SharedPropertiesService() {
         milestone: undefined,
         trackers_using_list_picker: [],
         csrf_token_campaign_status: undefined,
+        has_current_project_parents: false,
     };
 
     return {
-        getProjectId: getProjectId,
-        setProjectId: setProjectId,
-        getCampaignId: getCampaignId,
-        setCampaignId: setCampaignId,
-        getCurrentUser: getCurrentUser,
-        setCurrentUser: setCurrentUser,
-        getNodeServerAddress: getNodeServerAddress,
-        setNodeServerAddress: setNodeServerAddress,
-        getUUID: getUUID,
-        setUUID: setUUID,
-        setNodeServerVersion: setNodeServerVersion,
-        getNodeServerVersion: getNodeServerVersion,
-        setCampaignTrackerId: setCampaignTrackerId,
-        getCampaignTrackerId: getCampaignTrackerId,
-        setDefinitionTrackerId: setDefinitionTrackerId,
-        getDefinitionTrackerId: getDefinitionTrackerId,
-        setExecutionTrackerId: setExecutionTrackerId,
-        getExecutionTrackerId: getExecutionTrackerId,
-        setIssueTrackerId: setIssueTrackerId,
-        getIssueTrackerId: getIssueTrackerId,
-        setIssueTrackerConfig: setIssueTrackerConfig,
-        getIssueTrackerConfig: getIssueTrackerConfig,
-        getCurrentMilestone: getCurrentMilestone,
-        setCurrentMilestone: setCurrentMilestone,
-        isListPickerUsedByTracker: isListPickerUsedByTracker,
-        setTrackersUsingListPicker: setTrackersUsingListPicker,
-        getCSRFTokenCampaignStatus: getCSRFTokenCampaignStatus,
-        setCSRFTokenCampaignStatus: setCSRFTokenCampaignStatus,
+        getProjectId,
+        setProjectId,
+        getCampaignId,
+        setCampaignId,
+        getCurrentUser,
+        setCurrentUser,
+        getNodeServerAddress,
+        setNodeServerAddress,
+        getUUID,
+        setUUID,
+        setNodeServerVersion,
+        getNodeServerVersion,
+        setCampaignTrackerId,
+        getCampaignTrackerId,
+        setDefinitionTrackerId,
+        getDefinitionTrackerId,
+        setExecutionTrackerId,
+        getExecutionTrackerId,
+        setIssueTrackerId,
+        getIssueTrackerId,
+        setIssueTrackerConfig,
+        getIssueTrackerConfig,
+        getCurrentMilestone,
+        setCurrentMilestone,
+        isListPickerUsedByTracker,
+        setTrackersUsingListPicker,
+        getCSRFTokenCampaignStatus,
+        setCSRFTokenCampaignStatus,
+        setHasCurrentProjectParents,
+        hasCurrentProjectParents,
     };
 
     function getProjectId() {
@@ -154,5 +157,13 @@ function SharedPropertiesService() {
 
     function setCSRFTokenCampaignStatus(csrf_token) {
         property.csrf_token_campaign_status = csrf_token;
+    }
+
+    function setHasCurrentProjectParents(has_current_project_parents) {
+        property.has_current_project_parents = has_current_project_parents;
+    }
+
+    function hasCurrentProjectParents() {
+        return property.has_current_project_parents;
     }
 }

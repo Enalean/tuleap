@@ -32,7 +32,11 @@ function LinkFieldController($q, $element, $scope, gettextCatalog) {
             .then((linked_artifact) => {
                 self.parent_artifact = linked_artifact;
 
-                const canChoose = canChooseArtifactsParent(self.tracker, self.parent_artifact);
+                const canChoose = canChooseArtifactsParent(
+                    self.tracker,
+                    self.parent_artifact,
+                    self.has_current_project_parents
+                );
                 if (canChoose === true) {
                     return self.loadParentArtifactsTitle();
                 }
@@ -94,19 +98,29 @@ function LinkFieldController($q, $element, $scope, gettextCatalog) {
     }
 
     function showParentArtifactChoice() {
-        const canChoose = canChooseArtifactsParent(self.tracker, self.parent_artifact);
+        const canChoose = canChooseArtifactsParent(
+            self.tracker,
+            self.parent_artifact,
+            self.has_current_project_parents
+        );
         return canChoose && self.possible_parent_artifacts.length > 0;
     }
 
     function loadParentArtifactsTitle() {
-        return $q.when(getAllOpenParentArtifacts(self.tracker.id, 1000, 0)).then((artifacts) => {
-            self.possible_parent_artifacts = artifacts.map((artifact) => {
-                return {
-                    id: artifact.id,
-                    formatted_ref: formatArtifact(artifact),
-                };
+        return $q
+            .when(getAllOpenParentArtifacts(self.tracker.id, 1000, 0))
+            .then((artifacts) => {
+                self.possible_parent_artifacts = artifacts.map((artifact) => {
+                    return {
+                        id: artifact.id,
+                        formatted_ref: formatArtifact(artifact),
+                    };
+                });
+            })
+            .catch(() => {
+                // No trackers in parents project from which to select artifacts
+                return $q.when([]);
             });
-        });
     }
 
     function hasArtifactAlreadyAParent() {

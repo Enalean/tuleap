@@ -56,6 +56,11 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         );
         SharedPropertiesService.setTrackersDisablingListPicker(trackers_disabling_list_picker);
 
+        const has_current_project_parents = Boolean(
+            JSON.parse(planning_init_data.hasCurrentProjectParents)
+        );
+        SharedPropertiesService.setHasCurrentProjectParents(has_current_project_parents);
+
         const language = planning_init_data.language;
         initLocale(language);
     }

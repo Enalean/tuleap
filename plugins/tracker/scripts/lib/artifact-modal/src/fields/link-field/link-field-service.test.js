@@ -2,12 +2,12 @@ import { canChooseArtifactsParent } from "./link-field-service.js";
 
 describe("TuleapArtifactModalParentService -", () => {
     describe("canChooseArtifactsParent() -", () => {
-        it("Given no parent tracker, then it will return false", () => {
+        it("Given no parent tracker and no parent project, then it will return false", () => {
             const tracker = { id: 82 };
             const linked_artifact = {
                 artifact: { id: 38 },
             };
-            const result = canChooseArtifactsParent(tracker, linked_artifact);
+            const result = canChooseArtifactsParent(tracker, linked_artifact, false);
 
             expect(result).toBe(false);
         });
@@ -15,7 +15,7 @@ describe("TuleapArtifactModalParentService -", () => {
         it("Given a parent tracker and no linked_artifact, then it will return true", function () {
             const tracker = { id: 33, parent: { id: 86 } };
 
-            const result = canChooseArtifactsParent(tracker, null);
+            const result = canChooseArtifactsParent(tracker, null, false);
 
             expect(result).toBe(true);
         });
@@ -23,9 +23,17 @@ describe("TuleapArtifactModalParentService -", () => {
         it("Given no parent tracker and no linked_artifact, then it will return false", () => {
             const tracker = { id: 30 };
 
-            const result = canChooseArtifactsParent(tracker, null);
+            const result = canChooseArtifactsParent(tracker, null, false);
 
             expect(result).toBe(false);
+        });
+
+        it("Given no parent tracker, no linked_artifact, When there are parent projects, Then it will return true", () => {
+            const tracker = { id: 30 };
+
+            const result = canChooseArtifactsParent(tracker, null, true);
+
+            expect(result).toBe(true);
         });
 
         it("Given a parent tracker and a linked_artifact and given that the linked_artifact's tracker id is different from the parent tracker's id, then it will return true", function () {
@@ -36,7 +44,7 @@ describe("TuleapArtifactModalParentService -", () => {
                 },
             };
 
-            const result = canChooseArtifactsParent(tracker, linked_artifact);
+            const result = canChooseArtifactsParent(tracker, linked_artifact, false);
 
             expect(result).toBe(true);
         });
@@ -51,7 +59,7 @@ describe("TuleapArtifactModalParentService -", () => {
                 },
             };
 
-            const result = canChooseArtifactsParent(tracker, linked_artifact);
+            const result = canChooseArtifactsParent(tracker, linked_artifact, false);
 
             expect(result).toBe(false);
         });
@@ -66,7 +74,7 @@ describe("TuleapArtifactModalParentService -", () => {
                 },
             };
 
-            const result = canChooseArtifactsParent(tracker, linked_artifact);
+            const result = canChooseArtifactsParent(tracker, linked_artifact, false);
 
             expect(result).toBe(false);
         });
@@ -81,7 +89,7 @@ describe("TuleapArtifactModalParentService -", () => {
                 },
             };
 
-            const result = canChooseArtifactsParent(tracker, linked_artifact);
+            const result = canChooseArtifactsParent(tracker, linked_artifact, false);
 
             expect(result).toBe(false);
         });

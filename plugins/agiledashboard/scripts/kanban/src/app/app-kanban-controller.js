@@ -449,11 +449,13 @@ function KanbanCtrl(
             });
         };
         const is_list_picker_enabled = SharedPropertiesService.isListPickerEnabled();
+        const has_current_project_parents = SharedPropertiesService.hasCurrentProjectParents();
         NewTuleapArtifactModalService.showCreation(
             self.kanban.tracker_id,
             null,
             callback,
-            is_list_picker_enabled
+            is_list_picker_enabled,
+            has_current_project_parents
         );
     }
 
@@ -631,7 +633,8 @@ function KanbanCtrl(
                 kanban.tracker_id,
                 item.id,
                 callback,
-                SharedPropertiesService.isListPickerEnabled()
+                SharedPropertiesService.isListPickerEnabled(),
+                SharedPropertiesService.hasCurrentProjectParents()
             );
         }
     }

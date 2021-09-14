@@ -119,6 +119,8 @@ class IndexPresenter
      */
     public $csrf_token_campaign_status;
 
+    public string $has_current_project_parents;
+
     /**
      * @param int|false                         $campaign_tracker_id
      * @param int|false                         $test_definition_tracker_id
@@ -136,6 +138,7 @@ class IndexPresenter
         PFUser $current_user,
         object $milestone_representation,
         array $project_flags,
+        bool $has_current_project_parents,
         CSRFSynchronizerToken $csrf_token
     ) {
         $this->lang = $this->getLanguageAbbreviation($current_user);
@@ -179,7 +182,9 @@ class IndexPresenter
             $test_definition_tracker_id,
             $issue_tracker_id
         );
-        $this->csrf_token_campaign_status     = $csrf_token->getToken();
+
+        $this->csrf_token_campaign_status  = $csrf_token->getToken();
+        $this->has_current_project_parents = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string
