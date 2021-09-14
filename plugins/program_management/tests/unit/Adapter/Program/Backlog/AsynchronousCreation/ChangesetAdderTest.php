@@ -117,7 +117,10 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 $this->artifact,
                 [
-                    self::ARTIFACT_LINK_ID => [],
+                    self::ARTIFACT_LINK_ID => [
+                        'new_values' => '',
+                        'natures'    => []
+                    ],
                     self::TITLE_ID         => self::TITLE_VALUE,
                     self::DESCRIPTION_ID   => [
                         'content' => self::DESCRIPTION_VALUE,
