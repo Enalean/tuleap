@@ -38,4 +38,10 @@ final class ArtifactLinkValueTest extends \Tuleap\Test\PHPUnit\TestCase
             'natures'    => [(string) self::TIMEBOX_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]
         ], $value->getValues());
     }
+
+    public function testItBuildsEmptyValue(): void
+    {
+        $value = ArtifactLinkValue::buildEmptyValue();
+        self::assertEmpty($value->getValues());
+    }
 }

@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
@@ -32,7 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
-final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const MAPPED_STATUS_BIND_VALUE_ID = 3001;
     private const ARTIFACT_LINK_ID            = 1001;
@@ -76,7 +75,7 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
             null
         );
 
-        $changeset = MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
+        $changeset_values = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
             $status_mapper,
             $values,
             $artifact_link_value,
@@ -100,7 +99,7 @@ final class MirroredProgramIncrementChangesetTest extends \Tuleap\Test\PHPUnit\T
                 self::START_DATE_ID    => self::START_DATE_VALUE,
                 self::END_DATE_ID      => self::END_DATE_VALUE
             ],
-            $changeset->toFieldsDataArray()
+            $changeset_values->toFieldsDataArray()
         );
     }
 }

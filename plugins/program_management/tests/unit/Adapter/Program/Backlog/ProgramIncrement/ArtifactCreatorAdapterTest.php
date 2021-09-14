@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
@@ -94,7 +94,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function buildProgramIncrementChangeset(): MirroredProgramIncrementChangeset
+    private function buildProgramIncrementChangeset(): MirroredTimeboxChangesetValues
     {
         $source_values       = SourceTimeboxChangesetValuesBuilder::buildWithValues(
             'Program Increment',
@@ -108,7 +108,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($source_values);
         $target_fields       = SynchronizedFieldReferencesBuilder::build();
 
-        return MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
+        return MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
             MapStatusByValueStub::withValues(10001),
             $source_values,
             $artifact_link_value,

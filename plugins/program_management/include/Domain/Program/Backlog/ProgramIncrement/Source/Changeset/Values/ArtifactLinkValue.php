@@ -25,30 +25,35 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
 /**
- * I hold the new value of the Artifact link field for Mirrored Timeboxes. I contain a link to the source Timebox
- * with the _mirrored_milestone type.
- * I format those values to the array expected by the field's validation.
+ * I hold the new value of the Artifact link field for Mirrored Timeboxes.
+ * I can contain a link to the source Timebox with the _mirrored_milestone type, or no value.
+ * I format those values to the array expected by the Tracker field's validation.
  * @psalm-immutable
  */
 final class ArtifactLinkValue
 {
-    private int $source_artifact_id;
-
-    private function __construct(int $source_artifact_id)
+    private function __construct(private bool $is_empty, private int $source_artifact_id)
     {
-        $this->source_artifact_id = $source_artifact_id;
     }
 
     public static function fromSourceTimeboxValues(SourceTimeboxChangesetValues $values): self
     {
-        return new self($values->getSourceArtifactId());
+        return new self(false, $values->getSourceArtifactId());
+    }
+
+    public static function buildEmptyValue(): self
+    {
+        return new self(true, 0);
     }
 
     /**
-     * @return array{new_values: string, natures: array<string, string>}
+     * @return array{new_values?: string, natures?: array<string, string>}
      */
     public function getValues(): array
     {
+        if ($this->is_empty) {
+            return [];
+        }
         return [
             'new_values' => (string) $this->source_artifact_id,
             'natures'    => [(string) $this->source_artifact_id => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]

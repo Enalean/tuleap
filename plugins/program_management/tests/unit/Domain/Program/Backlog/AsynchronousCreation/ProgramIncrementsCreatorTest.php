@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -90,13 +89,13 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withConsecutive(
                 [
                     $first_tracker,
-                    self::isInstanceOf(MirroredProgramIncrementChangeset::class),
+                    self::isInstanceOf(MirroredTimeboxChangesetValues::class),
                     self::isInstanceOf(\PFUser::class),
                     $this->field_values->getSubmittedOn()
                 ],
                 [
                     $second_tracker,
-                    self::isInstanceOf(MirroredProgramIncrementChangeset::class),
+                    self::isInstanceOf(MirroredTimeboxChangesetValues::class),
                     self::isInstanceOf(\PFUser::class),
                     $this->field_values->getSubmittedOn()
                 ]
