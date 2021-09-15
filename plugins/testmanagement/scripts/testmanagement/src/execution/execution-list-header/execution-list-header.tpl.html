@@ -131,6 +131,7 @@
         </div>
         <div class="test-campaign-progressions">
             <div class="test-campaign-progression passed"
+                style="width: {{ $ctrl.campaign_state.campaign.nb_of_passed * 100 / $ctrl.campaign_state.campaign.total }}%"
                 ng-if="$ctrl.campaign_state.campaign.nb_of_passed"
             >
                 <div class="test-campaign-progression-value">{{ $ctrl.campaign_state.campaign.nb_of_passed }}</div>
