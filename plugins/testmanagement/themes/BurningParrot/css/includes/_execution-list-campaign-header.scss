@@ -86,10 +86,9 @@ $testers-padding: 4px;
         background: var(--tlp-neutral-dark-color);
         cursor: pointer;
 
-        > .test-campaign-tester {
-            position: relative;
-            top: 0;
-            right: 0;
+        > .test-campaign-tester:nth-child(4),
+        > .test-campaign-tester:nth-child(5) {
+            display: none;
         }
 
         > .test-campaign-testers-more {
@@ -99,13 +98,17 @@ $testers-padding: 4px;
 
     > .test-campaign-testers-more {
         visibility: hidden;
+        width: 1rem;
         margin: 0 4px 0 8px;
         color: var(--tlp-dimmed-color);
         font-size: 0.75rem;
+        text-align: center;
     }
 }
 
 .test-campaign-tester {
+    $more-testers-icon-width-including-margins: calc(1rem + 4px + 8px);
+
     position: relative;
     z-index: 3;
     flex: 0 0 auto;
@@ -133,7 +136,7 @@ $testers-padding: 4px;
         position: absolute;
         z-index: 2;
         top: $testers-padding;
-        right: -8px; // not related to --tlp-medium-spacing
+        right: calc(-8px + #{$more-testers-icon-width-including-margins}); // not related to --tlp-medium-spacing
 
         > .tlp-badge-primary {
             display: none;
@@ -144,7 +147,7 @@ $testers-padding: 4px;
         position: absolute;
         z-index: 1;
         top: $testers-padding;
-        right: -20px; // -avatar.width / 2 - right position of nth-child(4)
+        right: calc(-20px + #{$more-testers-icon-width-including-margins}); // -avatar.width / 2 - right position of nth-child(4)
 
         > .tlp-badge-primary {
             display: none;
