@@ -110,6 +110,10 @@ function ExecutionDetailCtrl(
     });
 
     $scope.$on("reload-comment-editor-view", (event, execution) => {
+        if (execution_id !== execution.id) {
+            return;
+        }
+
         const was_comment_editing = ExecutionService.getDataInEditor() !== "";
         if (
             was_comment_editing &&

@@ -25,13 +25,15 @@ import BaseController from "./execution-detail-controller.js";
 
 describe("ExecutionDetailController -", () => {
     let $scope,
+        $state,
         $q,
         SharedPropertiesService,
         ExecutionService,
         TlpModalService,
         NewTuleapArtifactModalService,
         ckeditorGetData,
-        ExecutionRestService;
+        ExecutionRestService,
+        ExecutionDetailController;
 
     beforeEach(() => {
         angular.mock.module(execution_module);
@@ -60,6 +62,10 @@ describe("ExecutionDetailController -", () => {
             ExecutionRestService = _ExecutionRestService_;
         });
 
+        $state = {
+            params: {},
+        };
+
         $scope = $rootScope.$new();
 
         jest.spyOn(ExecutionRestService, "leaveTestExecution").mockImplementation(() => $q.when());
@@ -74,8 +80,9 @@ describe("ExecutionDetailController -", () => {
 
         jest.spyOn(ExecutionService, "loadExecutions").mockImplementation(() => {});
 
-        $controller(BaseController, {
+        ExecutionDetailController = $controller(BaseController, {
             $scope,
+            $state,
             ExecutionService,
             TlpModalService,
             NewTuleapArtifactModalService,
@@ -410,6 +417,9 @@ describe("ExecutionDetailController -", () => {
         it("When there is no comment in editing mode and no new comment, Then the editor is cleared and write mode is displayed", () => {
             jest.spyOn(ExecutionService, "getDataInEditor").mockImplementation(() => "");
 
+            $state.params.execid = execution.id;
+            ExecutionDetailController.$onInit();
+
             $scope.$emit("reload-comment-editor-view", execution);
 
             expect(clear_editor).toHaveBeenCalled();
@@ -418,6 +428,9 @@ describe("ExecutionDetailController -", () => {
         it("When there is no comment in editing mode but a new comment, Then the editor is cleared and read mode is displayed", () => {
             jest.spyOn(ExecutionService, "getDataInEditor").mockImplementation(() => "");
             execution.previous_result.result = "A new comment";
+
+            $state.params.execid = execution.id;
+            ExecutionDetailController.$onInit();
 
             $scope.$emit("reload-comment-editor-view", execution);
 
@@ -429,18 +442,34 @@ describe("ExecutionDetailController -", () => {
                 return { id: 666 };
             });
 
+            $state.params.execid = execution.id;
+            ExecutionDetailController.$onInit();
+
             $scope.$emit("reload-comment-editor-view", execution);
 
             expect(clear_editor).toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeTruthy();
         });
         it("When comment is being edited and editor is displayed and users are different, Then warning message is displayed", () => {
+            $state.params.execid = execution.id;
+            ExecutionDetailController.$onInit();
+
             $scope.$emit("reload-comment-editor-view", execution);
 
             expect(clear_editor).not.toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeTruthy();
             expect($scope.displayTestCommentWarningOveriding).toBeTruthy();
             expect(execution.results).toEqual("A comment in editing mode");
+        });
+        it("When the user is commenting a test and someone else is passing another one, Then warning message is NOT displayed", () => {
+            $state.params.execid = 66;
+            ExecutionDetailController.$onInit();
+
+            $scope.$emit("reload-comment-editor-view", execution);
+
+            expect(clear_editor).not.toHaveBeenCalled();
+            expect($scope.displayTestCommentEditor).toBeTruthy();
+            expect($scope.displayTestCommentWarningOveriding).toBeFalsy();
         });
     });
 });
