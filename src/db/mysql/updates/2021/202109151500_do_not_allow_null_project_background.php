@@ -21,19 +21,16 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202108231506_add_background_color_column extends \Tuleap\ForgeUpgrade\Bucket
+final class b202109151500_do_not_allow_null_project_background extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
-        return 'Add project background color column';
+        return 'Clean up the project background using a color instead of an image';
     }
 
     public function up(): void
     {
-        $sql = "ALTER TABLE project_background
-                MODIFY COLUMN background VARCHAR(255) NULL,
-                ADD COLUMN background_color VARCHAR(255) NULL";
-
-        $this->api->dbh->exec($sql);
+        $this->api->dbh->exec('DELETE FROM project_background WHERE background IS NULL');
+        $this->api->dbh->exec('ALTER TABLE project_background MODIFY COLUMN background VARCHAR(255) NOT NULL');
     }
 }

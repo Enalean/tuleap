@@ -22,51 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
-use Tuleap\Project\ProjectBackground\ProjectBackgroundColorName;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 
 /**
  * @psalm-immutable
  * @psalm-import-type ValidProjectBackgroundName from \Tuleap\Project\ProjectBackground\ProjectBackgroundName
- * @psalm-import-type ValidProjectBackgroundColorName from \Tuleap\Project\ProjectBackground\ProjectBackgroundColorName
  */
 final class HeaderBackgroundRepresentation
 {
     /**
-     * @var string | null {@required false} {@choice aerial-water,asphalt-rock,beach-daytime,blue-rain,blue-sand,brown-alpaca,brown-desert,brown-grass,brown-textile,brush-daytime,green-grass,green-leaf,green-trees,led-light,ocean-waves,octopus-black,orange-tulip,purple-building,purple-droplet,purple-textile,snow-mountain,tree-water,white-sheep,wooden-surface}
-     * @psalm-var ValidProjectBackgroundName|null
+     * @var string {@required true} {@choice aerial-water,asphalt-rock,beach-daytime,blue-rain,blue-sand,brown-alpaca,brown-desert,brown-grass,brown-textile,brush-daytime,green-grass,green-leaf,green-trees,led-light,ocean-waves,octopus-black,orange-tulip,purple-building,purple-droplet,purple-textile,snow-mountain,tree-water,white-sheep,wooden-surface}
+     * @psalm-var ValidProjectBackgroundName
      */
     public $identifier;
 
     /**
-     * @var string | null {@required false} {@choice inca-silver,chrome-silver,firemist-silver,red-wine,fiesta-red,coral-pink,teddy-brown,clockwork-orange,graffiti-yellow,army-green,neon-green,acid-green,sherwood-green,ocean-turquoise,surf-green,deep-blue,lake-placid-blue,daphne-blue,plum-crazy,ultra-violet,lilac-purple,panther-pink,peggy-pink}
-     * @psalm-var ValidProjectBackgroundColorName|null
+     * @psalm-param ValidProjectBackgroundName $identifier
      */
-    public $color;
-
-    /**
-     * @psalm-param ValidProjectBackgroundName|null $identifier
-     * @psalm-param ValidProjectBackgroundColorName|null $color
-     */
-    private function __construct(?string $identifier, ?string $color)
+    private function __construct(string $identifier)
     {
         $this->identifier = $identifier;
-        $this->color      = $color;
     }
 
     public static function fromBackgroundName(ProjectBackgroundName $background_name): self
     {
-        return new self(
-            $background_name->getIdentifier(),
-            null
-        );
-    }
-
-    public static function fromColorName(ProjectBackgroundColorName $color_name): self
-    {
-        return new self(
-            null,
-            $color_name->getColorName()
-        );
+        return new self($background_name->getIdentifier());
     }
 }

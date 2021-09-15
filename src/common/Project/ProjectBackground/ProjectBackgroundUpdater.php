@@ -34,23 +34,11 @@ class ProjectBackgroundUpdater
         $this->project_background_dao = $project_background_dao;
     }
 
-    public function updateProjectBackgroundImage(
-        UserCanModifyProjectBackgroundPermission $permission,
-        ProjectBackgroundName $new_background_name
-    ): void {
-        $this->project_background_dao->setBackgroundImageByProjectID(
+    public function updateProjectBackground(UserCanModifyProjectBackgroundPermission $permission, ProjectBackgroundName $new_background_name): void
+    {
+        $this->project_background_dao->setBackgroundByProjectID(
             (int) $permission->getProject()->getID(),
             $new_background_name->getIdentifier()
-        );
-    }
-
-    public function updateProjectBackgroundColor(
-        UserCanModifyProjectBackgroundPermission $permission,
-        ProjectBackgroundColorName $color_name
-    ): void {
-        $this->project_background_dao->setBackgroundColorByProjectID(
-            (int) $permission->getProject()->getID(),
-            $color_name->getColorName()
         );
     }
 
