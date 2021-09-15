@@ -499,7 +499,7 @@ class Git extends PluginController
             if ($repository && $repository->userCanRead($user)) {
                 $this->addPermittedAction('view');
                 $this->addPermittedAction('edit');
-                $this->addPermittedAction('edit-description');
+                $this->addPermittedAction('edit-general-settings');
                 $this->addPermittedAction('clone');
                 if ($repository->belongsTo($user)) {
                     $this->addPermittedAction('repo_management');
