@@ -1702,7 +1702,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals('a banner message', $response_json['message']);
     }
 
-    public function testPUTHeaderBackgroundImage(): void
+    public function testPUTHeaderBackground(): void
     {
         $payload = json_encode(['identifier' => 'beach-daytime'], JSON_THROW_ON_ERROR);
 
@@ -1717,74 +1717,6 @@ class ProjectTest extends ProjectBase
         );
 
         self::assertEquals(200, $response->getStatusCode());
-    }
-
-    public function testPUTHeaderBackgroundColor(): void
-    {
-        $payload = json_encode(['color' => 'inca-silver'], JSON_THROW_ON_ERROR);
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest(
-                'PUT',
-                'projects/' . $this->project_public_member_id . '/header_background'
-            )->withBody(
-                $this->stream_factory->createStream($payload)
-            )
-        );
-
-        self::assertEquals(200, $response->getStatusCode());
-    }
-
-    public function testPUTHeaderBackgroundColorThrows400IfColorIsNotKnown(): void
-    {
-        $payload = json_encode(['color' => 'not-known'], JSON_THROW_ON_ERROR);
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest(
-                'PUT',
-                'projects/' . $this->project_public_member_id . '/header_background'
-            )->withBody(
-                $this->stream_factory->createStream($payload)
-            )
-        );
-
-        self::assertEquals(400, $response->getStatusCode());
-    }
-
-    public function testPUTHeaderBackgroundThrows400IfBothAreSet(): void
-    {
-        $payload = json_encode(['color' => 'inca-silver', 'identifier' => 'beach-daytime'], JSON_THROW_ON_ERROR);
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest(
-                'PUT',
-                'projects/' . $this->project_public_member_id . '/header_background'
-            )->withBody(
-                $this->stream_factory->createStream($payload)
-            )
-        );
-
-        self::assertEquals(400, $response->getStatusCode());
-    }
-
-    public function testPUTHeaderBackgroundThrows400IfNothingIsSet(): void
-    {
-        $payload = json_encode([], JSON_THROW_ON_ERROR);
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest(
-                'PUT',
-                'projects/' . $this->project_public_member_id . '/header_background'
-            )->withBody(
-                $this->stream_factory->createStream($payload)
-            )
-        );
-
-        self::assertEquals(400, $response->getStatusCode());
     }
 
     public function testDELETEHeaderBackground(): void

@@ -54,7 +54,6 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundColorName;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundPermissionsChecker;
@@ -1057,47 +1056,16 @@ class ProjectResource extends AuthenticatedResource
      *
      * @param int $id id of the project
      * @param HeaderBackgroundRepresentation $header_background_representation Header background to be displayed {@from body}
-     *
-     * @throws RestException 400
-     * @throws RestException 401
+     * @throws RestException
      */
     protected function putBackgroundHeader(int $id, HeaderBackgroundRepresentation $header_background_representation): void
     {
         $this->checkAccess();
 
-        if (
-            isset($header_background_representation->color) &&
-            isset($header_background_representation->identifier)
-        ) {
-            throw new RestException(
-                400,
-                "Both color and image cannot be defined in the same time."
-            );
-        }
-
-        if (
-            ! isset($header_background_representation->color) &&
-            ! isset($header_background_representation->identifier)
-        ) {
-            throw new RestException(
-                400,
-                "Neither color nor image is provided. One of this parameter must be set."
-            );
-        }
-
-        $project_background_updater = new ProjectBackgroundUpdater(new ProjectBackgroundDao());
-
-        if (isset($header_background_representation->identifier)) {
-            $project_background_updater->updateProjectBackgroundImage(
-                $this->getModifyHeaderBackgroundPermission($id),
-                ProjectBackgroundName::fromIdentifier($header_background_representation->identifier)
-            );
-        } else {
-            $project_background_updater->updateProjectBackgroundColor(
-                $this->getModifyHeaderBackgroundPermission($id),
-                ProjectBackgroundColorName::fromColorName($header_background_representation->color)
-            );
-        }
+        (new ProjectBackgroundUpdater(new ProjectBackgroundDao()))->updateProjectBackground(
+            $this->getModifyHeaderBackgroundPermission($id),
+            ProjectBackgroundName::fromIdentifier($header_background_representation->identifier)
+        );
     }
 
     /**
