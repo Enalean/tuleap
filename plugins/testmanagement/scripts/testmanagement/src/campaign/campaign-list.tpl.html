@@ -29,6 +29,7 @@
         <h2 class="test-campaign-title">{{ campaign.label }}</h2>
         <div class="test-campaign-progressions">
             <div class="test-campaign-progression passed"
+                style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%"
                 ng-if="campaign.nb_of_passed"
             >
                 <div class="test-campaign-progression-value">{{ campaign.nb_of_passed }}</div>
