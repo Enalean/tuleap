@@ -21,8 +21,17 @@ import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createRoadmapLocalVue } from "../../../roadmap-widget/src/helpers/local-vue-for-test";
 import type { Tracker } from "../type";
+import * as list_picker from "@tuleap/list-picker";
 
 describe("App", () => {
+    beforeEach(() => {
+        jest.spyOn(list_picker, "createListPicker").mockResolvedValue({
+            destroy: () => {
+                // Nothing to do since we did not really create something
+            },
+        });
+    });
+
     it("should select a tracker that is not already a lvl1 iteration", async () => {
         const wrapper = shallowMount(App, {
             localVue: await createRoadmapLocalVue(),

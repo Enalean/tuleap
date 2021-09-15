@@ -9,11 +9,9 @@
   "main": "dist/list-picker.umd.js",
   "style": "dist/style.css",
   "dependencies": {
-    "@juggle/resize-observer": "^3.3.1",
     "@tuleap/gettext": "file:../gettext",
     "lit-html": "^1.4.1"
   },
-  "devDependencies": {},
   "config": {
     "bin": "../../../../node_modules/.bin"
   },

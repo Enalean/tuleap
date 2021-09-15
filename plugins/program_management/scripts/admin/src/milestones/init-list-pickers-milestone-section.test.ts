@@ -70,6 +70,7 @@ describe("initListPickersMilestoneSection", () => {
     });
 
     it("When iteration tracker selector does not exist, Then error is thrown", async () => {
+        createListPickerSpy();
         const pi_selector = document.createElement("select");
         pi_selector.id = "admin-configuration-program-increment-tracker";
 
@@ -105,7 +106,7 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(plannable_trackers_selector);
         doc.body.appendChild(permissions_selector);
 
-        const create_list_picker = jest.spyOn(listPicker, "createListPicker");
+        const create_list_picker = createListPickerSpy();
         const disabled_plannable_trackers = jest.spyOn(
             disabledPlannableTrackerHelper,
             "disabledPlannableTrackers"
@@ -158,7 +159,7 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(permissions_selector);
         doc.body.appendChild(iteration_selector);
 
-        const create_list_picker = jest.spyOn(listPicker, "createListPicker");
+        const create_list_picker = createListPickerSpy();
         const disabled_plannable_trackers = jest.spyOn(
             disabledPlannableTrackerHelper,
             "disabledPlannableTrackers"
@@ -195,3 +196,11 @@ describe("initListPickersMilestoneSection", () => {
         expect(disabled_iteration_tracker).toHaveBeenCalledWith(doc, "", []);
     });
 });
+
+function createListPickerSpy(): jest.SpyInstance<Promise<listPicker.ListPicker>> {
+    return jest.spyOn(listPicker, "createListPicker").mockResolvedValue({
+        destroy: () => {
+            // Nothing to do since we did not really create something
+        },
+    });
+}
