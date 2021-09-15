@@ -43,12 +43,13 @@ export function autocomplete_projects_for_select2(element, options = {}) {
     select2(element, options);
 }
 
-function convertUsersToSelect2Entry({ tuleap_user_id, text, id }) {
+function convertUsersToSelect2Entry({ tuleap_user_id, text, id, ...other_parameters }) {
     let user = tuleap_user_id;
     if (!user) {
         user = id;
     }
     return {
+        ...other_parameters,
         id: user,
         text: text,
     };
@@ -95,7 +96,9 @@ export function autocomplete_users_for_select2(element, options = {}) {
             return escaper.html(user.text);
         }
 
-        const avatar = user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : "";
+        const avatar = user.has_avatar
+            ? '<img loading="lazy" src="' + escaper.html(user.avatar_url) + '">'
+            : "";
         const escaped_text = escaper.html(user.text);
         return `<div class="select2-result-user"><div class="tlp-avatar select2-result-user__avatar">${avatar}</div>${escaped_text}</div>`;
     }
