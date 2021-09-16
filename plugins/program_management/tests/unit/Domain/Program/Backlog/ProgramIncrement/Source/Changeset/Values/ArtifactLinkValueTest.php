@@ -42,6 +42,9 @@ final class ArtifactLinkValueTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsEmptyValue(): void
     {
         $value = ArtifactLinkValue::buildEmptyValue();
-        self::assertEmpty($value->getValues());
+        self::assertEquals([
+            'new_values' => '',
+            'natures'    => []
+        ], $value->getValues());
     }
 }

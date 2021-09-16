@@ -47,12 +47,15 @@ final class ArtifactLinkValue
     }
 
     /**
-     * @return array{new_values?: string, natures?: array<string, string>}
+     * @return array{new_values: string, natures: array<string, string>}
      */
     public function getValues(): array
     {
         if ($this->is_empty) {
-            return [];
+            return [
+                'new_values' => '',
+                'natures'    => []
+            ];
         }
         return [
             'new_values' => (string) $this->source_artifact_id,
