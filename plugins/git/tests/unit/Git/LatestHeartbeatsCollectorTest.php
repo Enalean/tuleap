@@ -28,30 +28,20 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\Project\HeartbeatsEntryCollection;
 
-class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var \Tracker_ArtifactFactory */
-    public $factory;
-
-    /** @var LatestHeartbeatsCollector */
-    public $collector;
-
-    /** @var \Project */
-    public $project;
-
-    /** @var \PFUser */
-    public $user;
+    private \GitRepositoryFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface $factory;
+    private LatestHeartbeatsCollector $collector;
+    private \Project $project;
+    private PFUser $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $glyph_finder = \Mockery::spy(\Tuleap\Glyph\GlyphFinder::class);
-        $glyph_finder->shouldReceive('get')->andReturns(\Mockery::spy(\Tuleap\Glyph\Glyph::class));
-
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = new \Project(['group_id' => 101]);
         $this->user    = new PFUser(['user_id' => 200, 'language_id' => 'en']);
 
         $dao = \Mockery::mock(\Git_LogDao::class);
@@ -72,7 +62,6 @@ class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->factory,
             $dao,
             \Mockery::spy(\Git_GitRepositoryUrlManager::class),
-            $glyph_finder,
             \Mockery::spy(\UserManager::class),
             \Mockery::spy(\UserHelper::class)
         );

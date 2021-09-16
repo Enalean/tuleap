@@ -149,8 +149,6 @@ use Tuleap\Git\User\AccessKey\Scope\GitRepositoryAccessKeyScope;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
-use Tuleap\Glyph\GlyphLocation;
-use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -327,7 +325,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function getHooksAndCallbacks()
     {
-        $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(HierarchyDisplayer::NAME);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
@@ -2399,21 +2396,12 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
-    {
-        $glyph_locations_collector->addLocation(
-            'tuleap-git',
-            new GlyphLocation(GIT_BASE_DIR . '/../glyphs')
-        );
-    }
-
     public function collectHeartbeatsEntries(HeartbeatsEntryCollection $collection): void
     {
         $collector = new LatestHeartbeatsCollector(
             $this->getRepositoryFactory(),
             $this->getGitLogDao(),
             $this->getGitRepositoryUrlManager(),
-            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
             UserManager::instance(),
             UserHelper::instance()
         );

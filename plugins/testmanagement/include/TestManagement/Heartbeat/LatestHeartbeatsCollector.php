@@ -23,50 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Heartbeat;
 
 use Codendi_HTMLPurifier;
-use EventManager;
 use PFUser;
 use Project;
 use Tracker_ArtifactFactory;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class LatestHeartbeatsCollector
 {
-    /**
-     * @var GlyphFinder
-     */
-    private $glyph_finder;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $factory;
-    /**
-     * @var ExecutionDao
-     */
-    private $dao;
-    /**
-     * @var \UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-
     public function __construct(
-        ExecutionDao $dao,
-        Tracker_ArtifactFactory $factory,
-        GlyphFinder $glyph_finder,
-        \UserHelper $user_helper,
-        \UserManager $user_manager
+        private ExecutionDao $dao,
+        private Tracker_ArtifactFactory $factory,
+        private \UserHelper $user_helper,
+        private \UserManager $user_manager
     ) {
-        $this->dao          = $dao;
-        $this->factory      = $factory;
-        $this->glyph_finder = $glyph_finder;
-        $this->user_helper  = $user_helper;
-        $this->user_manager = $user_manager;
     }
 
     public static function build(): self
@@ -74,7 +45,6 @@ class LatestHeartbeatsCollector
         return new self(
             new ExecutionDao(),
             Tracker_ArtifactFactory::instance(),
-            new GlyphFinder(EventManager::instance()),
             \UserHelper::instance(),
             \UserManager::instance()
         );
@@ -103,9 +73,8 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $row['last_update_date'],
-                    $this->glyph_finder->get('tuleap-tracker-small'),
-                    $this->glyph_finder->get('tuleap-tracker'),
-                    $this->getHTMLMessage($artifact, $project, (int) $row['last_updated_by_id'])
+                    $this->getHTMLMessage($artifact, $project, (int) $row['last_updated_by_id']),
+                    "fas fa-list"
                 )
             );
         }
