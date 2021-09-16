@@ -35,8 +35,62 @@ describe("FieldFocusManager", () => {
         source_select_box = document.createElement("select");
         search_field_element = document.createElement("input");
 
+        source_select_box.setAttribute("tabindex", "-1");
+
         jest.spyOn(selection_element, "focus");
         jest.spyOn(search_field_element, "focus");
+    });
+
+    describe("init", () => {
+        it(`Given the source <select> is a single select
+            When the source <select> has the focus
+            Then it sets the focus on the selection element`, () => {
+            new FieldFocusManager(
+                document.implementation.createHTMLDocument(),
+                source_select_box,
+                selection_element,
+                search_field_element
+            ).init();
+
+            source_select_box.dispatchEvent(new Event("focus"));
+
+            expect(selection_element.focus).toHaveBeenCalled();
+        });
+
+        it(`Given the source <select> is a multiple select
+            When the source <select> has the focus
+            Then it sets the focus on the search field element`, () => {
+            source_select_box.setAttribute("multiple", "multiple");
+
+            new FieldFocusManager(
+                document.implementation.createHTMLDocument(),
+                source_select_box,
+                selection_element,
+                search_field_element
+            ).init();
+
+            source_select_box.dispatchEvent(new Event("focus"));
+
+            expect(search_field_element.focus).toHaveBeenCalled();
+        });
+    });
+
+    describe("destroy", () => {
+        it("should remove the focus event listener on the source <select>", () => {
+            const focus_manager = new FieldFocusManager(
+                document.implementation.createHTMLDocument(),
+                source_select_box,
+                selection_element,
+                search_field_element
+            );
+
+            focus_manager.init();
+            source_select_box.dispatchEvent(new Event("focus"));
+            focus_manager.destroy();
+            source_select_box.dispatchEvent(new Event("focus"));
+
+            expect(selection_element.focus).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe("doesFieldHaveTheFocus", () => {
@@ -78,12 +132,12 @@ describe("FieldFocusManager", () => {
         it("When the source <select> is multiple, Then it should NOT apply the focus on the selection element", () => {
             source_select_box.setAttribute("multiple", "multiple");
 
-            focus_manager.applyFocusOnSelectionElement();
+            focus_manager.applyFocusOnListPicker();
             expect(selection_element.focus).not.toHaveBeenCalled();
         });
 
         it("When the source <select> is NOT multiple, Then it should apply the focus on the selection element", () => {
-            focus_manager.applyFocusOnSelectionElement();
+            focus_manager.applyFocusOnListPicker();
             expect(selection_element.focus).toHaveBeenCalled();
         });
     });
