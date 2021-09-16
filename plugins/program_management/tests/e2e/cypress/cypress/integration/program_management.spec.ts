@@ -38,6 +38,7 @@ describe("Program management", () => {
         configureProgram(program_project_name, team_project_name);
         createAndPlanFeature(program_project_name, team_project_name);
         checkThatProgramAndTeamsAreCorrect(program_project_name, team_project_name);
+        updateProgramIncrement(program_project_name, team_project_name);
     });
 });
 
@@ -186,13 +187,27 @@ function checkThatProgramAndTeamsAreCorrect(
     cy.visitProjectService(team_project_name, "Agile Dashboard");
     cy.get("[data-test=nav-bar-linked-projects]").contains(program_project_name);
 
-    cy.log("Check mirrored release have been created");
+    cy.log("Check mirrored release has been created");
     cy.get("[data-test=go-to-top-backlog]").click();
     cy.get("[data-test=expand-collapse-milestone]").contains("My first PI");
 
     cy.log("Check that user story linked to feature have been planned in Mirrored release");
     cy.get("[data-test=expand-collapse-milestone]").click();
     cy.get("[data-test=milestone-backlog-items]").contains("My US");
+}
+
+function updateProgramIncrement(program_project_name: string, team_project_name: string): void {
+    cy.visitProjectService(program_project_name, "Program");
+    cy.get("[data-test=program-increment-toggle]").click();
+    cy.get("[data-test=program-increment-info-edit-link]").click();
+    cy.get("[data-test=edit-field-program_increment_name]").click();
+    cy.get("[data-test=program_increment_name]").type("{end} updated");
+    cy.get("[data-test=artifact-submit]").click();
+
+    cy.log("Check mirrored release has been updated");
+    cy.visitProjectService(team_project_name, "Agile Dashboard");
+    cy.get("[data-test=go-to-top-backlog]").click();
+    cy.get("[data-test=expand-collapse-milestone]").contains("My first PI updated");
 }
 
 type CypressWrapper = Cypress.Chainable<JQuery<HTMLElement>>;
