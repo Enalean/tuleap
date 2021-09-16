@@ -604,15 +604,15 @@ class UserDao extends DataAccessObject
                 LEFT JOIN (
                     SELECT count(admin_flags) as nb, user_id
                     FROM user_group
-                    INNER JOIN groups USING(group_id)
-                    WHERE groups.status = 'A' AND admin_flags='A'
+                    INNER JOIN `groups` USING(group_id)
+                    WHERE `groups`.status = 'A' AND admin_flags='A'
                     GROUP BY user_id
                 ) as admin_of ON (admin_of.user_id = user.user_id)
                 LEFT JOIN (
                     SELECT count(group_id) as nb, user_id
                     FROM user_group
-                    INNER JOIN groups USING(group_id)
-                    WHERE groups.status = 'A'
+                    INNER JOIN `groups` USING(group_id)
+                    WHERE `groups`.status = 'A'
                     GROUP BY user_id
                 ) as member_of ON (member_of.user_id = user.user_id)
             $where

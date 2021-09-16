@@ -774,7 +774,7 @@ function util_check_fileupload($filename)
  */
 function util_get_group_name_from_id($group_id)
 {
-    $sql    = "SELECT group_name FROM groups WHERE group_id = " . db_ei($group_id);
+    $sql    = "SELECT group_name FROM `groups` WHERE group_id = " . db_ei($group_id);
     $result = db_query($sql);
     return db_result($result, 0, 0);
 }
@@ -842,7 +842,7 @@ function util_get_group_from_commit_id($cid)
         return 0;
     }
 
-    $sql = "SELECT group_id FROM groups WHERE unix_group_name='" . db_es($projname) . "'";
+    $sql = "SELECT group_id FROM `groups` WHERE unix_group_name='" . db_es($projname) . "'";
     $res = db_query($sql);
     return db_result($res, 0, 'group_id');
 }

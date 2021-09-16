@@ -32,7 +32,7 @@ class ServiceUsageDao extends DataAccessObject
         $sql = "SELECT group_id, SUM(svn_write_operations) AS result
                 FROM plugin_svn_full_history
                 JOIN plugin_svn_repositories ON plugin_svn_repositories.id = plugin_svn_full_history.repository_id
-                JOIN groups ON groups.group_id = plugin_svn_repositories.project_id
+                JOIN `groups` ON `groups`.group_id = plugin_svn_repositories.project_id
                 WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
                 GROUP BY group_id";
 

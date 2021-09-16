@@ -38,7 +38,7 @@ class ProjectLinksDao extends DataAccessObject
     {
         $sql = 'SELECT rel.*, g.group_name' .
                ' FROM plugin_projectlinks_relationship rel' .
-               '  JOIN groups g ON (g.group_id = rel.target_group_id)' .
+               '  JOIN `groups` AS g ON (g.group_id = rel.target_group_id)' .
                ' WHERE link_type_id = ' . db_ei($linkTypeId) .
                ' ORDER BY g.group_name';
         return $this->retrieve($sql);
@@ -52,14 +52,14 @@ class ProjectLinksDao extends DataAccessObject
      */
     public function searchForwardLinks($groupId)
     {
-        $sql = 'SELECT name AS link_name, type, groups.group_id,
+        $sql = 'SELECT name AS link_name, type, `groups`.group_id,
                   group_name, unix_group_name, uri_plus, link_id, creation_date,
                   master_group_id, target_group_id, link_type.link_type_id
                 FROM plugin_projectlinks_relationship AS rel
                   INNER JOIN plugin_projectlinks_link_type AS link_type 
                     USING (link_type_id)
-                  INNER JOIN groups
-                    ON (groups.group_id = rel.target_group_id)
+                  INNER JOIN `groups`
+                    ON (`groups`.group_id = rel.target_group_id)
                 WHERE master_group_id = ' . db_ei($groupId) . '
                   AND status = "A"
                 ORDER BY name, type, group_name';
@@ -74,14 +74,14 @@ class ProjectLinksDao extends DataAccessObject
      */
     public function searchBackLinks($groupId)
     {
-        $sql = 'SELECT reverse_name AS link_name, type, groups.group_id,
+        $sql = 'SELECT reverse_name AS link_name, type, `groups`.group_id,
                   group_name, unix_group_name, uri_plus, link_id, creation_date,
                   master_group_id, target_group_id,  link_type.link_type_id
                 FROM plugin_projectlinks_relationship AS rel
                   INNER JOIN plugin_projectlinks_link_type AS link_type 
                     USING (link_type_id)
-                  INNER JOIN groups
-                    ON (groups.group_id = rel.master_group_id)
+                  INNER JOIN `groups`
+                    ON (`groups`.group_id = rel.master_group_id)
                 WHERE target_group_id = ' . db_ei($groupId) . '
                   AND status = "A"
             ORDER BY name, type, group_name';

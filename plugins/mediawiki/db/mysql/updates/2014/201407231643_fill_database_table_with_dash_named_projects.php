@@ -57,11 +57,11 @@ EOT;
         $this->execDB($sql, 'An error occured while attempting to add a primary key to plugin_mediawiki_database');
 
         $sql = "REPLACE INTO plugin_mediawiki_database (project_id, database_name)
-                (SELECT groups.group_id as project_id, SCHEMA_NAME AS database_name
+                (SELECT `groups`.group_id as project_id, SCHEMA_NAME AS database_name
                     FROM INFORMATION_SCHEMA.SCHEMATA AS s
-                    JOIN groups ON REPLACE(groups.unix_group_name,'-','_') = SUBSTRING(s.SCHEMA_NAME, 18)
+                    JOIN `groups` ON REPLACE(`groups`.unix_group_name,'-','_') = SUBSTRING(s.SCHEMA_NAME, 18)
                     WHERE SCHEMA_NAME LIKE 'plugin_mediawiki%'
-                    AND groups.unix_group_name LIKE '%-%'
+                    AND `groups`.unix_group_name LIKE '%-%'
                 )";
 
         $this->execDB($sql, 'An error occured while filling plugin_mediawiki_database table (projects with dashed name): ');

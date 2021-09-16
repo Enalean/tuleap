@@ -32,7 +32,7 @@ $oneweekago_fmt = $year . $month . $mday;
 ################################### TOP DOWNLOADS
 
 # get all groups, and group_names
-my $query = "SELECT group_id,group_name FROM groups WHERE type=1 AND status='A' AND access != 'private' AND type='1'";
+my $query = "SELECT group_id,group_name FROM `groups` WHERE type=1 AND status='A' AND access != 'private' AND type='1'";
 my $rel = $dbh->prepare($query);
 $rel->execute();
 while(my ($group_id,$group_name) = $rel->fetchrow()) {

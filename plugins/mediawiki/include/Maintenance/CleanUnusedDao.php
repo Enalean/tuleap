@@ -79,8 +79,8 @@ class CleanUnusedDao extends DataAccessObject
     {
         $sql = "SELECT plugin_mediawiki_database.*
           FROM plugin_mediawiki_database
-             JOIN groups ON (group_id = project_id)
-          WHERE groups.status = 'D'";
+             JOIN `groups` ON (group_id = project_id)
+          WHERE `groups`.status = 'D'";
         return $this->retrieve($sql);
     }
 
@@ -244,14 +244,14 @@ class CleanUnusedDao extends DataAccessObject
     public function doesDatabaseNameCorrespondToAnActiveProject($database_name)
     {
         $identifier = substr($database_name, strlen(MediawikiDao::DEDICATED_DATABASE_PREFIX));
-        $where      = 'groups.unix_group_name = ' . $this->da->quoteSmart($identifier);
+        $where      = '`groups`.unix_group_name = ' . $this->da->quoteSmart($identifier);
         if (is_int($identifier)) {
-            $where = 'groups.group_id = ' . $this->da->escapeInt($identifier);
+            $where = '`groups`.group_id = ' . $this->da->escapeInt($identifier);
         }
         $sql = "SELECT 1
-                FROM groups
-                  JOIN service ON (service.group_id = groups.group_id AND service.short_name = 'plugin_mediawiki')
-                WHERE groups.status IN ('A', 's')
+                FROM `groups`
+                  JOIN service ON (service.group_id = `groups`.group_id AND service.short_name = 'plugin_mediawiki')
+                WHERE `groups`.status IN ('A', 's')
                     AND service.is_used = 1
                     AND $where";
         return $this->retrieveCount($sql) !== 0;

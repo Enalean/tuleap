@@ -50,7 +50,7 @@ class DBWriterCoreDao extends DataAccessObject
         $project_names_in_condition = EasyStatement::open()->in('?*', $project_names);
 
         $sql = "SELECT group_id as project_id, unix_group_name as project_name
-                FROM groups
+                FROM `groups`
                 WHERE unix_group_name IN ($project_names_in_condition)";
 
         return $this->getDB()->safeQuery($sql, $project_names_in_condition->values());

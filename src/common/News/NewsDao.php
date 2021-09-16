@@ -70,19 +70,19 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
         $where_statement = EasyStatement::open()->in('?*', [\Project::ACCESS_PUBLIC, \Project::ACCESS_PUBLIC_UNRESTRICTED]);
 
         $sql = "SELECT
-                    groups.group_id,
-                    groups.group_name,
-                    groups.unix_group_name,
+                    `groups`.group_id,
+                    `groups`.group_name,
+                    `groups`.unix_group_name,
                     news_bytes.submitted_by,
                     news_bytes.forum_id,
                     news_bytes.summary,
                     news_bytes.date,
                     news_bytes.details
             FROM news_bytes
-                INNER JOIN groups ON (news_bytes.group_id = groups.group_id)
+                INNER JOIN `groups` ON (news_bytes.group_id = `groups`.group_id)
             WHERE news_bytes.is_approved = 1
-                AND groups.status = 'A'
-                AND groups.access IN ($where_statement)
+                AND `groups`.status = 'A'
+                AND `groups`.access IN ($where_statement)
             GROUP BY news_bytes.forum_id
             ORDER BY date DESC LIMIT ? ";
 

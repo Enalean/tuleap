@@ -90,7 +90,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
         $sql = "SELECT g.group_name, r.repository_name, l.push_date, SUM(l.commits_number) AS commits_number
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
-                JOIN groups g ON g.group_id = r.project_id
+                JOIN `groups` AS g ON g.group_id = r.project_id
                 WHERE l.user_id = ?
                   AND r.repository_deletion_date  = '0000-00-00 00:00:00'
                   AND g.status = 'A'
@@ -120,7 +120,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
         $sql = "SELECT DISTINCT(r.repository_id), g.group_name, g.unix_group_name, r.repository_name, r.repository_namespace, g.group_id
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
-                JOIN groups g ON g.group_id = r.project_id
+                JOIN `groups` AS g ON g.group_id = r.project_id
                 WHERE l.user_id = ?
                   AND r.repository_deletion_date  = '0000-00-00 00:00:00'
                   AND g.status = 'A'

@@ -145,12 +145,12 @@ class Git_Mirror_MirrorDao extends \Tuleap\DB\DataAccessObject
 
     public function fetchAllRepositoryMirroredByMirror($mirror_id)
     {
-        $sql = 'SELECT plugin_git_repository_mirrors.repository_id, plugin_git.*, groups.group_name, groups.group_id
+        $sql = 'SELECT plugin_git_repository_mirrors.repository_id, plugin_git.*, `groups`.group_name, `groups`.group_id
                 FROM plugin_git_repository_mirrors
                     INNER JOIN plugin_git
                         ON plugin_git_repository_mirrors.repository_id = plugin_git.repository_id
-                    INNER JOIN groups
-                        ON plugin_git.project_id = groups.group_id
+                    INNER JOIN `groups`
+                        ON plugin_git.project_id = `groups`.group_id
                     LEFT JOIN plugin_git_restricted_mirrors ON plugin_git_restricted_mirrors.mirror_id = plugin_git_repository_mirrors.mirror_id
                     LEFT JOIN plugin_git_restricted_mirrors_allowed_projects ON (
                         plugin_git_restricted_mirrors_allowed_projects.mirror_id = plugin_git_restricted_mirrors.mirror_id
@@ -160,7 +160,7 @@ class Git_Mirror_MirrorDao extends \Tuleap\DB\DataAccessObject
                     AND plugin_git.repository_deletion_date IS NULL
                     AND (plugin_git_restricted_mirrors.mirror_id IS NULL
                          OR plugin_git_restricted_mirrors_allowed_projects.project_id IS NOT NULL)
-                ORDER BY groups.group_name, plugin_git.repository_name';
+                ORDER BY `groups`.group_name, plugin_git.repository_name';
 
         return $this->getDB()->run($sql, $mirror_id);
     }

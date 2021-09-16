@@ -168,10 +168,10 @@ class FRSPermissionDao extends DataAccessObject
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
 
-        $sql = "SELECT DISTINCT groups.group_id
-                FROM groups
-                  JOIN frs_global_permissions ON groups.group_id = frs_global_permissions.project_id
-                WHERE groups.status = 'A'
+        $sql = "SELECT DISTINCT `groups`.group_id
+                FROM `groups`
+                  JOIN frs_global_permissions ON `groups`.group_id = frs_global_permissions.project_id
+                WHERE `groups`.status = 'A'
                   AND ugroup_id = $ugroup_id
                 ";
 

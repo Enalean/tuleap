@@ -49,7 +49,7 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
                 FROM tracker_artifact
                   INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
                   INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
-                  INNER JOIN groups  ON (groups.group_id = tracker.group_id)
+                  INNER JOIN `groups`  ON (`groups`.group_id = tracker.group_id)
                   LEFT JOIN (
                       tracker_changeset_value AS changeset_value_title
                       INNER JOIN tracker_semantic_title
@@ -61,7 +61,7 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
                       AND changeset_value_title.changeset_id = tracker_artifact.last_changeset_id
                     )
                     $from
-                    WHERE groups.status = 'A'
+                    WHERE `groups`.status = 'A'
                       AND tracker.deletion_date IS NULL
                       AND $tracker_ids_statement
                       AND $where

@@ -22,7 +22,7 @@ global GROUP_INFO
 def set_group_info_from_name(gname):
 
   cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-  cursor.execute("SELECT * FROM groups WHERE unix_group_name='"+gname+"'")
+  cursor.execute("SELECT * FROM `groups` WHERE unix_group_name='"+gname+"'")
   row = cursor.fetchone()
   cursor.close()
   

@@ -103,7 +103,7 @@ class Statistics_ScmCvsDao extends DataAccessObject
     {
         $sql = "SELECT unix_group_name AS project, SUM(cvs_checkouts) + SUM(cvs_browse) AS count
                 FROM group_cvs_full_history
-                JOIN groups g USING (group_id)
+                JOIN `groups` AS g USING (group_id)
                 WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
                 GROUP BY project
                 ORDER BY count DESC
@@ -124,7 +124,7 @@ class Statistics_ScmCvsDao extends DataAccessObject
     {
         $sql = "SELECT unix_group_name AS project, SUM(cvs_commits) + SUM(cvs_adds) AS count
                 FROM group_cvs_full_history
-                JOIN groups g USING (group_id)
+                JOIN `groups` AS g USING (group_id)
                 WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
                 GROUP BY project
                 ORDER BY count DESC

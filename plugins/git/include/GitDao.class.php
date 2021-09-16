@@ -494,7 +494,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                   YEAR(repository_creation_date) AS year,
                   MONTHNAME(STR_TO_DATE(MONTH(repository_creation_date), '%m')) AS month
                   FROM plugin_git
-                  JOIN groups g ON group_id = project_id
+                  JOIN `groups` AS g ON group_id = project_id
                   WHERE $condition
                   GROUP BY year, month
                   ORDER BY year, STR_TO_DATE(month,'%M')";
@@ -584,7 +584,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     {
         $sql  = 'SELECT NULL
                 FROM plugin_git
-                    JOIN groups ON (group_id = project_id)
+                    JOIN `groups` ON (group_id = project_id)
                 WHERE remote_server_id = ?
                     AND remote_server_disconnect_date IS NULL
                     AND `groups`.status IN ("A", "s")

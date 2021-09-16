@@ -259,8 +259,8 @@ class UGroupUserDao extends DataAccessObject
 
         $sql = "SELECT *
                 FROM ugroup
-                INNER JOIN groups USING (group_id)
-                WHERE groups.access IN ($private, $private_wo_restricted)
+                INNER JOIN `groups` USING (group_id)
+                WHERE `groups`.access IN ($private, $private_wo_restricted)
                 AND ugroup.ugroup_id = $target_ugroup_id";
 
         $dar = $this->retrieve($sql);

@@ -109,14 +109,14 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
 
     public function searchAllGroups()
     {
-        $sql = 'SELECT group_id, unix_group_name FROM groups';
+        $sql = 'SELECT group_id, unix_group_name FROM `groups`';
         return $this->retrieve($sql);
     }
 
     public function searchAllOpenProjects()
     {
         $sql = "SELECT group_id, unix_group_name
-                FROM groups
+                FROM `groups`
                 WHERE status != 'D'";
 
         return $this->retrieve($sql);
@@ -285,7 +285,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
                        WHERE ' . $this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group') . '
                        GROUP BY group_id) as end' .
                 ' USING (group_id)' .
-                ' LEFT JOIN groups USING (group_id)' .
+                ' LEFT JOIN `groups` USING (group_id)' .
                 ' ORDER BY ' . $order . ' DESC' .
                 ' LIMIT ' . $this->da->escapeInt($limit);
 
@@ -378,7 +378,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
                        AND group_id = ' . $this->da->escapeInt($groupId) . '
                        GROUP BY group_id ) as end' .
                 ' USING (group_id)' .
-                ' LEFT JOIN groups using(group_id)';
+                ' LEFT JOIN `groups` using(group_id)';
         return $this->retrieve($sql);
     }
 
@@ -484,7 +484,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
                        WHERE ' . $this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group') . '
                        AND service IN (' . $this->da->quoteSmartImplode(',', $service) . ') group by group_id) as end' .
                 ' USING (group_id)' .
-                ' LEFT JOIN groups USING (group_id)' .
+                ' LEFT JOIN `groups` USING (group_id)' .
                 ' Group by group_id' .
                  ' ORDER BY ' . $order . ' DESC' .
                 ' LIMIT ' . $this->da->escapeInt($offset) . ',' . $this->da->escapeInt($limit);

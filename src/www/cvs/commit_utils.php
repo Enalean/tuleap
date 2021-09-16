@@ -47,7 +47,7 @@ function commits_branches_box($group_id, $name = 'branch', $checked = 'xzxz', $t
     if (! $group_id) {
         return _('ERROR - no group_id');
     } else {
-        $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
+        $sql = "SELECT unix_group_name from `groups` where group_id=" . db_ei($group_id);
 
         $result         = db_query($sql);
         $projectname    = db_result($result, 0, 'unix_group_name');
@@ -92,7 +92,7 @@ function commits_technician_box($projectname, $name = '_commiter', $checked = 'x
 
 function commits_tags_box($group_id, $name = '_tag', $checked = 'xzxz', $text_100 = 'None')
 {
-    $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
+    $sql = "SELECT unix_group_name from `groups` where group_id=" . db_ei($group_id);
 
     $result      = db_query($sql);
     $projectname = db_result($result, 0, 'unix_group_name');
@@ -272,7 +272,7 @@ function show_commitslist(
 
 function makeCvsLink($group_id, $filename, $text, $rev = '', $displayfunc = '')
 {
-    $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
+    $res_grp = db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id));
 
     $view_str = $displayfunc;
     if ($rev) {
@@ -286,7 +286,7 @@ function makeCvsLink($group_id, $filename, $text, $rev = '', $displayfunc = '')
 
 function makeCvsDirLink($group_id, $filename, $text, $dir = '')
 {
-    $res_grp    = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
+    $res_grp    = db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id));
     $row_grp    = db_fetch_array($res_grp);
     $group_name = $row_grp['unix_group_name'];
     return '<A HREF="/cvs/viewvc.php/' . $dir . '?root=' . $group_name . '&roottype=cvs"><B>' . $text . '</B></A>';

@@ -54,22 +54,22 @@ EOT;
         $sql = "CREATE OR REPLACE VIEW ftpgroups AS
             (
                 SELECT unix_group_name as groupname, group_id+1000 as gid, GROUP_CONCAT(user_name) as members
-                FROM groups
+                FROM `groups`
                     JOIN user_group USING (group_id)
                     JOIN user USING (user_id)
-                WHERE groups.status = 'A'
+                WHERE `groups`.status = 'A'
                     AND user.status IN ('A', 'R')
                     AND user_id > 100
                 GROUP BY gid
             )
             UNION
             (
-                SELECT LOWER(CONCAT(groups.unix_group_name, '-', ugroup.name)) as groupname, ugroup_id+10000 as gid, GROUP_CONCAT(user_name) as members
+                SELECT LOWER(CONCAT(`groups`.unix_group_name, '-', ugroup.name)) as groupname, ugroup_id+10000 as gid, GROUP_CONCAT(user_name) as members
                 FROM ugroup
-                    JOIN groups USING (group_id)
+                    JOIN `groups` USING (group_id)
                     LEFT JOIN ugroup_user USING (ugroup_id)
                     LEFT JOIN user USING (user_id)
-                WHERE groups.status = 'A'
+                WHERE `groups`.status = 'A'
                     AND user_id > 100
                     AND (user.user_id IS NULL OR user.status IN ('A', 'R'))
                 GROUP BY gid

@@ -167,7 +167,7 @@ if ($ldapPlugin && $plugin_manager->isPluginAvailable($ldapPlugin)) {
     if (isset($args['src']) && isset($args['dst'])) {
         svn_utils_convert_access_file_to_ldap($ldapUm, $args['src'], $args['dst']);
     } elseif (isset($args['all'])) {
-        $sql = 'SELECT groups.group_id, unix_group_name FROM groups LEFT JOIN plugin_ldap_svn_repository USING (group_id) WHERE status = "A" AND ldap_auth IS NULL';
+        $sql = 'SELECT `groups`.group_id, unix_group_name FROM `groups` LEFT JOIN plugin_ldap_svn_repository USING (group_id) WHERE status = "A" AND ldap_auth IS NULL';
         $res = db_query($sql);
         while ($row = db_fetch_array($res)) {
             //foreach (new DirectoryIterator($args['all']) as $dirInfo) {

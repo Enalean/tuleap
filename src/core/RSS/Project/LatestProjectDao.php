@@ -32,7 +32,7 @@ class LatestProjectDao extends \Tuleap\DB\DataAccessObject
         $statement = EasyStatement::open()->in('?*', [\Project::ACCESS_PUBLIC, \Project::ACCESS_PUBLIC_UNRESTRICTED]);
 
         $sql = "SELECT group_id
-                  FROM groups
+                  FROM `groups`
                     WHERE access IN ($statement)
                     AND status='A'
                     AND type=1

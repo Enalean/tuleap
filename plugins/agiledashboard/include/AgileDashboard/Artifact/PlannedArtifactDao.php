@@ -32,9 +32,9 @@ class PlannedArtifactDao extends DataAccessObject
                          JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
                          JOIN tracker                          AS t  ON (t.id = a.tracker_id)
                          JOIN plugin_agiledashboard_planning   AS p  ON (p.planning_tracker_id = t.id)
-                         JOIN groups ON (groups.group_id = t.group_id)
+                         JOIN `groups` ON (`groups`.group_id = t.group_id)
                 WHERE artlink.artifact_id = ?
-                  AND groups.status = 'A'
+                  AND `groups`.status = 'A'
                   AND p.group_id = ?";
 
         $rows = $this->getDB()->run($sql, $artifact_id, $project_id);

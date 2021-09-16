@@ -133,10 +133,10 @@ class UGroupDao extends DataAccessObject
     public function searchGroupByUserId($userId)
     {
         $user_id = $this->da->escapeInt($userId);
-        $sql     = "SELECT groups.group_id
+        $sql     = "SELECT `groups`.group_id
                   FROM ugroup
                   JOIN ugroup_user USING (ugroup_id)
-                  JOIN groups USING (group_id)
+                  JOIN `groups` USING (group_id)
                 WHERE user_id = $user_id
                 AND status != 'D'
                 ORDER BY group_name";
@@ -176,7 +176,7 @@ class UGroupDao extends DataAccessObject
                 FROM ugroup_user AS ug_u
                      INNER JOIN user USING (user_id)
                      INNER JOIN ugroup AS ug USING (ugroup_id)
-                     INNER JOIN groups AS g USING (group_id)
+                     INNER JOIN `groups` AS g USING (group_id)
                      LEFT JOIN user_group USING(group_id, user_id)
                      INNER JOIN forgeconfig ON (forgeconfig.name = 'access_mode')
                 WHERE ug_u.user_id = $user_id

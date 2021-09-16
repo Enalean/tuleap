@@ -37,9 +37,9 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
                     INNER JOIN tracker_artifact AS a ON (a.id = cv.artifact_id)
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = a.id)
                     INNER JOIN tracker ON (tracker.id = a.tracker_id)
-                    INNER JOIN groups ON (groups.group_id = tracker.group_id)
+                    INNER JOIN `groups` ON (`groups`.group_id = tracker.group_id)
                 WHERE changeset_value_id = $changeset_value_id
-                    AND groups.status = 'A'
+                    AND `groups`.status = 'A'
                     AND tracker.deletion_date IS NULL
                 ORDER BY tracker_artifact_priority_rank.rank";
 
@@ -55,10 +55,10 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
                     JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
                     JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
                     JOIN tracker                          AS t  ON (t.id = a.tracker_id)
-                    JOIN groups ON (groups.group_id = t.group_id)
+                    JOIN `groups` ON (`groups`.group_id = t.group_id)
                 WHERE artlink.artifact_id = $artifact_id
                     AND t.deletion_date IS NULL
-                    AND groups.status = 'A'";
+                    AND `groups`.status = 'A'";
 
         return $this->retrieve($sql);
     }
@@ -75,11 +75,11 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
                     JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
                     JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
                     JOIN tracker                          AS t  ON (t.id = a.tracker_id)
-                    JOIN groups ON (groups.group_id = t.group_id)
+                    JOIN `groups` ON (`groups`.group_id = t.group_id)
                 WHERE artlink.artifact_id = $artifact_id
                     AND tracker_id = $source_tracker_id
                     AND t.deletion_date IS NULL
-                    AND groups.status = 'A'";
+                    AND `groups`.status = 'A'";
 
         return $this->retrieve($sql);
     }
@@ -94,10 +94,10 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
                     JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
                     JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
                     JOIN tracker                          AS t  ON (t.id = a.tracker_id)
-                    JOIN groups ON (groups.group_id = t.group_id)
+                    JOIN `groups` ON (`groups`.group_id = t.group_id)
                 WHERE artlink.artifact_id = $artifact_id
                     AND t.deletion_date IS NULL
-                    AND groups.status = 'A'
+                    AND `groups`.status = 'A'
                     AND nature = $is_child";
 
         return $this->retrieve($sql);

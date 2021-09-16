@@ -23,13 +23,13 @@ class Docman_SystemCheckDao extends DataAccessObject
 
     public function getActiveProjectUnixNamesThatUseDocman()
     {
-        $sql = "SELECT DISTINCT LOWER(groups.unix_group_name) AS shortname
-                FROM groups
-                  JOIN service ON (groups.group_id = service.group_id)
+        $sql = "SELECT DISTINCT LOWER(`groups`.unix_group_name) AS shortname
+                FROM `groups`
+                  JOIN service ON (`groups`.group_id = service.group_id)
                 WHERE service.short_name = 'docman'
                   AND service.is_used = 1
                   AND service.is_active = 1
-                  AND groups.status = 'A'";
+                  AND `groups`.status = 'A'";
 
         return $this->retrieve($sql);
     }

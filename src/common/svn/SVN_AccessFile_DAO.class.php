@@ -101,7 +101,7 @@ class SVN_AccessFile_DAO extends DataAccessObject
         $group_id   = $this->da->escapeInt($group_id);
         $version_id = $this->da->escapeInt($version_id);
 
-        $sql = "UPDATE groups
+        $sql = "UPDATE `groups`
                 SET svn_accessfile_version_id = $version_id
                 WHERE group_id = $group_id";
 
@@ -130,7 +130,7 @@ class SVN_AccessFile_DAO extends DataAccessObject
 
         $sql = "SELECT s.version_number
                 FROM svn_accessfile_history s
-                    JOIN groups g ON g.group_id = s.group_id
+                    JOIN `groups` AS g ON g.group_id = s.group_id
                 WHERE g.group_id = $group_id
                     AND g.svn_accessfile_version_id = s.id";
 

@@ -342,7 +342,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
 
         // Create reference for all groups
         // Ugly SQL, needed until we have a proper Group/GroupManager class
-        $sql    = "SELECT group_id FROM groups WHERE group_id!=100";
+        $sql    = "SELECT group_id FROM `groups` WHERE group_id!=100";
         $result = db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $my_group_id = $arr['group_id'];

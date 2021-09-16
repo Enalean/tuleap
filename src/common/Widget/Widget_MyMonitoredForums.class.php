@@ -43,10 +43,10 @@ class Widget_MyMonitoredForums extends Widget
     {
         $purifier                 = Codendi_HTMLPurifier::instance();
         $html_my_monitored_forums = '';
-        $sql                      = "SELECT groups.group_id, groups.group_name " .
-             "FROM groups,forum_group_list,forum_monitored_forums " .
-             "WHERE groups.group_id=forum_group_list.group_id " .
-             "AND groups.status = 'A' " .
+        $sql                      = "SELECT `groups`.group_id, `groups`.group_name " .
+             "FROM `groups`,forum_group_list,forum_monitored_forums " .
+             "WHERE `groups`.group_id=forum_group_list.group_id " .
+             "AND `groups`.status = 'A' " .
             "AND forum_group_list.is_public <> 9 " .
              "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id " .
              "AND forum_monitored_forums.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' ";
@@ -54,7 +54,7 @@ class Widget_MyMonitoredForums extends Widget
         $current_user             = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
-            $sql     .= "AND groups.group_id IN (" . db_ei_implode($projects) . ") ";
+            $sql     .= "AND `groups`.group_id IN (" . db_ei_implode($projects) . ") ";
         }
         $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
 
@@ -69,9 +69,9 @@ class Widget_MyMonitoredForums extends Widget
                 $group_id = db_result($result, $j, 'group_id');
 
                 $sql2 = "SELECT forum_group_list.group_forum_id,forum_group_list.forum_name " .
-                    "FROM groups,forum_group_list,forum_monitored_forums " .
-                    "WHERE groups.group_id=forum_group_list.group_id " .
-                    "AND groups.group_id=" . db_ei($group_id) . " " .
+                    "FROM `groups`,forum_group_list,forum_monitored_forums " .
+                    "WHERE `groups`.group_id=forum_group_list.group_id " .
+                    "AND `groups`.group_id=" . db_ei($group_id) . " " .
                     "AND forum_group_list.is_public <> 9 " .
                     "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id " .
                     "AND forum_monitored_forums.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' LIMIT 100";

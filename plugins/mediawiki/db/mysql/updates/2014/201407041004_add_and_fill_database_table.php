@@ -57,17 +57,17 @@ EOT;
         $this->execDB($sql, 'An error occured while adding plugin_mediawiki_database table: ');
 
         $sql = "INSERT INTO plugin_mediawiki_database (project_id, database_name)
-                (SELECT groups.group_id as project_id, SCHEMA_NAME AS database_name
+                (SELECT `groups`.group_id as project_id, SCHEMA_NAME AS database_name
                     FROM INFORMATION_SCHEMA.SCHEMATA AS s
-                    JOIN groups ON groups.unix_group_name = SUBSTRING(s.SCHEMA_NAME, 18)
+                    JOIN `groups` ON `groups`.unix_group_name = SUBSTRING(s.SCHEMA_NAME, 18)
                     WHERE SCHEMA_NAME LIKE 'plugin_mediawiki%'
                 )";
         $this->execDB($sql, 'An error occured while filling plugin_mediawiki_database table (db with name): ');
 
         $sql = "INSERT INTO plugin_mediawiki_database (project_id, database_name)
-                (SELECT groups.group_id as project_id, SCHEMA_NAME AS database_name
+                (SELECT `groups`.group_id as project_id, SCHEMA_NAME AS database_name
                     FROM INFORMATION_SCHEMA.SCHEMATA AS s
-                    JOIN groups ON groups.group_id = SUBSTRING(s.SCHEMA_NAME, 18)
+                    JOIN `groups` ON `groups`.group_id = SUBSTRING(s.SCHEMA_NAME, 18)
                     WHERE SCHEMA_NAME LIKE 'plugin_mediawiki%'
                 )";
         $this->execDB($sql, 'An error occured while filling plugin_mediawiki_database table  (db with id): ');

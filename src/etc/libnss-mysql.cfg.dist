@@ -16,21 +16,21 @@ getpwent    SELECT user_name,'x',unix_uid+20000,unix_uid+20000,CONCAT(realname,'
 getspent    SELECT user_name,IF(unix_pw='','no_password',unix_pw),'1','0','99999','7','0','-1','0' \
             FROM user WHERE (status='A' OR status='R')
 getgrnam    (SELECT unix_group_name,'x',group_id+1000 \
-            FROM groups \
+            FROM `groups` \
             WHERE unix_group_name='%1$s' )\
             UNION (SELECT user_name,'x',unix_uid+20000 \
             FROM user \
             WHERE user_name='%1$s' )
             LIMIT 1
 getgrgid    (SELECT unix_group_name,'x',group_id+1000 \
-            FROM groups \
+            FROM `groups` \
             WHERE group_id='%1$u'-1000 ) \
             UNION (SELECT user_name,'x',unix_uid+20000 \
             FROM user \
             WHERE unix_uid='%1$u'-20000 )
             LIMIT 1
 getgrent    SELECT unix_group_name,'x',group_id+1000 \
-            FROM groups
+            FROM `groups`
 memsbygid   SELECT user.user_name \
             FROM user,user_group \
             WHERE user.user_id=user_group.user_id AND user_group.group_id='%1$u'-1000

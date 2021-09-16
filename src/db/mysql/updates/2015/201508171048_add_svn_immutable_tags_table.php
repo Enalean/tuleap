@@ -57,10 +57,10 @@ class b201508171048_add_svn_immutable_tags_table extends \Tuleap\ForgeUpgrade\Bu
     private function convertExistingConfig()
     {
         $sql = "INSERT INTO svn_immutable_tags (group_id, paths)
-                SELECT groups.group_id, '/*/tags'
-                FROM groups
-                WHERE groups.status = 'A'
-                  AND groups.svn_commit_to_tag_denied = 1";
+                SELECT `groups`.group_id, '/*/tags'
+                FROM `groups`
+                WHERE `groups`.status = 'A'
+                  AND `groups`.svn_commit_to_tag_denied = 1";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -68,10 +68,10 @@ class b201508171048_add_svn_immutable_tags_table extends \Tuleap\ForgeUpgrade\Bu
         }
 
         $sql = "INSERT INTO svn_immutable_tags (group_id, paths)
-                SELECT groups.group_id, '/tags'
-                FROM groups
-                WHERE groups.status = 'A'
-                  AND groups.svn_commit_to_tag_denied = 2";
+                SELECT `groups`.group_id, '/tags'
+                FROM `groups`
+                WHERE `groups`.status = 'A'
+                  AND `groups`.svn_commit_to_tag_denied = 2";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

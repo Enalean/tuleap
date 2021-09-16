@@ -37,7 +37,7 @@ class CrossTrackerArtifactReportDao extends DataAccessObject
                   tracker_changeset_value_title.value AS title
                 FROM tracker_artifact
                   INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
-                  INNER JOIN groups  ON (groups.group_id = tracker.group_id)
+                  INNER JOIN `groups`  ON (`groups`.group_id = tracker.group_id)
                   LEFT JOIN (
                       tracker_semantic_status
                       INNER JOIN tracker_changeset_value AS tracker_changeset_value_status
@@ -63,7 +63,7 @@ class CrossTrackerArtifactReportDao extends DataAccessObject
                         OR
                         tracker_changeset_value_list_status.bindvalue_id = tracker_semantic_status.open_value_id
                       )
-                      AND groups.status = 'A'
+                      AND `groups`.status = 'A'
                       AND tracker.deletion_date IS NULL
                       AND $tracker_ids_statement
                 ORDER BY tracker_artifact.id DESC

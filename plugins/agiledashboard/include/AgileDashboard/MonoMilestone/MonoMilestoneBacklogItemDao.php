@@ -62,7 +62,7 @@ class MonoMilestoneBacklogItemDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                         -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
-                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G               ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
                     -- Look if there is any status /open/ semantic defined
                     LEFT JOIN (

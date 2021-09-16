@@ -60,7 +60,7 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
             $already_set_sql = "AND group_id NOT IN (" . implode(',', $already_set_projects) . ")";
         }
 
-        $sql = "SELECT group_id FROM groups
+        $sql = "SELECT group_id FROM `groups`
             WHERE access = 'public'
             $already_set_sql";
 
@@ -74,7 +74,7 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
             $already_set_sql = " WHERE group_id NOT IN (" . implode(',', $already_set_projects) . ")";
         }
 
-        $sql = "SELECT group_id FROM groups
+        $sql = "SELECT group_id FROM `groups`
                 $already_set_sql";
 
         foreach ($this->db->dbh->query($sql)->fetchAll() as $frs_admins) {
@@ -96,7 +96,7 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
         $sql = "SELECT count(*) AS nb FROM forgeconfig f WHERE name = 'access_mode' AND value = '$access_mode'";
         $row = $this->db->dbh->query($sql)->fetch();
         if ($row['nb'] > 0) {
-            $sql = "SELECT group_id FROM groups WHERE access = '$visibility'";
+            $sql = "SELECT group_id FROM `groups` WHERE access = '$visibility'";
             foreach ($this->db->dbh->query($sql)->fetchAll() as $project) {
                 $projects[] = $project['group_id'];
                 $ugroups[]  = "('" . $project['group_id'] . "', '$permission_frs_reader', $ugroup_id)";

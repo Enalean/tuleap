@@ -49,8 +49,8 @@ class QueryBuilder extends DataAccessObject
                     $read_label AS type
                   FROM plugin_svn_full_history
                     INNER JOIN plugin_svn_repositories ON (plugin_svn_full_history.repository_id = plugin_svn_repositories.id)
-                    INNER JOIN groups ON (
-                        groups.group_id = plugin_svn_repositories.project_id
+                    INNER JOIN `groups` ON (
+                        `groups`.group_id = plugin_svn_repositories.project_id
                         AND plugin_svn_repositories.project_id = $project_id
                     )
                     INNER JOIN user USING (user_id)
@@ -68,8 +68,8 @@ class QueryBuilder extends DataAccessObject
                     $write_label AS type
                   FROM plugin_svn_full_history
                     INNER JOIN plugin_svn_repositories ON (plugin_svn_full_history.repository_id = plugin_svn_repositories.id)
-                    INNER JOIN groups ON (
-                        groups.group_id = plugin_svn_repositories.project_id
+                    INNER JOIN `groups` ON (
+                        `groups`.group_id = plugin_svn_repositories.project_id
                         AND plugin_svn_repositories.project_id = $project_id
                     )
                     INNER JOIN user USING (user_id)
@@ -87,8 +87,8 @@ class QueryBuilder extends DataAccessObject
                     $browse_label AS type
                   FROM plugin_svn_full_history
                     INNER JOIN plugin_svn_repositories ON (plugin_svn_full_history.repository_id = plugin_svn_repositories.id)
-                    INNER JOIN groups ON (
-                        groups.group_id = plugin_svn_repositories.project_id
+                    INNER JOIN `groups` ON (
+                        `groups`.group_id = plugin_svn_repositories.project_id
                         AND plugin_svn_repositories.project_id = $project_id
                     )
                     INNER JOIN user USING (user_id)

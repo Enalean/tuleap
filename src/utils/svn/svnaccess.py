@@ -45,7 +45,7 @@ def get_group_name_from_plugin_svnrepo_path(svnrepo):
     res    = cursor.execute(query)
 
     if (res > 0):
-        query  = 'SELECT g.unix_group_name FROM plugin_svn_repositories r JOIN groups g ON (g.group_id = r.project_id) WHERE project_id = "'+str(group_id)+'" AND name = "'+str(repository_name)+'"'
+        query  = 'SELECT g.unix_group_name FROM plugin_svn_repositories r JOIN `groups` AS g ON (g.group_id = r.project_id) WHERE project_id = "'+str(group_id)+'" AND name = "'+str(repository_name)+'"'
         res    = cursor.execute(query)
         row    = cursor.fetchone()
         cursor.close()

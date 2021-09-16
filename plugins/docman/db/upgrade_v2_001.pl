@@ -77,7 +77,7 @@ sub docman_exist {
 }
 
 sub create_docman_for_template_projects {
-    $qry = "SELECT group_id FROM groups WHERE type='2' and status IN ('A','s')";
+    $qry = "SELECT group_id FROM `groups` WHERE type='2' and status IN ('A','s')";
     $c = $dbh->prepare($qry);
     $c->execute();
     while (my ($group_id) = $c->fetchrow()) {

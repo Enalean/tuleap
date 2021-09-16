@@ -41,14 +41,14 @@ class b201806051554_restore_missing_art_artifact_references  extends ForgeUpgrad
     private function restoreArtReference()
     {
         $sql = "INSERT INTO reference_group (reference_id, group_id, is_active)
-                SELECT DISTINCT 1, groups.group_id, 1
-                FROM groups
+                SELECT DISTINCT 1, `groups`.group_id, 1
+                FROM `groups`
                   INNER JOIN service USING (group_id)
                 WHERE service.short_name = 'plugin_tracker'
-                  AND groups.group_id > 100
-                  AND groups.group_id NOT IN (
-                SELECT DISTINCT groups.group_id
-                FROM groups
+                  AND `groups`.group_id > 100
+                  AND `groups`.group_id NOT IN (
+                SELECT DISTINCT `groups`.group_id
+                FROM `groups`
                   INNER JOIN reference_group USING (group_id)
                 WHERE reference_id = 1)";
 
@@ -62,14 +62,14 @@ class b201806051554_restore_missing_art_artifact_references  extends ForgeUpgrad
     private function restoreArtifactReference()
     {
         $sql = "INSERT INTO reference_group (reference_id, group_id, is_active)
-                SELECT DISTINCT 2, groups.group_id, 1
-                FROM groups
+                SELECT DISTINCT 2, `groups`.group_id, 1
+                FROM `groups`
                   INNER JOIN service USING (group_id)
                 WHERE service.short_name = 'plugin_tracker'
-                  AND groups.group_id > 100
-                  AND groups.group_id NOT IN (
-                SELECT DISTINCT groups.group_id
-                FROM groups
+                  AND `groups`.group_id > 100
+                  AND `groups`.group_id NOT IN (
+                SELECT DISTINCT `groups`.group_id
+                FROM `groups`
                   INNER JOIN reference_group USING (group_id)
                 WHERE reference_id = 2)";
 

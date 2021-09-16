@@ -122,11 +122,11 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
     {
         $git_permission_type_in_condition = EasyStatement::open()->in('?*', Git::allPermissionTypes());
 
-        $sql = "SELECT DISTINCT groups.group_id
-                FROM groups
-                  JOIN plugin_git AS git ON (git.project_id = groups.group_id)
+        $sql = "SELECT DISTINCT `groups`.group_id
+                FROM `groups`
+                  JOIN plugin_git AS git ON (git.project_id = `groups`.group_id)
                   JOIN permissions ON (permissions.object_id = CAST(git.repository_id AS CHAR CHARACTER SET utf8) AND permissions.permission_type IN ($git_permission_type_in_condition))
-                WHERE groups.status = 'A'
+                WHERE `groups`.status = 'A'
                   AND git.repository_deletion_date = ?
                   AND permissions.ugroup_id = ?
                 ";

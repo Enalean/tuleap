@@ -32,7 +32,7 @@ class b201810171300_migrate_projects_with_invalid_statuses_to_suspended extends 
 
     public function up()
     {
-        $sql = "UPDATE groups SET status = 'H' WHERE status = 'I'";
+        $sql = "UPDATE `groups` SET status = 'H' WHERE status = 'I'";
 
         $res = $this->db->dbh->exec($sql);
 

@@ -43,9 +43,9 @@ EOT;
     {
         $sql = "UPDATE permissions p
                     JOIN plugin_git git ON (p.object_id = CAST(git.repository_id AS CHAR) AND permission_type IN ('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))
-                    JOIN groups         ON (git.project_id = groups.group_id)
+                    JOIN `groups`         ON (git.project_id = `groups`.group_id)
                 SET p.ugroup_id = 3
-                WHERE groups.access = 'private'
+                WHERE `groups`.access = 'private'
                 AND p.ugroup_id < 3";
 
         $res = $this->db->dbh->exec($sql);
@@ -62,7 +62,7 @@ EOT;
 
         $sql = "INSERT INTO system_event (type, parameters, priority, status, create_date, owner)
                 SELECT 'GIT_PROJECTS_UPDATE', GROUP_CONCAT(group_id SEPARATOR '::'), 1, 'NEW', NOW(), 'app'
-                FROM groups
+                FROM `groups`
                 WHERE access = 'private'
                 AND group_id > 100
                 AND status = 'A'";

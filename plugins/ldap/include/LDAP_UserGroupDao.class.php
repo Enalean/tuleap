@@ -149,9 +149,9 @@ class LDAP_UserGroupDao extends DataAccessObject
         $sql = "SELECT plugin_ldap_ugroup.*, ugroup.group_id AS project_id
                 FROM plugin_ldap_ugroup
                   INNER JOIN ugroup ON (ugroup.ugroup_id = plugin_ldap_ugroup.ugroup_id)
-                  INNER JOIN groups ON (groups.group_id = ugroup.group_id)
+                  INNER JOIN `groups` ON (`groups`.group_id = ugroup.group_id)
                 WHERE plugin_ldap_ugroup.synchro_policy = $policy
-                  AND groups.status IN ('A', 's')";
+                  AND `groups`.status IN ('A', 's')";
 
         return $this->retrieve($sql);
     }

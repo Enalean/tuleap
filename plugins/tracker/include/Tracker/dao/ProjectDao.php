@@ -50,8 +50,8 @@ class ProjectDao extends DataAccessObject
 
     private function runQueryWithAllProjects($limit, $offset)
     {
-        $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
-                    FROM groups
+        $sql = "SELECT SQL_CALC_FOUND_ROWS `groups`.*
+                    FROM `groups`
                     WHERE status = 'A'
                       AND group_id > 100
                     ORDER BY group_id ASC
@@ -63,8 +63,8 @@ class ProjectDao extends DataAccessObject
 
     private function runQueryWithFilteredProjects(PFUser $user, $limit, $offset)
     {
-        $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
-                    FROM groups
+        $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT `groups`.*
+                    FROM `groups`
                       JOIN user_group USING (group_id)
                     WHERE status = 'A'
                       AND group_id > 100

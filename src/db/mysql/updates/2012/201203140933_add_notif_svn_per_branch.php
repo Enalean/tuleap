@@ -42,7 +42,7 @@ EOT;
 
         $sql = 'INSERT INTO svn_notification (group_id, svn_events_mailing_list)
                            SELECT group_id, svn_events_mailing_list 
-                           FROM groups 
+                           FROM `groups`
                            WHERE svn_events_mailing_list <>"" 
                ';
         if ($this->db->tableNameExists('groups') && $this->db->tableNameExists('svn_notification')) {
@@ -52,7 +52,7 @@ EOT;
             }
         }
 
-        $sql = 'ALTER TABLE groups DROP COLUMN svn_events_mailing_list';
+        $sql = 'ALTER TABLE `groups` DROP COLUMN svn_events_mailing_list';
         if ($this->db->tableNameExists('groups') && $this->db->columnNameExists('groups', 'svn_events_mailing_list')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {

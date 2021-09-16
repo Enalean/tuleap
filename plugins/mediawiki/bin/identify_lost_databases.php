@@ -26,7 +26,7 @@
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 $bad_projects_with_mw_sql = "SELECT g.group_id, g.group_name
-    FROM groups g, group_plugin gp, plugins p
+    FROM `groups` g, group_plugin gp, plugins p
     WHERE g.group_id = gp.group_id
     AND gp.plugin_id = p.plugin_id
     AND p.plugin_name = 'mediawiki'

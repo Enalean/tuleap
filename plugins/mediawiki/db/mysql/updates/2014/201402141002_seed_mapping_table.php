@@ -52,7 +52,7 @@ EOT;
                 (
                     SELECT group_id, 1, '*'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 1
@@ -61,7 +61,7 @@ EOT;
                 (
                     SELECT group_id, 2, 'user'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 1
@@ -70,7 +70,7 @@ EOT;
                 (
                     SELECT group_id, 3, 'user'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 1
@@ -79,7 +79,7 @@ EOT;
                 (
                     SELECT group_id, 4, 'sysop'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 1
@@ -88,7 +88,7 @@ EOT;
                 (
                     SELECT group_id, 4, 'bureaucrat'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 1
@@ -98,7 +98,7 @@ EOT;
                 (
                     SELECT group_id, 3, 'user'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 0
@@ -107,7 +107,7 @@ EOT;
                 (
                     SELECT group_id, 4, 'sysop'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 0
@@ -116,7 +116,7 @@ EOT;
                 (
                     SELECT group_id, 4, 'bureaucrat'
                     FROM group_plugin
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                     WHERE group_plugin.short_name = 'plugin_mediawiki'
                     AND status = 'A'
                     AND is_public = 0

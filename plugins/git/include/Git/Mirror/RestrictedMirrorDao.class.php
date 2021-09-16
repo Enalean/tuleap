@@ -81,7 +81,7 @@ class Git_RestrictedMirrorDao extends RestrictedResourceDao
         $mirror_id = $this->da->escapeInt($mirror_id);
 
         $sql = "SELECT *
-                FROM groups g
+                FROM `groups` AS g
                 INNER JOIN plugin_git_restricted_mirrors_allowed_projects rm ON g.group_id = rm.project_id
                 WHERE rm.mirror_id = $mirror_id";
 

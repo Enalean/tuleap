@@ -56477,10 +56477,10 @@
       <code>db_numrows($res)</code>
       <code>db_numrows($res)</code>
       <code>db_numrows($this-&gt;db_result)</code>
-      <code>db_query("SELECT * FROM groups WHERE group_id=" . db_ei($this-&gt;group_id))</code>
+      <code>db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($this-&gt;group_id))</code>
       <code>db_query("SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' and group_id='" . db_ei($this-&gt;getGroupId()) . "'")</code>
       <code>db_query("SELECT user_id FROM user_group WHERE group_id='" . db_ei($this-&gt;getGroupId()) . "'")</code>
-      <code>db_query("UPDATE groups SET type='$type' WHERE group_id='" . db_ei($this-&gt;group_id) . "'")</code>
+      <code>db_query("UPDATE `groups` SET type='$type' WHERE group_id='" . db_ei($this-&gt;group_id) . "'")</code>
     </DeprecatedFunction>
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>int|string|null</code>
@@ -61086,7 +61086,7 @@
       <code>db_fetch_array()</code>
       <code>db_numrows($res)</code>
       <code>db_numrows($result)</code>
-      <code>db_query("SELECT count(*) AS count FROM groups WHERE status='P'")</code>
+      <code>db_query("SELECT count(*) AS count FROM `groups` WHERE status='P'")</code>
       <code>db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V' OR status='W'")</code>
       <code>db_query("SELECT count(*) AS count FROM user WHERE status='P'")</code>
       <code>db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'")</code>
@@ -65368,7 +65368,7 @@
     <DeprecatedFunction occurrences="6">
       <code>db_numrows($db_res)</code>
       <code>db_query("SELECT * FROM group_type")</code>
-      <code>db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM groups WHERE type='2' and status IN ('A','s')")</code>
+      <code>db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM `groups` WHERE type='2' and status IN ('A','s')")</code>
       <code>db_result($db_res, $i, 'name')</code>
       <code>db_result($db_res, $i, 'type_id')</code>
       <code>html_build_select_box_from_arrays(array_keys($this-&gt;data_array), $localizedTypes, $name, $checked_val, false)</code>
@@ -74519,8 +74519,8 @@
       <code>db_numrows($result)</code>
       <code>db_numrows($result)</code>
       <code>db_numrows($result1)</code>
-      <code>db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id))</code>
-      <code>db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id))</code>
+      <code>db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id))</code>
+      <code>db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id))</code>
       <code>db_query("SELECT shell FROM user WHERE user_id=$user_id")</code>
       <code>db_query($query)</code>
       <code>db_query($query)</code>
@@ -74686,7 +74686,7 @@
     <DeprecatedFunction occurrences="3">
       <code>db_ei($group_id)</code>
       <code>db_fetch_array($res_grp)</code>
-      <code>db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id))</code>
+      <code>db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id))</code>
     </DeprecatedFunction>
     <UndefinedGlobalVariable occurrences="2">
       <code>$HTML</code>
@@ -78652,7 +78652,7 @@
       <code>db_fetch_array($res_total)</code>
       <code>db_fetch_array($res_trove_cat)</code>
       <code>db_numrows($res_trove_cat)</code>
-      <code>db_query("SELECT count(*) as count FROM groups WHERE " . trove_get_visibility_for_user('access', $current_user) . " AND status='A' and type=1")</code>
+      <code>db_query("SELECT count(*) as count FROM `groups` WHERE " . trove_get_visibility_for_user('access', $current_user) . " AND status='A' and type=1")</code>
       <code>db_query("SELECT trove_cat_id FROM trove_cat WHERE parent=0 ORDER BY fullname LIMIT 1")</code>
       <code>db_query($qry_root_trov)</code>
       <code>db_query($query_projlist)</code>

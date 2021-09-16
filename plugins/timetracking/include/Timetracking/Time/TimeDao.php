@@ -92,7 +92,7 @@ class TimeDao extends DataAccessObject
                         ON timetracking_trackers.tracker_id = artifacts.tracker_id
                     INNER JOIN tracker AS tracker
                         ON tracker.id = timetracking_trackers.tracker_id
-                    INNER JOIN groups AS projects
+                    INNER JOIN `groups` AS projects
                         ON tracker.group_id = projects.group_id
                 WHERE user_id = ?
                 AND   day BETWEEN CAST(? AS DATE)

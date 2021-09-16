@@ -510,15 +510,15 @@ sub can_user_access_project {
 
     my $query = << 'EOF';
     SELECT NULL
-    FROM user, groups
-    WHERE user.status='A' AND user_name=? AND groups.group_id=? AND groups.status='A'
+    FROM user, `groups`
+    WHERE user.status='A' AND user_name=? AND `groups`.group_id=? AND `groups`.status='A'
     UNION ALL
     SELECT NULL
     FROM user
     JOIN user_group ON user_group.user_id=user.user_id
-    JOIN groups ON user_group.group_id = groups.group_id
-        AND groups.status = 'A'
-    WHERE user.status='R' AND user_name=? AND user_group.group_id=? AND groups.access <> 'private-wo-restr';
+    JOIN `groups` ON user_group.group_id = `groups`.group_id
+        AND `groups`.status = 'A'
+    WHERE user.status='R' AND user_name=? AND user_group.group_id=? AND `groups`.access <> 'private-wo-restr';
 EOF
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);

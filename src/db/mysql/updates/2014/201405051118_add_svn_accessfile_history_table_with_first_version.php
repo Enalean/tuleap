@@ -59,7 +59,7 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
     {
         $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, content, sha1_content, version_date)
                     SELECT 1, group_id, svn_accessfile, SHA1(svn_accessfile), CURRENT_TIMESTAMP
-                    FROM groups";
+                    FROM `groups`";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

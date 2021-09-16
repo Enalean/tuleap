@@ -23,7 +23,7 @@ if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
 ##
 ## Begin by collecting universal data into RAM.
 ##
-$sql	= "SELECT group_id FROM groups WHERE status='A'";
+$sql	= "SELECT group_id FROM `groups` WHERE status='A'";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
