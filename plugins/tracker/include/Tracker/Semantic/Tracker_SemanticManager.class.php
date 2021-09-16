@@ -85,6 +85,7 @@ class Tracker_SemanticManager
                 'semantic' => $semantic->getShortName(),
             ]);
 
+            $translated_button = dgettext('tuleap-tracker', 'Configure semantic');
             echo '<section class="tlp-pane tracker-admin-semantic" id="' . $purifier->purify('tracker-admin-semantic-' . $semantic->getShortName()) . '">
                     <div class="tlp-pane-container">
                         <div class="tlp-pane-header">
@@ -93,8 +94,8 @@ class Tracker_SemanticManager
                         <section class="tlp-pane-section">' . $semantic->fetchForSemanticsHomepage() . '</section>
                          <section class="tlp-pane-section tlp-pane-section-submit tracker-admin-semantics-edit-button-section">
                             <a href="' . $url . '" class="tlp-button-primary tlp-button-outline">
-                                <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i> Configure semantic
-                            </a>
+                                <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i>' . $translated_button
+                            . '</a>
                         </section>
                     </div>
                 </section>';

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -1020,6 +1020,9 @@ msgstr "Champ calculé"
 
 msgid "Computed value:"
 msgstr "Valeur calculée :"
+
+msgid "Configure semantic"
+msgstr "Configurer la sémantique"
 
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
