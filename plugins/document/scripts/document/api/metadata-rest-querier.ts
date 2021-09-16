@@ -18,7 +18,7 @@
  */
 
 import { put, recursiveGet } from "tlp";
-import type { Metadata } from "../type";
+import type { FolderStatus, Metadata } from "../store/metadata/module";
 
 export {
     putFileMetadata,
@@ -155,7 +155,7 @@ function putFolderDocumentMetadata(
     title: string,
     description: string,
     owner_id: number,
-    status: string | null,
+    status: FolderStatus | null,
     obsolescence_date: number | null,
     metadata: Array<Metadata> | null
 ): Promise<Response> {

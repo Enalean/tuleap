@@ -24,7 +24,8 @@ import {
     formatMetadataListValue,
     formatMetadataMultipleValue,
 } from "./value-transformer/list-value-helper";
-import type { Folder, Item, Metadata } from "../../type";
+import type { Folder, Item } from "../../type";
+import type { Metadata } from "../../store/metadata/module";
 
 export function transformItemMetadataForCreation(
     document_to_create: Item,

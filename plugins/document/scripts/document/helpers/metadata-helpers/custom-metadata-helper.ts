@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Metadata } from "../../type";
+import type { Metadata } from "../../store/metadata/module";
 
 export function getCustomMetadata(metadata_list: Array<Metadata> | null): Array<Metadata> {
     if (!metadata_list) {

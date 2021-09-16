@@ -23,8 +23,7 @@ import {
     loadProjectMetadata,
     updateFolderMetadata,
     updateMetadata,
-} from "./metadata-actions.js";
-import * as handle_errors from "../actions-helpers/handle-errors";
+} from "./metadata-actions";
 import * as metadata_rest_querier from "../../api/metadata-rest-querier";
 import * as rest_querier from "../../api/rest-querier";
 import {
@@ -35,22 +34,23 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
 } from "../../constants";
+import type { ActionContext } from "vuex";
+import type { Embedded, Empty, Folder, ItemFile, Link, RootState, Wiki } from "../../type";
+import type { FolderMetadata, MetadataState, Metadata, ListValue } from "./module";
 
 describe("Metadata actions", () => {
-    let context, getProjectMetadata, handleErrors, global_context;
+    let context: ActionContext<MetadataState, RootState>, getProjectMetadata: jest.SpyInstance;
 
     beforeEach(() => {
         context = {
-            commit: jest.fn(),
-        };
-
-        global_context = {
-            state: {
+            rootState: {
                 configuration: { project_id: 102 },
             },
-        };
+            commit: jest.fn(),
+            dispatch: jest.fn(),
+        } as unknown as ActionContext<MetadataState, RootState>;
+
         getProjectMetadata = jest.spyOn(metadata_rest_querier, "getProjectMetadata");
-        handleErrors = jest.spyOn(handle_errors, "handleErrors").mockReturnValue(Promise.resolve());
     });
 
     it(`load project metadata definition`, async () => {
@@ -63,7 +63,7 @@ describe("Metadata actions", () => {
 
         getProjectMetadata.mockReturnValue(metadata);
 
-        await loadProjectMetadata(context, [global_context]);
+        await loadProjectMetadata(context);
 
         expect(context.commit).toHaveBeenCalledWith("saveProjectMetadata", metadata);
     });
@@ -78,27 +78,27 @@ describe("Metadata actions", () => {
             },
         });
 
-        await loadProjectMetadata(context, [{ state: { configuration: { project_id: 102 } } }]);
+        await loadProjectMetadata(context);
 
-        expect(handleErrors).toHaveBeenCalled();
+        expect(context.dispatch).toHaveBeenCalled();
     });
 
     describe("replaceMetadataWithUpdatesOnes", () => {
-        let getItem, context;
+        let context: ActionContext<MetadataState, RootState>, getItem: jest.SpyInstance;
 
         beforeEach(() => {
             context = {
                 commit: jest.fn(),
                 dispatch: jest.fn(),
-            };
+            } as unknown as ActionContext<MetadataState, RootState>;
 
             getItem = jest.spyOn(rest_querier, "getItem");
         });
 
         describe("Given item is not the current folder -", () => {
-            it("should send null when obsolesence date is permanent", async () => {
+            it("should send null when obsolescence date is permanent", async () => {
                 jest.spyOn(metadata_rest_querier, "putFileMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
 
                 const item = {
@@ -110,9 +110,10 @@ describe("Metadata actions", () => {
                         id: 102,
                     },
                     status: "none",
-                    obsolescence_date: "",
-                };
+                    obsolescence_date: null,
+                } as ItemFile;
 
+                const metadata: Array<Metadata> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new title",
@@ -121,19 +122,16 @@ describe("Metadata actions", () => {
                         id: 102,
                     },
                     status: "draft",
-                    obsolescence_date: null,
-                    metadata: [],
-                };
+                    metadata,
+                } as ItemFile;
 
                 const current_folder = {
                     id: 456,
-                };
+                } as Folder;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateMetadata(context, [item, item_to_update, current_folder], {
-                    root: true,
-                });
+                await updateMetadata(context, { item, item_to_update, current_folder });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
@@ -151,9 +149,10 @@ describe("Metadata actions", () => {
                     { root: true }
                 );
             });
+
             it("should update file metadata", async () => {
                 jest.spyOn(metadata_rest_querier, "putFileMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
 
                 const item = {
@@ -165,8 +164,7 @@ describe("Metadata actions", () => {
                         id: 102,
                     },
                     status: "none",
-                    obsolescence_date: null,
-                };
+                } as ItemFile;
 
                 const item_to_update = {
                     id: 123,
@@ -176,19 +174,15 @@ describe("Metadata actions", () => {
                         id: 102,
                     },
                     status: "draft",
-                    obsolescence_date: null,
-                    metadata: [],
-                };
+                } as ItemFile;
 
                 const current_folder = {
                     id: 456,
-                };
+                } as Folder;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateMetadata(context, [item, item_to_update, current_folder], {
-                    root: true,
-                });
+                await updateMetadata(context, { item, item_to_update, current_folder });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
@@ -208,7 +202,7 @@ describe("Metadata actions", () => {
             });
             it("should update embedded file metadata", async () => {
                 jest.spyOn(metadata_rest_querier, "putEmbeddedFileMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
                 const item = {
                     id: 123,
@@ -220,8 +214,9 @@ describe("Metadata actions", () => {
                     },
                     status: "none",
                     obsolescence_date: null,
-                };
+                } as Embedded;
 
+                const metadata: Array<Metadata> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new embedded  title",
@@ -231,18 +226,16 @@ describe("Metadata actions", () => {
                     },
                     status: "draft",
                     obsolescence_date: null,
-                    metadata: [],
-                };
+                    metadata,
+                } as Embedded;
 
                 const current_folder = {
                     id: 456,
-                };
+                } as Folder;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateMetadata(context, [item, item_to_update, current_folder], {
-                    root: true,
-                });
+                await updateMetadata(context, { item, item_to_update, current_folder });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
@@ -262,7 +255,7 @@ describe("Metadata actions", () => {
             });
             it("should update link document metadata", async () => {
                 jest.spyOn(metadata_rest_querier, "putLinkMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
                 const item = {
                     id: 123,
@@ -274,8 +267,9 @@ describe("Metadata actions", () => {
                     },
                     status: "none",
                     obsolescence_date: null,
-                };
+                } as Link;
 
+                const metadata: Array<Metadata> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new link title",
@@ -285,18 +279,16 @@ describe("Metadata actions", () => {
                     },
                     status: "draft",
                     obsolescence_date: null,
-                    metadata: [],
-                };
+                    metadata,
+                } as Link;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
                 const current_folder = {
                     id: 456,
-                };
+                } as Folder;
 
-                await updateMetadata(context, [item, item_to_update, current_folder], {
-                    root: true,
-                });
+                await updateMetadata(context, { item, item_to_update, current_folder });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
@@ -317,7 +309,7 @@ describe("Metadata actions", () => {
 
             it("should update wiki document metadata", async () => {
                 jest.spyOn(metadata_rest_querier, "putWikiMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
                 const item = {
                     id: 123,
@@ -329,8 +321,9 @@ describe("Metadata actions", () => {
                     },
                     status: "none",
                     obsolescence_date: null,
-                };
+                } as Wiki;
 
+                const metadata: Array<Metadata> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new wiki title",
@@ -340,18 +333,16 @@ describe("Metadata actions", () => {
                     },
                     status: "approved",
                     obsolescence_date: null,
-                    metadata: [],
-                };
+                    metadata,
+                } as Wiki;
 
                 const current_folder = {
                     id: 456,
-                };
+                } as Folder;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateMetadata(context, [item, item_to_update, current_folder], {
-                    root: true,
-                });
+                await updateMetadata(context, { item, item_to_update, current_folder });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
@@ -371,7 +362,7 @@ describe("Metadata actions", () => {
             });
             it("should update empty document metadata", async () => {
                 jest.spyOn(metadata_rest_querier, "putEmptyDocumentMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
                 const item = {
                     id: 123,
@@ -383,8 +374,9 @@ describe("Metadata actions", () => {
                     },
                     status: "none",
                     obsolescence_date: null,
-                };
+                } as Empty;
 
+                const metadata: Array<Metadata> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new empty title",
@@ -394,18 +386,16 @@ describe("Metadata actions", () => {
                     },
                     status: "rejected",
                     obsolescence_date: null,
-                    metadata: [],
-                };
+                    metadata,
+                } as Empty;
 
                 const current_folder = {
                     id: 456,
-                };
+                } as Folder;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateMetadata(context, [item, item_to_update, current_folder], {
-                    root: true,
-                });
+                await updateMetadata(context, { item, item_to_update, current_folder });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
@@ -426,7 +416,7 @@ describe("Metadata actions", () => {
 
             it("should update folder metadata", async () => {
                 jest.spyOn(metadata_rest_querier, "putEmptyDocumentMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
                 const item = {
                     id: 123,
@@ -436,8 +426,18 @@ describe("Metadata actions", () => {
                     owner: {
                         id: 102,
                     },
-                };
+                } as Folder;
 
+                const list_values: Array<ListValue> = [
+                    {
+                        id: 103,
+                    } as ListValue,
+                ];
+                const folder_metadata: FolderMetadata = {
+                    short_name: "status",
+                    list_value: list_values,
+                } as FolderMetadata;
+                const metadata: Array<Metadata> = [folder_metadata];
                 const item_to_update = {
                     id: 123,
                     title: "My new empty title",
@@ -445,35 +445,27 @@ describe("Metadata actions", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
-                        {
-                            short_name: "status",
-                            list_value: [
-                                {
-                                    id: 103,
-                                },
-                            ],
-                        },
-                    ],
+                    metadata,
                     status: {
                         value: "rejected",
                         recursion: "none",
                     },
-                };
+                } as Folder;
 
                 const current_folder = {
                     id: 456,
-                };
+                } as Folder;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateFolderMetadata(context, [
+                const metadata_list_to_update: Array<string> = [];
+                await updateFolderMetadata(context, {
                     item,
                     item_to_update,
                     current_folder,
-                    [],
-                    "none",
-                ]);
+                    metadata_list_to_update,
+                    recursion_option: "none",
+                });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
@@ -496,7 +488,7 @@ describe("Metadata actions", () => {
         describe("Given I'm updating current folder -", () => {
             it("should update file metadata", async () => {
                 jest.spyOn(metadata_rest_querier, "putFileMetadata").mockReturnValue(
-                    Promise.resolve()
+                    Promise.resolve({} as unknown as Response)
                 );
 
                 const item = {
@@ -507,10 +499,11 @@ describe("Metadata actions", () => {
                     owner: {
                         id: 102,
                     },
-                    status: "none",
+                    // status: "none",
                     obsolescence_date: null,
-                };
+                } as Folder;
 
+                const metadata: Array<Metadata> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new title",
@@ -518,18 +511,18 @@ describe("Metadata actions", () => {
                     owner: {
                         id: 102,
                     },
-                    status: "draft",
+                    // status: "draft",
                     obsolescence_date: null,
-                    metadata: [],
-                };
+                    metadata,
+                } as Folder;
 
                 const current_folder = {
                     id: 123,
-                };
+                } as Folder;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateMetadata(context, [item, item_to_update, current_folder]);
+                await updateMetadata(context, { item, item_to_update, current_folder });
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "replaceCurrentFolder",
@@ -553,15 +546,13 @@ describe("Metadata actions", () => {
                         total_size: 102546950,
                         nb_files: 27,
                     },
-                })
+                } as Folder)
             );
 
-            const properties = await getFolderProperties(context, [
-                {
-                    id: 3,
-                    title: "Project Documentation",
-                },
-            ]);
+            const properties = await getFolderProperties(context, {
+                id: 3,
+                title: "Project Documentation",
+            } as Folder);
 
             expect(getItemWithSize).toHaveBeenCalled();
             expect(properties).toEqual({
@@ -575,16 +566,14 @@ describe("Metadata actions", () => {
                 .spyOn(rest_querier, "getItemWithSize")
                 .mockReturnValue(Promise.reject("error"));
 
-            await expect(
-                getFolderProperties(context, [
-                    {
-                        id: 3,
-                        title: "Project Documentation",
-                    },
-                ])
-            ).rejects.toBeDefined();
+            const folder = await getFolderProperties(context, {
+                id: 3,
+                title: "Project Documentation",
+            } as Folder);
 
             expect(getItemWithSize).toHaveBeenCalled();
+            expect(folder).toBeNull();
+            expect(context.dispatch).toHaveBeenCalled();
         });
     });
 });

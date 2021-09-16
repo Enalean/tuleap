@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Metadata, ListValue } from "../../../type";
+import type { Metadata, ListValue } from "../../../store/metadata/module";
 
 export type MetadataListValue = Array<number> | Array<ListValue>;
 export function assertListIsOnlyMultipleValue(

@@ -128,13 +128,13 @@ export default {
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
             this.item_to_update.metadata = this.formatted_item_metadata;
-            await this.$store.dispatch("metadata/updateFolderMetadata", [
-                this.item,
-                this.item_to_update,
-                this.current_folder,
-                this.metadata_list_to_update,
-                this.recursion_option,
-            ]);
+            await this.$store.dispatch("metadata/updateFolderMetadata", {
+                item: this.item,
+                item_to_update: this.item_to_update,
+                current_folder: this.current_folder,
+                metadata_list_to_update: this.metadata_list_to_update,
+                recursion_option: this.recursion_option,
+            });
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();

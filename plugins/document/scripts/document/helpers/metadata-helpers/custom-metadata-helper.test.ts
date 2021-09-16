@@ -18,7 +18,7 @@
  */
 
 import { getCustomMetadata } from "./custom-metadata-helper";
-import type { Metadata } from "../../type";
+import type { Metadata } from "../../store/metadata/module";
 
 describe("getCustomMetadata", () => {
     it("only returns custom metadata", () => {
