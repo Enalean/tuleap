@@ -61,7 +61,7 @@ import { mapState } from "vuex";
 import { createModal } from "tlp";
 import { sprintf } from "sprintf-js";
 import { TYPE_FILE } from "../../../constants";
-import { redirectToUrl } from "../../../helpers/location-helper.js";
+import { redirectToUrl } from "../../../helpers/location-helper";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";

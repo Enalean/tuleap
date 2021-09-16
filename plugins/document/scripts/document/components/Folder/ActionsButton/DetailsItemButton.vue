@@ -29,23 +29,29 @@
     </button>
 </template>
 
-<script>
-import { mapState } from "vuex";
-import { redirectToUrl } from "../../../helpers/location-helper.js";
-export default {
-    props: {
-        item: Object,
-        buttonClass: String,
-    },
-    computed: {
-        ...mapState("configuration", ["project_id"]),
-    },
-    methods: {
-        goToDetails() {
-            redirectToUrl(
-                `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=details`
-            );
-        },
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
+import { redirectToUrl } from "../../../helpers/location-helper";
+import type { Item } from "../../../type";
+
+const configuration = namespace("configuration");
+
+@Component
+export default class DetailsItemButton extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @Prop({ required: true })
+    readonly buttonClass!: string;
+
+    @configuration.State
+    readonly project_id!: number;
+
+    goToDetails(): void {
+        redirectToUrl(
+            `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=details`
+        );
+    }
+}
 </script>

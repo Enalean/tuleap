@@ -35,7 +35,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { redirectToUrl } from "../../helpers/location-helper.js";
+import { redirectToUrl } from "../../helpers/location-helper";
 
 export default {
     name: "SwitchToOldUI",
