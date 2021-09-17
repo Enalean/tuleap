@@ -35,7 +35,10 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RetrieveTrackerStub $tracker_builder;
     private RetrieveProgramUserGroupStub $ugroup_retriever;
-    private \PHPUnit\Framework\MockObject\MockObject|PlanStore $plan_store;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
+     */
+    private $plan_store;
     private RetrieveProjectStub $project_retriever;
     private int $project_id;
 

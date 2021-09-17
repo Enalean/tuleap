@@ -22,27 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\REST\I18NRestException;
 use Workflow;
 
 final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanStore
-     */
-    private $plan_store;
     /**
      * @var AddToTopBacklogPostActionJSONParser
      */
     private $parser;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
+     */
+    private $plan_store;
 
     protected function setUp(): void
     {
-        $this->plan_store = \Mockery::mock(PlanStore::class);
+        $this->plan_store = $this->createMock(PlanStore::class);
         $this->parser     = new AddToTopBacklogPostActionJSONParser($this->plan_store);
     }
 
@@ -69,9 +66,9 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
 
     public function testGetPostActionValue(): void
     {
-        $workflow = \Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('getTrackerId')->andReturn('140');
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTrackerId')->willReturn('140');
+        $this->plan_store->method('isPlannable')->willReturn(true);
 
         $post_action = $this->parser->parse($workflow, []);
         self::assertInstanceOf(AddToTopBacklogPostActionValue::class, $post_action);
@@ -80,9 +77,9 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
 
     public function testThrowsAnExceptionWhenTheWorkflowIsNotPartOfAPlannableTracker(): void
     {
-        $workflow = \Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('getTrackerId')->andReturn('403');
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTrackerId')->willReturn('403');
+        $this->plan_store->method('isPlannable')->willReturn(false);
 
         $this->expectException(I18NRestException::class);
 

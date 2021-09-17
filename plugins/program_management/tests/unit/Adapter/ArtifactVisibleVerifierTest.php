@@ -31,7 +31,7 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserIdentifier $user_identifier;
     private RetrieveUserStub $user_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $tracker_factory;
 

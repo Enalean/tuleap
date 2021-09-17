@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Mockery;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
@@ -42,24 +41,24 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 
 final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private NullLogger $logger;
+    private UserIdentifier $user_identifier;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramIncrementsDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProgramIncrementsDAO
      */
     private $dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&SemanticTimeframeBuilder
      */
     private $semantic_timeframe_builder;
     /**
-     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
-    private NullLogger $logger;
-    private UserIdentifier $user_identifier;
 
     protected function setUp(): void
     {

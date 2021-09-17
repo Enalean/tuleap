@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
@@ -41,22 +40,20 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private FeatureAdditionProcessor $processor;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinkUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactLinkUpdater
      */
     private $artifact_link_updater;
 
     protected function setUp(): void
     {
-        $this->artifact_factory      = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
+        $this->artifact_factory      = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->artifact_link_updater = $this->createMock(ArtifactLinkUpdater::class);
         $this->processor             = new FeatureAdditionProcessor(
             $this->artifact_factory,
             $this->artifact_link_updater,
@@ -67,7 +64,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenProgramIncrementArtifactCannotBeFound(): void
     {
         $feature_addition = $this->buildFeatureAddition();
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturnNull();
+        $this->artifact_factory->method('getArtifactById')->with(37)->willReturn(null);
 
         $this->expectException(ProgramIncrementNotFoundException::class);
         $this->processor->add($feature_addition);
@@ -88,8 +85,8 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $feature_addition           = $this->buildFeatureAddition();
         $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturn($program_increment_artifact);
-        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')->andThrow($exception);
+        $this->artifact_factory->method('getArtifactById')->with(37)->willReturn($program_increment_artifact);
+        $this->artifact_link_updater->method('updateArtifactLinks')->willThrowException($exception);
 
         $this->expectException(AddFeatureException::class);
         $this->processor->add($feature_addition);
@@ -98,10 +95,10 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
         $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturn($program_increment_artifact);
-        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')
-            ->once()
-            ->with(\Mockery::type(\PFUser::class), $program_increment_artifact, [76], [], \Tracker_FormElement_Field_ArtifactLink::NO_NATURE);
+        $this->artifact_factory->method('getArtifactById')->with(37)->willReturn($program_increment_artifact);
+        $this->artifact_link_updater->expects(self::once())
+            ->method('updateArtifactLinks')
+            ->with(self::isInstanceOf(\PFUser::class), $program_increment_artifact, [76], [], \Tracker_FormElement_Field_ArtifactLink::NO_NATURE);
 
         $this->processor->add($this->buildFeatureAddition());
     }

@@ -44,17 +44,17 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsProgram $program_verifier;
     private ProgramForAdministrationIdentifier $program;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|ExplicitBacklogDao
+     * @var \PHPUnit\Framework\MockObject\Stub&ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
     private \Project $team_project;
     private UserIdentifierStub $user_identifier;
     /**
-     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
 

@@ -28,11 +28,11 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class TrackerSemanticsTest extends TestCase
 {
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker
      */
     private $tracker;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|TrackerSemantics
+     * @var \PHPUnit\Framework\MockObject\Stub&TrackerSemantics
      */
     private $tracker_factory;
     private TrackerSemantics $factory;

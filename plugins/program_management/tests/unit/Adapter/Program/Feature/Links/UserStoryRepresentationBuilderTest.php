@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use Mockery;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
@@ -37,35 +36,33 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
     /**
      * @var UserStoryRepresentationBuilder
      */
     private $builder;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
+     */
+    private $dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BackgroundColorRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&BackgroundColorRetriever
      */
     private $retrieve_background;
 
     protected function setUp(): void
     {
-        $this->dao                 = \Mockery::mock(ArtifactsLinkedToParentDao::class);
-        $this->artifact_factory    = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->user                = \Mockery::mock(\PFUser::class);
-        $this->retrieve_background = \Mockery::mock(BackgroundColorRetriever::class);
+        $this->dao                 = $this->createMock(ArtifactsLinkedToParentDao::class);
+        $this->artifact_factory    = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->user                = $this->createMock(\PFUser::class);
+        $this->retrieve_background = $this->createMock(BackgroundColorRetriever::class);
 
         $plan_store = new class () implements PlanStore {
             public function isPlannable(int $plannable_tracker_id): bool
@@ -111,48 +108,25 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetBacklogItemsThatUserCanSee(): void
     {
         $this->dao
-            ->shouldReceive("getChildrenOfFeatureInTeamProjects")
+            ->expects(self::once())
+            ->method("getChildrenOfFeatureInTeamProjects")
             ->with(10)
-            ->once()
-            ->andReturn([['children_id' => 125], ['children_id' => 126], ['children_id' => 666]]);
-
-        $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 10)
-            ->once()
-            ->andReturn(\Mockery::mock(Artifact::class, ['getTrackerId' => 56]));
+            ->willReturn([['children_id' => 125], ['children_id' => 126], ['children_id' => 666]]);
 
         $artifact_125 = $this->buildArtifact(125);
-        $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 125)
-            ->once()
-            ->andReturn($artifact_125);
-
         $artifact_126 = $this->buildArtifact(126);
-        $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 126)
-            ->once()
-            ->andReturn($artifact_126);
 
-        $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 666)
-            ->once()
-            ->andReturnNull();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
+            [$this->user, 666, null],
+            [$this->user, 126, $artifact_126],
+            [$this->user, 125, $artifact_125],
+            [$this->user, 10, $this->createConfiguredMock(Artifact::class, ['getTrackerId' => 56])],
+        ]);
 
-        $this->retrieve_background
-            ->shouldReceive('retrieveBackgroundColor')
-            ->with($artifact_125, $this->user)
-            ->once()
-            ->andReturn(new BackgroundColor("lake-placid-blue"));
-
-        $this->retrieve_background
-            ->shouldReceive('retrieveBackgroundColor')
-            ->with($artifact_126, $this->user)
-            ->once()
-            ->andReturn(new BackgroundColor("fiesta-red"));
+        $this->retrieve_background->method('retrieveBackgroundColor')->willReturnMap([
+            [$artifact_125, $this->user, new BackgroundColor("lake-placid-blue")],
+            [$artifact_126, $this->user, new BackgroundColor("fiesta-red")],
+        ]);
 
         $children = $this->builder->buildFeatureStories(10, $this->user);
 
@@ -184,10 +158,10 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testThrowErrorIfUserCanNotSeeFeature(): void
     {
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
+            ->expects(self::once())
+            ->method('getArtifactByIdUserCanView')
             ->with($this->user, 10)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(FeatureNotAccessException::class);
         $this->builder->buildFeatureStories(10, $this->user);
@@ -196,29 +170,28 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testThrowErrorIfFeatureTrackerIsNotPlannable(): void
     {
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
+            ->expects(self::once())
+            ->method('getArtifactByIdUserCanView')
             ->with($this->user, 10)
-            ->once()
-            ->andReturn(\Mockery::mock(Artifact::class, ['getTrackerId' => 666]));
+            ->willReturn($this->createConfiguredMock(Artifact::class, ['getTrackerId' => 666]));
 
         $this->expectException(FeatureIsNotPlannableException::class);
         $this->builder->buildFeatureStories(10, $this->user);
     }
 
     /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
+     * @return \PHPUnit\Framework\MockObject\MockObject&Artifact
      */
     private function buildArtifact(int $id)
     {
-        $artifact = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->once()->andReturn($id);
-        $artifact->shouldReceive('getUri')->once()->andReturn('trackers?aid=' . $id);
-        $artifact->shouldReceive('getXRef')->once()->andReturn('story #' . $id);
-        $artifact->shouldReceive('getTitle')->once()->andReturn("Title");
-        $artifact->shouldReceive('isOpen')->once()->andReturn(true);
-        $artifact->shouldReceive('getTracker')
-            ->twice()
-            ->andReturn(
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->expects(self::once())->method('getId')->willReturn($id);
+        $artifact->expects(self::once())->method('getUri')->willReturn('trackers?aid=' . $id);
+        $artifact->expects(self::once())->method('getXRef')->willReturn('story #' . $id);
+        $artifact->expects(self::once())->method('getTitle')->willReturn("Title");
+        $artifact->expects(self::once())->method('isOpen')->willReturn(true);
+        $artifact->expects(self::exactly(2))->method('getTracker')
+            ->willReturn(
                 TrackerTestBuilder::aTracker()
                     ->withProject(
                         ProjectTestBuilder::aProject()

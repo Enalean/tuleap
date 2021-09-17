@@ -32,11 +32,11 @@ final class LastChangesetRetrieverTest extends TestCase
     private const ITERATION_ID      = 52;
     private const LAST_CHANGESET_ID = 3862;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Tracker_Artifact_ChangesetFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Artifact_ChangesetFactory
      */
     private $changeset_factory;
     private IterationIdentifier $iteration;

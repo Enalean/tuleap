@@ -61,11 +61,11 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 {
     private BuildProgramStub $build_program;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer
      */
     private $template_renderer;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|ProgramManagementBreadCrumbsBuilder
+     * @var \PHPUnit\Framework\MockObject\Stub&ProgramManagementBreadCrumbsBuilder
      */
     private $breadcrumbs_builder;
     /**
@@ -79,16 +79,16 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_builder;
     private \HTTPRequest $request;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
      */
     private $tracker_factory;
     private \PFUser $user;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker
+     * @var \PHPUnit\Framework\MockObject\Stub&ProgramIncrementCreatorChecker
      */
     private $program_increment_checker;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker
+     * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
      */
     private $iteration_checker;
 

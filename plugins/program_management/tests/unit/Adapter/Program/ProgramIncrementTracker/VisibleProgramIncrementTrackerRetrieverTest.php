@@ -34,7 +34,10 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory $tracker_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
+     */
+    private $tracker_factory;
     private UserIdentifier $user;
     private ProgramIdentifier $program;
     private RetrieveProgramIncrementTracker $tracker_id_retriever;

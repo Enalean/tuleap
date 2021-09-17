@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
@@ -30,20 +29,18 @@ use Tuleap\Tracker\Workflow\Update\PostAction;
 
 final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AddToTopBacklogPostActionDAO
-     */
-    private $dao;
     /**
      * @var AddToTopBacklogPostActionValueUpdater
      */
     private $updater;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&AddToTopBacklogPostActionDAO
+     */
+    private $dao;
 
     protected function setUp(): void
     {
-        $this->dao     = \Mockery::mock(AddToTopBacklogPostActionDAO::class);
+        $this->dao     = $this->createMock(AddToTopBacklogPostActionDAO::class);
         $this->updater = new AddToTopBacklogPostActionValueUpdater(
             $this->dao,
             new DBTransactionExecutorPassthrough()
@@ -54,8 +51,8 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     {
         $actions = new PostActionCollection(new AddToTopBacklogPostActionValue(), self::buildOtherPostAction());
 
-        $this->dao->shouldReceive('deleteTransitionPostActions')->with(14)->once();
-        $this->dao->shouldReceive('createPostActionForTransitionID')->with(14)->once();
+        $this->dao->expects(self::once())->method('deleteTransitionPostActions')->with(14);
+        $this->dao->expects(self::once())->method('createPostActionForTransitionID')->with(14);
 
         $this->updater->updateByTransition($actions, new \Transition(14, 321, null, null));
     }
@@ -64,8 +61,8 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     {
         $actions = new PostActionCollection(self::buildOtherPostAction());
 
-        $this->dao->shouldReceive('deleteTransitionPostActions')->with(15)->once();
-        $this->dao->shouldNotReceive('createPostActionForTransitionID');
+        $this->dao->expects(self::once())->method('deleteTransitionPostActions')->with(15);
+        $this->dao->expects(self::never())->method('createPostActionForTransitionID');
 
         $this->updater->updateByTransition($actions, new \Transition(15, 321, null, null));
     }

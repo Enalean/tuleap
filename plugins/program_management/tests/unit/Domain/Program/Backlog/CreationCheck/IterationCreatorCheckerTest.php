@@ -49,7 +49,10 @@ final class IterationCreatorCheckerTest extends TestCase
     private VerifyIsIterationTrackerStub $iteration_tracker_verifier;
     private ProgramTracker $program_tracker;
     private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
-    private \PHPUnit\Framework\MockObject\MockObject|TimeboxCreatorChecker $timebox_creator_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimeboxCreatorChecker
+     */
+    private $timebox_creator_checker;
     private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void

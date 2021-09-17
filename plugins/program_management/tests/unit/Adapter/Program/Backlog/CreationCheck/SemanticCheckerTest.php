@@ -40,10 +40,22 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticChecker $checker;
-    private \PHPUnit\Framework\MockObject\MockObject|\Tracker_Semantic_TitleDao $title_dao;
-    private \PHPUnit\Framework\MockObject\MockObject|\Tracker_Semantic_DescriptionDao $description_dao;
-    private \PHPUnit\Framework\MockObject\MockObject|SemanticTimeframeDao $timeframe_dao;
-    private \PHPUnit\Framework\MockObject\MockObject|CheckStatus $semantic_status_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_TitleDao
+     */
+    private $title_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_DescriptionDao
+     */
+    private $description_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&SemanticTimeframeDao
+     */
+    private $timeframe_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CheckStatus
+     */
+    private $semantic_status_checker;
     private ProgramTracker $program_increment_tracker;
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;

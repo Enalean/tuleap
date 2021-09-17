@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
@@ -41,23 +40,36 @@ use Tuleap\Tracker\TrackerColor;
 
 final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildPlanning $build_planning;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao $parent_dao;
     private FeatureRepresentationBuilder $builder;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory $artifact_factory;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory $form_element_factory;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|BackgroundColorRetriever $retrieve_background;
     private \PFUser $user;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&BackgroundColorRetriever
+     */
+    private $retrieve_background;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
+     */
+    private $parent_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&BuildPlanning
+     */
+    private $build_planning;
 
     protected function setUp(): void
     {
-        $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
-        $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
-        $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
-        $this->build_planning       = \Mockery::mock(BuildPlanning::class);
+        $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->retrieve_background  = $this->createMock(BackgroundColorRetriever::class);
+        $this->parent_dao           = $this->createMock(ArtifactsLinkedToParentDao::class);
+        $this->build_planning       = $this->createMock(BuildPlanning::class);
         $this->user                 = UserTestBuilder::aUser()->build();
         $retrieve_user              = RetrieveUserStub::withUser($this->user);
 
@@ -74,7 +86,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $program = ProgramIdentifierBuilder::buildWithId(110);
 
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturnNull();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 1)->willReturn(null);
 
         self::assertNull($this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
     }
@@ -86,12 +98,12 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $project  = $this->buildProject(110);
         $tracker  = $this->buildTracker(14, $project);
         $artifact = $this->buildArtifact(117, $tracker);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturn($artifact);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 1)->willReturn($artifact);
+        $this->artifact_factory->method('getArtifactById')->with(1)->willReturn($artifact);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $this->form_element_factory->shouldReceive('getFieldById')->with(101)->andReturn($field);
-        $field->shouldReceive('userCanRead')->andReturnFalse();
+        $field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $this->form_element_factory->method('getFieldById')->with(101)->willReturn($field);
+        $field->method('userCanRead')->willReturn(false);
 
         self::assertNull($this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
     }
@@ -103,39 +115,40 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $project  = $this->buildProject(101);
         $tracker  = $this->buildTracker(1, $project);
         $artifact = $this->buildArtifact(1, $tracker);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturn($artifact);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 2)->once()->andReturnNull();
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 3)->once()->andReturn(
-            \Mockery::mock(Artifact::class)
-        );
+        $this->artifact_factory->method('getArtifactById')->with(1)->willReturn($artifact);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
+            [$this->user, 1, $artifact],
+            [$this->user, 2, null],
+            [$this->user, 3, $this->createMock(Artifact::class)],
+        ]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $this->form_element_factory->shouldReceive('getFieldById')->with(101)->andReturn($field);
-        $field->shouldReceive('userCanRead')->andReturnTrue();
+
+        $field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $this->form_element_factory->method('getFieldById')->with(101)->willReturn($field);
+        $field->method('userCanRead')->willReturn(true);
 
         $background_color = new BackgroundColor("lake-placid-blue");
-        $this->retrieve_background->shouldReceive('retrieveBackgroundColor')->andReturn($background_color);
+        $this->retrieve_background->method('retrieveBackgroundColor')->willReturn($background_color);
 
-        $this->parent_dao->shouldReceive('getPlannedUserStory')->andReturn(
+        $this->parent_dao->method('getPlannedUserStory')->willReturn(
             [
                 ['user_story_id' => 1, 'project_id' => 100]
             ]
         );
-        $this->parent_dao->shouldReceive('getChildrenOfFeatureInTeamProjects')->andReturn(
+        $this->parent_dao->method('getChildrenOfFeatureInTeamProjects')->willReturn(
             [
                 ['children_id' => 2], ['children_id' => 3]
             ]
         );
-        $this->parent_dao->shouldReceive('isLinkedToASprintInMirroredProgramIncrement')->andReturnTrue();
+        $this->parent_dao->method('isLinkedToASprintInMirroredProgramIncrement')->willReturn(true);
 
         $planning = new \Planning(1, "Root planning", 1, '', '', [50, 60], 20);
         $planning->setPlanningTracker(
             TrackerTestBuilder::aTracker()->withId(20)->withProject(new Project(['group_id' => 1, 'group_name' => 'My project']))->build()
         );
-        $this->build_planning->shouldReceive("getRootPlanning")->andReturn($planning);
+        $this->build_planning->method("getRootPlanning")->willReturn($planning);
 
-        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Domain\ProgramManagementProject(1, 'my-project', "My project", '/project'));
+        $this->build_planning->method("getProjectFromPlanning")->willReturn(new \Tuleap\ProgramManagement\Domain\ProgramManagementProject(1, 'my-project', "My project", '/project'));
 
         $expected = new FeatureRepresentation(
             1,

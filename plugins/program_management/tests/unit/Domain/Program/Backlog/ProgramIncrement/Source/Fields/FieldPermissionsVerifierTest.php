@@ -32,9 +32,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class FieldPermissionsVerifierTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|Tracker_FormElementFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_FormElementFactory
      */
-    private mixed $form_element_factory;
+    private $form_element_factory;
     private FieldPermissionsVerifier $permission_verifier;
     private UserIdentifierStub $user_identifier;
     private \Tracker_FormElement_Field_String $full_field;

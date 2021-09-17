@@ -54,7 +54,10 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const ARTIFACT_LINK_FIELD_ID = 987;
     private RetrieveTrackerFromField $retrieve_tracker_from_field;
     private VerifyFieldPermissions $retrieve_field_permissions;
-    private \PHPUnit\Framework\MockObject\Stub|\TrackerFactory $tracker_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
+     */
+    private $tracker_factory;
     private RetrieveProjectFromTrackerStub $project_retriever;
     private TeamProjectsCollection $teams;
     private SynchronizedFieldFromProgramAndTeamTrackersCollection $collection;

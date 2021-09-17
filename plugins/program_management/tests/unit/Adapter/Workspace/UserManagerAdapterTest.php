@@ -30,7 +30,7 @@ final class UserManagerAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID = 170;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\UserManager
+     * @var \PHPUnit\Framework\MockObject\Stub&\UserManager
      */
     private $user_manager;
 

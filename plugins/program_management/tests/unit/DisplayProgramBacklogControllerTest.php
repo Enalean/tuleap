@@ -47,9 +47,18 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
 {
     use ForgeConfigSandbox;
 
-    private \PHPUnit\Framework\MockObject\Stub|\ProjectManager $project_manager;
-    private \PHPUnit\Framework\MockObject\Stub|ProjectFlagsBuilder $project_flags_builder;
-    private \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer $template_renderer;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer
+     */
+    private $template_renderer;
     private BuildProgram $build_program;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
 

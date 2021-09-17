@@ -27,7 +27,7 @@ use Project;
 final class ProgramManagementBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PFUser|\PHPUnit\Framework\MockObject\Stub
+     * @var \PFUser&\PHPUnit\Framework\MockObject\Stub
      */
     private $user;
     private Project $project;

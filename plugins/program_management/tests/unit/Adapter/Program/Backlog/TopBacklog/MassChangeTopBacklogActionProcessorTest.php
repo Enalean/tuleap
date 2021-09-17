@@ -23,35 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TopBacklogChangeProcessor
+     * @var \PHPUnit\Framework\MockObject\MockObject&TopBacklogChangeProcessor
      */
     private $top_backlog_change_processor;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker
      */
     private $tracker;
-    /**
-     * @var MassChangeTopBacklogActionProcessor
-     */
-    private $mass_change_processor;
 
     protected function setUp(): void
     {
-        $this->top_backlog_change_processor = \Mockery::mock(TopBacklogChangeProcessor::class);
-        $this->tracker                      = \Mockery::mock(\Tracker::class);
-        $this->tracker->shouldReceive('getGroupId')->andReturn('102');
+        $this->top_backlog_change_processor = $this->createMock(TopBacklogChangeProcessor::class);
+        $this->tracker                      = $this->createMock(\Tracker::class);
+        $this->tracker->method('getGroupId')->willReturn('102');
     }
 
     public function testCanProcessMassAdditionToTheTopBacklog(): void
@@ -61,17 +53,22 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
 
         $expected_top_backlog_change = new TopBacklogChange([400, 401], [], false, null);
 
-        $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')
-            ->withArgs(function (
-                ProgramIdentifier $program,
-                TopBacklogChange $top_backlog_change,
-                \PFUser $user
-            ) use (
-                $expected_top_backlog_change
-            ): bool {
-                self::assertEquals($expected_top_backlog_change, $top_backlog_change);
-                return true;
-            })->once();
+        $this->top_backlog_change_processor
+            ->expects(self::once())
+            ->method('processTopBacklogChangeForAProgram')
+            ->with(
+                self::anything(),
+                $this->callback(function (
+                    TopBacklogChange $top_backlog_change,
+                ) use (
+                    $expected_top_backlog_change
+                ): bool {
+                    self::assertEquals($expected_top_backlog_change, $top_backlog_change);
+                    return true;
+                }),
+                self::anything()
+            );
+
         $mass_change_processor = new MassChangeTopBacklogActionProcessor(
             BuildProgramStub::stubValidProgram(),
             $this->top_backlog_change_processor
@@ -87,17 +84,19 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
 
         $expected_top_backlog_change = new TopBacklogChange([], [402, 403], false, null);
 
-        $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')
-            ->withArgs(function (
-                ProgramIdentifier $program,
-                TopBacklogChange $top_backlog_change,
-                \PFUser $user
-            ) use (
-                $expected_top_backlog_change
-            ): bool {
-                self::assertEquals($expected_top_backlog_change, $top_backlog_change);
-                return true;
-            })->once();
+        $this->top_backlog_change_processor->method('processTopBacklogChangeForAProgram')
+            ->with(
+                self::anything(),
+                $this->callback(function (
+                    TopBacklogChange $top_backlog_change,
+                ) use (
+                    $expected_top_backlog_change
+                ): bool {
+                    self::assertEquals($expected_top_backlog_change, $top_backlog_change);
+                    return true;
+                }),
+                self::anything()
+            );
 
         $mass_change_processor = new MassChangeTopBacklogActionProcessor(
             BuildProgramStub::stubValidProgram(),
@@ -112,7 +111,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
         $user               = UserTestBuilder::aUser()->build();
         $source_information = new MassChangeTopBacklogSourceInformation(102, [405], $user, 'unchanged');
 
-        $this->top_backlog_change_processor->shouldNotReceive('processTopBacklogChangeForAProgram');
+        $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
 
         $mass_change_processor = new MassChangeTopBacklogActionProcessor(
             BuildProgramStub::stubValidProgram(),
@@ -126,7 +125,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
     {
         $source_information = new MassChangeTopBacklogSourceInformation(200, [406], UserTestBuilder::aUser()->build(), 'add');
 
-        $this->top_backlog_change_processor->shouldNotReceive('processTopBacklogChangeForAProgram');
+        $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
 
         $mass_change_processor = new MassChangeTopBacklogActionProcessor(
             BuildProgramStub::stubInvalidProgram(),

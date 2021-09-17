@@ -35,7 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&TrackerFactory
      */
     private $tracker_factory;
     private UserIdentifier $user_identifier;

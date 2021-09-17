@@ -23,19 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 
 final class AddToTopBacklogPostActionValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testVisitsAsAnExternalPostAction(): void
     {
         $value = new AddToTopBacklogPostActionValue();
 
-        $visitor = \Mockery::mock(PostActionVisitor::class);
-        $visitor->shouldReceive('visitExternalPostActionValue')->once();
+        $visitor = $this->createMock(PostActionVisitor::class);
+        $visitor->expects(self::once())->method('visitExternalPostActionValue');
 
         $value->accept($visitor);
     }

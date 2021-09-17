@@ -52,11 +52,11 @@ final class ArtifactUpdatedHandlerTest extends TestCase
     private ArtifactUpdatedEvent $event;
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PlanUserStoriesInMirroredProgramIncrements
+     * @var \PHPUnit\Framework\MockObject\MockObject&PlanUserStoriesInMirroredProgramIncrements
      */
     private $user_stories_planner;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RemovePlannedFeaturesFromTopBacklog
+     * @var \PHPUnit\Framework\MockObject\MockObject&RemovePlannedFeaturesFromTopBacklog
      */
     private $feature_remover;
     private TestLogger $logger;

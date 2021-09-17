@@ -43,13 +43,22 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker $program_increment_checker;
-    private \PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker $iteration_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&ProgramIncrementCreatorChecker
+     */
+    private $program_increment_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
+     */
+    private $iteration_checker;
     private ?ProgramTracker $program_tracker;
     private \Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier $program_identifier;
     private UserIdentifierStub $user_identifier;
     private VerifyTrackerSemanticsStub $verify_tracker_semantics;
-    private \PHPUnit\Framework\MockObject\Stub|\TrackerFactory $tracker_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
+     */
+    private $tracker_factory;
     private \Tracker $tracker;
 
     protected function setUp(): void

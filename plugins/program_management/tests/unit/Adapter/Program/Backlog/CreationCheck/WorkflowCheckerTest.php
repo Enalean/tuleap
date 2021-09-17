@@ -45,24 +45,24 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private WorkflowChecker $checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Workflow_Dao
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Workflow_Dao
      */
     private $workflow_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_Rule_Date_Dao
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Rule_Date_Dao
      */
     private $rule_date_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_Rule_List_Dao
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Rule_List_Dao
      */
     private $rule_list_dao;
     private RetrieveTrackerFromField $retrieve_tracker_from_field;
     private VerifyFieldPermissions $retrieve_field_permissions;
     private SynchronizedFieldFromProgramAndTeamTrackersCollection $collection;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
      */
-    private mixed $tracker_factory;
+    private $tracker_factory;
 
     protected function setUp(): void
     {

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Transition;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
@@ -31,17 +30,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AddToTopBacklogPostActionDAO
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Workflow
-     */
-    private $workflow;
     /**
      * @var int
      */
@@ -50,13 +40,21 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
      * @var Transition
      */
     private $transition;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&AddToTopBacklogPostActionDAO
+     */
+    private $dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Workflow
+     */
+    private $workflow;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(AddToTopBacklogPostActionDAO::class);
+        $this->dao = $this->createMock(AddToTopBacklogPostActionDAO::class);
 
         $workflow_id    = 112;
-        $this->workflow = \Mockery::mock(
+        $this->workflow = $this->createConfiguredMock(
             \Workflow::class,
             [
                 'getId' => (string) $workflow_id,
@@ -73,12 +71,12 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBuildsThePostAction(): void
     {
-        $this->dao->shouldReceive('searchByTransitionID')->with($this->transition_id)->andReturn(['id' => 88]);
+        $this->dao->method('searchByTransitionID')->with($this->transition_id)->willReturn(['id' => 88]);
 
         $factory = new AddToTopBacklogPostActionFactory(
             $this->dao,
             BuildProgramStub::stubValidProgram(),
-            \Mockery::mock(TopBacklogChangeProcessor::class)
+            $this->createMock(TopBacklogChangeProcessor::class)
         );
 
         $post_actions = $factory->loadPostActions($this->transition);
@@ -90,12 +88,12 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testDoesNotBuildThePostActionIfWeAreOutsideOfAProgram(): void
     {
-        $this->dao->shouldNotReceive('searchByTransitionId');
+        $this->dao->expects(self::never())->method('searchByTransitionId');
 
         $factory = new AddToTopBacklogPostActionFactory(
             $this->dao,
             BuildProgramStub::stubInvalidProgram(),
-            \Mockery::mock(TopBacklogChangeProcessor::class)
+            $this->createMock(TopBacklogChangeProcessor::class)
         );
 
         $post_actions = $factory->loadPostActions($this->transition);
@@ -104,9 +102,9 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testWarmsUpTheCacheBeforeGettingThePostAction(): void
     {
-        $this->dao->shouldReceive('searchByWorkflow')
+        $this->dao->method('searchByWorkflow')
             ->with($this->workflow)
-            ->andReturn(
+            ->willReturn(
                 [
                     [
                         'id' => 2,
@@ -118,12 +116,12 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
                     ],
                 ]
             );
-        $this->dao->shouldNotReceive('searchByTransitionId');
+        $this->dao->expects(self::never())->method('searchByTransitionId');
 
         $factory = new AddToTopBacklogPostActionFactory(
             $this->dao,
             BuildProgramStub::stubValidProgram(),
-            \Mockery::mock(TopBacklogChangeProcessor::class)
+            $this->createMock(TopBacklogChangeProcessor::class)
         );
 
         $factory->warmUpCacheForWorkflow($this->workflow);

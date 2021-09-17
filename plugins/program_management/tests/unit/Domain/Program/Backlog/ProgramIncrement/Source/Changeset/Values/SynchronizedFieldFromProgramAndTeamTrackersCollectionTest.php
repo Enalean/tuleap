@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -37,8 +35,6 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const ARTIFACT_LINK_ID = 1;
     private const TITLE_ID         = 2;
     private const DESCRIPTION_ID   = 3;
@@ -129,8 +125,8 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testCanDetermineIfAFieldIsSynchronized(): void
     {
-        $field = M::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn((string) self::ARTIFACT_LINK_ID);
+        $field = $this->createMock(\Tracker_FormElement_Field::class);
+        $field->method('getId')->willReturn((string) self::ARTIFACT_LINK_ID);
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
@@ -138,8 +134,8 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         $collection->add($synchronized_field_data);
         $this->assertTrue($collection->isFieldSynchronized($field));
 
-        $not_synchronized_field = M::mock(\Tracker_FormElement_Field::class);
-        $not_synchronized_field->shouldReceive('getId')->andReturn('1024');
+        $not_synchronized_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $not_synchronized_field->method('getId')->willReturn('1024');
         $this->assertFalse($collection->isFieldSynchronized($not_synchronized_field));
     }
 

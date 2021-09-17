@@ -34,8 +34,14 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class UserCanSubmitInTrackerVerifierTest extends TestCase
 {
-    private \PHPUnit\Framework\MockObject\Stub|\UserManager $user_manager;
-    private \PHPUnit\Framework\MockObject\Stub|\TrackerFactory $tracker_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\UserManager
+     */
+    private $user_manager;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
+     */
+    private $tracker_factory;
     private UserCanSubmitInTrackerVerifier $verifier;
     private UserIdentifier $user_identifier;
     private ProgramTracker $program_tracker;

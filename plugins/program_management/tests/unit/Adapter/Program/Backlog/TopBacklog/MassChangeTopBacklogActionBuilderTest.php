@@ -23,39 +23,30 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 
 final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-
     private BuildProgram $build_program;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PrioritizeFeaturesPermissionVerifier
-     */
-    private $prioritize_features_permission_verifier;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanStore
-     */
-    private $plan_store;
     private MassChangeTopBacklogActionBuilder $action_builder;
     /**
-     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
+     */
+    private $plan_store;
 
     protected function setUp(): void
     {
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->plan_store    = \Mockery::mock(PlanStore::class);
+        $this->plan_store    = $this->createMock(PlanStore::class);
         $this->user          = $this->createMock(\PFUser::class);
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
@@ -66,7 +57,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
     {
         $source_information  = new TopBacklogActionMassChangeSourceInformation(140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
+        $this->plan_store->method('isPlannable')->willReturn(true);
 
         self::assertNotNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, $this->user));
     }
@@ -91,7 +82,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
     {
         $source_information  = new TopBacklogActionMassChangeSourceInformation(600, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
+        $this->plan_store->method('isPlannable')->willReturn(false);
 
         self::assertNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, $this->user));
     }

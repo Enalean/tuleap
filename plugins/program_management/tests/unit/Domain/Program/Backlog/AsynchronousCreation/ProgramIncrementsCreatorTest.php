@@ -44,7 +44,10 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramIncrementsCreator $mirrors_creator;
-    private \PHPUnit\Framework\MockObject\MockObject|CreateArtifact $artifact_creator;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CreateArtifact
+     */
+    private $artifact_creator;
     private SourceTimeboxChangesetValues $field_values;
     private TrackerCollection $mirrored_program_increment_trackers;
     private UserIdentifier $user_identifier;
