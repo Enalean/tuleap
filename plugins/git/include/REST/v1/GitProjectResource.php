@@ -216,7 +216,7 @@ final class GitProjectResource extends AuthenticatedResource
             ),
             new \Git_LogDao(),
             \EventManager::instance(),
-            new \Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder())
+            new \Git_GitRepositoryUrlManager($git_plugin)
         );
         $result                      = new GitRepositoryListRepresentation(
             $repository_resource_builder->buildWithList($user, $git_repositories, $fields)

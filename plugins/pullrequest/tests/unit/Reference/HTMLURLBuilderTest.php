@@ -23,21 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\PullRequest;
 
 final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \GitRepositoryFactory
      */
     private $git_repository_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InstanceBaseURLBuilder
-     */
-    private $instance_base_url_builder;
     /**
      * @var int
      */
@@ -63,11 +60,9 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project                      = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUnixName' => false, 'isPublic' => false]);
         $repository->shouldReceive('getProject')->andReturns($project);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($repository);
-        $this->instance_base_url_builder = \Mockery::mock(InstanceBaseURLBuilder::class);
 
         $this->html_url_builder = new HTMLURLBuilder(
-            $this->git_repository_factory,
-            $this->instance_base_url_builder
+            $this->git_repository_factory
         );
     }
 
@@ -82,7 +77,7 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheAbsoluteWebURLToPullRequestOverview(): void
     {
-        $this->instance_base_url_builder->shouldReceive('build')->andReturn('https://example.com')->once();
+        \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $result = $this->html_url_builder->getAbsolutePullRequestOverviewUrl($this->buildPullRequest(28));
 

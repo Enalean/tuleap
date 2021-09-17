@@ -35,7 +35,6 @@ use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -1741,7 +1740,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
         $cleaner->deleteDanglingFilesToUpload($current_time);
 
-        $base_url_builder     = new InstanceBaseURLBuilder();
         $pending_jira_cleaner = new PendingJiraImportCleaner(
             $logger,
             new PendingJiraImportDao(),
@@ -1749,10 +1747,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new PendingJiraImportBuilder(ProjectManager::instance(), UserManager::instance()),
             new CancellationOfJiraImportNotifier(
                 new JiraImportNotifier(
-                    $base_url_builder,
                     $this->getMailNotificationBuilder(),
                 ),
-                $base_url_builder,
                 new LocaleSwitcher(),
                 TemplateRendererFactory::build(),
             )
@@ -2382,14 +2378,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getJiraSuccessImportNotifier(): JiraSuccessImportNotifier
     {
-        $base_url_builder = new InstanceBaseURLBuilder();
-
         return new JiraSuccessImportNotifier(
             new JiraImportNotifier(
-                $base_url_builder,
                 $this->getMailNotificationBuilder(),
             ),
-            $base_url_builder,
             new LocaleSwitcher(),
             TemplateRendererFactory::build(),
         );
@@ -2397,14 +2389,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getJiraErrorImportNotifier(): JiraErrorImportNotifier
     {
-        $base_url_builder = new InstanceBaseURLBuilder();
-
         return new JiraErrorImportNotifier(
             new JiraImportNotifier(
-                $base_url_builder,
                 $this->getMailNotificationBuilder(),
             ),
-            $base_url_builder,
             new LocaleSwitcher(),
             TemplateRendererFactory::build(),
         );

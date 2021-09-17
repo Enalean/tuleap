@@ -25,25 +25,19 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 use MailEnhancer;
 use MailNotificationBuilder;
 use trackerPlugin;
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ServerHostname;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
 class JiraImportNotifier
 {
-    /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $base_url_builder;
     /**
      * @var MailNotificationBuilder
      */
     private $mail_notification_builder;
 
     public function __construct(
-        InstanceBaseURLBuilder $base_url_builder,
         MailNotificationBuilder $mail_notification_builder
     ) {
-        $this->base_url_builder          = $base_url_builder;
         $this->mail_notification_builder = $mail_notification_builder;
     }
 
@@ -57,7 +51,7 @@ class JiraImportNotifier
         array $additional_breadcrumbs
     ): void {
         $hp       = \Codendi_HTMLPurifier::instance();
-        $base_url = $this->base_url_builder->build();
+        $base_url = ServerHostname::HTTPSUrl();
 
         $project_link  = $base_url . '/projects/' . urlencode($project->getUnixNameLowerCase());
         $trackers_link = $base_url . '/plugins/tracker/?' . http_build_query(['group_id' => $project->getID()]);

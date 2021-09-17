@@ -27,24 +27,19 @@ use ForgeConfig;
 use PFUser;
 use TemplateRenderer;
 use TemplateRendererFactory;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\mail\TemplateWithoutFooter;
+use Tuleap\ServerHostname;
 
 class InvitationEmailNotifier
 {
-    /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $instance_base_url_builder;
     /**
      * @var TemplateRenderer
      */
     private $template_renderer;
 
-    public function __construct(InstanceBaseURLBuilder $instance_base_url_builder)
+    public function __construct()
     {
-        $this->instance_base_url_builder = $instance_base_url_builder;
-        $this->template_renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
+        $this->template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
     }
 
     public function send(\PFUser $current_user, InvitationRecipient $recipient, ?string $custom_message): bool
@@ -72,7 +67,7 @@ class InvitationEmailNotifier
         $mail->setTo($recipient_user->getEmail());
         $mail->setSubject(sprintf(_('Invitation to log on to %s'), ForgeConfig::get('sys_name')));
 
-        $login_url = $this->instance_base_url_builder->build() . '/account/login.php';
+        $login_url = ServerHostname::HTTPSUrl() . '/account/login.php';
 
         $presenter = new InvitationEmailLoginPresenter($current_user, $recipient_user, $login_url, $custom_message);
         $body      = $this->template_renderer->renderToString("invite-login", $presenter);
@@ -91,7 +86,7 @@ class InvitationEmailNotifier
         $mail->setTo($external_email);
         $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get('sys_name')));
 
-        $register_url = $this->instance_base_url_builder->build() . '/account/register.php';
+        $register_url = ServerHostname::HTTPSUrl() . '/account/register.php';
 
         $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message);
         $body      = $this->template_renderer->renderToString("invite-register", $presenter);

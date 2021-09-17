@@ -22,16 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\InstanceBaseURLBuilder;
 
 class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&InstanceBaseURLBuilder
-     */
-    private $instanciate_url_builder;
+    use ForgeConfigSandbox;
 
     private BotCommentReferencePresenterBuilder $builder;
 
@@ -39,11 +35,8 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         parent::setUp();
 
-        $this->instanciate_url_builder = $this->createMock(InstanceBaseURLBuilder::class);
-        $this->instanciate_url_builder->method('build')->willReturn("https://tuleap.dev");
-        $this->builder = new BotCommentReferencePresenterBuilder(
-            $this->instanciate_url_builder
-        );
+        \ForgeConfig::set('sys_default_domain', 'example.com');
+        $this->builder = new BotCommentReferencePresenterBuilder();
     }
 
     public function testItReturnsPresenterWithOneReference(): void
@@ -53,7 +46,7 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $presenters = $this->builder->build($references);
         self::assertCount(1, $presenters);
         self::assertEquals("TULEAP-" . 123, $presenters[0]->label);
-        self::assertEquals("https://tuleap.dev/plugins/tracker/?aid=123", $presenters[0]->url);
+        self::assertEquals("https://example.com/plugins/tracker/?aid=123", $presenters[0]->url);
     }
 
     public function testItReturnsPresenterWithMultipleReferences(): void
@@ -63,8 +56,8 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $presenters = $this->builder->build($references);
         self::assertCount(2, $presenters);
         self::assertEquals("TULEAP-" . 123, $presenters[0]->label);
-        self::assertEquals("https://tuleap.dev/plugins/tracker/?aid=123", $presenters[0]->url);
+        self::assertEquals("https://example.com/plugins/tracker/?aid=123", $presenters[0]->url);
         self::assertEquals("TULEAP-" . 59, $presenters[1]->label);
-        self::assertEquals("https://tuleap.dev/plugins/tracker/?aid=59", $presenters[1]->url);
+        self::assertEquals("https://example.com/plugins/tracker/?aid=59", $presenters[1]->url);
     }
 }

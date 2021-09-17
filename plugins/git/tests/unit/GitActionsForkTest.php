@@ -40,7 +40,7 @@ final class GitActionsForkTests extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturnFalse()
             ->getMock();
 
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->actions = new GitActions(
             \Mockery::spy(\Git::class),

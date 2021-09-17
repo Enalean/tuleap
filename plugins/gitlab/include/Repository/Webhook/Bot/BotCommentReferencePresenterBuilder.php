@@ -23,20 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ServerHostname;
 
 class BotCommentReferencePresenterBuilder
 {
-    /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $instance_base_url_builder;
-
-    public function __construct(InstanceBaseURLBuilder $instance_base_url_builder)
-    {
-        $this->instance_base_url_builder = $instance_base_url_builder;
-    }
-
     /**
      * @param WebhookTuleapReference[] $references
      *
@@ -53,6 +43,6 @@ class BotCommentReferencePresenterBuilder
 
     private function getArtifactUrl(WebhookTuleapReference $reference): string
     {
-        return $this->instance_base_url_builder->build() . '/plugins/tracker/?' . http_build_query(['aid' => $reference->getId()]);
+        return ServerHostname::HTTPSUrl() . '/plugins/tracker/?' . http_build_query(['aid' => $reference->getId()]);
     }
 }

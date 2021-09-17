@@ -31,7 +31,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
-use Tuleap\InstanceBaseURLBuilder;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -73,7 +72,7 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_plugin = Mockery::spy(\GitPlugin::class);
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturn(false);
 
-        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin, new InstanceBaseURLBuilder());
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $mirror_data_mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
         $mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturn([]);

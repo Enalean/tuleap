@@ -29,7 +29,7 @@ use Tuleap\Git\GitService;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ServerHostname;
 
 class InvalidCredentialsNotifier
 {
@@ -37,10 +37,6 @@ class InvalidCredentialsNotifier
      * @var MailBuilder
      */
     private $mail_builder;
-    /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $instance_base_url;
     /**
      * @var IntegrationApiTokenDao
      */
@@ -52,14 +48,12 @@ class InvalidCredentialsNotifier
 
     public function __construct(
         MailBuilder $mail_builder,
-        InstanceBaseURLBuilder $instance_base_url,
         IntegrationApiTokenDao $dao,
         LoggerInterface $logger
     ) {
-        $this->mail_builder      = $mail_builder;
-        $this->instance_base_url = $instance_base_url;
-        $this->dao               = $dao;
-        $this->logger            = $logger;
+        $this->mail_builder = $mail_builder;
+        $this->dao          = $dao;
+        $this->logger       = $logger;
     }
 
     public function notifyGitAdministratorsThatCredentialsAreInvalid(
@@ -85,7 +79,7 @@ class InvalidCredentialsNotifier
             )
         );
 
-        $url = $this->instance_base_url->build() . GitService::getServiceUrlForProject($project);
+        $url = ServerHostname::HTTPSUrl() . GitService::getServiceUrlForProject($project);
 
         $body = sprintf(
             'It appears that the access token for %s is invalid. Tuleap cannot perform actions on it. Please check configuration on %s',

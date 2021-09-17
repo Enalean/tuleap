@@ -292,7 +292,7 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $this->git_plugin = PluginFactory::instance()->getPluginByName('git');
-        $url_manager      = new Git_GitRepositoryUrlManager($this->git_plugin, new \Tuleap\InstanceBaseURLBuilder());
+        $url_manager      = new Git_GitRepositoryUrlManager($this->git_plugin);
 
         $this->status_retriever              = new CommitStatusRetriever(new CommitStatusDAO());
         $metadata_retriever                  = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);

@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
 use Tracker;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\ServerHostname;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
@@ -34,10 +34,6 @@ class JiraSuccessImportNotifier
      * @var JiraImportNotifier
      */
     private $jira_import_notifier;
-    /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $base_url_builder;
     /**
      * @var LocaleSwitcher
      */
@@ -49,12 +45,10 @@ class JiraSuccessImportNotifier
 
     public function __construct(
         JiraImportNotifier $jira_import_notifier,
-        InstanceBaseURLBuilder $base_url_builder,
         LocaleSwitcher $locale_switcher,
         \TemplateRendererFactory $template_renderer_factory
     ) {
         $this->jira_import_notifier = $jira_import_notifier;
-        $this->base_url_builder     = $base_url_builder;
         $this->locale_switcher      = $locale_switcher;
 
         $this->renderer = $template_renderer_factory->getRenderer(__DIR__);
@@ -105,7 +99,7 @@ class JiraSuccessImportNotifier
 
     private function getLink(Tracker $tracker): string
     {
-        $base_url = $this->base_url_builder->build();
+        $base_url = ServerHostname::HTTPSUrl();
 
         return $base_url . '/plugins/tracker/?' . http_build_query(['tracker' => $tracker->getId()]);
     }

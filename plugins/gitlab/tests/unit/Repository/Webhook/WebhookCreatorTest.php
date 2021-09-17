@@ -27,14 +27,16 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
-use Tuleap\InstanceBaseURLBuilder;
 
 final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     /**
      * @var WebhookCreator
      */
@@ -69,15 +71,13 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger
         );
 
-        $instance_base_url = $this->createMock(InstanceBaseURLBuilder::class);
-        $instance_base_url->method('build')->willReturn('https://tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
 
         $this->creator = new WebhookCreator(
             $this->key_factory,
             $this->dao,
             $this->webhook_deletor,
             $this->gitlab_api_client,
-            $instance_base_url,
             $this->logger,
         );
     }

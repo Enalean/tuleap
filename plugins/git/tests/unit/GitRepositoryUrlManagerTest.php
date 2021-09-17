@@ -23,20 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Git;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ForgeConfigSandbox;
 
 final class GitRepositoryUrlManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \GitPlugin|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $git_plugin;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InstanceBaseURLBuilder
-     */
-    private $instance_base_url_builder;
 
     /**
      * @var \Git_GitRepositoryUrlManager
@@ -45,10 +42,9 @@ final class GitRepositoryUrlManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->git_plugin                = \Mockery::mock(\GitPlugin::class);
-        $this->instance_base_url_builder = \Mockery::mock(InstanceBaseURLBuilder::class);
+        $this->git_plugin = \Mockery::mock(\GitPlugin::class);
 
-        $this->url_manager = new \Git_GitRepositoryUrlManager($this->git_plugin, $this->instance_base_url_builder);
+        $this->url_manager = new \Git_GitRepositoryUrlManager($this->git_plugin);
     }
 
     public function testBuildsURLToACommit(): void
@@ -66,7 +62,7 @@ final class GitRepositoryUrlManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $repository = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('getRelativeHTTPUrl')->andReturn('/plugins/git/project1/repo1');
-        $this->instance_base_url_builder->shouldReceive('build')->andReturn('https://example.com');
+        \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->assertEquals(
             'https://example.com/plugins/git/project1/repo1?a=commit&h=fbe4dade4f744aa203ec35bf09f71475ecc3f9d6',

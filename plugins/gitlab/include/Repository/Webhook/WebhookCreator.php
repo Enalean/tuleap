@@ -28,7 +28,7 @@ use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ServerHostname;
 
 class WebhookCreator
 {
@@ -45,10 +45,6 @@ class WebhookCreator
      */
     private $dao;
     /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $instance_base_url;
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -62,14 +58,12 @@ class WebhookCreator
         WebhookDao $dao,
         WebhookDeletor $webhook_deletor,
         ClientWrapper $gitlab_api_client,
-        InstanceBaseURLBuilder $instance_base_url,
         LoggerInterface $logger
     ) {
         $this->gitlab_api_client = $gitlab_api_client;
         $this->key_factory       = $key_factory;
         $this->dao               = $dao;
         $this->webhook_deletor   = $webhook_deletor;
-        $this->instance_base_url = $instance_base_url;
         $this->logger            = $logger;
     }
 
@@ -116,7 +110,7 @@ class WebhookCreator
         GitlabRepositoryIntegration $gitlab_repository_integration,
         ConcealedString $secret
     ): int {
-        $base_url = $this->instance_base_url->build();
+        $base_url = ServerHostname::HTTPSUrl();
 
         $gitlab_repository_id = $gitlab_repository_integration->getGitlabRepositoryId();
         $integration_id       = $gitlab_repository_integration->getId();

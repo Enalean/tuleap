@@ -30,7 +30,6 @@ use TemplateRendererFactory;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -226,8 +225,7 @@ final class PullRequestNotificationSupport
                                 \UserHelper::instance(),
                                 $html_url_builder,
                                 new \Git_GitRepositoryUrlManager(
-                                    $git_plugin,
-                                    new InstanceBaseURLBuilder()
+                                    $git_plugin
                                 ),
                                 new PullRequestUpdateCommitDiff()
                             )
@@ -365,7 +363,7 @@ final class PullRequestNotificationSupport
 
     private static function buildHTMLURLBuilder(GitRepositoryFactory $git_repository_factory): HTMLURLBuilder
     {
-        return new HTMLURLBuilder($git_repository_factory, new InstanceBaseURLBuilder());
+        return new HTMLURLBuilder($git_repository_factory);
     }
 
     private static function buildGitRepositoryFactory(): GitRepositoryFactory

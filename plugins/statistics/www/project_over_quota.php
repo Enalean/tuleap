@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\InstanceBaseURLBuilder;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
@@ -36,5 +35,5 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$project_quota_html = new ProjectQuotaHtml(new InstanceBaseURLBuilder(), Codendi_HTMLPurifier::instance());
+$project_quota_html = new ProjectQuotaHtml(Codendi_HTMLPurifier::instance());
 $project_quota_html->displayProjectsOverQuota();

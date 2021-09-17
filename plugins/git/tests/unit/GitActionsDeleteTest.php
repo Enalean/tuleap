@@ -68,7 +68,7 @@ class GitActionsDeleteTests extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturnFalse()
             ->getMock();
 
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->git_actions = new GitActions(
             $this->controller,

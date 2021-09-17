@@ -32,7 +32,7 @@ if ($argc !== 3) {
 
 $git_plugin = PluginManager::instance()->getPluginByName('git');
 \assert($git_plugin instanceof GitPlugin);
-$url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
+$url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 $driver      = new Git_GitoliteDriver(
     $git_plugin->getLogger(),
     $git_plugin->getGitSystemEventManager(),

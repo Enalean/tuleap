@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationEmailNotifier;
@@ -90,7 +89,7 @@ class InvitationsResource extends AuthenticatedResource
                 $invite_buddy_configuration,
                 new InvitationLimitChecker($dao, $invite_buddy_configuration)
             ),
-            new InvitationEmailNotifier(new InstanceBaseURLBuilder()),
+            new InvitationEmailNotifier(),
             $user_manager,
             $dao,
             \BackendLogger::getDefaultLogger(),
