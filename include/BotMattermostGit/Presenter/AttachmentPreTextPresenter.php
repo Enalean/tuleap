@@ -25,11 +25,11 @@ use GitRepository;
 use HTTPRequest;
 use PFUser;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\ServerHostname;
 
 class AttachmentPreTextPresenter
 {
 
-    private $request;
     private $repository_destination;
     private $repository_url_manager;
 
@@ -42,12 +42,10 @@ class AttachmentPreTextPresenter
     public function __construct(
         PullRequest $pull_request,
         PFUser $user,
-        HTTPRequest $request,
         GitRepository $repository_destination,
         Git_GitRepositoryUrlManager $repository_url_manager
     ) {
         $this->user                   = $user;
-        $this->request                = $request;
         $this->repository_destination = $repository_destination;
         $this->repository_url_manager = $repository_url_manager;
 
@@ -64,6 +62,6 @@ class AttachmentPreTextPresenter
     {
         $repository_base_url = $this->repository_url_manager->getRepositoryBaseUrl($this->repository_destination);
 
-        return $this->request->getServerUrl() . $repository_base_url;
+        return ServerHostname::HTTPSUrl() . $repository_base_url;
     }
 }

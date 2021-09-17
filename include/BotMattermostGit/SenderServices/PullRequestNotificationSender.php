@@ -57,7 +57,6 @@ class PullRequestNotificationSender
     public function send(
         PullRequest $pull_request,
         PFUser $user,
-        HTTPRequest $request,
         Project $project,
         GitRepository $repository_destination
     ) {
@@ -67,7 +66,6 @@ class PullRequestNotificationSender
                 $attachment = $this->notification_builder->buildNotificationAttachment(
                     $pull_request,
                     $user,
-                    $request,
                     $project,
                     $repository_destination
                 );

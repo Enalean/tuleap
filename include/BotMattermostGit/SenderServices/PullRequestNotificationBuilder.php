@@ -27,6 +27,7 @@ use PFUser;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\ServerHostname;
 
 class PullRequestNotificationBuilder
 {
@@ -40,16 +41,14 @@ class PullRequestNotificationBuilder
     public function buildNotificationAttachment(
         PullRequest $pull_request,
         PFUser $user,
-        HTTPRequest $request,
         Project $project,
         GitRepository $repository_destination
     ) {
         $text       = $this->makeText($pull_request->getDescription());
-        $title_link = $this->makeTitleLink($pull_request, $request, $project);
+        $title_link = $this->makeTitleLink($pull_request, $project);
         $pretext    = $this->makePreText(
             $pull_request,
             $user,
-            $request,
             $repository_destination
         );
 
@@ -59,7 +58,6 @@ class PullRequestNotificationBuilder
     private function makePreText(
         PullRequest $pull_request,
         PFUser $user,
-        HTTPRequest $request,
         GitRepository $repository_destination
     ) {
         $renderer =  TemplateRendererFactory::build()->getRenderer(
@@ -71,7 +69,6 @@ class PullRequestNotificationBuilder
             new AttachmentPreTextPresenter(
                 $pull_request,
                 $user,
-                $request,
                 $repository_destination,
                 $this->repository_url_manager
             )
@@ -88,9 +85,9 @@ class PullRequestNotificationBuilder
         return $text;
     }
 
-    private function makeTitleLink(PullRequest $pull_request, HTTPRequest $request, Project $project)
+    private function makeTitleLink(PullRequest $pull_request, Project $project)
     {
-        return $request->getServerUrl() . GIT_BASE_URL . '/?' . http_build_query(
+        return ServerHostname::HTTPSUrl() . GIT_BASE_URL . '/?' . http_build_query(
             [
                     'action'   => 'pull-requests',
                     'repo_id'  => $pull_request->getRepositoryId(),

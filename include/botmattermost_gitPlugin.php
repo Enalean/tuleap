@@ -145,7 +145,6 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
             $pull_request_notification_sender->send(
                 $pull_request,
                 $creator,
-                HTTPRequest::instance(),
                 $project,
                 $repository_destination
             );
@@ -168,7 +167,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
-            $asset = new IncludeAssets(
+            $asset  = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/botmattermost_git/',
                 '/assets/botmattermost_git'
             );
