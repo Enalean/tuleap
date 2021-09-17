@@ -38,13 +38,13 @@
                     <div class="dashboard-widget-content-projectheartbeat-label">{{ label }}</div>
                     {{# entries }}
                         <div class="dashboard-widget-content-projectheartbeat-item">
-                            <div class="dashboard-widget-content-projectheartbeat-item-icon">{{{ small_icon }}}</div>
+                            <i class="dashboard-widget-content-projectheartbeat-item-icon fa {{ icon_name }}" aria-hidden="true"></i>
                             <div class="dashboard-widget-content-projectheartbeat-item-content">
                                 <div class="dashboard-widget-content-projectheartbeat-item-message">
                                     {{{ html_message }}}
                                 </div>
                                 <div class="dashboard-widget-content-projectheartbeat-item-time">
-                                    <i class="far fa-clock dashboard-widget-content-projectheartbeat-item-time-icon"></i>
+                                    <i class="far fa-clock dashboard-widget-content-projectheartbeat-item-time-icon" aria-hidden="true"></i>
                                     {{ updated_at }}
                                 </div>
                             </div>

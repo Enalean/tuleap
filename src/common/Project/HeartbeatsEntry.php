@@ -20,64 +20,24 @@
 
 namespace Tuleap\Project;
 
-use Tuleap\Glyph\Glyph;
-
-class HeartbeatsEntry
+final class HeartbeatsEntry
 {
-    /**
-     * @var int
-     */
-    private $updated_at;
-    /**
-     * @var string
-     */
-    private $html_message;
-    /**
-     * @var Glyph
-     */
-    private $normal_icon;
-    /**
-     * @var Glyph
-     */
-    private $small_icon;
-
-    public function __construct($updated_at, Glyph $small_icon, Glyph $normal_icon, $html_message)
+    public function __construct(private int $updated_at, private string $html_message, private string $icon_name)
     {
-        $this->updated_at   = (int) $updated_at;
-        $this->small_icon   = $small_icon;
-        $this->normal_icon  = $normal_icon;
-        $this->html_message = $html_message;
     }
 
-    /**
-     * @return int
-     */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): int
     {
         return $this->updated_at;
     }
 
-    /**
-     * @return string
-     */
-    public function getHTMLMessage()
+    public function getHTMLMessage(): string
     {
         return $this->html_message;
     }
 
-    /**
-     * @return Glyph
-     */
-    public function getNormalIcon()
+    public function getIconName(): string
     {
-        return $this->normal_icon;
-    }
-
-    /**
-     * @return Glyph
-     */
-    public function getSmallIcon()
-    {
-        return $this->small_icon;
+        return $this->icon_name;
     }
 }

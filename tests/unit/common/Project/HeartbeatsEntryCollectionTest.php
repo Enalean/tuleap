@@ -22,20 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class HeartbeatsEntryCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItReturnsEntriesOrderedByDate(): void
     {
-        $collection = new HeartbeatsEntryCollection(\Mockery::spy(\Project::class), \Mockery::spy(\PFUser::class));
+        $collection = new HeartbeatsEntryCollection(new \Project(["group_id" => 101]), UserTestBuilder::aUser()->build());
 
-        $icon = \Mockery::spy(\Tuleap\Glyph\Glyph::class);
-
-        $entry1 = new HeartbeatsEntry(100, $icon, $icon, 'message');
-        $entry2 = new HeartbeatsEntry(50, $icon, $icon, 'message');
-        $entry3 = new HeartbeatsEntry(10, $icon, $icon, 'message');
+        $entry1 = new HeartbeatsEntry(100, 'message', 'fa-list');
+        $entry2 = new HeartbeatsEntry(50, 'message', 'fa-list');
+        $entry3 = new HeartbeatsEntry(10, 'message', 'fa-list');
 
         $collection->add($entry3);
         $collection->add($entry1);

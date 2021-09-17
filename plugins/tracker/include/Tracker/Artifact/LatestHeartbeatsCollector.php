@@ -27,54 +27,21 @@ use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
 use UserHelper;
 use UserManager;
 
-class LatestHeartbeatsCollector
+final class LatestHeartbeatsCollector
 {
-    /**
-     * @var Tracker_ArtifactDao
-     */
-    private $dao;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $factory;
-    /**
-     * @var GlyphFinder
-     */
-    private $glyph_finder;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_manager;
-
     public function __construct(
-        Tracker_ArtifactDao $dao,
-        Tracker_ArtifactFactory $factory,
-        GlyphFinder $glyph_finder,
-        UserManager $user_manager,
-        UserHelper $user_helper,
-        EventDispatcherInterface $event_manager
+        private Tracker_ArtifactDao $dao,
+        private Tracker_ArtifactFactory $factory,
+        private UserManager $user_manager,
+        private UserHelper $user_helper,
+        private EventDispatcherInterface $event_manager
     ) {
-        $this->dao           = $dao;
-        $this->factory       = $factory;
-        $this->glyph_finder  = $glyph_finder;
-        $this->user_manager  = $user_manager;
-        $this->user_helper   = $user_helper;
-        $this->event_manager = $event_manager;
     }
 
     public function collect(HeartbeatsEntryCollection $collection): void
@@ -106,9 +73,8 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $artifact->getLastUpdateDate(),
-                    $this->glyph_finder->get('tuleap-tracker-small'),
-                    $this->glyph_finder->get('tuleap-tracker'),
-                    $this->getHTMLMessage($artifact)
+                    $this->getHTMLMessage($artifact),
+                    "fas fa-list"
                 )
             );
         }

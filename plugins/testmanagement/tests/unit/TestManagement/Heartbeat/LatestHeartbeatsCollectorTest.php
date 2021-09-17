@@ -24,7 +24,6 @@ namespace Tuleap\TestManagement\Heartbeat;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_ArtifactFactory;
-use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
@@ -37,30 +36,11 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var LatestHeartbeatsCollector
-     */
-    private $collector;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|GlyphFinder
-     */
-    private $glyph_finder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExecutionDao
-     */
-    private $dao;
+    private LatestHeartbeatsCollector $collector;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager $user_manager;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper $user_helper;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory $factory;
+    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExecutionDao $dao;
 
     protected function setUp(): void
     {
@@ -73,7 +53,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->collector = new LatestHeartbeatsCollector(
             $this->dao,
             $this->factory,
-            $this->glyph_finder,
             $this->user_helper,
             $this->user_manager
         );
@@ -127,8 +106,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('userCanView')->andReturnTrue();
 
         $this->factory->shouldReceive('getInstanceFromRow')->andReturn($artifact);
-
-        $this->glyph_finder->shouldReceive('get')->andReturn(\Mockery::mock(Glyph::class));
 
         $this->user_manager->shouldReceive('getUserById')->andReturn($user);
         $this->user_helper->shouldReceive('getLinkOnUser')->once();

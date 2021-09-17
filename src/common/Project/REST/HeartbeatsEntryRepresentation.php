@@ -26,31 +26,38 @@ use Tuleap\REST\JsonCast;
 /**
  * @psalm-immutable
  */
-class HeartbeatsEntryRepresentation
+final class HeartbeatsEntryRepresentation
 {
     /**
      * @var string Date of the last update of this entry {@type int} {@required true}
      */
-    public $updated_at;
+    public string $updated_at;
     /**
      * @var string Title of the entry {@type string} {@required true}
      */
-    public $html_message;
+    public string $html_message;
     /**
-     * @var string SVG icon associated with the entry {@type string} {@required true}
+     * @deprecated
+     * @var string SVG icon associated with the entry {@type string} {@required false}
      */
-    public $icon;
+    public string $icon;
     /**
-     * @var string SVG icon (small size) associated with the entry {@type string} {@required true}
+     * @deprecated
+     * @var string SVG icon (small size) associated with the entry {@type string} {@required false}
      */
-    public $small_icon;
+    public string $small_icon;
+    /**
+     * @var string font awesome icon {@type string} {@required false}
+     */
+    public string $icon_name;
 
-    private function __construct(string $updated_at, string $html_message, string $icon, string $small_icon)
+    private function __construct(string $updated_at, string $html_message, string $svg)
     {
         $this->updated_at   = $updated_at;
         $this->html_message = $html_message;
-        $this->icon         = $icon;
-        $this->small_icon   = $small_icon;
+        $this->icon         = "";
+        $this->small_icon   = "";
+        $this->icon_name    = $svg;
     }
 
     public static function build(HeartbeatsEntry $entry): self
@@ -58,8 +65,7 @@ class HeartbeatsEntryRepresentation
         return new self(
             JsonCast::toDate($entry->getUpdatedAt()),
             $entry->getHTMLMessage(),
-            $entry->getNormalIcon()->getInlineString(),
-            $entry->getSmallIcon()->getInlineString()
+            $entry->getIconName()
         );
     }
 }

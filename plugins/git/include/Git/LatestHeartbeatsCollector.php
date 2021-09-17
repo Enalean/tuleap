@@ -24,7 +24,6 @@ use Git_GitRepositoryUrlManager;
 use Git_LogDao;
 use GitRepository;
 use GitRepositoryFactory;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use UserHelper;
@@ -32,45 +31,13 @@ use UserManager;
 
 class LatestHeartbeatsCollector
 {
-    /**
-     * @var Git_LogDao
-     */
-    private $dao;
-    /**
-     * @var Git_GitRepositoryUrlManager
-     */
-    private $git_url_manager;
-    /**
-     * @var GlyphFinder
-     */
-    private $glyph_finder;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $factory;
-
     public function __construct(
-        GitRepositoryFactory $factory,
-        Git_LogDao $dao,
-        Git_GitRepositoryUrlManager $git_url_manager,
-        GlyphFinder $glyph_finder,
-        UserManager $user_manager,
-        UserHelper $user_helper
+        private GitRepositoryFactory $factory,
+        private Git_LogDao $dao,
+        private Git_GitRepositoryUrlManager $git_url_manager,
+        private UserManager $user_manager,
+        private UserHelper $user_helper
     ) {
-        $this->factory         = $factory;
-        $this->dao             = $dao;
-        $this->git_url_manager = $git_url_manager;
-        $this->glyph_finder    = $glyph_finder;
-        $this->user_manager    = $user_manager;
-        $this->user_helper     = $user_helper;
     }
 
     public function collect(HeartbeatsEntryCollection $collection)
@@ -93,9 +60,8 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $push_row['push_date'],
-                    $this->glyph_finder->get('tuleap-git-small'),
-                    $this->glyph_finder->get('tuleap-git'),
-                    $this->getHTMLMessage($repository, $push_row)
+                    $this->getHTMLMessage($repository, $push_row),
+                    "fas fa-tlp-versioning-git"
                 )
             );
         }

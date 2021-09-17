@@ -1641,7 +1641,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $collector = new LatestHeartbeatsCollector(
             $this->getArtifactDao(),
             $this->getArtifactFactory(),
-            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
             $this->getUserManager(),
             UserHelper::instance(),
             EventManager::instance()

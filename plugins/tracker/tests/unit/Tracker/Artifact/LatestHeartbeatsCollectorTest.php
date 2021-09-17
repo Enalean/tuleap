@@ -22,46 +22,31 @@ namespace Tuleap\Tracker\Artifact;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var \Tracker_ArtifactDao */
-    public $dao;
-
-    /** @var \Tracker_ArtifactFactory */
-    public $factory;
-
-    /** @var LatestHeartbeatsCollector */
-    public $collector;
-
-    /** @var \Project */
-    public $project;
-
-    /** @var \PFUser */
-    public $user;
+    private \Tracker_ArtifactDao $dao;
+    private \Tracker_ArtifactFactory $factory;
+    private LatestHeartbeatsCollector $collector;
+    private \Project $project;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $glyph_finder = \Mockery::spy(\Tuleap\Glyph\GlyphFinder::class);
-        $glyph_finder->shouldReceive('get')->andReturns(\Mockery::spy(\Tuleap\Glyph\Glyph::class));
-
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
-        $this->user    = new PFUser([
-            'language_id' => 'en',
-            'user_id' => 200
-        ]);
+        $this->user    = UserTestBuilder::aUser()->build();
 
         $this->dao = \Mockery::spy(\Tracker_ArtifactDao::class);
         $this->dao->shouldReceive('searchLatestUpdatedArtifactsInProject')->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)->andReturns(\TestHelper::arrayToDar(['id' => 1], ['id' => 2], ['id' => 3]));
@@ -80,6 +65,10 @@ class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact2->shouldReceive('getTracker')->andReturn($tracker);
         $artifact3->shouldReceive('getTracker')->andReturn($tracker);
 
+        $artifact1->shouldReceive('getLastUpdateDate')->andReturn(1272553678);
+        $artifact2->shouldReceive('getLastUpdateDate')->andReturn(1425343153);
+        $artifact3->shouldReceive('getLastUpdateDate')->andReturn(1525085316);
+
         $this->factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->factory->shouldReceive('getInstanceFromRow')->with(['id' => 1])->andReturns($artifact1);
         $this->factory->shouldReceive('getInstanceFromRow')->with(['id' => 2])->andReturns($artifact2);
@@ -91,7 +80,6 @@ class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->collector = new LatestHeartbeatsCollector(
             $this->dao,
             $this->factory,
-            $glyph_finder,
             \Mockery::spy(\UserManager::class),
             \Mockery::spy(\UserHelper::class),
             $event_manager
