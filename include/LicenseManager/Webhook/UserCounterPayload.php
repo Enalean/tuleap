@@ -20,7 +20,6 @@
 
 namespace Tuleap\Enalean\LicenseManager\Webhook;
 
-use HTTPRequest;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Webhook\Payload;
 
@@ -28,11 +27,11 @@ class UserCounterPayload implements Payload
 {
     private $payload;
 
-    public function __construct(HTTPRequest $request, UserCounterDao $dao, $max_users, $event, $user_id)
+    public function __construct(UserCounterDao $dao, $max_users, $event, $user_id)
     {
         $this->payload = [
             'event'     => $event,
-            'url'       => $request->getServerUrl(),
+            'url'       => \Tuleap\ServerHostname::HTTPSUrl(),
             'users'     => [],
             'max_users' => $max_users,
             'user_id'   => $user_id

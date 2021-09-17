@@ -80,7 +80,7 @@ class enalean_licensemanagerPlugin extends Plugin
         if (! $nb_max_users) {
             return;
         }
-        $payload = new UserCounterPayload(HTTPRequest::instance(), new UserCounterDao(), $this->getMaxUsers(), $event, $params['user_id']);
+        $payload = new UserCounterPayload(new UserCounterDao(), $this->getMaxUsers(), $event, $params['user_id']);
 
         $webhook_emitter = new Emitter(
             HTTPFactoryBuilder::requestFactory(),
