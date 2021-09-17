@@ -129,7 +129,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
             $logger
         );
 
-        $stand_up_notification_sender->send($this->getRequest());
+        $stand_up_notification_sender->send();
     }
 
     public function botmattermost_bot_deleted(BotMattermostDeleted $event)

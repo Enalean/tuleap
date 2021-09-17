@@ -53,7 +53,7 @@ class StandUpNotificationSender
         $this->logger                     = $logger;
     }
 
-    public function send(HTTPRequest $http_request)
+    public function send()
     {
         try {
             $agile_dashboard_bots = $this->bot_agiledashboard_factory->getAgileDashboardBotsForSummary();
@@ -65,7 +65,7 @@ class StandUpNotificationSender
                 $project      = $this->project_manager->getProject($project_id);
                 $admins       = $project->getAdmins();
                 $message->setText(
-                    $this->notification_builder->buildNotificationText($http_request, $admins[0], $project)
+                    $this->notification_builder->buildNotificationText($admins[0], $project)
                 );
 
                 $this->logger->info('start stand up notification in project ' . $project->getPublicName());

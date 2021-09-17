@@ -80,11 +80,7 @@ final class StandUpNotificationBuilderTest extends TestCase
             'group_name' => 'test',
         ]);
 
-        $http_request = $this->createMock(HTTPRequest::class);
-        $http_request->method('getServerUrl');
-
         $notification_text = $notification_builder->buildNotificationText(
-            $http_request,
             $this->createMock(PFUser::class),
             $project
         );

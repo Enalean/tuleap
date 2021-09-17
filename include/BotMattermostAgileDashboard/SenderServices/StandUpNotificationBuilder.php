@@ -21,7 +21,6 @@
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
 use AgileDashboard_Milestone_MilestoneStatusCounter;
-use HTTPRequest;
 use PFUser;
 use Planning;
 use Planning_Milestone;
@@ -31,6 +30,7 @@ use Project;
 use Tracker_FormElement_Field_Burndown;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
 use Tuleap\BotMattermostAgileDashboard\Presenter\StandUpSummaryPresenter;
+use Tuleap\ServerHostname;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -53,7 +53,7 @@ class StandUpNotificationBuilder
         $this->renderer                 = $renderer;
     }
 
-    public function buildNotificationText(HTTPRequest $http_request, PFUser $user, Project $project)
+    public function buildNotificationText(PFUser $user, Project $project)
     {
         $last_plannings_for_presenter = [];
         $last_plannings               = $this->planning_factory->getLastLevelPlannings($user, (int)$project->getID());
@@ -63,7 +63,6 @@ class StandUpNotificationBuilder
         foreach ($last_plannings as $last_planning) {
             $last_plannings_for_presenter['title']                 = sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'Stand-up summary of %1$s in project %2$s'), $last_planning->getName(), $project_name);
             $last_plannings_for_presenter['milestones']            = $this->buildMilestonesForNotification(
-                $http_request,
                 $last_planning,
                 $user
             );
@@ -76,21 +75,20 @@ class StandUpNotificationBuilder
         );
     }
 
-    private function buildMilestonesForNotification(HTTPRequest $http_request, Planning $last_planning, PFUser $user)
+    private function buildMilestonesForNotification(Planning $last_planning, PFUser $user)
     {
         $milestones           = $this->milestone_factory->getAllCurrentMilestones($user, $last_planning);
         $milestones_presenter = [];
 
         foreach ($milestones as $milestone) {
             $milestone              = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
-            $milestones_presenter[] = $this->buildMilestoneForNotification($http_request, $milestone, $user);
+            $milestones_presenter[] = $this->buildMilestoneForNotification($milestone, $user);
         }
 
         return $milestones_presenter;
     }
 
     private function buildMilestoneForNotification(
-        HTTPRequest $http_request,
         Planning_Milestone $milestone,
         PFUser $user
     ) {
@@ -101,38 +99,38 @@ class StandUpNotificationBuilder
         $parent_artifact = $tracker_artifact->getParent($user);
 
         if ($parent_artifact !== null) {
-            $burndown_url = $this->getBurndownUrl($http_request, $parent_artifact, $user);
+            $burndown_url = $this->getBurndownUrl($parent_artifact, $user);
         }
 
         if ($burndown_url === null) {
-            $burndown_url = $this->getBurndownUrl($http_request, $tracker_artifact, $user);
+            $burndown_url = $this->getBurndownUrl($tracker_artifact, $user);
         }
 
         return [
-            'cardwall_url'        => $this->getPlanningCardwallUrl($http_request, $milestone),
+            'cardwall_url'        => $this->getPlanningCardwallUrl($milestone),
             'artifact_title'      => $milestone->getArtifactTitle(),
             'artifact_start_date' => $this->getDate($milestone->getStartDate()),
             'artifact_end_date'   => $this->getDate($milestone->getEndDate()),
             'has_burndown'        => $burndown_url !== null,
             'burndown_url'        => $burndown_url,
-            'milestone_infos'     => $this->buildMilestoneInformation($http_request, $milestone, $user),
-            'linked_artifacts'    => $this->buildLinkedArtifactTable($http_request, $linked_artifacts),
+            'milestone_infos'     => $this->buildMilestoneInformation($milestone, $user),
+            'linked_artifacts'    => $this->buildLinkedArtifactTable($linked_artifacts),
             'has_recent_update'   => (! empty($linked_artifacts))
         ];
     }
 
-    private function getBurndownUrl(HTTPRequest $http_request, Artifact $artifact, PFUser $user)
+    private function getBurndownUrl(Artifact $artifact, PFUser $user)
     {
         $user_timezone = date_default_timezone_get();
 
         date_default_timezone_set(TimezoneRetriever::getServerTimezone());
-        $burndown = $this->buildBurndownUrl($http_request, $artifact, $user);
+        $burndown = $this->buildBurndownUrl($artifact, $user);
         date_default_timezone_set($user_timezone);
 
         return $burndown;
     }
 
-    private function buildBurndownUrl(HTTPRequest $http_request, Artifact $artifact, PFUser $user)
+    private function buildBurndownUrl(Artifact $artifact, PFUser $user)
     {
         if ($artifact->getABurndownField($user)) {
             $url_query = http_build_query(
@@ -143,7 +141,7 @@ class StandUpNotificationBuilder
                 ]
             );
 
-            return $http_request->getServerUrl() . TRACKER_BASE_URL . '/?' . $url_query;
+            return ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?' . $url_query;
         }
 
         return null;
@@ -162,9 +160,9 @@ class StandUpNotificationBuilder
         return $artifacts;
     }
 
-    private function getPlanningCardwallUrl(HTTPRequest $http_request, Planning_Milestone $milestone)
+    private function getPlanningCardwallUrl(Planning_Milestone $milestone)
     {
-        return $http_request->getServerUrl() . AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
+        return ServerHostname::HTTPSUrl() . AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             [
                 'group_id'    => $milestone->getGroupId(),
                 'planning_id' => $milestone->getPlanningId(),
@@ -180,12 +178,12 @@ class StandUpNotificationBuilder
         return $artifact->getLastUpdateDate() > strtotime('-1 day', time());
     }
 
-    private function buildMilestoneInformation(HTTPRequest $http_request, Planning_Milestone $milestone, PFUser $user)
+    private function buildMilestoneInformation(Planning_Milestone $milestone, PFUser $user)
     {
         $status = $this->milestone_status_counter->getStatus($user, $milestone->getArtifactId());
 
         return [
-            'id'             => $this->buildArtifactLink($http_request, $milestone->getArtifact()),
+            'id'             => $this->buildArtifactLink($milestone->getArtifact()),
             'open'           => $status['open'],
             'closed'         => $status['closed'],
             'days_remaining' => $this->getMilestoneDaysRemaining($milestone)
@@ -207,29 +205,29 @@ class StandUpNotificationBuilder
         return date('d M H:i', $date);
     }
 
-    private function buildArtifactLink(HTTPRequest $http_request, Artifact $tracker_Artifact)
+    private function buildArtifactLink(Artifact $tracker_Artifact)
     {
         return [
-            'url'  => $http_request->getServerUrl() . $tracker_Artifact->getUri(),
+            'url'  => ServerHostname::HTTPSUrl() . $tracker_Artifact->getUri(),
             'name' => $tracker_Artifact->getXRef()
         ];
     }
 
-    private function buildLinkedArtifactTable(HTTPRequest $http_request, array $tracker_artifacts)
+    private function buildLinkedArtifactTable(array $tracker_artifacts)
     {
         $table_body = [];
 
         foreach ($tracker_artifacts as $tracker_artifact) {
-            $table_body[] = $this->getTrackerArtifactInfo($http_request, $tracker_artifact);
+            $table_body[] = $this->getTrackerArtifactInfo($tracker_artifact);
         }
 
         return $table_body;
     }
 
-    private function getTrackerArtifactInfo(HTTPRequest $http_request, Artifact $tracker_artifact)
+    private function getTrackerArtifactInfo(Artifact $tracker_artifact)
     {
         return [
-            'artifact_link' => $this->buildArtifactLink($http_request, $tracker_artifact),
+            'artifact_link' => $this->buildArtifactLink($tracker_artifact),
             'title'         => $tracker_artifact->getTitle(),
             'status'        => $tracker_artifact->getStatus(),
             'last_update'   => $this->getDateTime($tracker_artifact->getLastUpdateDate())
