@@ -32,6 +32,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\ServerHostname;
 use UserManager;
 
 final class UserWellKnownChangePasswordController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
@@ -91,7 +92,7 @@ final class UserWellKnownChangePasswordController extends DispatchablePSR15Compa
         return $this->response_factory->createResponse(302)
             ->withHeader(
                 'Location',
-                sprintf('https://%s%s', \ForgeConfig::get('sys_https_host'), DisplaySecurityController::URL)
+                ServerHostname::HTTPSUrl() . DisplaySecurityController::URL
             );
     }
 }

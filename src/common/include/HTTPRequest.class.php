@@ -22,10 +22,8 @@
 class HTTPRequest extends Codendi_Request
 {
 
-    public const HEADER_X_FORWARDED_PROTO = 'HTTP_X_FORWARDED_PROTO';
-    public const HEADER_X_FORWARDED_FOR   = 'HTTP_X_FORWARDED_FOR';
-    public const HEADER_HOST              = 'HTTP_HOST';
-    public const HEADER_REMOTE_ADDR       = 'REMOTE_ADDR';
+    public const HEADER_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
+    public const HEADER_REMOTE_ADDR     = 'REMOTE_ADDR';
 
     /**
      * @var array
@@ -132,14 +130,6 @@ class HTTPRequest extends Codendi_Request
     }
 
     /**
-     * @return bool
-     */
-    private function doWeTerminateWithSecureConnection()
-    {
-        return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on');
-    }
-
-    /**
      * What are the IP adresses trusted to be a proxy
      *
      * @param array $proxies
@@ -149,22 +139,6 @@ class HTTPRequest extends Codendi_Request
         foreach ($proxies as $proxy) {
             $this->trusted_proxied[$proxy] = true;
         }
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSecure()
-    {
-        if ($this->reverseProxyForwardsOriginalProtocol()) {
-            return $this->isOriginalProtocolSecure();
-        }
-        return $this->doWeTerminateWithSecureConnection();
-    }
-
-    private function reverseProxyForwardsOriginalProtocol()
-    {
-        return $this->isFromTrustedProxy() && isset($_SERVER[self::HEADER_X_FORWARDED_PROTO]);
     }
 
     private function isFromTrustedProxy(): bool
@@ -211,41 +185,9 @@ class HTTPRequest extends Codendi_Request
         return 0 === substr_compare(sprintf('%032b', ip2long($request_ip)), sprintf('%032b', ip2long($address)), 0, $netmask);
     }
 
-    private function isOriginalProtocolSecure()
+    public function getServerUrl(): string
     {
-        return strtolower($_SERVER[self::HEADER_X_FORWARDED_PROTO]) === 'https';
-    }
-
-
-    private function getScheme()
-    {
-        if (ForgeConfig::get('sys_https_host') || $this->isSecure()) {
-            return 'https://';
-        } else {
-            return 'http://';
-        }
-    }
-
-    /**
-     * Returns the ServerURL the user requested, taking into account reverse proxy
-     * and protocols variations
-     *
-     * Logic:
-     * -> when we detect a reverse proxy, return reverse proxy URL
-     *   -> this assume that reverse proxy rewite HOST and HTTP_X_FORWARDED_PROTO headers
-     *
-     *
-     * @return String Fully qualified URL
-     */
-    public function getServerUrl()
-    {
-        if ($this->reverseProxyForwardsOriginalProtocol()) {
-            return $this->getScheme() . $_SERVER[self::HEADER_HOST];
-        } elseif ($this->isSecure() && ForgeConfig::get('sys_https_host')) {
-            return $this->getScheme() . ForgeConfig::get('sys_https_host');
-        } else {
-            return $this->getScheme() . ForgeConfig::get('sys_default_domain');
-        }
+        return \Tuleap\ServerHostname::HTTPSUrl();
     }
 
     /**

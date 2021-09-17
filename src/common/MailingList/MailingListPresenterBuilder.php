@@ -41,8 +41,7 @@ class MailingListPresenterBuilder
 
     public function buildFromRow(array $row, Project $project, HTTPRequest $request): MailingListPresenter
     {
-        $scheme      = $request->isSecure() ? 'https://' : 'http://';
-        $list_server = $scheme . ForgeConfig::get('sys_lists_host');
+        $list_server = 'https://' . ForgeConfig::get('sys_lists_host');
 
         $id        = (int) $row['group_list_id'];
         $list_name = $row['list_name'];

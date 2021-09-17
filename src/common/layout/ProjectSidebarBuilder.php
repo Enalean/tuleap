@@ -29,6 +29,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\ServerHostname;
 
 class ProjectSidebarBuilder
 {
@@ -166,12 +167,8 @@ class ProjectSidebarBuilder
                     $link
                 );
             }
-            $link                 = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
-            $sys_default_protocol = 'http';
-            if (ForgeConfig::get('sys_https_host')) {
-                $sys_default_protocol = 'https';
-            }
-            $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
+            $link = str_replace('$sys_default_domain', ServerHostname::hostnameWithHTTPSPort(), $link);
+            $link = str_replace('$sys_default_protocol', 'https', $link);
             $link = str_replace('$group_id', $project_id, $link);
         }
 

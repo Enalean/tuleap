@@ -21,7 +21,7 @@ namespace Tuleap\REST;
 
 use DateTime;
 use DateTimeZone;
-use ForgeConfig;
+use Tuleap\ServerHostname;
 
 class Header
 {
@@ -77,7 +77,7 @@ class Header
 
     public static function Location($uri)
     {
-        $route = 'https://' . ForgeConfig::get('sys_default_domain') . $uri;
+        $route = ServerHostname::HTTPSUrl() . $uri;
 
         self::sendHeader(self::LOCATION, $route);
     }

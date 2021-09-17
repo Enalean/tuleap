@@ -10,12 +10,6 @@ $sys_custompluginsroot = "/usr/share/tuleap/tests/integration/_fixtures/";
 $sys_pluginspath       = "/plugins";
 $sys_custompluginspath = "/customplugins";
 
-// If your Apache server have SSL configured give here the name
-// of the secure server. In most cases it will likely be the same
-// as $sys_default_domain. However you can also use this variable
-// to indicate a specific port for the https traffic (default 443)
-$sys_https_host = "%sys_default_domain%";
-
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
 // /!\ Developers: if you need to change the default value, it will have an
@@ -336,10 +330,6 @@ $sys_csp_script_scr_whitelist = '';
 
 // Convert cvs commit log messages from cp1252 to utf8.
 $sys_cvs_convert_cp1252_to_utf8 = 0;
-
-// Can query REST API without using HTTPS
-// /!\ This is unsafe unless you have something else (reverse-proxy) providing the SSL Layer between you and the server /!\
-$sys_rest_api_over_http = 0;
 
 // Comma separated list of IP addresses that are trusted reverse proxy.
 //

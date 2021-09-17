@@ -2162,7 +2162,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $email_domain = ForgeConfig::get('sys_default_mail_domain');
 
         if (! $email_domain) {
-            $email_domain = ForgeConfig::get('sys_default_domain');
+            $email_domain = Tuleap\ServerHostname::rawHostname();
         }
 
         return $email_domain;

@@ -21,10 +21,10 @@
 namespace Tuleap\Project\Service;
 
 use Feedback;
-use ForgeConfig;
 use Project;
 use ProjectManager;
 use ServiceDao;
+use Tuleap\ServerHostname;
 
 class ServiceCreator
 {
@@ -82,12 +82,8 @@ class ServiceCreator
      */
     private function replaceProtocolAndDomainInLink($link)
     {
-        $sys_default_protocol = 'http';
-        if (ForgeConfig::get('sys_https_host')) {
-            $sys_default_protocol = 'https';
-        }
-        $link = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
-        $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
+        $link = str_replace('$sys_default_domain', ServerHostname::hostnameWithHTTPSPort(), $link);
+        $link = str_replace('$sys_default_protocol', 'https', $link);
 
         return $link;
     }

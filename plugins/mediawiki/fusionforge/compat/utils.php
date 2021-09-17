@@ -43,15 +43,10 @@ function normalized_urlprefix()
  */
 function util_url_prefix($prefix = '')
 {
-    if ($prefix == 'http' || $prefix == 'https') {
-        return $prefix . '://';
-    } else {
-        if (ForgeConfig::get('sys_https_host')) {
-            return "https://";
-        } else {
-            return "http://";
-        }
-    }
+    return match ($prefix) {
+        'http', 'https' => $prefix . '://',
+        default => 'https://',
+    };
 }
 
 /**

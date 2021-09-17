@@ -29,6 +29,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\ServerHostname;
 
 final class HealthCheckCommand extends Command
 {
@@ -58,20 +59,20 @@ final class HealthCheckCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $sys_https_host = (string) \ForgeConfig::get('sys_https_host');
-        if (strpos($sys_https_host, ':') === false) {
-            $sys_https_host .= ':443';
+        $host = ServerHostname::hostnameWithHTTPSPort();
+        if (strpos($host, ':') === false) {
+            $host .= ':443';
         }
 
         $client = Client::createWithConfig(
             [
-                'curl'   => [CURLOPT_RESOLVE => [$sys_https_host . ':127.0.0.1']],
+                'curl'   => [CURLOPT_RESOLVE => [$host . ':127.0.0.1']],
                 'verify' => false,
             ]
         );
 
         try {
-            $response = $client->sendRequest($this->request_factory->createRequest('GET', 'https://' . $sys_https_host . '/api/version'));
+            $response = $client->sendRequest($this->request_factory->createRequest('GET', 'https://' . $host . '/api/version'));
         } catch (\Psr\Http\Client\ClientExceptionInterface $ex) {
             $output->write(OutputFormatter::escape($ex->getMessage()));
             return 1;

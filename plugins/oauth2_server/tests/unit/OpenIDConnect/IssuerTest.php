@@ -30,7 +30,7 @@ final class IssuerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheHTTPSHostPrefixedByHTTPSScheme(): void
     {
-        \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
 
         $this->assertEquals('https://tuleap.example.com', Issuer::toString());
     }

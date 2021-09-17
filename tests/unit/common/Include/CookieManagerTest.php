@@ -22,7 +22,7 @@ namespace Tuleap;
 
 use ForgeConfig;
 
-class CookieManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CookieManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
@@ -31,25 +31,8 @@ class CookieManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_cookie_prefix', 'test');
     }
 
-    public function testCookiePrefixIsUsedIfPossible(): void
+    public function testCookiePrefixIsUsed(): void
     {
-        ForgeConfig::set('sys_https_host', 'example.com');
-
         $this->assertEquals('__Host-test_name', CookieManager::getCookieName('name'));
-    }
-
-    public function testItDoesNotUseCookiePrefixIfHTTPSIsNotAvailable(): void
-    {
-        ForgeConfig::set('sys_https_host', '');
-
-        $this->assertEquals('test_name', CookieManager::getCookieName('name'));
-    }
-
-    public function testItDeterminesIfACookieCanUseSecureFlag(): void
-    {
-        ForgeConfig::set('sys_https_host', '');
-        $this->assertFalse(CookieManager::canCookieUseSecureFlag());
-        ForgeConfig::set('sys_https_host', 'example.com');
-        $this->assertTrue(CookieManager::canCookieUseSecureFlag());
     }
 }

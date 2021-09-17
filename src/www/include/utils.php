@@ -492,11 +492,7 @@ function util_cleanup_emails($addresses)
 // login name
 function util_normalize_email($address)
 {
-    if (strpos(ForgeConfig::get('sys_default_domain'), ':') === false) {
-        $host = ForgeConfig::get('sys_default_domain');
-    } else {
-        [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));
-    }
+    $host    = \Tuleap\ServerHostname::rawHostname();
     $address = util_cleanup_emails($address);
     if (validate_email($address)) {
         return $address;
@@ -723,12 +719,7 @@ function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto')
 // Used e.g. when inserting links in emails
 function get_list_server_url()
 {
-    $request = HTTPRequest::instance();
-    if ($request->isSecure()) {
-        return "https://" . ForgeConfig::get('sys_lists_host');
-    } else {
-        return "http://" . ForgeConfig::get('sys_lists_host');
-    }
+    return "https://" . ForgeConfig::get('sys_lists_host');
 }
 
 

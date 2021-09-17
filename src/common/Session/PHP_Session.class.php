@@ -29,7 +29,7 @@ class PHP_Session
         session_name(CookieManager::getCookieName(session_name()));
         session_set_cookie_params([
             'httponly' => true,
-            'secure'   => CookieManager::canCookieUseSecureFlag(),
+            'secure'   => true,
             'samesite' => 'Lax'
         ]);
         session_start();

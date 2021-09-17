@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,17 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class InstanceBaseURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ServerHostnameTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testInstanceBaseURLIsHTTPSByDefault(): void
+    public function testBuildsURLWithScheme(): void
     {
         \ForgeConfig::set('sys_default_domain', 'example.com');
+        self::assertEquals('https://example.com', ServerHostname::HTTPSUrl());
+    }
 
-        $instance_base_url_builder = new InstanceBaseURLBuilder();
+    public function testGetsHostname(): void
+    {
+        \ForgeConfig::set('sys_default_domain', 'example.com');
+        self::assertEquals('example.com', ServerHostname::rawHostname());
+    }
 
-        $this->assertEquals('https://example.com', $instance_base_url_builder->build());
+    public function testGetsHostnameWithoutSpecificPort(): void
+    {
+        \ForgeConfig::set('sys_default_domain', 'example.com:8443');
+        self::assertEquals('example.com', ServerHostname::rawHostname());
     }
 }

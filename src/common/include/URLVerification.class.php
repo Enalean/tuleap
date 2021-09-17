@@ -159,7 +159,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function isInternal(string $uri): bool
     {
         $url_decoded = urldecode($uri);
-        return preg_match('/(?:^[\/?][[:alnum:]]+)|(?:^' . preg_quote('https://' . ForgeConfig::get('sys_https_host') . '/', '/') . ')/', $url_decoded) === 1;
+        return preg_match('/(?:^[\/?][[:alnum:]]+)|(?:^' . preg_quote(\Tuleap\ServerHostname::HTTPSUrl() . '/', '/') . ')/', $url_decoded) === 1;
     }
 
     /**
@@ -174,11 +174,11 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @return String
      */
-    public function getRedirectionURL(HTTPRequest $request, $server)
+    public function getRedirectionURL($server)
     {
-        $chunks = $this->getUrlChunks($server);
+        $chunks = $this->getUrlChunks();
 
-        $location = $this->getRedirectLocation($request, $server, $chunks);
+        $location = $this->getRedirectLocation();
 
         if (isset($chunks['script'])) {
             $location .= $chunks['script'];
@@ -188,48 +188,9 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return $location;
     }
 
-    private function getRedirectLocation(HTTPRequest $request, array $server, array $chunks)
+    private function getRedirectLocation(): string
     {
-        if (isset($chunks['protocol']) || isset($chunks['host'])) {
-            return $this->rewriteProtocol($request, $server, $chunks);
-        }
-        return '';
-    }
-
-    private function rewriteProtocol(HTTPRequest $request, array $server, array $chunks)
-    {
-        if (isset($chunks['protocol'])) {
-            $location = $chunks['protocol'] . "://";
-        } else {
-            if ($request->isSecure()) {
-                $location = "https://";
-            } else {
-                $location = "http://";
-            }
-        }
-
-        if (isset($chunks['host'])) {
-            $location .= $chunks['host'];
-        } else {
-            $location .= $server['HTTP_HOST'];
-        }
-
-        return $location;
-    }
-
-    /**
-     * Modify the protocol entry if needed
-     *
-     * @param Array $server
-     *
-     * @return void
-     */
-    public function verifyProtocol(HTTPRequest $request)
-    {
-        if (! $request->isSecure() && ForgeConfig::get('sys_https_host')) {
-            $this->urlChunks['protocol'] = 'https';
-            $this->urlChunks['host']     = ForgeConfig::get('sys_https_host');
-        }
+        return \Tuleap\ServerHostname::HTTPSUrl();
     }
 
     /**
@@ -372,11 +333,10 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function assertValidUrl($server, HTTPRequest $request, ?Project $project = null)
     {
         if (! $this->isException($server)) {
-            $this->verifyProtocol($request);
             $this->verifyRequest($server);
             $chunks = $this->getUrlChunks();
             if (isset($chunks)) {
-                $location = $this->getRedirectionURL($request, $server);
+                $location = $this->getRedirectionURL($server);
                 $this->header($location);
             }
 

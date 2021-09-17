@@ -175,9 +175,7 @@ class MailingListDoCreateController implements DispatchableWithRequest
 
     private function getListServerUrl(HTTPRequest $request): string
     {
-        $scheme = $request->isSecure() ? 'https://' : 'http://';
-
-        return $scheme . ForgeConfig::get('sys_lists_host');
+        return 'https://' . ForgeConfig::get('sys_lists_host');
     }
 
     /**

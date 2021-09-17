@@ -27,15 +27,9 @@ define('PERMISSION_DENIED_FAULT', '3016');
 define('NUSOAP', 1);
 
 // Check if we the server is in secure mode or not.
-$request  = HTTPRequest::instance();
-$protocol = 'http';
-if ($request->isSecure() || ForgeConfig::get('sys_https_host')) {
-    $protocol = 'https';
-}
+$request = HTTPRequest::instance();
 
-$default_domain = ForgeConfig::get('sys_default_domain');
-
-$uri = $protocol . '://' . $default_domain;
+$uri = \Tuleap\ServerHostname::HTTPSUrl();
 
 // Instantiate server object
 $server = new soap_server();

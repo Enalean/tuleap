@@ -29,7 +29,6 @@ class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
     public function setUp(): void
     {
         ForgeConfig::set('sys_default_domain', 'example.com');
-        ForgeConfig::set('sys_https_host', 'example.com');
 
         $this->url_redirect = new URLRedirect(\Mockery::spy(\EventManager::class));
     }

@@ -58,16 +58,10 @@ require $utils_path."/group.pl";
 require $utils_path."/cvs1/checkins.pl";
 require $utils_path."/hudson.pl";
 
-my $codendi_srv;
-if ($sys_https_host) {
-  $codendi_srv="https://$sys_https_host";
-} else {
-  $codendi_srv="http://$sys_default_domain";
-}
-$codendi_http_srv="http://$sys_default_domain";
+my $server_url = "https://$sys_default_domain";
 
 # Base name of viewvc specification
-$VIEWVC_URL = "$codendi_srv/cvs/viewvc.php/";
+$VIEWVC_URL = "$server_url/cvs/viewvc.php/";
 $TMPDIR = $cvs_hook_tmp_dir;
 
 # Set this to something that takes "-s".
@@ -602,8 +596,7 @@ sub extract_xrefs {
     }
     $text=join("\n",@log);
     $cvstype="cvs_commit";
-    # HTTPS is not supported by LWP on RHEL3 -> use HTTP
-    my $req = POST "$codendi_http_srv/api/reference/extractCross.php",
+    my $req = POST "$server_url/api/reference/extractCross.php",
       [ group_id => "$group_id", text => "$text", rev_id=>"$commit_id", login=>"$login", type=>"$cvstype" ];
 
     my $response = $ua->request($req);

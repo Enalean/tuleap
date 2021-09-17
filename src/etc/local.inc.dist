@@ -50,14 +50,7 @@
 // PART I - Tuleap hostnames
 //
 
-// Hostnames should be fully qualified domain names (FQDNs); using short names
-// would be prettier but would stop you from distributing your Tuleap
-// implementation across multiple domains.
-//
-// Of course, if you have a lot of machines serving a particular purpose
-// such as FTP or for shell accounts, the "hostname" here might be in
-// reality an addr_list of machines that is serviced by a round-robin
-// mechanism or something fancy like a local-director.
+// Hostnames should be fully qualified domain names (FQDNs)
 //
 // =============================================================
 // The default Tuleap domain
@@ -65,16 +58,10 @@
 // this is used where ever the "naked" form of the Tuleap domain
 // might be used.
 // This is also used as the default name for the Web server using
-// the standard http protocol (for https see below). You can also
-// define a specific port number (useful for test servers - default 80)
+// the standard https protocols. You can also
+// define a specific port number (useful for test servers - default 443)
 //
 $sys_default_domain = '%sys_default_domain%';
-
-// If your Apache server have SSL configured give here the name
-// of the secure server. In most cases it will likely be the same
-// as $sys_default_domain. However you can also use this variable
-// to indicate a specific port for the https traffic (default 443)
-$sys_https_host = '%sys_default_domain%';
 
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
@@ -423,10 +410,6 @@ $sys_csp_script_scr_whitelist = '';
 
 // Convert cvs commit log messages from cp1252 to utf8.
 $sys_cvs_convert_cp1252_to_utf8 = 0;
-
-// Can query REST API without using HTTPS
-// /!\ This is unsafe unless you have something else (reverse-proxy) providing the SSL Layer between you and the server /!\
-$sys_rest_api_over_http = 0;
 
 // Comma separated list of IP addresses that are trusted reverse proxy.
 //

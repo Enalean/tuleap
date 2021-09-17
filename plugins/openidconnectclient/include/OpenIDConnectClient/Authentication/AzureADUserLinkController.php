@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Feedback;
 use Tuleap\OpenIDConnectClient\Login\Controller;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
@@ -44,19 +43,6 @@ class AzureADUserLinkController implements DispatchableWithRequest, Dispatchable
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $this->checkTLSPresence($request, $layout);
-
         $this->login_controller->login($request, $request->get('return_to'), $request->getTime());
-    }
-
-    private function checkTLSPresence(HTTPRequest $request, BaseLayout $layout): void
-    {
-        if (! $request->isSecure()) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')
-            );
-            $layout->redirect('/account/login.php');
-        }
     }
 }

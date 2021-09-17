@@ -9,7 +9,7 @@
         {{/login_url}}
 
         {{^ login_url }}
-            <form class="homepage-sign-in-form" action="{{ most_secure_url }}/account/login.php" method="POST">
+            <form class="homepage-sign-in-form" action="/account/login.php" method="POST">
                 {{# login }}
                     <div class="tlp-form-element">
                         <label for="form_loginname" class="tlp-label">{{ username_placeholder }}</label>
@@ -38,7 +38,7 @@
                         >
                         {{# allow_password_recovery }}
                             <p class="tlp-text-info homepage-sign-in-forgot-password">
-                                <a href="{{ most_secure_url }}/account/lostpw.php">{{ forgot_password }}</a>
+                                <a href="/account/lostpw.php">{{ forgot_password }}</a>
                             </p>
                         {{/ allow_password_recovery }}
                     </div>
@@ -55,7 +55,7 @@
             </form>
 
             {{# display_new_account_button }}
-                <span class="homepage-sign-in-register">{{ not_a_member }} <a href="{{ most_secure_url }}/account/register.php">{{ create_account_label }}</a></span>
+                <span class="homepage-sign-in-register">{{ not_a_member }} <a href="/account/register.php">{{ create_account_label }}</a></span>
             {{/display_new_account_button}}
         {{/ login_url }}
     </div>

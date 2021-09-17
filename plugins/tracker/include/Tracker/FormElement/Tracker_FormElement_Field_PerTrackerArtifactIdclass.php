@@ -101,8 +101,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         $output = '';
         switch ($format) {
             case 'html':
-                $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-                $output .= '<a href= "' . $proto . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
+                $output .= '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
                 break;
             default:
                 $output .= $artifact->getPerTrackerArtifactId();

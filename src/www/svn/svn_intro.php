@@ -46,14 +46,7 @@ $svn_preamble = $project->getSVNpreamble();
 if ($svn_preamble != '') {
     echo $hp->purify(util_unconvert_htmlspecialchars($svn_preamble), CODENDI_PURIFIER_FULL);
 } else {
-    $host = ForgeConfig::get('sys_default_domain');
-    if (ForgeConfig::get('sys_https_host')) {
-        $svn_url = 'https://' . $host;
-    } elseif (ForgeConfig::exists('sys_disable_subdomains') && ForgeConfig::get('sys_disable_subdomains')) {
-        $svn_url = 'http://' . $host;
-    } else {
-        $svn_url = 'http://svn.' . $project->getUnixNameMixedCase() . '.' . $host;
-    }
+    $svn_url = \Tuleap\ServerHostname::HTTPSUrl();
     // Domain name must be lowercase (issue with some SVN clients)
     $svn_url  = strtolower($svn_url);
     $svn_url .= '/svnroot/' . $project->getUnixNameMixedCase();

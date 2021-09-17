@@ -37,7 +37,6 @@ class HomePagePresenter
     public $user;
     public $user_is_anonymous;
     public $welcome_back;
-    public $most_secure_url;
     public $login;
     public $username_placeholder;
     public $password_placeholder;
@@ -59,7 +58,6 @@ class HomePagePresenter
     public function __construct(
         string $headline,
         PFUser $user,
-        $most_secure_url,
         User_LoginPresenter $login,
         $display_new_account_button,
         $login_url,
@@ -70,7 +68,6 @@ class HomePagePresenter
         $this->path_custom_logo           = Admin_Homepage_LogoFinder::getCurrentUrl();
         $this->user                       = $user;
         $this->user_is_anonymous          = $user->isAnonymous();
-        $this->most_secure_url            = $most_secure_url;
         $this->login                      = $login;
         $this->display_new_account_button = $display_new_account_button;
         $this->login_url                  = $login_url;

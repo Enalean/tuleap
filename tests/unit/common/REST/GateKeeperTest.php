@@ -59,34 +59,16 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($_SERVER['HTTP_REFERER']);
     }
 
-    public function testItThrowsExceptionWhenTokenOrAccessKeyAuthenticationWithoutSSL(): void
+    public function testItLetsPassWhenTokenOrAccessKeyAuthentication(): void
     {
-        $this->request->shouldReceive('isSecure')->andReturns(false);
-        $this->expectException(\Exception::class);
-
         $this->gate_keeper->assertAccess($this->anonymous, $this->request);
-    }
-
-    public function testItLetsPassWhenTokenOrAccessKeyAuthenticationWithSSL(): void
-    {
-        $this->request->shouldReceive('isSecure')->andReturns(true);
-
-        $this->gate_keeper->assertAccess($this->anonymous, $this->request);
-        $this->assertTrue(true, 'No exception should be raised');
-    }
-
-    public function testItLetPassHTTPWhenCookieAuthentication(): void
-    {
-        $this->request->shouldReceive('isSecure')->andReturns(false);
-
-        $this->gate_keeper->assertAccess($this->user, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
     public function testItLetPassWhenReferMatchesHost(): void
     {
-        $_SERVER['HTTP_REFERER'] = 'http://example.com/bla';
-        $this->request->shouldReceive('getServerUrl')->andReturns('http://example.com');
+        $_SERVER['HTTP_REFERER'] = 'https://example.com/bla';
+        $this->request->shouldReceive('getServerUrl')->andReturns('https://example.com');
 
         $this->gate_keeper->assertAccess($this->user, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
@@ -121,8 +103,8 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionWhenReferIsDiffentFromHost(): void
     {
-        $_SERVER['HTTP_REFERER'] = 'http://wannabe_attacker.com/bla';
-        $this->request->shouldReceive('getServerUrl')->andReturns('http://example.com');
+        $_SERVER['HTTP_REFERER'] = 'https://wannabe_attacker.com/bla';
+        $this->request->shouldReceive('getServerUrl')->andReturns('https://example.com');
 
         $this->expectException(\Exception::class);
         $this->gate_keeper->assertAccess($this->user, $this->request);
@@ -131,7 +113,7 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsExceptionWhenNoReferer(): void
     {
         unset($_SERVER['HTTP_REFERER']);
-        $this->request->shouldReceive('getServerUrl')->andReturns('http://example.com');
+        $this->request->shouldReceive('getServerUrl')->andReturns('https://example.com');
 
         $this->expectException(\Exception::class);
         $this->gate_keeper->assertAccess($this->user, $this->request);

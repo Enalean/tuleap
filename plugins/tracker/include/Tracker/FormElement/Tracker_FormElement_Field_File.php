@@ -485,8 +485,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
         $uh = UserHelper::instance();
 
-        $proto = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-        $url   = $proto . '://' . ForgeConfig::get('sys_default_domain');
+        $url = \Tuleap\ServerHostname::HTTPSUrl();
 
         if ($format == 'text') {
             foreach ($values as $fileinfo) {

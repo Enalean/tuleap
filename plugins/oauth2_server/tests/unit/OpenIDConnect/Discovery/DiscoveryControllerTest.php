@@ -45,7 +45,7 @@ final class DiscoveryControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->representation_builder = $this->createMock(ConfigurationResponseRepresentationBuilder::class);
 
-        \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
         $this->controller = new DiscoveryController(
             $this->representation_builder,
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),

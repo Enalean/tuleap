@@ -22,6 +22,7 @@
 final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
 
     protected function setUp(): void
     {
@@ -344,5 +345,12 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         //(create dynamically a new instance of a validator inside the function. Should be mocked)
         $this->assertEquals('testvalue', $r->getValidated('testkey', 'string', 'default value'));
         $this->assertEquals('default value', $r->getValidated('testkey', 'uint', 'default value'));
+    }
+
+    public function testGetServerUrl(): void
+    {
+        ForgeConfig::set('sys_default_domain', 'example.com');
+        $request = new HTTPRequest();
+        self::assertEquals('https://example.com', $request->getServerUrl());
     }
 }

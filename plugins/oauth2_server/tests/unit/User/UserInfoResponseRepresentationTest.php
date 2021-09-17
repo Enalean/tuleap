@@ -31,7 +31,7 @@ final class UserInfoResponseRepresentationTest extends \Tuleap\Test\PHPUnit\Test
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
     }
 
     /**

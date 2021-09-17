@@ -21,33 +21,24 @@
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Mockery;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Login\Controller;
+use Tuleap\Test\Builders\LayoutBuilder;
 
 final class AzureADUserLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItOnlyAcceptsHTTPS(): void
+    public function testProcessRequest(): void
     {
         $login_controller = \Mockery::mock(Controller::class);
         $request          = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('isSecure')->andReturns(false);
         $request->shouldReceive('getTime')->andReturns(false);
         $request->shouldReceive('get')->withArgs(['return_to']);
-
-        $response = Mockery::mock(BaseLayout::class);
-
-        $response->shouldReceive('addFeedback')
-                 ->withArgs(['error', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS'])
-                 ->once();
-
-        $response->shouldReceive('redirect')->once();
 
         $login_controller->shouldReceive('login')->once();
 
         $router = new AzureADUserLinkController($login_controller);
 
-        $router->process($request, $response, []);
+        $router->process($request, LayoutBuilder::build(), []);
     }
 }

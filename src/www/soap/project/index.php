@@ -22,15 +22,9 @@
 require_once __DIR__ . '/../../include/pre.php';
 
 
-// Check if we the server is in secure mode or not.
-$request  = HTTPRequest::instance();
-$protocol = 'http';
-if ($request->isSecure() || ForgeConfig::get('sys_https_host')) {
-    $protocol = 'https';
-}
-$default_domain = ForgeConfig::get('sys_default_domain');
+$request = HTTPRequest::instance();
 
-$uri = $protocol . '://' . $default_domain . '/soap/project';
+$uri = \Tuleap\ServerHostname::HTTPSUrl() . '/soap/project';
 
 $serviceClass = Project_SOAPServer::class;
 

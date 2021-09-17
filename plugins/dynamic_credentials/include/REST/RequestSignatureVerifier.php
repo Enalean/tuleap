@@ -25,6 +25,7 @@ use Tuleap\Cryptography\Asymmetric\SignaturePublicKey;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidSignatureException;
 use Tuleap\DynamicCredentials\Plugin\PluginInfo;
+use Tuleap\ServerHostname;
 
 class RequestSignatureVerifier
 {
@@ -47,7 +48,7 @@ class RequestSignatureVerifier
 
     public function isSignatureValid($signature, ...$request_parameters)
     {
-        $message_to_verify = \ForgeConfig::get('sys_https_host') . implode('', $request_parameters);
+        $message_to_verify = ServerHostname::hostnameWithHTTPSPort() . implode('', $request_parameters);
 
         $decoded_signature = base64_decode($signature, true);
         if ($decoded_signature === false) {

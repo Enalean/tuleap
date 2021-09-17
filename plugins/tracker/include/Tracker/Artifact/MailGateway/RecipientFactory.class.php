@@ -79,7 +79,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
             Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
             $row['salt'],
-            ForgeConfig::get('sys_default_domain')
+            \Tuleap\ServerHostname::rawHostname()
         );
     }
 

@@ -21,7 +21,6 @@ namespace Tuleap\REST;
 
 use PFUser;
 use Exception;
-use ForgeConfig;
 use HTTPRequest;
 
 /**
@@ -33,26 +32,17 @@ class GateKeeper
     public function assertAccess(PFUser $user, HTTPRequest $request)
     {
         if ($this->isTokenBasedAuthentication($user)) {
-            if ($request->isSecure() || $this->canReachApiWithoutHTTPS()) {
-                return true;
-            }
-            throw new Exception('The API is only accessible over HTTPS');
-        } else {
-            if ($this->isCSRFSafe($request)) {
-                return true;
-            }
-            throw new Exception('Referer doesn\'t match host. CSRF tentative ?');
+            return true;
         }
+        if ($this->isCSRFSafe($request)) {
+            return true;
+        }
+        throw new Exception('Referer doesn\'t match host. CSRF tentative ?');
     }
 
     private function isTokenBasedAuthentication(PFUser $user)
     {
         return $user->isAnonymous();
-    }
-
-    private function canReachApiWithoutHTTPS()
-    {
-        return ForgeConfig::get('sys_rest_api_over_http');
     }
 
     /**
@@ -87,13 +77,9 @@ class GateKeeper
     private function getUrlBase($url)
     {
         $parsed_url = parse_url($url);
-        $scheme     = '';
-        if (! ForgeConfig::get('sys_rest_api_over_http')) {
-            $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-        }
-        $host = isset($parsed_url['host']) ? idn_to_ascii($parsed_url['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) : '';
-        $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $host       = isset($parsed_url['host']) ? idn_to_ascii($parsed_url['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) : '';
+        $port       = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
 
-        return "$scheme$host$port";
+        return "https://$host$port";
     }
 }

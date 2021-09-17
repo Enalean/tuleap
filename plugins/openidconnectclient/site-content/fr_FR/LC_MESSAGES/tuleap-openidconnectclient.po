@@ -151,13 +151,6 @@ msgstr "La requête semble invalide, merci de réessayer"
 msgid "Tenant ID"
 msgstr "Id du locataire"
 
-msgid ""
-"The OpenID Connect plugin can only be used if the platform is accessible "
-"with HTTPS"
-msgstr ""
-"Le plugin OpenID Connect peut seulement être utilisé si la plateforme est "
-"accessible en HTTPS"
-
 msgid "The data you provided are not valid."
 msgstr "Les données que vous avez fournies ne sont pas valides."
 

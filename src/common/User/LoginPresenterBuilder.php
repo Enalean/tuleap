@@ -25,14 +25,13 @@ class User_LoginPresenterBuilder
 {
 
     /** @return User_LoginPresenter */
-    public function build($return_to, $printer_version, $form_loginname, $is_secure, CSRFSynchronizerToken $login_csrf, string $prompt_param)
+    public function build($return_to, $printer_version, $form_loginname, CSRFSynchronizerToken $login_csrf, string $prompt_param)
     {
         $additional_connectors = '';
         EventManager::instance()->processEvent(
             Event::LOGIN_ADDITIONAL_CONNECTOR,
             [
                 'return_to'            => $return_to,
-                'is_secure'            => $is_secure,
                 'additional_connector' => &$additional_connectors
             ]
         );
@@ -63,12 +62,12 @@ class User_LoginPresenterBuilder
     }
 
     /** @return User_LoginPresenter */
-    public function buildForHomepage($is_secure, CSRFSynchronizerToken $login_csrf)
+    public function buildForHomepage(CSRFSynchronizerToken $login_csrf)
     {
         $return_to       = '';
         $printer_version = 0;
         $form_loginname  = '';
 
-        return $this->build($return_to, $printer_version, $form_loginname, $is_secure, $login_csrf, '');
+        return $this->build($return_to, $printer_version, $form_loginname, $login_csrf, '');
     }
 }

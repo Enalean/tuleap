@@ -45,7 +45,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
         $this->controller = new UserInfoController(
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             $this->createMock(EmitterInterface::class)

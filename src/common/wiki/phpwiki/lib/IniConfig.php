@@ -595,11 +595,7 @@ function fixup_dynamic_configs($file)
         define('SERVER_PORT', 80);
     }
     if (! defined('SERVER_PROTOCOL')) {
-        if ($tuleap_request->isSecure()) {
-            define('SERVER_PROTOCOL', 'https');
-        } else {
-            define('SERVER_PROTOCOL', 'http');
-        }
+        define('SERVER_PROTOCOL', 'https');
     }
 
     if (! defined('SCRIPT_NAME')) {

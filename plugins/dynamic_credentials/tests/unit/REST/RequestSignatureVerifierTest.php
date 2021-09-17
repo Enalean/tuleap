@@ -37,7 +37,7 @@ class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
         \ForgeConfig::store();
-        \ForgeConfig::set('sys_https_host', self::USED_DOMAIN);
+        \ForgeConfig::set('sys_default_domain', self::USED_DOMAIN);
     }
 
     public function tearDown(): void
