@@ -51,6 +51,17 @@ export type FloatFieldIdentifier = "float";
 export type TextFieldIdentifier = "text";
 export type FileFieldIdentifier = "file";
 
+export type FieldTypeIdentifier =
+    | StructuralFieldIdentifier
+    | ReadOnlyFieldIdentifier
+    | ComputedFieldIdentifier
+    | SelectBoxFieldIdentifier
+    | DateFieldIdentifier
+    | IntFieldIdentifier
+    | FloatFieldIdentifier
+    | TextFieldIdentifier
+    | FileFieldIdentifier;
+
 export const COMPUTED_FIELD: ComputedFieldIdentifier;
 export const SELECTBOX_FIELD: SelectBoxFieldIdentifier;
 export const DATE_FIELD: DateFieldIdentifier;

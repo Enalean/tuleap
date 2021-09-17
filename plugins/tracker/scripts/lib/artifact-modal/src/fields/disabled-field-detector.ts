@@ -17,6 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    tracker_fields: [],
-};
+import { isInCreationMode } from "../modal-creation-mode-state";
+import {
+    FIELD_PERMISSION_CREATE,
+    FIELD_PERMISSION_UPDATE,
+} from "../../../../constants/fields-constants.js";
+import type { Field } from "../types";
+
+export function isDisabled(field: Field): boolean {
+    const necessary_permission = isInCreationMode()
+        ? FIELD_PERMISSION_CREATE
+        : FIELD_PERMISSION_UPDATE;
+    return !field.permissions.includes(necessary_permission);
+}

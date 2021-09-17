@@ -38,17 +38,20 @@
             v-on:interpret-content-event="togglePreview"
             data-test="format-selector"
         ></tuleap-artifact-modal-format-selector>
-        <rich-text-editor
-            v-bind:id="id"
-            v-bind:format="format"
-            v-bind:disabled="disabled"
-            v-bind:required="field.required"
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <tuleap-artifact-modal-rich-text-editor
+            v-bind:identifier.prop="id"
+            v-bind:format.prop="format"
+            v-bind:disabled.prop="disabled"
+            v-bind:required.prop="field.required"
             rows="5"
-            v-model="content"
-            v-on:upload-image="reemit"
+            v-bind:contentValue.prop="content"
+            v-on:content-change="onContentChange"
+            v-on:upload-image="onUploadImage"
             v-on:format-change="onFormatChange"
             v-show="!is_in_preview_mode && !is_in_error"
-        />
+            data-test="text-editor"
+        ></tuleap-artifact-modal-rich-text-editor>
         <div
             v-if="is_in_preview_mode && !is_in_error"
             v-dompurify-html="interpreted_commonmark"
@@ -60,13 +63,11 @@
     </div>
 </template>
 <script>
-import RichTextEditor from "../../common/RichTextEditor.vue";
-import { isDisabled } from "../disabled-field-detector.js";
+import { isDisabled } from "../disabled-field-detector";
 import { textfield_mixin } from "../../common/textfield-mixin.js";
 
 export default {
     name: "TextField",
-    components: { RichTextEditor },
     mixins: [textfield_mixin],
     props: {
         field: {
@@ -82,9 +83,6 @@ export default {
             get() {
                 return this.value.content;
             },
-            set(new_content) {
-                this.$emit("input", { format: this.format, content: new_content });
-            },
         },
         id() {
             return "tracker_field_" + this.field.field_id;
@@ -97,8 +95,11 @@ export default {
         this.initial_text_field_format = this.format;
     },
     methods: {
-        onFormatChange(new_format, new_content) {
-            this.$emit("input", { format: new_format, content: new_content });
+        onContentChange(event) {
+            this.$emit("input", { format: this.format, content: event.detail.content });
+        },
+        onFormatChange(event) {
+            this.$emit("input", { format: event.detail.format, content: event.detail.content });
         },
         togglePreview() {
             this.interpretCommonMark(this.content);

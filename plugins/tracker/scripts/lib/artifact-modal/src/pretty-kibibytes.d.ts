@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-let is_uploading_in_ckeditor = false;
-
-export function isUploadingInCKEditor() {
-    return is_uploading_in_ckeditor;
-}
-
-export function setIsUploadingInCKEditor() {
-    is_uploading_in_ckeditor = true;
-}
-
-export function setIsNotUploadingInCKEditor() {
-    is_uploading_in_ckeditor = false;
+declare module "pretty-kibibytes" {
+    export default function (num: number): string;
 }

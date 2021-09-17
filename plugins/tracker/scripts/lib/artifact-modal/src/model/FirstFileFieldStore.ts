@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isInCreationMode } from "../modal-creation-mode-state.js";
-import {
-    FIELD_PERMISSION_CREATE,
-    FIELD_PERMISSION_UPDATE,
-} from "../../../../constants/fields-constants.js";
+import type { Field, FileField } from "../types";
+import { getFirstFileField as detectFirstFileField } from "../fields/file-field/file-field-detector";
 
-export function isDisabled(field) {
-    const necessary_permission = isInCreationMode()
-        ? FIELD_PERMISSION_CREATE
-        : FIELD_PERMISSION_UPDATE;
-    return !field.permissions.includes(necessary_permission);
-}
+let first_file_field: FileField | null = null;
+
+export const setTrackerFields = (fields: Field[]): void => {
+    first_file_field = detectFirstFileField(fields);
+};
+
+export const getFirstFileField = (): FileField | null => first_file_field;

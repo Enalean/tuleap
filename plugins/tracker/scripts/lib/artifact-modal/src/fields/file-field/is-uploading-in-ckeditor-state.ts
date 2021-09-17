@@ -17,6 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function saveTrackerFields(state, tracker_fields) {
-    state.tracker_fields = tracker_fields;
+let is_uploading_in_ckeditor = false;
+
+export const isUploadingInCKEditor = (): boolean => is_uploading_in_ckeditor;
+
+export function setIsUploadingInCKEditor(): void {
+    is_uploading_in_ckeditor = true;
+}
+
+export function setIsNotUploadingInCKEditor(): void {
+    is_uploading_in_ckeditor = false;
 }

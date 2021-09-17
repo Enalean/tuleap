@@ -23,11 +23,11 @@ import "angular-mocks";
 
 import BaseModalController from "./tuleap-artifact-modal-controller.js";
 
-import * as modal_create_mode_state from "./modal-creation-mode-state.js";
+import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service.js";
-import * as file_field_detector from "./fields/file-field/file-field-detector.js";
+import * as file_field_detector from "./fields/file-field/file-field-detector";
 import * as file_uploader from "./fields/file-field/file-uploader.js";
-import * as is_uploading_in_ckeditor_state from "./fields/file-field/is-uploading-in-ckeditor-state.js";
+import * as is_uploading_in_ckeditor_state from "./fields/file-field/is-uploading-in-ckeditor-state";
 import * as field_dependencies_helper from "./field-dependencies-helper.js";
 import { getTargetFieldPossibleValues } from "./field-dependencies-helper.js";
 import * as validate_artifact_field_value from "./validate-artifact-field-value.js";

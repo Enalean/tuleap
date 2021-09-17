@@ -20,8 +20,7 @@
 import localVue from "../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import TextField from "./TextField.vue";
-import RichTextEditor from "../../common/RichTextEditor.vue";
-import * as disabled_field_detector from "../disabled-field-detector.js";
+import * as disabled_field_detector from "../disabled-field-detector";
 import { setCatalog } from "../../gettext-catalog";
 
 let isDisabled;
@@ -39,6 +38,7 @@ function getInstance(props = {}, data = {}) {
         },
         stubs: {
             "tuleap-artifact-modal-format-selector": true,
+            "tuleap-artifact-modal-rich-text-editor": true,
         },
     });
 }
@@ -72,7 +72,7 @@ describe(`TextField`, () => {
 
     it(`when the content changes, it will emit the "input" event with the new content`, () => {
         const wrapper = getInstance({ field, value });
-        wrapper.vm.content = "caramba";
+        wrapper.vm.onContentChange({ detail: { content: "caramba" } });
 
         expect(wrapper.emitted("input")[0]).toEqual([
             {
@@ -85,7 +85,7 @@ describe(`TextField`, () => {
     it(`when the RichTextEditor emits a "format-change" event,
         it will emit the "input" event with the new format and the new content`, () => {
         const wrapper = getInstance({ field, value });
-        wrapper.vm.onFormatChange("commonmark", "caramba");
+        wrapper.vm.onFormatChange({ detail: { format: "commonmark", content: "caramba" } });
 
         expect(wrapper.emitted("input")[0]).toEqual([
             {
@@ -100,10 +100,10 @@ describe(`TextField`, () => {
         const wrapper = getInstance({ field, value });
 
         const label = wrapper.find("[data-test=format-selector]");
-        const editor = wrapper.findComponent(RichTextEditor);
+        const editor = wrapper.find("[data-test=text-editor]");
 
         expect(label.element.identifier).toEqual("tracker_field_197");
-        expect(editor.props("id")).toEqual("tracker_field_197");
+        expect(editor.element.identifier).toEqual("tracker_field_197");
     });
     describe("Component display", () => {
         it("shows the Rich Text Editor if there is no error and if the user is in edit mode", () => {
@@ -111,7 +111,7 @@ describe(`TextField`, () => {
             const is_in_preview_mode = false;
             const wrapper = getInstance({ field, value }, { is_in_error, is_in_preview_mode });
 
-            expect(wrapper.findComponent(RichTextEditor).isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=text-editor]").isVisible()).toBe(true);
             expect(wrapper.find("[data-test=text-field-commonmark-preview]").exists()).toBe(false);
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(false);
         });
@@ -121,7 +121,7 @@ describe(`TextField`, () => {
             const is_in_preview_mode = true;
             const wrapper = getInstance({ field, value }, { is_in_error, is_in_preview_mode });
 
-            expect(wrapper.findComponent(RichTextEditor).isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=text-editor]").isVisible()).toBe(false);
             expect(wrapper.find("[data-test=text-field-commonmark-preview]").exists()).toBe(true);
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(false);
         });
@@ -135,7 +135,7 @@ describe(`TextField`, () => {
                 { is_in_error, error_text, is_in_preview_mode }
             );
 
-            expect(wrapper.findComponent(RichTextEditor).isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=text-editor]").isVisible()).toBe(false);
             expect(wrapper.find("[data-test=text-field-commonmark-preview]").exists()).toBe(false);
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(true);
             expect(wrapper.find("[data-test=text-field-error]").text()).toEqual(

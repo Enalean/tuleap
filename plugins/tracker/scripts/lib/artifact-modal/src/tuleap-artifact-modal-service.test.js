@@ -101,6 +101,7 @@ describe("NewTuleapArtifactModalService", () => {
                 color_name: "importer",
                 item_name: "preinvest",
                 parent: null,
+                fields: [],
             };
             getTracker.mockReturnValue($q.when(tracker));
             updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
@@ -288,6 +289,7 @@ describe("NewTuleapArtifactModalService", () => {
                     color_name: "slackerism",
                     label: "unstainableness",
                     parent: null,
+                    fields: [],
                 };
                 artifact = {
                     title: "onomatomania",

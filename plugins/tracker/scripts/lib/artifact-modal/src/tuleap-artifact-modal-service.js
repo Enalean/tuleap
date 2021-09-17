@@ -32,7 +32,6 @@ import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
 import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "../../../constants/fields-constants.js";
-import { store } from "./vuex-store.js";
 import { setTextFieldDefaultFormat } from "./model/UserPreferencesStore";
 import {
     getTargetFieldPossibleValues,
@@ -40,6 +39,7 @@ import {
 } from "./field-dependencies-helper.js";
 import { getSelectedValues } from "./model/field-values-formatter.js";
 import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
+import { setTrackerFields } from "./model/FirstFileFieldStore";
 
 export default ArtifactModalService;
 
@@ -175,7 +175,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 return file_upload_rules_promise;
             })
             .then(function () {
-                initializeVuexStore(modal_model);
+                initializeFileFieldStore(modal_model);
                 return modal_model;
             });
 
@@ -238,15 +238,15 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 return file_upload_rules_promise;
             })
             .then(function () {
-                initializeVuexStore(modal_model);
+                initializeFileFieldStore(modal_model);
                 return modal_model;
             });
 
         return promise;
     }
 
-    function initializeVuexStore(modal_model) {
-        store.commit("saveTrackerFields", modal_model.tracker.fields);
+    function initializeFileFieldStore(modal_model) {
+        setTrackerFields(modal_model.tracker.fields);
     }
 
     function getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model) {

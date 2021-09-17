@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isThereAtLeastOneFileField } from "./file-field-detector";
-import { getFileUploadRules } from "../../rest/rest-service.js";
+import type {
+    FieldTypeIdentifier,
+    FileFieldIdentifier,
+    Permission,
+} from "../../../constants/fields-constants";
 
-const file_upload_rules = {
-    // All units are in bytes
-    disk_quota: 0,
-    disk_usage: 0,
-    max_chunk_size: 0,
-};
+export type DisconnectFunction = () => void;
 
-export { updateFileUploadRulesWhenNeeded, file_upload_rules };
+export interface Field {
+    field_id: number;
+    type: FieldTypeIdentifier;
+    disabled: boolean;
+    permissions: Permission[];
+}
 
-function updateFileUploadRulesWhenNeeded(field_values) {
-    if (isThereAtLeastOneFileField(field_values)) {
-        return getFileUploadRules().then((data) => {
-            Object.assign(file_upload_rules, data);
-        });
-    }
-
-    return Promise.resolve();
+export interface FileField extends Field {
+    type: FileFieldIdentifier;
+    file_creation_uri: string;
+    max_size_upload: number;
 }

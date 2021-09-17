@@ -21,7 +21,6 @@ import localVue from "../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FollowupEditor from "./FollowupEditor.vue";
 import { setCatalog } from "../gettext-catalog";
-import RichTextEditor from "../common/RichTextEditor.vue";
 
 function getInstance(props = {}, data = {}) {
     return shallowMount(FollowupEditor, {
@@ -36,6 +35,7 @@ function getInstance(props = {}, data = {}) {
         },
         stubs: {
             "tuleap-artifact-modal-format-selector": true,
+            "tuleap-artifact-modal-rich-text-editor": true,
         },
     });
 }
@@ -52,7 +52,7 @@ describe(`FollowupEditor`, () => {
 
     it(`when the content changes, it will emit the "input" event with the new content`, () => {
         const wrapper = getInstance({ value });
-        wrapper.vm.content = "chrysopid";
+        wrapper.vm.onContentChange({ detail: { content: "chrysopid" } });
 
         expect(wrapper.emitted("input")[0]).toEqual([
             {
@@ -65,7 +65,7 @@ describe(`FollowupEditor`, () => {
     it(`when the RichTextEditor emits a "format-change" event,
         it will emit the "input" event with the new format and the new content`, () => {
         const wrapper = getInstance({ value });
-        wrapper.vm.onFormatChange("commonmark", "chrysopid");
+        wrapper.vm.onFormatChange({ detail: { format: "commonmark", content: "chrysopid" } });
 
         expect(wrapper.emitted("input")[0]).toEqual([
             {
@@ -80,7 +80,7 @@ describe(`FollowupEditor`, () => {
             const is_in_preview_mode = false;
             const wrapper = getInstance({ value }, { is_in_error, is_in_preview_mode });
 
-            expect(wrapper.findComponent(RichTextEditor).isVisible()).toBe(true);
+            expect(wrapper.find("[data-test=text-editor]").isVisible()).toBe(true);
             expect(wrapper.find("[data-test=text-field-commonmark-preview]").exists()).toBe(false);
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(false);
         });
@@ -90,7 +90,7 @@ describe(`FollowupEditor`, () => {
             const is_in_preview_mode = true;
             const wrapper = getInstance({ value }, { is_in_error, is_in_preview_mode });
 
-            expect(wrapper.findComponent(RichTextEditor).isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=text-editor]").isVisible()).toBe(false);
             expect(wrapper.find("[data-test=text-field-commonmark-preview]").exists()).toBe(true);
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(false);
         });
@@ -100,7 +100,7 @@ describe(`FollowupEditor`, () => {
             const is_in_preview_mode = false;
             const wrapper = getInstance({ value }, { is_in_error, error_text, is_in_preview_mode });
 
-            expect(wrapper.findComponent(RichTextEditor).isVisible()).toBe(false);
+            expect(wrapper.find("[data-test=text-editor]").isVisible()).toBe(false);
             expect(wrapper.find("[data-test=text-field-commonmark-preview]").exists()).toBe(false);
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(true);
             expect(wrapper.find("[data-test=text-field-error]").text()).toEqual(

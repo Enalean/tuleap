@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FILE_FIELD } from "../../../../../constants/fields-constants.js";
-import { isDisabled } from "../disabled-field-detector.js";
+import { FILE_FIELD } from "../../../../../constants/fields-constants";
+import { isDisabled } from "../disabled-field-detector";
+import type { Field, FileField } from "../../types";
 
-const isFileField = (field) => field.type === FILE_FIELD;
-const isEnabledFileField = (field) => isFileField(field) && !isDisabled(field);
+const isFileField = (field: Field): field is FileField => field.type === FILE_FIELD;
+const isEnabledFileField = (field: Field): field is FileField =>
+    isFileField(field) && !isDisabled(field);
 
-export function getAllFileFields(tracker_fields) {
-    return tracker_fields.filter(isEnabledFileField);
-}
+export const getAllFileFields = (tracker_fields: Field[]): FileField[] =>
+    tracker_fields.filter(isEnabledFileField);
 
-export function isThereAtLeastOneFileField(tracker_fields) {
-    return tracker_fields.some(isEnabledFileField);
-}
+export const isThereAtLeastOneFileField = (tracker_fields: Field[]): boolean =>
+    tracker_fields.some(isEnabledFileField);
 
-export function getFirstFileField(tracker_fields) {
+export function getFirstFileField(tracker_fields: Field[]): FileField | null {
     const result = tracker_fields.find(isEnabledFileField);
     return result !== undefined ? result : null;
 }
