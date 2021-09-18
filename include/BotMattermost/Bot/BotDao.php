@@ -17,79 +17,92 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\BotMattermost\Bot;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class BotDao extends DataAccessObject
 {
-
-    public function searchBots()
+    /**
+     * @psalm-return list<array{id:int, name:string, webhook_url:string, avatar_url:string}>
+     */
+    public function searchBots(): array
     {
         $sql = "SELECT * FROM plugin_botmattermost_bot";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
-    public function addBot($bot_name, $bot_webhook_url, $bot_avatar_url)
+    public function addBot(string $bot_name, string $bot_webhook_url, string $bot_avatar_url): int
     {
-        $name        = $this->da->quoteSmart($bot_name);
-        $webhook_url = $this->da->quoteSmart($bot_webhook_url);
-        $avatar_url  = $this->da->quoteSmart($bot_avatar_url);
-
-        $sql = "INSERT INTO plugin_botmattermost_bot (name, webhook_url, avatar_url)
-                VALUES ($name, $webhook_url, $avatar_url)";
-
-        return $this->updateAndGetLastId($sql);
+        return $this->getDB()->insertReturnId(
+            'plugin_botmattermost_bot',
+            [
+                'name'        => $bot_name,
+                'webhook_url' => $bot_webhook_url,
+                'avatar_url'  => $bot_avatar_url
+            ]
+        );
     }
 
-    public function deleteBot($bot_id)
+    public function deleteBot(int $bot_id): bool
     {
-        $id = $this->da->escapeInt($bot_id);
-
-        $sql = "DELETE FROM plugin_botmattermost_bot
-                WHERE id = $id";
-
-        return $this->update($sql);
+        try {
+            $this->getDB()->delete(
+                'plugin_botmattermost_bot',
+                [
+                    'id' => $bot_id
+                ]
+            );
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function updateBot($bot_name, $bot_webhook_url, $bot_avatar_url, $id)
+    public function updateBot(string $bot_name, string $bot_webhook_url, string $bot_avatar_url, int $id): bool
     {
-        $name        = $this->da->quoteSmart($bot_name);
-        $webhook_url = $this->da->quoteSmart($bot_webhook_url);
-        $avatar_url  = $this->da->quoteSmart($bot_avatar_url);
-        $id          = $this->da->escapeInt($id);
-
-        $sql = "UPDATE plugin_botmattermost_bot
-                SET name = $name,
-                    webhook_url = $webhook_url,
-                    avatar_url = $avatar_url
-                WHERE id = $id";
-
-        return $this->update($sql);
+        try {
+            $this->getDB()->update(
+                'plugin_botmattermost_bot',
+                [
+                    'name'        => $bot_name,
+                    'webhook_url' => $bot_webhook_url,
+                    'avatar_url'  => $bot_avatar_url
+                ],
+                [
+                    'id' => $id
+                ]
+            );
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function searchBotByNameAndByWebhookUrl($bot_name, $bot_webhook_url)
+    /**
+     * @psalm-return null|array{id:int, name:string, webhook_url:string, avatar_url:string}
+     */
+    public function searchBotByNameAndByWebhookUrl(string $bot_name, string $bot_webhook_url): ?array
     {
-        $name        = $this->da->quoteSmart($bot_name);
-        $webhook_url = $this->da->quoteSmart($bot_webhook_url);
-
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot
-                WHERE name = $name
-                    AND webhook_url = $webhook_url";
+                WHERE name = ?
+                    AND webhook_url = ?";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $bot_name, $bot_webhook_url);
     }
 
-    public function searchBotById($bot_id)
+    /**
+     * @psalm-return null|array{id:int, name:string, webhook_url:string, avatar_url:string}
+     */
+    public function searchBotById(int $bot_id): ?array
     {
-        $id = $this->da->escapeInt($bot_id);
-
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot
-                WHERE id = $id";
+                WHERE id = ?";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $bot_id);
     }
 }
