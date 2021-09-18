@@ -20,225 +20,197 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 
-use DataAccessObject;
 use Tuleap\BotMattermost\Bot\Bot;
+use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-
     public const SEND_TIME_INTERVAL = '00:00:59';
 
-    public function searchBotNotification($project_id)
+    /**
+     * @psalm-return null|array{id:int, bot_id:int, project_id:int, send_time:string}
+     */
+    public function searchBotNotification(int $project_id): ?array
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $sql = "SELECT *
+                FROM plugin_botmattermost_agiledashboard_notification
+                WHERE project_id = ?";
 
-        $sql = "SELECT * FROM plugin_botmattermost_agiledashboard_notification
-                WHERE project_id = $project_id";
-
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $project_id);
     }
 
-    public function searchChannels($notification_id)
+    /**
+     * @psalm-return list<array{notification_id:int, channel_name:string}>
+     */
+    public function searchChannels(int $notification_id): array
     {
-        $notification_id = $this->da->escapeInt($notification_id);
+        $sql = "SELECT *
+                FROM plugin_botmattermost_agiledashboard_notification_channel
+                WHERE notification_id = ?";
 
-        $sql = "SELECT * FROM plugin_botmattermost_agiledashboard_notification_channel
-                WHERE notification_id = $notification_id";
-
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $notification_id);
     }
 
-    public function searchAgileDashboardBotsForSummary()
+    public function searchAgileDashboardBotsForSummary(): ?array
     {
-        $interval = $this->da->quoteSmart(self::SEND_TIME_INTERVAL);
-
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot
                 INNER JOIN plugin_botmattermost_agiledashboard_notification
                 ON plugin_botmattermost_bot.id = plugin_botmattermost_agiledashboard_notification.bot_id
-                WHERE SUBTIME(CURRENT_TIME(), $interval) < send_time
+                WHERE SUBTIME(CURRENT_TIME(), ?) < send_time
                   AND send_time <= CURRENT_TIME()";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, self::SEND_TIME_INTERVAL);
     }
 
-    public function createNotification(array $channels, $bot_id, $project_id, $send_time)
+    public function createNotification(array $channels, int $bot_id, int $project_id, string $send_time): bool
     {
-        $this->da->startTransaction();
+        try {
+            return $this->getDB()->tryFlatTransaction(function () use ($channels, $bot_id, $project_id, $send_time): bool {
+                $notification_id = $this->createBotNotification($bot_id, $project_id, $send_time);
+                $this->createChannels($channels, $notification_id);
 
-        if (($notification_id = $this->createBotNotification($bot_id, $project_id, $send_time)) === false) {
-            $this->da->rollback();
-
-            return false;
-        } else {
-            if ($this->createChannels($channels, $notification_id) === false) {
-                $this->da->rollback();
-
-                return false;
-            }
-        }
-
-        return $this->da->commit();
-    }
-
-    public function updateNotification(array $channels, $project_id, $send_time)
-    {
-        $this->da->startTransaction();
-
-        $notification_id = $this->getNotificationId($project_id);
-
-        if ($this->updateBotNotification($notification_id, $send_time) === false) {
-            $this->da->rollback();
-
-            return false;
-        } else {
-            if ($this->updateChannels($channels, $notification_id) === false) {
-                $this->da->rollback();
-
-                return false;
-            }
-        }
-
-        return $this->da->commit();
-    }
-
-    public function deleteNotification($project_id)
-    {
-        $this->da->startTransaction();
-        if ($this->deleteNotificationByNotificationId($this->getNotificationId($project_id)) === false) {
-            $this->rollBack();
-
+                return true;
+            });
+        } catch (\PDOException $ex) {
             return false;
         }
-
-        return $this->da->commit();
     }
 
-    public function deleteNotificationByBot(Bot $bot)
+    public function updateNotification(array $channels, int $project_id, string $send_time): bool
     {
-        $bot_id = $this->da->escapeInt($bot->getId());
+        try {
+            return $this->getDB()->tryFlatTransaction(function () use ($channels, $project_id, $send_time): bool {
+                $notification_id = $this->getNotificationId($project_id);
+                $this->updateBotNotification($notification_id, $send_time);
+                $this->updateChannels($channels, $notification_id);
 
-        $sql = "DELETE notification, channel
+                return true;
+            });
+        } catch (\PDOException $ex) {
+            return false;
+        }
+    }
+
+    public function deleteNotification(int $project_id): bool
+    {
+        try {
+            return $this->getDB()->tryFlatTransaction(function () use ($project_id): bool {
+                $this->deleteNotificationByNotificationId($this->getNotificationId($project_id));
+                return true;
+            });
+        } catch (\PDOException $ex) {
+            return false;
+        }
+    }
+
+    public function deleteNotificationByBot(Bot $bot): bool
+    {
+        try {
+            $bot_id = (int) $bot->getId();
+
+            $sql = "DELETE notification, channel
                 FROM plugin_botmattermost_agiledashboard_notification AS notification
                 INNER JOIN plugin_botmattermost_agiledashboard_notification_channel AS channel
                   ON notification.id = channel.notification_id
-                WHERE bot_id = $bot_id";
+                WHERE bot_id = ?";
 
-        return $this->update($sql);
+            $this->getDB()->run($sql, $bot_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function searchTime($project_id)
+    private function deleteNotificationByNotificationId(int $notification_id): void
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT send_time
-                FROM plugin_botmattermost_agiledashboard_notification
-                WHERE project_id = $project_id";
-
-        return $this->retrieveFirstRow($sql);
+        $this->deleteBotNotification($notification_id);
+        $this->deleteChannels($notification_id);
     }
 
-    private function deleteNotificationByNotificationId($notification_id)
-    {
-        return $this->deleteBotNotification($notification_id) && $this->deleteChannels($notification_id);
-    }
-
-    private function getNotificationId($project_id)
+    private function getNotificationId(int $project_id): int
     {
         $res = $this->searchNotificationId($project_id);
 
         return $res['id'];
     }
 
-    private function searchNotificationId($project_id)
+    private function searchNotificationId(int $project_id): ?array
     {
-        $project_id = $this->da->escapeInt($project_id);
-
         $sql = "SELECT id
                 FROM plugin_botmattermost_agiledashboard_notification
-                WHERE project_id = $project_id";
+                WHERE project_id = ?";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $project_id);
     }
 
-    private function createBotNotification($bot_id, $project_id, $send_time)
+    private function createBotNotification(int $bot_id, int $project_id, string $send_time): int
     {
-        $bot_id     = $this->da->escapeInt($bot_id);
-        $project_id = $this->da->escapeInt($project_id);
-        $send_time  = $this->da->quoteSmart($send_time);
-
-        $sql = "INSERT INTO plugin_botmattermost_agiledashboard_notification (bot_id, project_id, send_time)
-                VALUES ($bot_id, $project_id, $send_time)";
-
-        return $this->updateAndGetLastId($sql);
+        return (int) $this->getDB()->insertReturnId(
+            'plugin_botmattermost_agiledashboard_notification',
+            [
+                'bot_id'     => $bot_id,
+                'project_id' => $project_id,
+                'send_time'  => $send_time,
+            ]
+        );
     }
 
-    private function createChannels(array $channels, $notification_id)
+    private function createChannels(array $channels, int $notification_id): void
     {
-        $channels_value_sql = [];
+        $data_to_insert = [];
         foreach ($channels as $channel_name) {
-            $channels_value_sql[] = $this->getChannelValueSqlForInsert($notification_id, $channel_name);
+            $data_to_insert[] = ['notification_id' => $notification_id, 'channel_name' => $channel_name];
         }
 
-        $sql = "INSERT INTO plugin_botmattermost_agiledashboard_notification_channel (notification_id, channel_name)
-                VALUES " . implode(',', $channels_value_sql);
-
-        return $this->update($sql);
+        $this->getDB()->insertMany(
+            'plugin_botmattermost_agiledashboard_notification_channel',
+            $data_to_insert
+        );
     }
 
-    private function getChannelValueSqlForInsert($notification_id, $channel_name)
+    private function updateBotNotification(int $id, string $send_time): void
     {
-        $notification_id = $this->da->escapeInt($notification_id);
-        $channel_name    = $this->da->quoteSmart($channel_name);
-
-        return "($notification_id, $channel_name)";
+        $this->getDB()->update(
+            'plugin_botmattermost_agiledashboard_notification',
+            [
+                'send_time' => $send_time
+            ],
+            [
+                'id' => $id
+            ]
+        );
     }
 
-    private function updateBotNotification($id, $send_time)
+    private function updateChannels(array $channels, int $notification_id): void
     {
-        $id        = $this->da->escapeInt($id);
-        $send_time = $this->da->quoteSmart($send_time);
-
-        $sql = "UPDATE plugin_botmattermost_agiledashboard_notification
-                SET send_time = $send_time
-                WHERE id = $id";
-
-        $this->update($sql);
-    }
-
-    private function updateChannels(array $channels, $notification_id)
-    {
-        $notification_id = $this->da->escapeInt($notification_id);
-
-        if (! $this->deleteChannels($notification_id)) {
-            return false;
-        }
+        $this->deleteChannels($notification_id);
         if ($this->hasValue($channels)) {
-            if (! $this->createChannels($channels, $notification_id)) {
-                return false;
-            }
+            $this->createChannels($channels, $notification_id);
         }
-
-        return true;
     }
 
-    private function deleteChannels($notification_id)
+    private function deleteChannels(int $notification_id): void
     {
-        $sql = "DELETE FROM plugin_botmattermost_agiledashboard_notification_channel
-                WHERE notification_id = $notification_id";
-
-        return $this->update($sql);
+        $this->getDB()->delete(
+            'plugin_botmattermost_agiledashboard_notification_channel',
+            [
+                'notification_id' => $notification_id
+            ]
+        );
     }
 
-    private function deleteBotNotification($id)
+    private function deleteBotNotification(int $id): void
     {
-        $sql = "DELETE FROM plugin_botmattermost_agiledashboard_notification
-                WHERE id = $id";
-
-        return $this->update($sql);
+        $this->getDB()->delete(
+            'plugin_botmattermost_agiledashboard_notification',
+            [
+                'id' => $id
+            ]
+        );
     }
 
-    private function hasValue(array $array)
+    private function hasValue(array $array): bool
     {
         if (empty($array)) {
             return false;
