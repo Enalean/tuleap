@@ -68,7 +68,7 @@ pipeline {
             parallel {
                 stage('UT PHPUnit') {
                     stages {
-                        stage('UT PHPUnit PHP 7.4') { steps { script { actions.runPHPUnitTests('74') } } }
+                        stage('UT PHPUnit PHP 8.0') { steps { script { actions.runPHPUnitTests('80') } } }
                     }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }

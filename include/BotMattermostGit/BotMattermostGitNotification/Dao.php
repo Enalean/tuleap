@@ -20,178 +20,146 @@
 
 namespace Tuleap\BotMattermostGit\BotMattermostGitNotification;
 
-use DataAccessObject;
 use Tuleap\BotMattermost\Bot\Bot;
+use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public function searchBotNotification($repository_id)
+    /**
+     * @psalm-return array{id:int, repository_id:int, bot_id:int}|null
+     */
+    public function searchBotNotification(int $repository_id): ?array
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = "SELECT *
+                FROM plugin_botmattermost_git_notification
+                WHERE repository_id = ?";
 
-        $sql = "SELECT * FROM plugin_botmattermost_git_notification
-                WHERE repository_id = $repository_id";
-
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $repository_id);
     }
 
-    public function searchChannels($notification_id)
+    /**
+     * @psalm-return list<array{notification_id:int, channel_name:string}>
+     */
+    public function searchChannels(int $notification_id): array
     {
-        $notification_id = $this->da->escapeInt($notification_id);
+        $sql = "SELECT *
+                FROM plugin_botmattermost_git_notification_channel
+                WHERE notification_id = ?";
 
-        $sql = "SELECT * FROM plugin_botmattermost_git_notification_channel
-                WHERE notification_id = $notification_id";
-
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $notification_id);
     }
 
-    public function createNotification(array $channels, $bot_id, $repository_id)
+    public function createNotification(array $channels, int $bot_id, int $repository_id): bool
     {
-        $this->da->startTransaction();
+        try {
+            return $this->getDB()->tryFlatTransaction(function () use ($channels, $bot_id, $repository_id): bool {
+                $notification_id = $this->createBotNotification($bot_id, $repository_id);
+                $this->createChannels($channels, $notification_id);
 
-        $notification_id = $this->createBotNotification($bot_id, $repository_id);
-
-        if ($notification_id === false) {
-            $this->da->rollback();
-
+                return true;
+            });
+        } catch (\PDOException $ex) {
             return false;
         }
-
-        if ($this->createChannels($channels, $notification_id) === false) {
-            $this->da->rollback();
-
-            return false;
-        }
-
-        return $this->da->commit();
     }
 
-    public function updateNotification(array $channels, $repository_id)
+    public function updateNotification(array $channels, int $repository_id): bool
     {
-        $this->da->startTransaction();
+        try {
+            return $this->getDB()->tryFlatTransaction(function () use ($channels, $repository_id): bool {
+                $notification_id = $this->getNotificationId($repository_id);
+                $this->updateChannels($channels, $notification_id);
 
-        $notification_id = $this->getNotificationId($repository_id);
-
-        if ($notification_id === false) {
-            $this->da->rollback();
-
+                return true;
+            });
+        } catch (\PDOException $ex) {
             return false;
         }
-
-        if ($this->updateChannels($channels, $notification_id) === false) {
-            $this->da->rollback();
-
-            return false;
-        }
-
-        return $this->da->commit();
     }
 
-    public function deleteNotification($repository_id)
+    public function deleteNotification(int $repository_id): bool
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-
-        $this->da->startTransaction();
-
-        $notification_id = $this->getNotificationId($repository_id);
-
-        if ($this->deleteBotNotification($notification_id) === false) {
-            $this->da->rollback();
-
+        try {
+            return $this->getDB()->tryFlatTransaction(function () use ($repository_id): bool {
+                $notification_id = $this->getNotificationId($repository_id);
+                $this->deleteBotNotification($notification_id);
+                $this->deleteChannels($notification_id);
+                return true;
+            });
+        } catch (\PDOException $ex) {
             return false;
         }
-
-        if ($this->deleteChannels($notification_id) === false) {
-            $this->da->rollback();
-
-            return false;
-        }
-
-        return $this->da->commit();
     }
 
-    private function getNotificationId($repository_id)
+    private function getNotificationId($repository_id): int
     {
         $res = $this->searchNotificationId($repository_id);
 
         return $res['id'];
     }
 
-    private function getChannelValueSqlForInsert($notification_id, $channel_name)
+    private function searchNotificationId(int $repository_id): ?array
     {
-        $notification_id = $this->da->escapeInt($notification_id);
-        $channel_name    = $this->da->quoteSmart($channel_name);
-
-        return "($notification_id, $channel_name)";
-    }
-
-
-    private function searchNotificationId($repository_id)
-    {
-        $repository_id = $this->da->escapeInt($repository_id);
-
         $sql = "SELECT id
                 FROM plugin_botmattermost_git_notification
-                WHERE repository_id = $repository_id";
+                WHERE repository_id = ?";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $repository_id);
     }
 
-    private function createBotNotification($repository_id, $bot_id)
+    private function createBotNotification(int $repository_id, int $bot_id): int
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $bot_id        = $this->da->escapeInt($bot_id);
-
-        $sql = "INSERT INTO plugin_botmattermost_git_notification(repository_id, bot_id)
-                VALUES ($repository_id, $bot_id)";
-
-        return $this->updateAndGetLastId($sql);
+        return (int) $this->getDB()->insertReturnId(
+            'plugin_botmattermost_git_notification',
+            [
+                'repository_id' => $repository_id,
+                'bot_id'        => $bot_id,
+            ]
+        );
     }
 
-    private function createChannels(array $channels, $notification_id)
+    private function createChannels(array $channels, int $notification_id): void
     {
-        $channels_value_sql = [];
+        $data_to_insert = [];
         foreach ($channels as $channel_name) {
-            $channels_value_sql[] = $this->getChannelValueSqlForInsert($notification_id, $channel_name);
+            $data_to_insert[] = ['notification_id' => $notification_id, 'channel_name' => $channel_name];
         }
 
-        $sql = "INSERT INTO plugin_botmattermost_git_notification_channel (notification_id, channel_name)
-                VALUES " . implode(',', $channels_value_sql);
-
-        return $this->update($sql);
+        $this->getDB()->insertMany(
+            'plugin_botmattermost_git_notification_channel',
+            $data_to_insert
+        );
     }
 
-    private function updateChannels(array $channels, $notification_id)
+    private function updateChannels(array $channels, int $notification_id): void
     {
-        if (! $this->deleteChannels($notification_id)) {
-            return false;
-        }
+        $this->deleteChannels($notification_id);
         if ($this->hasValue($channels)) {
-            if (! $this->createChannels($channels, $notification_id)) {
-                return false;
-            }
+            $this->createChannels($channels, $notification_id);
         }
-
-        return true;
     }
 
-    private function deleteBotNotification($id)
+    private function deleteBotNotification(int $id): void
     {
-        $sql = "DELETE FROM plugin_botmattermost_git_notification
-                WHERE id = $id";
-
-        return $this->update($sql);
+        $this->getDB()->delete(
+            'plugin_botmattermost_git_notification',
+            [
+                'id' => $id
+            ]
+        );
     }
 
-    private function deleteChannels($notification_id)
+    private function deleteChannels(int $notification_id): void
     {
-        $sql = "DELETE FROM plugin_botmattermost_git_notification_channel
-                WHERE notification_id = $notification_id";
-
-        return $this->update($sql);
+        $this->getDB()->delete(
+            'plugin_botmattermost_git_notification_channel',
+            [
+                'notification_id' => $notification_id
+            ]
+        );
     }
 
-    private function hasValue(array $array)
+    private function hasValue(array $array): bool
     {
         if (empty($array)) {
             return false;
@@ -200,16 +168,21 @@ class Dao extends DataAccessObject
         return (trim(implode('', $array)) !== '');
     }
 
-    public function deleteNotificationByBot(Bot $bot)
+    public function deleteNotificationByBot(Bot $bot): bool
     {
-        $bot_id = $this->da->escapeInt($bot->getId());
+        try {
+            $bot_id = $bot->getId();
 
-        $sql = "DELETE notification, channel
+            $sql = "DELETE notification, channel
                 FROM plugin_botmattermost_git_notification AS notification
                 INNER JOIN plugin_botmattermost_git_notification_channel AS channel
                   ON notification.id = channel.notification_id
-                WHERE bot_id = $bot_id";
+                WHERE bot_id = ?";
 
-        return $this->update($sql);
+            $this->getDB()->run($sql, $bot_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 }
