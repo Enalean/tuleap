@@ -65,7 +65,7 @@ class AccessControlVerifier
         $reference       = escapeshellarg($reference);
 
         try {
-            $this->system_command->exec("sudo -u gitolite gitolite access -q $repository_name $user_name 'W' $reference");
+            $this->system_command->exec("sudo -u gitolite /usr/bin/gitolite access -q $repository_name $user_name 'W' $reference");
         } catch (\System_Command_CommandException $ex) {
             return false;
         }
