@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -35,10 +35,10 @@ final class WorkFlowErrorPresenter
     public string $tracker_label;
     public string $project_label;
 
-    public function __construct(TrackerReference $reference, ProjectReference $project_reference, public string $tracker_url)
+    public function __construct(ProgramTracker $reference, ProjectReference $project_reference, public string $tracker_url)
     {
-        $this->tracker_id    = $reference->id;
-        $this->tracker_label = $reference->label;
+        $this->tracker_id    = $reference->getId();
+        $this->tracker_label = $reference->getTrackerName();
         $this->project_label = $project_reference->getProjectLabel();
     }
 }

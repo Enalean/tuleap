@@ -26,8 +26,8 @@ use ProjectManager;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -74,7 +74,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
     public function testItDisableArtifactSubmissionWhenCollectorFoundErrors(): void
     {
         $error_collector = new ConfigurationErrorsCollector(true);
-        $error_collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $error_collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         $event = new CanSubmitNewArtifact($this->user, $this->tracker);
 
         $this->handler->handle($event, $error_collector, UserIdentifierStub::buildGenericUser());

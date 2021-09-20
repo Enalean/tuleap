@@ -26,7 +26,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -51,37 +50,37 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenAFieldIsRequired(): void
     {
-        $this->collector->addRequiredFieldError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
+        $this->collector->addRequiredFieldError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasTransition(): void
     {
-        $this->collector->addWorkflowTransitionRulesError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowTransitionRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasGlobalRules(): void
     {
-        $this->collector->addWorkflowTransitionDateRulesError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowTransitionDateRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasFieldDependency(): void
     {
-        $this->collector->addWorkflowDependencyError(TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenFieldIsNotSubmittable(): void
     {
-        $this->collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addSubmitFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenFieldIsNotUpdatable(): void
     {
-        $this->collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceBuilder::buildWithId(1), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addUpdateFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 

@@ -51,10 +51,10 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollection
         $potential_tracker_presenters = [];
 
         foreach ($all_potential_trackers->trackers_reference as $potential_tracker) {
-            $selected                       = $timebox_tracker && $potential_tracker->id === $timebox_tracker->getId();
+            $selected                       = $timebox_tracker && $potential_tracker->getId() === $timebox_tracker->getId();
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
-                $potential_tracker->id,
-                $potential_tracker->label,
+                $potential_tracker->getId(),
+                $potential_tracker->getTrackerName(),
                 $selected
             );
         }

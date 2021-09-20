@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace unit\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Tests\Builder\TrackerReferenceBuilder;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,13 +36,13 @@ final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $tracker_factory;
     private ProjectFromTrackerRetriever $retriever;
-    private TrackerReference $tracker_reference;
+    private ProgramTracker $tracker_reference;
 
     protected function setUp(): void
     {
         $this->tracker_factory   = $this->createStub(\TrackerFactory::class);
         $this->retriever         = new ProjectFromTrackerRetriever($this->tracker_factory);
-        $this->tracker_reference = TrackerReferenceBuilder::buildWithId(1);
+        $this->tracker_reference = ProgramTrackerStub::withDefaults();
     }
 
     public function testItThrowsAnExceptionWhenTrackerIsNOtFound(): void

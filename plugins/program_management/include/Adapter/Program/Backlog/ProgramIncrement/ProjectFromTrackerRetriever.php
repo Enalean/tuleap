@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 final class ProjectFromTrackerRetriever implements RetrieveProjectFromTracker
 {
@@ -34,11 +34,11 @@ final class ProjectFromTrackerRetriever implements RetrieveProjectFromTracker
     {
     }
 
-    public function fromTrackerReference(TrackerReference $tracker_reference): ProjectReference
+    public function fromTrackerReference(ProgramTracker $program_tracker): ProjectReference
     {
-        $full_tracker = $this->tracker_factory->getTrackerById($tracker_reference->id);
+        $full_tracker = $this->tracker_factory->getTrackerById($program_tracker->getId());
         if (! $full_tracker) {
-            throw new \RuntimeException("Tracker with id #" . $tracker_reference->id . " not found");
+            throw new \RuntimeException("Tracker with id #" . $program_tracker->getId() . " not found");
         }
 
         return ProjectReferenceProxy::buildFromProject($full_tracker->getProject());

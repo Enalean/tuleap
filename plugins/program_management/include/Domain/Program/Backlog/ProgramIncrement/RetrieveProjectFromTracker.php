@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 interface RetrieveProjectFromTracker
 {
-    public function fromTrackerReference(TrackerReference $tracker_reference): ProjectReference;
+    public function fromTrackerReference(ProgramTracker $program_tracker): ProjectReference;
 }

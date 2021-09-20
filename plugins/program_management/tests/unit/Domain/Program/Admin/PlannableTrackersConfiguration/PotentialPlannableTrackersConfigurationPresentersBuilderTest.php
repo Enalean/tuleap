@@ -26,8 +26,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -73,9 +73,9 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends
         return $builder->buildPotentialPlannableTrackerPresenters(
             $this->program,
             PotentialTrackerCollection::fromProgram(
-                RetrieveTrackerFromProgramStub::fromTrackerReference(
-                    TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
-                    TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build()),
+                RetrieveTrackerFromProgramStub::fromProgramReference(
+                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
+                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build()),
                 ),
                 $this->program
             )

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 
 /**
@@ -33,12 +33,12 @@ use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 final class PotentialTrackerCollection
 {
     /**
-     * @var TrackerReference[]
+     * @var ProgramTracker[]
      */
     public array $trackers_reference;
 
     /**
-     * @param TrackerReference[] $trackers_reference
+     * @param ProgramTracker[] $trackers_reference
      */
     private function __construct(array $trackers_reference)
     {

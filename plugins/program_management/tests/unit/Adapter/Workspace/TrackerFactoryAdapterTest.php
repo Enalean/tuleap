@@ -33,8 +33,8 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_factory = $this->createStub(\TrackerFactory::class);
         $tracker_factory->method('getTrackersByGroupId')->willReturn(
             [
-                TrackerTestBuilder::aTracker()->withId(20)->withName('Sprint')->build(),
-                TrackerTestBuilder::aTracker()->withId(30)->withName('Feature')->build()
+                TrackerTestBuilder::aTracker()->withId(20)->withName('Sprint')->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build(),
+                TrackerTestBuilder::aTracker()->withId(30)->withName('Feature')->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build()
             ]
         );
 
@@ -44,10 +44,10 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertCount(2, $trackers_reference);
-        self::assertSame(20, $trackers_reference[0]->id);
-        self::assertSame('Sprint', $trackers_reference[0]->label);
-        self::assertSame(30, $trackers_reference[1]->id);
-        self::assertSame('Feature', $trackers_reference[1]->label);
+        self::assertSame(20, $trackers_reference[0]->getId());
+        self::assertSame('Sprint', $trackers_reference[0]->getTrackerName());
+        self::assertSame(30, $trackers_reference[1]->getId());
+        self::assertSame('Feature', $trackers_reference[1]->getTrackerName());
     }
 
     public function testReturnNullWhenNoTracker(): void
