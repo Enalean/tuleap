@@ -26,12 +26,24 @@
                     <label class="control-label col-sm-2" for="select_bot">{{ label_bot_list }}</label>
                     <div class="col-sm-8">
                         <select name="bot_id" class="form-control" id="select_bot">
-                            <optgroup label="{{# dgettext }} tuleap-botmattermost_git | System bots {{/ dgettext }}">
-                                {{# bots }}
-                                    <option {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}
-                                            value="{{ getId }}">{{ getName }}</option>
-                                {{/ bots}}
-                            </optgroup>
+                            {{# has_system_bots }}
+                                <optgroup label="{{# dgettext }} tuleap-botmattermost_git | System bots {{/ dgettext }}">
+                                    {{# system_bots }}
+                                        <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
+                                            {{ getName }}
+                                        </option>
+                                    {{/ system_bots }}
+                                </optgroup>
+                            {{/ has_system_bots }}
+                            {{# has_project_bots }}
+                                <optgroup label="{{# dgettext }} tuleap-botmattermost_git | Project bots {{/ dgettext }}">
+                                    {{# project_bots }}
+                                        <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
+                                            {{ getName }}
+                                        </option>
+                                    {{/ project_bots }}
+                                </optgroup>
+                            {{/ has_project_bots }}
                         </select>
                         <p class="text-info"><i class="fa fa-info-circle"></i> {{ description }}</p>
                         <p class="text-info">{{ description_create_bot }}</p>

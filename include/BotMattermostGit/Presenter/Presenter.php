@@ -18,37 +18,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermostGit;
+declare(strict_types=1);
+
+namespace Tuleap\BotMattermostGit\Presenter;
 
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use GitRepository;
+use Tuleap\BotMattermost\Bot\Bot;
 
 class Presenter
 {
+    public CSRFSynchronizerToken $csrf_token;
+    public array $bot_assigned;
+
     /**
-     * @var CSRFSynchronizerToken
+     * @var Bot[]
      */
-    public $csrf_token;
-    public $bot_assigned;
-    public $bots;
+    public array $system_bots;
+    /**
+     * @var Bot[]
+     */
+    public array $project_bots;
+
+    public bool $has_bots;
+    public bool $has_system_bots;
+    public bool $has_project_bots;
 
     private $repository;
 
+    /**
+     * @param Bot[] $system_bots
+     * @param Bot[] $project_bots
+     */
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
         GitRepository $repository,
-        array $bots,
-        $bot_assigned
+        array $system_bots,
+        array $project_bots,
+        array $bot_assigned
     ) {
         $this->csrf_token   = $csrf_token;
         $this->repository   = $repository;
-        $this->bots         = $bots;
+        $this->system_bots  = $system_bots;
+        $this->project_bots = $project_bots;
         $this->bot_assigned = $bot_assigned;
 
         $this->project_id    = $this->repository->getProjectId();
         $this->repository_id = $this->repository->getId();
-        $this->has_bots      = ! empty($bots);
+
+        $this->has_bots         = ! empty($system_bots) || ! empty($project_bots) ;
+        $this->has_system_bots  = ! empty($system_bots);
+        $this->has_project_bots = ! empty($project_bots) ;
 
         $this->title                  = dgettext('tuleap-botmattermost_git', 'Notifications in Mattermost');
         $this->description            = dgettext('tuleap-botmattermost_git', 'Choose a bot to send message in Mattermost when push occurs in this repository.');
@@ -71,7 +92,7 @@ class Presenter
 
         $this->any_configured_notification      = dgettext('tuleap-botmattermost_git', 'The Mattermost notification has not yet been configured.');
         $this->any_configured_notification_tips = dgettext('tuleap-botmattermost_git', 'To begin, click on add notification button below.');
-        $this->empty_bot_list                   = dgettext('tuleap-botmattermost_git', 'No bots are defined by the system administrator. The notification configuration is not available.');
+        $this->empty_bot_list                   = dgettext('tuleap-botmattermost_git', 'No bots are defined for the project (either system or project bots). The notification configuration is not available.');
         $this->empty_channel_list               = dgettext('tuleap-botmattermost_git', 'No channel selected, the channel defined at the webhook creation will be used as default');
 
         $this->button_config  = dgettext('tuleap-botmattermost_git', 'Add notification');

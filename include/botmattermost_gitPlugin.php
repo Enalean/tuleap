@@ -20,6 +20,7 @@
 
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermost\Bot\BotValidityChecker;
 use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
@@ -39,8 +40,8 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\PullRequest\GetCreatePullRequest;
 
-require_once 'autoload.php';
 require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
@@ -52,9 +53,6 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-botmattermost_git', __DIR__ . '/../site-content');
-        if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
-            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR . '/include/autoload.php';
-        }
     }
 
     public function getDependencies()
@@ -195,21 +193,24 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 
     private function getController(HTTPRequest $request)
     {
-        $botFactory = new BotFactory(new BotDao());
+        $bot_factory = new BotFactory(new BotDao());
 
         return new Controller(
             $request,
             new CSRFSynchronizerToken('/plugins/botmattermost_git/?group_id=' . $request->getProject()->getID()),
             $this->getGitRepositoryFactory(),
-            new Factory(new Dao(), $botFactory),
-            $botFactory,
-            new Validator($botFactory)
+            new Factory(new Dao(), $bot_factory),
+            $bot_factory,
+            new Validator(
+                $bot_factory,
+                new BotValidityChecker()
+            )
         );
     }
 
     private function getGitRepositoryUrlManager()
     {
-        return new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'), new \Tuleap\InstanceBaseURLBuilder());
+        return new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'));
     }
 
     private function getGitRepositoryFactory()

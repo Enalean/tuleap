@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermostGit\SenderServices;
+namespace Tuleap\BotMattermostGit\Presenter;
 
 use Git_GitRepositoryUrlManager;
 use GitRepository;

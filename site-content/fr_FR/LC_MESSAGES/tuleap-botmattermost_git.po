@@ -75,12 +75,13 @@ msgstr ""
 msgid "Invalid post argument(s)"
 msgstr ""
 
+#, fuzzy
 msgid ""
-"No bots are defined by the system administrator. The notification "
-"configuration is not available."
+"No bots are defined for the project (either system or project bots). The "
+"notification configuration is not available."
 msgstr ""
-"Aucun robot n'a été défini par l'administrateur du système. La configuration "
-"des notifications n'est donc pas disponible."
+"Aucun robot n'a été défini pour le projet (robot système ou robot de "
+"projet). La configuration des notifications n'est donc pas disponible."
 
 msgid ""
 "No channel selected, the channel defined at the webhook creation will be "
@@ -91,6 +92,9 @@ msgstr ""
 
 msgid "Notifications in Mattermost"
 msgstr "Notifications dans Mattermost"
+
+msgid "Project bots"
+msgstr "Robot de projet"
 
 msgid "Project:"
 msgstr "Projet :"

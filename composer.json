@@ -1,0 +1,8 @@
+{
+  "name": "tuleap/plugin-botmattermost_git",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\BotMattermostGit\\": ["include/", "include/BotMattermostGit/"]
+    }
+  }
+}

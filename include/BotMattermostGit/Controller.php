@@ -32,6 +32,7 @@ use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostGit\BotMattermostGitNotification\Factory;
 use Tuleap\BotMattermostGit\BotMattermostGitNotification\Validator;
 use Tuleap\BotMattermostGit\Exception\CannotDeleteBotNotificationException;
+use Tuleap\BotMattermostGit\Presenter\Presenter;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
 
 class Controller
@@ -88,15 +89,23 @@ class Controller
     {
         $renderer      = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR . '/templates');
         $repository_id = $repository->getId();
-        $bots          = $this->bot_factory->getBots();
+        $system_bots   = $this->bot_factory->getSystemBots();
+        $project_bots  = $this->bot_factory->getProjectBots((int) $repository->getProjectId());
 
-        if ($bot_assigned = $this->bot_git_factory->getBotNotification($repository_id)) {
-            $bot_assigned = $bot_assigned->toArray($repository_id);
+        $bot_assigned = [];
+        if ($selected_bot = $this->bot_git_factory->getBotNotification($repository_id)) {
+            $bot_assigned = $selected_bot->toArray($repository_id);
         }
 
         return $renderer->renderToString(
             'index',
-            new Presenter($this->csrf, $repository, $bots, $bot_assigned)
+            new Presenter(
+                $this->csrf,
+                $repository,
+                $system_bots,
+                $project_bots,
+                $bot_assigned
+            )
         );
     }
 

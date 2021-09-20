@@ -23,20 +23,18 @@ namespace Tuleap\BotMattermostGit\BotMattermostGitNotification;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
+use GitRepository;
 use GitRepositoryFactory;
 use HTTPRequest;
+use Tuleap\BotMattermost\Bot\BotValidityChecker;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
 use Valid_UInt;
 use Tuleap\BotMattermost\Bot\BotFactory;
 
 class Validator
 {
-
-    private $bot_factory;
-
-    public function __construct(BotFactory $bot_factory)
+    public function __construct(private BotFactory $bot_factory, private BotValidityChecker $bot_validity_checker)
     {
-        $this->bot_factory = $bot_factory;
     }
 
     public function isValid(
@@ -64,7 +62,7 @@ class Validator
             if ($this->validId($request->get('repository_id'))) {
                 switch ($action) {
                     case 'add':
-                        return $this->isValidAddAction($request);
+                        return $this->isValidAddAction($request, $repository);
                         break;
                     case 'edit':
                         return $this->isValidEditAction($request);
@@ -81,13 +79,13 @@ class Validator
         return false;
     }
 
-    private function isValidAddAction(HTTPRequest $request)
+    private function isValidAddAction(HTTPRequest $request, GitRepository $repository)
     {
         if (
             $request->existAndNonEmpty('bot_id') &&
             $request->exist('channels')
         ) {
-            return $this->validBotId($request->get('bot_id'));
+            return $this->validBotId($request->get('bot_id'), $repository);
         }
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
@@ -110,10 +108,14 @@ class Validator
         return false;
     }
 
-    private function validBotId($bot_id)
+    private function validBotId(int $bot_id, GitRepository $repository): bool
     {
         try {
-            $this->bot_factory->getBotById($bot_id);
+            $bot = $this->bot_factory->getBotById($bot_id);
+            $this->bot_validity_checker->checkBotCanBeUsedInProject(
+                $bot,
+                (int) $repository->getProjectId()
+            );
         } catch (Exception $e) {
             return false;
         }
