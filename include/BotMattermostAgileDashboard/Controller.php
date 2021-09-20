@@ -83,7 +83,7 @@ class Controller
     public function render()
     {
         $renderer   = TemplateRendererFactory::build()->getRenderer(
-            PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/template'
+            PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/templates'
         );
         $project_id = $this->request->getProject()->getID();
         $bots       = $this->bot_factory->getBots();

@@ -28,11 +28,13 @@
                     style="width: 100%"
                     required
                 >
-                    {{# bots }}
-                        <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
-                            {{ getName }}
-                        </option>
-                    {{/ bots}}
+                    <optgroup label="{{# dgettext }} tuleap-botmattermost_agiledashboard | System bots {{/ dgettext }}">
+                        {{# bots }}
+                            <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
+                                {{ getName }}
+                            </option>
+                        {{/ bots }}
+                    </optgroup>
                 </select>
                 <p class="tlp-text-info"><i class="fa fa-info-circle"></i> {{ description }}</p>
                 <p class="tlp-text-info">{{ description_create_bot }}</p>

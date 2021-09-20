@@ -132,6 +132,9 @@ msgstr "Heure d'envoi du rapport"
 msgid "Status"
 msgstr "Status"
 
+msgid "System bots"
+msgstr "Robots système"
+
 msgid "The Mattermost notification has not yet been configured."
 msgstr ""
 "Aucune configuration des notifications Mattermost n'est encore en place."

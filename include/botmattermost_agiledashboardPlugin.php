@@ -108,7 +108,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
             $milestone_status_counter,
             $planning_factory,
             MarkdownTemplateRendererFactory::build()
-                ->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/template')
+                ->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/templates')
         );
 
         $bot_agiledashboard_factory = new Factory(
