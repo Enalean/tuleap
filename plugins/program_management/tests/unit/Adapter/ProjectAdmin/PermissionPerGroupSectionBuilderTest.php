@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\ProjectAdmin;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
@@ -31,30 +30,28 @@ use UGroupManager;
 
 final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CanPrioritizeFeaturesDAO
-     */
-    private $can_prioritize_features_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PermissionPerGroupUGroupFormatter
-     */
-    private $formatter;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UGroupManager
-     */
-    private $ugroup_manager;
     /**
      * @var PermissionPerGroupSectionBuilder
      */
     private $permission_section_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CanPrioritizeFeaturesDAO
+     */
+    private $can_prioritize_features_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PermissionPerGroupUGroupFormatter
+     */
+    private $formatter;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&UGroupManager
+     */
+    private $ugroup_manager;
 
     protected function setUp(): void
     {
-        $this->can_prioritize_features_dao = \Mockery::mock(CanPrioritizeFeaturesDAO::class);
-        $this->formatter                   = \Mockery::mock(PermissionPerGroupUGroupFormatter::class);
-        $this->ugroup_manager              = \Mockery::mock(UGroupManager::class);
+        $this->can_prioritize_features_dao = $this->createMock(CanPrioritizeFeaturesDAO::class);
+        $this->formatter                   = $this->createMock(PermissionPerGroupUGroupFormatter::class);
+        $this->ugroup_manager              = $this->createMock(UGroupManager::class);
         $template_renderer                 = new class extends \TemplateRenderer {
             public function renderToString($template_name, $presenter): string
             {
@@ -72,14 +69,14 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testDisplayPermissionsWhenNoUGroupIsSelected(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
-        $project->shouldReceive('getService')->andReturn(new ProgramService($project, ['rank' => 100]));
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(102);
+        $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
         $event = new PermissionPerGroupPaneCollector($project, false);
 
-        $this->can_prioritize_features_dao->shouldReceive('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->andReturn([4]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, false)->andReturn(null);
-        $this->formatter->shouldReceive('getFormattedUGroups')->andReturn([['name' => 'Project admin']]);
+        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([4]);
+        $this->ugroup_manager->method('getUGroup')->with($project, false)->willReturn(null);
+        $this->formatter->method('getFormattedUGroups')->willReturn([['name' => 'Project admin']]);
 
         $this->permission_section_builder->collectSections($event);
 
@@ -88,14 +85,14 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testDisplayPermissionsWhenAUGroupIsSelected(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
-        $project->shouldReceive('getService')->andReturn(new ProgramService($project, ['rank' => 100]));
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(102);
+        $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
         $event = new PermissionPerGroupPaneCollector($project, 4);
 
-        $this->can_prioritize_features_dao->shouldReceive('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->andReturn([4]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, 4)->andReturn(new \ProjectUGroup(['group_id' => 102, 'ugroup_id' => 4]));
-        $this->formatter->shouldReceive('getFormattedUGroups')->andReturn([['name' => 'Project admin']]);
+        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([4]);
+        $this->ugroup_manager->method('getUGroup')->with($project, 4)->willReturn(new \ProjectUGroup(['group_id' => 102, 'ugroup_id' => 4]));
+        $this->formatter->method('getFormattedUGroups')->willReturn([['name' => 'Project admin']]);
 
         $this->permission_section_builder->collectSections($event);
 
@@ -104,14 +101,14 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testDisplayPermissionsWhenTheSelectedUGroupIsNotUsedInThePlan(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
-        $project->shouldReceive('getService')->andReturn(new ProgramService($project, ['rank' => 100]));
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(102);
+        $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
         $event = new PermissionPerGroupPaneCollector($project, 4);
 
-        $this->can_prioritize_features_dao->shouldReceive('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->andReturn([2]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, 4)->andReturn(new \ProjectUGroup(['group_id' => 102, 'ugroup_id' => 4]));
-        $this->formatter->shouldReceive('getFormattedUGroups')->andReturn([['name' => 'Project admin']]);
+        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([2]);
+        $this->ugroup_manager->method('getUGroup')->with($project, 4)->willReturn(new \ProjectUGroup(['group_id' => 102, 'ugroup_id' => 4]));
+        $this->formatter->method('getFormattedUGroups')->willReturn([['name' => 'Project admin']]);
 
         $this->permission_section_builder->collectSections($event);
 
@@ -120,8 +117,8 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testDoesNotDisplayPermissionsWhenTheServiceIsNotActive(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getService')->andReturn(null);
+        $project = $this->createMock(\Project::class);
+        $project->method('getService')->willReturn(null);
 
         $event = new PermissionPerGroupPaneCollector($project, false);
 
@@ -132,11 +129,11 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testDoesNotDisplayPermissionsWhenNoPlanHasBeenDefinedForTheProject(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
-        $project->shouldReceive('getService')->andReturn(new ProgramService($project, ['rank' => 100]));
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(102);
+        $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
 
-        $this->can_prioritize_features_dao->shouldReceive('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->andReturn([]);
+        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([]);
 
         $event = new PermissionPerGroupPaneCollector($project, false);
 

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
@@ -36,27 +35,13 @@ use Tuleap\Test\Builders\IncludeAssetsBuilder;
 
 final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private BuildProgram $build_program;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanStore
-     */
-    private $plan_store;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsExplicitTopBacklogDAO
-     */
-    private $artifacts_explicit_top_backlog_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlannedFeatureDAO
-     */
-    private $planned_feature_dao;
-    /**
-     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
      */
     private $tracker_factory;
 
@@ -64,9 +49,9 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     protected function setUp(): void
     {
         $this->build_program                      = BuildProgramStub::stubValidProgram();
-        $this->plan_store                         = \Mockery::mock(PlanStore::class);
-        $this->artifacts_explicit_top_backlog_dao = \Mockery::mock(ArtifactsExplicitTopBacklogDAO::class);
-        $this->planned_feature_dao                = \Mockery::mock(PlannedFeatureDAO::class);
+        $this->plan_store                         = $this->createMock(PlanStore::class);
+        $this->artifacts_explicit_top_backlog_dao = $this->createMock(ArtifactsExplicitTopBacklogDAO::class);
+        $this->planned_feature_dao                = $this->createMock(PlannedFeatureDAO::class);
         $this->tracker_factory                    = $this->createStub(\TrackerFactory::class);
         $this->user                               = $this->createStub(\PFUser::class);
         $this->user->method('isSuperUser')->willReturn(true);
@@ -78,9 +63,9 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
-        $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(false);
+        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $this->plan_store->method('isPlannable')->willReturn(true);
+        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(false);
         $this->mockAValidTracker();
 
         self::assertNotNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user));
@@ -90,7 +75,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(999, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(true);
+        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(true);
         $this->mockAValidTracker();
 
         self::assertNotNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user));
@@ -117,8 +102,8 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(2, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
+        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $this->plan_store->method('isPlannable')->willReturn(false);
         $this->mockAValidTracker();
 
         self::assertNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user));
@@ -128,9 +113,9 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(3, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
-        $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(true);
+        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $this->plan_store->method('isPlannable')->willReturn(true);
+        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(true);
         $this->mockAValidTracker();
 
         self::assertNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user));
@@ -140,9 +125,9 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
-        $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(false);
+        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $this->plan_store->method('isPlannable')->willReturn(true);
+        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(false);
         $tracker = $this->createStub(\Tracker::class);
         $tracker->method('hasSemanticsTitle')->willReturn(false);
         $tracker->method('hasSemanticsStatus')->willReturn(true);
@@ -159,9 +144,9 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
-        $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(false);
+        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $this->plan_store->method('isPlannable')->willReturn(true);
+        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(false);
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('hasSemanticsTitle')->willReturn(true);
         $tracker->method('hasSemanticsStatus')->willReturn(false);

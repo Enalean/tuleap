@@ -33,11 +33,11 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ArtifactsLinkedToParentDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
      */
     private $feature_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     private UserIdentifier $user_identifier;

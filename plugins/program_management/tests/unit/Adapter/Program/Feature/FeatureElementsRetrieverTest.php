@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
@@ -43,46 +42,38 @@ use Tuleap\Tracker\TrackerColor;
 
 class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private FeatureElementsRetriever $retriever;
+    private BuildProgram $build_program;
+    private \PFUser $user;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&FeaturesStore
+     */
+    private $features_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&BackgroundColorRetriever
+     */
+    private $retrieve_background;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
      */
     private $parent_dao;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BackgroundColorRetriever
-     */
-    private $retrieve_background;
-
-    private FeatureElementsRetriever $retriever;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FeaturesStore
-     */
-    private $features_dao;
-
-    private BuildProgram $build_program;
-    private \PFUser $user;
-
     protected function setUp(): void
     {
-        $this->features_dao         = \Mockery::mock(FeaturesStore::class);
+        $this->features_dao         = $this->createMock(FeaturesStore::class);
         $this->build_program        = BuildProgramStub::stubValidProgram();
-        $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
-        $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->retrieve_background  = $this->createMock(BackgroundColorRetriever::class);
+        $this->parent_dao           = $this->createMock(ArtifactsLinkedToParentDao::class);
         $this->user                 = UserTestBuilder::aUser()->build();
         $retrieve_user              = RetrieveUserStub::withUser($this->user);
 
@@ -94,40 +85,46 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->form_element_factory,
                 $this->retrieve_background,
                 new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
-                new UserStoryLinkedToFeatureChecker($this->parent_dao, \Mockery::mock(BuildPlanning::class), $this->artifact_factory, $retrieve_user)
+                new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->createMock(BuildPlanning::class), $this->artifact_factory, $retrieve_user)
             )
         );
     }
 
     public function testItBuildsACollectionOfOpenedElements(): void
     {
-        $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
+        $this->features_dao->method('searchPlannableFeatures')->willReturn(
             [
                 ['tracker_name' => 'User stories', 'artifact_id' => 1, 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],
                 ['tracker_name' => 'Features', 'artifact_id' => 2, 'artifact_title' => 'Artifact 2', 'field_title_id' => 1],
             ]
         );
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $this->form_element_factory->shouldReceive('getFieldById')->with(1)->andReturn($field);
-        $field->shouldReceive('userCanRead')->andReturnTrue();
+        $field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $this->form_element_factory->method('getFieldById')->with(1)->willReturn($field);
+        $field->method('userCanRead')->willReturn(true);
 
         $project      = ProjectTestBuilder::aProject()->withId(202)->withPublicName('My project')->build();
         $tracker_one  = $this->buildTracker(1, 'bug', $project);
         $artifact_one = $this->buildArtifact(1, $tracker_one);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturn($artifact_one);
-
         $tracker_two  = $this->buildTracker(2, 'user stories', $project);
         $artifact_two = $this->buildArtifact(2, $tracker_two);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 2)->andReturn($artifact_two);
 
-        $this->retrieve_background->shouldReceive('retrieveBackgroundColor')
-            ->andReturn(new BackgroundColor("lake-placid-blue"));
+        $this->artifact_factory->method('getArtifactById')->willReturnMap([
+            [1, $artifact_one],
+            [2, $artifact_two],
+        ]);
 
-        $this->parent_dao->shouldReceive('getPlannedUserStory')->andReturn([]);
-        $this->parent_dao->shouldReceive('getChildrenOfFeatureInTeamProjects')->twice()->andReturn([]);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
+            [$this->user, 1, $artifact_one],
+            [$this->user, 2, $artifact_two],
+        ]);
+
+
+        $this->retrieve_background->method('retrieveBackgroundColor')
+            ->willReturn(new BackgroundColor("lake-placid-blue"));
+
+        $this->parent_dao->method('getPlannedUserStory')->willReturn([]);
+        $this->parent_dao->expects(self::exactly(2))->method('getChildrenOfFeatureInTeamProjects')->willReturn([]);
 
         $collection = [
             new FeatureRepresentation(

@@ -38,7 +38,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
     private const FEATURE_ID = 741;
     private const PROGRAM_ID = 110;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     private UserIdentifier $user_identifier;

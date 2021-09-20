@@ -44,17 +44,29 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusSemanticChecker $checker;
-    private \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_StatusDao $semantic_status_dao;
-    private \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_StatusFactory $semantic_status_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_StatusDao
+     */
+    private $semantic_status_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_StatusFactory
+     */
+    private $semantic_status_factory;
     private TrackerCollection $collection;
     private Tracker $tracker_team_01;
     private Tracker $tracker_team_02;
     private SourceTrackerCollection $source_trackers;
     private Tracker $timebox_tracker;
-    private \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_Status $timebox_tracker_semantic_status;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_Status
+     */
+    private $timebox_tracker_semantic_status;
     private Tracker $program_increment;
     private ProgramTracker $program_increment_tracker;
-    private \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory $tracker_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
+     */
+    private $tracker_factory;
     private ProgramTracker $timebox_program_tracker;
 
     protected function setUp(): void

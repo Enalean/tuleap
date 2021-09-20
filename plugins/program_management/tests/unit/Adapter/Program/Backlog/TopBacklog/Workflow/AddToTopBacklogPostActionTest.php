@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
@@ -35,7 +34,6 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
@@ -43,14 +41,14 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $build_program;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TopBacklogChangeProcessor
+     * @var \PHPUnit\Framework\MockObject\MockObject&TopBacklogChangeProcessor
      */
     private $top_backlog_change_processor;
 
     protected function setUp(): void
     {
         $this->build_program                = BuildProgramStub::stubValidProgram();
-        $this->top_backlog_change_processor = \Mockery::mock(TopBacklogChangeProcessor::class);
+        $this->top_backlog_change_processor = $this->createMock(TopBacklogChangeProcessor::class);
     }
 
     public function testHasAShortName(): void
@@ -60,43 +58,43 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotBypassPermissions(): void
     {
-        self::assertFalse($this->getPostAction()->bypassPermissions(\Mockery::mock(Tracker_FormElement_Field::class)));
+        self::assertFalse($this->getPostAction()->bypassPermissions($this->createMock(Tracker_FormElement_Field::class)));
     }
 
     public function testTraverseVisitorAsAnExternalAction(): void
     {
-        $visitor = \Mockery::mock(Visitor::class);
-        $visitor->shouldReceive('visitExternalActions')->once();
+        $visitor = $this->createMock(Visitor::class);
+        $visitor->expects(self::once())->method('visitExternalActions');
 
         $this->getPostAction()->accept($visitor);
     }
 
     public function testAddArtifactToTheTopBacklogOnceTheTransitionIsExecuted(): void
     {
-        $changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(999);
-        $changeset->shouldReceive('getArtifact')->andReturn($artifact);
-        $tracker = \Mockery::mock(Tracker::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $tracker->shouldReceive('getGroupId')->andReturn('102');
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $artifact  = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(999);
+        $changeset->method('getArtifact')->willReturn($artifact);
+        $tracker = $this->createMock(Tracker::class);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $tracker->method('getGroupId')->willReturn('102');
 
-        $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')->once();
+        $this->top_backlog_change_processor->expects(self::once())->method('processTopBacklogChangeForAProgram');
 
         $this->getPostAction()->after($changeset);
     }
 
     public function testDoesNothingIfSomeReasonWeTryToProcessAnArtifactThatIsNotPartOfAProgram(): void
     {
-        $changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = \Mockery::mock(Artifact::class);
-        $changeset->shouldReceive('getArtifact')->andReturn($artifact);
-        $tracker = \Mockery::mock(Tracker::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $tracker->shouldReceive('getGroupId')->andReturn('103');
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $artifact  = $this->createMock(Artifact::class);
+        $changeset->method('getArtifact')->willReturn($artifact);
+        $tracker = $this->createMock(Tracker::class);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $tracker->method('getGroupId')->willReturn('103');
         $this->build_program = BuildProgramStub::stubInvalidProgram();
 
-        $this->top_backlog_change_processor->shouldNotReceive('processTopBacklogChangeForAProgram');
+        $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
 
         $this->getPostAction()->after($changeset);
     }
@@ -113,7 +111,7 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getPostAction(): AddToTopBacklogPostAction
     {
         return new AddToTopBacklogPostAction(
-            \Mockery::mock(\Transition::class),
+            $this->createMock(\Transition::class),
             1,
             $this->build_program,
             $this->top_backlog_change_processor

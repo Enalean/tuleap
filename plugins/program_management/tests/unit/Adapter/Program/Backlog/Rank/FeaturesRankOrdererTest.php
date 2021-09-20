@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
@@ -30,18 +29,16 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 
 final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private FeaturesRankOrderer $orderer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact_PriorityManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Artifact_PriorityManager
      */
     private $priority_manager;
-    private FeaturesRankOrderer $orderer;
 
     protected function setUp(): void
     {
-        $this->priority_manager = \Mockery::mock(\Tracker_Artifact_PriorityManager::class);
-        $this->priority_manager->shouldReceive('enableExceptionsOnError');
+        $this->priority_manager = $this->createMock(\Tracker_Artifact_PriorityManager::class);
+        $this->priority_manager->method('enableExceptionsOnError');
 
         $this->orderer = new FeaturesRankOrderer($this->priority_manager);
     }
@@ -54,10 +51,10 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
         $order->direction   = "before";
 
         $this->priority_manager
-            ->shouldReceive("moveListOfArtifactsBefore")
+            ->expects(self::once())
+            ->method("moveListOfArtifactsBefore")
             ->with([111], 45, "101", 101)
-            ->once()
-            ->andThrow(new Tracker_Artifact_Exception_CannotRankWithMyself(45));
+            ->willThrowException(new Tracker_Artifact_Exception_CannotRankWithMyself(45));
 
         $this->expectException(FeatureCanNotBeRankedWithItselfException::class);
         $this->orderer->reorder($order, "101", ProgramIdentifierBuilder::build());

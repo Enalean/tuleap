@@ -22,21 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 
 final class AddToTopBacklogPostActionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildsRepresentationFromPostAction(): void
     {
         $post_action = new AddToTopBacklogPostAction(
-            \Mockery::mock(\Transition::class),
+            $this->createMock(\Transition::class),
             147,
-            \Mockery::mock(BuildProgram::class),
-            \Mockery::mock(TopBacklogChangeProcessor::class)
+            $this->createMock(BuildProgram::class),
+            $this->createMock(TopBacklogChangeProcessor::class)
         );
 
         $representation = AddToTopBacklogPostActionRepresentation::buildFromPostAction($post_action);

@@ -44,11 +44,11 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class ConfigurationErrorsGathererTest extends TestCase
 {
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker
+     * @var \PHPUnit\Framework\MockObject\Stub&ProgramIncrementCreatorChecker
      */
     private $program_increment_checker;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker
+     * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
      */
     private $iteration_checker;
     private ProgramTracker $program_tracker;

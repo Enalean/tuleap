@@ -32,9 +32,9 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class TrackerFromFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|Tracker_FormElementFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_FormElementFactory
      */
-    private mixed $form_element_factory;
+    private $form_element_factory;
     private TrackerFromFieldRetriever $retriever;
 
     protected function setUp(): void

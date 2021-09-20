@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
@@ -40,27 +39,25 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private FeatureRemovalProcessor $processor;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProgramIncrementsDAO
      */
     private $program_increments_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinkUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactLinkUpdater
      */
     private $artifact_link_updater;
 
     protected function setUp(): void
     {
-        $this->program_increments_dao = \Mockery::mock(ProgramIncrementsDAO::class);
-        $this->artifact_factory       = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->artifact_link_updater  = \Mockery::mock(ArtifactLinkUpdater::class);
+        $this->program_increments_dao = $this->createMock(ProgramIncrementsDAO::class);
+        $this->artifact_factory       = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->artifact_link_updater  = $this->createMock(ArtifactLinkUpdater::class);
         $this->processor              = new FeatureRemovalProcessor(
             $this->program_increments_dao,
             $this->artifact_factory,
@@ -71,36 +68,36 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testWhenThereAreNoProgramIncrementsLinkingTheFeatureItDoesNothing(): void
     {
-        $this->program_increments_dao->shouldReceive('getProgramIncrementsLinkToFeatureId')
-            ->once()
-            ->andReturn([]);
+        $this->program_increments_dao->expects(self::once())
+            ->method('getProgramIncrementsLinkToFeatureId')
+            ->willReturn([]);
 
         $feature_removal = $this->buildFeatureRemoval();
         $this->processor->removeFromAllProgramIncrements($feature_removal);
 
-        $this->artifact_link_updater->shouldNotHaveReceived('updateArtifactLinks');
+        $this->artifact_link_updater->expects(self::never())->method('updateArtifactLinks');
     }
 
     public function testItSkipsNonExistentProgramIncrements(): void
     {
         $program_increment_ids = [['id' => 404], ['id' => 405]];
-        $this->program_increments_dao->shouldReceive('getProgramIncrementsLinkToFeatureId')
-            ->once()
-            ->andReturn($program_increment_ids);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(404)
-            ->andReturnNull();
+        $this->program_increments_dao->expects(self::once())
+            ->method('getProgramIncrementsLinkToFeatureId')
+            ->willReturn($program_increment_ids);
 
         $program_increment_artifact = new Artifact(405, 7, 101, 1234567890, false);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(405)
-            ->andReturn($program_increment_artifact);
+
+        $this->artifact_factory->method('getArtifactById')
+            ->willReturnMap([
+                [404, null],
+                [405, $program_increment_artifact],
+            ]);
 
         $feature_removal = $this->buildFeatureRemoval();
-        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')
-            ->once()
+        $this->artifact_link_updater->expects(self::once())
+            ->method('updateArtifactLinks')
             ->with(
-                \Mockery::type(\PFUser::class),
+                self::isInstanceOf(\PFUser::class),
                 $program_increment_artifact,
                 [],
                 [$feature_removal->feature_id],
@@ -124,16 +121,17 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItWrapsExceptions(\Throwable $exception): void
     {
         $program_increment_ids = [['id' => 25]];
-        $this->program_increments_dao->shouldReceive('getProgramIncrementsLinkToFeatureId')
-            ->andReturn($program_increment_ids);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(25)
-            ->andReturn(new Artifact(25, 7, 101, 1234567890, false));
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(98)
-            ->andReturn(new Artifact(98, 7, 101, 1234567890, false));
+        $this->program_increments_dao->method('getProgramIncrementsLinkToFeatureId')
+            ->willReturn($program_increment_ids);
+
+        $this->artifact_factory->method('getArtifactById')
+            ->willReturnMap([
+                [25, new Artifact(25, 7, 101, 1234567890, false)],
+                [98, new Artifact(98, 7, 101, 1234567890, false)],
+            ]);
+
         $feature_removal = $this->buildFeatureRemoval();
-        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')->andThrow($exception);
+        $this->artifact_link_updater->method('updateArtifactLinks')->willThrowException($exception);
 
         $this->expectException(RemoveFeatureException::class);
         $this->processor->removeFromAllProgramIncrements($feature_removal);
@@ -142,17 +140,17 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesArtifactLinksToRemoveFeatureFromAllProgramIncrements(): void
     {
         $program_increment_ids = [['id' => 25], ['id' => 98]];
-        $this->program_increments_dao->shouldReceive('getProgramIncrementsLinkToFeatureId')
-            ->andReturn($program_increment_ids);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(25)
-            ->andReturn(new Artifact(25, 7, 101, 1234567890, false));
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(98)
-            ->andReturn(new Artifact(98, 7, 101, 1234567890, false));
+        $this->program_increments_dao->method('getProgramIncrementsLinkToFeatureId')
+            ->willReturn($program_increment_ids);
+
+        $this->artifact_factory->method('getArtifactById')
+            ->willReturnMap([
+                [25, new Artifact(25, 7, 101, 1234567890, false)],
+                [98, new Artifact(98, 7, 101, 1234567890, false)],
+            ]);
 
         $feature_removal = $this->buildFeatureRemoval();
-        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')->twice();
+        $this->artifact_link_updater->expects(self::exactly(2))->method('updateArtifactLinks');
 
         $this->processor->removeFromAllProgramIncrements($feature_removal);
     }

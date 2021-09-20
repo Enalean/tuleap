@@ -38,11 +38,11 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\Stub|BuildTeam
+     * @var \PHPUnit\Framework\MockObject\Stub&BuildTeam
      */
     private $team_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TeamStore
+     * @var \PHPUnit\Framework\MockObject\MockObject&TeamStore
      */
     private $team_store;
     private \Project $program_project;

@@ -43,7 +43,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TimeboxCreatorChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimeboxCreatorChecker
      */
     private $timebox_creator_checker;
     private ProgramTracker $tracker;

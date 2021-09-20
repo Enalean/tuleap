@@ -42,15 +42,15 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $changeset_id    = 21;
     private ArtifactCreated $event;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PendingArtifactCreationStore
+     * @var \PHPUnit\Framework\MockObject\MockObject&PendingArtifactCreationStore
      */
     private $pending_artifact_creation_store;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|RunProgramIncrementCreation
+     * @var \PHPUnit\Framework\MockObject\Stub&RunProgramIncrementCreation
      */
     private $asyncronous_runner;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RemovePlannedFeaturesFromTopBacklog
+     * @var \PHPUnit\Framework\MockObject\MockObject&RemovePlannedFeaturesFromTopBacklog
      */
     private $feature_remover;
     private VerifyIsProgram $program_verifier;

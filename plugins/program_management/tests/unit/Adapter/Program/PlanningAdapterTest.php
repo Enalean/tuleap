@@ -36,7 +36,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PlanningAdapter $adapter;
-    private \PHPUnit\Framework\MockObject\Stub|\PlanningFactory $planning_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\PlanningFactory
+     */
+    private $planning_factory;
     private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
