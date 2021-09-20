@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 interface RetrieveFeatures
@@ -29,5 +30,5 @@ interface RetrieveFeatures
     /**
      * @return FeatureRepresentation[]
      */
-    public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array;
+    public function retrieveFeaturesToBePlanned(int $program_id, UserIdentifier $user_identifier): array;
 }

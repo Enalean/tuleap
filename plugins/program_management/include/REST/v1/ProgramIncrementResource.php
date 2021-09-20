@@ -97,7 +97,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     new ArtifactsLinkedToParentDao(),
                     new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
                     $artifact_factory
-                )
+                ),
+                $this->user_manager_adapter
             ),
             $this->getProgramSearcher(),
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter)
@@ -125,7 +126,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $elements = $this->program_increment_content_retriever->retrieveProgramIncrementContent($id, $user);
+            $elements = $this->program_increment_content_retriever->retrieveProgramIncrementContent($id, UserProxy::buildFromPFUser($user));
 
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 

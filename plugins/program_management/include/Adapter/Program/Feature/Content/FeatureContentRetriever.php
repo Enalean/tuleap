@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\RetrieveFeatureContent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class FeatureContentRetriever implements RetrieveFeatureContent
 {
@@ -53,9 +53,8 @@ final class FeatureContentRetriever implements RetrieveFeatureContent
         $this->visibility_verifier            = $visibility_verifier;
     }
 
-    public function retrieveProgramIncrementContent(int $id, \PFUser $user): array
+    public function retrieveProgramIncrementContent(int $id, UserIdentifier $user_identifier): array
     {
-        $user_identifier   = UserProxy::buildFromPFUser($user);
         $program_increment = ProgramIncrementIdentifier::fromId(
             $this->program_increment_verifier,
             $this->visibility_verifier,
@@ -68,7 +67,7 @@ final class FeatureContentRetriever implements RetrieveFeatureContent
         $elements = [];
         foreach ($planned_content as $artifact) {
             $feature = $this->feature_representation_builder->buildFeatureRepresentation(
-                $user,
+                $user_identifier,
                 $program,
                 $artifact['artifact_id'],
                 $artifact['field_title_id'],

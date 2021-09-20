@@ -28,9 +28,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -42,6 +44,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 {
     private FeatureRepresentationBuilder $builder;
     private \PFUser $user;
+    private UserIdentifier $user_identifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
      */
@@ -63,6 +66,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $build_planning;
 
+
     protected function setUp(): void
     {
         $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
@@ -72,13 +76,15 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->build_planning       = $this->createMock(BuildPlanning::class);
         $this->user                 = UserTestBuilder::aUser()->build();
         $retrieve_user              = RetrieveUserStub::withUser($this->user);
+        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
 
         $this->builder = new FeatureRepresentationBuilder(
             $this->artifact_factory,
             $this->form_element_factory,
             $this->retrieve_background,
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
-            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory)
+            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory),
+            $retrieve_user
         );
     }
 
@@ -88,7 +94,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 1)->willReturn(null);
 
-        self::assertNull($this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
+        self::assertNull($this->builder->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
@@ -105,7 +111,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->form_element_factory->method('getFieldById')->with(101)->willReturn($field);
         $field->method('userCanRead')->willReturn(false);
 
-        self::assertNull($this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
+        self::assertNull($this->builder->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
     }
 
     public function testItBuildsRepresentation(): void
@@ -161,7 +167,8 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             true
         );
 
-        self::assertEquals($expected, $this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
+
+        self::assertEquals($expected, $this->builder->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
     }
 
     private function buildProject(int $program_id): Project

@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 interface RetrieveFeatureContent
@@ -38,5 +39,5 @@ interface RetrieveFeatureContent
      * @throws ProgramTrackerException
      * @throws ProgramIncrementNotFoundException
      */
-    public function retrieveProgramIncrementContent(int $id, \PFUser $user): array;
+    public function retrieveProgramIncrementContent(int $id, UserIdentifier $user_identifier): array;
 }

@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -94,7 +95,8 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
                     $this->parent_dao,
                     $this->createMock(BuildPlanning::class),
                     $this->artifact_factory
-                )
+                ),
+                $retrieve_user
             ),
             new ProgramSearcher($this->getStubSearchProgram(), BuildProgramStub::stubValidProgram()),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
@@ -169,7 +171,7 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
             ),
         ];
 
-        self::assertEquals($collection, $this->retriever->retrieveProgramIncrementContent(202, $this->user));
+        self::assertEquals($collection, $this->retriever->retrieveProgramIncrementContent(202, UserIdentifierStub::buildGenericUser()));
     }
 
     private function getStubSearchProgram(): SearchProgram

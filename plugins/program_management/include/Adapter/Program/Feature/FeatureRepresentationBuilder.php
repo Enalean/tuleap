@@ -22,60 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use PFUser;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class FeatureRepresentationBuilder
 {
-    /**
-     * @var BackgroundColorRetriever
-     */
-    private $retrieve_background_color;
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var VerifyIsVisibleFeature
-     */
-    private $feature_verifier;
-    /**
-     * @var VerifyLinkedUserStoryIsNotPlanned
-     */
-    private $user_story_checker;
-
     public function __construct(
-        \Tracker_ArtifactFactory $artifact_factory,
-        \Tracker_FormElementFactory $form_element_factory,
-        BackgroundColorRetriever $retrieve_background_color,
-        VerifyIsVisibleFeature $feature_verifier,
-        VerifyLinkedUserStoryIsNotPlanned $user_story_checker
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private \Tracker_FormElementFactory $form_element_factory,
+        private BackgroundColorRetriever $retrieve_background_color,
+        private VerifyIsVisibleFeature $feature_verifier,
+        private VerifyLinkedUserStoryIsNotPlanned $user_story_checker,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->artifact_factory          = $artifact_factory;
-        $this->form_element_factory      = $form_element_factory;
-        $this->retrieve_background_color = $retrieve_background_color;
-        $this->feature_verifier          = $feature_verifier;
-        $this->user_story_checker        = $user_story_checker;
     }
 
     public function buildFeatureRepresentation(
-        PFUser $user,
+        UserIdentifier $user_identifier,
         ProgramIdentifier $program,
         int $artifact_id,
         int $title_field_id,
         string $artifact_title
     ): ?FeatureRepresentation {
-        $user_identifier = UserProxy::buildFromPFUser($user);
+        $user = $this->retrieve_user->getUserWithId($user_identifier);
 
         $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user_identifier, $program, null);
         if (! $feature) {
