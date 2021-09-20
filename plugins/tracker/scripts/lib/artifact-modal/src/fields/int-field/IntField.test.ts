@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { IntField } from "./IntField";
+import type { HostElement } from "./IntField";
 import { onInput } from "./IntField";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`IntField`, () => {
-    let dispatchEvent: jest.SpyInstance, host: Element & IntField, inner_input: HTMLInputElement;
+    let dispatchEvent: jest.SpyInstance, host: HostElement, inner_input: HTMLInputElement;
     beforeEach(() => {
         dispatchEvent = jest.fn();
         host = {
@@ -33,7 +33,7 @@ describe(`IntField`, () => {
             disabled: false,
             value: 0,
             dispatchEvent,
-        } as unknown as Element & IntField;
+        } as unknown as HostElement;
         inner_input = getDocument().createElement("input");
         inner_input.addEventListener("input", (event) => onInput(host, event));
     });

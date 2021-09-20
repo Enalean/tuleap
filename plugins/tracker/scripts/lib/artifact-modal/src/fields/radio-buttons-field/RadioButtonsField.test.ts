@@ -17,15 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { HostElement } from "./RadioButtonsField";
 import { onInput, RadioButtonsField } from "./RadioButtonsField";
 import { setCatalog } from "../../gettext-catalog";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`RadioButtonsField`, () => {
-    let dispatchEvent: jest.SpyInstance,
-        host: RadioButtonsField & HTMLElement,
-        inner_input: HTMLInputElement;
+    let dispatchEvent: jest.SpyInstance, host: HostElement, inner_input: HTMLInputElement;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
@@ -40,7 +39,7 @@ describe(`RadioButtonsField`, () => {
             value: 100,
             values: [],
             dispatchEvent,
-        } as unknown as RadioButtonsField & HTMLElement;
+        } as unknown as HostElement;
         inner_input = getDocument().createElement("input");
         inner_input.addEventListener("input", (event) => onInput(host, event));
     });

@@ -33,13 +33,14 @@ export interface RadioButtonsField {
     value: string;
     content: () => HTMLElement;
 }
+export type HostElement = RadioButtonsField & HTMLElement;
 
 interface ListValue {
     id: string;
     label: string;
 }
 
-export const onInput = (host: Element & RadioButtonsField, event: Event): void => {
+export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
         return;
     }
