@@ -22,6 +22,7 @@ namespace Tuleap\BotMattermostAgileDashboard\Presenter;
 
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
+use Tuleap\BotMattermost\Bot\Bot;
 
 class AdminNotificationPresenter
 {
@@ -30,10 +31,13 @@ class AdminNotificationPresenter
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
-    public $bots;
+    public $system_bots;
+    public $project_bots;
     public $project_id;
     public $bot_assigned;
     public $has_bots;
+    public $has_system_bots;
+    public $has_project_bots;
     public $title;
     public $description;
     public $table_col_name;
@@ -67,17 +71,26 @@ class AdminNotificationPresenter
      */
     public $time_input_title;
 
+    /**
+     * @param Bot[] $system_bots
+     * @param Bot[] $project_bots
+     */
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
-        array $bots,
-        $project_id,
-        $bot_assigned
+        array $system_bots,
+        array $project_bots,
+        int $project_id,
+        array $bot_assigned
     ) {
         $this->csrf_token             = $csrf_token;
-        $this->bots                   = $bots;
+        $this->system_bots            = $system_bots;
+        $this->project_bots           = $project_bots;
         $this->project_id             = $project_id;
         $this->bot_assigned           = $bot_assigned;
-        $this->has_bots               = ! empty($bots);
+        $this->has_bots               = ! empty($system_bots) || ! empty($project_bots);
+        $this->has_system_bots        = ! empty($system_bots);
+        $this->has_project_bots       = ! empty($project_bots);
+
         $this->title                  = dgettext('tuleap-botmattermost_agiledashboard', 'Mattermost notifications');
         $this->description            = dgettext('tuleap-botmattermost_agiledashboard', 'Choose a bot to send a summary of the stand-up in Mattermost.');
         $this->description_create_bot = dgettext('tuleap-botmattermost_agiledashboard', 'If you don\'t see a Bot linked to your Mattermost project/team, please contact your administrator.');
@@ -109,12 +122,10 @@ class AdminNotificationPresenter
         );
         $this->alert_time_warning             = sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'The specified time must be adapted according to the server\'s time zone %1$s'), date_default_timezone_get());
 
-        $this->bot_list_is_empty = count($this->bots) === 0;
-        $this->empty_bot_list    = dgettext('tuleap-botmattermost_agiledashboard', 'No bots are defined by the system administrator. The notification configuration is not available.');
+        $this->empty_bot_list = dgettext('tuleap-botmattermost_agiledashboard', 'No bots are defined for the project (either system or project bots). The notification configuration is not available.');
 
         $this->any_configured_notification      = dgettext('tuleap-botmattermost_agiledashboard', 'The Mattermost notification has not yet been configured.');
         $this->any_configured_notification_tips = dgettext('tuleap-botmattermost_agiledashboard', 'To begin, click on add notification button below.');
-        $this->empty_bot_list                   = dgettext('tuleap-botmattermost_agiledashboard', 'No bots are defined by the system administrator. The notification configuration is not available.');
         $this->empty_channel_list               = dgettext('tuleap-botmattermost_agiledashboard', 'No channel selected, the channel defined at the webhook creation will be used as default');
 
         $this->time_format_regexp = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";

@@ -28,6 +28,7 @@ use TemplateRendererFactory;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\NotificationCreator;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
 use Tuleap\BotMattermostAgileDashboard\Exception\CannotDeleteBotNotificationException;
 use Tuleap\BotMattermostAgileDashboard\Presenter\AdminNotificationPresenter;
@@ -35,24 +36,26 @@ use Tuleap\Layout\IncludeAssets;
 
 class Controller
 {
-
     private $request;
     private $csrf;
     private $bot_agiledashboard_factory;
     private $bot_factory;
+    private NotificationCreator $notification_creator;
 
     public function __construct(
         HTTPRequest $request,
         CSRFSynchronizerToken $csrf,
         Factory $bot_agiledashboard_factory,
         BotFactory $bot_factory,
-        Validator $validator
+        Validator $validator,
+        NotificationCreator $notification_creator
     ) {
         $this->request                    = $request;
         $this->csrf                       = $csrf;
         $this->bot_agiledashboard_factory = $bot_agiledashboard_factory;
         $this->bot_factory                = $bot_factory;
         $this->validator                  = $validator;
+        $this->notification_creator       = $notification_creator;
     }
 
     public function process()
@@ -85,11 +88,13 @@ class Controller
         $renderer   = TemplateRendererFactory::build()->getRenderer(
             PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/templates'
         );
-        $project_id = $this->request->getProject()->getID();
-        $bots       = $this->bot_factory->getBots();
+        $project_id   = $this->request->getProject()->getID();
+        $system_bots  = $this->bot_factory->getSystemBots();
+        $project_bots = $this->bot_factory->getProjectBots($project_id);
 
-        if ($bot_assigned = $this->bot_agiledashboard_factory->getBotNotification($project_id)) {
-            $bot_assigned = $bot_assigned->toArray($project_id);
+        $bot_assigned = [];
+        if ($selected_bot = $this->bot_agiledashboard_factory->getBotNotification($project_id)) {
+            $bot_assigned = $selected_bot->toArray();
         }
 
         $include_assets = new IncludeAssets(
@@ -101,7 +106,13 @@ class Controller
 
         return $renderer->renderToString(
             'adminConfiguration',
-            new AdminNotificationPresenter($this->csrf, $bots, $project_id, $bot_assigned)
+            new AdminNotificationPresenter(
+                $this->csrf,
+                $system_bots,
+                $project_bots,
+                $project_id,
+                $bot_assigned
+            )
         );
     }
 
@@ -118,12 +129,19 @@ class Controller
     private function addBotNotification()
     {
         if ($this->validator->isValid($this->csrf, $this->request, 'add')) {
+            $bot_id = $this->request->get('bot_id');
+            $bot    = $this->bot_factory->getBotById($bot_id);
+
             $project_id = $this->request->getProject()->getID();
-            $bot_id     = $this->request->get('bot_id');
             $channels   = $this->request->get('channels');
             $send_time  = $this->request->get('send_time');
 
-            $this->bot_agiledashboard_factory->addBotNotification($channels, $bot_id, $project_id, $send_time);
+            $this->notification_creator->createNotification(
+                $bot,
+                $project_id,
+                $channels,
+                $send_time
+            );
         }
     }
 

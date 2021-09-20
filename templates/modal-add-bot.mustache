@@ -28,13 +28,24 @@
                     style="width: 100%"
                     required
                 >
-                    <optgroup label="{{# dgettext }} tuleap-botmattermost_agiledashboard | System bots {{/ dgettext }}">
-                        {{# bots }}
-                            <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
-                                {{ getName }}
-                            </option>
-                        {{/ bots }}
-                    </optgroup>
+                    {{# has_system_bots }}
+                        <optgroup label="{{# dgettext }} tuleap-botmattermost_agiledashboard | System bots {{/ dgettext }}">
+                            {{# system_bots }}
+                                <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
+                                    {{ getName }}
+                                </option>
+                            {{/ system_bots }}
+                        </optgroup>
+                    {{/ has_system_bots }}
+                    {{# has_project_bots }}
+                        <optgroup label="{{# dgettext }} tuleap-botmattermost_agiledashboard | Project bots {{/ dgettext }}">
+                            {{# project_bots }}
+                                <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
+                                    {{ getName }}
+                                </option>
+                            {{/ project_bots }}
+                        </optgroup>
+                    {{/ has_project_bots }}
                 </select>
                 <p class="tlp-text-info"><i class="fa fa-info-circle"></i> {{ description }}</p>
                 <p class="tlp-text-info">{{ description_create_bot }}</p>

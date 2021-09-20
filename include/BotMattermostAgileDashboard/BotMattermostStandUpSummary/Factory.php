@@ -81,13 +81,6 @@ class Factory
         return $channels;
     }
 
-    public function addBotNotification(array $channels, $bot_id, $project_id, $send_time)
-    {
-        if (! $this->dao->createNotification($channels, $bot_id, $project_id, $send_time)) {
-            throw new CannotCreateBotNotificationException();
-        }
-    }
-
     public function saveBotNotification(array $channels, $project_id, $send_time)
     {
         if (! $this->dao->updateNotification($channels, $project_id, $send_time)) {

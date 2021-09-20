@@ -5,3 +5,5 @@ nbproject
 node_modules/
 *.pot
 site-content/*/LC_MESSAGES/*.mo
+vendor
+*.po~

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermostAgiledashboard\Plugin;
+namespace Tuleap\BotMattermostAgileDashboard\Plugin;
 
 class PluginDescriptor extends \PluginDescriptor
 {

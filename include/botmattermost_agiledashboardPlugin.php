@@ -25,6 +25,7 @@ use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Dao;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\NotificationCreator;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
 use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
 use Tuleap\BotMattermost\Bot\BotDao;
@@ -36,8 +37,8 @@ use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\Cron\EventCronJobEveryMinute;
 
-require_once 'autoload.php';
 require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
@@ -54,9 +55,6 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
 
     public function getHooksAndCallbacks()
     {
-        if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
-            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR . '/include/autoload.php';
-        }
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(GetAdditionalScrumAdminPaneContent::NAME);
         }
@@ -158,7 +156,11 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
                 new BotMattermostLogger()
             ),
             $bot_factory,
-            new Validator($bot_factory)
+            new Validator($bot_factory),
+            new NotificationCreator(
+                new Dao(),
+                new \Tuleap\BotMattermost\Bot\BotValidityChecker()
+            )
         );
     }
 
