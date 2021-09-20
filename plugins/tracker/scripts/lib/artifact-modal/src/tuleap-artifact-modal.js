@@ -63,6 +63,7 @@ import { FloatField } from "./fields/float-field/FloatField";
 import { CommonmarkSyntaxHelper } from "./common/CommonmarkSyntaxHelper";
 import { CommonmarkPreviewButton } from "./common/CommonmarkPreviewButton";
 import { RadioButtonsField } from "./fields/radio-buttons-field/RadioButtonsField";
+import { FormatSelector } from "./common/FormatSelector";
 
 define(
     IntField,
@@ -70,7 +71,8 @@ define(
     FloatField,
     CommonmarkSyntaxHelper,
     CommonmarkPreviewButton,
-    RadioButtonsField
+    RadioButtonsField,
+    FormatSelector
 );
 
 export default angular

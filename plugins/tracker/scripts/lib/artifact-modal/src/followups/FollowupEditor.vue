@@ -19,17 +19,15 @@
 
 <template>
     <div class="artifact-modal-followups-add-form" data-test="add-comment-form">
-        <format-selector
-            id="followup_comment"
-            v-bind:label="label"
-            v-bind:disabled="false"
-            v-bind:required="false"
-            v-bind:value="format"
-            v-bind:is_in_preview_mode="is_in_preview_mode"
-            v-bind:is_preview_loading="is_preview_loading"
-            v-bind:is_text_format_option_enabled="false"
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <tuleap-artifact-modal-format-selector
+            v-bind:identifier.prop="'followup_comment'"
+            v-bind:label.prop="label"
+            v-bind:value.prop="format"
+            v-bind:isInPreviewMode.prop="is_in_preview_mode"
+            v-bind:isPreviewLoading.prop="is_preview_loading"
             v-on:interpret-content-event="togglePreview"
-        />
+        ></tuleap-artifact-modal-format-selector>
         <rich-text-editor
             id="followup_comment"
             v-bind:format="format"
@@ -52,14 +50,13 @@
     </div>
 </template>
 <script>
-import FormatSelector from "../common/FormatSelector.vue";
 import RichTextEditor from "../common/RichTextEditor.vue";
 import { getCommentLabel } from "../gettext-catalog";
 import { textfield_mixin } from "../common/textfield-mixin.js";
 
 export default {
     name: "FollowupEditor",
-    components: { RichTextEditor, FormatSelector },
+    components: { RichTextEditor },
     mixins: [textfield_mixin],
     computed: {
         label() {
