@@ -35,12 +35,12 @@ use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -110,6 +110,47 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
     }
 
+    private function getController(RetrieveProject $retrieve_project): DisplayAdminProgramManagementController
+    {
+        $program_tracker = TrackerReferenceStub::withDefaults();
+
+        return new DisplayAdminProgramManagementController(
+            $retrieve_project,
+            $this->template_renderer,
+            $this->breadcrumbs_builder,
+            $this->team_searcher,
+            $this->build_project,
+            $this->team_verifier,
+            $this->build_program,
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_tracker),
+            RetrieveVisibleIterationTrackerStub::withValidTracker($program_tracker),
+            $this->plannable_tracker_builder,
+            BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
+            $this->permission_verifier,
+            RetrieveProgramIncrementLabelsStub::buildLabels(null, null),
+            SearchTrackersOfProgramStub::withTrackers(
+                TrackerReferenceStub::withId(80),
+            ),
+            RetrieveIterationLabelsStub::buildLabels(null, null),
+            AllProgramSearcherStub::buildPrograms(),
+            VerifyIterationsFeatureActiveStub::withActiveFeature(),
+            new ConfigurationErrorPresenterBuilder(
+                new ConfigurationErrorsGatherer(
+                    BuildProgramStub::stubValidProgram(),
+                    $this->program_increment_checker,
+                    $this->iteration_checker,
+                    SearchTeamsOfProgramStub::buildTeams(),
+                    new BuildProjectStub(),
+                    RetrieveUserStub::withUser($this->user)
+                ),
+                RetrievePlannableTrackersStub::buildIds(1, 2),
+                VerifyTrackerSemanticsStub::withAllSemantics(),
+                $this->tracker_factory
+            ),
+            RetrieveUserStub::withGenericUser(),
+        );
+    }
+
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
     {
         $this->expectException(NotFoundException::class);
@@ -169,47 +210,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject()))
             ->process($this->request, LayoutBuilder::build(), $this->variables);
-    }
-
-    private function getController(RetrieveProject $retrieve_project): DisplayAdminProgramManagementController
-    {
-        $program_tracker = ProgramTrackerStub::withDefaults();
-
-        return new DisplayAdminProgramManagementController(
-            $retrieve_project,
-            $this->template_renderer,
-            $this->breadcrumbs_builder,
-            $this->team_searcher,
-            $this->build_project,
-            $this->team_verifier,
-            $this->build_program,
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_tracker),
-            RetrieveVisibleIterationTrackerStub::withValidTracker($program_tracker),
-            $this->plannable_tracker_builder,
-            BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
-            $this->permission_verifier,
-            RetrieveProgramIncrementLabelsStub::buildLabels(null, null),
-            RetrieveTrackerFromProgramStub::fromProgramReference(
-                ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
-            ),
-            RetrieveIterationLabelsStub::buildLabels(null, null),
-            AllProgramSearcherStub::buildPrograms(),
-            VerifyIterationsFeatureActiveStub::withActiveFeature(),
-            new ConfigurationErrorPresenterBuilder(
-                new ConfigurationErrorsGatherer(
-                    BuildProgramStub::stubValidProgram(),
-                    $this->program_increment_checker,
-                    $this->iteration_checker,
-                    SearchTeamsOfProgramStub::buildTeams(),
-                    new BuildProjectStub(),
-                    RetrieveUserStub::withUser($this->user)
-                ),
-                RetrievePlannableTrackersStub::buildIds(1, 2),
-                VerifyTrackerSemanticsStub::withAllSemantics(),
-                $this->tracker_factory
-            ),
-            RetrieveUserStub::withGenericUser(),
-        );
     }
 
     private function mockProject(bool $is_service_active = true): Project

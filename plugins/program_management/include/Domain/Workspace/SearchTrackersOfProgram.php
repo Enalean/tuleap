@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-interface RetrieveTrackerFromProgram
+interface SearchTrackersOfProgram
 {
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      */
-    public function retrieveAllTrackersFromProgramId(ProgramForAdministrationIdentifier $program): array;
+    public function searchAllTrackersOfProgram(ProgramForAdministrationIdentifier $program): array;
 }

@@ -24,12 +24,13 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 
@@ -43,10 +44,12 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     private const END_PERIOD_ID    = 6;
     private TestLogger $logger;
     private UserIdentifier $user_identifier;
+    private TrackerReference $tracker;
 
     protected function setUp(): void
     {
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->tracker         = TrackerReferenceStub::withDefaults();
         $this->logger          = new TestLogger();
     }
 
@@ -165,7 +168,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
                         self::ARTIFACT_LINK_ID
                     )
                 ),
-                TrackerIdentifierStub::buildWithDefault(),
+                $this->tracker,
                 null
             )
         );
@@ -173,7 +176,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     private function getCollection(VerifyFieldPermissions $retrieve_field_permissions): SynchronizedFieldFromProgramAndTeamTrackersCollection
     {
-        $retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::with(1, 'tracker');
+        $retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::withTracker($this->tracker);
         return new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             $this->logger,
             $retrieve_tracker_from_field,

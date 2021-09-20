@@ -21,7 +21,7 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 final class ConfigurationErrorsCollector
@@ -56,7 +56,7 @@ final class ConfigurationErrorsCollector
      */
     private array $non_updatable_fields = [];
     /**
-     * @var ProgramTracker[]
+     * @var TrackerReference[]
      */
     private array $team_tracker_id_errors = [];
     /**
@@ -64,7 +64,7 @@ final class ConfigurationErrorsCollector
      */
     private array $semantic_status_no_field = [];
     /**
-     * @var ProgramTracker[]
+     * @var TrackerReference[]
      */
     private array $status_missing_in_teams = [];
     /**
@@ -92,7 +92,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @param ProgramTracker[] $potential_trackers_in_error
+     * @param TrackerReference[] $potential_trackers_in_error
      */
     public function addSemanticError(
         string $semantic_name,
@@ -106,12 +106,12 @@ final class ConfigurationErrorsCollector
         );
     }
 
-    public function addRequiredFieldError(ProgramTracker $tracker_reference, ProjectReference $project_reference, int $field_id, string $field_label): void
+    public function addRequiredFieldError(TrackerReference $tracker_reference, ProjectReference $project_reference, int $field_id, string $field_label): void
     {
         $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker_reference, $project_reference);
     }
 
-    public function addWorkflowTransitionRulesError(ProgramTracker $tracker_reference, ProjectReference $project_reference): void
+    public function addWorkflowTransitionRulesError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
     {
         $this->transition_rule_error[] = new WorkFlowErrorPresenter(
             $tracker_reference,
@@ -120,7 +120,7 @@ final class ConfigurationErrorsCollector
         );
     }
 
-    public function addWorkflowTransitionDateRulesError(ProgramTracker $tracker_reference, ProjectReference $project_reference): void
+    public function addWorkflowTransitionDateRulesError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
     {
         $this->transition_rule_date_error[] = new WorkFlowErrorPresenter(
             $tracker_reference,
@@ -129,7 +129,7 @@ final class ConfigurationErrorsCollector
         );
     }
 
-    public function addWorkflowDependencyError(ProgramTracker $tracker_reference, ProjectReference $project_reference): void
+    public function addWorkflowDependencyError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
     {
         $this->field_dependency_error[] = new WorkFlowErrorPresenter(
             $tracker_reference,
@@ -138,17 +138,17 @@ final class ConfigurationErrorsCollector
         );
     }
 
-    public function addSubmitFieldPermissionError(int $field_id, string $label, ProgramTracker $tracker, ProjectReference $project_reference): void
+    public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project_reference): void
     {
         $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project_reference);
     }
 
-    public function addUpdateFieldPermissionError(int $field_id, string $label, ProgramTracker $tracker, ProjectReference $project_reference): void
+    public function addUpdateFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project_reference): void
     {
         $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project_reference);
     }
 
-    public function userCanNotSubmitInTeam(ProgramTracker $team_tracker_id): void
+    public function userCanNotSubmitInTeam(TrackerReference $team_tracker_id): void
     {
         $this->team_tracker_id_errors[] = $team_tracker_id;
     }
@@ -159,7 +159,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @param ProgramTracker[] $trackers
+     * @param TrackerReference[] $trackers
      */
     public function addMissingSemanticInTeamErrors(array $trackers): void
     {
@@ -167,7 +167,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @param ProgramTracker[] $trackers
+     * @param TrackerReference[] $trackers
      */
     public function addMissingValueInSemantic(array $missing_values, array $trackers): void
     {
@@ -259,7 +259,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      */
     public function getTeamTrackerIdErrors(): array
     {
@@ -275,7 +275,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      */
     public function getStatusMissingInTeams(): array
     {

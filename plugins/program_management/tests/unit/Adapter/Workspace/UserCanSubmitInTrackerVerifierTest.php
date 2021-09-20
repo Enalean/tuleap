@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tracker;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -44,7 +44,7 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
     private $tracker_factory;
     private UserCanSubmitInTrackerVerifier $verifier;
     private UserIdentifier $user_identifier;
-    private ProgramTracker $program_tracker;
+    private TrackerReference $tracker;
 
     protected function setUp(): void
     {
@@ -54,7 +54,7 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
         $this->verifier = new UserCanSubmitInTrackerVerifier($this->user_manager, $this->tracker_factory);
 
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
-        $this->program_tracker = ProgramTrackerStub::withDefaults();
+        $this->tracker         = TrackerReferenceStub::withDefaults();
     }
 
     public function testItReturnsFalseWhenTrackerIsNotFound(): void
@@ -62,7 +62,7 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
         $this->tracker_factory->method("getTrackerById")->willReturn(null);
         $this->user_manager->method("getUserById")->willReturn(null);
 
-        self::assertFalse($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->program_tracker));
+        self::assertFalse($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->tracker));
     }
 
     public function testItReturnsFalseWhenUserIsNotFound(): void
@@ -70,7 +70,7 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
         $this->tracker_factory->method("getTrackerById")->willReturn(TrackerTestBuilder::aTracker()->build());
         $this->user_manager->method("getUserById")->willReturn(null);
 
-        self::assertFalse($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->program_tracker));
+        self::assertFalse($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->tracker));
     }
 
     public function testItReturnsUserCanSubmitArtifact(): void
@@ -81,6 +81,6 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
 
         $tracker->method("userCanSubmitArtifact")->willReturn(true);
 
-        self::assertTrue($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->program_tracker));
+        self::assertTrue($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->tracker));
     }
 }

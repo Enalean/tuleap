@@ -104,7 +104,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerOfArtifactRetriever;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserCanSubmitInTrackerVerifier;
@@ -827,7 +827,7 @@ final class program_managementPlugin extends Plugin
 
     public function trackerUsage(array $params): void
     {
-        if ((new PlanDao())->isPartOfAPlan(TrackerProxy::fromTracker($params['tracker']))) {
+        if ((new PlanDao())->isPartOfAPlan(TrackerReferenceProxy::fromTracker($params['tracker']))) {
             $params['result'] = [
                 'can_be_deleted' => false,
                 'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName()

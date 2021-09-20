@@ -28,11 +28,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -46,7 +46,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
      * @var \PHPUnit\Framework\MockObject\MockObject&TimeboxCreatorChecker
      */
     private $timebox_creator_checker;
-    private ProgramTracker $tracker;
+    private TrackerReference $tracker;
     private \PFUser $user;
     private ProgramIdentifier $program;
     private VerifyIsProgramIncrementTracker $program_verifier;
@@ -59,19 +59,30 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
         $this->program_verifier        = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
 
-        $this->tracker = ProgramTrackerStub::withDefaults();
+        $this->tracker = TrackerReferenceStub::withDefaults();
 
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
             $this->tracker
         );
 
         $this->root_milestone_retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            ProgramTrackerStub::withDefaults()
+            TrackerReferenceStub::withDefaults()
         );
 
         $this->user            = UserTestBuilder::aUser()->build();
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
         $this->program         = ProgramIdentifierBuilder::build();
+    }
+
+    private function getChecker(): ProgramIncrementCreatorChecker
+    {
+        return new ProgramIncrementCreatorChecker(
+            $this->timebox_creator_checker,
+            $this->program_verifier,
+            $this->root_milestone_retriever,
+            $this->program_increment_tracker_retriever,
+            new TestLogger()
+        );
     }
 
     public function testDisallowArtifactCreationWhenItIsAProgramIncrementTrackerAndOtherChecksDoNotPass(): void
@@ -192,16 +203,5 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             new ConfigurationErrorsCollector(true),
             $this->user_identifier
         ));
-    }
-
-    private function getChecker(): ProgramIncrementCreatorChecker
-    {
-        return new ProgramIncrementCreatorChecker(
-            $this->timebox_creator_checker,
-            $this->program_verifier,
-            $this->root_milestone_retriever,
-            $this->program_increment_tracker_retriever,
-            new TestLogger()
-        );
     }
 }

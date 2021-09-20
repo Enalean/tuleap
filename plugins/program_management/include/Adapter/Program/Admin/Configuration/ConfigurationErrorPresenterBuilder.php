@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TrackerErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyTrackerSemantics;
 
@@ -44,7 +44,7 @@ final class ConfigurationErrorPresenterBuilder
     }
 
     public function buildProgramIncrementErrorPresenter(
-        ProgramTracker $program_increment_tracker,
+        TrackerReference $program_increment_tracker,
         ?ProgramIdentifier $program,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
@@ -57,7 +57,7 @@ final class ConfigurationErrorPresenterBuilder
     }
 
     public function buildIterationErrorPresenter(
-        ?ProgramTracker $iteration_tracker,
+        ?TrackerReference $iteration_tracker,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): ?TrackerErrorPresenter {
@@ -69,13 +69,13 @@ final class ConfigurationErrorPresenterBuilder
     }
 
     private function buildTrackerErrorPresenter(
-        ProgramTracker $program_tracker,
+        TrackerReference $tracker,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): ?TrackerErrorPresenter {
         return TrackerErrorPresenter::fromTracker(
             $this->errors_gatherer,
-            $program_tracker,
+            $tracker,
             $user_identifier,
             $errors_collector
         );
@@ -92,8 +92,8 @@ final class ConfigurationErrorPresenterBuilder
                 if (! $tracker) {
                     continue;
                 }
-                $program_tracker = TrackerProxy::fromTracker($tracker);
-                $plannable_error_collector->addSemanticError('Title', 'title', [$program_tracker]);
+                $tracker_reference = TrackerReferenceProxy::fromTracker($tracker);
+                $plannable_error_collector->addSemanticError('Title', 'title', [$tracker_reference]);
             }
 
             if (! $this->verify_tracker_semantics->hasStatusSemantic($tracker_id)) {
@@ -101,8 +101,8 @@ final class ConfigurationErrorPresenterBuilder
                 if (! $tracker) {
                     continue;
                 }
-                $program_tracker = TrackerProxy::fromTracker($tracker);
-                $plannable_error_collector->addSemanticError('Status', 'status', [$program_tracker]);
+                $tracker_reference = TrackerReferenceProxy::fromTracker($tracker);
+                $plannable_error_collector->addSemanticError('Status', 'status', [$tracker_reference]);
             }
         }
 

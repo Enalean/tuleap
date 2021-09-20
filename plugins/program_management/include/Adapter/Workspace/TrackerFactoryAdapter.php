@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
 
-final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram, RetrieveTracker
+final class TrackerFactoryAdapter implements SearchTrackersOfProgram, RetrieveTracker
 {
     private \TrackerFactory $tracker_factory;
 
@@ -37,26 +37,26 @@ final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram, Retriev
     }
 
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      */
-    public function retrieveAllTrackersFromProgramId(ProgramForAdministrationIdentifier $program): array
+    public function searchAllTrackersOfProgram(ProgramForAdministrationIdentifier $program): array
     {
         $trackers           = $this->tracker_factory->getTrackersByGroupId($program->id);
         $tracker_references = [];
 
         foreach ($trackers as $tracker) {
-            $tracker_references[] = TrackerProxy::fromTracker($tracker);
+            $tracker_references[] = TrackerReferenceProxy::fromTracker($tracker);
         }
 
         return $tracker_references;
     }
 
-    public function getTrackerById(int $tracker_id): ?ProgramTracker
+    public function getTrackerById(int $tracker_id): ?TrackerReference
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
             return null;
         }
-        return TrackerProxy::fromTracker($tracker);
+        return TrackerReferenceProxy::fromTracker($tracker);
     }
 }

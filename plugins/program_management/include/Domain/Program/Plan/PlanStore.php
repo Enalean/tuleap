@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 interface PlanStore
 {
@@ -30,5 +30,5 @@ interface PlanStore
 
     public function isPlannable(int $plannable_tracker_id): bool;
 
-    public function isPartOfAPlan(ProgramTracker $tracker_data): bool;
+    public function isPartOfAPlan(TrackerReference $tracker): bool;
 }

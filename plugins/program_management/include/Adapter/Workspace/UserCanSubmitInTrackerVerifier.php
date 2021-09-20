@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -33,9 +33,9 @@ final class UserCanSubmitInTrackerVerifier implements VerifyUserCanSubmit
     {
     }
 
-    public function canUserSubmitArtifact(UserIdentifier $user_identifier, ProgramTracker $program_tracker): bool
+    public function canUserSubmitArtifact(UserIdentifier $user_identifier, TrackerReference $tracker): bool
     {
-        $full_tracker = $this->tracker_factory->getTrackerById($program_tracker->getId());
+        $full_tracker = $this->tracker_factory->getTrackerById($tracker->getId());
         $full_user    = $this->user_manager->getUserById($user_identifier->getId());
 
         if (! $full_tracker || ! $full_user) {

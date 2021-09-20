@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 final class TrackerFromFieldRetriever implements RetrieveTrackerFromField
 {
@@ -34,7 +34,7 @@ final class TrackerFromFieldRetriever implements RetrieveTrackerFromField
     {
     }
 
-    public function fromFieldId(int $field_id): ProgramTracker
+    public function fromFieldId(int $field_id): TrackerReference
     {
         $full_field = $this->form_element_factory->getFieldById($field_id);
 
@@ -42,6 +42,6 @@ final class TrackerFromFieldRetriever implements RetrieveTrackerFromField
             throw new FieldNotFoundException($field_id);
         }
 
-        return TrackerProxy::fromTracker($full_field->getTracker());
+        return TrackerReferenceProxy::fromTracker($full_field->getTracker());
     }
 }

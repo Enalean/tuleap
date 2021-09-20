@@ -25,30 +25,28 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Source;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const TIMEBOX_TRACKER_ID   = 58;
     private const BLUE_TEAM_TRACKER_ID = 79;
     private const RED_TEAM_TRACKER_ID  = 80;
 
     private TeamProjectsCollection $teams;
     private UserIdentifier $user;
     private ProgramIdentifier $program;
-    private \Tracker $blue_team_tracker;
-    private \Tracker $red_team_tracker;
     private TrackerCollection $team_trackers;
-    private ProgramTracker $timebox_tracker;
+    private TrackerReference $timebox_tracker;
 
     protected function setUp(): void
     {
@@ -61,14 +59,12 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->program
         );
 
-        $this->timebox_tracker   = ProgramTrackerStub::withDefaults();
-        $this->blue_team_tracker = TrackerTestBuilder::aTracker()->withId(self::BLUE_TEAM_TRACKER_ID)->build();
-        $this->red_team_tracker  = TrackerTestBuilder::aTracker()->withId(self::RED_TEAM_TRACKER_ID)->build();
+        $this->timebox_tracker = TrackerReferenceStub::withId(self::TIMEBOX_TRACKER_ID);
 
         $this->team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-                ProgramTrackerStub::fromTracker($this->blue_team_tracker),
-                ProgramTrackerStub::fromTracker($this->red_team_tracker)
+                TrackerReferenceStub::withId(self::BLUE_TEAM_TRACKER_ID),
+                TrackerReferenceStub::withId(self::RED_TEAM_TRACKER_ID),
             ),
             $this->teams,
             $this->user
@@ -83,9 +79,8 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->team_trackers,
             $this->user
         );
-        $trackers   = $collection->getSourceTrackers();
         $ids        = $collection->getSourceTrackerIds();
-        self::assertContainsEquals($this->timebox_tracker, $trackers);
+        self::assertContains(self::TIMEBOX_TRACKER_ID, $ids);
         self::assertContains(self::BLUE_TEAM_TRACKER_ID, $ids);
         self::assertContains(self::RED_TEAM_TRACKER_ID, $ids);
     }
@@ -102,6 +97,7 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $trackers = $collection->getSourceTrackers();
         self::assertContainsEquals($this->timebox_tracker, $trackers);
         $ids = $collection->getSourceTrackerIds();
+        self::assertContains(self::TIMEBOX_TRACKER_ID, $ids);
         self::assertContains(self::BLUE_TEAM_TRACKER_ID, $ids);
         self::assertContains(self::RED_TEAM_TRACKER_ID, $ids);
     }

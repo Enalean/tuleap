@@ -27,14 +27,15 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends TestCase
 {
+    private const FIRST_TRACKER_ID  = 300;
+    private const SECOND_TRACKER_ID = 500;
     private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
@@ -47,9 +48,9 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends
         $presenters = $this->getPresenters(RetrievePlannableTrackersStub::buildIds(300));
 
         self::assertCount(2, $presenters);
-        self::assertSame(300, $presenters[0]->id);
+        self::assertSame(self::FIRST_TRACKER_ID, $presenters[0]->id);
         self::assertTrue($presenters[0]->is_selected);
-        self::assertSame(500, $presenters[1]->id);
+        self::assertSame(self::SECOND_TRACKER_ID, $presenters[1]->id);
         self::assertFalse($presenters[1]->is_selected);
     }
 
@@ -58,9 +59,9 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends
         $presenters = $this->getPresenters(RetrievePlannableTrackersStub::buildIds());
 
         self::assertCount(2, $presenters);
-        self::assertSame(300, $presenters[0]->id);
+        self::assertSame(self::FIRST_TRACKER_ID, $presenters[0]->id);
         self::assertFalse($presenters[0]->is_selected);
-        self::assertSame(500, $presenters[1]->id);
+        self::assertSame(self::SECOND_TRACKER_ID, $presenters[1]->id);
         self::assertFalse($presenters[1]->is_selected);
     }
 
@@ -73,9 +74,9 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends
         return $builder->buildPotentialPlannableTrackerPresenters(
             $this->program,
             PotentialTrackerCollection::fromProgram(
-                RetrieveTrackerFromProgramStub::fromProgramReference(
-                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
-                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build()),
+                SearchTrackersOfProgramStub::withTrackers(
+                    TrackerReferenceStub::withId(self::FIRST_TRACKER_ID),
+                    TrackerReferenceStub::withId(self::SECOND_TRACKER_ID),
                 ),
                 $this->program
             )

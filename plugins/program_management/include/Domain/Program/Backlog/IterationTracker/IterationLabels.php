@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -40,7 +40,7 @@ final class IterationLabels
 
     public static function fromIterationTracker(
         RetrieveIterationLabels $label_retriever,
-        ?ProgramTracker $tracker
+        ?TrackerReference $tracker
     ): self {
         if (! $tracker) {
             return new self(null, null);

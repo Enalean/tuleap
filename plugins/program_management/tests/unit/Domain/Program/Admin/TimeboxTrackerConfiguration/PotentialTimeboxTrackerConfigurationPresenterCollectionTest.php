@@ -25,14 +25,15 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\TimeboxTrackerConfigurat
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 
 final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIRST_TRACKER_ID  = 300;
+    private const SECOND_TRACKER_ID = 500;
     private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
@@ -43,13 +44,13 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends 
     public function testBuildTrackerPresentersWithCheckedTrackerIfExist(): void
     {
         $presenters = $this->getPresenters(
-            ProgramTrackerStub::withId(300)
+            TrackerReferenceStub::withId(300)
         );
 
         self::assertCount(2, $presenters);
-        self::assertSame(300, $presenters[0]->id);
+        self::assertSame(self::FIRST_TRACKER_ID, $presenters[0]->id);
         self::assertTrue($presenters[0]->is_selected);
-        self::assertSame(500, $presenters[1]->id);
+        self::assertSame(self::SECOND_TRACKER_ID, $presenters[1]->id);
         self::assertFalse($presenters[1]->is_selected);
     }
 
@@ -58,22 +59,22 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends 
         $presenters = $this->getPresenters(null);
 
         self::assertCount(2, $presenters);
-        self::assertSame(300, $presenters[0]->id);
+        self::assertSame(self::FIRST_TRACKER_ID, $presenters[0]->id);
         self::assertFalse($presenters[0]->is_selected);
-        self::assertSame(500, $presenters[1]->id);
+        self::assertSame(self::SECOND_TRACKER_ID, $presenters[1]->id);
         self::assertFalse($presenters[1]->is_selected);
     }
 
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    private function getPresenters(?ProgramTracker $program_tracker): array
+    private function getPresenters(?TrackerReference $program_tracker): array
     {
         return PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
             PotentialTrackerCollection::fromProgram(
-                RetrieveTrackerFromProgramStub::fromProgramReference(
-                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
-                    ProgramTrackerStub::fromTracker(TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build()),
+                SearchTrackersOfProgramStub::withTrackers(
+                    TrackerReferenceStub::withId(self::FIRST_TRACKER_ID),
+                    TrackerReferenceStub::withId(self::SECOND_TRACKER_ID),
                 ),
                 $this->program
             ),

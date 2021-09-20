@@ -26,7 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ConfigurationErrorsCollectorTest extends TestCase
@@ -43,56 +43,56 @@ final class ConfigurationErrorsCollectorTest extends TestCase
         $this->collector->addSemanticError(
             'Title',
             'title',
-            [ProgramTrackerStub::withId(1), ProgramTrackerStub::withId(2), ProgramTrackerStub::withId(3)]
+            [TrackerReferenceStub::withId(1), TrackerReferenceStub::withId(2), TrackerReferenceStub::withId(3)]
         );
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenAFieldIsRequired(): void
     {
-        $this->collector->addRequiredFieldError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
+        $this->collector->addRequiredFieldError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasTransition(): void
     {
-        $this->collector->addWorkflowTransitionRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowTransitionRulesError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasGlobalRules(): void
     {
-        $this->collector->addWorkflowTransitionDateRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowTransitionDateRulesError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasFieldDependency(): void
     {
-        $this->collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowDependencyError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenFieldIsNotSubmittable(): void
     {
-        $this->collector->addSubmitFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenFieldIsNotUpdatable(): void
     {
-        $this->collector->addUpdateFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenUserCanNotEditTeams(): void
     {
-        $this->collector->userCanNotSubmitInTeam(ProgramTrackerStub::withId(200));
+        $this->collector->userCanNotSubmitInTeam(TrackerReferenceStub::withId(200));
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenStatusIsNotSetInTeams(): void
     {
-        $this->collector->addMissingSemanticInTeamErrors([1]);
+        $this->collector->addMissingSemanticInTeamErrors([TrackerReferenceStub::withId(1)]);
         self::assertTrue($this->collector->hasError());
     }
 
@@ -104,7 +104,7 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenStatusHasMissingValues(): void
     {
-        $this->collector->addMissingValueInSemantic(["Planned", "On going"], [1, 2]);
+        $this->collector->addMissingValueInSemantic(['Planned', 'On going'], [TrackerReferenceStub::withId(1), TrackerReferenceStub::withId(2)]);
         self::assertTrue($this->collector->hasError());
     }
 

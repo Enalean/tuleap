@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckSemantic;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
@@ -41,7 +41,7 @@ final class SemanticChecker implements CheckSemantic
     }
 
     public function areTrackerSemanticsWellConfigured(
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,
         ConfigurationErrorsCollector $configuration_errors
     ): bool {
@@ -117,7 +117,7 @@ final class SemanticChecker implements CheckSemantic
     }
 
     /**
-     * @param ProgramTracker[] $trackers
+     * @param TrackerReference[] $trackers
      */
     private function buildSemanticError(
         ConfigurationErrorsCollector $configuration_errors,

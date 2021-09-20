@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -62,11 +62,11 @@ final class TrackerErrorPresenter
     public array $non_updatable_field_errors;
     public bool $has_presenter_errors;
     /**
-     * @var ProgramTracker[]
+     * @var TrackerReference[]
      */
     public array $team_tracker_id_errors;
     /**
-     * @var ProgramTracker[]
+     * @var TrackerReference[]
      */
     public array $status_missing_in_teams;
     /**
@@ -97,12 +97,12 @@ final class TrackerErrorPresenter
      * @param WorkFlowErrorPresenter[]               $field_dependency_error
      * @param FieldsPermissionErrorPresenter[]       $non_submittable_field_errors
      * @param FieldsPermissionErrorPresenter[]       $non_updatable_field_errors
-     * @param ProgramTracker[]                       $team_tracker_id_errors
-     * @param ProgramTracker[]                       $status_missing_in_teams
+     * @param TrackerReference[]                     $team_tracker_id_errors
+     * @param TrackerReference[]                     $status_missing_in_teams
      * @param SemanticStatusNoFieldPresenter[]       $semantic_status_no_field
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
      * @param TitleHasIncorrectTypePresenter[]       $title_has_incorrect_type_error
-     * @param MissingArtifactLinkFieldPresenter[]  $missing_artifact_link_fields_errors
+     * @param MissingArtifactLinkFieldPresenter[]    $missing_artifact_link_fields_errors
      */
     private function __construct(
         array $semantic_errors,
@@ -167,7 +167,7 @@ final class TrackerErrorPresenter
 
     public static function fromTracker(
         ConfigurationErrorsGatherer $errors_gatherer,
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): ?self {

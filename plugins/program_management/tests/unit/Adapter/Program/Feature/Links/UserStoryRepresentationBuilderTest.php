@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Featur
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -81,7 +81,7 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 throw new \LogicException("Not implemented");
             }
 
-            public function isPartOfAPlan(ProgramTracker $tracker_data): bool
+            public function isPartOfAPlan(TrackerReference $tracker): bool
             {
                 throw new \LogicException("Not implemented");
             }

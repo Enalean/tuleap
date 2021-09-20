@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Ver
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, RetrievePlannableTrackers
 {
@@ -160,14 +160,14 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         return array_map(static fn(array $row): int => $row['plannable_tracker_id'], $rows);
     }
 
-    public function isPartOfAPlan(ProgramTracker $tracker_data): bool
+    public function isPartOfAPlan(TrackerReference $tracker): bool
     {
         $sql = 'SELECT COUNT(*)
                 FROM plugin_program_management_plan
                 LEFT JOIN plugin_program_management_program ON (plugin_program_management_plan.project_id = plugin_program_management_program.program_project_id)
                 WHERE plannable_tracker_id = ? OR program_increment_tracker_id = ? OR iteration_tracker_id = ?';
 
-        return $this->getDB()->exists($sql, $tracker_data->getId(), $tracker_data->getId(), $tracker_data->getId());
+        return $this->getDB()->exists($sql, $tracker->getId(), $tracker->getId(), $tracker->getId());
     }
 
     public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool

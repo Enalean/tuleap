@@ -22,18 +22,18 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
 
-final class RetrieveTrackerFromProgramStub implements RetrieveTrackerFromProgram
+final class SearchTrackersOfProgramStub implements SearchTrackersOfProgram
 {
     /**
-     * @var ProgramTracker[]
+     * @var TrackerReference[]
      */
     private array $trackers;
 
     /**
-     * @param ProgramTracker[] $trackers
+     * @param TrackerReference[] $trackers
      */
     private function __construct(array $trackers)
     {
@@ -41,14 +41,14 @@ final class RetrieveTrackerFromProgramStub implements RetrieveTrackerFromProgram
     }
 
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      */
-    public function retrieveAllTrackersFromProgramId(ProgramForAdministrationIdentifier $program): array
+    public function searchAllTrackersOfProgram(ProgramForAdministrationIdentifier $program): array
     {
         return $this->trackers;
     }
 
-    public static function fromProgramReference(ProgramTracker ...$trackers): self
+    public static function withTrackers(TrackerReference ...$trackers): self
     {
         return new self($trackers);
     }

@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 
 final class ProgramPlannableTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,7 +45,11 @@ final class ProgramPlannableTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildAProgramIncrement(): void
     {
-        $tracker = ProgramPlannableTracker::build(RetrieveTrackerStub::buildValidTrackerWithProjectId(101), 1, $this->program);
+        $tracker = ProgramPlannableTracker::build(
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withDefaults()),
+            1,
+            $this->program
+        );
         self::assertEquals(1, $tracker->getId());
     }
 }

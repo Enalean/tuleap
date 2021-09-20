@@ -26,7 +26,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tracker_FormElementFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerFromFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -54,15 +53,16 @@ final class TrackerFromFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTheField(): void
     {
         $field   = $this->createStub(\Tracker_FormElement_Field::class);
-        $tracker = TrackerTestBuilder::aTracker()->withId(1)->withName('Tracker')->withProject(new \Project(['group_id' => 102, 'group_name' => "A project"]))->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->withName('Tracker')
+            ->withProject(new \Project(['group_id' => 102, 'group_name' => 'A project']))
+            ->build();
         $field->method('getTracker')->willReturn($tracker);
         $this->form_element_factory->method('getFieldById')->willReturn($field);
 
-        $expected_result = ProgramTrackerStub::fromTracker($tracker);
         $program_tracker = $this->retriever->fromFieldId(1);
-        self::assertEquals($expected_result->getId(), $program_tracker->getId());
-        self::assertEquals($expected_result->getTrackerName(), $program_tracker->getTrackerName());
-        self::assertEquals($expected_result->getProjectId(), $program_tracker->getProjectId());
-        self::assertEquals($expected_result->getProjectName(), $program_tracker->getProjectName());
+        self::assertSame(1, $program_tracker->getId());
+        self::assertSame('Tracker', $program_tracker->getLabel());
+        self::assertSame(102, $program_tracker->getProjectId());
+        self::assertSame('A project', $program_tracker->getProjectLabel());
     }
 }

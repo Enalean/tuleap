@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -42,7 +42,7 @@ final class VerifyUserCanSubmitStub implements VerifyUserCanSubmit
         return new self(false);
     }
 
-    public function canUserSubmitArtifact(UserIdentifier $user_identifier, ProgramTracker $program_tracker): bool
+    public function canUserSubmitArtifact(UserIdentifier $user_identifier, TrackerReference $tracker): bool
     {
         return $this->can_submit;
     }

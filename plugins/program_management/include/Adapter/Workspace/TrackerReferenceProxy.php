@@ -24,18 +24,27 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tracker;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
  * @psalm-immutable
  */
-final class TrackerProxy implements ProgramTracker
+final class TrackerReferenceProxy implements TrackerReference
 {
-    private function __construct(private int $id, private string $tracker_name, private int $project_id, private string $project_name)
-    {
+    private function __construct(
+        private int $id,
+        private string $tracker_name,
+        private int $project_id,
+        private string $project_name
+    ) {
     }
 
-    public function getTrackerName(): string
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getLabel(): string
     {
         return $this->tracker_name;
     }
@@ -45,18 +54,18 @@ final class TrackerProxy implements ProgramTracker
         return $this->project_id;
     }
 
-    public function getId(): int
+    public function getProjectLabel(): string
     {
-        return $this->id;
+        return $this->project_name;
     }
 
     public static function fromTracker(Tracker $tracker): self
     {
-        return new self($tracker->getId(), $tracker->getName(), (int) $tracker->getGroupId(), $tracker->getProject()->getPublicName());
-    }
-
-    public function getProjectName(): string
-    {
-        return $this->project_name;
+        return new self(
+            $tracker->getId(),
+            $tracker->getName(),
+            (int) $tracker->getGroupId(),
+            $tracker->getProject()->getPublicName()
+        );
     }
 }

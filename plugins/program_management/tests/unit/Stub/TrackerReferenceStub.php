@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class ProgramTrackerStub implements ProgramTracker
+final class TrackerReferenceStub implements TrackerReference
 {
     private function __construct(private int $id, private string $name, private int $project_id, private $project_name)
     {
@@ -43,7 +43,17 @@ final class ProgramTrackerStub implements ProgramTracker
 
     public static function withId(int $id): self
     {
-        return self::withValues($id, 'tracker', 101, 'A project');
+        return self::withIdAndLabel($id, 'tracker');
+    }
+
+    public static function withIdAndLabel(int $id, string $label): self
+    {
+        return self::withValues($id, $label, 101, 'A project');
+    }
+
+    public static function withProjectId(int $project_id): self
+    {
+        return self::withValues(1, 'tracker', $project_id, 'A project');
     }
 
     public static function withValues(int $id, string $name, int $project_id, string $project_name): self
@@ -51,7 +61,12 @@ final class ProgramTrackerStub implements ProgramTracker
         return new self($id, $name, $project_id, $project_name);
     }
 
-    public function getTrackerName(): string
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getLabel(): string
     {
         return $this->name;
     }
@@ -61,12 +76,7 @@ final class ProgramTrackerStub implements ProgramTracker
         return $this->project_id;
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getProjectName(): string
+    public function getProjectLabel(): string
     {
         return $this->project_name;
     }

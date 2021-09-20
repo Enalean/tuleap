@@ -51,7 +51,7 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilder
 
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $potential_tracker->getId(),
-                $potential_tracker->getTrackerName(),
+                $potential_tracker->getLabel(),
                 $selected
             );
         }

@@ -27,7 +27,7 @@ use Tracker_Semantic_StatusFactory;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 final class StatusSemanticChecker implements CheckStatus
 {
@@ -46,7 +46,7 @@ final class StatusSemanticChecker implements CheckStatus
     }
 
     public function isStatusWellConfigured(
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,
         ConfigurationErrorsCollector $configuration_errors
     ): bool {
@@ -61,7 +61,7 @@ final class StatusSemanticChecker implements CheckStatus
             return false;
         }
 
-        $trackers_in_error = $this->getProgramTrackersWithoutStatusDefined(
+        $trackers_in_error = $this->getTrackersWithoutStatusDefined(
             $source_tracker_collection
         );
 
@@ -89,9 +89,9 @@ final class StatusSemanticChecker implements CheckStatus
     }
 
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      */
-    private function getProgramTrackersWithoutStatusDefined(SourceTrackerCollection $source_tracker_collection): array
+    private function getTrackersWithoutStatusDefined(SourceTrackerCollection $source_tracker_collection): array
     {
         $trackers_ids_without_status = $this->semantic_status_dao->getTrackerIdsWithoutSemanticStatusDefined(
             $source_tracker_collection->getSourceTrackerIds()

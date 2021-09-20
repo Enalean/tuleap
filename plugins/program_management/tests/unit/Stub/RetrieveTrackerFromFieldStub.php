@@ -24,30 +24,24 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 final class RetrieveTrackerFromFieldStub implements RetrieveTrackerFromField
 {
-
-    private int $id;
-    private string $name;
-
-    public function __construct(int $id, string $name)
+    private function __construct(private TrackerReference $tracker)
     {
-        $this->id   = $id;
-        $this->name = $name;
     }
 
     /**
      * @psalm-pure
      */
-    public static function with(int $id, string $name): self
+    public static function withTracker(TrackerReference $tracker): self
     {
-        return new self($id, $name);
+        return new self($tracker);
     }
 
-    public function fromFieldId(int $field_id): ProgramTracker
+    public function fromFieldId(int $field_id): TrackerReference
     {
-        return ProgramTrackerStub::withValues($this->id, $this->name, 101, 'Project name');
+        return $this->tracker;
     }
 }

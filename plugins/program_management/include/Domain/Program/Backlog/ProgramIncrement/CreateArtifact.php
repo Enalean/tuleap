@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 interface CreateArtifact
 {
     public function create(
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         MirroredTimeboxChangesetValues $mirrored_program_increment_changeset,
         \PFUser $user,
         SubmissionDate $submission_date

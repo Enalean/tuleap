@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -61,7 +61,7 @@ final class ConfigurationErrorsGatherer
     }
 
     public function gatherConfigurationErrors(
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): void {

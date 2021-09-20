@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -39,16 +39,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 final class SourceTrackerCollection
 {
     /**
-     * @var ProgramTracker[]
+     * @param TrackerReference[] $source_trackers
      */
-    private array $source_trackers;
-
-    /**
-     * @param ProgramTracker[] $source_trackers
-     */
-    private function __construct(array $source_trackers)
+    private function __construct(private array $source_trackers)
     {
-        $this->source_trackers = $source_trackers;
     }
 
     /**
@@ -91,7 +85,7 @@ final class SourceTrackerCollection
     }
 
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      */
     public function getSourceTrackers(): array
     {
@@ -100,12 +94,11 @@ final class SourceTrackerCollection
 
     /**
      * @return int[]
-     * @psalm-mutation-free
      */
     public function getSourceTrackerIds(): array
     {
         return array_map(
-            static fn(ProgramTracker $tracker) => $tracker->getId(),
+            static fn(TrackerReference $tracker) => $tracker->getId(),
             $this->source_trackers
         );
     }

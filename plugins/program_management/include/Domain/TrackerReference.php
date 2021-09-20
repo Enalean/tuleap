@@ -25,13 +25,12 @@ namespace Tuleap\ProgramManagement\Domain;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 /**
+ * I hold a Tracker's identifier, its label and it's project's id and label
  * @psalm-immutable
  */
-interface ProgramTracker extends TrackerIdentifier
+interface TrackerReference extends TrackerIdentifier
 {
-    public function getTrackerName(): string;
-
+    public function getLabel(): string;
     public function getProjectId(): int;
-
-    public function getProjectName(): string;
+    public function getProjectLabel(): string;
 }

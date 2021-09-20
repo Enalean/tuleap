@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 interface VerifyUserCanSubmit
 {
-    public function canUserSubmitArtifact(UserIdentifier $user_identifier, ProgramTracker $program_tracker): bool;
+    public function canUserSubmitArtifact(UserIdentifier $user_identifier, TrackerReference $tracker): bool;
 }

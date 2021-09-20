@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -35,7 +35,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 final class Planning
 {
     private function __construct(
-        private ProgramTracker $planning_tracker,
+        private TrackerReference $planning_tracker,
         private int $id,
         private string $name,
         private array $backlog_tracker_ids,
@@ -48,7 +48,7 @@ final class Planning
         return $this->id;
     }
 
-    public function getPlanningTracker(): ProgramTracker
+    public function getPlanningTracker(): TrackerReference
     {
         return $this->planning_tracker;
     }
@@ -80,7 +80,7 @@ final class Planning
         );
 
         return new self(
-            TrackerProxy::fromTracker($root_planning->getPlanningTracker()),
+            TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker()),
             $root_planning->getId(),
             $root_planning->getName(),
             $root_planning->getBacklogTrackersIds(),

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
 
 /**
  * I contain a list of TrackerReference. All TrackerReferences come from the same project.
@@ -33,23 +33,16 @@ use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 final class PotentialTrackerCollection
 {
     /**
-     * @var ProgramTracker[]
+     * @param TrackerReference[] $trackers_reference
      */
-    public array $trackers_reference;
-
-    /**
-     * @param ProgramTracker[] $trackers_reference
-     */
-    private function __construct(array $trackers_reference)
+    private function __construct(public array $trackers_reference)
     {
-        $this->trackers_reference = $trackers_reference;
     }
 
     public static function fromProgram(
-        RetrieveTrackerFromProgram $trackers_retriever,
+        SearchTrackersOfProgram $trackers_searcher,
         ProgramForAdministrationIdentifier $program
     ): self {
-        $trackers_reference = $trackers_retriever->retrieveAllTrackersFromProgramId($program);
-        return new self($trackers_reference);
+        return new self($trackers_searcher->searchAllTrackersOfProgram($program));
     }
 }

@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 
 final class IterationTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -53,7 +54,7 @@ final class IterationTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration_representation = new PlanIterationChange(1, 'Iterations', 'iteration');
 
         $tracker = IterationTracker::fromPlanIterationChange(
-            RetrieveTrackerStub::buildValidTrackerWithProjectId(101),
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withDefaults()),
             $iteration_representation,
             $this->program
         );
@@ -67,7 +68,7 @@ final class IterationTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration_representation = new PlanIterationChange(1, null, null);
 
         $tracker = IterationTracker::fromPlanIterationChange(
-            RetrieveTrackerStub::buildValidTrackerWithProjectId(101),
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withDefaults()),
             $iteration_representation,
             $this->program
         );

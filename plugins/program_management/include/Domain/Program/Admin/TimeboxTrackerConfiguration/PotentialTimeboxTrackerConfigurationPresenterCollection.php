@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\TimeboxTrackerConfigurat
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -46,7 +46,7 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollection
 
     public static function fromTimeboxTracker(
         PotentialTrackerCollection $all_potential_trackers,
-        ?ProgramTracker $timebox_tracker
+        ?TrackerReference $timebox_tracker
     ): self {
         $potential_tracker_presenters = [];
 
@@ -54,7 +54,7 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollection
             $selected                       = $timebox_tracker && $potential_tracker->getId() === $timebox_tracker->getId();
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $potential_tracker->getId(),
-                $potential_tracker->getTrackerName(),
+                $potential_tracker->getLabel(),
                 $selected
             );
         }

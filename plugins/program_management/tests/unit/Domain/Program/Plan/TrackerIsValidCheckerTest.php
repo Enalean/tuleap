@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerDoesNotBelongToProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TrackerIsValidCheckerTest extends TestCase
@@ -40,14 +41,21 @@ final class TrackerIsValidCheckerTest extends TestCase
     {
         $this->expectException(PlanTrackerDoesNotBelongToProjectException::class);
 
-        TrackerIsValidChecker::checkTrackerIsValid(RetrieveTrackerStub::buildValidTrackerWithProjectId(206), 1, 101);
+        TrackerIsValidChecker::checkTrackerIsValid(
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withProjectId(206)),
+            1,
+            101
+        );
     }
 
     public function testItDoesNotThrowWhenTrackerIsValid(): void
     {
         $project_id = 101;
-
-        TrackerIsValidChecker::checkTrackerIsValid(RetrieveTrackerStub::buildValidTrackerWithProjectId($project_id), 1, $project_id);
+        TrackerIsValidChecker::checkTrackerIsValid(
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withProjectId($project_id)),
+            1,
+            $project_id
+        );
         $this->addToAssertionCount(1);
     }
 }

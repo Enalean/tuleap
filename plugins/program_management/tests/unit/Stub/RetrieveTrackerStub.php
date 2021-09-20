@@ -22,30 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 
 final class RetrieveTrackerStub implements RetrieveTracker
 {
-    private ?int $project_id;
-
-    private function __construct(?int $project_id)
+    private function __construct(private ?TrackerReference $tracker)
     {
-        $this->project_id = $project_id;
     }
 
-    public function getTrackerById(int $tracker_id): ?ProgramTracker
+    public function getTrackerById(int $tracker_id): ?TrackerReference
     {
-        if ($this->project_id === null) {
-            return null;
-        }
-
-        return ProgramTrackerStub::withValues($tracker_id, "tracker", $this->project_id, 'A project name');
+        return $this->tracker;
     }
 
-    public static function buildValidTrackerWithProjectId(int $project_id): self
+    public static function withTracker(TrackerReference $tracker): self
     {
-        return new self($project_id);
+        return new self($tracker);
     }
 
     public static function buildNullTracker(): self
