@@ -56,13 +56,22 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        unset($_SERVER['HTTP_REFERER']);
+        unset($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_SEC_FETCH_SITE'], $_SERVER['HTTP_SEC_FETCH_MODE']);
     }
 
     public function testItLetsPassWhenTokenOrAccessKeyAuthentication(): void
     {
         $this->gate_keeper->assertAccess($this->anonymous, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
+    }
+
+    public function testRequestPassesWhenComesFromTheSameOriginInAExpectedWay(): void
+    {
+        $_SERVER['HTTP_SEC_FETCH_SITE'] = 'same-origin';
+        $_SERVER['HTTP_SEC_FETCH_MODE'] = 'cors';
+
+        $this->expectNotToPerformAssertions();
+        $this->gate_keeper->assertAccess($this->user, $this->request);
     }
 
     public function testItLetPassWhenReferMatchesHost(): void

@@ -57,9 +57,26 @@ class GateKeeper
         return false;
     }
 
-    private function isRequestFromSelf(HTTPRequest $request)
+    private function isRequestFromSelf(HTTPRequest $request): bool
     {
-        return strtolower($this->getQueryHost($request)) === strtolower($this->getRefererHost());
+        $sec_fetch_site = $this->getSecFetchSite();
+        if ($sec_fetch_site === '') {
+            // We are still supporting browsers that does not send Fetch Metadata headers
+            // so we need a fallback to a check of the Referer header
+            return strtolower($this->getQueryHost($request)) === strtolower($this->getRefererHost());
+        }
+
+        return $sec_fetch_site === 'same-origin' && $this->getSecFetchMode() === 'cors';
+    }
+
+    private function getSecFetchSite(): string
+    {
+        return $_SERVER['HTTP_SEC_FETCH_SITE'] ?? '';
+    }
+
+    private function getSecFetchMode(): string
+    {
+        return $_SERVER['HTTP_SEC_FETCH_MODE'] ?? '';
     }
 
     private function getQueryHost(HTTPRequest $request)
@@ -72,6 +89,7 @@ class GateKeeper
         if (isset($_SERVER['HTTP_REFERER'])) {
             return $this->getUrlBase($_SERVER['HTTP_REFERER']);
         }
+        return '';
     }
 
     private function getUrlBase($url)
