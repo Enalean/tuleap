@@ -25,6 +25,8 @@ const emptyFunction = (): void => {
     //Do nothing
 };
 
+type HostElement = CommonmarkSyntaxHelper & HTMLElement;
+
 describe(`CommonmarkSyntaxHelper`, () => {
     let doc: Document;
     beforeEach(() => {
@@ -41,7 +43,7 @@ describe(`CommonmarkSyntaxHelper`, () => {
                 disabled: true,
                 section: null,
                 button: null,
-            } as CommonmarkSyntaxHelper & HTMLElement;
+            } as HostElement;
             const update = CommonmarkSyntaxHelper.content(host);
             update(host, target);
 
@@ -64,7 +66,7 @@ describe(`CommonmarkSyntaxHelper`, () => {
             const host = {
                 section: doc.createElement("div"),
                 button: doc.createElement("button"),
-            } as unknown as HTMLElement & CommonmarkSyntaxHelper;
+            } as unknown as HostElement;
 
             const disconnect = connect(host);
             if (typeof disconnect !== "function") {

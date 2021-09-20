@@ -31,7 +31,9 @@ export interface FloatField {
     value: AllowedValue;
 }
 
-export const onInput = (host: Element & FloatField, event: Event): void => {
+export type HostElement = FloatField & HTMLElement;
+
+export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
         return;
     }

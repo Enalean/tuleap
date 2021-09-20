@@ -22,6 +22,7 @@ import { dispatch, html } from "hybrids";
 import { cleanValue } from "./int-field-value-formatter";
 
 export type AllowedValue = number | "";
+export type HostElement = IntField & HTMLElement;
 
 export interface IntField {
     fieldId: number;
@@ -31,7 +32,7 @@ export interface IntField {
     value: AllowedValue;
 }
 
-export const onInput = (host: Element & IntField, event: Event): void => {
+export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
         return;
     }

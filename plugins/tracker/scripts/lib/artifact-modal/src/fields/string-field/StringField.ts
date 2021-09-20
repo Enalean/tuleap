@@ -27,8 +27,9 @@ export interface StringField {
     disabled: boolean;
     value: string;
 }
+export type HostElement = StringField & HTMLElement;
 
-export const onInput = (host: Element & StringField, event: Event): void => {
+export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
         return;
     }
