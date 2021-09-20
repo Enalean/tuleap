@@ -29,7 +29,9 @@ class BotDao extends DataAccessObject
      */
     public function searchBots(): array
     {
-        $sql = "SELECT * FROM plugin_botmattermost_bot";
+        $sql = "SELECT *
+                FROM plugin_botmattermost_bot
+                WHERE project_id IS NULL";
 
         return $this->getDB()->run($sql);
     }
@@ -41,7 +43,8 @@ class BotDao extends DataAccessObject
             [
                 'name'        => $bot_name,
                 'webhook_url' => $bot_webhook_url,
-                'avatar_url'  => $bot_avatar_url
+                'avatar_url'  => $bot_avatar_url,
+                'project_id'  => null
             ]
         );
     }
@@ -89,7 +92,8 @@ class BotDao extends DataAccessObject
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot
                 WHERE name = ?
-                    AND webhook_url = ?";
+                    AND webhook_url = ?
+                    AND project_id IS NULL";
 
         return $this->getDB()->row($sql, $bot_name, $bot_webhook_url);
     }

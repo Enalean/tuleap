@@ -22,7 +22,6 @@ namespace Tuleap\BotMattermost\Bot;
 
 class Bot
 {
-
     private $id;
     private $name;
     private $webhook_url;
@@ -58,10 +57,5 @@ class Bot
     public function getAvatarUrl()
     {
         return $this->avatar_url;
-    }
-
-    public function getChannelsNamesInOneRow()
-    {
-        return ''; // no more channels linked to the bot
     }
 }
