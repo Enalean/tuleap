@@ -26,10 +26,12 @@
                     <label class="control-label col-sm-2" for="select_bot">{{ label_bot_list }}</label>
                     <div class="col-sm-8">
                         <select name="bot_id" class="form-control" id="select_bot">
-                            {{# bots }}
-                                <option {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}
-                                        value="{{ getId }}">{{ getName }}</option>
-                            {{/ bots}}
+                            <optgroup label="{{# dgettext }} tuleap-botmattermost_git | System bots {{/ dgettext }}">
+                                {{# bots }}
+                                    <option {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}
+                                            value="{{ getId }}">{{ getName }}</option>
+                                {{/ bots}}
+                            </optgroup>
                         </select>
                         <p class="text-info"><i class="fa fa-info-circle"></i> {{ description }}</p>
                         <p class="text-info">{{ description_create_bot }}</p>

@@ -86,7 +86,7 @@ class Controller
 
     public function render(GitRepository $repository)
     {
-        $renderer      = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR . '/template');
+        $renderer      = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR . '/templates');
         $repository_id = $repository->getId();
         $bots          = $this->bot_factory->getBots();
 

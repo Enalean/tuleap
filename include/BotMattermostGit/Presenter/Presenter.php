@@ -74,7 +74,6 @@ class Presenter
         $this->empty_bot_list                   = dgettext('tuleap-botmattermost_git', 'No bots are defined by the system administrator. The notification configuration is not available.');
         $this->empty_channel_list               = dgettext('tuleap-botmattermost_git', 'No channel selected, the channel defined at the webhook creation will be used as default');
 
-
         $this->button_config  = dgettext('tuleap-botmattermost_git', 'Add notification');
         $this->button_confirm = dgettext('tuleap-botmattermost_git', 'Add');
         $this->button_close   = dgettext('tuleap-botmattermost_git', 'Cancel');

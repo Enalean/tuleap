@@ -99,6 +99,9 @@ msgstr "Projet :"
 msgid "Pull request submitted by %1$s on the repository"
 msgstr "Pull request proposée par %1$s sur le dépôt"
 
+msgid "System bots"
+msgstr "Robots système"
+
 msgid "The Mattermost notification has not yet been configured."
 msgstr ""
 "Aucune configuration des notifications Mattermost n'est encore en place."
