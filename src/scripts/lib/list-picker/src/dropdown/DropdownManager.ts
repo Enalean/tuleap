@@ -73,7 +73,7 @@ export class DropdownManager {
         this.dropdown_element.removeAttribute("data-test-list-picker-dropdown-open");
         this.list_picker_element.classList.remove("list-picker-with-open-dropdown");
         this.setAriaExpandedAttribute(this.dropdown_list_element, false);
-        this.field_focus_manager.applyFocusOnSelectionElement();
+        this.field_focus_manager.applyFocusOnListPicker();
 
         if (this.selection_element.hasAttribute("aria-expanded")) {
             this.setAriaExpandedAttribute(this.selection_element, false);

@@ -63,6 +63,8 @@ export async function createListPicker(
         selection_element,
         search_field_element
     );
+    field_focus_manager.init();
+
     const dropdown_manager = new DropdownManager(
         document,
         wrapper_element,
@@ -151,6 +153,7 @@ export async function createListPicker(
             event_manager.removeEventsListenersOnDocument();
             dropdown_manager.destroy();
             document.body.removeChild(dropdown_element);
+            field_focus_manager.destroy();
         },
     };
 }

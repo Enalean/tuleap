@@ -64,7 +64,7 @@ describe("dropdown-manager", () => {
         } as unknown as ScrollingManager;
 
         field_focus_manager = {
-            applyFocusOnSelectionElement: jest.fn(),
+            applyFocusOnListPicker: jest.fn(),
             applyFocusOnSearchField: jest.fn(),
         } as unknown as FieldFocusManager;
 
@@ -113,7 +113,7 @@ describe("dropdown-manager", () => {
         expect(dropdown.classList).not.toContain("list-picker-dropdown-shown");
         expect(list.getAttribute("aria-expanded")).toBe("false");
         expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
-        expect(field_focus_manager.applyFocusOnSelectionElement).toHaveBeenCalled();
+        expect(field_focus_manager.applyFocusOnListPicker).toHaveBeenCalled();
     });
 
     it("should not open the list picker if it's already open", () => {
