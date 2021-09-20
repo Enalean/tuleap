@@ -54,8 +54,14 @@ describe("download-docx", () => {
                         title: "Art title 741",
                         fields: [
                             {
+                                content_length: "short",
                                 field_name: "Field 1",
                                 field_value: "Some string",
+                            },
+                            {
+                                content_length: "long",
+                                field_name: "Field 2",
+                                field_value: "Long text content",
                             },
                         ],
                         containers: [
@@ -63,8 +69,14 @@ describe("download-docx", () => {
                                 name: "Fieldset title",
                                 fields: [
                                     {
+                                        content_length: "short",
                                         field_name: "Field 1",
                                         field_value: "Some string",
+                                    },
+                                    {
+                                        content_length: "long",
+                                        field_name: "Field 3",
+                                        field_value: "Long text content inside a fieldset",
                                     },
                                 ],
                                 containers: [],

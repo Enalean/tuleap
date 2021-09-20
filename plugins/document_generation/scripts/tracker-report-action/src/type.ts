@@ -75,10 +75,21 @@ interface DateReportCriterionAdvancedValue {
     readonly is_advanced: true;
 }
 
-export interface ArtifactFieldValue {
+interface ArtifactFieldValueContent {
     readonly field_name: string;
     readonly field_value: string;
 }
+
+interface ArtifactFieldValueShort {
+    readonly content_length: "short";
+}
+
+interface ArtifactFieldValueLong {
+    readonly content_length: "long";
+}
+
+export type ArtifactFieldValue = ArtifactFieldValueContent &
+    (ArtifactFieldValueShort | ArtifactFieldValueLong);
 
 export interface ExportDocument {
     readonly name: string;

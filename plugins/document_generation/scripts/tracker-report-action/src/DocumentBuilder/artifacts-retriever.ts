@@ -177,6 +177,7 @@ export type ArtifactReportFieldValue =
     | ArtifactReportResponseUnknownFieldValue
     | ArtifactReportResponseNumericFieldValue
     | ArtifactReportResponseStringFieldValue
+    | ArtifactReportResponseTextFieldValue
     | (ArtifactReportResponseDateFieldValue & { is_time_displayed: boolean })
     | ArtifactReportResponseComputedFieldValue;
 
@@ -184,6 +185,7 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
     | ArtifactReportResponseNumericFieldValue
     | ArtifactReportResponseStringFieldValue
+    | ArtifactReportResponseTextFieldValue
     | ArtifactReportResponseDateFieldValue
     | ArtifactReportResponseComputedFieldValue;
 
@@ -199,6 +201,14 @@ interface ArtifactReportResponseStringFieldValue {
     type: "string";
     label: string;
     value: string | null;
+}
+
+interface ArtifactReportResponseTextFieldValue {
+    field_id: number;
+    type: "text";
+    label: string;
+    value: string | null;
+    format: "text" | "html";
 }
 
 interface ArtifactReportResponseDateFieldValue {

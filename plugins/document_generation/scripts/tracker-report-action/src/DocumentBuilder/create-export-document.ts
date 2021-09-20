@@ -73,6 +73,14 @@ function formatFieldValue(
     value: ArtifactReportFieldValue,
     datetime_locale_information: DateTimeLocaleInformation
 ): ArtifactFieldValue | null {
+    if (value.type === "text" && value.format === "text") {
+        return {
+            field_name: value.label,
+            field_value: value.value ?? "",
+            content_length: "long",
+        };
+    }
+
     let artifact_field_value = "";
     if (
         value.type === "aid" ||
@@ -114,6 +122,7 @@ function formatFieldValue(
     return {
         field_name: value.label,
         field_value: artifact_field_value,
+        content_length: "short",
     };
 }
 

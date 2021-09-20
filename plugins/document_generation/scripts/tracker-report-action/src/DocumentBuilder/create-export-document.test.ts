@@ -102,6 +102,13 @@ describe("Create ArtifactValues Collection", () => {
                         value: null,
                         is_time_displayed: false,
                     },
+                    {
+                        field_id: 13,
+                        type: "text",
+                        label: "Description",
+                        value: "Some long description in art #1001",
+                        format: "text",
+                    },
                 ],
                 containers: [
                     {
@@ -193,6 +200,13 @@ describe("Create ArtifactValues Collection", () => {
                         value: null,
                         is_time_displayed: false,
                     },
+                    {
+                        field_id: 13,
+                        type: "text",
+                        label: "Description",
+                        value: "<p>Some long description in art #1002</p>",
+                        format: "html",
+                    },
                 ],
                 containers: [
                     {
@@ -239,44 +253,59 @@ describe("Create ArtifactValues Collection", () => {
                 title: "tracker_shortname #1001 - title01",
                 fields: [
                     {
+                        content_length: "short",
                         field_name: "Artifact Number",
                         field_value: "1001",
                     },
                     {
+                        content_length: "short",
                         field_name: "Title",
                         field_value: "title01",
                     },
                     {
+                        content_length: "short",
                         field_name: "Capacity",
                         field_value: "5",
                     },
                     {
+                        content_length: "short",
                         field_name: "Effort",
                         field_value: "1.5",
                     },
                     {
+                        content_length: "short",
                         field_name: "Per tracker ID",
                         field_value: "1",
                     },
                     {
+                        content_length: "short",
                         field_name: "Rank",
                         field_value: "50",
                     },
                     {
+                        content_length: "short",
                         field_name: "Computed",
                         field_value: "10",
                     },
                     {
+                        content_length: "short",
                         field_name: "Submitted On",
                         field_value: "12/28/2020 9:55:55 AM",
                     },
                     {
+                        content_length: "short",
                         field_name: "Last Update Date",
                         field_value: "7/30/2021",
                     },
                     {
+                        content_length: "short",
                         field_name: "Closed Date",
                         field_value: "",
+                    },
+                    {
+                        content_length: "long",
+                        field_name: "Description",
+                        field_value: "Some long description in art #1001",
                     },
                 ],
                 containers: [
@@ -288,6 +317,7 @@ describe("Create ArtifactValues Collection", () => {
                                 name: "Sub details",
                                 fields: [
                                     {
+                                        content_length: "short",
                                         field_name: "A detail",
                                         field_value: "Value in art #1001",
                                     },
@@ -303,42 +333,52 @@ describe("Create ArtifactValues Collection", () => {
                 title: "tracker_shortname #1002 - title02",
                 fields: [
                     {
+                        content_length: "short",
                         field_name: "Artifact Number",
                         field_value: "1002",
                     },
                     {
+                        content_length: "short",
                         field_name: "Title",
                         field_value: "title02",
                     },
                     {
+                        content_length: "short",
                         field_name: "Capacity",
                         field_value: "2",
                     },
                     {
+                        content_length: "short",
                         field_name: "Effort",
                         field_value: "2.5",
                     },
                     {
+                        content_length: "short",
                         field_name: "Per tracker ID",
                         field_value: "2",
                     },
                     {
+                        content_length: "short",
                         field_name: "Rank",
                         field_value: "51",
                     },
                     {
+                        content_length: "short",
                         field_name: "Computed",
                         field_value: "10",
                     },
                     {
+                        content_length: "short",
                         field_name: "Submitted On",
                         field_value: "12/29/2020 9:55:55 AM",
                     },
                     {
+                        content_length: "short",
                         field_name: "Last Update Date",
                         field_value: "7/29/2021",
                     },
                     {
+                        content_length: "short",
                         field_name: "Closed Date",
                         field_value: "",
                     },
@@ -352,6 +392,7 @@ describe("Create ArtifactValues Collection", () => {
                                 name: "Sub details",
                                 fields: [
                                     {
+                                        content_length: "short",
                                         field_name: "A detail",
                                         field_value: "Value in art #1002",
                                     },
