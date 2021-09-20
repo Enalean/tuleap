@@ -5,3 +5,5 @@ node_modules
 .phpunit.result.cache
 *.pot
 *.mo
+vendor
+*.po~

@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,5 +20,26 @@
 
 declare(strict_types=1);
 
-require_once(__DIR__ . '/../../include/botmattermostPlugin.php');
-require_once(__DIR__ . '/../../../../src/common/constants.php');
+namespace Tuleap\BotMattermost\Bot;
+
+use Tuleap\BotMattermost\Exception\BotCannotBeUsedInProjectException;
+
+class BotValidityChecker
+{
+    /**
+     * @throws BotCannotBeUsedInProjectException
+     */
+    public function checkBotCanBeUsedInProject(Bot $bot, int $project_id): void
+    {
+        $bot_project_id = $bot->getProjectId();
+        if ($bot_project_id === null) {
+            return;
+        }
+
+        if ($bot_project_id === $project_id) {
+            return;
+        }
+
+        throw new BotCannotBeUsedInProjectException($bot_project_id, $project_id);
+    }
+}

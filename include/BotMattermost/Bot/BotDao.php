@@ -25,15 +25,27 @@ use Tuleap\DB\DataAccessObject;
 class BotDao extends DataAccessObject
 {
     /**
-     * @psalm-return list<array{id:int, name:string, webhook_url:string, avatar_url:string}>
+     * @psalm-return list<array{id:int, name:string, webhook_url:string, avatar_url:string, project_id:null}>
      */
-    public function searchBots(): array
+    public function searchSystemBots(): array
     {
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot
                 WHERE project_id IS NULL";
 
         return $this->getDB()->run($sql);
+    }
+
+    /**
+     * @psalm-return list<array{id:int, name:string, webhook_url:string, avatar_url:string, project_id:int}>
+     */
+    public function searchProjectBots(int $project_id): array
+    {
+        $sql = "SELECT *
+                FROM plugin_botmattermost_bot
+                WHERE project_id = ?";
+
+        return $this->getDB()->run($sql, $project_id);
     }
 
     public function addBot(string $bot_name, string $bot_webhook_url, string $bot_avatar_url): int

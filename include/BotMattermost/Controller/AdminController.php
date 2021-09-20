@@ -66,7 +66,7 @@ class AdminController
     public function displayIndex(BaseLayout $response)
     {
         try {
-            $admin_presenter     = new AdminPresenter($this->csrf, $this->bot_factory->getBots());
+            $admin_presenter     = new AdminPresenter($this->csrf, $this->bot_factory->getSystemBots());
             $admin_page_renderer = new AdminPageRenderer();
             $admin_page_renderer->renderAPresenter(
                 $admin_presenter->title,

@@ -70,7 +70,7 @@ final class AdminControllerTest extends TestCase
 
     public function testDeleteBotProcessBotDeletedEvent(): void
     {
-        $bot = new Bot(1, 'bot', 'webhook_url', '');
+        $bot = new Bot(1, 'bot', 'webhook_url', '', null);
 
         $this->csrf->expects(self::once())->method('check')->willReturn(true);
         $this->http_request->expects(self::once())->method('get')->with('bot_id')->willReturn(1);

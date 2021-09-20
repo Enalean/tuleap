@@ -59,7 +59,8 @@ class SenderTest extends TestCase
             1,
             'Robot',
             'https://example.com/hook',
-            'https://example.com/avatar'
+            'https://example.com/avatar',
+            null
         );
 
         $this->botMattermost_client

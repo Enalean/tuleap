@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\BotMattermost\Exception;
 
-require_once(__DIR__ . '/../../include/botmattermostPlugin.php');
-require_once(__DIR__ . '/../../../../src/common/constants.php');
+class BotCannotBeUsedInProjectException extends \RuntimeException
+{
+    public function __construct(int $bot_id, int $project_id)
+    {
+        parent::__construct(
+            sprintf(
+                dgettext('tuleap-botmattermost', 'The bot #%d cannot be used in project #%d'),
+                $bot_id,
+                $project_id
+            )
+        );
+    }
+}

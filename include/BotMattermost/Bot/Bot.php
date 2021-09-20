@@ -22,40 +22,48 @@ namespace Tuleap\BotMattermost\Bot;
 
 class Bot
 {
-    private $id;
-    private $name;
-    private $webhook_url;
-    private $avatar_url;
+    private int $id;
+    private string $name;
+    private string $webhook_url;
+    private string $avatar_url;
+    private ?int $project_id;
 
     public function __construct(
-        $id,
-        $name,
-        $webhook_url,
-        $avatar_url
+        int $id,
+        string $name,
+        string $webhook_url,
+        string $avatar_url,
+        ?int $project_id
     ) {
         $this->id          = $id;
         $this->name        = $name;
         $this->webhook_url = $webhook_url;
         $this->avatar_url  = $avatar_url;
+        $this->project_id  = $project_id;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getWebhookUrl()
+    public function getWebhookUrl(): string
     {
         return $this->webhook_url;
     }
 
-    public function getAvatarUrl()
+    public function getAvatarUrl(): string
     {
         return $this->avatar_url;
+    }
+
+    public function getProjectId(): ?int
+    {
+        return $this->project_id;
     }
 }

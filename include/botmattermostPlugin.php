@@ -24,12 +24,13 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Controller\AdminController;
+use Tuleap\BotMattermost\Router;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once 'constants.php';
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class BotMattermostPlugin extends Plugin
 {

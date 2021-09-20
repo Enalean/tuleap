@@ -23,7 +23,6 @@ namespace Tuleap\BotMattermost\SenderServices;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Tuleap\BotMattermost\Bot\Bot;
-use Tuleap\BotMattermostGit\SenderServices\Attachment;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class EncoderMessageTest extends TestCase
@@ -39,7 +38,8 @@ final class EncoderMessageTest extends TestCase
             1,
             'Robot',
             'https://example.com/hook',
-            'https://example.com/avatar'
+            'https://example.com/avatar',
+            null
         );
     }
 

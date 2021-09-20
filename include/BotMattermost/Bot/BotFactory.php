@@ -59,7 +59,8 @@ class BotFactory
             $id,
             $bot_name,
             $bot_webhook_url,
-            $bot_avatar_url
+            $bot_avatar_url,
+            null
         );
     }
 
@@ -91,23 +92,25 @@ class BotFactory
     /**
      * @return Bot[]
      */
-    public function getBots()
+    public function getSystemBots(): array
     {
-        $dar = $this->dao->searchBots();
+        $dar = $this->dao->searchSystemBots();
         if ($dar === false) {
             throw new BotNotFoundException();
         }
-        $bots = [];
-        foreach ($dar as $row) {
-            $bots[] = new Bot(
-                $row['id'],
-                $row['name'],
-                $row['webhook_url'],
-                $row['avatar_url']
-            );
-        }
+        return $this->buildBotsFromDAR($dar);
+    }
 
-        return $bots;
+    /**
+     * @return Bot[]
+     */
+    public function getProjectBots(int $project_id): array
+    {
+        $dar = $this->dao->searchProjectBots($project_id);
+        if ($dar === false) {
+            throw new BotNotFoundException();
+        }
+        return $this->buildBotsFromDAR($dar);
     }
 
     public function doesBotAlreadyExist($name, $webhook_url)
@@ -115,7 +118,7 @@ class BotFactory
         return $this->dao->searchBotByNameAndByWebhookUrl($name, $webhook_url);
     }
 
-    public function getBotById($bot_id)
+    public function getBotById($bot_id): Bot
     {
         $row = $this->dao->searchBotById($bot_id);
         if ($row === null || $row === false) {
@@ -126,7 +129,27 @@ class BotFactory
             $row['id'],
             $row['name'],
             $row['webhook_url'],
-            $row['avatar_url']
+            $row['avatar_url'],
+            $row['project_id']
         );
+    }
+
+    /**
+     * @return Bot[]
+     */
+    private function buildBotsFromDAR(array $dar): array
+    {
+        $bots = [];
+        foreach ($dar as $row) {
+            $bots[] = new Bot(
+                $row['id'],
+                $row['name'],
+                $row['webhook_url'],
+                $row['avatar_url'],
+                $row['project_id']
+            );
+        }
+
+        return $bots;
     }
 }

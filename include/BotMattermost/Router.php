@@ -17,9 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Tuleap\BotMattermost;
 
+use HTTPRequest;
+use PFUser;
+use Feedback;
 use Tuleap\BotMattermost\Controller\AdminController;
 use Tuleap\Request\DispatchableWithRequest;
+
 
 class Router implements DispatchableWithRequest
 {

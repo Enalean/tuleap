@@ -118,6 +118,10 @@ msgstr "Aucun contenu de message à envoyer"
 msgid "No results"
 msgstr "Aucun résultat"
 
+#, fuzzy, php-format
+msgid "The bot #%d cannot be used in project #%d"
+msgstr "Le robot #%d n'est pas lié au projet #%d"
+
 msgid ""
 "The channel handle is display in its URL<br>example: https://example.com/"
 "myGroup/channels/mychannel<br>handle: mychannel"
