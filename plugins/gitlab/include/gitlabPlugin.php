@@ -90,7 +90,6 @@ use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Mail\MailFilter;
@@ -241,7 +240,6 @@ class gitlabPlugin extends Plugin
                         new MailLogger()
                     ),
                 ),
-                new InstanceBaseURLBuilder(),
                 new IntegrationApiTokenDao(),
                 $logger,
             ),
@@ -251,7 +249,7 @@ class gitlabPlugin extends Plugin
             $comment_sender,
             new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
             $logger,
-            new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+            new BotCommentReferencePresenterBuilder(),
             TemplateRendererFactory::build(),
         );
 
@@ -319,7 +317,7 @@ class gitlabPlugin extends Plugin
                         $comment_sender,
                         new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         $logger,
-                        new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+                        new BotCommentReferencePresenterBuilder(),
                         TemplateRendererFactory::build()
                     ),
                     new PreviouslySavedReferencesRetriever(
@@ -405,7 +403,6 @@ class gitlabPlugin extends Plugin
                         new MailLogger()
                     ),
                 ),
-                new InstanceBaseURLBuilder(),
                 new IntegrationApiTokenDao(),
                 $logger,
             ),
@@ -415,7 +412,7 @@ class gitlabPlugin extends Plugin
             $comment_sender,
             new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
             $logger,
-            new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+            new BotCommentReferencePresenterBuilder(),
             TemplateRendererFactory::build(),
         );
 
@@ -483,7 +480,7 @@ class gitlabPlugin extends Plugin
                         $comment_sender,
                         new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         $logger,
-                        new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+                        new BotCommentReferencePresenterBuilder(),
                         TemplateRendererFactory::build()
                     ),
                     new PreviouslySavedReferencesRetriever(

@@ -71,7 +71,6 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\REST\Header;
 use UserManager;
 
@@ -165,7 +164,6 @@ final class GitlabRepositoryResource
                         BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
                     ),
                     $gitlab_api_client,
-                    new InstanceBaseURLBuilder(),
                     BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
                 ),
                 new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), new KeyFactory())
@@ -395,7 +393,6 @@ final class GitlabRepositoryResource
                         BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
                     ),
                     $gitlab_api_client,
-                    new InstanceBaseURLBuilder(),
                     $logger,
                 ),
                 $logger,
@@ -434,7 +431,6 @@ final class GitlabRepositoryResource
                         BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
                     ),
                     $gitlab_api_client,
-                    new InstanceBaseURLBuilder(),
                     $logger,
                 )
             );

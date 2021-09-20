@@ -18,7 +18,6 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\ProjectQuotaPresenter;
 
@@ -40,7 +39,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 $csrf = new CSRFSynchronizerToken('project_quota.php');
 
 $request = HTTPRequest::instance();
-$pqHtml  = new ProjectQuotaHtml(new InstanceBaseURLBuilder(), Codendi_HTMLPurifier::instance());
+$pqHtml  = new ProjectQuotaHtml(Codendi_HTMLPurifier::instance());
 $pqHtml->HandleRequest($request);
 
 $project_quota_manager = new ProjectQuotaManager();

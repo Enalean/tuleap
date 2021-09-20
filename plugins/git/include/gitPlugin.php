@@ -2039,7 +2039,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     private function getGitRepositoryUrlManager()
     {
-        return new Git_GitRepositoryUrlManager($this, new \Tuleap\InstanceBaseURLBuilder());
+        return new Git_GitRepositoryUrlManager($this);
     }
 
     /**

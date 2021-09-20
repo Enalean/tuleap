@@ -26,15 +26,17 @@ use Notification;
 use PFUser;
 use Project;
 use Psr\Log\LoggerInterface;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     public function testItDoesNothingIfEmailIsAlreadySent(): void
     {
         $integration = new GitlabRepositoryIntegration(
@@ -62,7 +64,6 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $notifier = new InvalidCredentialsNotifier(
             $mail_builder,
-            new InstanceBaseURLBuilder(),
             $dao,
             $this->createMock(LoggerInterface::class),
         );
@@ -100,7 +101,6 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $notifier = new InvalidCredentialsNotifier(
             $mail_builder,
-            new InstanceBaseURLBuilder(),
             $dao,
             $this->createMock(LoggerInterface::class),
         );
@@ -166,12 +166,10 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('info')
             ->with('Notification has been sent to project administrators to warn them that the token appears to be invalid');
 
-        $instance_base_url = $this->createMock(InstanceBaseURLBuilder::class);
-        $instance_base_url->method('build')->willReturn('https://tuleap.example.com');
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
 
         $notifier = new InvalidCredentialsNotifier(
             $mail_builder,
-            $instance_base_url,
             $dao,
             $logger
         );

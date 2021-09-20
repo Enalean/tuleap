@@ -128,7 +128,7 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
 
         $git_plugin = \Mockery::mock(GitPlugin::class);
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns(false);
-        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->mirror_data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
         $this->mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns([]);

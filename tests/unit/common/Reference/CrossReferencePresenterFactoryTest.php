@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ForgeConfigSandbox;
 
 class CrossReferencePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferencesDao
@@ -42,11 +43,9 @@ class CrossReferencePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao = \Mockery::mock(CrossReferencesDao::class);
 
-        $url_builder = \Mockery::mock(InstanceBaseURLBuilder::class)
-            ->shouldReceive(['build' => 'https://example.com'])
-            ->getMock();
+        \ForgeConfig::set('sys_default_domain', 'example.com');
 
-        $this->factory = new CrossReferencePresenterFactory($this->dao, $url_builder);
+        $this->factory = new CrossReferencePresenterFactory($this->dao);
     }
 
     public function testGetTargetsOfEntity()

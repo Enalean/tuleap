@@ -41,7 +41,7 @@ class GitBackendTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $git_plugin = \Mockery::mock(GitPlugin::class);
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns();
-        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
     }
 
     protected function tearDown(): void

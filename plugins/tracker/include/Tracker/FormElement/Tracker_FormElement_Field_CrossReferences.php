@@ -24,7 +24,6 @@ use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Forum\ForumDao;
 use Tuleap\Forum\ForumRetriever;
 use Tuleap\Forum\MessageRetriever;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\News\NewsDao;
 use Tuleap\News\NewsRetriever;
@@ -356,7 +355,6 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 ReferenceManager::instance(),
                 new CrossReferencePresenterFactory(
                     new CrossReferencesDao(),
-                    new InstanceBaseURLBuilder()
                 ),
                 ProjectManager::instance(),
                 new ProjectAccessChecker(

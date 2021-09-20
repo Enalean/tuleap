@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\ServerHostname;
 
 class CrossReferencePresenterFactory
 {
@@ -30,15 +30,10 @@ class CrossReferencePresenterFactory
      * @var CrossReferencesDao
      */
     private $dao;
-    /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $intance_url_builder;
 
-    public function __construct(CrossReferencesDao $dao, InstanceBaseURLBuilder $intance_url_builder)
+    public function __construct(CrossReferencesDao $dao)
     {
-        $this->dao                 = $dao;
-        $this->intance_url_builder = $intance_url_builder;
+        $this->dao = $dao;
     }
 
     /**
@@ -100,7 +95,7 @@ class CrossReferencePresenterFactory
             $parameters['group_id'] = $project_id;
         }
 
-        return $this->intance_url_builder->build() . '/goto?' . http_build_query($parameters);
+        return ServerHostname::HTTPSUrl() . '/goto?' . http_build_query($parameters);
     }
 
     private function getDeleteUrl(array $row): string

@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\ProjectsOverQuotaPresenter;
 
@@ -42,23 +41,18 @@ class ProjectQuotaHtml
     /** @var UserManager */
     private $user_manager;
     /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $instance_url_builder;
-    /**
      * @var Codendi_HTMLPurifier
      */
     private $html_purifier;
 
-    public function __construct(InstanceBaseURLBuilder $instance_url_builder, Codendi_HTMLPurifier $html_purifier)
+    public function __construct(Codendi_HTMLPurifier $html_purifier)
     {
-        $this->dao                  = new Statistics_ProjectQuotaDao();
-        $this->projectManager       = ProjectManager::instance();
-        $this->projectQuotaManager  = new ProjectQuotaManager();
-        $this->csrf                 = new CSRFSynchronizerToken('project_quota.php');
-        $this->user_manager         = UserManager::instance();
-        $this->instance_url_builder = $instance_url_builder;
-        $this->html_purifier        = $html_purifier;
+        $this->dao                 = new Statistics_ProjectQuotaDao();
+        $this->projectManager      = ProjectManager::instance();
+        $this->projectQuotaManager = new ProjectQuotaManager();
+        $this->csrf                = new CSRFSynchronizerToken('project_quota.php');
+        $this->user_manager        = UserManager::instance();
+        $this->html_purifier       = $html_purifier;
     }
 
     /**
@@ -307,7 +301,7 @@ class ProjectQuotaHtml
 
         foreach ($exceeding_projects as $project) {
             $new_values['subject_content'] = sprintf(dgettext('tuleap-statistics', '[Disk quota] [Warning] Project %1$s is exceeding allowed disk quota'), $project['project_name']);
-            $new_values['body_content']    = sprintf(dgettext('tuleap-statistics', 'Dear project administrator,<br><br>The size of the project <a href="%1$s">%2$s</a> is: "%3$s".<br>We advise you to delete unneeded data in order to decrease the project size growth. <br>(please note that deleting items from a subversion repository has no effect on the disk size, on the contrary, it may increase your server repository size).<br>We advise you to avoid storing binaries into your Subversion repository.<br>For Documents, you can remove oldest versions in order to decrease the project\'s size.<br><br>--<br>Please note that without any actions from you, for the safety of the entire platform, your project may be suspended until we find a solution.'), $this->html_purifier->purify($this->instance_url_builder->build() . '/projects/' . urlencode($project['project_unix_name'])), $this->html_purifier->purify($project['project_name']), $this->html_purifier->purify($project['current_disk_space']));
+            $new_values['body_content']    = sprintf(dgettext('tuleap-statistics', 'Dear project administrator,<br><br>The size of the project <a href="%1$s">%2$s</a> is: "%3$s".<br>We advise you to delete unneeded data in order to decrease the project size growth. <br>(please note that deleting items from a subversion repository has no effect on the disk size, on the contrary, it may increase your server repository size).<br>We advise you to avoid storing binaries into your Subversion repository.<br>For Documents, you can remove oldest versions in order to decrease the project\'s size.<br><br>--<br>Please note that without any actions from you, for the safety of the entire platform, your project may be suspended until we find a solution.'), $this->html_purifier->purify(\Tuleap\ServerHostname::HTTPSUrl() . '/projects/' . urlencode($project['project_unix_name'])), $this->html_purifier->purify($project['project_name']), $this->html_purifier->purify($project['current_disk_space']));
 
             $enhanced_projects[] = array_merge($project, $new_values);
         }

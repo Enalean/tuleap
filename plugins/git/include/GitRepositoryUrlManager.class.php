@@ -19,21 +19,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\InstanceBaseURLBuilder;
 
 class Git_GitRepositoryUrlManager
 {
     /** @var GitPlugin  */
     private $git_plugin;
-    /**
-     * @var InstanceBaseURLBuilder
-     */
-    private $instance_base_url_builder;
 
-    public function __construct(GitPlugin $git_plugin, InstanceBaseURLBuilder $instance_base_url_builder)
+    public function __construct(GitPlugin $git_plugin)
     {
-        $this->git_plugin                = $git_plugin;
-        $this->instance_base_url_builder = $instance_base_url_builder;
+        $this->git_plugin = $git_plugin;
     }
 
     /**
@@ -75,6 +69,6 @@ class Git_GitRepositoryUrlManager
 
     public function getAbsoluteCommitURL(GitRepository $repository, string $commit_reference): string
     {
-        return $this->instance_base_url_builder->build() . $this->getCommitURL($repository, $commit_reference);
+        return \Tuleap\ServerHostname::HTTPSUrl() . $this->getCommitURL($repository, $commit_reference);
     }
 }

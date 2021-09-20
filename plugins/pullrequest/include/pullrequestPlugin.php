@@ -513,7 +513,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
             UserManager::instance(),
             new UserHelper(),
-            new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder()),
+            new Git_GitRepositoryUrlManager($git_plugin),
             $this->getTemplateRenderer()
         );
 
@@ -756,8 +756,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     private function getHTMLBuilder(): HTMLURLBuilder
     {
         return new HTMLURLBuilder(
-            $this->getRepositoryFactory(),
-            new \Tuleap\InstanceBaseURLBuilder()
+            $this->getRepositoryFactory()
         );
     }
 
