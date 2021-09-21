@@ -21,11 +21,12 @@ import {
     isThereAtLeastOneFileField,
     getAllFileFields,
     getFirstFileField,
-} from "./file-field-detector.js";
-import * as disabled_field_detector from "../disabled-field-detector.js";
+} from "./file-field-detector";
+import * as disabled_field_detector from "../disabled-field-detector";
+import type { Field } from "../../types";
 
 describe("file-field-detector", () => {
-    let isDisabled;
+    let isDisabled: jest.SpyInstance;
     beforeEach(() => {
         isDisabled = jest.spyOn(disabled_field_detector, "isDisabled");
     });
@@ -36,21 +37,21 @@ describe("file-field-detector", () => {
                 { field_id: 95, type: "file" },
                 { field_id: 72, type: "int" },
                 { field_id: 64, type: "file" },
-            ];
+            ] as Field[];
             isDisabled.mockReturnValue(false);
 
             expect(isThereAtLeastOneFileField(tracker_fields)).toBe(true);
         });
 
         it(`Given a tracker with a disabled file field, then it returns false`, () => {
-            const tracker_fields = [{ field_id: 95, type: "file" }];
+            const tracker_fields = [{ field_id: 95, type: "file" }] as Field[];
             isDisabled.mockReturnValue(true);
 
             expect(isThereAtLeastOneFileField(tracker_fields)).toBe(false);
         });
 
         it("Given a tracker with no file field, then it will return false", () => {
-            const tracker_fields = [{ field_id: 62, type: "int" }];
+            const tracker_fields = [{ field_id: 62, type: "int" }] as Field[];
             isDisabled.mockReturnValue(false);
 
             expect(isThereAtLeastOneFileField(tracker_fields)).toBe(false);
@@ -64,7 +65,7 @@ describe("file-field-detector", () => {
                 { field_id: 62, type: "file" },
                 { field_id: 43, type: "string" },
                 { field_id: 38, type: "file" },
-            ];
+            ] as Field[];
             isDisabled.mockReturnValue(false);
 
             const result = getAllFileFields(tracker_fields);
@@ -80,7 +81,7 @@ describe("file-field-detector", () => {
             then it will return only the enabled field`, () => {
             const enabled_field = { field_id: 62, type: "file" };
             const disabled_field = { field_id: 38, type: "file " };
-            const tracker_fields = [enabled_field, disabled_field];
+            const tracker_fields = [enabled_field, disabled_field] as Field[];
             isDisabled.mockImplementation((field) => field === disabled_field);
 
             const result = getAllFileFields(tracker_fields);
@@ -96,19 +97,19 @@ describe("file-field-detector", () => {
                 { field_id: 85, type: "file" },
                 { field_id: 96, type: "float" },
                 { field_id: 45, type: "file" },
-            ];
+            ] as Field[];
             isDisabled.mockReturnValue(false);
 
             const result = getFirstFileField(tracker_fields);
 
-            expect(result.type).toEqual("file");
+            expect(result?.type).toEqual("file");
         });
 
         it(`Given a tracker with only one enabled file field,
             then it will return it`, () => {
             const enabled_field = { field_id: 62, type: "file" };
             const disabled_field = { field_id: 38, type: "file " };
-            const tracker_fields = [enabled_field, disabled_field];
+            const tracker_fields = [enabled_field, disabled_field] as Field[];
             isDisabled.mockImplementation((field) => field === disabled_field);
 
             const result = getFirstFileField(tracker_fields);
@@ -119,7 +120,7 @@ describe("file-field-detector", () => {
         it(`Given a tracker with no enabled file field,
             then it will return null`, () => {
             const disabled_field = { field_id: 64, type: "file" };
-            const tracker_fields = [disabled_field];
+            const tracker_fields = [disabled_field] as Field[];
             isDisabled.mockImplementation((field) => field === disabled_field);
 
             const result = getFirstFileField(tracker_fields);

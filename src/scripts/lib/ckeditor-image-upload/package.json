@@ -7,6 +7,7 @@
   "version": "0.0.0",
   "module": "dist/ckeditor-image-upload.es.js",
   "main": "dist/ckeditor-image-upload.umd.js",
+  "types": "src/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/ckeditor-image-upload.es.js",
@@ -17,7 +18,9 @@
     "@tuleap/tlp-fetch": "file:../tlp-fetch",
     "tus-js-client": "^2.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/ckeditor": "^4.9.10"
+  },
   "config": {
     "bin": "../../../../node_modules/.bin"
   },

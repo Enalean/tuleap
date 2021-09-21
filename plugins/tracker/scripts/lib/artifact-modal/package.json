@@ -30,8 +30,7 @@
     "readable-stream": "^2.3.6",
     "sprintf-js": "^1.1.2",
     "vue": "^2.6.14",
-    "vue-dompurify-html": "^2.3.0",
-    "vuex": "^3.6.2"
+    "vue-dompurify-html": "^2.3.0"
   },
   "peerDependencies": {
     "angular": "^1.8.0",
@@ -39,6 +38,7 @@
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
+    "@types/ckeditor": "^4.9.10",
     "@vue/test-utils": "^1.2.2",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2",

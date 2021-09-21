@@ -33,7 +33,7 @@ import "ngVue/build/plugins.js";
 import Vue from "vue";
 import TextField from "./fields/text-field/TextField.vue";
 import FollowupEditor from "./followups/FollowupEditor.vue";
-import NgVueConfig from "./ng-vue-config.js";
+import "./ng-vue-config.js";
 
 import "../../../../../../src/scripts/tuleap/custom-elements/relative-date";
 import { STRUCTURAL_FIELDS } from "../../../constants/fields-constants.js";
@@ -64,6 +64,7 @@ import { CommonmarkSyntaxHelper } from "./common/CommonmarkSyntaxHelper";
 import { CommonmarkPreviewButton } from "./common/CommonmarkPreviewButton";
 import { RadioButtonsField } from "./fields/radio-buttons-field/RadioButtonsField";
 import { FormatSelector } from "./common/FormatSelector";
+import { RichTextEditor } from "./common/RichTextEditor";
 
 define(
     IntField,
@@ -72,7 +73,8 @@ define(
     CommonmarkSyntaxHelper,
     CommonmarkPreviewButton,
     RadioButtonsField,
-    FormatSelector
+    FormatSelector,
+    RichTextEditor
 );
 
 export default angular
@@ -96,7 +98,6 @@ export default angular
             }
         },
     ])
-    .config(NgVueConfig)
     .constant("TuleapArtifactModalAwkwardCreationFields", AwkwardCreationFields)
     .constant("TuleapArtifactModalStructuralFields", STRUCTURAL_FIELDS)
     .controller("TuleapArtifactModalController", ArtifactModalController)

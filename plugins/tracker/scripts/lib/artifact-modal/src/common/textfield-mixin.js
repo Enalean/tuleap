@@ -46,8 +46,8 @@ export const textfield_mixin = {
         },
     },
     methods: {
-        reemit(...args) {
-            this.$emit("upload-image", ...args);
+        onUploadImage(event) {
+            this.$emit("upload-image", event.detail.field_id, event.detail.image);
         },
         async interpretCommonMark(content) {
             this.is_in_error = false;

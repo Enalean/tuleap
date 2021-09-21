@@ -28,17 +28,20 @@
             v-bind:isPreviewLoading.prop="is_preview_loading"
             v-on:interpret-content-event="togglePreview"
         ></tuleap-artifact-modal-format-selector>
-        <rich-text-editor
-            id="followup_comment"
-            v-bind:format="format"
-            v-bind:disabled="is_preview_loading"
-            v-bind:required="false"
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <tuleap-artifact-modal-rich-text-editor
+            v-bind:identifier.prop="'followup_comment'"
+            v-bind:format.prop="format"
+            v-bind:disabled.prop="is_preview_loading"
+            v-bind:required.prop="false"
             rows="3"
-            v-model="content"
-            v-on:upload-image="reemit"
+            v-bind:contentValue.prop="content"
+            v-on:content-change="onContentChange"
+            v-on:upload-image="onUploadImage"
             v-on:format-change="onFormatChange"
             v-show="!is_in_preview_mode && !is_in_error"
-        />
+            data-test="text-editor"
+        ></tuleap-artifact-modal-rich-text-editor>
         <div
             v-if="is_in_preview_mode && !is_in_error"
             v-dompurify-html="interpreted_commonmark"
@@ -50,13 +53,11 @@
     </div>
 </template>
 <script>
-import RichTextEditor from "../common/RichTextEditor.vue";
 import { getCommentLabel } from "../gettext-catalog";
 import { textfield_mixin } from "../common/textfield-mixin.js";
 
 export default {
     name: "FollowupEditor",
-    components: { RichTextEditor },
     mixins: [textfield_mixin],
     computed: {
         label() {
@@ -66,14 +67,14 @@ export default {
             get() {
                 return this.value.body;
             },
-            set(new_content) {
-                this.$emit("input", { format: this.format, body: new_content });
-            },
         },
     },
     methods: {
-        onFormatChange(new_format, new_content) {
-            this.$emit("input", { format: new_format, body: new_content });
+        onContentChange(event) {
+            this.$emit("input", { format: this.format, body: event.detail.content });
+        },
+        onFormatChange(event) {
+            this.$emit("input", { format: event.detail.format, body: event.detail.content });
         },
         togglePreview() {
             this.interpretCommonMark(this.content);

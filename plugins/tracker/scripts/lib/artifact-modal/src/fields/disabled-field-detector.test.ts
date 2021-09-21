@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isDisabled } from "./disabled-field-detector.js";
-import * as modal_creation_mode_state from "../modal-creation-mode-state.js";
+import { isDisabled } from "./disabled-field-detector";
+import * as modal_creation_mode_state from "../modal-creation-mode-state";
+import type { Field } from "../types";
 
 describe(`disabled-field-detector`, () => {
     describe(`isDisabled()`, () => {
@@ -28,12 +29,12 @@ describe(`disabled-field-detector`, () => {
             });
 
             it(`when the field has the "create" permission, then it returns false`, () => {
-                const field = { permissions: ["read", "create"] };
+                const field = { permissions: ["read", "create"] } as Field;
                 expect(isDisabled(field)).toBe(false);
             });
 
             it(`when the field does not have the "create" permission, then it returns true`, () => {
-                const field = { permissions: ["read", "update"] };
+                const field = { permissions: ["read", "update"] } as Field;
                 expect(isDisabled(field)).toBe(true);
             });
         });
@@ -44,12 +45,12 @@ describe(`disabled-field-detector`, () => {
             });
 
             it(`when the field has the "update" permission, then it returns false`, () => {
-                const field = { permissions: ["read", "update"] };
+                const field = { permissions: ["read", "update"] } as Field;
                 expect(isDisabled(field)).toBe(false);
             });
 
             it(`when the field does not have the "update" permission, then it returns true`, () => {
-                const field = { permissions: ["read", "create"] };
+                const field = { permissions: ["read", "create"] } as Field;
                 expect(isDisabled(field)).toBe(true);
             });
         });

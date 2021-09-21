@@ -20,7 +20,7 @@
 import { loadTooltips } from "@tuleap/tooltip";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
-import { isDisabled } from "./fields/disabled-field-detector.js";
+import { isDisabled } from "./fields/disabled-field-detector";
 import {
     createArtifact,
     editArtifact,
@@ -30,11 +30,11 @@ import {
 import {
     getAllFileFields,
     isThereAtLeastOneFileField,
-} from "./fields/file-field/file-field-detector.js";
+} from "./fields/file-field/file-field-detector";
 import {
     isUploadingInCKEditor,
     setIsNotUploadingInCKEditor,
-} from "./fields/file-field/is-uploading-in-ckeditor-state.js";
+} from "./fields/file-field/is-uploading-in-ckeditor-state";
 import { uploadAllTemporaryFiles } from "./fields/file-field/file-uploader.js";
 import {
     relativeDatePlacement,

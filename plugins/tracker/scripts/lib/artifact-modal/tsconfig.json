@@ -2,7 +2,7 @@
     "extends": "../../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
         "lib": ["ES2015", "ES2017", "ES2020.Intl", "DOM", "DOM.Iterable"],
-        "types": ["jest"],
+        "types": ["ckeditor", "jest"],
         "baseUrl": ".",
         "paths": {
             "tlp": ["../../../../../src/themes/tlp/src/js/index.ts"]
