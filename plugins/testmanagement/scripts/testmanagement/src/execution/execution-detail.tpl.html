@@ -244,21 +244,32 @@
                     ng-bind-html="execution.previous_result.result"
                 >
                 </div>
-                <div
-                    ng-if="execution.attachments.length > 0"
-                    class="current-test-comment-attachments"
-                >
-                    <a
-                        ng-repeat="file in execution.attachments track by file.id"
-                        ng-href="{{ file.html_url }}"
-                        class="current-test-comment-attachment"
-                        title="{{ file.filename }}"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        <i class="fas fa-paperclip" aria-hidden="true"></i>
-                        <span class="current-test-comment-attachment-label">{{ file.filename }}</span>
-                    </a>
+                <div class="current-test-comment-attachements-container">
+                    <div ng-if="execution.attachments.length > 0" class="current-test-comment-attachments">
+                        <a
+                            ng-repeat="file in execution.attachments track by file.id"
+                            ng-href="{{ file.html_url }}"
+                            class="current-test-comment-attachment"
+                            title="{{ file.filename }}"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <i class="fas fa-paperclip" aria-hidden="true"></i>
+                            <span class="current-test-comment-attachment-label">{{ file.filename }}</span>
+                        </a>
+                    </div>
+                    <div class="current-test-comment-attachements-controls" ng-class="{'current-test-comment-attachements-controls-no-placeholder': execution.attachments.length > 0}">
+                        <p ng-if="execution.attachments.length === 0" class="test-files-empty-placeholder" translate>
+                            Select files to attach or drop them in the text area...
+                        </p>
+                        <label
+                            for="test-files-upload-button"
+                            class="test-files-upload-button-label tlp-button-secondary tlp-button-small tlp-button-outline disabled"
+                        >
+                            <input id="test-files-upload-button" type="file" disabled>
+                            <span translate>Attach files...</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </section>

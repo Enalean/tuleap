@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "1 test will be added"
@@ -52,6 +52,9 @@ msgstr ""
 
 msgid "An error occurred while loading the tests. {{ error }}"
 msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
+
+msgid "Attach files..."
+msgstr "Joindre des fichiers..."
 
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
@@ -291,6 +294,11 @@ msgstr "Enregistrer les changements"
 
 msgid "Save comment"
 msgstr "Sauvegarder le commentaire"
+
+msgid "Select files to attach or drop them in the text area..."
+msgstr ""
+"Sélectionnez des fichier à joindre ou glissez-déposez les dans la zone de "
+"texte..."
 
 msgid "Select first test tab from test list"
 msgstr "Sélectionne le premier onglet de test de la liste"
