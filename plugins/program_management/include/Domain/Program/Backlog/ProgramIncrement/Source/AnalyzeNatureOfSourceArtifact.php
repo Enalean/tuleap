@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
-use PFUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
 
 interface AnalyzeNatureOfSourceArtifact
@@ -30,5 +30,5 @@ interface AnalyzeNatureOfSourceArtifact
     /**
      * @throws NatureAnalyzerException
      */
-    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, PFUser $user): \Project;
+    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, UserIdentifier $user_identifier): \Project;
 }

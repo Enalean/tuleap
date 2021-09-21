@@ -25,8 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeboxFromMirroredTimeboxStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -35,13 +37,13 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
     private const TIMEBOX_ID = 247;
     private RetrieveTimeboxFromMirroredTimeboxStub $timebox_retriever;
     private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private \PFUser $user;
+    private UserIdentifier $user_identifier;
     private \Project $project;
 
     protected function setUp(): void
     {
-        $this->user    = UserTestBuilder::aUser()->build();
-        $this->project = \Project::buildForTest();
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->project         = \Project::buildForTest();
 
         $this->timebox_retriever = RetrieveTimeboxFromMirroredTimeboxStub::withTimebox(self::TIMEBOX_ID);
         $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
@@ -51,7 +53,8 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         return new SourceArtifactNatureAnalyzer(
             $this->timebox_retriever,
-            $this->artifact_factory
+            $this->artifact_factory,
+            RetrieveUserStub::withGenericUser()
         );
     }
 
@@ -60,7 +63,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->timebox_retriever = RetrieveTimeboxFromMirroredTimeboxStub::withNoTimebox();
 
         $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
-        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
+        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user_identifier);
     }
 
     public function testItThrowsExceptionWhenProgramIncrementArtifactIsNotFound(): void
@@ -68,7 +71,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
         $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
-        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
+        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user_identifier);
     }
 
     public function testReturnsProjectWhenArtifactHaveMirroredMilestoneLink(): void
@@ -76,7 +79,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         $timebox = $this->getTimebox(true);
         $this->artifact_factory->method('getArtifactById')->willReturn($timebox);
 
-        $result = $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
+        $result = $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user_identifier);
         self::assertEquals($this->project, $result);
     }
 
@@ -86,7 +89,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->artifact_factory->method('getArtifactById')->willReturn($timebox);
 
         $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
-        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user);
+        $this->getAnalyzer()->retrieveProjectOfMirroredArtifact($this->getMirroredTimebox(), $this->user_identifier);
     }
 
     private function getMirroredTimebox(): Stub|Artifact

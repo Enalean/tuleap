@@ -22,25 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
 
-use PFUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
 {
     public function __construct(
         private RetrieveTimeboxFromMirroredTimebox $timebox_retriever,
-        private \Tracker_ArtifactFactory $artifact_factory
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private RetrieveUser $retrieve_user
     ) {
     }
 
     /**
      * @throws NatureAnalyzerException
      */
-    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, PFUser $user): \Project
+    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, UserIdentifier $user_identifier): \Project
     {
         $program_increment_id = $this->timebox_retriever->getTimeboxFromMirroredTimeboxId($artifact->getId());
 
@@ -50,6 +52,7 @@ final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifac
 
         $program_increment = $this->artifact_factory->getArtifactById($program_increment_id);
 
+        $user = $this->retrieve_user->getUserWithId($user_identifier);
         if (! $program_increment || ! $program_increment->userCanView($user)) {
             throw new TimeboxOfMirroredTimeboxNotFoundException($program_increment_id);
         }

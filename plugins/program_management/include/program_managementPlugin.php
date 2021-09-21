@@ -844,13 +844,14 @@ final class program_managementPlugin extends Plugin
     {
         $source_analyser = new SourceArtifactNatureAnalyzer(
             new MirroredTimeboxesDao(),
-            Tracker_ArtifactFactory::instance()
+            Tracker_ArtifactFactory::instance(),
+            new UserManagerAdapter(UserManager::instance())
         );
         $artifact        = $original_project_collector->getOriginalArtifact();
         $user            = $original_project_collector->getUser();
 
         try {
-            $project = $source_analyser->retrieveProjectOfMirroredArtifact($artifact, $user);
+            $project = $source_analyser->retrieveProjectOfMirroredArtifact($artifact, UserProxy::buildFromPFUser($user));
 
             $original_project_collector->setOriginalProject($project);
         } catch (NatureAnalyzerException $exception) {
