@@ -196,7 +196,7 @@ $tlp-button-outline-hover-color: #fafafa;
 
     &:disabled,
     &.disabled {
-        @include tlp-button-disabled(var(--tlp-neutral-light-color-lighter-30), var(--tlp-neutral-light-color-transparent-40));
+        @include tlp-button-disabled(var(--tlp-neutral-light-color-lighter-30), var(--tlp-dark-color-transparent-50));
     }
 
     &.tlp-button-outline {
