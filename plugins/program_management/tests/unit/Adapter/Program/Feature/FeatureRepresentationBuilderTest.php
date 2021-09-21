@@ -83,7 +83,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->form_element_factory,
             $this->retrieve_background,
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
-            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory),
+            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory, $retrieve_user),
             $retrieve_user
         );
     }

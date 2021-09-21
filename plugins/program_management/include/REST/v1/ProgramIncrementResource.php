@@ -79,12 +79,19 @@ final class ProgramIncrementResource extends AuthenticatedResource
     public FeatureContentRetriever $program_increment_content_retriever;
     private \UserManager $user_manager;
     private UserManagerAdapter $user_manager_adapter;
+    private UserStoryLinkedToFeatureChecker $linked_to_feature_checker;
 
     public function __construct()
     {
         $this->user_manager                        = \UserManager::instance();
         $this->user_manager_adapter                = new UserManagerAdapter($this->user_manager);
         $artifact_factory                          = \Tracker_ArtifactFactory::instance();
+        $this->linked_to_feature_checker           = new UserStoryLinkedToFeatureChecker(
+            new ArtifactsLinkedToParentDao(),
+            new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
+            $artifact_factory,
+            $this->user_manager_adapter
+        );
         $this->program_increment_content_retriever = new FeatureContentRetriever(
             new ProgramIncrementsDAO(),
             new ContentDao(),
@@ -93,11 +100,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 \Tracker_FormElementFactory::instance(),
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
-                new UserStoryLinkedToFeatureChecker(
-                    new ArtifactsLinkedToParentDao(),
-                    new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                    $artifact_factory
-                ),
+                $this->linked_to_feature_checker,
                 $this->user_manager_adapter
             ),
             $this->getProgramSearcher(),
@@ -192,11 +195,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $plan_dao,
             new FeaturePlanner(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new UserStoryLinkedToFeatureChecker(
-                    new ArtifactsLinkedToParentDao(),
-                    new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                    $artifact_factory
-                ),
+                $this->linked_to_feature_checker,
                 new FeatureRemovalProcessor(
                     $program_increments_dao,
                     $artifact_factory,

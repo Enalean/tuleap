@@ -74,7 +74,7 @@ class FeatureRepresentationBuilder
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
             $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user),
             $this->user_story_checker->isLinkedToAtLeastOnePlannedUserStory($user_identifier, $feature),
-            $this->user_story_checker->hasStoryLinked($user, $feature)
+            $this->user_story_checker->hasStoryLinked($user_identifier, $feature)
         );
     }
 }

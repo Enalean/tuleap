@@ -40,7 +40,7 @@ final class VerifyLinkedUserStoryIsNotPlannedStub implements VerifyLinkedUserSto
         return $this->is_linked;
     }
 
-    public function hasStoryLinked(\PFUser $user, FeatureIdentifier $feature): bool
+    public function hasStoryLinked(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool
     {
         return false;
     }
