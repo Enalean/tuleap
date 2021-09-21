@@ -33,7 +33,6 @@ export default defineConfig(
             },
             rollupOptions: {
                 external: [
-                    "@juggle/resize-observer",
                     "lit-html",
                     "lit-html/directives/style-map",
                     "lit-html/directives/class-map",
@@ -41,7 +40,6 @@ export default defineConfig(
                 ],
                 output: {
                     globals: {
-                        "@juggle/resize-observer": "@juggle/resize-observer",
                         "lit-html": "lit-html",
                         "lit-html/directives/style-map": "lit-html/directives/style-map",
                         "lit-html/directives/class-map": "lit-html/directives/class-map",

@@ -46,7 +46,13 @@ describe("DisplayTeamsToAggregate", () => {
             select.id = "program-management-choose-teams";
             doc.body.appendChild(select);
 
-            const create_list_picker = jest.spyOn(listPicker, "createListPicker");
+            const create_list_picker = jest
+                .spyOn(listPicker, "createListPicker")
+                .mockResolvedValue({
+                    destroy: () => {
+                        // Nothing to do since we did not really create something
+                    },
+                });
 
             await displayTeamsToAggregate(gettext, doc);
             expect(create_list_picker).toHaveBeenCalledWith(select, {
