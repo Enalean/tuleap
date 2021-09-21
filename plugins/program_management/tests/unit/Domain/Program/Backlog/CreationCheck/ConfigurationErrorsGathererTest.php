@@ -27,15 +27,15 @@ use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -50,7 +50,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
      */
     private $iteration_checker;
-    private ProgramTracker $program_tracker;
+    private TrackerReference $tracker;
     private UserIdentifier $user_identifier;
     private ConfigurationErrorsGatherer $gatherer;
     private BuildProgram $build_program;
@@ -66,7 +66,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $this->teams_searcher            = SearchTeamsOfProgramStub::buildTeams(1);
         $this->project_builder           = new BuildProjectStub();
         $this->retrieve_user             = RetrieveUserStub::withUser(UserTestBuilder::aUser()->build());
-        $this->program_tracker           = ProgramTrackerStub::withDefaults();
+        $this->tracker                   = TrackerReferenceStub::withDefaults();
         $this->user_identifier           = UserIdentifierStub::buildGenericUser();
 
         $this->gatherer = new ConfigurationErrorsGatherer(
@@ -94,7 +94,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         );
 
         $gatherer->gatherConfigurationErrors(
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -105,12 +105,15 @@ final class ConfigurationErrorsGathererTest extends TestCase
     public function testItCollectProgramIncrementErrors(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(false);
-        $errors_collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowDependencyError(
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
 
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
         $this->iteration_checker->expects(self::never())->method('canCreateAnIteration');
         $this->gatherer->gatherConfigurationErrors(
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -121,12 +124,15 @@ final class ConfigurationErrorsGathererTest extends TestCase
     public function testItCollectProgramIncrementAndIterationErrors(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowDependencyError(
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
 
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
         $this->iteration_checker->expects(self::once())->method('canCreateAnIteration');
         $this->gatherer->gatherConfigurationErrors(
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -141,7 +147,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
         $this->iteration_checker->expects(self::once())->method('canCreateAnIteration');
         $this->gatherer->gatherConfigurationErrors(
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );

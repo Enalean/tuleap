@@ -24,36 +24,35 @@ declare(strict_types=1);
 
 namespace unit\Adapter\Program\Backlog\ProgramIncrement;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
+use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
-     */
-    private $tracker_factory;
+    private Stub|\TrackerFactory $tracker_factory;
     private ProjectFromTrackerRetriever $retriever;
-    private ProgramTracker $tracker_reference;
+    private TrackerReference $tracker_reference;
 
     protected function setUp(): void
     {
         $this->tracker_factory   = $this->createStub(\TrackerFactory::class);
         $this->retriever         = new ProjectFromTrackerRetriever($this->tracker_factory);
-        $this->tracker_reference = ProgramTrackerStub::withDefaults();
+        $this->tracker_reference = TrackerReferenceStub::withDefaults();
     }
 
-    public function testItThrowsAnExceptionWhenTrackerIsNOtFound(): void
+    public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
     {
         $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(TrackerNotFoundException::class);
         $this->retriever->fromTrackerReference($this->tracker_reference);
     }
 
-    public function testItBuildsPrimitive(): void
+    public function testItRetrievesProjectReference(): void
     {
         $project = new \Project(['group_id' => 101, 'group_name' => "My project"]);
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();

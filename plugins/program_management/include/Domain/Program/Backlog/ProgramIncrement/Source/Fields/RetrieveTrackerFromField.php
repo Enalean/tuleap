@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 interface RetrieveTrackerFromField
 {
-    public function fromFieldId(int $field_id): ProgramTracker;
+    public function fromFieldId(int $field_id): TrackerReference;
 }

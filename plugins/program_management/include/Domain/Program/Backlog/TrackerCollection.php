@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHas
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -38,17 +38,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 final class TrackerCollection
 {
     /**
-     * @var ProgramTracker[]
-     * @psalm-readonly
+     * @param TrackerReference[] $mirrored_timebox_trackers
      */
-    private array $mirrored_timebox_trackers;
-
-    /**
-     * @param ProgramTracker[] $mirrored_timebox_trackers
-     */
-    private function __construct(array $mirrored_timebox_trackers)
+    private function __construct(private array $mirrored_timebox_trackers)
     {
-        $this->mirrored_timebox_trackers = $mirrored_timebox_trackers;
     }
 
     /**
@@ -90,13 +83,13 @@ final class TrackerCollection
     public function getTrackerIds(): array
     {
         return array_map(
-            static fn(ProgramTracker $tracker) => $tracker->getId(),
+            static fn(TrackerReference $tracker) => $tracker->getId(),
             $this->mirrored_timebox_trackers
         );
     }
 
     /**
-     * @return ProgramTracker[]
+     * @return TrackerReference[]
      * @psalm-mutation-free
      */
     public function getTrackers(): array

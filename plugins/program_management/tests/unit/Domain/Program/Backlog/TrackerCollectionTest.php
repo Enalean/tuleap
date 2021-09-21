@@ -28,11 +28,11 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -88,10 +88,19 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_tracker->method('getId')->willReturn(57);
         $second_tracker->method('getName')->willReturn("tracker B");
         $second_tracker->method('getGroupId')->willReturn(101);
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::fromTracker($first_tracker), ProgramTrackerStub::fromTracker($second_tracker));
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            TrackerReferenceStub::fromTracker($first_tracker),
+            TrackerReferenceStub::fromTracker($second_tracker)
+        );
 
         $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user_identifier);
-        self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, new ConfigurationErrorsCollector(false), VerifyUserCanSubmitStub::userCanSubmit()));
+        self::assertTrue(
+            $collection->canUserSubmitAnArtifactInAllTrackers(
+                $this->user_identifier,
+                new ConfigurationErrorsCollector(false),
+                VerifyUserCanSubmitStub::userCanSubmit()
+            )
+        );
 
         $trackers = $collection->getTrackers();
         self::assertEquals($first_tracker->getId(), $trackers[0]->getId());
@@ -119,7 +128,10 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_tracker->method('getId')->willReturn(57);
         $second_tracker->method('getName')->willReturn("tracker B");
         $second_tracker->method('getGroupId')->willReturn(101);
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::fromTracker($first_tracker), ProgramTrackerStub::fromTracker($second_tracker));
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            TrackerReferenceStub::fromTracker($first_tracker),
+            TrackerReferenceStub::fromTracker($second_tracker)
+        );
 
         $collection = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier);
         self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, new ConfigurationErrorsCollector(false), VerifyUserCanSubmitStub::userCanSubmit()));
@@ -136,7 +148,10 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             new BuildProjectStub(),
             $this->program_identifier
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::withId(1), ProgramTrackerStub::withId(2));
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withId(1),
+            TrackerReferenceStub::withId(2)
+        );
 
         $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user_identifier);
         self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, new ConfigurationErrorsCollector(false), VerifyUserCanSubmitStub::userCanNotSubmit()));
@@ -149,7 +164,10 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             new BuildProjectStub(),
             $this->program_identifier
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::withId(1), ProgramTrackerStub::withId(2));
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withId(1),
+            TrackerReferenceStub::withId(2)
+        );
 
         $collection = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier);
         self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, new ConfigurationErrorsCollector(false), VerifyUserCanSubmitStub::userCanNotSubmit()));
@@ -162,7 +180,10 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             new BuildProjectStub(),
             $this->program_identifier
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::withId(1), ProgramTrackerStub::withId(2));
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withId(1),
+            TrackerReferenceStub::withId(2)
+        );
 
         $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier);
         $configuration_errors = new ConfigurationErrorsCollector(true);
@@ -177,7 +198,10 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             new BuildProjectStub(),
             $this->program_identifier
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::withId(1), ProgramTrackerStub::withId(2));
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withId(1),
+            TrackerReferenceStub::withId(2)
+        );
 
         $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier);
         $configuration_errors = new ConfigurationErrorsCollector(false);

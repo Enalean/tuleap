@@ -61,7 +61,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -86,7 +86,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
         private VerifyProjectPermission $permission_verifier,
         private RetrieveProgramIncrementLabels $program_increment_labels_retriever,
-        private RetrieveTrackerFromProgram $retrieve_tracker_from_program,
+        private SearchTrackersOfProgram $trackers_searcher,
         private RetrieveIterationLabels $iteration_labels_retriever,
         private AllProgramSearcher $all_program_searcher,
         private VerifyIterationsFeatureActive $feature_flag_verifier,
@@ -203,7 +203,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         );
 
         $all_potential_trackers = PotentialTrackerCollection::fromProgram(
-            $this->retrieve_tracker_from_program,
+            $this->trackers_searcher,
             $admin_program
         );
 

@@ -27,13 +27,13 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const ITERATION_TRACKER_ID = 75;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&TrackerFactory
      */
@@ -48,7 +48,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->tracker_factory      = $this->createStub(TrackerFactory::class);
         $this->user_identifier      = UserIdentifierStub::buildGenericUser();
         $this->program              = ProgramIdentifierBuilder::build();
-        $this->tracker_id_retriever = RetrieveIterationTrackerStub::buildValidTrackerId(1);
+        $this->tracker_id_retriever = RetrieveIterationTrackerStub::buildValidTrackerId(self::ITERATION_TRACKER_ID);
         $this->retrieve_user        = RetrieveUserStub::withGenericUser();
     }
 
@@ -75,9 +75,9 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     public function testGetNullIfUserCanNotSeeTracker(): void
     {
         $tracker = $this->createStub(\Tracker::class);
-        $tracker->method('getId')->willReturn(1);
+        $tracker->method('getId')->willReturn(self::ITERATION_TRACKER_ID);
         $tracker->method('userCanView')->willReturn(false);
-        $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
+        $this->tracker_factory->method('getTrackerById')->with(self::ITERATION_TRACKER_ID)->willReturn($tracker);
 
         self::assertNull(
             $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)
@@ -87,15 +87,15 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     public function testGetTrackerWhenItIsExistAndUserSeeIt(): void
     {
         $tracker = $this->createStub(\Tracker::class);
-        $tracker->method('getId')->willReturn(1);
-        $tracker->method('getName')->willReturn("Tracker 1");
+        $tracker->method('getId')->willReturn(self::ITERATION_TRACKER_ID);
+        $tracker->method('getName')->willReturn('Tracker 1');
         $tracker->method('getGroupId')->willReturn(101);
         $tracker->method('userCanView')->willReturn(true);
-        $tracker->method('getProject')->willReturn(new \Project(['group_id' => 101, 'group_name' => "A project"]));
-        $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
+        $tracker->method('getProject')->willReturn(new \Project(['group_id' => 101, 'group_name' => 'A project']));
+        $this->tracker_factory->method('getTrackerById')->with(self::ITERATION_TRACKER_ID)->willReturn($tracker);
 
         self::assertSame(
-            ProgramTrackerStub::fromTracker($tracker)->getId(),
+            self::ITERATION_TRACKER_ID,
             $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)->getId()
         );
     }

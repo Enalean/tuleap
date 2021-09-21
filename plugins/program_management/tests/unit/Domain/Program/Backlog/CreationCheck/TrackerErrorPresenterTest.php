@@ -26,20 +26,20 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TrackerErrorPresenterTest extends TestCase
 {
-    private ProgramTracker $program_tracker;
+    private TrackerReference $tracker;
     private UserIdentifierStub $user_identifier;
     private ConfigurationErrorsGatherer $gatherer;
 
@@ -51,7 +51,7 @@ final class TrackerErrorPresenterTest extends TestCase
         $teams_searcher            = SearchTeamsOfProgramStub::buildTeams(1);
         $project_builder           = new BuildProjectStub();
         $retrieve_user             = RetrieveUserStub::withUser(UserTestBuilder::aUser()->build());
-        $this->program_tracker     = ProgramTrackerStub::withDefaults();
+        $this->tracker             = TrackerReferenceStub::withDefaults();
         $this->user_identifier     = UserIdentifierStub::buildGenericUser();
 
         $program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
@@ -73,12 +73,12 @@ final class TrackerErrorPresenterTest extends TestCase
         $errors_collector->addSemanticError(
             'Title',
             'title',
-            [1, 2, 3]
+            [TrackerReferenceStub::withId(1), TrackerReferenceStub::withId(2), TrackerReferenceStub::withId(3)]
         );
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -91,11 +91,16 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasRequiredErrors(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addRequiredFieldError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
+        $errors_collector->addRequiredFieldError(
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric(),
+            100,
+            'My field'
+        );
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -108,12 +113,15 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForTransition(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowTransitionRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowTransitionRulesError(
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
 
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -126,11 +134,14 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForGlobalRules(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowTransitionDateRulesError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowTransitionDateRulesError(
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -143,11 +154,14 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasWorkflowErrorsForFieldDependency(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addWorkflowDependencyError(
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -160,11 +174,16 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasPermissionErrorsWhenNotSubmittable(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addSubmitFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addSubmitFieldPermissionError(
+            100,
+            "My custom field",
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -177,11 +196,16 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasPermissionErrorsWhenNotEditable(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addUpdateFieldPermissionError(100, "My custom field", ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $errors_collector->addUpdateFieldPermissionError(
+            100,
+            "My custom field",
+            $this->tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -194,11 +218,11 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasErrorWhenUserCanNotSubmitInTeam(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->userCanNotSubmitInTeam(ProgramTrackerStub::withDefaults());
+        $errors_collector->userCanNotSubmitInTeam($this->tracker);
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -211,11 +235,13 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasErrorSemanticStatusErrorWhenStatusMissingInTeam(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addMissingSemanticInTeamErrors([1, 2, 3]);
+        $errors_collector->addMissingSemanticInTeamErrors(
+            [TrackerReferenceStub::withId(1), TrackerReferenceStub::withId(2), TrackerReferenceStub::withId(3)]
+        );
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -232,7 +258,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -245,11 +271,11 @@ final class TrackerErrorPresenterTest extends TestCase
     public function testItHasErrorSemanticStatusErrorWhenStatusMissingValues(): void
     {
         $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addMissingValueInSemantic(["On going"], [1]);
+        $errors_collector->addMissingValueInSemantic(['On going'], [TrackerReferenceStub::withId(1)]);
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );
@@ -265,7 +291,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
-            $this->program_tracker,
+            $this->tracker,
             $this->user_identifier,
             $errors_collector
         );

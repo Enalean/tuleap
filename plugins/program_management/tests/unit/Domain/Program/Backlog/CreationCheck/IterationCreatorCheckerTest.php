@@ -27,14 +27,14 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -47,7 +47,7 @@ final class IterationCreatorCheckerTest extends TestCase
     private TestLogger $logger;
     private RetrievePlanningMilestoneTracker $milestone_retriever;
     private VerifyIsIterationTrackerStub $iteration_tracker_verifier;
-    private ProgramTracker $program_tracker;
+    private TrackerReference $tracker;
     private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&TimeboxCreatorChecker
@@ -61,16 +61,27 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->user                       = UserTestBuilder::aUser()->build();
         $this->user_identifier            = UserIdentifierStub::buildGenericUser();
         $this->program                    = ProgramIdentifierBuilder::build();
-        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(ProgramTrackerStub::withDefaults());
+        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withDefaults()
+        );
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
-        $this->program_tracker            = ProgramTrackerStub::withDefaults();
+        $this->tracker                    = TrackerReferenceStub::withId(102);
 
         $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
 
-        $iteration_tracker = ProgramTrackerStub::withId(102);
-
         $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withValidTracker(
-            $iteration_tracker
+            $this->tracker
+        );
+    }
+
+    private function getChecker(): IterationCreatorChecker
+    {
+        return new IterationCreatorChecker(
+            $this->milestone_retriever,
+            $this->iteration_tracker_verifier,
+            $this->iteration_tracker_retriever,
+            $this->timebox_creator_checker,
+            $this->logger
         );
     }
 
@@ -80,7 +91,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
-                $this->program_tracker,
+                $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(),
@@ -99,7 +110,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
-                $this->program_tracker,
+                $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(),
@@ -119,7 +130,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertFalse(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
-                $this->program_tracker,
+                $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
@@ -141,7 +152,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
-                $this->program_tracker,
+                $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
@@ -161,7 +172,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
-                $this->program_tracker,
+                $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
@@ -181,7 +192,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertFalse(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
-                $this->program_tracker,
+                $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
@@ -191,17 +202,6 @@ final class IterationCreatorCheckerTest extends TestCase
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
-        );
-    }
-
-    private function getChecker(): IterationCreatorChecker
-    {
-        return new IterationCreatorChecker(
-            $this->milestone_retriever,
-            $this->iteration_tracker_verifier,
-            $this->iteration_tracker_retriever,
-            $this->timebox_creator_checker,
-            $this->logger
         );
     }
 }

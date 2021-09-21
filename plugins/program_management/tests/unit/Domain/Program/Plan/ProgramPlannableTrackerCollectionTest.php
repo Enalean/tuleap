@@ -25,30 +25,33 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramPlannableTrackerCollectionTest extends TestCase
 {
     private ProgramForAdministrationIdentifier $program;
-    private int $project_id;
 
     protected function setUp(): void
     {
-        $this->project_id = 101;
-        $this->program    = ProgramForAdministrationIdentifierBuilder::build();
+        $this->program = ProgramForAdministrationIdentifierBuilder::build();
     }
 
     public function testItThrowsAnExceptionWhenTrackerListIsEmpty(): void
     {
         $this->expectException(PlannableTrackerCannotBeEmptyException::class);
-        ProgramPlannableTrackerCollection::fromIds(RetrieveTrackerStub::buildValidTrackerWithProjectId($this->project_id), [], $this->program);
+        ProgramPlannableTrackerCollection::fromIds(
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withDefaults()),
+            [],
+            $this->program
+        );
     }
 
     public function testItBuildPlannableTrackers(): void
     {
         $tracker_id = 1;
 
-        $retriever = RetrieveTrackerStub::buildValidTrackerWithProjectId($this->project_id);
+        $retriever = RetrieveTrackerStub::withTracker(TrackerReferenceStub::withDefaults());
 
         $expected = [ProgramPlannableTracker::build($retriever, $tracker_id, $this->program)];
         self::assertEquals($expected, ProgramPlannableTrackerCollection::fromIds($retriever, [$tracker_id], $this->program)->trackers);

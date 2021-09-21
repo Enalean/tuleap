@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
@@ -45,7 +46,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->project_id        = 102;
-        $this->tracker_builder   = RetrieveTrackerStub::buildValidTrackerWithProjectId($this->project_id);
+        $this->tracker_builder   = RetrieveTrackerStub::withTracker(TrackerReferenceStub::withProjectId($this->project_id));
         $this->ugroup_retriever  = RetrieveProgramUserGroupStub::withValidUserGroups(4);
         $this->plan_store        = $this->createMock(PlanStore::class);
         $this->project_retriever = RetrieveProjectStub::withValidProjects(ProjectTestBuilder::aProject()->withId(102)->build());

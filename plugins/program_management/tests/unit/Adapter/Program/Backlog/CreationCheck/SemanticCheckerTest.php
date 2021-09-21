@@ -27,10 +27,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
@@ -56,13 +56,13 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&CheckStatus
      */
     private $semantic_status_checker;
-    private ProgramTracker $program_increment_tracker;
+    private TrackerReference $program_increment_tracker;
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;
 
     protected function setUp(): void
     {
-        $this->program_increment_tracker = ProgramTrackerStub::withDefaults();
+        $this->program_increment_tracker = TrackerReferenceStub::withDefaults();
 
         $user_identifier = UserIdentifierStub::buildGenericUser();
         $teams           = TeamProjectsCollection::fromProgramIdentifier(
@@ -74,7 +74,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
-            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(ProgramTrackerStub::withDefaults()),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->program_increment_tracker),
             ProgramIdentifierBuilder::build(),
             $this->trackers,
             $user_identifier

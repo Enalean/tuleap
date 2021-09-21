@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
@@ -95,7 +95,7 @@ final class WorkflowChecker implements CheckWorkflow
                 $tracker = $this->tracker_factory->getTrackerById($rule['tracker_id']);
                 if ($tracker) {
                     $errors_collector->addWorkflowTransitionRulesError(
-                        TrackerProxy::fromTracker($tracker),
+                        TrackerReferenceProxy::fromTracker($tracker),
                         ProjectReferenceProxy::buildFromProject($tracker->getProject())
                     );
                 }
@@ -125,7 +125,7 @@ final class WorkflowChecker implements CheckWorkflow
                 $tracker = $this->tracker_factory->getTrackerById($tracker_id);
                 if ($tracker) {
                     $errors_collector->addWorkflowTransitionDateRulesError(
-                        TrackerProxy::fromTracker($tracker),
+                        TrackerReferenceProxy::fromTracker($tracker),
                         ProjectReferenceProxy::buildFromProject($tracker->getProject())
                     );
                 }
@@ -155,7 +155,7 @@ final class WorkflowChecker implements CheckWorkflow
                 $tracker = $this->tracker_factory->getTrackerById($tracker_id);
                 if ($tracker) {
                     $errors_collector->addWorkflowDependencyError(
-                        TrackerProxy::fromTracker($tracker),
+                        TrackerReferenceProxy::fromTracker($tracker),
                         ProjectReferenceProxy::buildFromProject($tracker->getProject())
                     );
                 }

@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 interface CheckStatus
 {
     public function isStatusWellConfigured(
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,
         ConfigurationErrorsCollector $configuration_errors
     ): bool;

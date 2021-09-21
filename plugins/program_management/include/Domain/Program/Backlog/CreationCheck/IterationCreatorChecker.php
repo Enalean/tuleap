@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -61,7 +61,7 @@ class IterationCreatorChecker
 
     public function canCreateAnIteration(
         PFUser $user,
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
         ConfigurationErrorsCollector $errors_collector,

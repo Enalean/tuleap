@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -32,13 +32,13 @@ final class SemanticStatusMissingValuesPresenter
 {
     public string $missing_values;
     /**
-     * @var ProgramTracker[]
+     * @var TrackerReference[]
      */
     public array $trackers;
 
     /**
-     * @param string[]         $missing_values
-     * @param ProgramTracker[] $trackers
+     * @param string[]           $missing_values
+     * @param TrackerReference[] $trackers
      */
     public function __construct(array $missing_values, array $trackers)
     {

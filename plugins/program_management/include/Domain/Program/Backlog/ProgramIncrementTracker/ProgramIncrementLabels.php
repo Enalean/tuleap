@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -40,7 +40,7 @@ final class ProgramIncrementLabels
 
     public static function fromProgramIncrementTracker(
         RetrieveProgramIncrementLabels $label_retriever,
-        ?ProgramTracker $tracker
+        ?TrackerReference $tracker
     ): self {
         if (! $tracker) {
             return new self(null, null);

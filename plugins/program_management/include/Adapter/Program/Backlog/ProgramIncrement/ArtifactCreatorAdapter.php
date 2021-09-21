@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Mirrore
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
@@ -41,7 +41,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
      * @throws ArtifactCreationException
      */
     public function create(
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         MirroredTimeboxChangesetValues $mirrored_program_increment_changeset,
         \PFUser $user,
         SubmissionDate $submission_date

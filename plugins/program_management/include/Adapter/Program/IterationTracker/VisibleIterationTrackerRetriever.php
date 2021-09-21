@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\IterationTracker;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -43,7 +43,7 @@ final class VisibleIterationTrackerRetriever implements RetrieveVisibleIteration
     public function retrieveVisibleIterationTracker(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier
-    ): ?ProgramTracker {
+    ): ?TrackerReference {
         $program_id           = $program->getId();
         $iteration_tracker_id = $this->iteration_tracker_retriever->getIterationTrackerId(
             $program_id
@@ -62,7 +62,7 @@ final class VisibleIterationTrackerRetriever implements RetrieveVisibleIteration
             return null;
         }
 
-        return TrackerProxy::fromTracker($iteration_tracker);
+        return TrackerReferenceProxy::fromTracker($iteration_tracker);
     }
 
     /**

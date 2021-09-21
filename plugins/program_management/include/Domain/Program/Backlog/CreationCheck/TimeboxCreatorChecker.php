@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -47,14 +47,14 @@ class TimeboxCreatorChecker
     }
 
     public function canTimeboxBeCreated(
-        ProgramTracker $tracker_data,
+        TrackerReference $tracker,
         SourceTrackerCollection $program_and_milestone_trackers,
         TrackerCollection $team_trackers,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $configuration_errors
     ): bool {
         $can_be_created = true;
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_and_milestone_trackers, $configuration_errors)) {
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker, $program_and_milestone_trackers, $configuration_errors)) {
             $can_be_created = false;
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return $can_be_created;

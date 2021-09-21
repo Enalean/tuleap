@@ -26,21 +26,21 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveVisibleProgramIncrementTrackerStub implements RetrieveVisibleProgramIncrementTracker
 {
-    private ?ProgramTracker $tracker;
+    private ?TrackerReference $tracker;
     private bool $is_visible;
 
-    private function __construct(?ProgramTracker $tracker, bool $is_visible)
+    private function __construct(?TrackerReference $tracker, bool $is_visible)
     {
         $this->tracker    = $tracker;
         $this->is_visible = $is_visible;
     }
 
-    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): ProgramTracker
+    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): TrackerReference
     {
         if (! $this->is_visible) {
             throw new ProgramTrackerNotFoundException(101);
@@ -51,7 +51,7 @@ final class RetrieveVisibleProgramIncrementTrackerStub implements RetrieveVisibl
         return $this->tracker;
     }
 
-    public static function withValidTracker(ProgramTracker $tracker): self
+    public static function withValidTracker(TrackerReference $tracker): self
     {
         return new self($tracker, true);
     }

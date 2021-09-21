@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 
 final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private ?ProgramTracker $program_tracker;
+    private ?TrackerReference $tracker;
 
     protected function setUp(): void
     {
-        $this->program_tracker = ProgramTrackerStub::withDefaults();
+        $this->tracker = TrackerReferenceStub::withDefaults();
     }
 
     public function testLabelsAreNullWhenNoProgramTracker(): void
@@ -50,7 +50,7 @@ final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $labels = IterationLabels::fromIterationTracker(
             RetrieveIterationLabelsStub::buildLabels(null, null),
-            $this->program_tracker
+            $this->tracker
         );
 
         self::assertNull($labels->label);
@@ -61,7 +61,7 @@ final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $labels = IterationLabels::fromIterationTracker(
             RetrieveIterationLabelsStub::buildLabels('Iterations', 'iteration'),
-            $this->program_tracker
+            $this->tracker
         );
 
         self::assertSame('Iterations', $labels->label);

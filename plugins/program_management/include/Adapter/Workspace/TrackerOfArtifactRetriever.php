@@ -46,6 +46,6 @@ final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact
         if (! $tracker) {
             throw new TrackerNotFoundException($tracker_id);
         }
-        return TrackerProxy::fromTracker($tracker);
+        return TrackerReferenceProxy::fromTracker($tracker);
     }
 }

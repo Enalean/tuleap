@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 interface RetrieveTracker
 {
-    public function getTrackerById(int $tracker_id): ?ProgramTracker;
+    public function getTrackerById(int $tracker_id): ?TrackerReference;
 }

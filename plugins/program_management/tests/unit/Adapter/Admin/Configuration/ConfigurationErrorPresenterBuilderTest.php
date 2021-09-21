@@ -27,15 +27,15 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -50,7 +50,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
      * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
      */
     private $iteration_checker;
-    private ?ProgramTracker $program_tracker;
+    private ?TrackerReference $program_tracker;
     private \Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier $program_identifier;
     private UserIdentifierStub $user_identifier;
     private VerifyTrackerSemanticsStub $verify_tracker_semantics;
@@ -67,12 +67,13 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->tracker_factory           = $this->createStub(\TrackerFactory::class);
         $this->program_identifier        = ProgramIdentifierBuilder::build();
         $this->user_identifier           = UserIdentifierStub::buildGenericUser();
-        $this->program_tracker           = ProgramTrackerStub::withDefaults();
+        $this->program_tracker           = TrackerReferenceStub::withDefaults();
         $this->verify_tracker_semantics  = VerifyTrackerSemanticsStub::withAllSemantics();
-        $this->tracker                   = TrackerTestBuilder::aTracker()->withId(1)
-                                                                         ->withName('Tracker')
+        $this->tracker                   = TrackerTestBuilder::aTracker()
+            ->withId(1)
+            ->withName('Tracker')
             ->withProject(new \Project(['group_id' => 101, 'group_name' => 'A project']))
-                                                                         ->build();
+            ->build();
     }
 
     public function testItBuildsProgramIncrementErrorPresenter(): void
@@ -80,7 +81,10 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
 
         $error_collector = new ConfigurationErrorsCollector(false);
-        $error_collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $error_collector->addWorkflowDependencyError(
+            $this->program_tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
         $this->getErrorBuilder()->buildProgramIncrementErrorPresenter(
             $this->program_tracker,
             $this->program_identifier,
@@ -110,7 +114,10 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->iteration_checker->method('canCreateAnIteration');
 
         $error_collector = new ConfigurationErrorsCollector(true);
-        $error_collector->addWorkflowDependencyError(ProgramTrackerStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $error_collector->addWorkflowDependencyError(
+            $this->program_tracker,
+            ProjectReferenceBuilder::buildGeneric()
+        );
         $this->getErrorBuilder()->buildIterationErrorPresenter(
             $this->program_tracker,
             $this->user_identifier,

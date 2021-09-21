@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 /**
@@ -38,14 +38,14 @@ final class RequiredErrorPresenter
     public function __construct(
         int $field_id,
         public string $field_label,
-        ProgramTracker $tracker,
+        TrackerReference $tracker,
         ProjectReference $project_reference
     ) {
         $this->field_admin_url    = '/plugins/tracker/?' .
             http_build_query(
                 ['tracker' => $tracker->getId(), 'func' => 'admin-formElement-update', 'formElement' => $field_id]
             );
-        $this->tracker_name       = $tracker->getTrackerName();
+        $this->tracker_name       = $tracker->getLabel();
         $this->team_project_label = $project_reference->getProjectLabel();
     }
 }
