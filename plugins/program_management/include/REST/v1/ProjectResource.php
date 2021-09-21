@@ -162,7 +162,8 @@ final class ProjectResource extends AuthenticatedResource
                     new ArtifactsLinkedToParentDao(),
                     new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
                     $artifact_factory
-                )
+                ),
+                $this->user_manager_adapter
             )
         );
         $this->features_permission_verifier = new PrioritizeFeaturesPermissionVerifier(
@@ -330,7 +331,7 @@ final class ProjectResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $elements = $this->features_retriever->retrieveFeaturesToBePlanned($id, $user);
+            $elements = $this->features_retriever->retrieveFeaturesToBePlanned($id, UserProxy::buildFromPFUser($user));
 
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
