@@ -62,7 +62,7 @@ class PullRequestPermissionChecker
      */
     public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user): void
     {
-        $repository = $this->getRepository($pull_request->getRepositoryId());
+        $repository = $this->getRepository($pull_request->getRepoDestId());
         $this->checkUserCanReadRepository($user, $repository);
     }
 

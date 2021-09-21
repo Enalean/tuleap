@@ -33,7 +33,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 
-class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -75,7 +75,7 @@ class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenGitRepoIsNotFound(): void
     {
-        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
+        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
 
         $permission_checker = $this->instantiatePermissionChecker();
@@ -87,7 +87,7 @@ class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLetsExceptionBubbleUpWhenUserHasNotAccessToProject(): void
     {
-        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
+        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrows(new Project_AccessPrivateException());
@@ -101,7 +101,7 @@ class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLetsExceptionBubbleUpWhenProjectIsNotFound(): void
     {
-        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
+        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrows(new Project_AccessProjectNotFoundException());
@@ -113,9 +113,9 @@ class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
-    public function testItThrowsWhenUserCannotReadGitRepo(): void
+    public function testItThrowsWhenUserCannotReadTheDestinationGitRepo(): void
     {
-        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
+        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
         $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturns(false);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
