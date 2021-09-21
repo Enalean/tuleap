@@ -116,7 +116,7 @@ Interfaces named `Store` have one method that returns `void`. They usually take 
 
 #### `<something>`Stub
 
-A test-only implementation of an Interface. Contrary to `Builders`, `Stubs` always implement an interface. Most of the time, they implement an operation like `Retrieve` something or `Verify` something. Sometimes, they implement a `value-object` interface like `TrackerIdentifier` or `UserIdentifier`. They should be kept as simple as possible.
+A test-only implementation of an Interface. Contrary to `Builders`, `Stubs` always implement an interface. Most of the time, they implement an operation like `Retrieve` something or `Verify` something. Sometimes, they implement a `value-object` interface like `TrackerIdentifier` or `UserIdentifier`. They should be kept as simple as possible. Their static methods usually are prefixed by `with`: `withTracker()`, `withUser()`, etc.
 
 In the case of `value-object` interfaces, we create Stubs to make it easier to build them. It is easier to build a `UserIdentifierStub` with just an `int` than to build a `UserProxy`, because then we must also build a `\PFUser`.
 
@@ -134,7 +134,7 @@ They let us depend only on the builder and not on many stubs. For example, inste
 
 A `value-object` interface always has a matching `Proxy` implementation. It is a way to circumvent the rule that forbids `Domain` classes from depending on other plugins or Tuleap Core classes (see [ADR-0002 Hexagonal Architecture][1]).
 
-For example, we want to build a `UserIdentifier` from a `\PFUser`. Since `\PFUser` is a class from Tuleap core, we cannot write a class like `UserIdentifier` in the Domain, as this would break the rule. To work around this, we have a value-object interface `UserIdentifier` in the Domain, and an implementation of this interface `UserProxy` in the Adapters namespace. Since the implementation is in Adapters, it can be built from `\PFUser`. Domain classes never use the Proxy directly, but depend on the value-object interface, which is also in the Domain.
+For example, we want to build a `UserIdentifier` from a `\PFUser` (to provide guarantees that `UserIdentifier` is valid, see [ADR-0003 Static factory method pattern][2]). Since `\PFUser` is a class from Tuleap core, we cannot write a class like `UserIdentifier` in the Domain, as this would break the rule. To work around this, we have a value-object interface `UserIdentifier` in the Domain, and an implementation of this interface `UserProxy` in the Adapters namespace. Since the implementation is in Adapters, it can be built from `\PFUser`. Domain classes never use the Proxy directly, but depend on the value-object interface, which is also in the Domain.
 
 It can also be used to map Events from other plugins.
 
@@ -148,6 +148,8 @@ Interfaces named `Verify` have one method that returns a `boolean`. They are mea
 
 - [SAFe glossary][0].
 - [ADR-0002 Hexagonal Architecture][1]
+- [ADR-0003 Static factory method pattern][2]
 
 [0]: https://www.scaledagileframework.com/glossary/
 [1]: <./0002-hexagonal-architecture.md>
+[2]: <./0003-static-factory-method.md>
