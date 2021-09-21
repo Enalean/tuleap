@@ -1057,7 +1057,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($data_target_fields_ids !== '') {
             $html .= $data_target_fields_ids;
         }
-        return $html . '">';
+        return $html . '>';
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
