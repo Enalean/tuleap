@@ -36,8 +36,8 @@ class b2018005141637_add_stepdef_table extends \Tuleap\ForgeUpgrade\Bucket
             id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             changeset_value_id INT(11) NOT NULL,
             description TEXT,
-            rank INT(11) UNSIGNED NOT NULL,
-            INDEX cvid_idx(changeset_value_id, rank)
+            `rank` INT(11) UNSIGNED NOT NULL,
+            INDEX cvid_idx(changeset_value_id, `rank`)
         )";
         $result = $this->db->createTable('plugin_testmanagement_changeset_value_stepdef', $sql);
 

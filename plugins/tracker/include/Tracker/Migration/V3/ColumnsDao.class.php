@@ -56,7 +56,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
                          LEFT JOIN tracker_field_string AS S ON(F.id = S.field_id)
                     WHERE parent_id <> 0 AND use_it = 1
                       AND F.tracker_id = $tv5_id
-                    ORDER BY parent_id, rank, id
+                    ORDER BY parent_id, `rank`, id
                     ) AS R1";
         $this->update($sql);
     }
@@ -85,7 +85,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
                 $new_rank = $rank++;
                 $this->trace("{$data['id']} takes 2 columns. change the rank to $new_rank.");
                 $sql = "UPDATE tracker_field
-                        SET rank = $new_rank
+                        SET `rank` = $new_rank
                         WHERE id = {$data['id']}";
                 $this->update($sql);
             } else {
@@ -108,7 +108,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
                 }
                 $sql = "UPDATE tracker_field
                         SET parent_id = $new_parent,
-                            rank      = $new_rank
+                            `rank`      = $new_rank
                             WHERE id = {$data['id']}";
                 $this->update($sql);
             }
@@ -122,7 +122,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
 
     private function createColumn($index, $parent_id, $rank)
     {
-        $sql = "INSERT INTO tracker_field(parent_id, formElement_type, name, label, rank, tracker_id, use_it)
+        $sql = "INSERT INTO tracker_field(parent_id, formElement_type, name, label, `rank`, tracker_id, use_it)
                 SELECT $parent_id, 'column', 'column_$index', 'c$index', $rank, tracker_id, use_it
                 FROM tracker_field
                 WHERE id = $parent_id";

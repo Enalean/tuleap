@@ -37,7 +37,7 @@ class b201705161407_create_tables_dashboards_lines extends \Tuleap\ForgeUpgrade\
                   dashboard_id INT(11) UNSIGNED NOT NULL,
                   dashboard_type VARCHAR(255) NOT NULL,
                   layout VARCHAR(255) NOT NULL,
-                  rank INT(11) NOT NULL,
+                  `rank` INT(11) NOT NULL,
                   INDEX idx(dashboard_id, dashboard_type(3))
                 )';
 

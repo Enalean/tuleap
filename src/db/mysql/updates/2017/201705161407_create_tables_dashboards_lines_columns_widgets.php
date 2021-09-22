@@ -35,7 +35,7 @@ class b201705161407_create_tables_dashboards_lines_columns_widgets extends \Tule
         $sql = 'CREATE TABLE dashboards_lines_columns_widgets (
                   column_id INT(11) UNSIGNED NOT NULL,
                   widget_id INT(11) UNSIGNED NOT NULL,
-                  rank INT(11) NOT NULL,
+                  `rank` INT(11) NOT NULL,
                   PRIMARY KEY (column_id, widget_id)
                 )';
 

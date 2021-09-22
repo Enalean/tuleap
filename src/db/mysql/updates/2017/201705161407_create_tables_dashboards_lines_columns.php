@@ -35,7 +35,7 @@ class b201705161407_create_tables_dashboards_lines_columns extends \Tuleap\Forge
         $sql = 'CREATE TABLE dashboards_lines_columns (
                   id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                   line_id INT(11) UNSIGNED NOT NULL,
-                  rank INT(11) NOT NULL,
+                  `rank` INT(11) NOT NULL,
                   INDEX idx(line_id)
                 )';
 

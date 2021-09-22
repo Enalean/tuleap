@@ -47,7 +47,7 @@ class b201612091720_use_only_rank_for_artifact_priority extends \Tuleap\ForgeUpg
     {
         $sql = "CREATE TABLE tracker_artifact_priority_rank(
                     artifact_id INT(11) NULL PRIMARY KEY,
-                    rank INT(11) UNSIGNED NOT NULL
+                    `rank` INT(11) UNSIGNED NOT NULL
                 ) ENGINE=InnoDB";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -60,7 +60,7 @@ class b201612091720_use_only_rank_for_artifact_priority extends \Tuleap\ForgeUpg
 
     private function populateTable()
     {
-        $sql = "INSERT INTO tracker_artifact_priority_rank(artifact_id, rank)
+        $sql = "INSERT INTO tracker_artifact_priority_rank(artifact_id, `rank`)
                 SELECT curr_id, rank
                 FROM tracker_artifact_priority
                 WHERE curr_id IS NOT NULL";
