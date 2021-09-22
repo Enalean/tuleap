@@ -115,9 +115,6 @@ class OpenIDConnectSigningKeyFactory
         $encrypted_jwt_private_key = SymmetricCrypto::encrypt(new ConcealedString($rsa_private_key_pem_format_str), $encryption_key);
         \sodium_memzero($rsa_private_key_pem_format_str);
         $rsa_public_key = \openssl_pkey_get_details($rsa_key)['key'];
-        if (\PHP_VERSION_ID < 80000) {
-            \openssl_pkey_free($rsa_key);
-        }
 
         $new_key_expiration_date = $current_time->add($this->signing_key_expiration_delay);
         $old_keys_cleanup_date   = $current_time->sub($this->id_token_expiration_delay);
