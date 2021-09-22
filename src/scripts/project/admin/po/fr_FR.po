@@ -13,11 +13,35 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "Activities"
+msgstr "Activités"
+
+msgid "Animals & Nature"
+msgstr "Animaux & Nature"
+
+msgid "Custom"
+msgstr "Personalisé"
+
 msgid "Email"
 msgstr "Email"
 
+msgid "Flags"
+msgstr "Drapeaux"
+
+msgid "Food & Drink"
+msgstr "Aliment & Boisson"
+
 msgid "Name"
 msgstr "Nom"
+
+msgid "No icons found"
+msgstr "Pas d'icône trouvé"
+
+msgid "Objects"
+msgstr "Objets"
+
+msgid "People & Body"
+msgstr "Personnes & Corps"
 
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
@@ -25,8 +49,24 @@ msgstr "Veuillez sélectionner un fichier à téléverser"
 msgid "Preview loading..."
 msgstr "Chargement de l'aperçu..."
 
+
+msgid "Recent Icons"
+msgstr "Icones récentes"
+
+msgid "Search icon..."
+msgstr "Rechercher une icône..."
+
+msgid "Smileys & Emotion"
+msgstr "Smileys & Emotion"
+
+msgid "Symbols"
+msgstr "Symboles"
+
 msgid "There isn't any new user to import"
 msgstr "Il n'y a aucun nouvel utilisateur à importer"
+
+msgid "Travel & Places"
+msgstr "Voyage & Lieux"
 
 msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
 msgstr ""

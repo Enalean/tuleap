@@ -51,9 +51,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 function initModals(): void {
     document.addEventListener("click", (event) => {
         const button = event.target;
+
+        // To be compatible with the icon picker
         if (!(button instanceof HTMLElement)) {
-            throw new Error("No target button on click");
+            return;
         }
+
         const allowed_ids = [
             "project-admin-ugroup-add-binding",
             "project-admin-ugroups-modal",

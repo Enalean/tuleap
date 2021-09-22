@@ -35,6 +35,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
+use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\System\ServiceControl;
 use Tuleap\User\SwitchToPresenterBuilder;
@@ -67,6 +68,7 @@ final class GetWhitelistedKeys implements Dispatchable
         HelpDropdownPresenterBuilder::class,
         BrowserDeprecationMessage::class,
         SwitchToPresenterBuilder::class,
+        ProjectIconChecker::class,
     ];
 
     /**

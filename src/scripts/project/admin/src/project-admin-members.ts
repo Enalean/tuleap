@@ -57,9 +57,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 function initModals(): void {
     document.addEventListener("click", (event) => {
         const button = event.target;
+
+        // To be compatible with the icon picker
         if (!(button instanceof HTMLElement)) {
-            throw new Error("No button target");
+            return;
         }
+
         if (
             button.id === "project-admin-members-modal-import-users-button" ||
             button.classList.contains("project-members-delete-button")
