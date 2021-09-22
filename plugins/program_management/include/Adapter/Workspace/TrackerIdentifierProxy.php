@@ -20,20 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
  */
-interface ArtifactUpdatedEvent
+final class TrackerIdentifierProxy implements TrackerIdentifier
 {
-    public function getArtifact(): ArtifactIdentifier;
-    public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserIdentifier;
-    public function getChangeset(): ChangesetIdentifier;
+    private function __construct(private int $id)
+    {
+    }
+
+    public static function fromTracker(\Tracker $tracker): self
+    {
+        return new self($tracker->getId());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

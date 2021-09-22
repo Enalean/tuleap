@@ -65,9 +65,9 @@ final class ProgramIncrementIdentifier
         VerifyIsProgramIncrementTracker $program_increment_verifier,
         ArtifactUpdatedEvent $artifact_updated
     ): ?self {
-        if (! $program_increment_verifier->isProgramIncrementTracker($artifact_updated->getTrackerId())) {
+        if (! $program_increment_verifier->isProgramIncrementTracker($artifact_updated->getTracker()->getId())) {
             return null;
         }
-        return new self($artifact_updated->getArtifactId());
+        return new self($artifact_updated->getArtifact()->getId());
     }
 }

@@ -20,20 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
-/**
- * @psalm-immutable
- */
-interface ArtifactUpdatedEvent
+final class ProgramIncrementTrackerIdentifierBuilder
 {
-    public function getArtifact(): ArtifactIdentifier;
-    public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserIdentifier;
-    public function getChangeset(): ChangesetIdentifier;
+    public static function buildWithId(int $id): ProgramIncrementTrackerIdentifier
+    {
+        return ProgramIncrementTrackerIdentifier::fromId(
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+            TrackerIdentifierStub::withId($id)
+        );
+    }
 }

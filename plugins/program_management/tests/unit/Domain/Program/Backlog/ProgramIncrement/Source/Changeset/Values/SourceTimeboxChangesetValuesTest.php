@@ -75,7 +75,7 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsFromUpdate(): void
     {
-        $update = ProgramIncrementUpdateBuilder::buildWithIds(102, self::SOURCE_TIMEBOX_ID, 19, '9926');
+        $update = ProgramIncrementUpdateBuilder::buildWithIds(102, self::SOURCE_TIMEBOX_ID, 19, 9926);
         $values = SourceTimeboxChangesetValues::fromUpdate(
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),

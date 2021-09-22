@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementTrackerIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -52,10 +51,7 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             )
         );
 
-        $this->program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
-            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
-            11
-        );
+        $this->program_increment_tracker = ProgramIncrementTrackerIdentifierBuilder::buildWithId(11);
     }
 
     public function testItBuildsFromProgramIncrementTracker(): void

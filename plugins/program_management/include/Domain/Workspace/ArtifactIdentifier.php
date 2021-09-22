@@ -20,20 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
-
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 /**
+ * I am the id (identifier) of an Artifact. ⚠ I may not be visible by the current user
  * @psalm-immutable
  */
-interface ArtifactUpdatedEvent
+interface ArtifactIdentifier
 {
-    public function getArtifact(): ArtifactIdentifier;
-    public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserIdentifier;
-    public function getChangeset(): ChangesetIdentifier;
+    public function getId(): int;
 }

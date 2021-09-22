@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
@@ -81,7 +82,7 @@ final class ArtifactCreatedHandler
 
         $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
             $this->program_increment_verifier,
-            $source_tracker->getId()
+            TrackerIdentifierProxy::fromTracker($source_tracker)
         );
         if (! $program_increment_tracker) {
             return;

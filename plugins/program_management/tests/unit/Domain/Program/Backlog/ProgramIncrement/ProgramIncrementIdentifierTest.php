@@ -22,18 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
-use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -41,12 +36,25 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserIdentifier $user;
     private VerifyIsProgramIncrementStub $program_increment_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
+    private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
+    private ArtifactUpdatedEventStub $artifact_updated;
 
     protected function setUp(): void
     {
-        $this->user                       = UserIdentifierStub::buildGenericUser();
+        $this->user = UserIdentifierStub::withId(101);
+
         $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
         $this->visibility_verifier        = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
+        $this->tracker_verifier           = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+
+        $tracker                = TrackerIdentifierStub::withId(127);
+        $changeset_id           = 919;
+        $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
+            self::PROGRAM_INCREMENT_ID,
+            $tracker,
+            $this->user,
+            $changeset_id
+        );
     }
 
     public function testItBuildsFromId(): void
@@ -87,7 +95,7 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull(
             ProgramIncrementIdentifier::fromArtifactUpdated(
                 VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
-                $this->buildArtifactUpdated()
+                $this->artifact_updated
             )
         );
     }
@@ -95,22 +103,9 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAProgramIncrementFromArtifactUpdated(): void
     {
         $program_increment = ProgramIncrementIdentifier::fromArtifactUpdated(
-            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
-            $this->buildArtifactUpdated()
+            $this->tracker_verifier,
+            $this->artifact_updated
         );
         self::assertSame(self::PROGRAM_INCREMENT_ID, $program_increment->getId());
-    }
-
-    private function buildArtifactUpdated(): ArtifactUpdatedEvent
-    {
-        $pfuser    = UserTestBuilder::aUser()->withId(101)->build();
-        $tracker   = TrackerTestBuilder::aTracker()->withId(127)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(self::PROGRAM_INCREMENT_ID)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('919')
-            ->ofArtifact($artifact)
-            ->submittedBy($pfuser->getId())
-            ->build();
-        $event     = new ArtifactUpdated($artifact, $pfuser, $changeset);
-        return ArtifactUpdatedProxy::fromArtifactUpdated($event);
     }
 }

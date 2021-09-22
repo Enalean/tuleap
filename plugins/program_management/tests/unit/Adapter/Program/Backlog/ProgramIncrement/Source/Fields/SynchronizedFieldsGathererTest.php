@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementTrackerIdentifierBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
@@ -59,8 +59,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_builder    = $this->createStub(SemanticTimeframeBuilder::class);
         $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
 
-        $this->tracker_identifier = ProgramIncrementTrackerIdentifier::fromId(
-            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+        $this->tracker_identifier = ProgramIncrementTrackerIdentifierBuilder::buildWithId(
             self::PROGRAM_INCREMENT_TRACKER_ID
         );
         $project                  = new \Project(['group_id' => 101, 'group_name' => "My project"]);

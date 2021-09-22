@@ -22,22 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredUserNotFoundException;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -46,12 +43,12 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     private const USER_ID                      = 183;
     private const CHANGESET_ID                 = 8996;
     private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
-    private ArtifactUpdatedProxy $artifact_updated;
     private VerifyIsUserStub $user_verifier;
     private VerifyIsProgramIncrementStub $program_increment_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIsChangesetStub $changeset_verifier;
     private RetrieveProgramIncrementTrackerStub $tracker_retriever;
+    private ArtifactUpdatedEventStub $artifact_updated;
     private PendingProgramIncrementUpdateProxy $pending_update;
 
     protected function setUp(): void
@@ -71,16 +68,14 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             self::CHANGESET_ID
         );
 
-        $user      = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
-        $tracker   = TrackerTestBuilder::aTracker()->withId(self::PROGRAM_INCREMENT_TRACKER_ID)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(self::PROGRAM_INCREMENT_ID)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset((string) self::CHANGESET_ID)
-            ->ofArtifact($artifact)
-            ->submittedBy($user->getId())
-            ->build();
-
-        $tracker_event          = new ArtifactUpdated($artifact, $user, $changeset);
-        $this->artifact_updated = ArtifactUpdatedProxy::fromArtifactUpdated($tracker_event);
+        $user                   = UserIdentifierStub::withId(self::USER_ID);
+        $tracker                = TrackerIdentifierStub::withId(self::PROGRAM_INCREMENT_TRACKER_ID);
+        $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
+            self::PROGRAM_INCREMENT_ID,
+            $tracker,
+            $user,
+            self::CHANGESET_ID
+        );
     }
 
     public function testItBuildsFromArtifactUpdatedEvent(): void

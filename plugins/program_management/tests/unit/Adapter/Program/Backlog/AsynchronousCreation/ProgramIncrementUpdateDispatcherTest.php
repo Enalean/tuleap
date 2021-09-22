@@ -68,7 +68,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
             self::USER_ID,
             self::PROGRAM_INCREMENT_ID,
             17,
-            (string) self::CHANGESET_ID
+            self::CHANGESET_ID
         );
 
         $iterations                = IterationIdentifier::buildCollectionFromProgramIncrement(

@@ -24,27 +24,34 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracke
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 17;
+    private TrackerIdentifierStub $tracker_identifier;
+
+    protected function setUp(): void
+    {
+        $this->tracker_identifier = TrackerIdentifierStub::withId(self::PROGRAM_INCREMENT_TRACKER_ID);
+    }
 
     public function testItReturnsNullWhenIdIsNotAProgramIncrementTracker(): void
     {
         $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
             VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
-            self::PROGRAM_INCREMENT_TRACKER_ID
+            $this->tracker_identifier
         );
         self::assertNull($program_increment_tracker);
     }
 
-    public function testItBuildsFromId(): void
+    public function testItBuildsFromTrackerIdentifier(): void
     {
         $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
-            self::PROGRAM_INCREMENT_TRACKER_ID
+            $this->tracker_identifier
         );
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $program_increment_tracker->getId());
     }

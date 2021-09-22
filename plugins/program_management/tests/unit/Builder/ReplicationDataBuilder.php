@@ -24,8 +24,6 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -71,10 +69,7 @@ final class ReplicationDataBuilder
             null
         );
 
-        $tracker = ProgramIncrementTrackerIdentifier::fromId(
-            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
-            1
-        );
+        $tracker = ProgramIncrementTrackerIdentifierBuilder::buildWithId(1);
         return ReplicationDataAdapter::build($source_program_increment, $user, $source_changeset, $tracker);
     }
 

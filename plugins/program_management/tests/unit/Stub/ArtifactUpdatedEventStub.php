@@ -20,25 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Events;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ArtifactIdentifierProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerIdentifierProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-/**
- * I am a proxy for ArtifactUpdated
- * @see ArtifactUpdated
- * @psalm-immutable
- */
-final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
+final class ArtifactUpdatedEventStub implements ArtifactUpdatedEvent
 {
     private function __construct(
         private ArtifactIdentifier $artifact,
@@ -48,14 +41,15 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
     ) {
     }
 
-    public static function fromArtifactUpdated(ArtifactUpdated $artifact_updated): self
+    public static function withIds(int $artifact_id, TrackerIdentifier $tracker, UserIdentifier $user, int $changeset_id): self
     {
-        $full_artifact = $artifact_updated->getArtifact();
-        $artifact      = ArtifactIdentifierProxy::fromArtifact($full_artifact);
-        $tracker       = TrackerIdentifierProxy::fromTracker($full_artifact->getTracker());
-        $user          = UserProxy::buildFromPFUser($artifact_updated->getUser());
-        $changeset     = ChangesetProxy::fromChangeset($artifact_updated->getChangeset());
-        return new self($artifact, $tracker, $user, $changeset);
+        $artifact = ArtifactTestBuilder::anArtifact($artifact_id)->build();
+        return new self(
+            ArtifactIdentifierProxy::fromArtifact($artifact),
+            $tracker,
+            $user,
+            DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id)
+        );
     }
 
     public function getArtifact(): ArtifactIdentifier
