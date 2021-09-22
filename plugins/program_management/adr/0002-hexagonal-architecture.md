@@ -71,7 +71,7 @@ Keep in mind that we have adopted these rules and recommendations gradually, so 
 
 * It makes us write a "compatibility" layer between other plugins and our code that protects it. If we change the other plugin's code, only the Adapters should change.
 * It allows us to manipulate Tuleap concepts like Tracker with a naming that makes sense in our Domain. Program Increment and Features are both Artifacts from Tracker, but in our plugin they have a distinct role and meaning.
-* It reduces the cognitive load. Responsibilities are better split.
+* It reduces cognitive load. Responsibilities are better split.
 * Tests are less coupled to implementation.
 * We can write _Overlapping Sociable Tests_.
 * The design made us fix the previous flaws: we previously had "wrapper" objects with methods like `ProgramTracker::getFullTracker()`. This is a flaw in the hexagonal architecture, as nothing prevents Domain code from handling `Tracker` object. The design pushed us to fix this in order to add new features.
