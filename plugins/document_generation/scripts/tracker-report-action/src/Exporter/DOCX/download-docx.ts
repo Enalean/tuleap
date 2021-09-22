@@ -20,15 +20,13 @@
 import type {
     ArtifactContainer,
     ArtifactFieldValue,
-    ReportCriterionValue,
+    DateReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
-    DateReportCriterionValue,
+    ReportCriterionValue,
 } from "../../type";
 import type { ILevelsOptions, XmlComponent } from "docx";
-import { TabStopPosition, TabStopType } from "docx";
-import { ShadingType } from "docx";
 import {
     AlignmentType,
     Bookmark,
@@ -44,10 +42,13 @@ import {
     PageBreak,
     PageNumber,
     Paragraph,
+    ShadingType,
     StyleLevel,
     Table,
     TableCell,
     TableRow,
+    TabStopPosition,
+    TabStopType,
     TextRun,
     WidthType,
 } from "docx";
@@ -57,6 +58,7 @@ import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/ge
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
 import { loadImage } from "./Image/image-loader";
+import { transformLargeContentIntoAParagraph } from "./transform-large-content-into-paragraph";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
@@ -140,9 +142,7 @@ export async function downloadDocx(
             })
         );
 
-        if (artifact.fields.length > 0) {
-            artifacts_content.push(buildFieldValuesDisplayZone(artifact.fields));
-        }
+        artifacts_content.push(...buildFieldValuesDisplayZone(artifact.fields));
 
         artifacts_content.push(...buildContainersDisplayZone(artifact.containers));
     }
@@ -499,10 +499,8 @@ function buildContainersDisplayZone(
 ): ReadonlyArray<XmlComponent> {
     return containers.flatMap((container) => {
         const sub_containers_display_zones = buildContainersDisplayZone(container.containers);
-        const field_values_display_zone = [];
-        if (container.fields.length > 0) {
-            field_values_display_zone.push(buildFieldValuesDisplayZone(container.fields));
-        }
+        const field_values_display_zone: XmlComponent[] = [];
+        field_values_display_zone.push(...buildFieldValuesDisplayZone(container.fields));
 
         if (sub_containers_display_zones.length === 0 && field_values_display_zone.length === 0) {
             return [];
@@ -653,7 +651,31 @@ function buildDateReportCriterionValue(
     });
 }
 
-function buildFieldValuesDisplayZone(artifact_values: ReadonlyArray<ArtifactFieldValue>): Table {
+function buildFieldValuesDisplayZone(
+    artifact_values: ReadonlyArray<ArtifactFieldValue>
+): XmlComponent[] {
+    const display_zone: XmlComponent[] = [];
+
+    const short_fields = artifact_values.filter((field) => field.content_length === "short");
+    if (short_fields.length > 0) {
+        display_zone.push(buildShortFieldValuesDisplayZone(short_fields));
+    }
+
+    const long_fields = artifact_values.filter((field) => field.content_length === "long");
+    for (const long_field of long_fields) {
+        const title = new Paragraph({
+            heading: HeadingLevel.HEADING_4,
+            children: [new TextRun(long_field.field_name)],
+        });
+        display_zone.push(title, transformLargeContentIntoAParagraph(long_field.field_value));
+    }
+
+    return display_zone;
+}
+
+function buildShortFieldValuesDisplayZone(
+    artifact_values: ReadonlyArray<ArtifactFieldValue>
+): Table {
     const fields_rows: TableRow[] = [];
 
     for (const artifact_value of artifact_values) {
