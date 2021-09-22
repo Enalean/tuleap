@@ -26,16 +26,19 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Change
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactUserNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Artifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 
 final class ReplicationDataAdapter implements BuildReplicationData
 {
@@ -44,7 +47,9 @@ final class ReplicationDataAdapter implements BuildReplicationData
         private \UserManager $user_manager,
         private PendingArtifactCreationStore $pending_artifact_creation_store,
         private \Tracker_Artifact_ChangesetFactory $changeset_factory,
-        private VerifyIsProgramIncrementTracker $program_increment_verifier
+        private VerifyIsProgramIncrementTracker $program_increment_verifier,
+        private RetrieveProgramOfProgramIncrement $program_retriever,
+        private BuildProject $project_builder
     ) {
     }
 
@@ -98,7 +103,15 @@ final class ReplicationDataAdapter implements BuildReplicationData
         return self::build($source_artifact, $user, $source_changeset, $tracker);
     }
 
-    public static function build(
+    public function buildFromProgramIncrementCreation(ProgramIncrementCreation $creation): ReplicationData
+    {
+        $artifact   = new Artifact($creation->program_increment->getId());
+        $program_id = $this->program_retriever->getProgramOfProgramIncrement($creation->program_increment);
+        $project    = $this->project_builder->buildFromId($program_id);
+        return new ReplicationData($creation->tracker, $creation->changeset, $artifact, $project, $creation->user);
+    }
+
+    private static function build(
         \Tuleap\Tracker\Artifact\Artifact $source_artifact,
         \PFUser $user,
         \Tracker_Artifact_Changeset $source_changeset,

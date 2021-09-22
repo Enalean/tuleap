@@ -28,6 +28,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredP
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactUserNotFoundException;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -48,6 +51,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private Stub|\UserManager $user_manager;
     private Stub|\Tracker_ArtifactFactory $artifact_factory;
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
+    private RetrieveProgramOfProgramIncrementStub $program_retriever;
     private array $pending_row;
     private Artifact $artifact;
     private \PFUser $user;
@@ -60,6 +64,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pending_artifact_creation_store = $this->createStub(PendingArtifactCreationStore::class);
         $this->changeset_factory               = $this->createStub(\Tracker_Artifact_ChangesetFactory::class);
         $this->program_increment_verifier      = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->program_retriever               = RetrieveProgramOfProgramIncrementStub::withProgram(self::PROJECT_ID);
 
         $this->pending_row = ['program_artifact_id' => self::ARTIFACT_ID, 'user_id' => self::USER_ID, 'changeset_id' => self::CHANGESET_ID];
         $project           = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
@@ -89,7 +94,9 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->pending_artifact_creation_store,
             $this->changeset_factory,
-            $this->program_increment_verifier
+            $this->program_increment_verifier,
+            $this->program_retriever,
+            new BuildProjectStub()
         );
     }
 
@@ -138,6 +145,24 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(PendingArtifactChangesetNotFoundException::class);
         $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
+    }
+
+    public function testItBuildsFromProgramIncrementCreation(): void
+    {
+        $creation = ProgramIncrementCreationBuilder::buildWithIds(
+            self::USER_ID,
+            self::ARTIFACT_ID,
+            self::TRACKER_ID,
+            self::CHANGESET_ID
+        );
+
+        $replication = $this->getAdapter()->buildFromProgramIncrementCreation($creation);
+
+        self::assertSame(self::ARTIFACT_ID, $replication->getArtifact()->getId());
+        self::assertSame(self::USER_ID, $replication->getUserIdentifier()->getId());
+        self::assertSame(self::CHANGESET_ID, $replication->getChangeset()->getId());
+        self::assertSame(self::TRACKER_ID, $replication->getTracker()->getId());
+        self::assertSame(self::PROJECT_ID, $replication->getProject()->getId());
     }
 
     public function testItBuildsReplicationData(): void

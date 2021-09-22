@@ -22,20 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Psr\Log\Test\TestLogger;
+use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreIterationCreations;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementUpdateStub;
+use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\StoreProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
@@ -52,11 +51,9 @@ final class ArtifactUpdatedHandlerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&PlanUserStoriesInMirroredProgramIncrements
      */
     private $user_stories_planner;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&RemovePlannedFeaturesFromTopBacklog
-     */
-    private $feature_remover;
-    private TestLogger $logger;
+    private RemovePlannedFeaturesFromTopBacklogStub $feature_remover;
+    private StoreProgramIncrementUpdateStub $update_store;
+    private DispatchProgramIncrementUpdateStub $update_dispatcher;
 
     protected function setUp(): void
     {
@@ -67,10 +64,11 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             4208
         );
 
-        $this->logger                     = new TestLogger();
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
         $this->user_stories_planner       = $this->createMock(PlanUserStoriesInMirroredProgramIncrements::class);
-        $this->feature_remover            = $this->createMock(RemovePlannedFeaturesFromTopBacklog::class);
+        $this->feature_remover            = RemovePlannedFeaturesFromTopBacklogStub::withCount();
+        $this->update_store               = StoreProgramIncrementUpdateStub::withCount();
+        $this->update_dispatcher          = DispatchProgramIncrementUpdateStub::withCount();
     }
 
     private function getHandler(): ArtifactUpdatedHandler
@@ -80,18 +78,13 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             $this->user_stories_planner,
             $this->feature_remover,
             new ProgramIncrementUpdateScheduler(
-                new class implements StoreProgramIncrementUpdate {
-                    public function storeUpdate(ProgramIncrementUpdate $update): void
-                    {
-                        // Side effects
-                    }
-                },
+                $this->update_store,
                 new IterationCreationDetector(
                     VerifyIterationsFeatureActiveStub::withActiveFeature(),
                     SearchIterationsStub::withIterationIds(101, 102),
                     VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                     VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-                    $this->logger,
+                    new NullLogger(),
                     RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
                 ),
                 new class implements StoreIterationCreations {
@@ -100,12 +93,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                         // Side effects
                     }
                 },
-                new class implements DispatchProgramIncrementUpdate {
-                    public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
-                    {
-                        // Side effects
-                    }
-                }
+                $this->update_dispatcher
             )
         );
     }
@@ -113,21 +101,23 @@ final class ArtifactUpdatedHandlerTest extends TestCase
     public function testItCleansUpTopBacklogAndPlansUserStoriesAndSchedulesProgramIncrementUpdate(): void
     {
         $this->user_stories_planner->expects(self::once())->method('plan');
-        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
 
         $this->getHandler()->handle($this->event);
 
-        self::assertTrue($this->logger->hasDebugRecords());
+        self::assertSame(1, $this->feature_remover->getCallCount());
+        self::assertSame(1, $this->update_store->getCallCount());
+        self::assertSame(1, $this->update_dispatcher->getCallCount());
     }
 
     public function testItOnlyCleansUpTopBacklogWhenArtifactIsNotAProgramIncrement(): void
     {
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
         $this->user_stories_planner->expects(self::never())->method('plan');
-        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
 
         $this->getHandler()->handle($this->event);
 
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertSame(1, $this->feature_remover->getCallCount());
+        self::assertSame(0, $this->update_store->getCallCount());
+        self::assertSame(0, $this->update_dispatcher->getCallCount());
     }
 }

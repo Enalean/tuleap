@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
@@ -61,13 +62,13 @@ final class ProgramIncrementIdentifier
         return new self($artifact_id);
     }
 
-    public static function fromArtifactUpdated(
+    public static function fromArtifactEvent(
         VerifyIsProgramIncrementTracker $program_increment_verifier,
-        ArtifactUpdatedEvent $artifact_updated
+        ArtifactUpdatedEvent|ArtifactCreatedEvent $event
     ): ?self {
-        if (! $program_increment_verifier->isProgramIncrementTracker($artifact_updated->getTracker()->getId())) {
+        if (! $program_increment_verifier->isProgramIncrementTracker($event->getTracker()->getId())) {
             return null;
         }
-        return new self($artifact_updated->getArtifact()->getId());
+        return new self($event->getArtifact()->getId());
     }
 }

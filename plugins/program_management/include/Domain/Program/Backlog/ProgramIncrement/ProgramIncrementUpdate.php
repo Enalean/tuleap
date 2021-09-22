@@ -57,7 +57,7 @@ final class ProgramIncrementUpdate
         VerifyIsProgramIncrementTracker $program_increment_verifier,
         ArtifactUpdatedEvent $event
     ): ?self {
-        $program_increment = ProgramIncrementIdentifier::fromArtifactUpdated($program_increment_verifier, $event);
+        $program_increment = ProgramIncrementIdentifier::fromArtifactEvent($program_increment_verifier, $event);
         if (! $program_increment) {
             return null;
         }

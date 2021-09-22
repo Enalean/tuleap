@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Domain\Events;
 
-interface PendingArtifactCreationStore
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
+/**
+ * @psalm-immutable
+ */
+interface ArtifactCreatedEvent
 {
-    public function getPendingArtifactById(int $artifact_id, int $user_id): ?array;
-
-    public function deleteArtifactFromPendingCreation(int $artifact_id, int $user_id): void;
+    public function getArtifact(): ArtifactIdentifier;
+    public function getTracker(): TrackerIdentifier;
+    public function getUser(): UserIdentifier;
+    public function getChangeset(): ChangesetIdentifier;
 }

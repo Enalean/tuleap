@@ -25,8 +25,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 
-final class PendingArtifactCreationDao extends DataAccessObject implements PendingArtifactCreationStore
+final class PendingProgramIncrementCreationDAO extends DataAccessObject implements PendingArtifactCreationStore, StoreProgramIncrementCreation
 {
     public function getPendingArtifactById(int $artifact_id, int $user_id): ?array
     {
@@ -40,15 +42,13 @@ final class PendingArtifactCreationDao extends DataAccessObject implements Pendi
         });
     }
 
-    public function addArtifactToPendingCreation(int $artifact_id, int $user_id, int $changeset_id): void
+    public function storeCreation(ProgramIncrementCreation $creation): void
     {
-        $this->getDB()->run(
-            "INSERT INTO plugin_program_management_pending_mirrors
-            (program_artifact_id, user_id, changeset_id) VALUES (?, ?, ?)",
-            $artifact_id,
-            $user_id,
-            $changeset_id
-        );
+        $this->getDB()->insert('plugin_program_management_pending_mirrors', [
+            'program_artifact_id' => $creation->program_increment->getId(),
+            'user_id'             => $creation->user->getId(),
+            'changeset_id'        => $creation->changeset->getId()
+        ]);
     }
 
     public function deleteArtifactFromPendingCreation(int $artifact_id, int $user_id): void

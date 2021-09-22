@@ -23,46 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Exception;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
+use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
 
-final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
+/**
+ * I push a single Queue message to trigger the creation of mirrored Program Increments.
+ */
+final class ProgramIncrementCreationDispatcher implements DispatchProgramIncrementCreation
 {
     private const TOPIC = 'tuleap.program_management.program_increment.creation';
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var QueueFactory
-     */
-    private $queue_factory;
-    /**
-     * @var BuildReplicationData
-     */
-    private $replication_data_adapter;
-    /**
-     * @var TaskBuilder
-     */
-    private $task_builder;
-
-
     public function __construct(
-        \Psr\Log\LoggerInterface $logger,
-        QueueFactory $queue_factory,
-        BuildReplicationData $replication_data_adapter,
-        TaskBuilder $task_builder
+        private LoggerInterface $logger,
+        private QueueFactory $queue_factory,
+        private BuildReplicationData $replication_data_adapter,
+        private TaskBuilder $task_builder
     ) {
-        $this->logger                   = $logger;
-        $this->queue_factory            = $queue_factory;
-        $this->replication_data_adapter = $replication_data_adapter;
-        $this->task_builder             = $task_builder;
     }
 
     /**
@@ -96,22 +79,23 @@ final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
         $task->createProgramIncrements($replication_data);
     }
 
-    public function executeProgramIncrementsCreation(ReplicationData $replication_data): void
+    public function dispatchCreation(ProgramIncrementCreation $creation): void
     {
-        $artifact_id = $replication_data->getArtifact()->getId();
+        $artifact_id = $creation->program_increment->getId();
         try {
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
                 self::TOPIC,
                 [
                     'artifact_id' => $artifact_id,
-                    'user_id'     => $replication_data->getUserIdentifier()->getId(),
+                    'user_id'     => $creation->user->getId(),
                 ]
             );
         } catch (Exception $exception) {
             $this->logger->error("Unable to queue artifact mirrors creation for artifact #{$artifact_id}", ['exception' => $exception]);
 
 
+            $replication_data = $this->replication_data_adapter->buildFromProgramIncrementCreation($creation);
             $this->processProgramIncrementCreation($replication_data);
         }
     }

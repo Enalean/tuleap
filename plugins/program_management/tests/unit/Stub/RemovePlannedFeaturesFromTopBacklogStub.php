@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-interface PendingArtifactCreationStore
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
+
+final class RemovePlannedFeaturesFromTopBacklogStub implements RemovePlannedFeaturesFromTopBacklog
 {
-    public function getPendingArtifactById(int $artifact_id, int $user_id): ?array;
+    private function __construct(private int $call_count)
+    {
+    }
 
-    public function deleteArtifactFromPendingCreation(int $artifact_id, int $user_id): void;
+    public static function withCount(): self
+    {
+        return new self(0);
+    }
+
+    public function removeFeaturesPlannedInAProgramIncrementFromTopBacklog(int $potential_program_increment_id): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
 }

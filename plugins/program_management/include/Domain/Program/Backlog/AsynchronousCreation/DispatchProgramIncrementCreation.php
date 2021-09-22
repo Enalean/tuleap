@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface PendingArtifactCreationStore
-{
-    public function getPendingArtifactById(int $artifact_id, int $user_id): ?array;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 
-    public function deleteArtifactFromPendingCreation(int $artifact_id, int $user_id): void;
+interface DispatchProgramIncrementCreation
+{
+    public function dispatchCreation(ProgramIncrementCreation $creation): void;
 }

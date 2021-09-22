@@ -22,83 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerIdentifierProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
-use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 final class ArtifactCreatedHandler
 {
-    private VerifyIsProgram $program_verifier;
-    private RunProgramIncrementCreation $run_program_increment_creation;
-    private PendingArtifactCreationStore $pending_artifact_creation_store;
-    private VerifyIsProgramIncrementTracker $program_increment_verifier;
-    private RemovePlannedFeaturesFromTopBacklog $feature_remover;
-    private LoggerInterface $logger;
-
     public function __construct(
-        VerifyIsProgram $program_verifier,
-        RunProgramIncrementCreation $run_program_increment_creation,
-        PendingArtifactCreationStore $pending_artifact_creation_store,
-        VerifyIsProgramIncrementTracker $program_increment_verifier,
-        RemovePlannedFeaturesFromTopBacklog $feature_remover,
-        LoggerInterface $logger
+        private RemovePlannedFeaturesFromTopBacklog $feature_remover,
+        private VerifyIsProgramIncrementTracker $program_increment_verifier,
+        private StoreProgramIncrementCreation $creation_store,
+        private DispatchProgramIncrementCreation $creation_dispatcher,
     ) {
-        $this->program_verifier                = $program_verifier;
-        $this->run_program_increment_creation  = $run_program_increment_creation;
-        $this->pending_artifact_creation_store = $pending_artifact_creation_store;
-        $this->program_increment_verifier      = $program_increment_verifier;
-        $this->feature_remover                 = $feature_remover;
-        $this->logger                          = $logger;
     }
 
-    public function handle(ArtifactCreated $event): void
+    public function handle(ArtifactCreatedEvent $event): void
     {
-        $source_artifact = $event->getArtifact();
-        $source_tracker  = $source_artifact->getTracker();
-        $source_project  = $source_tracker->getProject();
-        $current_user    = $event->getUser();
+        $this->feature_remover->removeFeaturesPlannedInAProgramIncrementFromTopBacklog($event->getArtifact()->getId());
 
-        $this->feature_remover->removeFeaturesPlannedInAProgramIncrementFromTopBacklog($source_artifact->getId());
-
-        if (! $this->program_verifier->isAProgram((int) $source_project->getID())) {
-            $this->logger->debug($source_project->getID() . " is not a program");
-            return;
-        }
-
-        $this->logger->debug(
-            sprintf(
-                "Store program create with #%d by user #%d",
-                $source_artifact->getId(),
-                (int) $event->getUser()->getId()
-            )
-        );
-
-        $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromId(
+        $creation = ProgramIncrementCreation::fromArtifactCreatedEvent(
             $this->program_increment_verifier,
-            TrackerIdentifierProxy::fromTracker($source_tracker)
+            $event
         );
-        if (! $program_increment_tracker) {
+        if (! $creation) {
             return;
         }
-        $this->pending_artifact_creation_store->addArtifactToPendingCreation(
-            $event->getArtifact()->getId(),
-            (int) $event->getUser()->getId(),
-            (int) $event->getChangeset()->getId()
-        );
-
-        $replication_data = ReplicationDataAdapter::build(
-            $source_artifact,
-            $current_user,
-            $event->getChangeset(),
-            $program_increment_tracker
-        );
-        $this->run_program_increment_creation->executeProgramIncrementsCreation($replication_data);
+        $this->creation_store->storeCreation($creation);
+        $this->creation_dispatcher->dispatchCreation($creation);
     }
 }
