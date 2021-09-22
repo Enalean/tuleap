@@ -27,6 +27,6 @@ class BaselineTuleapService extends \Service
 {
     public function getIconName(): string
     {
-        return 'fa-tlp-baseline';
+        return 'fas fa-tlp-baseline';
     }
 }
