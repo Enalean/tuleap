@@ -64,7 +64,7 @@ class LDAP_ProjectDao extends DataAccessObject
     {
         $sql = 'SELECT NULL' .
             ' FROM plugin_ldap_svn_repository' .
-            ' JOIN groups USING (group_id)' .
+            ' JOIN `groups` USING (group_id)' .
             ' WHERE unix_group_name=' . $this->da->quoteSmart($groupName);
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {

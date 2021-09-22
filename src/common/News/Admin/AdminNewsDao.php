@@ -53,9 +53,9 @@ class AdminNewsDao extends DataAccessObject
     {
         $id = $this->da->escapeInt($id);
 
-        $sql = "SELECT groups.unix_group_name,news_bytes.*
-                FROM news_bytes,groups WHERE id=$id
-                AND news_bytes.group_id=groups.group_id";
+        $sql = "SELECT `groups`.unix_group_name,news_bytes.*
+                FROM news_bytes,`groups` WHERE id=$id
+                AND news_bytes.group_id=`groups`.group_id";
 
         return $this->retrieveFirstRow($sql);
     }

@@ -108,12 +108,12 @@ class Dao extends DataAccessObject
      */
     public function getAllRepositoriesInActiveProjects()
     {
-        $sql = "SELECT groups.*, plugin_svn_repositories.*
-                FROM groups
-                    INNER JOIN service ON (service.group_id = groups.group_id AND service.short_name = 'plugin_svn')
-                    INNER JOIN plugin_svn_repositories ON (plugin_svn_repositories.project_id = groups.group_id)
+        $sql = "SELECT `groups`.*, plugin_svn_repositories.*
+                FROM `groups`
+                    INNER JOIN service ON (service.group_id = `groups`.group_id AND service.short_name = 'plugin_svn')
+                    INNER JOIN plugin_svn_repositories ON (plugin_svn_repositories.project_id = `groups`.group_id)
                 WHERE service.is_used = '1'
-                  AND groups.status = 'A'
+                  AND `groups`.status = 'A'
                   AND repository_deletion_date IS NULL";
 
         return $this->retrieve($sql);
@@ -124,11 +124,11 @@ class Dao extends DataAccessObject
         $project_name = $this->da->quoteSmart($project->getUnixNameMixedCase());
         $name         = $this->da->quoteSmart($name);
 
-        $sql = "SELECT groups.*, id, name, CONCAT(unix_group_name, '/', name) AS repository_name,
+        $sql = "SELECT `groups`.*, id, name, CONCAT(unix_group_name, '/', name) AS repository_name,
                     backup_path, repository_deletion_date, is_core
-                FROM groups, plugin_svn_repositories
-                WHERE project_id = groups.group_id
-                AND groups.unix_group_name = $project_name
+                FROM `groups`, plugin_svn_repositories
+                WHERE project_id = `groups`.group_id
+                AND `groups`.unix_group_name = $project_name
                 AND plugin_svn_repositories.name = $name";
 
         return $this->retrieveFirstRow($sql);
@@ -297,7 +297,7 @@ class Dao extends DataAccessObject
 
         $sql = 'SELECT plugin_svn_repositories.*
                 FROM plugin_svn_repositories
-                    INNER JOIN groups AS project
+                    INNER JOIN `groups` AS project
                     ON plugin_svn_repositories.project_id = project.group_id
                 WHERE project.status <> ' . $status_deleted . '
                 AND repository_deletion_date IS NULL

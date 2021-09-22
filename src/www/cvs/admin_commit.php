@@ -48,7 +48,7 @@ if (! ($service instanceof ServiceCVS)) {
 $service->displayCVSAdminHeader($request->getCurrentUser());
 
 // get project name
-$sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=" . db_ei($group_id);
+$sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from `groups` where group_id=" . db_ei($group_id);
 
 $result             = db_query($sql);
 $projectname        = db_result($result, 0, 'unix_group_name');

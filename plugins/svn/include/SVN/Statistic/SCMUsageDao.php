@@ -35,7 +35,7 @@ class SCMUsageDao extends DataAccessObject
                     SUM(svn_browse_operations) AS nb_browse
                 FROM plugin_svn_full_history
                 JOIN plugin_svn_repositories ON plugin_svn_repositories.id = plugin_svn_full_history.repository_id
-                JOIN groups ON groups.group_id = plugin_svn_repositories.project_id
+                JOIN `groups` ON `groups`.group_id = plugin_svn_repositories.project_id
                 WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
                     $filter_by_project
                 GROUP BY year, month
@@ -54,7 +54,7 @@ class SCMUsageDao extends DataAccessObject
                     COUNT(DISTINCT(group_id)) AS nb_project, COUNT(DISTINCT(user_id)) AS nb_user
                 FROM plugin_svn_full_history
                 JOIN plugin_svn_repositories ON plugin_svn_repositories.id = plugin_svn_full_history.repository_id
-                JOIN groups ON groups.group_id = plugin_svn_repositories.project_id
+                JOIN `groups` ON `groups`.group_id = plugin_svn_repositories.project_id
                 WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
                     AND svn_read_operations > 0
                     $filter_by_project
@@ -74,7 +74,7 @@ class SCMUsageDao extends DataAccessObject
                     COUNT(DISTINCT(group_id)) AS nb_project, COUNT(DISTINCT(user_id)) AS nb_user
                 FROM plugin_svn_full_history
                 JOIN plugin_svn_repositories ON plugin_svn_repositories.id = plugin_svn_full_history.repository_id
-                JOIN groups ON groups.group_id = plugin_svn_repositories.project_id
+                JOIN `groups` ON `groups`.group_id = plugin_svn_repositories.project_id
                 WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
                     AND svn_write_operations > 0
                     $filter_by_project
@@ -93,7 +93,7 @@ class SCMUsageDao extends DataAccessObject
         $sql = "SELECT unix_group_name AS project, SUM(svn_write_operations) AS nb_write
                 FROM plugin_svn_full_history
                 JOIN plugin_svn_repositories ON plugin_svn_repositories.id = plugin_svn_full_history.repository_id
-                JOIN groups ON groups.group_id = plugin_svn_repositories.project_id
+                JOIN `groups` ON `groups`.group_id = plugin_svn_repositories.project_id
                 WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
                     $filter_by_project
                 GROUP BY project
@@ -113,7 +113,7 @@ class SCMUsageDao extends DataAccessObject
                 FROM plugin_svn_full_history
                 JOIN user ON user.user_id = plugin_svn_full_history.user_id
                 JOIN plugin_svn_repositories ON plugin_svn_repositories.id = plugin_svn_full_history.repository_id
-                JOIN groups ON groups.group_id = plugin_svn_repositories.project_id
+                JOIN `groups` ON `groups`.group_id = plugin_svn_repositories.project_id
                 WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
                     $filter_by_project
                 GROUP BY user

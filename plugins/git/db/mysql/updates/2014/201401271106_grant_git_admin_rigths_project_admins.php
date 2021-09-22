@@ -52,7 +52,7 @@ EOT;
     {
          $sql = "INSERT INTO permissions (object_id, permission_type, ugroup_id)
                  SELECT DISTINCT(group_id), 'PLUGIN_GIT_ADMIN', 4
-                 FROM groups";
+                 FROM `groups`";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

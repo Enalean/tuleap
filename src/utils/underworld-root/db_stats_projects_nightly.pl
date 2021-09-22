@@ -92,7 +92,7 @@ if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
 	## register_time
 	$sql = "INSERT INTO stats_project_build_tmp
 		SELECT group_id,'register_time',register_time 
-		FROM groups
+		FROM `groups`
 		GROUP BY group_id";
 	$rel = $dbh->prepare($sql)->execute();
 	print "Insert register_time from groups...\n" if $verbose;

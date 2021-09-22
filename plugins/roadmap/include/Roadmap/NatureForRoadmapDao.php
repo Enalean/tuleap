@@ -40,7 +40,7 @@ class NatureForRoadmapDao extends DataAccessObject
                     INNER JOIN tracker                              AS t          ON (t.id = linked_art.tracker_id AND t.deletion_date IS NULL)
                     INNER JOIN tracker_semantic_title               AS title      ON (title.tracker_id = t.id)
                     INNER JOIN tracker_semantic_timeframe           AS timeframe  ON (t.id = timeframe.tracker_id)
-                    INNER JOIN groups ON (groups.group_id = t.group_id AND groups.status = 'A')
+                    INNER JOIN `groups` ON (`groups`.group_id = t.group_id AND `groups`.status = 'A')
                 WHERE parent_art.id  = ?";
 
         return $this->getDB()->run($sql, $artifact_id);

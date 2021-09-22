@@ -364,9 +364,9 @@ class TrackerDao extends DataAccessObject
     {
         $sql = "SELECT tracker.*
                 FROM tracker
-                    INNER JOIN groups USING (group_id)
+                    INNER JOIN `groups` USING (group_id)
                 WHERE tracker.deletion_date > 0
-                    AND groups.status <> 'D'
+                    AND `groups`.status <> 'D'
                 ORDER BY tracker.group_id";
 
         return $this->retrieve($sql);

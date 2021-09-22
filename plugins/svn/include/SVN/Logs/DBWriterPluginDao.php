@@ -28,7 +28,7 @@ class DBWriterPluginDao extends \DataAccessObject
     {
         $project_names = $this->da->quoteSmartImplode(',', $project_names);
         $sql           = "SELECT id as repository_id, unix_group_name as project_name, name as repository_name
-          FROM groups g
+          FROM `groups` AS g
           INNER JOIN plugin_svn_repositories r ON (r.project_id = g.group_id)
           WHERE
           g.unix_group_name IN ($project_names)";

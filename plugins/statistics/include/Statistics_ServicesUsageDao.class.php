@@ -46,7 +46,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     public function getNameOfActiveProjectsBeforeEndDate()
     {
         $sql = "SELECT group_id, group_name AS result
-            FROM groups
+            FROM `groups`
             WHERE status='A'
                AND register_time <= $this->end_date
             GROUP BY group_id";
@@ -57,7 +57,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     public function getShortNameOfActiveProjectsBeforeEndDate()
     {
         $sql = "SELECT group_id, unix_group_name AS result
-            FROM groups
+            FROM `groups`
             WHERE status='A'
                AND register_time <= $this->end_date
             GROUP BY group_id";
@@ -68,7 +68,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     public function getIdsOfActiveProjectsBeforeEndDate()
     {
         $sql = "SELECT group_id, group_id AS result
-            FROM groups
+            FROM `groups`
             WHERE status='A'
                AND register_time <= $this->end_date
             GROUP BY group_id";
@@ -79,7 +79,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     public function getPrivacyOfActiveProjectsBeforeEndDate()
     {
         $sql = "SELECT group_id, access AS result
-            FROM groups
+            FROM `groups`
             WHERE status='A'
                AND register_time <= $this->end_date
             GROUP BY group_id";
@@ -90,7 +90,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     public function getDescriptionOfActiveProjectsBeforeEndDate()
     {
         $sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ') AS result
-                FROM groups
+                FROM `groups`
                 WHERE status='A'
                     AND register_time <= $this->end_date
                 GROUP BY group_id";
@@ -101,7 +101,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     public function getRegisterTimeOfActiveProjectsBeforeEndDate()
     {
         $sql = "SELECT group_id, FROM_UNIXTIME(register_time,'%Y-%m-%d') AS result
-                FROM groups
+                FROM `groups`
                 WHERE status='A'
                     AND register_time <= $this->end_date
                 GROUP BY group_id";
@@ -156,8 +156,8 @@ class Statistics_ServicesUsageDao extends DataAccessObject
         $end_date = $this->da->escapeInt($this->end_date);
 
         $sql = "SELECT group_id, IF(xml.template_name IS NOT NULL, 0, built_from_template) AS result
-                FROM groups
-                    LEFT JOIN project_template_xml AS xml ON (xml.id = groups.group_id)
+                FROM `groups`
+                    LEFT JOIN project_template_xml AS xml ON (xml.id = `groups`.group_id)
                 WHERE status='A'
                   AND register_time <= $end_date
                 GROUP BY group_id";
@@ -170,8 +170,8 @@ class Statistics_ServicesUsageDao extends DataAccessObject
         $end_date = $this->da->escapeInt($this->end_date);
 
         $sql = "SELECT project.group_id, IF(xml.template_name IS NOT NULL, xml.template_name, template.group_name) AS result
-                FROM groups AS project
-                    INNER JOIN  groups AS template ON (template.group_id = project.built_from_template)
+                FROM `groups` AS project
+                    INNER JOIN  `groups` AS template ON (template.group_id = project.built_from_template)
                     LEFT JOIN project_template_xml AS xml ON (xml.id = project.group_id)
                 WHERE project.status='A'
                   AND project.register_time <= $end_date

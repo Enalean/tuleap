@@ -139,22 +139,22 @@ FROM user;
 
 INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default)
 SELECT group_id, 'g', 1, 1
-FROM groups;
+FROM `groups`;
 
 -- First column
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 1, 'projectdescription', 0
-FROM groups;
+FROM `groups`;
 
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 1, 'projectpublicareas', 2
-FROM groups;
+FROM `groups`;
 
 -- Second column
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 2, 'projectmembers', 0
-FROM groups;
+FROM `groups`;
 
 -- only if News is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)

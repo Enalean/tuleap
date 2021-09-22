@@ -24,10 +24,10 @@ class SVN_DAO extends \Tuleap\DB\DataAccessObject
     public function searchSvnRepositories()
     {
         $sql = "SELECT groups.*
-                FROM groups
-                    INNER JOIN service ON (service.group_id = groups.group_id AND service.short_name = 'svn')
+                FROM `groups`
+                    INNER JOIN service ON (service.group_id = `groups`.group_id AND service.short_name = 'svn')
                 WHERE service.is_used = '1'
-                  AND groups.status = 'A'";
+                  AND `groups`.status = 'A'";
 
         return $this->getDB()->run($sql);
     }

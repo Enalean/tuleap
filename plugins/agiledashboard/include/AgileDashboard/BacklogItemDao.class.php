@@ -107,7 +107,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                     -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
-                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G               ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
                     LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
                         tracker_semantic_status as SS
@@ -143,7 +143,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                     -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
-                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G               ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
                     -- ensure that the artifact is not planned in a milestone by joins + IS NULL (below)
                     LEFT JOIN ( tracker_artifact parent_art
@@ -171,7 +171,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                         -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
-                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G               ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
                     -- Look if there is any status /open/ semantic defined
                     LEFT JOIN (
@@ -211,7 +211,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                         -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
-                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G               ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
                     -- ensure that the artifact is not planned in a milestone by joins + IS NULL (below)
                     LEFT JOIN ( tracker_artifact parent_art
@@ -242,7 +242,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                 FROM tracker_artifact AS art_1
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
-                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G               ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
                     -- ensure that the artifact is not planned in a milestone by joins
                     LEFT JOIN ( tracker_artifact parent_art

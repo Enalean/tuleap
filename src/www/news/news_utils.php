@@ -121,8 +121,8 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
         $wclause = 'news_bytes.is_approved = 1';
     }
 
-    $sql = "SELECT groups.group_name,
-                    groups.unix_group_name,
+    $sql = "SELECT `groups`.group_name,
+                    `groups`.unix_group_name,
                     news_bytes.submitted_by,
                     news_bytes.forum_id,
                     news_bytes.summary,
@@ -130,10 +130,10 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
                     news_bytes.details,
                     count(forum.msg_id) AS num_comments
             FROM news_bytes
-                INNER JOIN groups ON (news_bytes.group_id = groups.group_id)
+                INNER JOIN `groups` ON (news_bytes.group_id = `groups`.group_id)
                 LEFT JOIN forum ON (forum.group_forum_id = news_bytes.forum_id)
             WHERE $wclause
-              AND groups.status = 'A'
+              AND `groups`.status = 'A'
             GROUP BY news_bytes.forum_id
             ORDER BY date DESC LIMIT " . db_ei($limit + $tail_headlines);
 
@@ -322,7 +322,7 @@ function news_check_permission($forum_id, $group_id)
 
     if ($group_id == ForgeConfig::get('sys_news_group')) {
         //search for the real group_id of the news
-        $sql = "SELECT g.access FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = " . db_ei($forum_id);
+        $sql = "SELECT g.access FROM news_bytes AS n INNER JOIN `groups` AS g USING(group_id) WHERE n.forum_id = " . db_ei($forum_id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $row = db_fetch_array($res);

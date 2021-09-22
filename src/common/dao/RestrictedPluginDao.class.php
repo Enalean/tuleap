@@ -73,7 +73,7 @@ class RestrictedPluginDao extends RestrictedResourceDao
         $resource_id = $this->da->escapeInt($resource_id);
 
         $sql = "SELECT *
-                FROM groups g
+                FROM `groups` AS g
                 INNER JOIN project_plugin pp ON g.group_id = pp.project_id
                 WHERE pp.plugin_id = $resource_id";
 

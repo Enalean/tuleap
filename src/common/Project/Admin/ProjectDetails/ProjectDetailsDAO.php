@@ -37,7 +37,7 @@ class ProjectDetailsDAO extends DataAccessObject
     public function searchGroupInfo($group_id)
     {
         $escaped_group_id = $this->da->escapeInt($group_id);
-        $group_info       = $this->retrieveFirstRow("SELECT * FROM groups WHERE group_id = $escaped_group_id");
+        $group_info       = $this->retrieveFirstRow("SELECT * FROM `groups` WHERE group_id = $escaped_group_id");
 
         if ($this->foundRows() < 1) {
             exit_no_group();
@@ -84,7 +84,7 @@ class ProjectDetailsDAO extends DataAccessObject
         $escaped_form_shortdesc  = $this->da->quoteSmart($form_shortdesc);
         $escaped_group_id        = $this->da->escapeInt($group_id);
 
-        $sql = "UPDATE groups
+        $sql = "UPDATE `groups`
                 SET   group_name        = $escaped_form_group_name,
                       short_description = $escaped_form_shortdesc
                 WHERE group_id          = $escaped_group_id";

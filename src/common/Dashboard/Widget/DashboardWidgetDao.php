@@ -656,7 +656,7 @@ class DashboardWidgetDao extends DataAccessObject
                         line.dashboard_type = 'project'
                         AND project_dashboards.id = line.dashboard_id
                     )
-                    LEFT JOIN groups AS project ON(
+                    LEFT JOIN `groups` AS project ON(
                         project.group_id = project_dashboards.project_id
                     )
                     LEFT JOIN user_dashboards ON(

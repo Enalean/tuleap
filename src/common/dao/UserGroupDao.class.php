@@ -43,9 +43,9 @@ class UserGroupDao extends DataAccessObject
     {
         $user_id = $this->da->escapeInt($user_id);
         $sql     = "SELECT *
-                FROM user_group INNER JOIN groups USING(group_id)
+                FROM user_group INNER JOIN `groups` USING(group_id)
                 WHERE user_id = $user_id
-                  AND groups.status = 'A'";
+                  AND `groups`.status = 'A'";
         return $this->retrieve($sql);
     }
 

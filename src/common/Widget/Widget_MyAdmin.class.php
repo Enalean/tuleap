@@ -144,7 +144,7 @@ class Widget_MyAdmin extends Widget
 
     private function getHTMLForNonSuperAdmin($i)
     {
-        db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
+        db_query("SELECT count(*) AS count FROM `groups` WHERE status='P'");
         $row              = db_fetch_array();
         $pending_projects = $row['count'];
 

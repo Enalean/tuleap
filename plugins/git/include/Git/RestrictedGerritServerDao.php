@@ -70,7 +70,7 @@ class RestrictedGerritServerDao extends RestrictedResourceDao
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
 
         $sql = "SELECT *
-                FROM groups g
+                FROM `groups` AS g
                 INNER JOIN plugin_git_restricted_gerrit_servers_allowed_projects rgs ON g.group_id = rgs.project_id
                 WHERE rgs.gerrit_server_id = $gerrit_server_id";
 

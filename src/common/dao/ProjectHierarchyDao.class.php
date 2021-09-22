@@ -78,9 +78,9 @@ class ProjectHierarchyDao extends DataAccessObject
     {
         $group_id = $this->da->escapeInt($group_id);
 
-        $sql = "SELECT groups.*
-               FROM groups
-               JOIN project_parent ON (groups.group_id = project_parent.parent_group_id)
+        $sql = "SELECT `groups`.*
+               FROM `groups`
+               JOIN project_parent ON (`groups`.group_id = project_parent.parent_group_id)
                WHERE project_parent.group_id = $group_id";
 
         return $this->retrieve($sql);
@@ -94,9 +94,9 @@ class ProjectHierarchyDao extends DataAccessObject
     {
         $group_id = $this->da->escapeInt($group_id);
 
-        $sql = "SELECT groups.*
-               FROM groups
-               JOIN project_parent ON (groups.group_id = project_parent.group_id)
+        $sql = "SELECT `groups`.*
+               FROM `groups`
+               JOIN project_parent ON (`groups`.group_id = project_parent.group_id)
                WHERE project_parent.parent_group_id = $group_id";
 
         return $this->retrieve($sql);

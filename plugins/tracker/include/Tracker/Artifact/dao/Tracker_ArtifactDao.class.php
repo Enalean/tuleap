@@ -220,7 +220,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $sql                     = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)          -- Last changeset is needed (no need of history)
                     LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
                         tracker_semantic_status as SS
@@ -258,7 +258,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN (
                         tracker_semantic_contributor as SC
                         INNER JOIN tracker_changeset_value AS CV1 ON (CV1.field_id = SC.field_id)
@@ -300,7 +300,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on, G.group_name
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
                         tracker_semantic_status as SS
                         INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
@@ -323,7 +323,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                 SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on, G.group_name
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN (
                         tracker_semantic_contributor as SC
                         INNER JOIN tracker_changeset_value AS CV1 ON (CV1.field_id = SC.field_id)
@@ -790,7 +790,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     $exclude
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
                     LEFT JOIN (
                         tracker_semantic_status as SS
@@ -849,7 +849,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     ) ON (linked_art.id = artlink2.artifact_id $exclude)
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
                     LEFT JOIN (
                         tracker_changeset_value AS CV2
@@ -903,7 +903,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     $exclude
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
                     LEFT JOIN (
                         tracker_changeset_value AS CV2
@@ -1084,7 +1084,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                      $exclude
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
                     LEFT JOIN (
                         tracker_changeset_value AS CV2
@@ -1204,7 +1204,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     ) ON (linked_art.id = artlink2.artifact_id $exclude)
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
                     INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
                     LEFT JOIN (
                         tracker_semantic_status as SS

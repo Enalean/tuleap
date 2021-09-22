@@ -46,7 +46,7 @@ class MediawikiVersionDao extends DataAccessObject
 
     public function getAllMediawikiToMigrate($from_version)
     {
-        $sql = "SELECT groups.group_id " . $this->getSearchVersionQuery($from_version);
+        $sql = "SELECT `groups`.group_id " . $this->getSearchVersionQuery($from_version);
         return $this->retrieve($sql);
     }
 
@@ -60,9 +60,9 @@ class MediawikiVersionDao extends DataAccessObject
     private function getSearchVersionQuery($from_version)
     {
         $from_version = $this->da->quoteSmart($from_version);
-        return "FROM groups
-                INNER JOIN plugin_mediawiki_version mw_version ON (mw_version.project_id = groups.group_id)
+        return "FROM `groups`
+                INNER JOIN plugin_mediawiki_version mw_version ON (mw_version.project_id = `groups`.group_id)
                 WHERE mw_version = $from_version
-                AND groups.status IN ('A', 's')";
+                AND `groups`.status IN ('A', 's')";
     }
 }

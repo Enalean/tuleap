@@ -33,28 +33,28 @@ class b201504081720_allow_restricted_project_access extends \Tuleap\ForgeUpgrade
 
     public function up()
     {
-        $sql = "ALTER TABLE groups
+        $sql = "ALTER TABLE `groups`
                 ADD COLUMN access VARCHAR(16) NOT NULL DEFAULT 'private' AFTER is_public";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column access in table groups');
         }
 
-        $sql = "UPDATE groups
+        $sql = "UPDATE `groups`
                 SET access = 'private' WHERE is_public = 0";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating column access with private projects');
         }
 
-        $sql = "UPDATE groups
+        $sql = "UPDATE `groups`
                 SET access = 'public' WHERE is_public = 1";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating column access with public projects');
         }
 
-        $sql = "ALTER TABLE groups
+        $sql = "ALTER TABLE `groups`
                 DROP COLUMN is_public,
                 DROP KEY idx_groups_public,
                 ADD KEY idx_groups_access (access)";

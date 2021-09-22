@@ -44,7 +44,7 @@ print "Running year $year, month $month, day $day.\n" if $verbose;
 
    ## It's makes things a whole lot faster for us if we cache the filerelease/group info beforehand.
 print "Caching group information out of the database..." if $verbose;
-$query = "SELECT group_id,unix_group_name,http_domain FROM groups";
+$query = "SELECT group_id,unix_group_name,http_domain FROM `groups`";
 $rel = $dbh->prepare( $query );
 $rel->execute();
 while( $info = $rel->fetchrow_arrayref() ) {

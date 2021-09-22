@@ -190,7 +190,7 @@ class PluginHudsonJobDao extends DataAccessObject
         }
         $sql = "SELECT COUNT(*) AS count
                 FROM plugin_hudson_job
-                JOIN groups USING (group_id)
+                JOIN `groups` USING (group_id)
                 WHERE status = 'A'
                   " . $condition;
         return $this->retrieve($sql);

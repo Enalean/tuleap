@@ -70,7 +70,7 @@ if ( ! -f $logfile ) {
    ## Now, we will pull all of the project ID's and names into a *massive*
    ## hash, because it will save us some real time in the log processing.
 print "Caching group information from groups table.\n" if $verbose;
-$sql = "SELECT group_id,unix_group_name FROM groups";
+$sql = "SELECT group_id,unix_group_name FROM `groups`";
 $res = $dbh->prepare($sql);
 $res->execute();
 while ( $temp = $res->fetchrow_arrayref() ) {

@@ -55,7 +55,7 @@ if ($status !== true) {
 }
 
 $sql = "SELECT access, count(*) AS nb
-    FROM groups
+    FROM `groups`
     WHERE status = 'A'
     GROUP BY access";
 dumpStats($dao, $sql, $archive, "private-public-projects.csv");
@@ -69,8 +69,8 @@ $sql = "SELECT
          user_group.group_id,
          count(user_group.user_id) AS nb
      FROM user_group
-         INNER JOIN groups
-             ON groups.group_id = user_group.group_id AND groups.status = 'A'
+         INNER JOIN `groups`
+             ON `groups`.group_id = user_group.group_id AND `groups`.status = 'A'
          INNER JOIN user
             ON user.user_id = user_group.user_id AND user.status IN ('A', 'R')
      GROUP BY group_id";
@@ -80,8 +80,8 @@ $sql = "SELECT
          user_group.user_id,
          count(user_group.group_id) AS nb
      FROM user_group
-         INNER JOIN groups
-             ON groups.group_id = user_group.group_id AND groups.status = 'A'
+         INNER JOIN `groups`
+             ON `groups`.group_id = user_group.group_id AND `groups`.status = 'A'
          INNER JOIN user
             ON user.user_id = user_group.user_id AND user.status IN ('A', 'R')
      GROUP BY user_id";
@@ -103,8 +103,8 @@ dumpStats($dao, $sql, $archive, "nb-users-by-timezone.csv");
 
 $sql = "SELECT frs_package.group_id, count(*) AS nb
      FROM frs_package
-         INNER JOIN groups
-             ON groups.group_id = frs_package.group_id AND groups.status = 'A'
+         INNER JOIN `groups`
+             ON `groups`.group_id = frs_package.group_id AND `groups`.status = 'A'
      GROUP BY frs_package.group_id";
 dumpStats($dao, $sql, $archive, "nb-packages-per-projects.csv");
 
@@ -114,8 +114,8 @@ $sql = "SELECT
      FROM frs_release
          INNER JOIN frs_package
              ON frs_release.package_id = frs_package.package_id
-         INNER JOIN groups
-             ON groups.group_id = frs_package.group_id AND groups.status = 'A'
+         INNER JOIN `groups`
+             ON `groups`.group_id = frs_package.group_id AND `groups`.status = 'A'
      GROUP BY frs_package.package_id";
 dumpStats($dao, $sql, $archive, "nb-releases-per-packages.csv");
 
@@ -127,8 +127,8 @@ $sql = "SELECT
              ON frs_file.release_id = frs_release.release_id
          INNER JOIN frs_package
              ON frs_release.package_id = frs_package.package_id
-         INNER JOIN groups
-             ON groups.group_id = frs_package.group_id AND groups.status = 'A'
+         INNER JOIN `groups`
+             ON `groups`.group_id = frs_package.group_id AND `groups`.status = 'A'
      GROUP BY frs_release.release_id";
 dumpStats($dao, $sql, $archive, "nb-files-per-releases.csv");
 
@@ -137,8 +137,8 @@ if ($plugin_manager->getAvailablePluginByName('git')) {
             project_id,
             count(*) AS nb
         FROM plugin_git
-            INNER JOIN groups
-                ON groups.group_id = plugin_git.project_id AND groups.status = 'A'
+            INNER JOIN `groups`
+                ON `groups`.group_id = plugin_git.project_id AND `groups`.status = 'A'
         GROUP BY project_id";
     dumpStats($dao, $sql, $archive, "nb-git-repositories-per-projects.csv");
 }
@@ -149,8 +149,8 @@ if ($plugin_manager->getAvailablePluginByName('svn')) {
             project_id,
             count(*) AS nb
         FROM plugin_svn_repositories
-            INNER JOIN groups
-                ON groups.group_id = plugin_svn_repositories.project_id AND groups.status = 'A'
+            INNER JOIN `groups`
+                ON `groups`.group_id = plugin_svn_repositories.project_id AND `groups`.status = 'A'
         GROUP BY project_id";
     dumpStats($dao, $sql, $archive, "nb-svn-repositories-per-projects.csv");
 }
@@ -160,8 +160,8 @@ if ($plugin_manager->getAvailablePluginByName('tracker')) {
             tracker.group_id,
             count(*) AS nb
         FROM tracker
-            INNER JOIN groups
-                ON groups.group_id = tracker.group_id AND groups.status = 'A' AND deletion_date IS NULL
+            INNER JOIN `groups`
+                ON `groups`.group_id = tracker.group_id AND `groups`.status = 'A' AND deletion_date IS NULL
         GROUP BY tracker.group_id";
     dumpStats($dao, $sql, $archive, "nb-trackers-per-projects.csv");
 
@@ -169,8 +169,8 @@ if ($plugin_manager->getAvailablePluginByName('tracker')) {
             tracker.group_id,
             count(*) AS nb
         FROM tracker
-            INNER JOIN groups
-                ON groups.group_id = tracker.group_id AND groups.status = 'A' AND deletion_date IS NULL
+            INNER JOIN `groups`
+                ON `groups`.group_id = tracker.group_id AND `groups`.status = 'A' AND deletion_date IS NULL
             INNER JOIN tracker_artifact
                 ON tracker.id = tracker_artifact.tracker_id
         GROUP BY tracker.group_id";

@@ -41,11 +41,11 @@ class b201607281200_migrate_existing_permissions extends \Tuleap\ForgeUpgrade\Bu
         $last_ugroup_id = $this->getLastUGroupId();
 
         $sql = "INSERT INTO ugroup (name, description, group_id)
-                    SELECT DISTINCT '$group_frs_admin', '$frs_admin_description', groups.group_id
-                    FROM groups
-                        INNER JOIN user_group ON user_group.group_id = groups.group_id
+                    SELECT DISTINCT '$group_frs_admin', '$frs_admin_description', `groups`.group_id
+                    FROM `groups`
+                        INNER JOIN user_group ON user_group.group_id = `groups`.group_id
                     WHERE status <> 'D'
-                      AND groups.group_id <> 100
+                      AND `groups`.group_id <> 100
                       AND file_flags = 2";
 
         if ($this->db->dbh->exec($sql) === false) {

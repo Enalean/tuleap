@@ -202,7 +202,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
             '     ON (t.table_id = u.table_id)' .
             '   JOIN plugin_docman_item AS i' .
             '     ON (i.item_id = t.item_id)' .
-            '   JOIN groups g' .
+            '   JOIN `groups` AS g' .
             '     ON (g.group_id = i.group_id)' .
             ' WHERE u.reviewer_id = ' . $this->da->escapeInt($userId) .
             ' AND u.state = ' . $this->da->escapeInt($state) .
@@ -220,7 +220,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
             '     ON (v.id = t.version_id)' .
             '   JOIN plugin_docman_item AS i' .
             '     ON (i.item_id = v.item_id)' .
-            '   JOIN groups g' .
+            '   JOIN `groups` AS g' .
             '     ON (g.group_id = i.group_id)' .
             ' WHERE u.reviewer_id = ' . $this->da->escapeInt($userId) .
             ' AND u.state = ' . $this->da->escapeInt($state) .
@@ -242,7 +242,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
             ' FROM plugin_docman_approval t' .
             '  LEFT JOIN ' . parent::getTableStatusJoin('app_u', 't') .
             '  JOIN plugin_docman_item i ON (i.item_id = t.item_id)' .
-            '  JOIN groups g ON (g.group_id = i.group_id)' .
+            '  JOIN `groups` AS g ON (g.group_id = i.group_id)' .
             ' WHERE t.table_owner = ' . $this->da->escapeInt($userId) .
             ' AND t.status IN (' . PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED . ', ' . PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED . ')' .
             ' AND ' . Docman_ItemDao::getCommonExcludeStmt('i') .
@@ -258,7 +258,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
             '     ON (v.id = t.version_id)' .
             '   JOIN plugin_docman_item AS i' .
             '     ON (i.item_id = v.item_id)' .
-            '   JOIN groups g' .
+            '   JOIN `groups` AS g' .
             '     ON (g.group_id = i.group_id)' .
             ' WHERE t.table_owner = ' . $this->da->escapeInt($userId) .
             ' AND t.status IN (' . PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED . ', ' . PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED . ')' .

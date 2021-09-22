@@ -108,7 +108,7 @@ class TemplateSingleton
 
     public function getTemplates()
     {
-        $db_templates = db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM groups WHERE type='2' and status IN ('A','s')");
+        $db_templates = db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM `groups` WHERE type='2' and status IN ('A','s')");
         return $db_templates;
     }
 }

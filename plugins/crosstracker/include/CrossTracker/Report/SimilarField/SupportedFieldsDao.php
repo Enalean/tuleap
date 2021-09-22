@@ -32,9 +32,9 @@ class SupportedFieldsDao extends DataAccessObject
         $sql = "SELECT tracker_field.*
                 FROM tracker_field
                      JOIN tracker ON (tracker_field.tracker_id = tracker.id)
-                     JOIN groups ON (groups.group_id = tracker.group_id)
+                     JOIN `groups` ON (`groups`.group_id = tracker.group_id)
                 WHERE tracker.deletion_date IS NULL
-                  AND groups.status = 'A'
+                  AND `groups`.status = 'A'
                   AND tracker_field.use_it = 1
                   AND $tracker_ids_statement
                   AND tracker_field.formElement_type IN ('string', 'text', 'int', 'float', 'date', 'sb', 'rb')";

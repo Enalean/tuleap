@@ -482,7 +482,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),
             'type'                => db_ei($type)
         ];
-        $sql         = 'INSERT INTO groups(' . implode(', ', array_keys($insert_data)) . ') VALUES (' . implode(', ', array_values($insert_data)) . ')';
+        $sql         = 'INSERT INTO `groups`(' . implode(', ', array_keys($insert_data)) . ') VALUES (' . implode(', ', array_values($insert_data)) . ')';
         $result      = db_query($sql);
 
         if (! $result) {
@@ -578,10 +578,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function initCVSModuleFromTemplate($group_id, $template_id)
     {
-        $sql    = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM groups WHERE group_id=" . db_ei($template_id);
+        $sql    = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM `groups` WHERE group_id=" . db_ei($template_id);
         $result = db_query($sql);
         $arr    = db_fetch_array($result);
-        $query  = "UPDATE groups
+        $query  = "UPDATE `groups`
                   SET cvs_tracker='" . db_ei($arr['cvs_tracker']) . "',
                       cvs_watch_mode='" . db_ei($arr['cvs_watch_mode']) . "' ,
                       cvs_preamble='" . db_escape_string($arr['cvs_preamble']) . "',
@@ -609,17 +609,17 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
 
-        $sql    = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM groups WHERE group_id=" . db_ei($template_id) . " ";
+        $sql    = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM `groups` WHERE group_id=" . db_ei($template_id) . " ";
         $result = db_query($sql);
         $arr    = db_fetch_array($result);
-        $query  = "UPDATE groups, svn_accessfile_history
+        $query  = "UPDATE `groups`, svn_accessfile_history
                   SET svn_tracker='" . db_ei($arr['svn_tracker']) . "',
                       svn_mandatory_ref='" . db_ei($arr['svn_mandatory_ref']) . "',
                       svn_preamble='" . db_escape_string($arr['svn_preamble']) . "',
                       svn_commit_to_tag_denied='" . db_ei($arr['svn_commit_to_tag_denied']) . "',
                       svn_accessfile_version_id = svn_accessfile_history.id
-                  WHERE groups.group_id = " . db_ei($group_id) . "
-                      AND groups.group_id = svn_accessfile_history.group_id";
+                  WHERE `groups`.group_id = " . db_ei($group_id) . "
+                      AND `groups`.group_id = svn_accessfile_history.group_id";
 
         $result = db_query($query);
         if (! $result) {
@@ -748,8 +748,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function copyEmailOptionsFromTemplate($group_id, $template_id)
     {
-        $sql = "UPDATE groups AS g1
-                JOIN groups AS g2
+        $sql = "UPDATE `groups` AS g1
+                JOIN `groups` AS g2
                   ON g2.group_id = " . db_ei($template_id) . "
                 SET g1.truncated_emails = g2.truncated_emails
                 WHERE g1.group_id = " . db_ei($group_id);

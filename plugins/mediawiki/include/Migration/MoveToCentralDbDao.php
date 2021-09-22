@@ -60,9 +60,9 @@ class MoveToCentralDbDao extends DataAccessObject
         $central_db_name = $this->da->quoteSmart($this->central_database_name);
         $sql             = "SELECT plugin_mediawiki_database.*
                 FROM plugin_mediawiki_database
-                  JOIN groups ON (group_id = project_id)
-                  JOIN service ON (service.group_id = groups.group_id AND short_name = 'plugin_mediawiki')
-                WHERE groups.status IN ('A', 's')
+                  JOIN `groups` ON (group_id = project_id)
+                  JOIN service ON (service.group_id = `groups`.group_id AND short_name = 'plugin_mediawiki')
+                WHERE `groups`.status IN ('A', 's')
                     AND is_used = 1
                     AND database_name != $central_db_name";
         return $this->retrieve($sql);
@@ -89,10 +89,10 @@ class MoveToCentralDbDao extends DataAccessObject
     {
         $sql = "SELECT plugin_mediawiki_database.*
                 FROM plugin_mediawiki_database
-                  JOIN groups ON (group_id = project_id)
-                  JOIN service ON (service.group_id = groups.group_id AND short_name = 'plugin_mediawiki')
+                  JOIN `groups` ON (group_id = project_id)
+                  JOIN service ON (service.group_id = `groups`.group_id AND short_name = 'plugin_mediawiki')
                 WHERE project_id = $project_id
-                  AND groups.status IN ('A', 's')
+                  AND `groups`.status IN ('A', 's')
                   AND is_used = 1";
         $row = $this->retrieveFirstRow($sql);
         if (! $row) {

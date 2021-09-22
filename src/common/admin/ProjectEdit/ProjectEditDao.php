@@ -26,7 +26,7 @@ class ProjectEditDao extends DataAccessObject
 {
     public function updateProjectStatusAndType($status, $type, $project_id)
     {
-        $sql = 'UPDATE groups
+        $sql = 'UPDATE `groups`
                 SET status = ?, type = ?
                 WHERE group_id = ?
         ';

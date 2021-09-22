@@ -25,7 +25,7 @@ sub set_group_info_from_name {
   my ($gname) = @_;
   my ($query, $c, $res);
 
-  $query = "SELECT * FROM groups WHERE unix_group_name=?";
+  $query = "SELECT * FROM `groups` WHERE unix_group_name=?";
   $c = $dbh->prepare($query);
   $c->bind_param(1, $gname, SQL_VARCHAR);
   $res = $c->execute();

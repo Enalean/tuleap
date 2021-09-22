@@ -282,7 +282,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     //  add links to all projects already created from the template
                     $db_res = db_query(
                         "SELECT group_id
-                             FROM groups
+                             FROM `groups`
                              WHERE (built_from_template = " . db_ei($target_group_id) . ");"
                     );
                     while ($row = db_fetch_array($db_res)) {
@@ -749,15 +749,15 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             "</h2>\n";
         $templLinks = db_query("
             SELECT plugin_projectlinks_relationship.link_type_id,
-                name AS link_name, type, groups.group_id,
+                name AS link_name, type, `groups`.group_id,
                 group_name, unix_group_name, uri_plus,
                 link_id, creation_date, master_group_id, target_group_id
             FROM plugin_projectlinks_relationship,
-                plugin_projectlinks_link_type,groups
+                plugin_projectlinks_link_type,`groups`
             WHERE (plugin_projectlinks_relationship.link_type_id
                     = plugin_projectlinks_link_type.link_type_id)
                 AND (plugin_projectlinks_relationship.target_group_id
-                    = groups.group_id)
+                    = `groups`.group_id)
                 AND ((master_group_id = " . db_ei($template_id) . ")
                     AND (target_group_id <> " . db_ei($group_id) . ")
                     AND (status = 'A'))

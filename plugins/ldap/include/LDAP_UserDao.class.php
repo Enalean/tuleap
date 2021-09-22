@@ -140,7 +140,7 @@ class LDAP_UserDao extends DataAccessObject
             ' WHERE user_name LIKE ' . $this->da->quoteSmart($name, ['force_string']);
         if ($this->retrieve($sql)->rowCount() === 0) {
             $sql = 'SELECT group_id' .
-                ' FROM groups' .
+                ' FROM `groups`' .
                 ' WHERE unix_group_name LIKE ' . $this->da->quoteSmart($name, ['force_string']);
             if ($this->retrieve($sql)->rowCount() === 0) {
                 return true;

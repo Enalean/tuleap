@@ -22,16 +22,9 @@
 class ProjectDao extends DataAccessObject
 {
 
-    public const TABLE_NAME      = 'groups';
     public const GROUP_ID        = 'group_id';
     public const STATUS          = 'status';
     public const UNIX_GROUP_NAME = 'unix_group_name';
-
-    public function __construct($da = null)
-    {
-        parent::__construct($da);
-        $this->table_name = 'groups';
-    }
 
     public function getFoundRows()
     {
@@ -48,7 +41,7 @@ class ProjectDao extends DataAccessObject
     public function searchById($id)
     {
         $sql = "SELECT *" .
-               " FROM " . $this->table_name .
+               " FROM `groups` " .
                " WHERE group_id = " . $this->da->quoteSmart($id);
         return $this->retrieve($sql);
     }
@@ -57,7 +50,7 @@ class ProjectDao extends DataAccessObject
     {
         $status = $this->da->quoteSmart($status);
         $sql    = "SELECT SQL_CALC_FOUND_ROWS *
-                FROM $this->table_name
+                FROM `groups`
                 WHERE status = $status
                 ORDER BY group_name";
         return $this->retrieve($sql);
@@ -69,7 +62,7 @@ class ProjectDao extends DataAccessObject
         $status  = $this->da->quoteSmart($status);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS 1
-                FROM groups g
+                FROM `groups` AS g
                   JOIN user_group ug USING (group_id)
                 WHERE g.status = $status
                   AND ug.user_id = $user_id
@@ -94,7 +87,7 @@ class ProjectDao extends DataAccessObject
     {
         $unixGroupName = $this->da->quoteSmart($unixGroupName);
         $sql           = "SELECT *
-                FROM $this->table_name
+                FROM `groups`
                 WHERE unix_group_name=$unixGroupName";
         return $this->retrieve($sql);
     }
@@ -103,7 +96,7 @@ class ProjectDao extends DataAccessObject
     {
         $unixGroupName = $this->da->quoteSmart($unixGroupName);
         $sql           = "SELECT *
-                FROM $this->table_name
+                FROM `groups`
                 WHERE LOWER(unix_group_name)=LOWER($unixGroupName)";
         return $this->retrieve($sql);
     }
@@ -164,7 +157,7 @@ class ProjectDao extends DataAccessObject
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS g.*" .
-               " FROM " . $this->table_name . " g" .
+               " FROM `groups` AS g" .
                $join .
                " WHERE (g.group_name like " . $this->da->quoteSmart($name . '%') .
                " OR g.unix_group_name like " . $this->da->quoteSmart($name . '%') . ")" .
@@ -180,7 +173,7 @@ class ProjectDao extends DataAccessObject
     public function searchSiteTemplates()
     {
         $sql = "SELECT *
-         FROM groups
+         FROM `groups`
          WHERE type='2'
              AND status IN ('A','s')";
         return $this->retrieve($sql);
@@ -190,7 +183,7 @@ class ProjectDao extends DataAccessObject
     {
         $project_status = $this->da->quoteSmart(Project::STATUS_PENDING);
 
-        $sql = "SELECT * FROM groups WHERE status=$project_status ORDER BY register_time";
+        $sql = "SELECT * FROM `groups` WHERE status=$project_status ORDER BY register_time";
 
         return $this->retrieve($sql);
     }
@@ -209,12 +202,12 @@ class ProjectDao extends DataAccessObject
     {
         $user_id = $this->da->escapeInt($user_id);
         $sql     = "SELECT groups.*
-            FROM groups
+            FROM `groups`
               JOIN user_group USING (group_id)
             WHERE user_group.user_id = $user_id
               $where
-              AND groups.status='A'
-            ORDER BY groups.group_name ASC";
+              AND `groups`.status='A'
+            ORDER BY `groups`.group_name ASC";
         return $this->retrieve($sql);
     }
 
@@ -223,26 +216,26 @@ class ProjectDao extends DataAccessObject
         $user_id = $this->da->escapeInt($user_id);
 
         $sql = "SELECT groups.*
-        FROM groups
+        FROM `groups`
           JOIN user_group USING (group_id)
         WHERE user_group.user_id = $user_id
-          AND groups.status='A'
+          AND `groups`.status='A'
 
         UNION DISTINCT
 
-        SELECT groups.*
-        FROM groups
+        SELECT `groups`.*
+        FROM `groups`
           INNER JOIN ugroup USING (group_id)
           INNER JOIN ugroup_user USING (ugroup_id)
         WHERE ugroup_user.user_id = $user_id
-          AND groups.status='A'";
+          AND `groups`.status='A'";
 
         return $this->retrieve($sql);
     }
 
     public function updateStatus($id, $status)
     {
-        $sql = 'UPDATE groups' .
+        $sql = 'UPDATE `groups`' .
             ' SET status = ' . $this->da->quoteSmart($status) .
             ' WHERE group_id = ' . $this->da->escapeInt($id);
         return $this->update($sql);
@@ -257,7 +250,7 @@ class ProjectDao extends DataAccessObject
     public function renameProject($project, $new_name)
     {
         //Update 'groups' table
-        $sql        = ' UPDATE groups SET unix_group_name= ' . $this->da->quoteSmart($new_name) . ' ,
+        $sql        = ' UPDATE `groups` SET unix_group_name= ' . $this->da->quoteSmart($new_name) . ' ,
                  http_domain=REPLACE (http_domain,' . $this->da->quoteSmart($project->getUnixName(false)) . ',' . $this->da->quoteSmart($new_name) . ')
                  WHERE group_id= ' . $this->da->quoteSmart($project->getID());
         $res_groups = $this->update($sql);
@@ -312,7 +305,7 @@ class ProjectDao extends DataAccessObject
         }
 
         $sql = 'SELECT SQL_CALC_FOUND_ROWS *
-                FROM groups ' . $stm . '
+                FROM `groups` ' . $stm . '
                 ORDER BY group_name
                 ASC ' . $project_limit;
 
@@ -350,7 +343,7 @@ class ProjectDao extends DataAccessObject
 
         $sql = "
             SELECT SQL_CALC_FOUND_ROWS project.*, count(user_group.user_id) as nb_members
-            FROM groups project
+            FROM `groups` AS project
             LEFT JOIN user_group USING (group_id)
             $where_condition
             GROUP BY project.group_id
@@ -372,14 +365,14 @@ class ProjectDao extends DataAccessObject
 
         if ($user->isSuperUser()) {
             $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
-                    FROM groups
+                    FROM `groups`
                     WHERE status = 'A'
                       AND group_id > 100
                     ORDER BY group_id ASC
                     LIMIT $offset, $limit";
         } else {
-            $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
-                    FROM groups
+            $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT `groups`.*
+                    FROM `groups`
                       JOIN user_group USING (group_id)
                     WHERE status = 'A'
                       AND group_id > 100
@@ -398,8 +391,8 @@ class ProjectDao extends DataAccessObject
         $offset  = $this->da->escapeInt($offset);
         $limit   = $this->da->escapeInt($limit);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
-                    FROM groups
+        $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT `groups`.*
+                    FROM `groups`
                       JOIN user_group USING (group_id)
                     WHERE status = 'A'
                       AND group_id > 100
@@ -416,8 +409,8 @@ class ProjectDao extends DataAccessObject
         $offset  = $this->da->escapeInt($offset);
         $limit   = $this->da->escapeInt($limit);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
-                    FROM groups
+        $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT `groups`.*
+                    FROM `groups`
                       JOIN user_group USING (group_id)
                     WHERE status = 'A'
                       AND user_group.admin_flags = 'A'
@@ -439,16 +432,16 @@ class ProjectDao extends DataAccessObject
         $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         if ($user->isSuperUser()) {
-            $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
-                    FROM groups
+            $sql = "SELECT SQL_CALC_FOUND_ROWS `groups`.*
+                    FROM `groups`
                     WHERE status = 'A'
                       AND group_id > 100
                       AND unix_group_name = $shortname
                     ORDER BY group_id ASC
                     LIMIT $offset, $limit";
         } else {
-            $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
-                    FROM groups
+            $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT `groups`.*
+                    FROM `groups`
                       JOIN user_group USING (group_id)
                     WHERE status = 'A'
                       AND group_id > 100
@@ -477,7 +470,7 @@ class ProjectDao extends DataAccessObject
         }
 
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM `groups`
                 WHERE $access_clause
                 AND status = 'A'";
         return $this->retrieve($sql);
@@ -586,7 +579,7 @@ class ProjectDao extends DataAccessObject
      */
     public function setSvnHeader($groupId, $mailingHeader)
     {
-        $sql = ' UPDATE groups
+        $sql = ' UPDATE `groups`
                  SET svn_events_mailing_header = ' . $this->da->quoteSmart($mailingHeader) . '
                  WHERE group_id = ' . $this->da->escapeInt($groupId);
         return $this->update($sql);
@@ -610,7 +603,7 @@ class ProjectDao extends DataAccessObject
     public function searchGlobalPaginatedForRestrictedUsers($words, $offset, $exact, $user_id, $limit)
     {
         $user_id = $this->da->escapeInt($user_id);
-        $from    = " JOIN user_group ON (user_group.group_id = groups.group_id)";
+        $from    = " JOIN user_group ON (user_group.group_id = `groups`.group_id)";
         $where   = " AND user_group.user_id = $user_id";
         return $this->searchGlobalParams($words, $offset, $exact, $from, $where, $limit);
     }
@@ -632,9 +625,9 @@ class ProjectDao extends DataAccessObject
         $private               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
         $private_wo_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
-        $sql = "SELECT DISTINCT group_name, unix_group_name, groups.group_id, short_description
-                FROM groups
-                    LEFT JOIN group_desc_value ON (group_desc_value.group_id = groups.group_id)
+        $sql = "SELECT DISTINCT group_name, unix_group_name, `groups`.group_id, short_description
+                FROM `groups`
+                    LEFT JOIN group_desc_value ON (group_desc_value.group_id = `groups`.group_id)
                     $from
                 WHERE status='A'
                 AND access NOT IN ($private, $private_wo_restricted)
@@ -655,7 +648,7 @@ class ProjectDao extends DataAccessObject
         $access     = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "UPDATE groups SET access = $access WHERE group_id = $project_id";
+        $sql = "UPDATE `groups` SET access = $access WHERE group_id = $project_id";
 
         return $this->update($sql);
     }
@@ -665,7 +658,7 @@ class ProjectDao extends DataAccessObject
         $access     = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "UPDATE groups SET access = $access WHERE group_id = $project_id";
+        $sql = "UPDATE `groups` SET access = $access WHERE group_id = $project_id";
 
         return $this->update($sql);
     }
@@ -675,7 +668,7 @@ class ProjectDao extends DataAccessObject
         $project_id = $this->da->escapeInt($project_id);
         $access     = $this->da->quoteSmart(Project::ACCESS_PUBLIC);
 
-        $sql = "UPDATE groups SET access = $access WHERE group_id = $project_id";
+        $sql = "UPDATE `groups` SET access = $access WHERE group_id = $project_id";
 
         return $this->update($sql);
     }
@@ -685,7 +678,7 @@ class ProjectDao extends DataAccessObject
         $project_id = $this->da->escapeInt($project_id);
         $access     = $this->da->quoteSmart(Project::ACCESS_PUBLIC_UNRESTRICTED);
 
-        $sql = "UPDATE groups SET access = $access WHERE group_id = $project_id";
+        $sql = "UPDATE `groups` SET access = $access WHERE group_id = $project_id";
 
         return $this->update($sql);
     }
@@ -704,7 +697,7 @@ class ProjectDao extends DataAccessObject
     {
         $new_access = $this->da->quoteSmart($new);
         $old_access = $this->da->quoteSmart($old);
-        $sql        = "UPDATE groups SET access = $new_access WHERE access = $old_access";
+        $sql        = "UPDATE `groups` SET access = $new_access WHERE access = $old_access";
 
         return $this->update($sql);
     }
@@ -714,7 +707,7 @@ class ProjectDao extends DataAccessObject
         $project_id = $this->da->escapeInt($project_id);
         $usage      = $this->da->escapeInt($usage);
 
-        $sql = "UPDATE groups SET truncated_emails = $usage WHERE group_id = $project_id";
+        $sql = "UPDATE `groups` SET truncated_emails = $usage WHERE group_id = $project_id";
 
         return $this->update($sql);
     }
@@ -726,13 +719,13 @@ class ProjectDao extends DataAccessObject
 
         return $this->retrieve(
             "SELECT user.user_id AS user_id, user.user_name AS user_name, user.realname AS realname
-             FROM user_group INNER JOIN user USING(user_id) INNER JOIN groups USING(group_id)
+             FROM user_group INNER JOIN user USING(user_id) INNER JOIN `groups` USING(group_id)
              WHERE user_group.group_id = $project_id
                  AND (
                     user.status = 'A'
                     OR (
                         user.status = 'R'
-                        AND groups.access <> $private_without_restricted
+                        AND `groups`.access <> $private_without_restricted
                     )
                  )
              "
@@ -745,8 +738,8 @@ class ProjectDao extends DataAccessObject
         $offset         = $this->da->escapeInt($offset);
         $limit          = $this->da->escapeInt($limit);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
-                FROM groups
+        $sql = "SELECT SQL_CALC_FOUND_ROWS `groups`.*
+                FROM `groups`
                 WHERE status = $project_status
                   AND group_id > 100
                 ORDER BY group_id ASC
@@ -757,7 +750,7 @@ class ProjectDao extends DataAccessObject
 
     public function getProjectsGroupByStatus()
     {
-        return $this->retrieve("SELECT status, count(*) AS project_nb FROM groups GROUP BY status");
+        return $this->retrieve("SELECT status, count(*) AS project_nb FROM `groups` GROUP BY status");
     }
 
     public function countProjectRegisteredBefore($timestamp)
@@ -765,7 +758,7 @@ class ProjectDao extends DataAccessObject
         $timestamp = $this->da->escapeInt($timestamp);
         $status    = $this->da->quoteSmart(Project::STATUS_ACTIVE);
 
-        $sql = "SELECT count(*) AS nb FROM groups WHERE register_time >= $timestamp AND status = $status";
+        $sql = "SELECT count(*) AS nb FROM `groups` WHERE register_time >= $timestamp AND status = $status";
 
         $row = $this->retrieve($sql)->getRow();
 

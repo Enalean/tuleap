@@ -58,15 +58,15 @@ class MyProjects extends \Widget
         $display_privacy = ForgeConfig::get('sys_display_project_privacy_in_service_bar');
         $user            = UserManager::instance()->getCurrentUser();
 
-        $order = 'groups.group_name';
+        $order = '`groups`.group_name';
         if ($display_privacy) {
-            $order = 'access, groups.group_name';
+            $order = 'access, `groups`.group_name';
         }
-        $result = db_query("SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.access, user_group.admin_flags" .
-                           " FROM groups" .
+        $result = db_query("SELECT `groups`.group_id, `groups`.group_name, `groups`.unix_group_name, `groups`.status, `groups`.access, user_group.admin_flags" .
+                           " FROM `groups`" .
                            " JOIN user_group USING (group_id)" .
                            " WHERE user_group.user_id = " . db_ei($user->getId()) .
-                           " AND groups.status = 'A'" .
+                           " AND `groups`.status = 'A'" .
                            " ORDER BY $order");
         $rows   = db_numrows($result);
         if (! $result || $rows < 1) {
@@ -220,16 +220,16 @@ class MyProjects extends \Widget
             'copyright'   => 'Copyright Xerox',
             'pubDate'     => gmdate('D, d M Y G:i:s', time()) . ' GMT',
         ]);
-        $result     = db_query("SELECT groups.group_name,"
-            . "groups.group_id,"
-            . "groups.unix_group_name,"
-            . "groups.status,"
-            . "groups.access,"
+        $result     = db_query("SELECT `groups`.group_name,"
+            . "`groups`.group_id,"
+            . "`groups`.unix_group_name,"
+            . "`groups`.status,"
+            . "`groups`.access,"
             . "user_group.admin_flags "
-            . "FROM groups,user_group "
-            . "WHERE groups.group_id=user_group.group_id "
+            . "FROM `groups`,user_group "
+            . "WHERE `groups`.group_id=user_group.group_id "
             . "AND user_group.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' "
-            . "AND groups.status='A' ORDER BY group_name");
+            . "AND `groups`.status='A' ORDER BY group_name");
         $rows       = db_numrows($result);
         if (! $result || $rows < 1) {
             $rss->addItem([

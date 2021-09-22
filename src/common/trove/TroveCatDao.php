@@ -139,14 +139,14 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
     {
         $parent_category_id = $this->da->escapeInt($parent_category_id);
 
-        $sql = "SELECT groups.group_id, trove_cat.fullname AS result
-                FROM groups
+        $sql = "SELECT `groups`.group_id, trove_cat.fullname AS result
+                FROM `groups`
                     LEFT JOIN trove_group_link ON (
-                        trove_group_link.group_id = groups.group_id
+                        trove_group_link.group_id = `groups`.group_id
                         AND trove_group_link.trove_cat_root = $parent_category_id
                     )
                     LEFT JOIN trove_cat ON (trove_cat.trove_cat_id = trove_group_link.trove_cat_id)
-                GROUP BY groups.group_id";
+                GROUP BY `groups`.group_id";
 
         return $this->retrieve($sql);
     }

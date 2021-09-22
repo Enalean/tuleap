@@ -52,10 +52,10 @@ class b201710171318_add_artifact_link_usage_table extends \Tuleap\ForgeUpgrade\B
     private function insertData()
     {
         $sql = "REPLACE INTO plugin_tracker_projects_use_artifactlink_types (project_id)
-                SELECT DISTINCT groups.group_id
-                FROM groups
+                SELECT DISTINCT `groups`.group_id
+                FROM `groups`
                     INNER JOIN service USING (group_id)
-                WHERE groups.status != 'D'
+                WHERE `groups`.status != 'D'
                 AND service.short_name = 'plugin_tracker'";
 
         $res = $this->db->dbh->exec($sql);

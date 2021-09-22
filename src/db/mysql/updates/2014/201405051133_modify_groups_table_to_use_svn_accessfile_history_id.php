@@ -39,7 +39,7 @@ class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends
 
     private function modifySvnAccessfileGroups()
     {
-        $sql = "ALTER TABLE groups
+        $sql = "ALTER TABLE `groups`
                     MODIFY svn_accessfile INT(11)";
 
         $res = $this->db->dbh->exec($sql);
@@ -50,9 +50,9 @@ class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends
 
     private function addNewSvnAccessfileGroupsValue()
     {
-        $sql = "UPDATE groups, svn_accessfile_history
-                SET groups.svn_accessfile = svn_accessfile_history.id
-                WHERE svn_accessfile_history.group_id = groups.group_id";
+        $sql = "UPDATE `groups`, svn_accessfile_history
+                SET `groups`.svn_accessfile = svn_accessfile_history.id
+                WHERE svn_accessfile_history.group_id = `groups`.group_id";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -52,7 +52,7 @@ echo '<div class="cvs-intro">';
 echo '<TABLE width="100%"><TR valign="top"><TD width="65%">' . "\n";
 
 // Get group properties
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
+$res_grp = db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id));
 $row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information

@@ -36,7 +36,7 @@ function svn_data_get_technicians($group_id)
 
 function svn_data_update_general_settings($group_id, $svn_tracked, $svn_preamble, $svn_mandatory_ref, $svn_can_change_log)
 {
-    $query  = "update groups set svn_tracker='" . db_ei($svn_tracked) .
+    $query  = "update `groups` set svn_tracker='" . db_ei($svn_tracked) .
     "', svn_preamble='" . db_es(htmlspecialchars($svn_preamble)) .
         "', svn_mandatory_ref='" . db_ei($svn_mandatory_ref) .
         "', svn_can_change_log='" . db_ei($svn_can_change_log) .

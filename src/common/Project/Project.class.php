@@ -462,7 +462,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
     public function getProjectsCreatedFrom()
     {
-        $sql         = 'SELECT * FROM groups WHERE built_from_template = ' . db_ei($this->getGroupId()) . " AND status <> 'D'";
+        $sql         = 'SELECT * FROM `groups` WHERE built_from_template = ' . db_ei($this->getGroupId()) . " AND status <> 'D'";
         $subprojects = [];
         if ($res = db_query($sql)) {
             while ($data = db_fetch_array($res)) {

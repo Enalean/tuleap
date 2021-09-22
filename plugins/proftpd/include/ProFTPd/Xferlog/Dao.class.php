@@ -154,10 +154,10 @@ class Dao extends DataAccessObject
                     user.user_name AS user_name,
                     user.realname AS realname,
                     user.email AS email,
-                    SUBSTR(file_name, LENGTH(groups.unix_group_name)+2, LENGTH(file_name)) AS title
+                    SUBSTR(file_name, LENGTH(`groups`.unix_group_name)+2, LENGTH(file_name)) AS title
                 FROM plugin_proftpd_xferlog as log
                     LEFT JOIN user USING (user_id)
-                    LEFT JOIN groups USING (group_id)
+                    LEFT JOIN `groups` USING (group_id)
                 WHERE group_id = $group_id
                 AND $where_conditions";
         return $sql;

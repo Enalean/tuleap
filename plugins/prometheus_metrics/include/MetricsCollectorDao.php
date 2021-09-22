@@ -28,7 +28,7 @@ class MetricsCollectorDao extends DataAccessObject
 
     public function getProjectsByStatus()
     {
-        $sql = 'SELECT status, count(*) as nb FROM groups WHERE status IN ("A", "P", "D") GROUP BY status';
+        $sql = 'SELECT status, count(*) as nb FROM `groups` WHERE status IN ("A", "P", "D") GROUP BY status';
         return $this->getDB()->run($sql);
     }
 

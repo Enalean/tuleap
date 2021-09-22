@@ -140,7 +140,7 @@ sub ldap_connect {
 
         my $query =
             "SELECT NULL"
-          . " FROM groups g JOIN plugin_ldap_svn_repository svnrep USING (group_id)"
+          . " FROM `groups` AS g JOIN plugin_ldap_svn_repository svnrep USING (group_id)"
           . " WHERE svnrep.ldap_auth = 1"
           . " AND g.group_id = ?";
         my $c = $dbh->prepare($query);
