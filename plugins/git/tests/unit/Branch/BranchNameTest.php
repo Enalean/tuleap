@@ -44,4 +44,12 @@ final class BranchNameTest extends TestCase
         $default = BranchName::defaultBranchName();
         self::assertEquals('main', $default->name);
     }
+
+    public function testDefaultBranchNameIsValid(): void
+    {
+        $default                        = BranchName::defaultBranchName();
+        $branch_name_built_from_default = BranchName::fromBranchNameShortHand($default->name);
+
+        self::assertEquals($default, $branch_name_built_from_default);
+    }
 }

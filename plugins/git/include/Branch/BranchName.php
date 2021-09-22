@@ -55,6 +55,6 @@ final class BranchName
 
     public static function defaultBranchName(): self
     {
-        return self::fromBranchNameShortHand('main');
+        return new self('main');
     }
 }
