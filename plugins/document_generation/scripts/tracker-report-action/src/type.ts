@@ -86,6 +86,7 @@ interface ArtifactFieldValueShort {
 
 interface ArtifactFieldValueLong {
     readonly content_length: "long";
+    readonly content_format: "plaintext" | "html";
 }
 
 export type ArtifactFieldValue = ArtifactFieldValueContent &
