@@ -22,6 +22,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 let entry_points = {
     modals: "./scripts/modals.js",
+    "project-admin-modals": "./scripts/project-admin/modals.ts",
     "botmattermost-style": "./themes/botmattermost.scss",
 };
 
@@ -35,12 +36,19 @@ module.exports = [
         externals: {
             tlp: "tlp",
         },
+        resolve: {
+            extensions: [".ts", ".js"],
+        },
         module: {
-            rules: [webpack_configurator.rule_scss_loader],
+            rules: [
+                ...webpack_configurator.configureTypescriptRules(),
+                webpack_configurator.rule_scss_loader
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(false),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },

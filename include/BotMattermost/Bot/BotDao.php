@@ -48,7 +48,7 @@ class BotDao extends DataAccessObject
         return $this->getDB()->run($sql, $project_id);
     }
 
-    public function addBot(string $bot_name, string $bot_webhook_url, string $bot_avatar_url): int
+    public function addBot(string $bot_name, string $bot_webhook_url, string $bot_avatar_url, ?int $project_id): int
     {
         return $this->getDB()->insertReturnId(
             'plugin_botmattermost_bot',
@@ -56,7 +56,7 @@ class BotDao extends DataAccessObject
                 'name'        => $bot_name,
                 'webhook_url' => $bot_webhook_url,
                 'avatar_url'  => $bot_avatar_url,
-                'project_id'  => null
+                'project_id'  => $project_id
             ]
         );
     }
@@ -96,18 +96,16 @@ class BotDao extends DataAccessObject
         return true;
     }
 
-    /**
-     * @psalm-return null|array{id:int, name:string, webhook_url:string, avatar_url:string}
-     */
-    public function searchBotByNameAndByWebhookUrl(string $bot_name, string $bot_webhook_url): ?array
+    public function isABotWithNameAndWebhookUrlAlreadyExisting(string $bot_name, string $bot_webhook_url): bool
     {
-        $sql = "SELECT *
+        $sql = "SELECT NULL
                 FROM plugin_botmattermost_bot
                 WHERE name = ?
-                    AND webhook_url = ?
-                    AND project_id IS NULL";
+                    AND webhook_url = ?";
 
-        return $this->getDB()->row($sql, $bot_name, $bot_webhook_url);
+        $rows = $this->getDB()->run($sql, $bot_name, $bot_webhook_url);
+
+        return count($rows) > 0;
     }
 
     /**

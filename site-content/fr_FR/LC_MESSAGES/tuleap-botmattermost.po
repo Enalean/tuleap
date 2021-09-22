@@ -43,14 +43,23 @@ msgstr "Nom du robot"
 msgid "Bot name..."
 msgstr "Nom..."
 
+msgid "Bot successfully created"
+msgstr "Robot créé avec succès"
+
 msgid "Bot successfully deleted"
 msgstr "Robot supprimé avec succès"
 
 msgid "Bot successfully edited"
 msgstr "Robot édité avec succès"
 
+msgid "Bot successfully updated"
+msgstr "Robot mis à jour avec succès"
+
 msgid "Bot to send notifications in Mattermost"
 msgstr "Robot pour recevoir des notifications sur Mattermost"
+
+msgid "Bots Mattermost"
+msgstr "Robots Mattermost"
 
 msgid "Bots list"
 msgstr "Liste des robots"
@@ -97,14 +106,23 @@ msgstr "La mise à jour du robot a échoué"
 msgid "Id"
 msgstr "Id"
 
+msgid "Invalid Avatar URL"
+msgstr "L'URL de l'avatar est invalide"
+
 msgid "Invalid URL"
 msgstr "URL invalide"
+
+msgid "Invalid Webhook URL"
+msgstr "L'URL du Webhook est invalide"
 
 msgid "Invalid bot ID"
 msgstr "L'identifiant du robot est invalide"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "No bot defined"
+msgstr "Aucun robot n'a été défini"
 
 msgid "No bot found"
 msgstr "Aucun robot n'a été trouvé"
@@ -118,9 +136,12 @@ msgstr "Aucun contenu de message à envoyer"
 msgid "No results"
 msgstr "Aucun résultat"
 
-#, fuzzy, php-format
+msgid "Project Mattermost bots"
+msgstr "Robot Mattermost du projet"
+
+#, php-format
 msgid "The bot #%d cannot be used in project #%d"
-msgstr "Le robot #%d n'est pas lié au projet #%d"
+msgstr "Le robot #%d ne peut être utilisé dans le projet #%d"
 
 msgid ""
 "The channel handle is display in its URL<br>example: https://example.com/"

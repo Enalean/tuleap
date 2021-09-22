@@ -27,7 +27,10 @@ use HTTPRequest;
 use CSRFSynchronizerToken;
 use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BotMattermost\BotMattermostDeleted;
+use Tuleap\BotMattermost\Bot\BotCreator;
+use Tuleap\BotMattermost\Bot\BotDeletor;
+use Tuleap\BotMattermost\Bot\BotEditor;
+use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 use Tuleap\BotMattermost\Presenter\AdminPresenter;
 use Tuleap\Layout\BaseLayout;
 use Valid_HTTPURI;
@@ -41,7 +44,6 @@ use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 
 class AdminController
 {
-
     private $csrf;
     private $bot_factory;
     private $event_manager;
@@ -55,7 +57,10 @@ class AdminController
         CSRFSynchronizerToken $csrf,
         BotFactory $bot_factory,
         EventManager $event_manager,
-        BaseLanguage $language
+        BaseLanguage $language,
+        private BotDeletor $bot_deletor,
+        private BotEditor $bot_editor,
+        private BotCreator $bot_creator
     ) {
         $this->csrf          = $csrf;
         $this->bot_factory   = $bot_factory;
@@ -70,7 +75,7 @@ class AdminController
             $admin_page_renderer = new AdminPageRenderer();
             $admin_page_renderer->renderAPresenter(
                 $admin_presenter->title,
-                PLUGIN_BOT_MATTERMOST_BASE_DIR . '/template/',
+                PLUGIN_BOT_MATTERMOST_BASE_DIR . '/templates/',
                 'index',
                 $admin_presenter
             );
@@ -86,13 +91,13 @@ class AdminController
         $this->csrf->check();
         if ($this->validPostArgument($request, $response)) {
             try {
-                $this->bot_factory->save(
+                $this->bot_creator->createSystemBot(
                     $request->get('bot_name'),
                     $request->get('webhook_url'),
-                    $request->get('avatar_url')
+                    $request->get('avatar_url'),
                 );
                 $response->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot added successfully'));
-            } catch (CannotCreateBotException $e) {
+            } catch (CannotCreateBotException | ProvidedBotParameterIsNotValidException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             } catch (BotAlreadyExistException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
@@ -104,15 +109,13 @@ class AdminController
     public function deleteBot(HTTPRequest $request, BaseLayout $response)
     {
         $this->csrf->check();
-        $id = $request->get('bot_id');
-        if ($this->validBotId($response, $id)) {
+        $bot_id = $request->get('bot_id');
+        if ($this->validBotId($response, $bot_id)) {
             try {
-                $bot   = $this->bot_factory->getBotById($id);
-                $event = new BotMattermostDeleted($bot);
-                $this->bot_factory->deleteBotById($bot->getId());
-                $this->event_manager->processEvent($event);
+                $bot = $this->bot_factory->getBotById($bot_id);
+                $this->bot_deletor->deleteBot($bot);
                 $response->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot successfully deleted'));
-            } catch (CannotDeleteBotException $e) {
+            } catch (CannotDeleteBotException | BotNotFoundException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
@@ -125,14 +128,14 @@ class AdminController
         $id = $request->get('bot_id');
         if ($this->validPostArgument($request, $response) && $this->validBotId($response, $id)) {
             try {
-                $this->bot_factory->update(
+                $this->bot_editor->editBotById(
+                    $id,
                     $request->get('bot_name'),
                     $request->get('webhook_url'),
                     $request->get('avatar_url'),
-                    $id
                 );
                 $response->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot successfully edited'));
-            } catch (CannotUpdateBotException $e) {
+            } catch (CannotUpdateBotException | ProvidedBotParameterIsNotValidException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }

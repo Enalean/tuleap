@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\BotMattermost\Bot;
 
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
@@ -35,18 +36,21 @@ class BotFactory
     }
 
     /**
-     * @return Bot
+     * @throws CannotCreateBotException
+     * @throws BotAlreadyExistException
      */
     public function save(
-        $bot_name,
-        $bot_webhook_url,
-        $bot_avatar_url
-    ) {
-        if (! $this->doesBotAlreadyExist($bot_name, $bot_webhook_url)) {
+        string $bot_name,
+        string $bot_webhook_url,
+        string $bot_avatar_url,
+        ?int $project_id
+    ): void {
+        if (! $this->isABotWithNameAndWebhookUrlAlreadyExisting($bot_name, $bot_webhook_url)) {
             $id = $this->dao->addBot(
                 trim($bot_name),
                 trim($bot_webhook_url),
-                trim($bot_avatar_url)
+                trim($bot_avatar_url),
+                $project_id
             );
             if (! $id) {
                 throw new CannotCreateBotException();
@@ -54,22 +58,17 @@ class BotFactory
         } else {
             throw new BotAlreadyExistException();
         }
-
-        return new Bot(
-            $id,
-            $bot_name,
-            $bot_webhook_url,
-            $bot_avatar_url,
-            null
-        );
     }
 
+    /**
+     * @throws CannotUpdateBotException
+     */
     public function update(
-        $bot_name,
-        $bot_webhook_url,
-        $bot_avatar_url,
-        $bot_id
-    ) {
+        string $bot_name,
+        string  $bot_webhook_url,
+        string $bot_avatar_url,
+        int $bot_id
+    ): void {
         if (
             ! $this->dao->updateBot(
                 trim($bot_name),
@@ -82,7 +81,7 @@ class BotFactory
         }
     }
 
-    public function deleteBotById($id)
+    public function deleteBotById(int $id): void
     {
         if (! $this->dao->deleteBot($id)) {
             throw new CannotDeleteBotException();
@@ -113,9 +112,9 @@ class BotFactory
         return $this->buildBotsFromDAR($dar);
     }
 
-    public function doesBotAlreadyExist($name, $webhook_url)
+    public function isABotWithNameAndWebhookUrlAlreadyExisting(string $name, string $webhook_url): bool
     {
-        return $this->dao->searchBotByNameAndByWebhookUrl($name, $webhook_url);
+        return $this->dao->isABotWithNameAndWebhookUrlAlreadyExisting($name, $webhook_url);
     }
 
     public function getBotById($bot_id): Bot
