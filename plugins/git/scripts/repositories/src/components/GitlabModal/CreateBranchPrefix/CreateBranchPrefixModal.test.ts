@@ -26,6 +26,7 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 import type { Store } from "vuex-mock-store";
 import CreateBranchPrefixModal from "./CreateBranchPrefixModal.vue";
 import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("CreateBranchPrefixModal", () => {
     let localVue, store: Store;
@@ -145,13 +146,13 @@ describe("CreateBranchPrefixModal", () => {
 
             await wrapper.vm.$nextTick();
 
-            jest.spyOn(store, "dispatch").mockRejectedValue({
-                response: {
+            jest.spyOn(store, "dispatch").mockRejectedValue(
+                new FetchWrapperError("", {
                     status: 400,
                     json: (): Promise<{ error: { code: number; message: string } }> =>
                         Promise.resolve({ error: { code: 400, message: "Error on server" } }),
-                },
-            });
+                } as Response)
+            );
 
             jest.spyOn(gitlab_error_handler, "handleError");
             // We also display the error in the console.

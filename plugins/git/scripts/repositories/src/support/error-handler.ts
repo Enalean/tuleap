@@ -18,11 +18,12 @@
  */
 
 import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants";
+import { FetchWrapperError } from "tlp";
 
-export async function getErrorCode(e: XMLHttpRequest): Promise<number> {
+export async function getErrorCode(e: unknown): Promise<number> {
     let error_code;
 
-    if (!e.response) {
+    if (!(e instanceof FetchWrapperError)) {
         throw e;
     }
 

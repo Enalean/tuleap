@@ -67,7 +67,7 @@ export default class DropContainerCell extends Mixins(
     readonly swimlane!: Swimlane;
 
     @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+    override readonly column!: ColumnDefinition;
 
     @column_store.Getter
     readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];

@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../default/css/style';
-@use './tracker-creation';
-@use '~@tuleap/mention';
-@use '~@tuleap/plugin-tracker-rich-text-editor';
-@use '../../../../../src/themes/tlp/src/scss/components/switch';
-@use '../../../../../src/themes/tlp/src/scss/components/panes';
-@use '../../../../../src/themes/tlp/src/scss/components/cards';
-@use '../../../../../src/themes/tlp/src/scss/components/badges';
-@use '../../../../../src/themes/tlp/src/scss/components/tables';
+@use "../../default/css/style";
+@use "./tracker-creation";
+@use "~@tuleap/mention";
+@use "~@tuleap/plugin-tracker-rich-text-editor";
+@use "../../../../../src/themes/tlp/src/scss/components/switch";
+@use "../../../../../src/themes/tlp/src/scss/components/panes";
+@use "../../../../../src/themes/tlp/src/scss/components/cards";
+@use "../../../../../src/themes/tlp/src/scss/components/badges";
+@use "../../../../../src/themes/tlp/src/scss/components/tables";
 
 /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
 .widget_content #tracker_report_table > thead > tr > th {

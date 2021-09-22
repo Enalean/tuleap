@@ -27,6 +27,7 @@ import type { Store } from "vuex-mock-store";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import type { GitlabDataWithPath, GitlabProject } from "../../../type";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("ListRepositoriesModal", () => {
     let store_options: {
@@ -169,8 +170,8 @@ describe("ListRepositoriesModal", () => {
         const wrapper = instantiateComponent([]);
 
         jest.spyOn(store, "dispatch").mockReturnValue(
-            Promise.reject({
-                response: {
+            Promise.reject(
+                new FetchWrapperError("Not found", {
                     json(): Promise<{ error: { code: number; message: string } }> {
                         return Promise.resolve({
                             error: {
@@ -179,8 +180,8 @@ describe("ListRepositoriesModal", () => {
                             },
                         });
                     },
-                },
-            })
+                } as Response)
+            )
         );
 
         wrapper.setData({

@@ -19,52 +19,47 @@
 
 import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants";
 import { getErrorCode } from "./error-handler";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("error-handler", () => {
     it("When the server responds with a 404, then the error for 'No git service' will be committed", async () => {
-        const error_json = {
-            response: {
-                json(): Promise<{ error: { code: number; message: string } }> {
-                    return Promise.resolve({
-                        error: {
-                            code: 404,
-                            message: "Error",
-                        },
-                    });
-                },
+        const error = new FetchWrapperError("Not found", {
+            json(): Promise<{ error: { code: number; message: string } }> {
+                return Promise.resolve({
+                    error: {
+                        code: 404,
+                        message: "Error",
+                    },
+                });
             },
-        } as unknown as XMLHttpRequest;
-        expect(await getErrorCode(error_json)).toBe(ERROR_TYPE_NO_GIT);
+        } as Response);
+        expect(await getErrorCode(error)).toBe(ERROR_TYPE_NO_GIT);
     });
 
     it("When the server responds with another error code, then the unknown error will be committed", async () => {
-        const error_json = {
-            response: {
-                json(): Promise<{ error: { code: number; message: string } }> {
-                    return Promise.resolve({
-                        error: {
-                            code: 403,
-                            message: "Error",
-                        },
-                    });
-                },
+        const error = new FetchWrapperError("Forbidden", {
+            json(): Promise<{ error: { code: number; message: string } }> {
+                return Promise.resolve({
+                    error: {
+                        code: 403,
+                        message: "Error",
+                    },
+                });
             },
-        } as unknown as XMLHttpRequest;
-        expect(await getErrorCode(error_json)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
+        } as Response);
+        expect(await getErrorCode(error)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
     });
 
     it("When something else happens (no response), then the unknown error will be committed", async () => {
-        const error_json = {
-            response: {
-                json(): Promise<{ error: { message: string } }> {
-                    return Promise.resolve({
-                        error: {
-                            message: "Error",
-                        },
-                    });
-                },
+        const error = new FetchWrapperError("Error", {
+            json(): Promise<{ error: { message: string } }> {
+                return Promise.resolve({
+                    error: {
+                        message: "Error",
+                    },
+                });
             },
-        } as unknown as XMLHttpRequest;
-        expect(await getErrorCode(error_json)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
+        } as Response);
+        expect(await getErrorCode(error)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
     });
 });

@@ -21,6 +21,7 @@ import { manageTeamOfProgram } from "../api/manage-team";
 import { resetRestErrorAlert, setRestErrorMessage } from "../helper/rest-error-helper";
 import { resetButtonToAddTeam, setButtonToDisabledWithSpinner } from "../helper/button-helper";
 import type { ErrorRest } from "../type";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const DISPLAY_ERROR_REST_ID = "program-management-add-team-error-rest";
 
@@ -54,6 +55,9 @@ export function addTeamInProgram(program_id: number, doc: Document): void {
             });
             window.location.reload();
         } catch (e) {
+            if (!(e instanceof FetchWrapperError)) {
+                throw e;
+            }
             e.response
                 .json()
                 .then(({ error }: ErrorRest) => {

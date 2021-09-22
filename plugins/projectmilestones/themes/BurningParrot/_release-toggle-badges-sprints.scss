@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'release-chart';
+@use "release-chart";
 
 $border-width-px: calc(12px - 1px * var(--tlp-is-condensed));
 $heigh-bar-px: calc(32px - 6px * var(--tlp-is-condensed));

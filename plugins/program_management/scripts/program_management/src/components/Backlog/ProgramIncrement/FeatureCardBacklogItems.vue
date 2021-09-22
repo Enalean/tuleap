@@ -55,6 +55,7 @@ import { handleError } from "../../../helpers/error-handler";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { Feature } from "../../../type";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component({
     components: { UserStoryDisplayer, ErrorDisplayer, BacklogElementSkeleton },
@@ -99,7 +100,9 @@ export default class FeatureCardBacklogItems extends Vue {
                 program_increment: this.program_increment,
             });
         } catch (rest_error) {
-            this.message_error_rest = await handleError(rest_error, this);
+            if (rest_error instanceof FetchWrapperError) {
+                this.message_error_rest = await handleError(rest_error, this);
+            }
             throw rest_error;
         } finally {
             this.is_loading_user_story = false;

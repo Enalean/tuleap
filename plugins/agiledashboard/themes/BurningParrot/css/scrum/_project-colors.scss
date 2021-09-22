@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'sass:color';
-@use '../../../../../../src/themes/common/css/project-background/background';
+@use "sass:color";
+@use "../../../../../../src/themes/common/css/project-background/background";
 
 @each $project-color-name, $project-color-properties in background.$definitions {
     $project-color: background.get-color($project-color-name);

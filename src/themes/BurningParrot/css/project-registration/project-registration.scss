@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@use './includes/cards';
-@use './includes/project-information';
-@use './includes/services';
+@use "./includes/cards";
+@use "./includes/project-information";
+@use "./includes/services";
 
 $illustration-width: 319px;
 $illustration-spacing: calc(2 * var(--tlp-jumbo-spacing));

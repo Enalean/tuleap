@@ -27,6 +27,7 @@ import { createStoreMock } from "../../../../../../src/scripts/vue-components/st
 import type { Wrapper } from "@vue/test-utils";
 import type { Report } from "../type";
 import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("ReadingMode", () => {
     let backendCrossTrackerReport: BackendCrossTrackerReport,
@@ -120,12 +121,12 @@ describe("ReadingMode", () => {
         });
 
         it("When there is a REST error, then it will be shown", async () => {
-            jest.spyOn(rest_querier, "updateReport").mockRejectedValue({
-                response: {
+            jest.spyOn(rest_querier, "updateReport").mockRejectedValue(
+                new FetchWrapperError("Not found", {
                     json: (): Promise<{ error: { code: number; message: string } }> =>
                         Promise.resolve({ error: { code: 404, message: "Report not found" } }),
-                },
-            });
+                } as Response)
+            );
 
             const wrapper = await instantiateComponent();
 

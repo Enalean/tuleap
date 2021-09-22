@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { VueGettextProvider } from "./vue-gettext-provider";
 import type { ActionContext } from "vuex";
 import type { State } from "../type";
 
 export async function handleError(
-    rest_error: FetchWrapperError,
+    rest_error: unknown,
     gettext_provider: VueGettextProvider
 ): Promise<string> {
-    if (!("response" in rest_error)) {
+    if (!(rest_error instanceof FetchWrapperError)) {
         return gettext_provider.$gettext("Oops, an error occurred!");
     }
 
@@ -45,9 +45,12 @@ export async function handleError(
 
 export async function handleModalError(
     context: ActionContext<State, State>,
-    rest_error: FetchWrapperError
+    rest_error: unknown
 ): Promise<void> {
     try {
+        if (!(rest_error instanceof FetchWrapperError)) {
+            throw rest_error;
+        }
         const { error } = await rest_error.response.json();
         context.commit("setModalErrorMessage", error.code + " " + error.message);
     } catch (e) {

@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
-@use 'roadmap-variables';
-@use 'grid';
-@use 'sass:math';
-@use 'dependencies';
-@use 'popover';
+@use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "roadmap-variables";
+@use "grid";
+@use "sass:math";
+@use "dependencies";
+@use "popover";
 
 .roadmap-gantt-task {
     display: flex;

@@ -25,6 +25,7 @@ import { createCampaign, loadCampaigns, refreshCampaign } from "./campaign-actio
 import type { Campaign } from "../../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 jest.mock("tlp");
 
@@ -75,7 +76,7 @@ describe("Campaign state actions", () => {
         });
 
         it("Does not catch 403 so that empty state can be displayed instead of error state", async () => {
-            const error = { response: { status: 403 } };
+            const error = new FetchWrapperError("Forbidden", { status: 403 } as Response);
             tlpRecursiveGetMock.mockRejectedValue(error);
 
             await loadCampaigns(context);

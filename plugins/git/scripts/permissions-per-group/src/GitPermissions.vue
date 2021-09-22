@@ -58,6 +58,7 @@ import Vue from "vue";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
 import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
+import { FetchWrapperError } from "tlp";
 
 @Component({
     components: { GitInlineFilter, GitPermissionsTable },
@@ -94,8 +95,10 @@ export default class GitPermissions extends Vue {
             this.is_loaded = true;
             this.repositories = repositories;
         } catch (e) {
-            const { error } = await e.response.json();
-            this.error = error;
+            if (e instanceof FetchWrapperError) {
+                const { error } = await e.response.json();
+                this.error = error;
+            }
         } finally {
             this.is_loading = false;
         }

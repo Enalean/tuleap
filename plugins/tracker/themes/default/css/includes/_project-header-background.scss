@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../src/themes/common/css/project-background/background';
-@use '../../src/themes/FlamingParrot/css/utils/variables-common';
+@use "../../src/themes/common/css/project-background/background";
+@use "../../src/themes/FlamingParrot/css/utils/variables-common";
 
 .project-with-background {
     // stylelint-disable selector-id-pattern, selector-class-pattern

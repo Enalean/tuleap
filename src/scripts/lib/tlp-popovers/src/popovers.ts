@@ -129,7 +129,7 @@ type EventType = "click" | "mouseout" | "mouseover" | "keyup";
 interface EventListener {
     element: EventTarget;
     type: EventType;
-    handler: EventHandlerNonNull;
+    handler: { (e: Event): unknown };
 }
 
 function buildListeners(

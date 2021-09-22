@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
-@use './graph';
+@use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "./graph";
 
 $remaining-effort-color: swatch-colors.$tlp-swatch-neon-green;
 

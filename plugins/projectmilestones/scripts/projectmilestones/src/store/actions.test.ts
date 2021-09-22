@@ -28,6 +28,7 @@ import type {
     TestManagementCampaign,
 } from "../type";
 import * as rest_querier from "../api/rest-querier";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("Store actions", () => {
     let context: ActionContext<State, State>;
@@ -418,15 +419,14 @@ describe("Store actions", () => {
 
     describe("handleErrorMessage - error", () => {
         it("Given an error, When it can't parse the error, Then the error message is empty.", async () => {
-            await actions.handleErrorMessage(context, {
-                name: "error",
-                message: "Something went wrong",
-                response: {
+            await actions.handleErrorMessage(
+                context,
+                new FetchWrapperError("error", {
                     json(): Promise<void> {
                         throw new Error();
                     },
-                } as Response,
-            });
+                } as Response)
+            );
 
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "");
         });

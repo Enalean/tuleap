@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'scrum/overview';
-@use 'scrum/planning';
-@use 'scrum/project-header-background';
-@use 'header';
+@use "scrum/overview";
+@use "scrum/planning";
+@use "scrum/project-header-background";
+@use "header";
 
 .agiledashboard-milestone-details-items-list-badge {
     margin: 0 5px 0 0;

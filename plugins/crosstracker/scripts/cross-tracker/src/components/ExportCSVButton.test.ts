@@ -25,6 +25,7 @@ import * as rest_querier from "../api/rest-querier";
 import * as download_helper from "../helpers/download-helper";
 import * as bom_helper from "../helpers/bom-helper";
 import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("ExportCSVButton", () => {
     let download: jest.SpyInstance, getCSVReport: jest.SpyInstance, addBOM: jest.SpyInstance;
@@ -75,12 +76,12 @@ describe("ExportCSVButton", () => {
         it("When there is a REST error, then it will be shown", async () => {
             const wrapper = await instantiateComponent();
             getCSVReport.mockImplementation(() =>
-                Promise.reject({
-                    response: {
+                Promise.reject(
+                    new FetchWrapperError("Not found", {
                         status: 404,
                         text: () => Promise.resolve("Report with id 90 not found"),
-                    },
-                })
+                    } as Response)
+                )
             );
 
             wrapper.find("[data-test=export-cvs-button]").trigger("click");
@@ -102,6 +103,13 @@ describe("ExportCSVButton", () => {
                         status: 503,
                     },
                 })
+            );
+            getCSVReport.mockImplementation(() =>
+                Promise.reject(
+                    new FetchWrapperError("Forbidden", {
+                        status: 503,
+                    } as Response)
+                )
             );
 
             wrapper.find("[data-test=export-cvs-button]").trigger("click");

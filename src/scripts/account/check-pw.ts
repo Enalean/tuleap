@@ -43,7 +43,7 @@ async function checkPassword(password: string): Promise<void> {
             setRobustnessToGood();
         }
     } catch (e) {
-        if (e.name !== "AbortError") {
+        if (!(e instanceof Error) || e.name !== "AbortError") {
             throw e;
         }
     }

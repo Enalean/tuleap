@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'roadmap-variables';
-@use 'controls';
-@use 'gantt-header';
-@use 'scrolling-area';
+@use "roadmap-variables";
+@use "controls";
+@use "gantt-header";
+@use "scrolling-area";
 
 .roadmap-gantt {
     display: flex;

@@ -77,14 +77,12 @@ describe(`Error module actions`, () => {
 
         it(`when a message can be extracted from the FetchWrapperError,
             it will set an error message that will show up in a dedicated modal window`, async () => {
-            const error = {
-                response: {
-                    json: () =>
-                        Promise.resolve({
-                            error: { code: 500, message: "Oh snap" },
-                        }),
-                } as Response,
-            } as FetchWrapperError;
+            const error = new FetchWrapperError("Internal Server Error", {
+                json: () =>
+                    Promise.resolve({
+                        error: { code: 500, message: "Oh snap" },
+                    }),
+            } as Response);
             await actions.handleErrorsForLock(context, error);
 
             expect(context.commit).toHaveBeenCalledWith("setLockError", "Oh snap");

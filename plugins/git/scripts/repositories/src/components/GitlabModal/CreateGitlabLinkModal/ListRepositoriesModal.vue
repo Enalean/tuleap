@@ -179,7 +179,7 @@ import { Component, Prop } from "vue-property-decorator";
 import { Getter } from "vuex-class";
 import { namespace } from "vuex-class";
 import type { GitlabProject, GitlabDataWithPath } from "../../../type";
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { GitLabRepositoryCreation } from "../../../gitlab/gitlab-api-querier";
 
 const gitlab = namespace("gitlab");
@@ -252,8 +252,11 @@ export default class ListRepositoriesModal extends Vue {
         this.message_error_rest = "";
     }
 
-    async handleError(rest_error: FetchWrapperError): Promise<void> {
+    async handleError(rest_error: unknown): Promise<void> {
         try {
+            if (!(rest_error instanceof FetchWrapperError)) {
+                throw rest_error;
+            }
             const { error } = await rest_error.response.json();
             this.message_error_rest = error.code + ": " + error.message;
         } catch (error) {

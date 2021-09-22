@@ -23,6 +23,7 @@ import type { RootState } from "../type";
 import * as tlp from "tlp";
 import { loadBacklogItems, loadTestDefinitions } from "./backlog-item-actions";
 import type { BacklogItem, TestDefinition } from "../../type";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 jest.mock("tlp");
 
@@ -167,7 +168,7 @@ describe("BacklogItem state actions", () => {
         });
 
         it("Does not catch 403 so that empty state can be displayed instead of error state", async () => {
-            const error = { response: { status: 403 } };
+            const error = new FetchWrapperError("Forbidden", { status: 403 } as Response);
             tlpRecursiveGetMock.mockRejectedValue(error);
 
             await loadBacklogItems(context);
@@ -263,7 +264,7 @@ describe("BacklogItem state actions", () => {
         });
 
         it("Does not catch 403 so that empty state can be displayed instead of error state", async () => {
-            const error = { response: { status: 403 } };
+            const error = new FetchWrapperError("Forbidden", { status: 403 } as Response);
             tlpRecursiveGetMock.mockRejectedValue(error);
 
             const backlog_item = { id: 101 } as BacklogItem;

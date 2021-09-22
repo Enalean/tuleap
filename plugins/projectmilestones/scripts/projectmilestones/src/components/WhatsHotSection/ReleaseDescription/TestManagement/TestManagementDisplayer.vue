@@ -38,7 +38,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { MilestoneData, TestManagementCampaign } from "../../../../type";
 import { Action, State } from "vuex-class";
-import type { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "tlp";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import TestManagement from "./TestManagement.vue";
 
@@ -76,8 +76,11 @@ export default class TestManagementDisplayer extends Vue {
         }
     }
 
-    async handle_error(rest_error: FetchWrapperError): Promise<void> {
+    async handle_error(rest_error: unknown): Promise<void> {
         try {
+            if (!(rest_error instanceof FetchWrapperError)) {
+                throw rest_error;
+            }
             const { error } = await rest_error.response.json();
             this.message_error_rest = error.code + " " + error.message;
         } catch (error) {

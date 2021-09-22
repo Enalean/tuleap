@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post } from "@tuleap/tlp-fetch";
+import { FetchWrapperError, get, post } from "@tuleap/tlp-fetch";
 import { ResultAsync } from "neverthrow";
 
 export const GitLabBranchCreationPossibleError = {
@@ -59,7 +59,7 @@ export function postGitlabBranch(
                 initial_error: err,
             };
 
-            if (!looksLikeAnHTTPResponseError(err) || err.response.status !== 400) {
+            if (!(err instanceof FetchWrapperError) || err.response.status !== 400) {
                 return Promise.resolve(default_error);
             }
 
@@ -102,8 +102,4 @@ export function getGitLabRepositoryBranchInformation(
         })(),
         (err: unknown) => err
     );
-}
-
-function looksLikeAnHTTPResponseError(err: unknown): err is { response: Response } {
-    return typeof err === "object" && Object.prototype.hasOwnProperty.call(err, "response");
 }

@@ -98,8 +98,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import type { FetchWrapperError, Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "tlp";
+import { createModal, FetchWrapperError } from "tlp";
 import { namespace, State } from "vuex-class";
 import type { CreateCampaignPayload } from "../../store/campaign/type";
 import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";
@@ -174,10 +174,8 @@ export default class CreateModal extends Vue {
         await this.loadBacklogItems();
     }
 
-    private async getErrorMessageDetailsFromError(
-        error: Error | FetchWrapperError
-    ): Promise<string> {
-        if (!("response" in error)) {
+    private async getErrorMessageDetailsFromError(error: unknown): Promise<string> {
+        if (!(error instanceof FetchWrapperError)) {
             return "";
         }
 

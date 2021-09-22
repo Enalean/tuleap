@@ -20,10 +20,7 @@
 import type { ActionContext } from "vuex";
 import type { ErrorState } from "../error/module";
 import type { Item } from "../../type";
-
-export interface DocumentException {
-    response: Response;
-}
+import { FetchWrapperError } from "tlp";
 
 interface DocumentJsonError {
     error: JsonError;
@@ -36,10 +33,10 @@ interface JsonError {
 
 export async function handleErrors(
     context: ActionContext<ErrorState, ErrorState>,
-    exception: DocumentException
+    exception: unknown
 ): Promise<void> {
     const message = "Internal server error";
-    if (exception.response === undefined) {
+    if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
         context.commit("error/setFolderLoadingError", message);
         throw exception;
     }
@@ -60,10 +57,10 @@ export async function handleErrors(
 
 export async function handleErrorsForDocument(
     context: ActionContext<ErrorState, ErrorState>,
-    exception: DocumentException
+    exception: unknown
 ): Promise<void> {
     const message = "Internal server error";
-    if (exception.response === undefined) {
+    if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
         context.commit("error/setItemLoadingError", message);
         throw exception;
     }
@@ -84,11 +81,11 @@ export async function handleErrorsForDocument(
 
 export async function handleErrorsForDeletionModal(
     context: ActionContext<ErrorState, ErrorState>,
-    exception: DocumentException,
+    exception: unknown,
     item: Item
 ): Promise<void> {
     const message = "Internal server error";
-    if (exception.response === undefined) {
+    if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
         context.commit("error/setModalError", message);
         throw exception;
     }

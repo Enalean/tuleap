@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+@use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 @function to-snake-case($string) {
     $index: str-index($string, "-");

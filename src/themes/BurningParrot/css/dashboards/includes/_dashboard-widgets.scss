@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use './widgets/contacts';
-@use './widgets/heartbeat';
-@use './widgets/imageviewer';
-@use './widgets/lastcommit';
-@use './widgets/myprojects';
-@use './widgets/project-members';
-@use './widgets/trackerv3';
-@use './widgets/project-classification';
-@use './widgets/welcomemessage';
-@use './widgets/public-areas';
+@use "./widgets/contacts";
+@use "./widgets/heartbeat";
+@use "./widgets/imageviewer";
+@use "./widgets/lastcommit";
+@use "./widgets/myprojects";
+@use "./widgets/project-members";
+@use "./widgets/trackerv3";
+@use "./widgets/project-classification";
+@use "./widgets/welcomemessage";
+@use "./widgets/public-areas";
 
 .dashboard-widget-container {
     width: 100%;

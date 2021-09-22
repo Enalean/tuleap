@@ -20,7 +20,7 @@
 
 import type { VueGettextProvider } from "../../../../../program_management/scripts/program_management/src/helpers/vue-gettext-provider";
 import { handleError } from "./gitlab-error-handler";
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("gitlab-error-handler", () => {
     describe("handleError", () => {
@@ -47,20 +47,18 @@ describe("gitlab-error-handler", () => {
 
         it("When there is i18n message, Then it is returned", async () => {
             const message = await handleError(
-                {
-                    response: {
-                        json: (): Promise<{
-                            error: { i18n_error_message: string; code: number; message: string };
-                        }> =>
-                            Promise.resolve({
-                                error: {
-                                    i18n_error_message: "My i18n Message",
-                                    code: 404,
-                                    message: "not found",
-                                },
-                            }),
-                    },
-                } as FetchWrapperError,
+                new FetchWrapperError("Not Found", {
+                    json: (): Promise<{
+                        error: { i18n_error_message: string; code: number; message: string };
+                    }> =>
+                        Promise.resolve({
+                            error: {
+                                i18n_error_message: "My i18n Message",
+                                code: 404,
+                                message: "not found",
+                            },
+                        }),
+                } as Response),
                 gettext_provider
             );
             expect(message).toEqual("My i18n Message");
@@ -68,19 +66,17 @@ describe("gitlab-error-handler", () => {
 
         it("When there is no i18n message, Then it code ans message are returned", async () => {
             const message = await handleError(
-                {
-                    response: {
-                        json: (): Promise<{
-                            error: { code: number; message: string };
-                        }> =>
-                            Promise.resolve({
-                                error: {
-                                    code: 404,
-                                    message: "not found",
-                                },
-                            }),
-                    },
-                } as FetchWrapperError,
+                new FetchWrapperError("Not Found", {
+                    json: (): Promise<{
+                        error: { code: number; message: string };
+                    }> =>
+                        Promise.resolve({
+                            error: {
+                                code: 404,
+                                message: "not found",
+                            },
+                        }),
+                } as Response),
                 gettext_provider
             );
             expect(message).toEqual("404 not found");
