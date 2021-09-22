@@ -29,6 +29,7 @@ export interface ProjectPrivacy {
 
 export interface ProjectFlag {
     readonly label: string;
+    readonly description: string;
 }
 
 export function getProjectPrivacyIcon(privacy: ProjectPrivacy): string {

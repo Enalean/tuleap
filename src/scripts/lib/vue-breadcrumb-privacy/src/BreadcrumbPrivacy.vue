@@ -97,7 +97,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { ProjectFlag, ProjectPrivacy } from "./project-privacy-helper";
 import { getProjectPrivacyIcon } from "./project-privacy-helper";
-import { createPopover } from "@tuleap/tlp";
+import { createPopover } from "@tuleap/tlp-popovers";
 
 @Component({ name: "BreadcrumbPrivacy" })
 export default class BreadcrumbPrivacy extends Vue {
