@@ -22,29 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use PFUser;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNotPlanned
 {
-    private ArtifactsLinkedToParentDao $stories_linked_to_feature_dao;
-    private BuildPlanning $planning_adapter;
-    private Tracker_ArtifactFactory $artifact_factory;
-
     public function __construct(
-        ArtifactsLinkedToParentDao $stories_linked_to_feature_dao,
-        BuildPlanning $planning_adapter,
-        Tracker_ArtifactFactory $artifact_factory
+        private ArtifactsLinkedToParentDao $stories_linked_to_feature_dao,
+        private BuildPlanning $planning_adapter,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->stories_linked_to_feature_dao = $stories_linked_to_feature_dao;
-        $this->planning_adapter              = $planning_adapter;
-        $this->artifact_factory              = $artifact_factory;
     }
 
     public function isLinkedToAtLeastOnePlannedUserStory(
@@ -72,8 +66,9 @@ final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNo
         return false;
     }
 
-    public function hasStoryLinked(PFUser $user, FeatureIdentifier $feature): bool
+    public function hasStoryLinked(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool
     {
+        $user            = $this->retrieve_user->getUserWithId($user_identifier);
         $linked_children = $this->stories_linked_to_feature_dao->getChildrenOfFeatureInTeamProjects($feature->id);
         foreach ($linked_children as $linked_child) {
             $child = $this->artifact_factory->getArtifactByIdUserCanView($user, $linked_child['children_id']);

@@ -26,9 +26,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -42,14 +42,12 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
     private $artifact_factory;
     private UserIdentifier $user_identifier;
     private BuildPlanningStub $planning_builder;
-    private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->planning_builder = BuildPlanningStub::withValidRootPlanning();
         $this->feature_dao      = $this->createMock(ArtifactsLinkedToParentDao::class);
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
-        $this->user             = UserTestBuilder::aUser()->build();
         $this->user_identifier  = UserIdentifierStub::buildGenericUser();
     }
 
@@ -115,7 +113,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn([]);
 
         self::assertFalse(
-            $this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101))
+            $this->getChecker()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -131,11 +129,11 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactByIdUserCanView')
-            ->with($this->user, 666)
+            ->with(self::isInstanceOf(\PFUser::class), 666)
             ->willReturn(null);
 
         self::assertFalse(
-            $this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101))
+            $this->getChecker()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -151,11 +149,11 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactByIdUserCanView')
-            ->with($this->user, 236)
+            ->with(self::isInstanceOf(\PFUser::class), 236)
             ->willReturn($this->createMock(\Artifact::class));
 
         self::assertTrue(
-            $this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101))
+            $this->getChecker()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -191,7 +189,8 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
         return new UserStoryLinkedToFeatureChecker(
             $this->feature_dao,
             $this->planning_builder,
-            $this->artifact_factory
+            $this->artifact_factory,
+            RetrieveUserStub::withGenericUser()
         );
     }
 }

@@ -94,7 +94,8 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
                 new UserStoryLinkedToFeatureChecker(
                     $this->parent_dao,
                     $this->createMock(BuildPlanning::class),
-                    $this->artifact_factory
+                    $this->artifact_factory,
+                    $retrieve_user
                 ),
                 $retrieve_user
             ),

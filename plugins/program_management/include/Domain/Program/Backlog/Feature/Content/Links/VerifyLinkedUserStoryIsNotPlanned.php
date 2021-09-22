@@ -29,5 +29,5 @@ interface VerifyLinkedUserStoryIsNotPlanned
 {
     public function isLinkedToAtLeastOnePlannedUserStory(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool;
 
-    public function hasStoryLinked(\PFUser $user, FeatureIdentifier $feature): bool;
+    public function hasStoryLinked(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool;
 }

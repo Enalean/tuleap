@@ -104,6 +104,7 @@ final class ProjectResource extends AuthenticatedResource
     private BuildProgram $build_program;
     private UserManagerAdapter $user_manager_adapter;
     private PrioritizeFeaturesPermissionVerifier $features_permission_verifier;
+    private UserStoryLinkedToFeatureChecker $linked_to_feature_checker;
 
     public function __construct()
     {
@@ -138,7 +139,12 @@ final class ProjectResource extends AuthenticatedResource
             $this->user_manager_adapter
         );
 
-        $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao, $this->user_manager_adapter);
+        $team_adapter       = new TeamAdapter(
+            $project_manager,
+            $program_dao,
+            $explicit_backlog_dao,
+            $this->user_manager_adapter
+        );
         $this->team_creator = new TeamCreator(
             $project_retriever,
             $team_dao,
@@ -150,6 +156,12 @@ final class ProjectResource extends AuthenticatedResource
 
         $artifact_factory                   = \Tracker_ArtifactFactory::instance();
         $form_element_factory               = \Tracker_FormElementFactory::instance();
+        $this->linked_to_feature_checker    = new UserStoryLinkedToFeatureChecker(
+            new ArtifactsLinkedToParentDao(),
+            new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
+            $artifact_factory,
+            $this->user_manager_adapter
+        );
         $this->features_retriever           = new FeatureElementsRetriever(
             $this->build_program,
             new FeaturesDao(),
@@ -158,11 +170,7 @@ final class ProjectResource extends AuthenticatedResource
                 $form_element_factory,
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
-                new UserStoryLinkedToFeatureChecker(
-                    new ArtifactsLinkedToParentDao(),
-                    new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                    $artifact_factory
-                ),
+                $this->linked_to_feature_checker,
                 $this->user_manager_adapter
             )
         );
@@ -239,7 +247,7 @@ final class ProjectResource extends AuthenticatedResource
      *
      * @url    PUT {id}/program_plan
      *
-     * @param int                                  $id Id of the program project
+     * @param int $id                                              Id of the program project
      * @param ProjectResourcePutPlanRepresentation $representation {@from body}
      *
      *
@@ -286,7 +294,7 @@ final class ProjectResource extends AuthenticatedResource
      *
      * @url    PUT {id}/program_teams
      *
-     * @param int                                   $id Id of the program project
+     * @param int $id                                               Id of the program project
      * @param ProjectResourcePutTeamsRepresentation $representation {@from body}
      *
      *
@@ -315,11 +323,11 @@ final class ProjectResource extends AuthenticatedResource
      *
      * Get the to be planned elements of a program
      *
-     * @url GET {id}/program_backlog
+     * @url    GET {id}/program_backlog
      * @access hybrid
      *
-     * @param int $id Id of the program
-     * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
+     * @param int $id     Id of the program
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
      * @return FeatureRepresentation[]
@@ -384,7 +392,7 @@ final class ProjectResource extends AuthenticatedResource
      *
      * @url PATCH {id}/program_backlog
      *
-     * @param int                        $id ID of the program
+     * @param int $id                                                  ID of the program
      * @param BacklogPatchRepresentation $backlog_patch_representation {@from body}
      *
      * @throws RestException 401
@@ -410,11 +418,7 @@ final class ProjectResource extends AuthenticatedResource
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
-            new UserStoryLinkedToFeatureChecker(
-                new ArtifactsLinkedToParentDao(),
-                new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-                $artifact_factory
-            ),
+            $this->linked_to_feature_checker,
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             new FeatureRemovalProcessor(
                 new ProgramIncrementsDAO(),
@@ -470,11 +474,11 @@ final class ProjectResource extends AuthenticatedResource
     /**
      * Get program increments
      *
-     * @url GET {id}/program_increments
+     * @url    GET {id}/program_increments
      * @access hybrid
      *
-     * @param int $id ID of the program
-     * @param int $limit Number of elements displayed per page {@min 1} {@max 50}
+     * @param int $id     ID of the program
+     * @param int $limit  Number of elements displayed per page {@min 1} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
      * @return ProgramIncrementRepresentation[]

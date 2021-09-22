@@ -1036,7 +1036,8 @@ final class program_managementPlugin extends Plugin
             new UserStoryLinkedToFeatureChecker(
                 new ArtifactsLinkedToParentDao(),
                 new PlanningAdapter(\PlanningFactory::build(), $user_manager_adapter),
-                $artifact_factory
+                $artifact_factory,
+                $user_manager_adapter
             ),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_manager_adapter),
             new FeatureRemovalProcessor(
