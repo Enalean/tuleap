@@ -53,6 +53,7 @@ const config_for_flaming_parrot = {
         "cross-references-fields": "./scripts/form-element/src/cross-references-fields.ts",
         "edit-view": "./scripts/artifact/edition/edit-view.ts",
         "list-fields": "./scripts/artifact/list-fields.ts",
+        "run-field-dependencies": "./scripts/artifact/run-field-dependencies.ts",
         "artifact-links-field": "./scripts/artifact/edition/artifact-links-field.ts",
         "mass-change": "./scripts/artifact/mass-change/mass-change-view.ts",
         "modal-v2": "./scripts/modal-v2/modal-in-place.js",

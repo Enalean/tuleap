@@ -51,7 +51,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
-use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
@@ -3405,7 +3405,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function includeJavascriptAssetsForMassChange(): void
     {
-        ListPickerIncluder::includeListPickerAssets($this->getId());
+        ListFieldsIncluder::includeListFieldsAssets($this->getId());
         $assets = $this->getIncludeAssets();
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('mass-change.js'));
     }

@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
-use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\Artifact\View\Nature;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
@@ -146,7 +146,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         ];
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
-        ListPickerIncluder::includeListPickerAssets($this->tracker->getId());
+        ListFieldsIncluder::includeListFieldsAssets($this->tracker->getId());
 
         $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
         $this->event_manager->dispatch($event);

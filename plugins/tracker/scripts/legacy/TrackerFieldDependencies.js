@@ -275,5 +275,3 @@ tuleap.tracker.runTrackerFieldDependencies = function () {
         rule_node.process();
     });
 };
-
-document.addEventListener("DOMContentLoaded", tuleap.tracker.runTrackerFieldDependencies);
