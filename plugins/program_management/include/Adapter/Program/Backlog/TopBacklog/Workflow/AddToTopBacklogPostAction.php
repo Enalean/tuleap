@@ -95,9 +95,8 @@ class AddToTopBacklogPostAction extends Transition_PostAction
 
     public function after(Tracker_Artifact_Changeset $changeset): void
     {
-        $user            = new AddToBacklogPostActionAllPowerfulUser();
         $bypass          = new WorkflowUserPermissionBypass();
-        $user_identifier = UserProxy::buildFromPFUser($user);
+        $user_identifier = UserProxy::buildFromPFUser(new AddToBacklogPostActionAllPowerfulUser());
 
         $artifact = $changeset->getArtifact();
 
@@ -113,6 +112,6 @@ class AddToTopBacklogPostAction extends Transition_PostAction
         }
 
         $top_backlog_change = new TopBacklogChange([$artifact->getId()], [], false, null);
-        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user, $bypass);
+        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user_identifier, $bypass);
     }
 }

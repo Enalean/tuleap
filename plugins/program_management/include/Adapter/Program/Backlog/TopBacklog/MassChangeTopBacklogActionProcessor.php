@@ -56,14 +56,13 @@ final class MassChangeTopBacklogActionProcessor
                 return;
         }
 
-        $user            = $source_information->user;
-        $user_identifier = UserProxy::buildFromPFUser($user);
+        $user_identifier = UserProxy::buildFromPFUser($source_information->user);
         try {
             $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier, null);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return;
         }
 
-        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user, null);
+        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user_identifier, null);
     }
 }

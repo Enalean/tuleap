@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -69,6 +70,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&FeaturesRankOrderer
      */
     private $feature_orderer;
+    private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
@@ -81,7 +83,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
         $this->user->method('getId')->willReturn(101);
-        $this->retrieve_user = RetrieveUserStub::withUser($this->user);
+        $this->retrieve_user   = RetrieveUserStub::withUser($this->user);
+        $this->user_identifier = UserIdentifierStub::withId(101);
 
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
@@ -111,7 +114,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([742, 790], [741, 789], false, null),
-            $this->user,
+            $this->user_identifier,
             null
         );
     }
@@ -131,7 +134,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([], [741, 789], false, null),
-            $this->user,
+            $this->user_identifier,
             null
         );
     }
@@ -147,7 +150,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([964], [963], false, null),
-            $this->user,
+            $this->user_identifier,
             null
         );
     }
@@ -168,7 +171,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([964], [], true, null),
-            $this->user,
+            $this->user_identifier,
             null
         );
     }
@@ -200,7 +203,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([964], [], true, null),
-            $this->user,
+            $this->user_identifier,
             null
         );
     }
@@ -227,7 +230,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([], [403], false, null),
-            $user,
+            $this->user_identifier,
             null
         );
     }
@@ -254,7 +257,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             $program,
             new TopBacklogChange([], [], false, $element_to_order),
-            $this->user,
+            $this->user_identifier,
             null
         );
     }

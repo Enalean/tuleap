@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
@@ -42,6 +41,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
@@ -74,11 +74,10 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     public function processTopBacklogChangeForAProgram(
         ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,
-        \PFUser $user,
+        UserIdentifier $user_identifier,
         ?PermissionBypass $bypass
     ): void {
-        $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user, $bypass) {
-            $user_identifier = UserProxy::buildFromPFUser($user);
+        $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user_identifier, $bypass) {
             try {
                 $user_can_prioritize = UserCanPrioritize::fromUser(
                     $this->prioritize_features_permission_verifier,
@@ -87,7 +86,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                     $bypass
                 );
             } catch (NotAllowedToPrioritizeException $e) {
-                throw new CannotManipulateTopBacklog($program, $user);
+                throw new CannotManipulateTopBacklog($program, $user_identifier);
             }
 
             $feature_add_removals = $this->filterFeaturesThatCanBeManipulated(
