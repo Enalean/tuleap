@@ -95,7 +95,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     {
         $this->variables = ['project_name' => 'not_found'];
 
-        $this->user                      = UserTestBuilder::aUser()->withRealName('Test User')->build();
+        $this->user                      = UserTestBuilder::buildWithDefaults();
         $this->request                   = HTTPRequestBuilder::get()->withUser($this->user)->build();
         $this->template_renderer         = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder       = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);

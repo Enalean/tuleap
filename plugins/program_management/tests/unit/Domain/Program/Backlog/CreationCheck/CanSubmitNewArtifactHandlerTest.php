@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -77,7 +77,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $error_collector->addWorkflowDependencyError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
         $event = new CanSubmitNewArtifact($this->user, $this->tracker);
 
-        $this->handler->handle($event, $error_collector, UserIdentifierStub::buildGenericUser());
+        $this->handler->handle($event, $error_collector, UserReferenceStub::withDefaults());
         self::assertFalse($event->canSubmitNewArtifact());
     }
 
@@ -86,7 +86,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $error_collector = new ConfigurationErrorsCollector(true);
         $event           = new CanSubmitNewArtifact($this->user, $this->tracker);
 
-        $this->handler->handle($event, $error_collector, UserIdentifierStub::buildGenericUser());
+        $this->handler->handle($event, $error_collector, UserReferenceStub::withDefaults());
         self::assertTrue($event->canSubmitNewArtifact());
     }
 }

@@ -21,33 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
-/**
- * I am a Proxy around PFUser attributes
- *
- * @psalm-immutable
- */
-final class UserProxy implements UserReference
+final class UserReferenceStub implements UserReference
 {
     private function __construct(private int $id, private string $name)
     {
     }
 
-    /**
-     * PFUser can return no name for workflow users
-     */
-    public static function buildFromPFUser(\PFUser $user): self
-    {
-        $name =  $user->getName() ?? "";
-        return new self((int) $user->getId(), $name);
-    }
-
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public static function withDefaults(): self
+    {
+        return new self(101, 'John');
+    }
+
+    public static function withIdAndName(int $user_id, string $name): self
+    {
+        return new self($user_id, $name);
     }
 
     public function getName(): string

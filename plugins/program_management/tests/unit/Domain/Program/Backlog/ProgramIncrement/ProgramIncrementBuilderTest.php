@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class ProgramIncrementBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -49,7 +48,7 @@ final class ProgramIncrementBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             $program_increment_builder->buildOpenProgramIncrements(
                 12,
-                UserProxy::buildFromPFUser(UserTestBuilder::aUser()->build())
+                UserIdentifierStub::buildGenericUser()
             )
         );
     }

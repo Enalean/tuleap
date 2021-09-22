@@ -27,20 +27,21 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationE
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TrackerErrorPresenterTest extends TestCase
 {
     private TrackerReference $tracker;
-    private UserIdentifierStub $user_identifier;
+    private UserReference $user_identifier;
     private ConfigurationErrorsGatherer $gatherer;
 
     protected function setUp(): void
@@ -52,7 +53,7 @@ final class TrackerErrorPresenterTest extends TestCase
         $project_builder           = new BuildProjectStub();
         $retrieve_user             = RetrieveUserStub::withUser(UserTestBuilder::aUser()->build());
         $this->tracker             = TrackerReferenceStub::withDefaults();
-        $this->user_identifier     = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier     = UserReferenceStub::withDefaults();
 
         $program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
         $iteration_checker->expects(self::once())->method('canCreateAnIteration');

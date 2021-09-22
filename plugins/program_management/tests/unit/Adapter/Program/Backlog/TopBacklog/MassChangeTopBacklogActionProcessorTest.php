@@ -38,18 +38,19 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker
      */
     private $tracker;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->top_backlog_change_processor = $this->createMock(TopBacklogChangeProcessor::class);
         $this->tracker                      = $this->createMock(\Tracker::class);
         $this->tracker->method('getGroupId')->willReturn('102');
+        $this->user = UserTestBuilder::buildWithDefaults();
     }
 
     public function testCanProcessMassAdditionToTheTopBacklog(): void
     {
-        $user               = UserTestBuilder::aUser()->build();
-        $source_information = new MassChangeTopBacklogSourceInformation(102, [400, 401], $user, 'add');
+        $source_information = new MassChangeTopBacklogSourceInformation(102, [400, 401], $this->user, 'add');
 
         $expected_top_backlog_change = new TopBacklogChange([400, 401], [], false, null);
 
@@ -79,8 +80,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
 
     public function testCanProcessMassDeletionToTheTopBacklog(): void
     {
-        $user               = UserTestBuilder::aUser()->build();
-        $source_information = new MassChangeTopBacklogSourceInformation(102, [402, 403], $user, 'remove');
+        $source_information = new MassChangeTopBacklogSourceInformation(102, [402, 403], $this->user, 'remove');
 
         $expected_top_backlog_change = new TopBacklogChange([], [402, 403], false, null);
 
@@ -108,8 +108,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
 
     public function testDoesNothingWhenProcessingAMassChangeWithNoTopBacklogModification(): void
     {
-        $user               = UserTestBuilder::aUser()->build();
-        $source_information = new MassChangeTopBacklogSourceInformation(102, [405], $user, 'unchanged');
+        $source_information = new MassChangeTopBacklogSourceInformation(102, [405], $this->user, 'unchanged');
 
         $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
 
@@ -123,7 +122,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
 
     public function testDoesNothingWhenAMassChangeHappensOutsideOfAProgramProject(): void
     {
-        $source_information = new MassChangeTopBacklogSourceInformation(200, [406], UserTestBuilder::aUser()->build(), 'add');
+        $source_information = new MassChangeTopBacklogSourceInformation(200, [406], $this->user, 'add');
 
         $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
 

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
@@ -35,7 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFou
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 class IterationCreatorChecker
 {
@@ -60,12 +59,11 @@ class IterationCreatorChecker
     }
 
     public function canCreateAnIteration(
-        PFUser $user,
         TrackerReference $tracker,
         ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
         ConfigurationErrorsCollector $errors_collector,
-        UserIdentifier $user_identifier
+        UserReference $user_identifier
     ): bool {
         if (! $this->verify_is_iteration->isIterationTracker($tracker->getId())) {
             return true;
@@ -75,7 +73,7 @@ class IterationCreatorChecker
             sprintf(
                 'Checking if Iteration can be created in second planning of program #%s by user %s (#%s)',
                 $program->getId(),
-                $user->getName(),
+                $user_identifier->getName(),
                 $user_identifier->getId()
             )
         );
@@ -120,7 +118,7 @@ class IterationCreatorChecker
                 sprintf(
                     'Iteration cannot be created in program #%s by user %s (#%s)',
                     $program->getId(),
-                    $user->getName(),
+                    $user_identifier->getName(),
                     $user_identifier->getId()
                 )
             );

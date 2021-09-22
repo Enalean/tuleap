@@ -68,6 +68,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger                     = new NullLogger();
         $this->user                       = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
+        $this->user->method('getName')->willReturn("John");
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
     }
 

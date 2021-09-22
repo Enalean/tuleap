@@ -68,7 +68,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
         $this->changeset_creator = $this->createStub(\Tracker_Artifact_Changeset_NewChangesetCreator::class);
 
-        $this->pfuser   = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
+        $this->pfuser   = UserTestBuilder::buildWithId(self::USER_ID);
         $this->artifact = ArtifactTestBuilder::anArtifact(self::TIMEBOX_ID)->build();
 
         $fields = new SynchronizedFieldsStubPreparation(

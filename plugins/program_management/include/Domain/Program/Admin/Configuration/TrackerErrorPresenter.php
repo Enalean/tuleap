@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
  * @psalm-immutable
@@ -168,7 +168,7 @@ final class TrackerErrorPresenter
     public static function fromTracker(
         ConfigurationErrorsGatherer $errors_gatherer,
         TrackerReference $tracker,
-        UserIdentifier $user_identifier,
+        UserReference $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): ?self {
         $errors_gatherer->gatherConfigurationErrors($tracker, $user_identifier, $errors_collector);

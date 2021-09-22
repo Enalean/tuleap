@@ -22,27 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use PFUser;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class IterationCreatorCheckerTest extends TestCase
 {
-    private PFUser $user;
     private ProgramIdentifier $program;
     private TestLogger $logger;
     private RetrievePlanningMilestoneTracker $milestone_retriever;
@@ -53,13 +51,12 @@ final class IterationCreatorCheckerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&TimeboxCreatorChecker
      */
     private $timebox_creator_checker;
-    private UserIdentifierStub $user_identifier;
+    private UserReference $user_identifier;
 
     protected function setUp(): void
     {
         $this->logger                     = new TestLogger();
-        $this->user                       = UserTestBuilder::aUser()->build();
-        $this->user_identifier            = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier            = UserReferenceStub::withDefaults();
         $this->program                    = ProgramIdentifierBuilder::build();
         $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             TrackerReferenceStub::withDefaults()
@@ -90,7 +87,6 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildNotIteration();
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -109,7 +105,6 @@ final class IterationCreatorCheckerTest extends TestCase
     {
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -129,7 +124,6 @@ final class IterationCreatorCheckerTest extends TestCase
 
         self::assertFalse(
             $this->getChecker()->canCreateAnIteration(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -151,7 +145,6 @@ final class IterationCreatorCheckerTest extends TestCase
 
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -171,7 +164,6 @@ final class IterationCreatorCheckerTest extends TestCase
 
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -191,7 +183,6 @@ final class IterationCreatorCheckerTest extends TestCase
 
         self::assertFalse(
             $this->getChecker()->canCreateAnIteration(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(

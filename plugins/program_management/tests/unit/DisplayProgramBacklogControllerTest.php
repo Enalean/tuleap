@@ -61,6 +61,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
     private $template_renderer;
     private BuildProgram $build_program;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -68,6 +69,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->project_flags_builder = $this->createStub(ProjectFlagsBuilder::class);
         $this->build_program         = BuildProgramStub::stubValidProgram();
         $this->template_renderer     = $this->createMock(\TemplateRenderer::class);
+        $this->user                  = UserTestBuilder::buildWithDefaults();
 
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
             TrackerReferenceStub::withDefaults()
@@ -99,7 +101,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->mockProject();
         $this->build_program = BuildProgramStub::stubInvalidProgram();
 
-        $request   = HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->build())->build();
+        $request   = HTTPRequestBuilder::get()->withUser($this->user)->build();
         $variables = ['project_name' => 'test_project'];
 
         $this->expectException(ForbiddenException::class);
@@ -112,7 +114,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->mockProject();
         $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withNotVisibleProgramIncrementTracker();
 
-        $request   = HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->build())->build();
+        $request   = HTTPRequestBuilder::get()->withUser($this->user)->build();
         $variables = ['project_name' => 'test_project'];
 
         $this->expectException(NotFoundException::class);
@@ -132,6 +134,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $user->method('getPreference')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
         $user->method('getId')->willReturn(101);
+        $user->method('getName')->willReturn('John');
 
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];
@@ -158,6 +161,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $user->method('getPreference')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
         $user->method('getId')->willReturn(101);
+        $user->method('getName')->willReturn('John');
 
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];

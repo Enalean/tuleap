@@ -51,6 +51,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
         $this->user->method('getId')->willReturn(101);
+        $this->user->method('getName')->willReturn('John');
     }
 
     public function testMassChangeTopBacklogActionCanBeProvidedWhenUserHasPermissionInAAppropriateTracker(): void

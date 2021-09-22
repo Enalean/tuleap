@@ -23,15 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
@@ -98,7 +97,7 @@ final class PossibleParentHandlerTest extends TestCase
 
             public function getUser(): UserIdentifier
             {
-                return UserProxy::buildFromPFUser(UserTestBuilder::aUser()->build());
+                return UserIdentifierStub::buildGenericUser();
             }
 
             public function trackerIsInRootPlanning(): bool
