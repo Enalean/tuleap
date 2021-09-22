@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -70,5 +71,21 @@ final class ProgramIdentifier
     {
         // We assume that ReplicationData has already made sure that its project is a Program
         return new self($replication_data->getProject()->getId());
+    }
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    public static function fromProgramIncrement(
+        RetrieveProgramOfProgramIncrement $program_retriever,
+        BuildProgram $program_builder,
+        ProgramIncrementIdentifier $program_increment,
+        UserIdentifier $user
+    ): self {
+        $program_id = $program_retriever->getProgramOfProgramIncrement($program_increment);
+        $program_builder->ensureProgramIsAProject($program_id, $user, null);
+
+        return new self($program_id);
     }
 }

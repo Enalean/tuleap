@@ -22,7 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-interface SearchProgram
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+
+interface RetrieveProgramOfProgramIncrement
 {
-    public function searchProgramOfProgramIncrement(int $program_increment_id): ?int;
+    /**
+     * @throws ProgramIncrementHasNoProgramException
+     */
+    public function getProgramOfProgramIncrement(ProgramIncrementIdentifier $program_increment): int;
 }
