@@ -31,7 +31,7 @@ export interface MarkdownTextEditorArea extends HTMLOrTextEditorArea {
     readonly preview_button: TemplateResult;
     readonly help_button: TemplateResult;
     readonly preview_area: TemplateResult;
-    readonly hidden_format_input?: TemplateResult;
+    readonly hidden_format_input: TemplateResult | undefined;
 }
 
 export const renderHTMLOrTextEditor = (

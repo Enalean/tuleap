@@ -23,7 +23,7 @@ import type { UserForPeoplePicker } from "./card/type";
 export interface SwimlaneState {
     swimlanes: Array<Swimlane>;
     is_loading_swimlanes: boolean;
-    dropzone_rejecting_drop?: HTMLElement;
+    dropzone_rejecting_drop?: HTMLElement | undefined;
     is_card_creation_blocked_due_to_ongoing_creation: boolean;
     possible_assignees: Map<number, UserForPeoplePicker[]>;
 }
@@ -43,14 +43,14 @@ export interface MoveCardsPayload {
     readonly card: Card;
     readonly swimlane: Swimlane;
     readonly column: ColumnDefinition;
-    readonly position?: CardPosition;
+    readonly position?: CardPosition | undefined;
 }
 
 export interface HandleDropPayload {
     readonly dropped_card: HTMLElement;
     readonly target_cell: HTMLElement;
     readonly source_cell: HTMLElement;
-    readonly sibling_card?: HTMLElement;
+    readonly sibling_card?: HTMLElement | undefined;
 }
 
 export interface HandleDragPayload {

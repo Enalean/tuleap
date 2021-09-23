@@ -39,7 +39,7 @@ export class EditorAreaState implements EditorAreaStateInterface {
     public current_format: TextFieldFormat;
     public rendered_html: Promise<string> | null = null;
     public readonly selectbox_id: string;
-    public readonly selectbox_name?: string;
+    public readonly selectbox_name: string | undefined;
     private readonly editor: TextEditorInterface;
     private readonly project_id: string;
 

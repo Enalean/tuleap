@@ -23,7 +23,7 @@ type FieldCharacterType = "begin" | "end" | "separate";
 
 class FidCharAttrs extends XmlAttributeComponent<{
     readonly type: FieldCharacterType;
-    readonly dirty?: boolean;
+    readonly dirty?: boolean | undefined;
 }> {
     protected override readonly xmlKeys = { type: "w:fldCharType", dirty: "w:dirty" };
 }

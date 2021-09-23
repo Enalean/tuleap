@@ -27,7 +27,7 @@ interface OptionsUserSelect2 {
     use_tuleap_id?: boolean;
     internal_users_only?: 0 | 1;
     placeholder?: string;
-    project_id?: string;
+    project_id?: string | undefined;
 }
 
 export function autocomplete_projects_for_select2(

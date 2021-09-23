@@ -4,6 +4,7 @@
         "module": "ES2015",
         "lib": ["ES2015"],
         "strict": true,
+        "exactOptionalPropertyTypes": true,
         "isolatedModules": true,
         "noImplicitOverride": true,
         "declaration": true,

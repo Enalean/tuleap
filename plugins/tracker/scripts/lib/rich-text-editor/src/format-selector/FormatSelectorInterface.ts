@@ -22,7 +22,7 @@ import type { TextEditorInterface } from "../TextEditorInterface";
 
 export interface FormatSelectorPresenter {
     readonly id: string;
-    readonly name?: string;
+    readonly name: string | undefined;
     readonly selected_value: TextFieldFormat;
     readonly editor: TextEditorInterface;
 }

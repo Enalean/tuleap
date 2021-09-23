@@ -194,11 +194,11 @@ export interface Options<Result = DataFormat | GroupedDataFormat, RemoteResult =
     language?: string | Translation;
     matcher?: (params: SearchOptions, data: OptGroupData | OptionData) => OptGroupData | OptionData | null;
     maximumInputLength?: number;
-    maximumSelectionLength?: number;
+    maximumSelectionLength?: number|undefined;
     minimumInputLength?: number;
     minimumResultsForSearch?: number;
     multiple?: boolean;
-    placeholder?: string | IdTextPair;
+    placeholder?: string | IdTextPair | undefined;
     resultsAdapter?: any;
     selectionAdapter?: any;
     selectOnClose?: boolean;
