@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'background';
+@use "background";
 
 .project-with-background {
     @include background.css-custom-properties("blue-sand");

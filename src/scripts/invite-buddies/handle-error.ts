@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { displayError } from "./feedback-display";
 
-export async function handleError(rest_error: FetchWrapperError): Promise<void> {
-    if (rest_error.response === undefined) {
+export async function handleError(rest_error: unknown): Promise<void> {
+    if (!(rest_error instanceof FetchWrapperError) || rest_error.response === undefined) {
         throw rest_error;
     }
 

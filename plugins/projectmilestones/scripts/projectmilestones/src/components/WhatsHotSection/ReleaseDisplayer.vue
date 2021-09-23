@@ -57,7 +57,7 @@ import Vue from "vue";
 import type { MilestoneData, TestManagementCampaign } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import type { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "tlp";
 import { is_testplan_activated } from "../../helpers/test-management-helper";
 
 @Component({
@@ -108,8 +108,8 @@ export default class ReleaseDisplayer extends Vue {
         }
     }
 
-    async handle_error(rest_error: FetchWrapperError): Promise<void> {
-        if (rest_error.response === undefined) {
+    async handle_error(rest_error: unknown): Promise<void> {
+        if (!(rest_error instanceof FetchWrapperError) || rest_error.response === undefined) {
             this.error_message = this.$gettext("Oops, an error occurred!");
             throw rest_error;
         }

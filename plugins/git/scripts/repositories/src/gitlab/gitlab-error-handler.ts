@@ -18,14 +18,14 @@
  *
  */
 
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { VueGettextProvider } from "./vue-gettext-provider";
 
 export async function handleError(
-    rest_error: FetchWrapperError,
+    rest_error: unknown,
     gettext_provider: VueGettextProvider
 ): Promise<string> {
-    if (!("response" in rest_error)) {
+    if (!(rest_error instanceof FetchWrapperError)) {
         return gettext_provider.$gettext("Oops, an error occurred!");
     }
 

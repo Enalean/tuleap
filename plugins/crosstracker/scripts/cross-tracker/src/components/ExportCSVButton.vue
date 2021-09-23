@@ -40,6 +40,7 @@ import { getCSVReport } from "../api/rest-querier";
 import Vue from "vue";
 import Component from "vue-class-component";
 import { State, Getter } from "vuex-class";
+import { FetchWrapperError } from "tlp";
 
 @Component
 export default class ExportCSVButton extends Vue {
@@ -59,6 +60,9 @@ export default class ExportCSVButton extends Vue {
             const report_with_bom = addBOM(report);
             download(report_with_bom, `export-${this.report_id}.csv`, "text/csv;encoding:utf-8");
         } catch (error) {
+            if (!(error instanceof FetchWrapperError)) {
+                throw error;
+            }
             if (error.response.status.toString().substring(0, 2) === "50") {
                 this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
                 return;

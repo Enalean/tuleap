@@ -25,6 +25,7 @@ import * as api from "./rest-querier";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
 import localVueForTest from "./helper/local-vue-for-test";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("GitPermissions", () => {
     const store_options = {};
@@ -40,13 +41,13 @@ describe("GitPermissions", () => {
     it("When API returns Error, Then it's displayed", async () => {
         const wrapper = instantiateComponent();
         jest.spyOn(api, "getGitPermissions").mockReturnValue(
-            Promise.reject({
-                response: {
+            Promise.reject(
+                new FetchWrapperError("Not found", {
                     status: 404,
                     json: (): Promise<{ error: string }> =>
                         Promise.resolve({ error: "Error during get permissions" }),
-                },
-            })
+                } as Response)
+            )
         );
 
         wrapper.find("[data-test=git-permission-button-load]").trigger("click");

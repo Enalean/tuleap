@@ -21,6 +21,7 @@ import { addTeamInProgram } from "./add-team";
 import * as api from "../api/manage-team";
 import * as restErrorHelper from "../helper/rest-error-helper";
 import * as buttonAddTeamHelper from "../helper/button-helper";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
@@ -88,12 +89,12 @@ describe("AddTeam", () => {
             const doc = getDocumentWithButton(button_to_add_team, 2);
 
             manage_team.mockImplementation(() =>
-                Promise.reject({
-                    response: {
+                Promise.reject(
+                    new FetchWrapperError("Not found", {
                         json: (): Promise<{ error: { code: number; message: string } }> =>
                             Promise.resolve({ error: { code: 400, message: "Team not found" } }),
-                    },
-                })
+                    } as Response)
+                )
             );
 
             addTeamInProgram(125, doc);
@@ -114,8 +115,8 @@ describe("AddTeam", () => {
             const doc = getDocumentWithButton(button_to_add_team, 2);
 
             manage_team.mockImplementation(() =>
-                Promise.reject({
-                    response: {
+                Promise.reject(
+                    new FetchWrapperError("Not found", {
                         json: (): Promise<{ error: { code: number; message: string } }> =>
                             Promise.resolve({
                                 error: {
@@ -124,8 +125,8 @@ describe("AddTeam", () => {
                                     i18n_error_message: "L'Équipe n'est pas trouvée",
                                 },
                             }),
-                    },
-                })
+                    } as Response)
+                )
             );
 
             addTeamInProgram(125, doc);

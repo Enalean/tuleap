@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use './reviewers';
-@use './timeline';
+@use "./reviewers";
+@use "./timeline";
 
 .pull-request-reviewers-timeline {
     display: flex;

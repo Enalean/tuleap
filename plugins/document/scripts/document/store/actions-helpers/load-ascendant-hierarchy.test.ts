@@ -23,6 +23,7 @@ import { loadAscendantHierarchy } from "./load-ascendant-hierarchy";
 import type { ActionContext } from "vuex";
 import type { ErrorState } from "../error/module";
 import type { Folder, Item } from "../../type";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("loadAscendantHierarchy", () => {
     let context: ActionContext<ErrorState, ErrorState>, getParents: jest.SpyInstance;
@@ -123,8 +124,8 @@ describe("loadAscendantHierarchy", () => {
         await loadAscendantHierarchy(
             context,
             3,
-            Promise.reject({
-                response: {
+            Promise.reject(
+                new FetchWrapperError("Not Found", {
                     ok: false,
                     status: 404,
                     statusText: "",
@@ -134,8 +135,8 @@ describe("loadAscendantHierarchy", () => {
                                 i18n_error_message: error_message,
                             },
                         }),
-                },
-            })
+                } as Response)
+            )
         );
 
         expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");

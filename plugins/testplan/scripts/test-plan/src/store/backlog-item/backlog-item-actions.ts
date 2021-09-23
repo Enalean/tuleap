@@ -116,7 +116,7 @@ export async function loadTestDefinitions(
     }
 }
 
-function isPermissionDenied(error: Error | FetchWrapperError): boolean {
+function isPermissionDenied(error: unknown): boolean {
     if (!isAFetchWrapperError(error)) {
         return false;
     }
@@ -124,6 +124,6 @@ function isPermissionDenied(error: Error | FetchWrapperError): boolean {
     return error.response.status === 403;
 }
 
-function isAFetchWrapperError(error: Error | FetchWrapperError): error is FetchWrapperError {
-    return "response" in error;
+function isAFetchWrapperError(error: unknown): error is FetchWrapperError {
+    return error instanceof Error && "response" in error;
 }

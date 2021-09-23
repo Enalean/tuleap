@@ -51,6 +51,7 @@ import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { PackagePermission } from "./type";
+import { FetchWrapperError } from "tlp";
 
 @Component({ components: { PackagePermissionsTable } })
 export default class BaseFRSPackagePermissions extends Vue {
@@ -85,6 +86,9 @@ export default class BaseFRSPackagePermissions extends Vue {
 
             this.is_loaded = true;
         } catch (e) {
+            if (!(e instanceof FetchWrapperError)) {
+                throw e;
+            }
             const { error } = await e.response.json();
             this.rest_error = error;
         } finally {

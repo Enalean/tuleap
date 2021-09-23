@@ -48,6 +48,7 @@ import { Component } from "vue-property-decorator";
 import type { Credentials, JiraImportData, ProjectList } from "../../../../../store/type";
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 import TrackerFromJiraServer from "./TrackerFromJiraServer.vue";
+import { FetchWrapperError } from "tlp";
 
 @Component({
     components: { TrackerFromJiraServer, TrackerFromJiraProject },
@@ -97,6 +98,9 @@ export default class TrackerFromJira extends Vue {
 
             this.is_connection_valid = true;
         } catch (e) {
+            if (!(e instanceof FetchWrapperError)) {
+                throw e;
+            }
             const { error } = await e.response.json();
             this.error_message = error;
         } finally {

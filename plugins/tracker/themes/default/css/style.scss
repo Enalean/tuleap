@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'codemirror/lib/codemirror';
-@use 'codemirror/addon/hint/show-hint';
-@use '../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
-@use 'includes/cards';
-@use 'includes/field-bound-colors';
-@use 'includes/columns-colors';
-@use 'includes/move-artifact';
-@use 'includes/artifact-link-field';
-@use 'includes/xml-changesets';
-@use 'includes/xml-validation';
-@use 'includes/project-header-background';
-@use 'includes/cross-references-fields';
+@use "codemirror/lib/codemirror";
+@use "codemirror/addon/hint/show-hint";
+@use "../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "includes/cards";
+@use "includes/field-bound-colors";
+@use "includes/columns-colors";
+@use "includes/move-artifact";
+@use "includes/artifact-link-field";
+@use "includes/xml-changesets";
+@use "includes/xml-validation";
+@use "includes/project-header-background";
+@use "includes/cross-references-fields";
 
 $tracker-artifact-submit-buttons-height: 80px;
 $tracker-artifact-submit-buttons-concurrent-edition-height: 286px;

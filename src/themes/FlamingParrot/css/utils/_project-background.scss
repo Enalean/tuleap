@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../../common/css/project-background/background';
-@use '../../../common/css/project-background/project-background';
-@use 'variables-color-common';
+@use "../../../common/css/project-background/background";
+@use "../../../common/css/project-background/project-background";
+@use "variables-color-common";
 
 .project-with-background {
     .project-administration-title,

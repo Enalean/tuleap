@@ -35,7 +35,7 @@ import type {
     TestManagementCampaign,
     TrackerNumberArtifacts,
 } from "../type";
-import type { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "tlp";
 import type { ActionContext } from "vuex";
 import { getSortedSprints } from "../helpers/milestones-sprints-helper";
 
@@ -189,9 +189,9 @@ async function getItemsOfSprints(
 
 export async function handleErrorMessage(
     context: ActionContext<State, State>,
-    rest_error: FetchWrapperError
+    rest_error: unknown
 ): Promise<void> {
-    if (rest_error.response === undefined) {
+    if (!(rest_error instanceof FetchWrapperError) || rest_error.response === undefined) {
         context.commit("setErrorMessage", "");
         throw rest_error;
     }

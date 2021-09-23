@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'sass:color';
+@use "sass:color";
 
 $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
 

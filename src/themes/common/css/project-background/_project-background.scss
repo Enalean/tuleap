@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'background';
-@use '../../../BurningParrot/css/includes/global-variables';
+@use "background";
+@use "../../../BurningParrot/css/includes/global-variables";
 
 $elements-that-can-contain-background: ".main-project-tabs", ".dashboard-project-header", ".breadcrumb-container", "#feedback", ".administration-title", ".project-administration-title", ".project-header-title", ".toolbar.nav-pills";
 

@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'roadmap-variables';
-@use 'timeperiod';
-@use 'iteration';
-@use 'task';
-@use 'today';
+@use "roadmap-variables";
+@use "timeperiod";
+@use "iteration";
+@use "task";
+@use "today";
 
 $empty-room-to-display-today-pin-head: roadmap-variables.$today-pin-head-size + 2px;
 

@@ -62,6 +62,7 @@ import { Getter, State } from "vuex-class";
 import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
+import { FetchWrapperError } from "tlp";
 
 export interface SaveEvent {
     saved_state: boolean;
@@ -138,7 +139,7 @@ export default class CrossTrackerWidget extends Vue {
                 this.$store.commit("setInvalidTrackers", invalid_trackers);
             }
         } catch (error) {
-            if (Object.prototype.hasOwnProperty.call(error, "response")) {
+            if (error instanceof FetchWrapperError) {
                 const error_json = await error.response.json();
                 this.$store.commit("setErrorMessage", error_json.error.message);
             }

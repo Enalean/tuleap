@@ -101,7 +101,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { createModal } from "tlp";
+import { createModal, FetchWrapperError } from "tlp";
 import type { Modal } from "tlp";
 import { getProjectId } from "../repository-list-presenter";
 import { postRepository } from "../api/rest-querier";
@@ -133,8 +133,11 @@ export default class GitRepositoryCreate extends Vue {
             const repository = await postRepository(getProjectId(), this.repository_name);
             window.location.href = repository.html_url;
         } catch (e) {
-            const { error } = await e.response.json();
-            const error_code = Number.parseInt(error.code, 10);
+            let error_code: number | undefined = undefined;
+            if (e instanceof FetchWrapperError) {
+                const { error } = await e.response.json();
+                error_code = Number.parseInt(error.code, 10);
+            }
             if (error_code === 400) {
                 this.error = this.$gettext(
                     'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".'

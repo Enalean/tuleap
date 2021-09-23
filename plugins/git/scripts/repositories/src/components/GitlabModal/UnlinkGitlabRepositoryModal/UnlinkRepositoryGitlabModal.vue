@@ -85,7 +85,8 @@
 </template>
 
 <script lang="ts">
-import type { FetchWrapperError, Modal } from "tlp";
+import { FetchWrapperError } from "tlp";
+import type { Modal } from "tlp";
 import { createModal } from "tlp";
 import { deleteIntegrationGitlab } from "../../../gitlab/gitlab-api-querier";
 import { Component } from "vue-property-decorator";
@@ -190,8 +191,11 @@ export default class UnlinkRepositoryGitlabModal extends Vue {
         }
     }
 
-    async handleError(rest_error: FetchWrapperError): Promise<void> {
+    async handleError(rest_error: unknown): Promise<void> {
         try {
+            if (!(rest_error instanceof FetchWrapperError)) {
+                throw rest_error;
+            }
             const { error } = await rest_error.response.json();
             this.message_error_rest = error.code + " " + error.message;
         } catch (error) {

@@ -93,6 +93,7 @@ import type {
 } from "../../../../../store/type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action, Mutation, State } from "vuex-class";
+import { FetchWrapperError } from "tlp";
 
 @Component
 export default class TrackerFromJiraProject extends Vue {
@@ -139,6 +140,9 @@ export default class TrackerFromJiraProject extends Vue {
             this.setTrackerList(tracker_list);
             this.setProject(project);
         } catch (e) {
+            if (!(e instanceof FetchWrapperError)) {
+                throw e;
+            }
             const { error } = await e.response.json();
             this.error_message = error;
         } finally {

@@ -19,8 +19,7 @@
 
 import type { ActionContext } from "vuex";
 import type { RootState, State } from "../../type";
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
-import type { DocumentException } from "../actions-helpers/handle-errors";
+import { FetchWrapperError } from "tlp";
 import { getErrorMessage } from "../actions-helpers/handle-errors";
 import type { ErrorState } from "./module";
 
@@ -40,9 +39,9 @@ export async function handleGlobalModalError(
 
 export async function handleErrorsForModal(
     context: ActionContext<ErrorState, RootState>,
-    exception: DocumentException
+    exception: unknown
 ): Promise<void> {
-    if (exception.response === undefined) {
+    if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
         context.commit("error/setModalError", message);
         throw exception;
     }
@@ -56,9 +55,12 @@ export async function handleErrorsForModal(
 
 export async function handleErrorsForLock(
     context: ActionContext<ErrorState, ErrorState>,
-    exception: DocumentException
+    exception: unknown
 ): Promise<void> {
     try {
+        if (!(exception instanceof FetchWrapperError)) {
+            throw exception;
+        }
         const json = await exception.response.json();
         context.commit("setLockError", getErrorMessage(json));
     } catch (error) {

@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'codemirror/lib/codemirror';
-@use 'codemirror/addon/merge/merge';
+@use "codemirror/lib/codemirror";
+@use "codemirror/addon/merge/merge";
 
-@use './includes/dashboard';
-@use './includes/pull-request';
-@use './includes/overview';
-@use './includes/commits';
-@use './includes/files';
-@use './includes/file-diff';
-@use './includes/tuleap-username';
-@use './includes/pull-request-refs';
+@use "./includes/dashboard";
+@use "./includes/pull-request";
+@use "./includes/overview";
+@use "./includes/commits";
+@use "./includes/files";
+@use "./includes/file-diff";
+@use "./includes/tuleap-username";
+@use "./includes/pull-request-refs";
 
-@use '../../../src/themes/BurningParrot/css/includes/labels/labels-box';
+@use "../../../src/themes/BurningParrot/css/includes/labels/labels-box";

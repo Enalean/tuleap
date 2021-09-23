@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../default/css/includes/cards';
-@use '../../default/css/includes/field-bound-colors';
-@use '../../default/css/includes/xml-validation';
-@use 'includes/homepage';
-@use 'includes/widgets';
-@use 'includes/administration';
-@use 'includes/project-tracker-background';
-@use 'includes/email-copy-paste';
+@use "../../default/css/includes/cards";
+@use "../../default/css/includes/field-bound-colors";
+@use "../../default/css/includes/xml-validation";
+@use "includes/homepage";
+@use "includes/widgets";
+@use "includes/administration";
+@use "includes/project-tracker-background";
+@use "includes/email-copy-paste";
 
 .header-column-deleted-tracker {
     width: 50%;

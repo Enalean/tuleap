@@ -25,6 +25,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import type { Store } from "vuex-mock-store";
 import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("ConfirmReplaceTokenModal", () => {
     let store_options = {},
@@ -161,13 +162,13 @@ describe("ConfirmReplaceTokenModal", () => {
 
         const wrapper = instantiateComponent();
 
-        jest.spyOn(store, "dispatch").mockRejectedValue({
-            response: {
+        jest.spyOn(store, "dispatch").mockRejectedValue(
+            new FetchWrapperError("Not found", {
                 status: 404,
                 json: (): Promise<{ error: { code: number; message: string } }> =>
                     Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-            },
-        });
+            } as Response)
+        );
 
         jest.spyOn(gitlab_error_handler, "handleError");
         // We also display the error in the console.

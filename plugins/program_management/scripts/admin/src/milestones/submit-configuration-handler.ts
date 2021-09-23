@@ -27,6 +27,7 @@ import {
     setButtonToDisabledWithSpinner,
 } from "../helper/button-helper";
 import { buildProgramConfiguration } from "../helper/program-configuration-builder";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const DISPLAY_ERROR_REST_ID = "program-management-save-configuration-error-rest";
 const FORM_ID = "form-program-configuration";
@@ -63,6 +64,9 @@ export function submitConfigurationHandler(
             await saveConfiguration(buildProgramConfiguration(doc, program_id, use_iteration));
             window.location.reload();
         } catch (e) {
+            if (!(e instanceof FetchWrapperError)) {
+                throw e;
+            }
             e.response
                 .json()
                 .then(({ error }: ErrorRest) => {

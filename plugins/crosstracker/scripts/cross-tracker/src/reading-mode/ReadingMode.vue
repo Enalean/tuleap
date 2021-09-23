@@ -68,6 +68,7 @@ import { Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import Vue from "vue";
+import { FetchWrapperError } from "tlp";
 
 @Component({
     components: { TrackerListReadingMode },
@@ -126,7 +127,7 @@ export default class ReadingMode extends Vue {
 
             this.$emit("saved");
         } catch (error) {
-            if (Object.prototype.hasOwnProperty.call(error, "response")) {
+            if (error instanceof FetchWrapperError) {
                 const error_json = await error.response.json();
                 this.$store.commit("setErrorMessage", error_json.error.message);
             }

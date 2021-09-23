@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { FetchWrapperError } from "../src/fetch-wrapper";
+
 export function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
     spy_function.mockReturnValue(
         Promise.resolve({
@@ -29,13 +31,13 @@ export function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
 
 export function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
     spy_function.mockReturnValue(
-        Promise.reject({
-            response: {
+        Promise.reject(
+            new FetchWrapperError(statusText, {
                 ok: false,
                 status,
                 statusText,
                 json: () => Promise.resolve(error_json),
-            },
-        })
+            })
+        )
     );
 }

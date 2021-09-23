@@ -79,6 +79,7 @@ import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracke
 import { Component, Prop, Watch } from "vue-property-decorator";
 import type { Artifact, ArtifactsCollection } from "../type";
 import { State } from "vuex-class";
+import { FetchWrapperError } from "tlp";
 
 @Component({ components: { ArtifactTableRow, ExportButton } })
 export default class ArtifactTable extends Vue {
@@ -147,7 +148,7 @@ export default class ArtifactTable extends Vue {
             this.artifacts = this.artifacts.concat(new_artifacts);
         } catch (error) {
             this.is_load_more_displayed = false;
-            if (Object.prototype.hasOwnProperty.call(error, "response")) {
+            if (error instanceof FetchWrapperError) {
                 const error_json = await error.response.json();
                 if (
                     error_json &&

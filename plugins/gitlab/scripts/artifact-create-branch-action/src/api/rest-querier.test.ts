@@ -24,11 +24,10 @@ import {
 } from "./rest-querier";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
-jest.mock("@tuleap/tlp-fetch");
-
 describe("postGitlabBranch", () => {
     it("asks to create the GitLab branch", async () => {
         const postSpy = jest.spyOn(tlp, "post");
+        mockFetchSuccess(postSpy);
 
         const result = await postGitlabBranch(1, 123, "main");
 

@@ -63,8 +63,8 @@ export async function loadCampaigns(
     }
 }
 
-function isPermissionDenied(error: Error | FetchWrapperError): boolean {
-    if (!isAFetchWrapperError(error)) {
+function isPermissionDenied(error: unknown): boolean {
+    if (!(error instanceof Error) || !isAFetchWrapperError(error)) {
         return false;
     }
 

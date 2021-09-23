@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use './repository-card';
-@use './gitlab';
+@use "./repository-card";
+@use "./gitlab";
 
 .git-repository-list-empty-image {
     stroke: var(--tlp-main-color-transparent-70);

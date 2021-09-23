@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'workflow/header';
-@use 'workflow/matrix';
-@use 'workflow/transition-modal';
-@use '~@tuleap/list-picker';
+@use "workflow/header";
+@use "workflow/matrix";
+@use "workflow/transition-modal";
+@use "~@tuleap/list-picker";
 
 .tracker-workflow-loader {
     height: 200px;

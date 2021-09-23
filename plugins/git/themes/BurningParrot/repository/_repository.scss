@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'gitphp/commit';
-@use 'gitphp/tag';
-@use 'gitphp/commitdiff';
-@use 'gitphp/shortlog';
-@use 'gitphp/blob';
-@use 'gitphp/tree';
-@use 'gitphp/highlight';
-@use '../gitphp-override';
+@use "gitphp/commit";
+@use "gitphp/tag";
+@use "gitphp/commitdiff";
+@use "gitphp/shortlog";
+@use "gitphp/blob";
+@use "gitphp/tree";
+@use "gitphp/highlight";
+@use "../gitphp-override";
 
 .git-repository-header {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;

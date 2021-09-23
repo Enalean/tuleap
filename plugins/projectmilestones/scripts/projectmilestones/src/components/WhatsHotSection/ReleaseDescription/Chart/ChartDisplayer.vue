@@ -47,7 +47,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import type { MilestoneData } from "../../../../type";
 import Vue from "vue";
-import type { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "tlp";
 import { getChartData } from "../../../../api/rest-querier";
 import { getBurndownDataFromType, getBurnupDataFromType } from "../../../../helpers/chart-helper";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
@@ -116,8 +116,11 @@ export default class ChartDisplayer extends Vue {
         }
     }
 
-    async handle_error(rest_error: FetchWrapperError): Promise<void> {
+    async handle_error(rest_error: unknown): Promise<void> {
         try {
+            if (!(rest_error instanceof FetchWrapperError)) {
+                return;
+            }
             const { error } = await rest_error.response.json();
             this.message_error_rest = error.code + " " + error.message;
         } catch (error) {
