@@ -304,6 +304,7 @@ describe("Create ArtifactValues Collection", () => {
                     },
                     {
                         content_length: "long",
+                        content_format: "plaintext",
                         field_name: "Description",
                         field_value: "Some long description in art #1001",
                     },
@@ -381,6 +382,12 @@ describe("Create ArtifactValues Collection", () => {
                         content_length: "short",
                         field_name: "Closed Date",
                         field_value: "",
+                    },
+                    {
+                        content_length: "long",
+                        content_format: "html",
+                        field_name: "Description",
+                        field_value: "<p>Some long description in art #1002</p>",
                     },
                 ],
                 containers: [

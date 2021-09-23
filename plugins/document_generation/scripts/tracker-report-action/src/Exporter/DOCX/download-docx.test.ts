@@ -60,6 +60,7 @@ describe("download-docx", () => {
                             },
                             {
                                 content_length: "long",
+                                content_format: "plaintext",
                                 field_name: "Field 2",
                                 field_value: "Long text content",
                             },
@@ -75,8 +76,9 @@ describe("download-docx", () => {
                                     },
                                     {
                                         content_length: "long",
+                                        content_format: "html",
                                         field_name: "Field 3",
-                                        field_value: "Long text content inside a fieldset",
+                                        field_value: "Long HTML content inside a fieldset",
                                     },
                                 ],
                                 containers: [],

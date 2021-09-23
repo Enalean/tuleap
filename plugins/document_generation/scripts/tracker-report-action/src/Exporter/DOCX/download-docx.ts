@@ -654,21 +654,37 @@ function buildDateReportCriterionValue(
 function buildFieldValuesDisplayZone(
     artifact_values: ReadonlyArray<ArtifactFieldValue>
 ): XmlComponent[] {
+    const short_fields = [];
+    const display_zone_long_fields: XmlComponent[] = [];
+
+    for (const field of artifact_values) {
+        switch (field.content_length) {
+            case "short":
+                short_fields.push(field);
+                break;
+            case "long":
+                display_zone_long_fields.push(
+                    new Paragraph({
+                        heading: HeadingLevel.HEADING_4,
+                        children: [new TextRun(field.field_name)],
+                    }),
+                    transformLargeContentIntoAParagraph(field.field_value, field.content_format)
+                );
+                break;
+            default:
+                ((value: never): never => {
+                    throw new Error("Should never happen, all fields must be handled " + value);
+                })(field);
+        }
+    }
+
     const display_zone: XmlComponent[] = [];
 
-    const short_fields = artifact_values.filter((field) => field.content_length === "short");
     if (short_fields.length > 0) {
         display_zone.push(buildShortFieldValuesDisplayZone(short_fields));
     }
 
-    const long_fields = artifact_values.filter((field) => field.content_length === "long");
-    for (const long_field of long_fields) {
-        const title = new Paragraph({
-            heading: HeadingLevel.HEADING_4,
-            children: [new TextRun(long_field.field_name)],
-        });
-        display_zone.push(title, transformLargeContentIntoAParagraph(long_field.field_value));
-    }
+    display_zone.push(...display_zone_long_fields);
 
     return display_zone;
 }

@@ -18,47 +18,32 @@
  */
 
 import { transformLargeContentIntoAParagraph } from "./transform-large-content-into-paragraph";
-import type { IContext } from "docx";
+import { Paragraph, TextRun } from "docx";
+import * as html_transformer from "./transform-html-into-paragraph";
 
 describe("transform-large-content-into-paragraph", () => {
-    it("transforms large text content", () => {
-        const paragraph = transformLargeContentIntoAParagraph("My\ncontent");
-        const tree = paragraph.prepForXml({} as IContext);
+    it("transforms large plaintext content", () => {
+        const paragraph = transformLargeContentIntoAParagraph("My\ncontent", "plaintext");
 
-        expect(tree).toStrictEqual({
-            "w:p": [
-                {
-                    "w:r": [
-                        {
-                            "w:t": [
-                                {
-                                    _attr: {
-                                        "xml:space": "preserve",
-                                    },
-                                },
-                                "My",
-                            ],
-                        },
-                    ],
-                },
-                {
-                    "w:r": [
-                        {
-                            "w:br": {},
-                        },
-                        {
-                            "w:t": [
-                                {
-                                    _attr: {
-                                        "xml:space": "preserve",
-                                    },
-                                },
-                                "content",
-                            ],
-                        },
-                    ],
-                },
-            ],
-        });
+        expect(paragraph).toStrictEqual(
+            new Paragraph({
+                children: [
+                    new TextRun("My"),
+                    new TextRun({
+                        text: "content",
+                        break: 1,
+                    }),
+                ],
+            })
+        );
+    });
+
+    it("transforms large HTML content", () => {
+        const expected_value = new Paragraph("Some HTML");
+        jest.spyOn(html_transformer, "transformHTMLIntoAParagraph").mockReturnValue(expected_value);
+
+        const paragraph = transformLargeContentIntoAParagraph("Some HTML", "html");
+
+        expect(paragraph).toStrictEqual(expected_value);
     });
 });
