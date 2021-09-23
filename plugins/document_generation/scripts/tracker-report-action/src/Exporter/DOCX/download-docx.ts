@@ -26,7 +26,7 @@ import type {
     GlobalExportProperties,
     ReportCriterionValue,
 } from "../../type";
-import type { ILevelsOptions, XmlComponent } from "docx";
+import type { XmlComponent } from "docx";
 import {
     AlignmentType,
     Bookmark,
@@ -306,7 +306,14 @@ export async function downloadDocx(
             config: [
                 {
                     reference: MAIN_TITLES_NUMBERING_ID,
-                    levels: generateMainTitlesNumberingLevelConfiguration(),
+                    levels: [
+                        {
+                            level: 0,
+                            format: LevelFormat.DECIMAL,
+                            alignment: AlignmentType.START,
+                            text: "%1.",
+                        },
+                    ],
                 },
             ],
         },
@@ -782,19 +789,4 @@ function buildTableCellContent(content: TextRun | ExternalHyperlink): TableCell 
         ],
         margins: TABLE_MARGINS,
     });
-}
-function generateMainTitlesNumberingLevelConfiguration(): ILevelsOptions[] {
-    const levels: ILevelsOptions[] = [];
-    let text_level = "";
-    for (let level = 0; level < 10; level++) {
-        text_level += `%${level + 1}.`;
-        levels.push({
-            level: level,
-            format: LevelFormat.DECIMAL,
-            alignment: AlignmentType.START,
-            text: text_level,
-        });
-    }
-
-    return levels;
 }
