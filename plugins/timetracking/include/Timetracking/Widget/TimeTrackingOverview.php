@@ -61,7 +61,7 @@ class TimeTrackingOverview extends Widget
         if ($this->widget_title !== null) {
             return $this->widget_title;
         }
-        return $this->widget_title ?: dgettext('tuleap-timetracking', 'Timetracking overview');
+        return dgettext('tuleap-timetracking', 'Timetracking overview');
     }
 
     public function loadContent($id)
