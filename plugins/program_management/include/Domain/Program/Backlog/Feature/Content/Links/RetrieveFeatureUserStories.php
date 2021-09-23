@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 
 interface RetrieveFeatureUserStories
@@ -32,5 +33,5 @@ interface RetrieveFeatureUserStories
      * @throws FeatureNotAccessException
      * @throws FeatureIsNotPlannableException
      */
-    public function buildFeatureStories(int $feature_id, \PFUser $user): array;
+    public function buildFeatureStories(int $feature_id, UserIdentifier $user): array;
 }

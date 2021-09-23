@@ -30,6 +30,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAcce
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -48,10 +51,7 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $user;
+    private UserIdentifier $user;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&BackgroundColorRetriever
      */
@@ -61,7 +61,7 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao                 = $this->createMock(ArtifactsLinkedToParentDao::class);
         $this->artifact_factory    = $this->createMock(Tracker_ArtifactFactory::class);
-        $this->user                = $this->createMock(\PFUser::class);
+        $this->user                = UserIdentifierStub::buildGenericUser();
         $this->retrieve_background = $this->createMock(BackgroundColorRetriever::class);
 
         $plan_store = new class () implements PlanStore {
@@ -101,7 +101,8 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             $this->artifact_factory,
             $plan_store,
-            $this->retrieve_background
+            $this->retrieve_background,
+            RetrieveUserStub::withGenericUser()
         );
     }
 
@@ -116,17 +117,17 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_125 = $this->buildArtifact(125);
         $artifact_126 = $this->buildArtifact(126);
 
-        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
-            [$this->user, 666, null],
-            [$this->user, 126, $artifact_126],
-            [$this->user, 125, $artifact_125],
-            [$this->user, 10, $this->createConfiguredMock(Artifact::class, ['getTrackerId' => 56])],
-        ]);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnOnConsecutiveCalls(
+            $this->createConfiguredMock(Artifact::class, ['getTrackerId' => 56]),
+            null,
+            $artifact_125,
+            $artifact_126,
+        );
 
-        $this->retrieve_background->method('retrieveBackgroundColor')->willReturnMap([
-            [$artifact_125, $this->user, new BackgroundColor("lake-placid-blue")],
-            [$artifact_126, $this->user, new BackgroundColor("fiesta-red")],
-        ]);
+        $this->retrieve_background->method('retrieveBackgroundColor')->willReturnOnConsecutiveCalls(
+            new BackgroundColor("lake-placid-blue"),
+            new BackgroundColor("fiesta-red"),
+        );
 
         $children = $this->builder->buildFeatureStories(10, $this->user);
 
@@ -160,7 +161,7 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactByIdUserCanView')
-            ->with($this->user, 10)
+            ->with(self::isInstanceOf(\PFUser::class), 10)
             ->willReturn(null);
 
         $this->expectException(FeatureNotAccessException::class);
@@ -172,7 +173,7 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory
             ->expects(self::once())
             ->method('getArtifactByIdUserCanView')
-            ->with($this->user, 10)
+            ->with(self::isInstanceOf(\PFUser::class), 10)
             ->willReturn($this->createConfiguredMock(Artifact::class, ['getTrackerId' => 666]));
 
         $this->expectException(FeatureIsNotPlannableException::class);

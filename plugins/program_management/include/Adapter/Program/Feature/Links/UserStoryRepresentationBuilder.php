@@ -27,39 +27,21 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Retrie
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class UserStoryRepresentationBuilder implements RetrieveFeatureUserStories
 {
-    /**
-     * @var ArtifactsLinkedToParentDao
-     */
-    private $dao;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var PlanStore
-     */
-    private $plan_store;
-    /**
-     * @var BackgroundColorRetriever
-     */
-    private $retrieve_background_color;
-
     public function __construct(
-        ArtifactsLinkedToParentDao $dao,
-        \Tracker_ArtifactFactory $artifact_factory,
-        PlanStore $plan_store,
-        BackgroundColorRetriever $retrieve_background_color
+        private ArtifactsLinkedToParentDao $dao,
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private PlanStore $plan_store,
+        private BackgroundColorRetriever $retrieve_background_color,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->dao                       = $dao;
-        $this->artifact_factory          = $artifact_factory;
-        $this->plan_store                = $plan_store;
-        $this->retrieve_background_color = $retrieve_background_color;
     }
 
     /**
@@ -67,8 +49,9 @@ class UserStoryRepresentationBuilder implements RetrieveFeatureUserStories
      * @throws FeatureNotAccessException
      * @throws FeatureIsNotPlannableException
      */
-    public function buildFeatureStories(int $feature_id, \PFUser $user): array
+    public function buildFeatureStories(int $feature_id, UserIdentifier $user_identifier): array
     {
+        $user    = $this->retrieve_user->getUserWithId($user_identifier);
         $feature = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
         if (! $feature) {
             throw new FeatureNotAccessException();

@@ -28,6 +28,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
@@ -40,14 +42,9 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
 {
     private const MAX_LIMIT = 50;
     public const  ROUTE     = 'program_backlog_items';
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var RetrieveFeatureUserStories
-     */
-    private $user_story_representation_builder;
+
+    private \UserManager $user_manager;
+    private RetrieveFeatureUserStories $user_story_representation_builder;
 
     public function __construct()
     {
@@ -56,7 +53,8 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
             new ArtifactsLinkedToParentDao(),
             \Tracker_ArtifactFactory::instance(),
             new PlanDao(),
-            new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()))
+            new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
+            new UserManagerAdapter($this->user_manager)
         );
     }
 
@@ -81,7 +79,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $children = $this->user_story_representation_builder->buildFeatureStories($id, $user);
+            $children = $this->user_story_representation_builder->buildFeatureStories($id, UserProxy::buildFromPFUser($user));
 
             Header::sendPaginationHeaders($limit, $offset, count($children), self::MAX_LIMIT);
 
