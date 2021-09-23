@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUse
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface TopBacklogChangeProcessor
 {
@@ -39,7 +40,7 @@ interface TopBacklogChangeProcessor
     public function processTopBacklogChangeForAProgram(
         ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,
-        \PFUser $user,
+        UserIdentifier $user_identifier,
         ?PermissionBypass $bypass
     ): void;
 }

@@ -400,8 +400,6 @@ final class ProjectResource extends AuthenticatedResource
      */
     protected function patchBacklog(int $id, BacklogPatchRepresentation $backlog_patch_representation): void
     {
-        $user = $this->user_manager->getCurrentUser();
-
         $feature_ids_to_remove = [];
         foreach ($backlog_patch_representation->remove as $feature_to_remove) {
             $feature_ids_to_remove[] = $feature_to_remove->id;
@@ -429,7 +427,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         try {
-            $user_identifier = UserProxy::buildFromPFUser($user);
+            $user_identifier = UserProxy::buildFromPFUser($this->user_manager->getCurrentUser());
             $program         = ProgramIdentifier::fromId($this->build_program, $id, $user_identifier, null);
             $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
@@ -439,7 +437,7 @@ final class ProjectResource extends AuthenticatedResource
                     $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog,
                     $backlog_patch_representation->order
                 ),
-                $user,
+                $user_identifier,
                 null
             );
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
