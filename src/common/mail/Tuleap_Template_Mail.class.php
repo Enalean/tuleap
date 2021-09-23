@@ -36,7 +36,7 @@ class Tuleap_Template_Mail extends Tuleap_Template
         parent::__construct($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
         $this->set('txt_display_not_correct', _('Is this email not displaying correctly?'));
         $this->set('txt_can_update_prefs', _('Update your email preferences'));
-        $this->set('http_url', HTTPRequest::instance()->getServerUrl());
+        $this->set('http_url', \Tuleap\ServerHostname::HTTPSUrl());
         $this->set('title', '');
     }
 }

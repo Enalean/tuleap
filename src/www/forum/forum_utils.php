@@ -724,7 +724,7 @@ function handle_monitoring($forum_id, $thread_id, $msg_id)
             foreach ($to_list as $to) {
                 $mail->setBcc($to);
             }
-            $server_url = HTTPRequest::instance()->getServerUrl();
+            $server_url = \Tuleap\ServerHostname::HTTPSUrl();
             $url1       = $server_url . "/forum/monitor.php?forum_id=" . $forum_id;
             $url2       = $server_url . "/forum/monitor_thread.php?forum_id=" . $forum_id;
             $body       = _('Read and respond to this message at') . ": " .

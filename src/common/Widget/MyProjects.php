@@ -24,7 +24,6 @@ namespace Tuleap\Widget;
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use ForgeConfig;
-use HTTPRequest;
 use Project;
 use RSS;
 use Tuleap\Config\ConfigKey;
@@ -211,7 +210,7 @@ class MyProjects extends \Widget
     public function displayRss(): void
     {
         $hp         = Codendi_HTMLPurifier::instance();
-        $server_url = HTTPRequest::instance()->getServerUrl();
+        $server_url = \Tuleap\ServerHostname::HTTPSUrl();
         $rss        = new RSS([
             'title'       => 'Codendi - MyProjects',
             'description' => 'My projects',

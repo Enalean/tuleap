@@ -233,7 +233,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
         $additional_button_presenter = new WidgetAdditionalButtonPresenter(
             $this->report->getTracker(),
-            HTTPRequest::instance(),
             false
         );
 

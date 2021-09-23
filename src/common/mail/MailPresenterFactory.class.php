@@ -36,7 +36,7 @@ class MailPresenterFactory
         $color_logo   = "#000";
         $color_button = "#347DBA";
 
-        $base_url = HTTPRequest::instance()->getServerUrl();
+        $base_url = \Tuleap\ServerHostname::HTTPSUrl();
         $this->setColorTheme($color_logo, $color_button);
 
         $attributes_presenter = [

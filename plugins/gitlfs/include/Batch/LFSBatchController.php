@@ -103,7 +103,7 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
         try {
             $response = $this->batch_successful_response_builder->build(
                 new \DateTimeImmutable(),
-                $request->getServerUrl(),
+                \Tuleap\ServerHostname::HTTPSUrl(),
                 $repository,
                 $batch_request->getOperation(),
                 ...$batch_request->getObjects()

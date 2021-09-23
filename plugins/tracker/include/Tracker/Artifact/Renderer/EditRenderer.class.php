@@ -135,11 +135,10 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             ['title' => $this->artifact->getXRef(),
                   'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()]
         ];
-        $request     = HTTPRequest::instance();
         $params      = [
             'body_class' => ['widgetable', 'has-sidebar-with-pinned-header', 'tracker-artifact-view-body'],
             'open_graph' => new \Tuleap\OpenGraph\OpenGraphPresenter(
-                $request->getServerUrl() . $this->artifact->getUri(),
+                \Tuleap\ServerHostname::HTTPSUrl() . $this->artifact->getUri(),
                 $this->artifact->getTitle(),
                 $this->artifact->getDescription()
             )

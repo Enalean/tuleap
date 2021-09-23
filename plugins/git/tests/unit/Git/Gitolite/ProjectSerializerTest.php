@@ -26,10 +26,10 @@ use Git_Gitolite_ConfigPermissionsSerializer;
 use Git_Gitolite_ProjectSerializer;
 use Git_GitRepositoryUrlManager;
 use GitRepository;
-use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -37,6 +37,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var Git_Gitolite_ProjectSerializer
@@ -59,10 +60,7 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->fix_dir = __DIR__ . '/_fixtures';
 
-        $this->http_request = Mockery::spy(\HTTPRequest::class);
-        HTTPRequest::setInstance($this->http_request);
-
-        $this->http_request->shouldReceive('getServerUrl')->andReturn('https://localhost');
+        \ForgeConfig::set('sys_default_domain', 'localhost');
 
         PermissionsManager::setInstance(Mockery::spy(\PermissionsManager::class));
         $this->permissions_manager = PermissionsManager::instance();
@@ -108,7 +106,6 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();
-        HTTPRequest::clearInstance();
 
         parent::tearDown();
     }

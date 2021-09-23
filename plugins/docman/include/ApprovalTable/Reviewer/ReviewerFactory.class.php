@@ -361,7 +361,7 @@ class Docman_ApprovalTableReviewerFactory
         $reviewsArray = [];
         $dao          = self::_getDao();
         $dar          = $dao->getAllReviewsForUserByState($userId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
-        $docmanUrl    = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
+        $docmanUrl    = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman';
         while ($dar->valid()) {
             $row            = $dar->current();
             $baseUrl        = $docmanUrl . '/?group_id=' . $row['group_id'];
@@ -385,7 +385,7 @@ class Docman_ApprovalTableReviewerFactory
         $reviewsArray = [];
         $dao          = self::_getDao();
         $dar          = $dao->getAllApprovalTableForUser($userId);
-        $docmanUrl    = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
+        $docmanUrl    = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman';
         while ($dar->valid()) {
             $row = $dar->current();
 

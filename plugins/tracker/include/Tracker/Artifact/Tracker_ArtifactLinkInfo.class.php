@@ -133,7 +133,7 @@ class Tracker_ArtifactLinkInfo
 
     public function getUrl()
     {
-        return HTTPRequest::instance()->getServerUrl() . '/goto?' . http_build_query(
+        return \Tuleap\ServerHostname::HTTPSUrl() . '/goto?' . http_build_query(
             [
                 'key'      => $this->getKeyword(),
                 'val'      => $this->getArtifactId(),

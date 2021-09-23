@@ -190,14 +190,12 @@ use Tuleap\Project\MappingRegistry;
 
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request = HTTPRequest::instance();
-
         $additional_parameters = [];
         if ($owner_type === ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
             $additional_parameters = ['group_id' => $owner_id];
         }
 
-        return $request->getServerUrl() . '/widgets/?' . http_build_query(
+        return \Tuleap\ServerHostname::HTTPSUrl() . '/widgets/?' . http_build_query(
             array_merge(
                 [
                     'dashboard_id' => $dashboard_id,

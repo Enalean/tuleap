@@ -75,7 +75,7 @@ class LogoRetriever
     public function getLegacyUrl(): ?string
     {
         if ($this->hasLegacyLogo()) {
-            return HTTPRequest::instance()->getServerUrl() . '/images/organization_logo.png';
+            return \Tuleap\ServerHostname::HTTPSUrl() . '/images/organization_logo.png';
         }
         return null;
     }

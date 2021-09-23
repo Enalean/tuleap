@@ -90,7 +90,7 @@ class MailProjectNotificationMustBeApprovedPresenter extends MailOutlinePresente
 
     public function get_url()
     {
-        return HTTPRequest::instance()->getServerUrl() . '/admin/approve-pending.php';
+        return \Tuleap\ServerHostname::HTTPSUrl() . '/admin/approve-pending.php';
     }
 
     public function getMessageText()

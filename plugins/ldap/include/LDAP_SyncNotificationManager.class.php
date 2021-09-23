@@ -61,7 +61,7 @@ class LDAP_SyncNotificationManager
      */
     private function getBody($unixProjectName, $user)
     {
-        $server_url                = HTTPRequest::instance()->getServerUrl();
+        $server_url                = \Tuleap\ServerHostname::HTTPSUrl();
         $project_url               = $server_url . '/projects/' . urlencode($unixProjectName);
         $project                   = $this->projectManager->getProjectByUnixName($unixProjectName);
         $publicProjectName         = $project->getPublicName();

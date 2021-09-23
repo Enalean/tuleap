@@ -259,7 +259,7 @@ class FileModuleMonitorFactory
 
         $emails       = [$user->getEmail()];
         $service_name = 'Files';
-        $goto_link    = HTTPRequest::instance()->getServerUrl() . '/file/showfiles.php?group_id=' . $package->getGroupID() .
+        $goto_link    = \Tuleap\ServerHostname::HTTPSUrl() . '/file/showfiles.php?group_id=' . $package->getGroupID() .
                         '&package_id=' . $package->getPackageID();
 
         return new Notification($emails, $subject, $html_body, $text_body, $goto_link, $service_name);
@@ -288,8 +288,7 @@ class FileModuleMonitorFactory
         );
         $purifier     = Codendi_HTMLPurifier::instance();
 
-        $request   = HTTPRequest::instance();
-        $goto_link = $request->getServerUrl() . '/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
+        $goto_link = \Tuleap\ServerHostname::HTTPSUrl() . '/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
             '&package_id=' . urlencode($package->getPackageID());
         $htmlBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail');
         $htmlBody .= ' <a href="' . $purifier->purify($goto_link) . '" >' . $purifier->purify($package->getName()) . '</a>';
@@ -297,7 +296,7 @@ class FileModuleMonitorFactory
         $txtBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail') . ' "' . $package->getName() . '" : ';
         $txtBody .= $goto_link;
         $txtBody .= "\n\n" . $GLOBALS['Language']->getText('file_showfiles', 'stop_monitoring') . ': ';
-        $txtBody .= HTTPRequest::instance()->getServerUrl() . '/file/filemodule_monitor.php?group_id=' . urlencode($package->getGroupID()) . '&filemodule_id=' . urlencode($package->getPackageID());
+        $txtBody .= \Tuleap\ServerHostname::HTTPSUrl() . '/file/filemodule_monitor.php?group_id=' . urlencode($package->getGroupID()) . '&filemodule_id=' . urlencode($package->getPackageID());
 
         $notification = $this->getNotification($package, $user, $htmlBody, $txtBody);
         $project      = ProjectManager::instance()->getProject($package->getGroupID());
@@ -328,8 +327,7 @@ class FileModuleMonitorFactory
         );
         $purifier     = Codendi_HTMLPurifier::instance();
 
-        $request    = HTTPRequest::instance();
-        $server_url = $request->getServerUrl();
+        $server_url = \Tuleap\ServerHostname::HTTPSUrl();
 
         $goto_link = $server_url . '/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
             '&package_id=' . urlencode($package->getPackageID());

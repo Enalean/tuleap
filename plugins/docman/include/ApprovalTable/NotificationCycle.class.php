@@ -225,7 +225,7 @@ class Docman_ApprovalTableNotificationCycle
 
     public function getReviewUrl()
     {
-        $baseUrl   = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
+        $baseUrl   = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
         $reviewUrl = $baseUrl . '&action=details&section=approval&id=' . $this->item->getId();
         return $reviewUrl;
     }
@@ -312,7 +312,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
         $project         = $project_manager->getProject($this->item->getGroupId());
 
         $reviewUrl = $this->getReviewUrl();
-        $baseUrl   = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
+        $baseUrl   = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
         $propUrl   = $baseUrl . '&action=edit&id=' . $this->item->getId();
         $body      = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was approved by last reviewer: %3$s <%4$s>.
 You can access to the table with the following link:
@@ -541,7 +541,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($this->item->getGroupId());
-        $baseUrl         = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
+        $baseUrl         = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
         $itemUrl         = $baseUrl . '&action=show&id=' . $this->item->getId();
         $comment         = '';
         $userComment     = $this->table->getDescription();

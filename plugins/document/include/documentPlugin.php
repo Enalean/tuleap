@@ -250,7 +250,7 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function docmanLinkProvider(DocmanLinkProvider $link_provider)
     {
         $project = $link_provider->getProject();
-        $link_provider->replaceProvider(new DocumentLinkProvider(HTTPRequest::instance()->getServerUrl(), $project));
+        $link_provider->replaceProvider(new DocumentLinkProvider(\Tuleap\ServerHostname::HTTPSUrl(), $project));
     }
 
     public function docmanSettingsTabsPresenterCollection(DocmanSettingsTabsPresenterCollection $collection): void

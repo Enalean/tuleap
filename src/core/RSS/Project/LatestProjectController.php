@@ -67,7 +67,7 @@ class LatestProjectController implements DispatchableWithRequest
         $feed->setTitle(sprintf(_('%s new projects'), ForgeConfig::get('sys_name')));
         $feed->setCopyright(sprintf(_('Copyright (c) %s, %s Team, 2001-%d. All Rights Reserved'), ForgeConfig::get('sys_long_org_name'), ForgeConfig::get('sys_name'), date('Y')));
         $feed->setDescription(sprintf(_('%s full project listing'), ForgeConfig::get('sys_name')));
-        $feed->setLink($request->getServerUrl());
+        $feed->setLink(\Tuleap\ServerHostname::HTTPSUrl());
         $feed->setLanguage('en-us');
         $feed->setDateModified($request->getTime());
 

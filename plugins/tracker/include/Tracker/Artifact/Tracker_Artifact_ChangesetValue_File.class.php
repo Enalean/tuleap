@@ -326,9 +326,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     private function addFileForHTMLFormat($still_existing_files_ids, &$added, &$previews, $file)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $request  = HTTPRequest::instance();
         if (isset($still_existing_files_ids[$file->getId()])) {
-            $added[] = '<a href="' . $request->getServerUrl() . $purifier->purify($this->field->getFileHTMLUrl($file)) . '">' .
+            $added[] = '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . $purifier->purify($this->field->getFileHTMLUrl($file)) . '">' .
                 $purifier->purify($file->getFilename())
                 . '</a>';
 

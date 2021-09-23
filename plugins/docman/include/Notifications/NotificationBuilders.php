@@ -27,7 +27,6 @@ use Docman_NotificationsManager_Delete;
 use Docman_NotificationsManager_Move;
 use Docman_NotificationsManager_Subscribers;
 use EventManager;
-use HTTPRequest;
 use MailBuilder;
 use Project;
 use TemplateRendererFactory;
@@ -231,7 +230,7 @@ class NotificationBuilders
     private function getProvider(Project $project): ILinkUrlProvider
     {
         $provider      = new LegacyLinkProvider(
-            HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
+            \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
         );
         $link_provider = new DocmanLinkProvider($project, $provider);
         EventManager::instance()->processEvent($link_provider);

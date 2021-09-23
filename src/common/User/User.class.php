@@ -1499,7 +1499,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             return $this->avatar_url;
         }
 
-        $request    = HTTPRequest::instance();
         $avatar_url = self::DEFAULT_AVATAR_URL;
 
         if (! $this->isAnonymous() && $this->hasAvatar()) {
@@ -1511,7 +1510,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             }
         }
 
-        $this->avatar_url = $request->getServerUrl() . $avatar_url;
+        $this->avatar_url = \Tuleap\ServerHostname::HTTPSUrl() . $avatar_url;
 
         return $this->avatar_url;
     }

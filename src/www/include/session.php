@@ -24,7 +24,7 @@ $G_SESSION = [];
 
 function session_make_url($loc)
 {
-    return HTTPRequest::instance()->getServerUrl() . $loc;
+    return \Tuleap\ServerHostname::HTTPSUrl() . $loc;
 }
 
 function session_redirect($loc)

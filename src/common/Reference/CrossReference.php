@@ -142,7 +142,7 @@ class CrossReference
 
     public function computeUrls()
     {
-        $server_url  = HTTPRequest::instance()->getServerUrl();
+        $server_url  = \Tuleap\ServerHostname::HTTPSUrl();
         $group_param = '';
         if ($this->refTargetGid != 100) {
             $group_param = "&group_id=" . $this->refTargetGid;

@@ -26,7 +26,7 @@ A person's use of <?php echo \ForgeConfig::get('sys_name'); ?> and any of its Se
 any time is subject to <?php echo \ForgeConfig::get('sys_name'); ?> then-current Terms of Service ("TOS"),
 which may be updated from time to time as set forth below. Each user can
 review the then-current TOS at any time at:
-<a href="/tos/tos.php"><?php echo \HTTPRequest::instance()->getServerUrl(); ?>/tos/tos.php</a>.  In addition, each user's use of
+<a href="/tos/tos.php"><?php echo \Tuleap\ServerHostname::HTTPSUrl(); ?>/tos/tos.php</a>.  In addition, each user's use of
 particular Services may be subject to specific guidelines or rules
 ("Service-specific Rules") posted from time to time and incorporated by this
 reference into the TOS.  A user's use of  <?php echo \ForgeConfig::get('sys_name'); ?> and/or its Services

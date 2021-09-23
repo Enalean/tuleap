@@ -215,7 +215,7 @@ class Docman_ApprovalTableReminder
      */
     private function getReviewUrl(Docman_Item $docmanItem)
     {
-        $baseUrl   = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
+        $baseUrl   = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
         $reviewUrl = $baseUrl . '&action=details&section=approval&id=' . $docmanItem->getId() . '&review=1';
         return $reviewUrl;
     }
@@ -229,7 +229,7 @@ class Docman_ApprovalTableReminder
      */
     private function getItemUrl(Docman_Item $docmanItem)
     {
-        $baseUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
+        $baseUrl = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
         $itemUrl = $baseUrl . '&action=show&id=' . $docmanItem->getId();
         return $itemUrl;
     }

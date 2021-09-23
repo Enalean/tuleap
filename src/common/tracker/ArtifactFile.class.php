@@ -138,7 +138,7 @@ class ArtifactFile
             }
             $this->Artifact->addHistory('attachment', $old_value, $new_value);
 
-            $changes['attach']['href'] = HTTPRequest::instance()->getServerUrl() .
+            $changes['attach']['href'] = \Tuleap\ServerHostname::HTTPSUrl() .
              "/tracker/download.php?artifact_id=" . $this->Artifact->getID() . "&id=$id";
 
             return $id;

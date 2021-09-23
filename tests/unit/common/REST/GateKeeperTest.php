@@ -21,13 +21,12 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use HTTPRequest;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use Tuleap\ForgeConfigSandbox;
 
 final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var PFUser
@@ -38,10 +37,6 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $anonymous;
     /**
-     * @var HTTPRequest|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $request;
-    /**
      * @var GateKeeper
      */
     private $gate_keeper;
@@ -51,7 +46,6 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user        = new PFUser(['user_id' => 112, 'language_id' => 'en']);
         $this->anonymous   = new PFUser(['user_id' => 0, 'language_id' => 'en']);
         $this->gate_keeper = new GateKeeper();
-        $this->request     = \Mockery::spy(HTTPRequest::class);
     }
 
     protected function tearDown(): void
@@ -61,7 +55,7 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLetsPassWhenTokenOrAccessKeyAuthentication(): void
     {
-        $this->gate_keeper->assertAccess($this->anonymous, $this->request);
+        $this->gate_keeper->assertAccess($this->anonymous);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
@@ -71,60 +65,60 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['HTTP_SEC_FETCH_MODE'] = 'cors';
 
         $this->expectNotToPerformAssertions();
-        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->gate_keeper->assertAccess($this->user);
     }
 
     public function testItLetPassWhenReferMatchesHost(): void
     {
         $_SERVER['HTTP_REFERER'] = 'https://example.com/bla';
-        $this->request->shouldReceive('getServerUrl')->andReturns('https://example.com');
+        \ForgeConfig::set('sys_default_domain', 'example.com');
 
-        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->gate_keeper->assertAccess($this->user);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
     public function testItLetPassWhenReferMatchesAnEquivalentHostWithCase(): void
     {
         $_SERVER['HTTP_REFERER'] = 'https://example.com/';
-        $this->request->shouldReceive('getServerUrl')->andReturns('https://EXAMPLE.COM');
+        \ForgeConfig::set('sys_default_domain', 'EXAMPLE.COM');
 
-        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->gate_keeper->assertAccess($this->user);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
     public function testItLetPassWhenReferMatchesAnEquivalentIDNHost(): void
     {
         $_SERVER['HTTP_REFERER'] = 'https://チューリップ.example.com/';
-        $this->request->shouldReceive('getServerUrl')->andReturns('https://xn--7cke4dscza1i.example.com');
+        \ForgeConfig::set('sys_default_domain', 'xn--7cke4dscza1i.example.com');
 
-        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->gate_keeper->assertAccess($this->user);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
     public function testItLetPassWhenReferMatchesAnEquivalentIDNHostWithCase(): void
     {
         $_SERVER['HTTP_REFERER'] = 'https://チューリップ.example.com/';
-        $this->request->shouldReceive('getServerUrl')->andReturns('https://チューリップ.EXAMPLE.COM');
+        \ForgeConfig::set('sys_default_domain', 'チューリップ.EXAMPLE.COM');
 
-        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->gate_keeper->assertAccess($this->user);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItThrowsExceptionWhenReferIsDiffentFromHost(): void
+    public function testItThrowsExceptionWhenReferIsDifferentFromHost(): void
     {
-        $_SERVER['HTTP_REFERER'] = 'https://wannabe_attacker.com/bla';
-        $this->request->shouldReceive('getServerUrl')->andReturns('https://example.com');
+        $_SERVER['HTTP_REFERER'] = 'https://wannabe_attacker.example.org/bla';
+        \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->expectException(\Exception::class);
-        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->gate_keeper->assertAccess($this->user);
     }
 
     public function testItThrowsExceptionWhenNoReferer(): void
     {
         unset($_SERVER['HTTP_REFERER']);
-        $this->request->shouldReceive('getServerUrl')->andReturns('https://example.com');
+        \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->expectException(\Exception::class);
-        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->gate_keeper->assertAccess($this->user);
     }
 }

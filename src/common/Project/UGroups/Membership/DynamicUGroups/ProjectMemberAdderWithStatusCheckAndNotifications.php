@@ -24,7 +24,6 @@ namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
 use BaseLanguage;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Mail\MailFactory;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 
@@ -101,7 +100,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
     private function getMessageBody(\Project $project): string
     {
         $group_name      = $project->getPublicName();
-        $base_url        = HTTPRequest::instance()->getServerUrl();
+        $base_url        = \Tuleap\ServerHostname::HTTPSUrl();
         $unix_group_name = $project->getUnixName();
         // $message is defined in the content file
         $message = '';

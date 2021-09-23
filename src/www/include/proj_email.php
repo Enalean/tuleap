@@ -41,7 +41,7 @@ function send_new_project_email(Project $project)
 function send_new_user_email($to, $login, $confirm_hash)
 {
     //needed by new_user_email.txt
-    $base_url  = HTTPRequest::instance()->getServerUrl();
+    $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
@@ -53,7 +53,7 @@ function send_new_user_email($to, $login, $confirm_hash)
 function send_admin_new_user_email($to, $login)
 {
     //needed by new_user_email.txt
-    $base_url  = HTTPRequest::instance()->getServerUrl();
+    $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
@@ -65,7 +65,7 @@ function send_admin_new_user_email($to, $login)
 function send_new_user_email_notification($to, $login)
 {
     //needed by new_user_email.txt
-    $base_url  = HTTPRequest::instance()->getServerUrl();
+    $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
@@ -77,7 +77,7 @@ function send_new_user_email_notification($to, $login)
 function send_approval_new_user_email($to, $login)
 {
     //needed by new_user_email.txt
-    $base_url  = HTTPRequest::instance()->getServerUrl();
+    $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');

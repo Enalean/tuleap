@@ -473,7 +473,7 @@ Create Date:  {$this->getCreateDate()}
 Process Date: {$this->getProcessDate()}
 End Date:     {$this->getEndDate()}
 ---------------
-<" . HTTPRequest::instance()->getServerUrl() . "/admin/system_events/>
+<" . \Tuleap\ServerHostname::HTTPSUrl() . "/admin/system_events/>
 ");
             $m->send();
         }
