@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -38,10 +37,5 @@ final class ProgramIdentifierBuilder
     public static function buildWithId(int $id): ProgramIdentifier
     {
         return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserIdentifierStub::buildGenericUser(), null);
-    }
-
-    public static function buildWithIdAndPass(int $id): ProgramIdentifier
-    {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserIdentifierStub::buildGenericUser(), new WorkflowUserPermissionBypass());
     }
 }

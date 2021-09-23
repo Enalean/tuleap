@@ -27,30 +27,22 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\RetrieveFeatureContent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class FeatureContentRetriever implements RetrieveFeatureContent
 {
-    private ContentStore $content_store;
-    private VerifyIsProgramIncrement $program_increment_verifier;
-    private FeatureRepresentationBuilder $feature_representation_builder;
-    private ProgramSearcher $program_searcher;
-    private VerifyIsVisibleArtifact $visibility_verifier;
-
     public function __construct(
-        VerifyIsProgramIncrement $program_increment_verifier,
-        ContentStore $content_store,
-        FeatureRepresentationBuilder $feature_representation_builder,
-        ProgramSearcher $program_searcher,
-        VerifyIsVisibleArtifact $visibility_verifier
+        private VerifyIsProgramIncrement $program_increment_verifier,
+        private ContentStore $content_store,
+        private FeatureRepresentationBuilder $feature_representation_builder,
+        private VerifyIsVisibleArtifact $visibility_verifier,
+        private RetrieveProgramOfProgramIncrement $program_retriever,
+        private BuildProgram $program_builder
     ) {
-        $this->content_store                  = $content_store;
-        $this->program_increment_verifier     = $program_increment_verifier;
-        $this->feature_representation_builder = $feature_representation_builder;
-        $this->program_searcher               = $program_searcher;
-        $this->visibility_verifier            = $visibility_verifier;
     }
 
     public function retrieveProgramIncrementContent(int $id, UserIdentifier $user_identifier): array
@@ -61,7 +53,12 @@ final class FeatureContentRetriever implements RetrieveFeatureContent
             $id,
             $user_identifier
         );
-        $program           = $this->program_searcher->getProgramOfProgramIncrement($id, $user_identifier);
+        $program           = ProgramIdentifier::fromProgramIncrement(
+            $this->program_retriever,
+            $this->program_builder,
+            $program_increment,
+            $user_identifier
+        );
         $planned_content   = $this->content_store->searchContent($program_increment->getId());
 
         $elements = [];

@@ -27,10 +27,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -51,8 +53,10 @@ interface ModifyContent
      * @throws ProgramTrackerException
      * @throws RemoveFeatureException
      * @throws FeatureException
-     * @throws ProgramNotFoundException
+     * @throws ProgramIncrementHasNoProgramException
      * @throws AddOrOrderMustBeSetException
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
      */
     public function modifyContent(int $program_increment_id, ContentChange $content_change, UserIdentifier $user): void;
 }

@@ -24,12 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
-use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 
-final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher
+final class ProgramDao extends DataAccessObject implements ProgramStore, RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher
 {
     public function isAProgram(int $project_id): bool
     {
@@ -68,15 +70,17 @@ final class ProgramDao extends DataAccessObject implements ProgramStore, SearchP
         $this->getDB()->insert('plugin_program_management_team_projects', $sql);
     }
 
-    public function searchProgramOfProgramIncrement(int $program_increment_id): ?int
+    public function getProgramOfProgramIncrement(ProgramIncrementIdentifier $program_increment): int
     {
         $sql = 'SELECT program.program_project_id
                 FROM plugin_program_management_program AS program
-                    INNER JOIN tracker ON tracker.id = program.program_increment_tracker_id
-                    INNER JOIN tracker_artifact AS program_increment ON tracker.id = program_increment.tracker_id
+                    INNER JOIN tracker_artifact AS program_increment ON program.program_increment_tracker_id = program_increment.tracker_id
                 WHERE program_increment.id = ?';
 
-        $result = $this->getDB()->cell($sql, $program_increment_id);
-        return ($result !== false) ? (int) $result : null;
+        $result = $this->getDB()->cell($sql, $program_increment->getId());
+        if ($result === false) {
+            throw new ProgramIncrementHasNoProgramException($program_increment);
+        }
+        return (int) $result;
     }
 }

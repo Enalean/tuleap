@@ -29,11 +29,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
-use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckFeatureIsPlannedInProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
@@ -47,6 +46,7 @@ use function PHPUnit\Framework\assertTrue;
 
 final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const PROGRAM_ID = 128;
     private UserIdentifierStub $user;
     private VerifyPrioritizeFeaturesPermissionStub $prioritize_permission_verifier;
     private VerifyIsVisibleFeatureStub $visible_feature_verifier;
@@ -69,7 +69,6 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ContentModifier(
             $this->prioritize_permission_verifier,
             VerifyIsProgramIncrementStub::withValidProgramIncrement(),
-            $this->getStubProgramSearcher(),
             $this->visible_feature_verifier,
             $this->can_be_planned_verifier,
             new FeaturePlanner(
@@ -83,6 +82,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->feature_is_planned_checker,
             VerifyUserCanPlanInProgramIncrementStub::buildCanPlan(),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            RetrieveProgramOfProgramIncrementStub::withProgram(self::PROGRAM_ID),
+            BuildProgramStub::stubValidProgram()
         );
     }
 
@@ -190,19 +191,6 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         return $feature_to_order;
     }
 
-    private function getStubProgramSearcher(): ProgramSearcher
-    {
-        return new ProgramSearcher(
-            new class implements SearchProgram {
-                public function searchProgramOfProgramIncrement(int $program_increment_id): ?int
-                {
-                    return 101;
-                }
-            },
-            BuildProgramStub::stubValidProgram()
-        );
-    }
-
     private function buildFeatureRemoverStub(): RemoveFeature
     {
         return new class implements RemoveFeature {
@@ -245,14 +233,9 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function getStubOrderFeature(bool $is_called = false): OrderFeatureRank
     {
-        return new class ($is_called) implements OrderFeatureRank {
-
-            /** @var bool */
-            private $is_called;
-
-            public function __construct(bool $is_called)
+        return new class ($is_called, self::PROGRAM_ID) implements OrderFeatureRank {
+            public function __construct(private bool $is_called, private int $expected_program)
             {
-                $this->is_called = $is_called;
             }
 
             public function reorder(
@@ -262,7 +245,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ): void {
                 if ($this->is_called) {
                     assertTrue($context_id === "12");
-                    assertTrue($program->getId() === 101);
+                    assertTrue($program->getId() === $this->expected_program);
                 }
             }
         };

@@ -20,21 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-final class ProgramNotFoundException extends \Exception
+final class ProgramIncrementHasNoProgramException extends \RuntimeException
 {
     private string $i18n_message;
 
-    public function __construct(int $id)
+    public function __construct(ProgramIncrementIdentifier $program_increment)
     {
-        parent::__construct("Could not find the program of program increment #$id");
+        parent::__construct(
+            sprintf('Could not find the program of program increment #%d', $program_increment->getId())
+        );
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
                 'Could not find the program of program increment #%d'
             ),
-            $id
+            $program_increment->getId()
         );
     }
 

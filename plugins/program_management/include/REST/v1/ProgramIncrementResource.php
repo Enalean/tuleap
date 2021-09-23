@@ -56,11 +56,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Add
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ContentChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ContentModifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeaturePlanner;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -83,9 +84,11 @@ final class ProgramIncrementResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager                        = \UserManager::instance();
-        $this->user_manager_adapter                = new UserManagerAdapter($this->user_manager);
-        $artifact_factory                          = \Tracker_ArtifactFactory::instance();
+        $this->user_manager         = \UserManager::instance();
+        $this->user_manager_adapter = new UserManagerAdapter($this->user_manager);
+        $artifact_factory           = \Tracker_ArtifactFactory::instance();
+        $program_dao                = new ProgramDao();
+
         $this->linked_to_feature_checker           = new UserStoryLinkedToFeatureChecker(
             new ArtifactsLinkedToParentDao(),
             new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
@@ -103,8 +106,14 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $this->linked_to_feature_checker,
                 $this->user_manager_adapter
             ),
-            $this->getProgramSearcher(),
-            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter)
+            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+            $program_dao,
+            new ProgramAdapter(
+                ProjectManager::instance(),
+                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
+                $program_dao,
+                $this->user_manager_adapter
+            )
         );
     }
 
@@ -129,12 +138,15 @@ final class ProgramIncrementResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $elements = $this->program_increment_content_retriever->retrieveProgramIncrementContent($id, UserProxy::buildFromPFUser($user));
+            $elements = $this->program_increment_content_retriever->retrieveProgramIncrementContent(
+                $id,
+                UserProxy::buildFromPFUser($user)
+            );
 
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
             return array_slice($elements, $offset, $limit);
-        } catch (ProgramIncrementNotFoundException | ProgramNotFoundException | PlanTrackerException | ProgramTrackerException $e) {
+        } catch (ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | PlanTrackerException | ProgramTrackerException | ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }
@@ -179,6 +191,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ArtifactLinkUpdaterDataFormater()
         );
         $plan_dao               = new PlanDao();
+        $program_dao            = new ProgramDao();
         $modifier               = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
                 new ProjectManagerAdapter(\ProjectManager::instance(), $this->user_manager_adapter),
@@ -190,7 +203,6 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $this->user_manager_adapter
             ),
             $program_increments_dao,
-            $this->getProgramSearcher(),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             $plan_dao,
             new FeaturePlanner(
@@ -208,7 +220,14 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             new FeatureDAO(),
             new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter),
-            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter)
+            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+            $program_dao,
+            new ProgramAdapter(
+                ProjectManager::instance(),
+                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
+                $program_dao,
+                $this->user_manager_adapter
+            )
         );
 
         try {
@@ -218,9 +237,9 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 ContentChange::fromRESTRepresentation($potential_feature_id_to_add, $patch_representation->order),
                 UserProxy::buildFromPFUser($user)
             );
-        } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
+        } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | ProjectIsNotAProgramException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
-        } catch (NotAllowedToPrioritizeException $e) {
+        } catch (ProgramAccessException | NotAllowedToPrioritizeException $e) {
             throw new I18NRestException(403, $e->getI18NExceptionMessage());
         } catch (FeatureException | AddOrOrderMustBeSetException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
@@ -235,18 +254,5 @@ final class ProgramIncrementResource extends AuthenticatedResource
     public function optionsContent(int $id): void
     {
         Header::allowOptionsGetPatch();
-    }
-
-    private function getProgramSearcher(): ProgramSearcher
-    {
-        return new ProgramSearcher(
-            new ProgramDao(),
-            new ProgramAdapter(
-                ProjectManager::instance(),
-                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
-                new ProgramDao(),
-                new UserManagerAdapter(\UserManager::instance())
-            )
-        );
     }
 }

@@ -24,11 +24,17 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ProgramIncrementIdentifierBuilder
 {
+    public static function buildWithId(int $program_increment_id): ProgramIncrementIdentifier
+    {
+        return self::buildWithIdAndUser($program_increment_id, UserIdentifierStub::buildGenericUser());
+    }
+
     public static function buildWithIdAndUser(
         int $program_increment_id,
         UserIdentifier $user
