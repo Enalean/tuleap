@@ -22,7 +22,7 @@ import { createStoreMock } from "../../../../../../../../src/scripts/vue-compone
 import localVue from "../../../../helpers/local-vue.js";
 import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
 import EventBus from "../../../../helpers/event-bus.js";
-import * as location_helper from "../../../../helpers/location-helper.js";
+import * as location_helper from "../../../../helpers/location-helper";
 import Vue from "vue";
 
 describe("DownloadFolderAsZip", () => {

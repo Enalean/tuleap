@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function redirectToUrl(url) {
+export function redirectToUrl(url: string): void {
     window.location.assign(url);
 }
