@@ -22861,6 +22861,9 @@
       <code>setSummary</code>
       <code>setTitle</code>
     </MissingReturnType>
+    <ParadoxicalCondition occurrences="1">
+      <code>! $start_date</code>
+    </ParadoxicalCondition>
     <PossiblyFalseOperand occurrences="1">
       <code>$dateDisp</code>
     </PossiblyFalseOperand>

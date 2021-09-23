@@ -43,7 +43,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
      */
     public function buildGraph()
     {
-        if ($this->width == 0) {
+        if (! $this->width) {
             if (! is_null($this->xaxis)) {
                 $this->width = (count($this->data) * count($this->data[0]) * 25) + (2 * 150);
             } else {
