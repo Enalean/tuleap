@@ -2931,6 +2931,9 @@ msgstr "Récemment"
 msgid "Red"
 msgstr "Rouge"
 
+msgid "Redirecting..."
+msgstr "Redirection…"
+
 msgid "Reference ID"
 msgstr "Identifiant"
 
@@ -3016,6 +3019,14 @@ msgstr "Remplacer le logo actuellement utilisé"
 
 msgid "Repository History"
 msgstr "Historique du dépôt"
+
+#, php-format
+msgid ""
+"Requested page currently loading. If it does not, try <a href=\"%1$s\">%1$s</"
+"a>."
+msgstr ""
+"La page demandée est en cours de chargement. Si ce n’est pas le cas, essayez "
+"<a href=\"%1$s\">%1$s</a>."
 
 msgid "Restricted user"
 msgstr "Utilisateur restreint"
@@ -4454,6 +4465,9 @@ msgstr[1] ""
 msgid "You are about to remove the mailing list %s."
 msgstr "Vous êtes sur le point de supprimer la liste de diffusion %s."
 
+msgid "You are going be redirected"
+msgstr "Vous allez être redirigé(e)"
+
 msgid ""
 "You are monitoring the whole forum. If you want to monitor only specific "
 "threads, Stop Monitoring Forum."
@@ -4476,6 +4490,13 @@ msgid "You are not the user who asked for email change"
 msgstr ""
 "Vous n'etes pas l'utilisateur à l'origine de la demande de changement d'e-"
 "mail"
+
+msgid ""
+"You are on the redirection page. You may found useful links on your <a href="
+"\"/my\">personal page</a>."
+msgstr ""
+"Vous êtes sur la page de redirection. Vous trouverez des liens utiles sur "
+"votre <a href=\"/my\">page personnelle</a>."
 
 #, php-format
 msgid ""
