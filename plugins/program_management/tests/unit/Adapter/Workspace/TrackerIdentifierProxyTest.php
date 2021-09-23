@@ -20,20 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-/**
- * @psalm-immutable
- */
-interface ArtifactUpdatedEvent
+final class TrackerIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function getArtifact(): ArtifactIdentifier;
-    public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserIdentifier;
-    public function getChangeset(): ChangesetIdentifier;
+    private const TRACKER_ID = 91;
+
+    public function testItBuildsFromTracker(): void
+    {
+        $full_tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
+        $proxy        = TrackerIdentifierProxy::fromTracker($full_tracker);
+        self::assertSame(self::TRACKER_ID, $proxy->getId());
+    }
 }

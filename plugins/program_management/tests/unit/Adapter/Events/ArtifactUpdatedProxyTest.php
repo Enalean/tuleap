@@ -48,8 +48,8 @@ final class ArtifactUpdatedProxyTest extends TestCase
         );
 
         $proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);
-        self::assertSame(228, $proxy->getArtifactId());
-        self::assertSame(33, $proxy->getTrackerId());
+        self::assertSame(228, $proxy->getArtifact()->getId());
+        self::assertSame(33, $proxy->getTracker()->getId());
         self::assertSame(110, $proxy->getUser()->getId());
         self::assertSame(884, $proxy->getChangeset()->getId());
     }

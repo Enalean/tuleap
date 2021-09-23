@@ -73,7 +73,7 @@ final class PendingProgramIncrementUpdateDAOTest extends \Tuleap\Test\PHPUnit\Te
             self::USER_ID,
             self::$active_artifact_id,
             self::TRACKER_ID,
-            (string) self::CHANGESET_ID
+            self::CHANGESET_ID
         );
         $this->dao->storeUpdate($update);
 
@@ -92,14 +92,14 @@ final class PendingProgramIncrementUpdateDAOTest extends \Tuleap\Test\PHPUnit\Te
             self::USER_ID,
             self::$active_artifact_id,
             self::TRACKER_ID,
-            (string) self::CHANGESET_ID
+            self::CHANGESET_ID
         );
         $this->dao->storeUpdate($first_update);
         $second_update = ProgramIncrementUpdateBuilder::buildWithIds(
             self::USER_ID,
             self::$active_artifact_id,
             self::TRACKER_ID,
-            (string) self::SECOND_CHANGESET_ID
+            self::SECOND_CHANGESET_ID
         );
         $this->dao->storeUpdate($second_update);
 
@@ -115,7 +115,7 @@ final class PendingProgramIncrementUpdateDAOTest extends \Tuleap\Test\PHPUnit\Te
             self::USER_ID,
             $program_increment_id,
             self::TRACKER_ID,
-            (string) self::CHANGESET_ID
+            self::CHANGESET_ID
         );
         $this->dao->storeUpdate($update);
 

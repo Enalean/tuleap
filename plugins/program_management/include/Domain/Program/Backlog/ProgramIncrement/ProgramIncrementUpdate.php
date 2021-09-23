@@ -61,7 +61,7 @@ final class ProgramIncrementUpdate
         if (! $program_increment) {
             return null;
         }
-        $tracker = ProgramIncrementTrackerIdentifier::fromId($program_increment_verifier, $event->getTrackerId());
+        $tracker = ProgramIncrementTrackerIdentifier::fromId($program_increment_verifier, $event->getTracker());
         if (! $tracker) {
             return null;
         }

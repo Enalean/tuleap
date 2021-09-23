@@ -57,7 +57,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             self::USER_ID,
             self::PROGRAM_INCREMENT_ID,
             self::PROGRAM_INCREMENT_TRACKER_ID,
-            '3882'
+            3882
         );
 
         $this->logger          = new TestLogger();

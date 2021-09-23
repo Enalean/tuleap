@@ -66,7 +66,7 @@ final class ArtifactUpdatedHandler
     private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(ArtifactUpdatedEvent $artifact_updated): void
     {
         $this->feature_remover->removeFeaturesPlannedInAProgramIncrementFromTopBacklog(
-            $artifact_updated->getArtifactId()
+            $artifact_updated->getArtifact()->getId()
         );
     }
 }

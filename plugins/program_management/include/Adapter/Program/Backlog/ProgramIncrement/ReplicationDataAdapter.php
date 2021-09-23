@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetProxy;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
@@ -69,7 +70,7 @@ final class ReplicationDataAdapter implements BuildReplicationData
 
         $tracker = ProgramIncrementTrackerIdentifier::fromId(
             $this->program_increment_verifier,
-            $source_artifact->getTrackerId()
+            TrackerIdentifierProxy::fromTracker($source_artifact->getTracker())
         );
         if (! $tracker) {
             throw new StoredProgramIncrementNoLongerValidException($program_increment_id);

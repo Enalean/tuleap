@@ -22,41 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementUpdateBuilder
 {
     public static function build(): ProgramIncrementUpdate
     {
-        return self::buildWithIds(141, 334, 20, '7516');
+        return self::buildWithIds(141, 334, 20, 7516);
     }
 
     public static function buildWithIds(
         int $user_id,
         int $program_increment_id,
         int $tracker_id,
-        string $changeset_id
+        int $changeset_id
     ): ProgramIncrementUpdate {
-        $user      = UserTestBuilder::aUser()->withId($user_id)->build();
-        $tracker   = TrackerTestBuilder::aTracker()->withId($tracker_id)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact($program_increment_id)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset($changeset_id)
-            ->ofArtifact($artifact)
-            ->submittedBy($user->getId())
-            ->build();
-
-        $tracker_event = new ArtifactUpdated($artifact, $user, $changeset);
-        $proxy         = ArtifactUpdatedProxy::fromArtifactUpdated($tracker_event);
+        $event = ArtifactUpdatedEventStub::withIds(
+            $program_increment_id,
+            TrackerIdentifierStub::withId($tracker_id),
+            UserIdentifierStub::withId($user_id),
+            $changeset_id
+        );
         return ProgramIncrementUpdate::fromArtifactUpdatedEvent(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
-            $proxy
+            $event
         );
     }
 }

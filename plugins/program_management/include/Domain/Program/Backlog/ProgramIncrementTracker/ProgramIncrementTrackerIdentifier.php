@@ -35,12 +35,14 @@ final class ProgramIncrementTrackerIdentifier implements TrackerIdentifier
     {
     }
 
-    public static function fromId(VerifyIsProgramIncrementTracker $program_increment_verifier, int $tracker_id): ?self
-    {
-        if (! $program_increment_verifier->isProgramIncrementTracker($tracker_id)) {
+    public static function fromId(
+        VerifyIsProgramIncrementTracker $program_increment_verifier,
+        TrackerIdentifier $tracker
+    ): ?self {
+        if (! $program_increment_verifier->isProgramIncrementTracker($tracker->getId())) {
             return null;
         }
-        return new self($tracker_id);
+        return new self($tracker->getId());
     }
 
     public static function fromProgramIncrement(
