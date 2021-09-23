@@ -46,7 +46,7 @@ class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $csrf_token;
     /**
-     * @var \ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \Tuleap\Config\ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $config_dao;
 
@@ -54,7 +54,7 @@ class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->configuration = Mockery::mock(InviteBuddyConfiguration::class);
         $this->csrf_token    = Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->config_dao    = Mockery::mock(\ConfigDao::class);
+        $this->config_dao    = Mockery::mock(\Tuleap\Config\ConfigDao::class);
 
         $this->controller = new InviteBuddyAdminUpdateController(
             $this->csrf_token,
@@ -158,7 +158,7 @@ class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $this->config_dao
-            ->shouldReceive('save')
+            ->shouldReceive('saveInt')
             ->with('max_invitations_by_day', 10)
             ->once();
 

@@ -20,7 +20,7 @@
 
 namespace Tuleap\CLI\Command;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use EventManager;
 use ForgeAccess;
 use ForgeAccess_ForgePropertiesManager;

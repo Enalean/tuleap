@@ -43,7 +43,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
     private $date_display_preference_validator;
 
     /**
-     * @var \ConfigDao
+     * @var \Tuleap\Config\ConfigDao
      */
     private $config_dao;
 
@@ -55,7 +55,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
     public function __construct(
         \CSRFSynchronizerToken $csrf_token,
         SelectedDateDisplayPreferenceValidator $date_display_preference_validator,
-        \ConfigDao $config_dao,
+        \Tuleap\Config\ConfigDao $config_dao,
         \UserPreferencesDao $preferences_dao
     ) {
         $this->csrf_token                        = $csrf_token;

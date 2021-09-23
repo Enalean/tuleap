@@ -32,11 +32,11 @@ class ProjectVisibilityConfigManager
     public const SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE = 'send_mail_on_project_visibility_change';
 
     /**
-     * @var \ConfigDao
+     * @var \Tuleap\Config\ConfigDao
      */
     private $config_dao;
 
-    public function __construct(\ConfigDao $config_dao)
+    public function __construct(\Tuleap\Config\ConfigDao $config_dao)
     {
         $this->config_dao = $config_dao;
     }

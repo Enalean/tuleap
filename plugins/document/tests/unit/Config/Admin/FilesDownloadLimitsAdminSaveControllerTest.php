@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use CSRFSynchronizerToken;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -85,12 +85,12 @@ class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\Te
         $this->token->shouldReceive('check')->once();
 
         $this->config_dao
-            ->shouldReceive('save')
+            ->shouldReceive('saveInt')
             ->with('plugin_document_max_archive_size', 2000)
             ->once()
             ->andReturnTrue();
         $this->config_dao
-            ->shouldReceive('save')
+            ->shouldReceive('saveInt')
             ->with('plugin_document_warning_threshold', 25)
             ->once()
             ->andReturnTrue();

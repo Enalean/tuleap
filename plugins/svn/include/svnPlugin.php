@@ -29,6 +29,7 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigSet;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Event\Events\ExportXmlProject;

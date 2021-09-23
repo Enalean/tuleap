@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use Tuleap\Document\Config\HistoryEnforcementSettings;
@@ -73,17 +73,16 @@ class HistoryEnforcementAdminSaveController implements DispatchableWithRequest
 
     private function save(bool $is_changelog_proposed_after_dnd, BaseLayout $layout): void
     {
-        $success = $this->config_dao->save(
-            HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND,
-            $is_changelog_proposed_after_dnd
-        );
-
-        if ($success) {
+        try {
+            $this->config_dao->saveBool(
+                HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND,
+                $is_changelog_proposed_after_dnd
+            );
             $layout->addFeedback(
                 \Feedback::INFO,
                 dgettext('tuleap-document', 'Settings have been saved successfully.')
             );
-        } else {
+        } catch (\Exception) {
             $layout->addFeedback(
                 \Feedback::ERROR,
                 dgettext('tuleap-document', 'An error occurred while saving configuration.')

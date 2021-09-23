@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use CSRFSynchronizerToken;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -85,8 +85,8 @@ final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUn
         $this->token->shouldReceive('check')->once();
 
         $this->config_dao
-            ->shouldReceive('save')
-            ->with(HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND, 1)
+            ->shouldReceive('saveBool')
+            ->with(HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND, true)
             ->once()
             ->andReturnTrue();
 

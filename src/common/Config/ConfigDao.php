@@ -18,23 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Config;
+
+use Tuleap\DB\DataAccessObject;
+
 class ConfigDao extends DataAccessObject
 {
-
-    public function searchAll()
+    /**
+     * @return list<array{name: string, value: string}>
+     */
+    public function searchAll(): array
     {
         $sql = "SELECT * FROM forgeconfig";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
-    public function save($name, $value)
+    public function save(string $name, string $value): void
     {
-        $name  = $this->da->quoteSmart($name);
-        $value = $this->da->quoteSmart($value);
+        $sql = "REPLACE INTO forgeconfig (name, value) VALUES (?, ?)";
 
-        $sql = "REPLACE INTO forgeconfig (name, value) VALUES ($name, $value)";
+        $this->getDB()->safeQuery($sql, [$name, $value]);
+    }
 
-        return $this->update($sql);
+    public function saveBool(string $name, bool $value): void
+    {
+        $this->save($name, $value ? '1' : '0');
+    }
+
+    public function saveInt(string $name, int $value): void
+    {
+        $this->save($name, (string) $value);
     }
 }

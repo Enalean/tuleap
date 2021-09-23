@@ -30,6 +30,7 @@ use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigKey;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;

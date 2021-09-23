@@ -173,16 +173,13 @@ class ForgeAccess_AdminController
     {
         $this->csrf->check();
 
-        $updated  = false;
-        $updated |= $this->updateAnonymousForSiteHomePage();
-        $updated |= $this->updateAnonymousForContact();
+        $this->updateAnonymousForSiteHomePage();
+        $this->updateAnonymousForContact();
 
-        if ($updated) {
-            $this->response->addFeedback(
-                Feedback::INFO,
-                _('Successfully updated.')
-            );
-        }
+        $this->response->addFeedback(
+            Feedback::INFO,
+            _('Successfully updated.')
+        );
         $this->redirectToIndex();
     }
 
@@ -190,18 +187,16 @@ class ForgeAccess_AdminController
     {
         $new_value = $this->getToggleValue(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE);
         if ($new_value !== -1) {
-            return $this->manager->updateAnonymousCanSeeSiteHomePage($new_value);
+            $this->manager->updateAnonymousCanSeeSiteHomePage($new_value);
         }
-        return false;
     }
 
     private function updateAnonymousForContact()
     {
         $new_value = $this->getToggleValue(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT);
         if ($new_value !== -1) {
-            return $this->manager->updateAnonymousCanSeeContact($new_value);
+            $this->manager->updateAnonymousCanSeeContact($new_value);
         }
-        return false;
     }
 
     private function getToggleValue($key)

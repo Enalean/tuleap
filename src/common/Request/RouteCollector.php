@@ -23,7 +23,7 @@ namespace Tuleap\Request;
 
 use ArtifactTypeFactory;
 use Codendi_HTMLPurifier;
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use EventManager;
 use FastRoute;
 use FRSFileFactory;

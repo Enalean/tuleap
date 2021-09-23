@@ -18,6 +18,7 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Config\ConfigDao;
 use Tuleap\ForgeAccess\UnknownForgeAccessValueException;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\User\UserGroup\NameTranslator;
@@ -99,11 +100,11 @@ class ForgeAccess_ForgePropertiesManager
 
     public function updateAnonymousCanSeeSiteHomePage($new_value)
     {
-        return $this->config_dao->save(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE, $new_value);
+        $this->config_dao->save(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE, $new_value);
     }
 
     public function updateAnonymousCanSeeContact($new_value)
     {
-        return $this->config_dao->save(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT, $new_value);
+        $this->config_dao->save(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT, $new_value);
     }
 }

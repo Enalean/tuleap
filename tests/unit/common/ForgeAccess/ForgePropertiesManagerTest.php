@@ -20,7 +20,7 @@
 
 namespace Tuleap\ForgeAccess;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use Event;
 use EventManager;
 use ForgeAccess;

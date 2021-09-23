@@ -19,6 +19,7 @@
   */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Config\ConfigDao;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 
@@ -101,15 +102,15 @@ class Admin_Homepage_Controller
         $this->csrf->check();
 
         if ($this->request->get('use_statistics_homepage')) {
-            $this->config_dao->save(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS, 1);
+            $this->config_dao->saveBool(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS, true);
         } else {
-            $this->config_dao->save(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS, 0);
+            $this->config_dao->saveBool(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS, false);
         }
 
         if ($this->request->get('use_news_homepage')) {
-            $this->config_dao->save(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS, 1);
+            $this->config_dao->saveBool(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS, true);
         } else {
-            $this->config_dao->save(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS, 0);
+            $this->config_dao->saveBool(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS, false);
         }
 
         $headlines = $this->request->get('headlines');

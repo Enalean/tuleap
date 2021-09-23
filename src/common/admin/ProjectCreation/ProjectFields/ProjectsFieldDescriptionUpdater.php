@@ -35,13 +35,13 @@ class ProjectsFieldDescriptionUpdater
      */
     private $custom_description_dao;
     /**
-     * @var \ConfigDao
+     * @var \Tuleap\Config\ConfigDao
      */
     private $config_dao;
 
     public function __construct(
         Project_CustomDescription_CustomDescriptionDao $custom_description_dao,
-        \ConfigDao $config_dao
+        \Tuleap\Config\ConfigDao $config_dao
     ) {
         $this->custom_description_dao = $custom_description_dao;
         $this->config_dao             = $config_dao;
@@ -67,7 +67,7 @@ class ProjectsFieldDescriptionUpdater
     private function updateRequiredDescription(string $id, bool $required, BaseLayout $layout): void
     {
         if ($id === DescriptionFieldAdminPresenterBuilder::SHORT_DESCRIPTION_FIELD_ID) {
-            $this->config_dao->save("enable_not_mandatory_description", ! $required);
+            $this->config_dao->saveBool("enable_not_mandatory_description", ! $required);
         } else {
             $this->custom_description_dao->updateRequiredCustomDescription($required, (int) $id);
         }
