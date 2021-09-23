@@ -33,11 +33,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
-// Defines all of the settings first (hosts, databases, etc.)
-ForgeConfig::loadLocalInc();
-ForgeConfig::loadDatabaseInc();
-ForgeConfig::loadFromDatabase();
-ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
+ForgeConfig::loadInSequence();
 
 bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));
 textdomain('tuleap-core');

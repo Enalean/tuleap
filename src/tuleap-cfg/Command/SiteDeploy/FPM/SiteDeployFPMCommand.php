@@ -56,7 +56,7 @@ final class SiteDeployFPMCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        ForgeConfig::loadLocalInc();
+        ForgeConfig::loadInSequence();
 
         $php_version = $input->getOption(self::OPT_PHP_VERSION);
         assert(is_string($php_version));

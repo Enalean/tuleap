@@ -20,6 +20,12 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\language;
+
+use BaseLanguage;
+use BaseLanguageFactory;
+use ForgeConfig;
+
 final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -29,7 +35,8 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        ForgeConfig::loadFromFile(__DIR__ . '/_fixtures/local.inc');
+        ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
+        ForgeConfig::set('sys_lang', 'fr_FR');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
         $this->oldLocale          = setlocale(LC_ALL, "0");
@@ -70,7 +77,11 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($us, $factory->getBaseLanguage('en_US'));
         $this->assertEquals($fr, $factory->getBaseLanguage('fr_FR'));
         $this->assertNotEquals($factory->getBaseLanguage('en_US'), $factory->getBaseLanguage('fr_FR'));
-        $this->assertSame($factory->getBaseLanguage('en_US'), $factory->getBaseLanguage('en_US'), 'the language should be cached');
+        $this->assertSame(
+            $factory->getBaseLanguage('en_US'),
+            $factory->getBaseLanguage('en_US'),
+            'the language should be cached'
+        );
     }
 
     public function testFactoryShouldSetADefaultLanguageForUnknownLocales(): void
@@ -92,6 +103,7 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $us = $factory->getBaseLanguage('en_US');
         $this->assertEquals('en_US', $us->lang);
     }
+
     public function testDoesntMessUpGlobalState(): void
     {
         $factory = new BaseLanguageFactory();

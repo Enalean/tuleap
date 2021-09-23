@@ -47,8 +47,7 @@ final class SetupForgeUpgradeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        \ForgeConfig::loadLocalInc();
-        \ForgeConfig::loadDatabaseInc();
+        \ForgeConfig::loadInSequence();
         $forge_upgrade = new ForgeUpgrade(
             DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
             new ConsoleLogger(

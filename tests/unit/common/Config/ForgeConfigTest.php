@@ -28,23 +28,48 @@ use ConfigValueProvider;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
 
 class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        ForgeConfig::store();
-        $GLOBALS['Language'] = \Mockery::mock(\BaseLanguage::class);
-    }
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['Language']);
-        ForgeConfig::restore();
+        putenv('TULEAP_LOCAL_INC=');
         parent::tearDown();
+    }
+
+    public function testDefaultLoadSequenceGetValueFromLocalInc(): void
+    {
+        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
+        $dao = $this->createMock(ConfigDao::class);
+        $dao->method('searchAll')->willReturn([]);
+        ForgeConfig::setDatabaseConfigDao($dao);
+
+        ForgeConfig::loadInSequence();
+        self::assertEquals('Matchete', ForgeConfig::get('sys_fullname'));
+    }
+
+    public function testDefaultLoadSequenceGetValueFromDatabase(): void
+    {
+        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
+        $dao = $this->createMock(ConfigDao::class);
+        $dao->method('searchAll')->willReturn(
+            [
+                [
+                    'name'  => \ProjectManager::CONFIG_PROJECT_APPROVAL,
+                    'value' => '1',
+                ]
+            ]
+        );
+        ForgeConfig::setDatabaseConfigDao($dao);
+
+        ForgeConfig::loadInSequence();
+        self::assertEquals('1', ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL));
     }
 
     public function testUsage(): void
@@ -153,9 +178,9 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $default_file = __DIR__ . '/../../../../site-content/en_US/include/restricted_user_permissions.txt';
 
         $GLOBALS['Language']
-            ->shouldReceive('getContent')
+            ->method('getContent')
             ->with('include/restricted_user_permissions', 'en_US')
-            ->andReturns($default_file);
+            ->willReturn($default_file);
 
         $this->assertEquals(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), []);
     }
@@ -165,9 +190,9 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $customised_file = __DIR__ . '/_fixtures/restricted_user_permissions.txt';
 
         $GLOBALS['Language']
-            ->shouldReceive('getContent')
+            ->method('getContent')
             ->with('include/restricted_user_permissions', 'en_US')
-            ->andReturns($customised_file);
+            ->willReturn($customised_file);
 
         $this->assertEquals(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), [123, 456]);
     }
@@ -177,9 +202,9 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $customised_file = __DIR__ . '/_fixtures/restricted_user_permissions.txt';
 
         $GLOBALS['Language']
-            ->shouldReceive('getContent')
+            ->method('getContent')
             ->with('include/restricted_user_permissions', 'en_US')
-            ->andReturns($customised_file);
+            ->willReturn($customised_file);
 
         ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
 

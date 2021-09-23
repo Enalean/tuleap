@@ -25,8 +25,7 @@ $local_inc        = $locar_inc_finder->getLocalIncPath();
 
 require_once $local_inc;
 
-ForgeConfig::loadFromFile($local_inc);
-ForgeConfig::loadDatabaseInc();
+ForgeConfig::loadInSequence();
 
 require_once __DIR__ . '/../include/mediawikiPlugin.php';
 

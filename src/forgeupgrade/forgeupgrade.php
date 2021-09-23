@@ -112,8 +112,7 @@ $logger = new Logger('forgeupgrade');
 $logger->pushHandler(new StreamHandler(STDOUT, $verbosity));
 
 // Go
-\ForgeConfig::loadLocalInc();
-\ForgeConfig::loadDatabaseInc();
+\ForgeConfig::loadInSequence();
 $upg = new ForgeUpgrade(
     DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
     $logger

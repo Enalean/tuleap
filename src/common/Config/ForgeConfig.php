@@ -23,9 +23,6 @@
 
 use Tuleap\Config\ConfigDao;
 
-/**
- * Base class to read forge configuration
- */
 class ForgeConfig
 {
     public const AUTH_TYPE_LDAP      = 'ldap';
@@ -36,11 +33,12 @@ class ForgeConfig
      */
     protected static array $conf_stack = [0 => []];
 
+    private static ?ConfigDao $config_dao = null;
+
     /**
      * Load the configuration variables into the current stack
      *
      * @access protected for testing purpose
-     *
      */
     protected static function load(ConfigValueProvider $value_provider)
     {
@@ -48,14 +46,22 @@ class ForgeConfig
         self::$conf_stack[0] = array_merge(self::$conf_stack[0], $value_provider->getVariables());
     }
 
-    public static function loadLocalInc(): void
+    public static function loadInSequence(): void
+    {
+        self::loadLocalInc();
+        self::loadDatabaseInc();
+        self::loadFromDatabase();
+        self::loadFromFile(self::get('redis_config_file'));
+    }
+
+    private static function loadLocalInc(): void
     {
         self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
         $local_inc_file_path = (new Config_LocalIncFinder())->getLocalIncPath();
         self::loadFromFile($local_inc_file_path);
     }
 
-    public static function loadDatabaseInc(): void
+    private static function loadDatabaseInc(): void
     {
         $database_config_file = self::get('db_config_file');
         if (! is_file($database_config_file)) {
@@ -64,14 +70,27 @@ class ForgeConfig
         self::loadFromFile($database_config_file);
     }
 
-    public static function loadFromFile($file)
+    public static function loadFromFile($file): void
     {
         self::load(new ConfigValueFileProvider($file));
     }
 
-    public static function loadFromDatabase()
+    private static function loadFromDatabase(): void
     {
-        self::load(new ConfigValueDatabaseProvider(new ConfigDao()));
+        self::load(new ConfigValueDatabaseProvider(self::getDatabaseConfigDao()));
+    }
+
+    private static function getDatabaseConfigDao(): ConfigDao
+    {
+        if (self::$config_dao) {
+            return self::$config_dao;
+        }
+        return new ConfigDao();
+    }
+
+    public static function setDatabaseConfigDao(ConfigDao $config_dao): void
+    {
+        self::$config_dao = $config_dao;
     }
 
     /**
@@ -80,9 +99,8 @@ class ForgeConfig
      * @param $name    string the variable name
      * @param $default mixed  the value to return if the variable is not set in the configuration
      *
-     * @return mixed
      */
-    public static function get($name, $default = false)
+    public static function get(string $name, mixed $default = false): mixed
     {
         if (self::exists($name)) {
             return self::$conf_stack[0][$name];
@@ -118,10 +136,8 @@ class ForgeConfig
 
     /**
      * Dump the content of the config for debugging purpose
-     *
-     * @return void
      */
-    public static function dump()
+    public static function dump(): void
     {
         var_export(self::$conf_stack[0]);
     }
@@ -129,10 +145,8 @@ class ForgeConfig
     /**
      * Store and clear the current stack. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
      * @see ConfigTest::setUp() for details
-     *
-     * @return void
      */
-    public static function store()
+    public static function store(): void
     {
         array_unshift(self::$conf_stack, []);
         if (! count(self::$conf_stack)) {
@@ -143,10 +157,8 @@ class ForgeConfig
     /**
      * Restore the previous stack. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
      * @see ConfigTest::tearDown() for details
-     *
-     * @return void
      */
-    public static function restore()
+    public static function restore(): void
     {
         if (count(self::$conf_stack) > 1) {
             array_shift(self::$conf_stack);
@@ -155,11 +167,8 @@ class ForgeConfig
 
     /**
      * Set a configuration value. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
-     *
-     * @param $name String Variable name
-     * @param $value Mixed Variable value
      */
-    public static function set($name, $value)
+    public static function set(string $name, mixed $value): void
     {
         self::$conf_stack[0][$name] = $value;
     }
@@ -194,10 +203,7 @@ class ForgeConfig
         return self::get('codendi_cache_dir');
     }
 
-    /**
-     * @return mixed
-     */
-    public static function getFeatureFlag(string $key)
+    public static function getFeatureFlag(string $key): mixed
     {
         return self::get(self::FEATURE_FLAG_PREFIX . $key);
     }
