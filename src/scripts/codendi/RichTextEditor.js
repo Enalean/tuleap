@@ -20,7 +20,6 @@
 
 import { initMentions } from "@tuleap/mention";
 import CKEDITOR from "ckeditor4";
-import tuleap from "tuleap";
 import TurndownService from "turndown";
 import marked from "marked";
 
@@ -151,17 +150,6 @@ codendi.RTE = Class.create({
         }
 
         this.rte = CKEDITOR.replace(this.element.id, replace_options);
-
-        /*CKEDITOR filters HTML tags
-              So, if your default text is like <blabla>, this will not be displayed.
-              To "fix" this, we escape the textarea content.
-              However, we don't need to espace this for non default values.
-            */
-
-        if (this.element.readAttribute("data-field-default-value") !== null) {
-            var escaped_value = tuleap.escaper.html(this.element.value);
-            this.rte.setData(escaped_value);
-        }
 
         CKEDITOR.on("dialogDefinition", function (ev) {
             var tab,

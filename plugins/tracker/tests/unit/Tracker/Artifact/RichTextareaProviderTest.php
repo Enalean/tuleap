@@ -84,12 +84,6 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             80,
             'input-value',
             true,
-            [
-                [
-                    'name'  => 'artifact-id',
-                    'value' => 123
-                ]
-            ]
         );
         self::assertEquals(
             <<<EOL
@@ -101,7 +95,6 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         cols="80"
         name="input-name"
         required
-            data-artifact-id="123"
             data-project-id="7"
         data-test="input-name"
 >input-value</textarea>
@@ -133,12 +126,6 @@ EOL
             80,
             'input-value',
             false,
-            [
-                [
-                    'name'  => 'artifact-id',
-                    'value' => 123
-                ]
-            ]
         );
         self::assertEquals(
             <<<EOL
@@ -152,9 +139,8 @@ EOL
         \n            data-upload-url="/api/v1/tracker_fields/1002/files"
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"
-            data-artifact-id="123"
-            data-help-id="input-id-help"
             data-project-id="7"
+            data-help-id="input-id-help"
         data-test="input-name"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
