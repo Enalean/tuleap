@@ -1,0 +1,39 @@
+<div class="current-test-comment-attachements-container">
+    <div class="current-test-comment-attachments">
+        <a
+            ng-repeat="file in $ctrl.execution.attachments track by file.id"
+            ng-href="{{ file.html_url }}"
+            class="current-test-comment-attachment"
+            title="{{ file.filename }}"
+            target="_blank"
+            rel="noreferrer"
+        >
+            <i class="fas fa-paperclip" aria-hidden="true"></i>
+            <span class="current-test-comment-attachment-label">{{ file.filename }}</span>
+        </a>
+        <span
+            ng-repeat="file in $ctrl.execution.uploaded_files_through_attachment_area track by file.id"
+            class="current-test-comment-attachment"
+            title="{{ file.filename }}"
+        >
+            <i class="fas fa-paperclip" aria-hidden="true"></i>
+            <span class="current-test-comment-attachment-label">{{ file.filename }}</span>
+        </span>
+    </div>
+    <div ng-if="$ctrl.isInCommentMode" class="current-test-comment-attachements-controls" ng-class="{'current-test-comment-attachements-controls-no-placeholder': $ctrl.execution.attachments.length > 0}">
+        <p ng-if="$ctrl.execution.attachments.length === 0 && $ctrl.execution.uploaded_files_through_attachment_area.length === 0" class="test-files-empty-placeholder" translate>
+            Select files to attach or drop them in the text area...
+        </p>
+        <label
+            for="test-files-upload-button"
+            class="test-files-upload-button-label tlp-button-secondary tlp-button-small tlp-button-outline"
+        >
+            <input
+                id="test-files-upload-button"
+                type="file"
+                multiple
+            >
+            <span translate>Attach files...</span>
+        </label>
+    </div>
+</div>

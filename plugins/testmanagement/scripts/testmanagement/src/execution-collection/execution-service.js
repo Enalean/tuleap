@@ -64,6 +64,7 @@ function ExecutionService(
         removeTestExecutionWithoutUpdateCampaignStatus,
         updateTestExecution,
         clearEditor,
+        clearFilesUploadedThroughAttachmentArea,
         getUsedUploadedFilesIds,
         updatePresenceOnCampaign,
         removeAllPresencesOnCampaign,
@@ -79,6 +80,8 @@ function ExecutionService(
         addArtifactLink,
         setCommentOnEditor,
         getDataInEditor,
+        addToFilesAddedThroughAttachmentArea,
+        getUploadedFilesThroughAttachmentAreaIds,
     });
 
     initialization();
@@ -257,7 +260,11 @@ function ExecutionService(
 
     function clearEditor(execution) {
         self.editor.setData("", { noSnapshot: true });
-        execution.uploaded_files = [];
+        execution.uploaded_files_through_text_field = [];
+    }
+
+    function clearFilesUploadedThroughAttachmentArea(execution) {
+        execution.uploaded_files_through_attachment_area = [];
     }
 
     function getDataInEditor() {
@@ -416,7 +423,7 @@ function ExecutionService(
     }
 
     function setupImageUpload(field, execution) {
-        execution.uploaded_files = [];
+        execution.uploaded_files_through_text_field = [];
 
         if (!execution.upload_url) {
             disablePasteOfImages();
@@ -451,7 +458,7 @@ function ExecutionService(
 
     function getUsedUploadedFilesIds(execution) {
         let upload_files_id = [];
-        execution.uploaded_files.forEach(function (item) {
+        execution.uploaded_files_through_text_field.forEach(function (item) {
             if (self.editor.getData().indexOf(item.download_href) !== -1) {
                 upload_files_id.push(item.id);
             }
@@ -472,7 +479,15 @@ function ExecutionService(
     }
 
     function addToFilesAddedByTextField(execution, uploaded_file) {
-        execution.uploaded_files.push(uploaded_file);
+        execution.uploaded_files_through_text_field.push(uploaded_file);
+    }
+
+    function addToFilesAddedThroughAttachmentArea(execution, uploaded_file) {
+        execution.uploaded_files_through_attachment_area.push(uploaded_file);
+    }
+
+    function getUploadedFilesThroughAttachmentAreaIds(execution) {
+        return execution.uploaded_files_through_attachment_area.map((file) => file.id);
     }
 
     function removeViewTestExecution(execution_id, user_to_remove) {

@@ -126,6 +126,7 @@ function ExecutionDetailCtrl(
             return;
         }
         ExecutionService.clearEditor(execution);
+        ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
         $scope.displayTestCommentEditor = !execution.previous_result.result;
     });
 
@@ -333,7 +334,8 @@ function ExecutionDetailCtrl(
         $scope.execution.is_automated =
             Boolean($scope.execution.definition.automated_tests) &&
             $scope.execution.definition.automated_tests !== "";
-        $scope.execution.uploaded_files = [];
+        $scope.execution.uploaded_files_through_text_field = [];
+        $scope.execution.uploaded_files_through_attachment_area = [];
         $scope.displayTestCommentEditor = !$scope.execution.previous_result.result;
     }
 
@@ -372,7 +374,10 @@ function ExecutionDetailCtrl(
             event.target.blur();
         }
 
-        let uploaded_file_ids = ExecutionService.getUsedUploadedFilesIds(execution);
+        let uploaded_file_ids = [].concat(
+            ExecutionService.getUsedUploadedFilesIds(execution),
+            ExecutionService.getUploadedFilesThroughAttachmentAreaIds(execution)
+        );
 
         ExecutionRestService.putTestExecution(execution.id, new_status, comment, uploaded_file_ids)
             .then(
@@ -404,6 +409,7 @@ function ExecutionDetailCtrl(
             showTestCommentEditor(execution);
             if (execution.userCanReloadTestBecauseDefinitionIsUpdated) {
                 ExecutionService.clearEditor(execution);
+                ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
             }
         }
     }
@@ -412,6 +418,7 @@ function ExecutionDetailCtrl(
         $scope.onlyStatusHasBeenChanged = false;
         $scope.displayTestCommentEditor = true;
         ExecutionService.clearEditor(execution);
+        ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
         execution.userCanReloadTestBecauseDefinitionIsUpdated();
     }
 
@@ -494,6 +501,7 @@ function ExecutionDetailCtrl(
     function onCancelEditionComment(execution) {
         $scope.displayTestCommentEditor = !execution.previous_result.result;
         ExecutionService.clearEditor(execution);
+        ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
     }
 
     function onLoadNewComment(execution) {
@@ -501,6 +509,7 @@ function ExecutionDetailCtrl(
         $scope.displayTestCommentWarningOveriding = false;
         if ($scope.displayTestCommentEditor) {
             ExecutionService.clearEditor(execution);
+            ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
         }
     }
 
