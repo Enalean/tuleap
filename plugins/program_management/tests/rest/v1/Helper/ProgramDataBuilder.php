@@ -108,7 +108,6 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $program = ProgramForAdministrationIdentifier::fromProject(
             $team_dao,
             $project_permissions_verifier,
-            $user_adapter,
             UserProxy::buildFromPFUser($this->user),
             ProjectProxy::buildFromProject($program_project)
         );

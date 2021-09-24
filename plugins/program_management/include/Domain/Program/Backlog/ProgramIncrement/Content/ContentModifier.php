@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
@@ -62,7 +62,7 @@ final class ContentModifier implements ModifyContent
     ) {
     }
 
-    public function modifyContent(int $program_increment_id, ContentChange $content_change, UserIdentifier $user): void
+    public function modifyContent(int $program_increment_id, ContentChange $content_change, UserReference $user): void
     {
         if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
             throw new AddOrOrderMustBeSetException();

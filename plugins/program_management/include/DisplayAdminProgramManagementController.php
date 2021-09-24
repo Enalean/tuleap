@@ -117,7 +117,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $admin_program = ProgramForAdministrationIdentifier::fromProject(
                 $this->verify_is_team,
                 $this->permission_verifier,
-                $this->retrieve_user,
                 $user_identifier,
                 $project_identifier
             );

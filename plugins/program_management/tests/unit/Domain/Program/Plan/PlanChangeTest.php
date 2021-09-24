@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class PlanChangeTest extends TestCase
@@ -34,7 +34,7 @@ final class PlanChangeTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier = UserReferenceStub::withDefaults();
     }
 
     public function testItThrowsWhenProgramIncrementTrackerIdCanAlsoBePlanned(): void
@@ -108,7 +108,7 @@ final class PlanChangeTest extends TestCase
         );
 
         self::assertSame($plan_program_increment_change, $plan_change->program_increment_change);
-        self::assertSame($user, $plan_change->user_identifier);
+        self::assertSame($user, $plan_change->user);
         self::assertSame($project_id, $plan_change->project_id);
         self::assertSame($tracker_ids_that_can_be_planned, $plan_change->tracker_ids_that_can_be_planned);
         self::assertSame($can_possibly_prioritize_ugroups, $plan_change->can_possibly_prioritize_ugroups);
@@ -134,7 +134,7 @@ final class PlanChangeTest extends TestCase
         );
 
         self::assertSame($plan_program_increment_change, $plan_change->program_increment_change);
-        self::assertSame($user, $plan_change->user_identifier);
+        self::assertSame($user, $plan_change->user);
         self::assertSame($project_id, $plan_change->project_id);
         self::assertSame($tracker_ids_that_can_be_planned, $plan_change->tracker_ids_that_can_be_planned);
         self::assertSame($can_possibly_prioritize_ugroups, $plan_change->can_possibly_prioritize_ugroups);

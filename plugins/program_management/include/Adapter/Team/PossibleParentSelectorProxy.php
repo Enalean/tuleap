@@ -27,7 +27,7 @@ use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Team\PossibleParentSelectorEvent;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
@@ -45,7 +45,7 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
         return new self($possible_parent_selector, $retrieve_root_planning, $retrieve_artifact);
     }
 
-    public function getUser(): UserIdentifier
+    public function getUser(): UserReference
     {
         return UserProxy::buildFromPFUser($this->inner_event->user);
     }

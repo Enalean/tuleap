@@ -135,8 +135,7 @@ final class ProjectResource extends AuthenticatedResource
             $plan_dao,
             $project_retriever,
             $team_dao,
-            $project_permission_verifier,
-            $this->user_manager_adapter
+            $project_permission_verifier
         );
 
         $team_adapter       = new TeamAdapter(
@@ -150,8 +149,7 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao,
             $project_permission_verifier,
             $team_adapter,
-            $team_dao,
-            $this->user_manager_adapter
+            $team_dao
         );
 
         $artifact_factory                   = \Tracker_ArtifactFactory::instance();

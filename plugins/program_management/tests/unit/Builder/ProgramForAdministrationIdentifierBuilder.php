@@ -25,8 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 
@@ -37,8 +36,7 @@ final class ProgramForAdministrationIdentifierBuilder
         return ProgramForAdministrationIdentifier::fromProject(
             VerifyIsTeamStub::withNotValidTeam(),
             VerifyProjectPermissionStub::withAdministrator(),
-            RetrieveUserStub::withGenericUser(),
-            UserIdentifierStub::buildGenericUser(),
+            UserReferenceStub::withDefaults(),
             ProjectIdentifierStub::build()
         );
     }
@@ -48,8 +46,7 @@ final class ProgramForAdministrationIdentifierBuilder
         return ProgramForAdministrationIdentifier::fromProject(
             VerifyIsTeamStub::withNotValidTeam(),
             VerifyProjectPermissionStub::withAdministrator(),
-            RetrieveUserStub::withGenericUser(),
-            UserIdentifierStub::buildGenericUser(),
+            UserReferenceStub::withDefaults(),
             ProjectIdentifierStub::buildWithId($id)
         );
     }

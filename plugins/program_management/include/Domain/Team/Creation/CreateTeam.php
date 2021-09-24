@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 interface CreateTeam
 {
@@ -38,5 +38,5 @@ interface CreateTeam
      * @throws TeamAccessException
      * @throws ProgramIsTeamException
      */
-    public function create(UserIdentifier $user_identifier, int $project_id, array $team_ids): void;
+    public function create(UserReference $user, int $project_id, array $team_ids): void;
 }

@@ -25,17 +25,17 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 
 final class ProgramIdentifierBuilder
 {
     public static function build(): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser(), null);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserReferenceStub::withDefaults(), null);
     }
 
     public static function buildWithId(int $id): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserIdentifierStub::buildGenericUser(), null);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserReferenceStub::withDefaults(), null);
     }
 }

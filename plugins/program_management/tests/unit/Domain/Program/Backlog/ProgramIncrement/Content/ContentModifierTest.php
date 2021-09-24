@@ -29,11 +29,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckFeatureIsPlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -47,7 +48,7 @@ use function PHPUnit\Framework\assertTrue;
 final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID = 128;
-    private UserIdentifierStub $user;
+    private UserIdentifier $user;
     private VerifyPrioritizeFeaturesPermissionStub $prioritize_permission_verifier;
     private VerifyIsVisibleFeatureStub $visible_feature_verifier;
     private VerifyCanBePlannedInProgramIncrementStub $can_be_planned_verifier;
@@ -56,7 +57,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->user                           = UserIdentifierStub::buildGenericUser();
+        $this->user                           = UserReferenceStub::withDefaults();
         $this->prioritize_permission_verifier = VerifyPrioritizeFeaturesPermissionStub::canPrioritize();
         $this->visible_feature_verifier       = VerifyIsVisibleFeatureStub::buildVisibleFeature();
         $this->can_be_planned_verifier        = VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier();

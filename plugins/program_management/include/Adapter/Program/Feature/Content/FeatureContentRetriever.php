@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 final class FeatureContentRetriever implements RetrieveFeatureContent
 {
@@ -45,26 +45,26 @@ final class FeatureContentRetriever implements RetrieveFeatureContent
     ) {
     }
 
-    public function retrieveProgramIncrementContent(int $id, UserIdentifier $user_identifier): array
+    public function retrieveProgramIncrementContent(int $id, UserReference $user): array
     {
         $program_increment = ProgramIncrementIdentifier::fromId(
             $this->program_increment_verifier,
             $this->visibility_verifier,
             $id,
-            $user_identifier
+            $user
         );
         $program           = ProgramIdentifier::fromProgramIncrement(
             $this->program_retriever,
             $this->program_builder,
             $program_increment,
-            $user_identifier
+            $user
         );
         $planned_content   = $this->content_store->searchContent($program_increment->getId());
 
         $elements = [];
         foreach ($planned_content as $artifact) {
             $feature = $this->feature_representation_builder->buildFeatureRepresentation(
-                $user_identifier,
+                $user,
                 $program,
                 $artifact['artifact_id'],
                 $artifact['field_title_id'],
