@@ -298,6 +298,9 @@ table.rimage {
 	position: relative;
 	z-index: 3;
 }
+#p-search > h5 {
+    padding: 0;
+}
 input.searchButton {
 	margin-top: 1px;
 	font-size: 95%;
