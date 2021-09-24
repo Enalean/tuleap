@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Project\Icon;
+
+use ForgeConfig;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Project\Icons\ProjectIconChecker;
+
+class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+{
+    use ForgeConfigSandbox;
+
+    public function testTheProjectIconFeatureIsDisabledIfForgeConfigIsNotSet(): void
+    {
+        ForgeConfig::set('some_config', '1');
+        self::assertFalse(ProjectIconChecker::isProjectIconFeatureActive());
+    }
+
+    public function testTheProjectIconFeatureIsDisabledIfForgeConfigIsSetTo0(): void
+    {
+        ForgeConfig::set('feature_flag_project_icon_display', '0');
+        self::assertFalse(ProjectIconChecker::isProjectIconFeatureActive());
+    }
+
+    public function testTheProjectIconFeatureIsEnabledIfForgeConfigIsSetTo1(): void
+    {
+        ForgeConfig::set('feature_flag_project_icon_display', '1');
+        self::assertTrue(ProjectIconChecker::isProjectIconFeatureActive());
+    }
+}

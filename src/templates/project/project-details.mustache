@@ -31,7 +31,11 @@
                                 {{/ built_from_xml_template }}
                             </div>
                         </div>
-                        <div class="tlp-form-element">
+                        {{# is_project_icon_enabled }}
+                        <div class="project-admin-project-name-container">
+                        {{/ is_project_icon_enabled }}
+                        <div
+                            class="tlp-form-element {{# is_project_icon_enabled }}form-group-name-element{{/ is_project_icon_enabled }}">
                             <label for="form_group_name" class="tlp-label">
                                 {{ project_name_label }} <i class="fa fa-asterisk"></i>
                             </label>
@@ -47,7 +51,20 @@
                             />
                             <p class="tlp-text-info">{{ project_name_info }}</p>
                         </div>
-
+                        {{# is_project_icon_enabled }}
+                            <div class="tlp-form-element">
+                                <label class="tlp-label" for="form-group-name-icon">{{ icon_label_name }}</label>
+                                <div class="tlp-form-element tlp-form-element-append">
+                                    <input type="text" disabled maxlength="1" class="tlp-input form-group-name-icon-input" id="form-group-name-icon" name="form-group-name-icon-input"
+                                           value="">
+                                    <button id="form-group-name-icon-button" type="button"
+                                            class="tlp-append tlp-button-primary tlp-button-outline">
+                                        <i class="fas fa-caret-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {{/ is_project_icon_enabled }}
                         <div class="tlp-form-element">
                             <label for="form_shortdesc" class="tlp-label">
                                 {{ short_description_label }}

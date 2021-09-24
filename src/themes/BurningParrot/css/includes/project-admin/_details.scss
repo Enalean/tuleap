@@ -17,6 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.project-admin-project-name-container {
+    display: flex;
+    gap: var(--tlp-large-spacing);
+}
+
+.form-group-name-icon-input {
+    width: 50px;
+}
+
+.form-group-name-element {
+    width: 80%;
+}
+
 .project-admin-details-form {
     display: flex;
     flex-direction: column;

@@ -20,11 +20,32 @@
 import { createModal } from "tlp";
 import { autocomplete_projects_for_select2 as autocomplete } from "../../../tuleap/autocomplete-for-select2";
 import { openTargetModalIdOnClick } from "../../../tuleap/modals/modal-opener";
+import { getPOFileFromLocale, initGettext } from "../../../tuleap/gettext/gettext-init";
+import type GetText from "node-gettext";
+import { initIconPicker } from "./helpers/icon-picker-initializer";
+import { buildIconPicker } from "./helpers/icon-picker-builder";
 
-document.addEventListener("DOMContentLoaded", () => {
+let gettext_provider: null | GetText;
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const user_locale = document.body.dataset.userLocale;
+    if (!user_locale) {
+        throw new Error("No user locale");
+    }
+    gettext_provider = await initGettext(
+        user_locale,
+        "project-admin",
+        (user_locale) =>
+            import(
+                /* webpackChunkName: "project-admin-po-" */ "../po/" +
+                    getPOFileFromLocale(user_locale)
+            )
+    );
+
     initTOSCheckbox();
     initHierarchyModal();
     initWarningRestrictedUsersRemovalOnProjectVisibilityChange();
+    initIconPicker(document, buildIconPicker(gettext_provider));
 
     const select_element = document.getElementById(
         "project-admin-details-hierarchy-project-select"

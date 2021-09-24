@@ -2,7 +2,8 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "module": "esnext", //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
-        "types": ["jest", "bootstrap", "ckeditor"]
+        "types": ["jest", "bootstrap", "ckeditor"],
+        "resolveJsonModule": true
     },
     "include": [
         "scripts/account/**/*",

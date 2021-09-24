@@ -1673,6 +1673,9 @@ msgstr "ID"
 msgid "INSERT FAILED"
 msgstr "L'insertion a échoué"
 
+msgid "Icon"
+msgstr "Icône"
+
 msgid "Id"
 msgstr "Id"
 
