@@ -183,7 +183,8 @@ describe("ExecutionDetailController -", () => {
             );
             ExecutionService.editor = ckeditorGetData;
             execution.results = "psychoanalyzer rupture solidish";
-            execution.uploaded_files = [];
+            execution.uploaded_files_through_text_field = [];
+            execution.uploaded_files_through_attachment_area = [];
             $scope.execution = execution;
             $scope.displayTestCommentEditor = true;
         });
@@ -305,9 +306,22 @@ describe("ExecutionDetailController -", () => {
         });
 
         describe("notrun()", () => {
+            beforeEach(() => {
+                execution.uploaded_files_through_attachment_area = [
+                    {
+                        id: 15,
+                        filename: "bug_1.png",
+                    },
+                    {
+                        id: 16,
+                        filename: "bug_2.png",
+                    },
+                ];
+            });
+
             it("Then the status will be saved to 'notrun'", () => {
                 ckeditorGetData.getData = () => ["/download/href"];
-                execution.uploaded_files = [
+                execution.uploaded_files_through_text_field = [
                     {
                         id: 13,
                         download_href: "/download/href",
@@ -321,14 +335,14 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "notrun",
                     execution.results,
-                    [13]
+                    [13, 15, 16]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
 
             it("Then the status will be saved to 'notrun' and only the file in ckeditor will be send", () => {
                 ckeditorGetData.getData = () => ["/download/href"];
-                execution.uploaded_files = [
+                execution.uploaded_files_through_text_field = [
                     {
                         id: 13,
                         download_href: "/download/href",
@@ -346,7 +360,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "notrun",
                     execution.results,
-                    [13]
+                    [13, 15, 16]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -377,7 +391,8 @@ describe("ExecutionDetailController -", () => {
         });
 
         it("When the user updates the comment, Then the status does not change", () => {
-            execution.uploaded_files = [];
+            execution.uploaded_files_through_text_field = [];
+            execution.uploaded_files_through_attachment_area = [];
 
             $scope.updateComment(event, execution);
             $scope.$apply();
@@ -401,7 +416,6 @@ describe("ExecutionDetailController -", () => {
             results: "",
             previous_result: { result: "", submitted_by: { id: 666 } },
         };
-        let clear_editor;
         beforeEach(() => {
             execution.previous_result.result = "";
             $scope.displayTestCommentEditor = true;
@@ -411,7 +425,11 @@ describe("ExecutionDetailController -", () => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockImplementation(() => {
                 return { id: 120 };
             });
-            clear_editor = jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
+            jest.spyOn(
+                ExecutionService,
+                "clearFilesUploadedThroughAttachmentArea"
+            ).mockImplementation(() => {});
         });
 
         it("When there is no comment in editing mode and no new comment, Then the editor is cleared and write mode is displayed", () => {
@@ -422,7 +440,8 @@ describe("ExecutionDetailController -", () => {
 
             $scope.$emit("reload-comment-editor-view", execution);
 
-            expect(clear_editor).toHaveBeenCalled();
+            expect(ExecutionService.clearEditor).toHaveBeenCalled();
+            expect(ExecutionService.clearFilesUploadedThroughAttachmentArea).toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeTruthy();
         });
         it("When there is no comment in editing mode but a new comment, Then the editor is cleared and read mode is displayed", () => {
@@ -434,7 +453,8 @@ describe("ExecutionDetailController -", () => {
 
             $scope.$emit("reload-comment-editor-view", execution);
 
-            expect(clear_editor).toHaveBeenCalled();
+            expect(ExecutionService.clearEditor).toHaveBeenCalled();
+            expect(ExecutionService.clearFilesUploadedThroughAttachmentArea).toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeFalsy();
         });
         it("When the user who pushed the new comment and the user who was editing the comment are same, Then the editor is cleared", () => {
@@ -447,7 +467,8 @@ describe("ExecutionDetailController -", () => {
 
             $scope.$emit("reload-comment-editor-view", execution);
 
-            expect(clear_editor).toHaveBeenCalled();
+            expect(ExecutionService.clearEditor).toHaveBeenCalled();
+            expect(ExecutionService.clearFilesUploadedThroughAttachmentArea).toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeTruthy();
         });
         it("When comment is being edited and editor is displayed and users are different, Then warning message is displayed", () => {
@@ -456,7 +477,8 @@ describe("ExecutionDetailController -", () => {
 
             $scope.$emit("reload-comment-editor-view", execution);
 
-            expect(clear_editor).not.toHaveBeenCalled();
+            expect(ExecutionService.clearEditor).not.toHaveBeenCalled();
+            expect(ExecutionService.clearFilesUploadedThroughAttachmentArea).not.toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeTruthy();
             expect($scope.displayTestCommentWarningOveriding).toBeTruthy();
             expect(execution.results).toEqual("A comment in editing mode");
@@ -467,7 +489,8 @@ describe("ExecutionDetailController -", () => {
 
             $scope.$emit("reload-comment-editor-view", execution);
 
-            expect(clear_editor).not.toHaveBeenCalled();
+            expect(ExecutionService.clearEditor).not.toHaveBeenCalled();
+            expect(ExecutionService.clearFilesUploadedThroughAttachmentArea).not.toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeTruthy();
             expect($scope.displayTestCommentWarningOveriding).toBeFalsy();
         });

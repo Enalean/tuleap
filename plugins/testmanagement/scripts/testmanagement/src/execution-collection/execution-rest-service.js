@@ -42,6 +42,7 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
         getExecution,
         updateExecutionToUseLatestVersionOfDefinition,
         updateStepStatus,
+        createFileInTestExecution,
     });
 
     function getRemoteExecutions(campaign_id, limit, offset) {
@@ -205,6 +206,19 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
             }).catch((exception) => {
                 return exception.response.json().then((json) => $q.reject(json.error));
             })
+        );
+    }
+
+    function createFileInTestExecution(execution, file) {
+        return $q.when(
+            post(execution.upload_url, {
+                headers,
+                body: JSON.stringify({
+                    name: file.name,
+                    file_size: file.size,
+                    file_type: file.type,
+                }),
+            }).then((response) => response.json())
         );
     }
 }

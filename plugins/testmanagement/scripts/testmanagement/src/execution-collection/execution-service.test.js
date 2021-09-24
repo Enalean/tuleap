@@ -1180,7 +1180,7 @@ describe("ExecutionService", () => {
                         summary: "My first test",
                         uri: "testmanagement_definitions/3",
                     },
-                    uploaded_files: [],
+                    uploaded_files_through_text_field: [],
                     viewed_by: [user_one],
                 },
                 5: {
@@ -1192,7 +1192,7 @@ describe("ExecutionService", () => {
                         summary: "My first test",
                         uri: "testmanagement_definitions/3",
                     },
-                    uploaded_files: [],
+                    uploaded_files_through_text_field: [],
                     viewed_by: [user_two],
                 },
             };

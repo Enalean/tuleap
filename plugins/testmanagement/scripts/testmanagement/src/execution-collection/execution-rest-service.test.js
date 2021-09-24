@@ -376,4 +376,40 @@ describe("ExecutionRestService", () => {
             return wrapPromise(promise);
         });
     });
+
+    describe("createFileInTestExecution()", () => {
+        it("should create a file for the given test execution and return its representation", async () => {
+            const test_execution = {
+                upload_url: "/api/v1/tracker_fields/1260/file",
+            };
+
+            const created_file = {
+                id: 1234,
+                upload_href: "/upload-me.here",
+                download_href: "/download-me.there",
+            };
+
+            const file = {
+                name: "bug.png",
+                size: 12345678910,
+                type: "image/png",
+            };
+
+            const tlpPost = jest.spyOn(tlp, "post");
+            mockFetchSuccess(tlpPost, { return_json: created_file });
+
+            const promise = ExecutionRestService.createFileInTestExecution(test_execution, file);
+            const result = await wrapPromise(promise);
+
+            expect(tlpPost).toHaveBeenCalledWith("/api/v1/tracker_fields/1260/file", {
+                headers: expected_headers,
+                body: JSON.stringify({
+                    name: "bug.png",
+                    file_size: 12345678910,
+                    file_type: "image/png",
+                }),
+            });
+            expect(result).toEqual(created_file);
+        });
+    });
 });
