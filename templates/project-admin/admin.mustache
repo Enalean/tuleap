@@ -9,7 +9,7 @@
                     <button id="button-modal-add-bot" type="button" data-target="modal-add-bot" class="tlp-button-primary">
                         <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Add bot {{/ dgettext }}
                     </button>
-                    {{> modal-add-bot }}
+                    {{> ../modals/modal-add-bot }}
                 </div>
                 <table id="bot_list" class="tlp-table">
                     <thead>
@@ -24,27 +24,27 @@
                         {{# project_bots }}
                             <tr>
                                 <td class="bot-name">
-                                    {{# getAvatarUrl }}<img class="bot-avatar" src="{{ getAvatarUrl }}">{{/ getAvatarUrl }}
-                                    {{ getName }}
+                                    {{# avatar_url }}<img class="bot-avatar" src="{{ avatar_url }}">{{/ avatar_url }}
+                                    {{ bot_name }}
                                 </td>
-                                <td>{{ getWebhookUrl }}</td>
+                                <td>{{ webhook_url }}</td>
                                 <td class="tlp-table-cell-actions">
-                                    <button id="button-modal-edit-bot-{{ getId }}"
+                                    <button id="button-modal-edit-bot-{{ bot_id }}"
                                             type="button"
                                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
-                                            data-modal-id="modal-edit-bot-{{ getId }}"
+                                            data-modal-id="modal-edit-bot-{{ bot_id }}"
                                     >
                                         <i class="fa fa-pencil tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Edit {{/ dgettext }}
                                     </button>
-                                    {{> modal-edit-bot }}
-                                    <button id="button-modal-delete-bot-{{ getId }}"
+                                    {{> ../modals/modal-edit-bot }}
+                                    <button id="button-modal-delete-bot-{{ bot_id }}"
                                             type="submit"
                                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
-                                            data-modal-id="modal-delete-bot-{{ getId }}"
+                                            data-modal-id="modal-delete-bot-{{ bot_id }}"
                                     >
                                         <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Delete {{/ dgettext }}
                                     </button>
-                                    {{> modal-delete-bot }}
+                                    {{> ../modals/modal-delete-bot }}
                                 </td>
                             </tr>
                         {{/ project_bots }}

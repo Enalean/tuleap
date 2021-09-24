@@ -24,25 +24,44 @@ namespace Tuleap\BotMattermost\Administration\Project;
 
 use CSRFSynchronizerToken;
 use Tuleap\BotMattermost\Bot\Bot;
+use Tuleap\BotMattermost\Presenter\BotPresenter;
 
 class ProjectAdministrationPresenter
 {
     /**
-     * @var Bot[]
+     * @var BotPresenter[]
      */
     public array $project_bots;
     public bool $has_bots;
     public CSRFSynchronizerToken $csrf_token;
     public int $project_id;
+    public string $create_bot_url;
 
     /**
      * @param Bot[] $project_bots
      */
     public function __construct(array $project_bots, CSRFSynchronizerToken $csrf_token, int $project_id)
     {
-        $this->project_bots = $project_bots;
+        $this->project_bots = $this->buildBotPresenterCollection($project_bots);
         $this->has_bots     = ! empty($project_bots);
         $this->csrf_token   = $csrf_token;
         $this->project_id   = $project_id;
+
+        $this->create_bot_url = "/plugins/botmattermost/bot/create";
+    }
+
+    /**
+     * @param Bot[] $bots
+     *
+     * @retrun BotPresenter[]
+     */
+    private function buildBotPresenterCollection(array $bots): array
+    {
+        $presenters = [];
+        foreach ($bots as $bot) {
+            $presenters[] = BotPresenter::buildFromBot($bot);
+        }
+
+        return $presenters;
     }
 }

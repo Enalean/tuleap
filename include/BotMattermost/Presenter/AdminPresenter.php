@@ -27,10 +27,11 @@ class AdminPresenter
 {
     public CSRFSynchronizerToken $csrf_token;
     /**
-     * @var Bot[]
+     * @var BotPresenter[]
      */
     public array $bots;
     public bool $has_bots;
+    public string $create_bot_url;
 
     /**
      * @param Bot[] $bots
@@ -38,8 +39,25 @@ class AdminPresenter
     public function __construct(CSRFSynchronizerToken $csrf_token, array $bots)
     {
         $this->csrf_token = $csrf_token;
-        $this->bots       = $bots;
+        $this->bots       = $this->buildBotPresenterCollection($bots);
 
         $this->has_bots = count($this->bots) > 0;
+
+        $this->create_bot_url = "?action=add_bot";
+    }
+
+    /**
+     * @param Bot[] $bots
+     *
+     * @retrun BotPresenter[]
+     */
+    private function buildBotPresenterCollection(array $bots): array
+    {
+        $presenters = [];
+        foreach ($bots as $bot) {
+            $presenters[] = BotPresenter::buildFromBot($bot);
+        }
+
+        return $presenters;
     }
 }

@@ -1,8 +1,11 @@
 <form id="modal-add-bot" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label" method="POST"
-      action="?action=add_bot">
+      action="{{ create_bot_url }}">
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
+    {{# project_id }}
+        <input type="hidden" name="project_id" value="{{ project_id }}">
+    {{/ project_id }}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="modal-big-content-label">
             <i class="fa fa-plus tlp-modal-title-icon"></i> {{# dgettext }} tuleap-botmattermost | Add bot {{/ dgettext }}
