@@ -100,7 +100,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
         );
 
         foreach ($select_stm->fetchAll() as $line) {
-            $sql        = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, rank)
+            $sql        = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, `rank`)
                            VALUES (:new_dashboard_id, :type, :rank)";
             $insert_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $insert_stm->execute(
@@ -143,7 +143,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
 
         $rank = 0;
         foreach ($columns as $column) {
-            $sql        = "INSERT INTO dashboards_lines_columns (line_id, rank)
+            $sql        = "INSERT INTO dashboards_lines_columns (line_id, `rank`)
                            VALUES (:new_line_id, :rank)";
             $insert_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $insert_stm->execute(
@@ -197,7 +197,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
                 WHERE column_id = :old_column_id
                   AND owner_type = :owner_type
                   AND owner_id   = :owner_id
-                ORDER BY rank";
+                ORDER BY `rank`";
 
         $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $select_stm->execute(
@@ -209,7 +209,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
         );
 
         foreach ($select_stm->fetchAll() as $widget) {
-            $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, rank, name, content_id, is_minimized)
+            $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id, is_minimized)
                     VALUES (:new_column_id, :rank, :name, :content_id, :is_minimized)";
 
             $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);

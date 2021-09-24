@@ -65,7 +65,7 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject
 
     private function createTooltip($tv5_id)
     {
-        $sql = "INSERT INTO tracker_tooltip(tracker_id, field_id, rank)
+        $sql = "INSERT INTO tracker_tooltip(tracker_id, field_id, `rank`)
                 SELECT tracker_id, id, 1
                 FROM tracker_field
                 WHERE name = 'summary'
@@ -73,7 +73,7 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject
                   AND tracker_id = $tv5_id";
         $this->update($sql);
 
-        $sql = "INSERT INTO tracker_tooltip(tracker_id, field_id, rank)
+        $sql = "INSERT INTO tracker_tooltip(tracker_id, field_id, `rank`)
                 SELECT tracker_id, id, 2
                 FROM tracker_field
                 WHERE name = 'status_id'
@@ -81,7 +81,7 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject
                   AND tracker_id = $tv5_id";
         $this->update($sql);
 
-        $sql = "INSERT INTO tracker_tooltip(tracker_id, field_id, rank)
+        $sql = "INSERT INTO tracker_tooltip(tracker_id, field_id, `rank`)
                 SELECT tracker_id, id, 3
                 FROM tracker_field
                 WHERE name = 'details'

@@ -40,14 +40,14 @@ class FRSPackageDao extends DataAccessObject
     public function searchById($id, $extraFlags = 0)
     {
         $_id = (int) $id;
-        return $this->_search(' p.package_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
+        return $this->_search(' p.package_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY `rank` DESC LIMIT 1', null, $extraFlags);
     }
 
     public function searchInGroupById($id, $group_id, $extraFlags = 0)
     {
         $_id       = (int) $id;
         $_group_id = (int) $group_id;
-        return $this->_search(' p.package_id = ' . $this->da->escapeInt($_id) . ' AND p.group_id = ' . $this->da->escapeInt($_group_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
+        return $this->_search(' p.package_id = ' . $this->da->escapeInt($_id) . ' AND p.group_id = ' . $this->da->escapeInt($_group_id), '', ' ORDER BY `rank` DESC LIMIT 1', null, $extraFlags);
     }
 
     public function searchByFileId($file_id)
@@ -56,7 +56,7 @@ class FRSPackageDao extends DataAccessObject
         return $this->_search(
             ' f.file_id =' . $this->da->escapeInt($_file_id) . ' AND f.release_id = r.release_id AND r.package_id = p.package_id AND r.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED),
             '',
-            'ORDER BY rank DESC LIMIT 1',
+            'ORDER BY `rank` DESC LIMIT 1',
             ['frs_release AS r', 'frs_file AS f']
         );
     }
@@ -68,7 +68,7 @@ class FRSPackageDao extends DataAccessObject
         return $this->_search(
             'p.group_id = ' . $this->da->escapeInt($_group_id) . ' AND r.release_id = ' . $this->da->escapeInt($_id) . ' AND p.package_id = r.package_id AND r.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED),
             '',
-            'ORDER BY rank DESC LIMIT 1',
+            'ORDER BY `rank` DESC LIMIT 1',
             ['frs_release AS r']
         );
     }
@@ -89,7 +89,7 @@ class FRSPackageDao extends DataAccessObject
     public function searchByGroupId($id)
     {
         $_id = (int) $id;
-        return $this->_search(' p.group_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY rank ASC ');
+        return $this->_search(' p.group_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY `rank` ASC ');
     }
 
     public function searchActivePackagesByGroupId($id)
@@ -97,7 +97,7 @@ class FRSPackageDao extends DataAccessObject
         $id        = $this->da->escapeInt($id);
         $status_id = $this->da->escapeInt(FRSPackage::STATUS_ACTIVE);
 
-        return $this->_search(" group_id = $id AND status_id = $status_id", '', 'ORDER BY rank');
+        return $this->_search(" group_id = $id AND status_id = $status_id", '', 'ORDER BY `rank`');
     }
 
     public function searchPaginatedActivePackagesByGroupId($id, $limit, $offset)
@@ -111,7 +111,7 @@ class FRSPackageDao extends DataAccessObject
                 FROM frs_package
                 WHERE group_id  = $id
                   AND status_id = $status_id
-                ORDER BY rank
+                ORDER BY `rank`
                 LIMIT $offset, $limit";
 
         return $this->retrieve($sql);
@@ -175,7 +175,7 @@ class FRSPackageDao extends DataAccessObject
         }
 
         if ($rank !== null) {
-            $arg[]    = 'rank';
+            $arg[]    = '`rank`';
             $values[] = $this->prepareRanking('frs_package', 0, $group_id, $rank, 'package_id', 'group_id');
         }
 
@@ -194,7 +194,7 @@ class FRSPackageDao extends DataAccessObject
     {
         $arg    = [];
         $values = [];
-        $cols   = ['group_id', 'name', 'status_id', 'rank', 'approve_license'];
+        $cols   = ['group_id', 'name', 'status_id', '`rank`', 'approve_license'];
         foreach ($data_array as $key => $value) {
             if ($key == 'rank') {
                 $value = $this->prepareRanking('frs_package', 0, $data_array['group_id'], $value, 'package_id', 'group_id');
@@ -246,7 +246,7 @@ class FRSPackageDao extends DataAccessObject
         }
 
         if ($rank !== null) {
-            $argArray[] = 'rank=' . $this->prepareRanking('frs_package', $package_id, $group_id, $rank, 'package_id', 'group_id');
+            $argArray[] = '`rank`=' . $this->prepareRanking('frs_package', $package_id, $group_id, $rank, 'package_id', 'group_id');
         }
 
         if ($approve_license !== null) {

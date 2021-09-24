@@ -193,8 +193,8 @@ class PriorityDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_order = func_get_args();
         $this->assertEquals(
+            $expected_order,
             $this->getArtifactIdsOrderedByRank(),
-            $expected_order
         );
     }
 
@@ -208,7 +208,7 @@ class PriorityDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getArtifactIdsOrderedByRank(): array
     {
         $ids     = [];
-        $results = $this->db->run('SELECT artifact_id FROM tracker_artifact_priority_rank ORDER BY rank');
+        $results = $this->db->run('SELECT artifact_id FROM tracker_artifact_priority_rank ORDER BY `rank`');
         foreach ($results as $row) {
             $ids[] = $row['artifact_id'];
         }

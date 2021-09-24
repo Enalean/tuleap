@@ -200,9 +200,7 @@ class ArtifactType
      */
     public function getNotificationRoles($artifact_type_id)
     {
-        $sql = 'SELECT * FROM artifact_notification_role WHERE group_artifact_id=' . db_ei($artifact_type_id) . ' ORDER BY rank ASC;';
-        //$sql = 'SELECT * FROM artifact_notification_role_default ORDER BY rank ASC;';
-        //echo $sql.'<br>';
+        $sql = 'SELECT * FROM artifact_notification_role WHERE group_artifact_id=' . db_ei($artifact_type_id) . ' ORDER BY `rank` ASC;';
         return db_query($sql);
     }
 
@@ -214,9 +212,7 @@ class ArtifactType
      */
     public function getNotificationEvents($artifact_type_id)
     {
-        $sql = 'SELECT * FROM artifact_notification_event WHERE group_artifact_id=' . db_ei($artifact_type_id) . ' ORDER BY rank ASC;';
-        //$sql = 'SELECT * FROM artifact_notification_event_default ORDER BY rank ASC;';
-        //echo $sql.'<br>';
+        $sql = 'SELECT * FROM artifact_notification_event WHERE group_artifact_id=' . db_ei($artifact_type_id) . ' ORDER BY `rank` ASC;';
         return db_query($sql);
     }
 
@@ -1124,7 +1120,7 @@ class ArtifactType
     {
         global $Language;
         $sql = "insert into artifact_notification_event " .
-         "select event_id," . db_ei($group_artifact_id) . ",event_label,rank,short_description_msg,description_msg " .
+         "select event_id," . db_ei($group_artifact_id) . ",event_label,`rank`,short_description_msg,description_msg " .
          "from artifact_notification_event_default";
 
         $res_insert = db_query($sql);
@@ -1148,7 +1144,7 @@ class ArtifactType
     {
         global $Language;
         $sql = "insert into artifact_notification_role " .
-         "select role_id," . db_ei($group_artifact_id) . ",role_label ,rank, short_description_msg,description_msg " .
+         "select role_id," . db_ei($group_artifact_id) . ",role_label ,`rank`, short_description_msg,description_msg " .
          "from artifact_notification_role_default";
 
         $res_insert = db_query($sql);

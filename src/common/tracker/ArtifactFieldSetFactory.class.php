@@ -97,7 +97,7 @@ class ArtifactFieldSetFactory
         $sql = "SELECT *
                 FROM artifact_field_set
                 WHERE group_artifact_id=" . db_ei($group_artifact_id) . "
-                ORDER BY rank";
+                ORDER BY `rank`";
 
         //echo $sql;
 
@@ -131,7 +131,7 @@ class ArtifactFieldSetFactory
         $sql = "SELECT *
                 FROM artifact_field_set
                 WHERE group_artifact_id='" . db_ei($group_artifact_id) . "'
-                ORDER BY rank ASC";
+                ORDER BY `rank` ASC";
 
         $result              = db_query($sql);
         $rows                = db_numrows($result);
@@ -272,7 +272,7 @@ class ArtifactFieldSetFactory
         $rank        = ($rank ? $rank : 0);
 
         // create the artifact_field_set
-        $sql = "INSERT INTO artifact_field_set (group_artifact_id, name, description, rank)
+        $sql = "INSERT INTO artifact_field_set (group_artifact_id, name, description, `rank`)
                 VALUES (" . db_ei($this->ArtifactType->getID()) . ",'" . db_es($fieldset_name) . "','" . db_es($description) . "'," . db_ei($rank) . ")";
 
         $res_insert = db_query($sql);
@@ -356,7 +356,7 @@ class ArtifactFieldSetFactory
         global $Language;
         // Copy the field_sets
         $fieldset_id_source_dest_array = [];
-        $sql_source_fieldset           = "SELECT field_set_id, name, description, rank FROM artifact_field_set WHERE group_artifact_id=" . db_ei($atid_source);
+        $sql_source_fieldset           = "SELECT field_set_id, name, description, `rank` FROM artifact_field_set WHERE group_artifact_id=" . db_ei($atid_source);
         $res_source_fieldset           = db_query($sql_source_fieldset);
         while ($fieldset_source_array = db_fetch_array($res_source_fieldset)) {
             // For each fieldset of the source tracker, we create a new fieldset in the dest tracker,

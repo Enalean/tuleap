@@ -55,7 +55,7 @@ class Tracker_Migration_V3_ReportsDao extends DataAccessObject
     {
         $tv5_id = $this->da->escapeInt($tv5_id);
 
-        $sql = "INSERT INTO tracker_report_criteria(report_id, field_id, rank, is_advanced)
+        $sql = "INSERT INTO tracker_report_criteria(report_id, field_id, `rank`, is_advanced)
                 SELECT R.id, F.id, place_query, 0
                 FROM tracker_report AS R
                      INNER JOIN artifact_report_field AS RF ON (R.old_id = RF.report_id)
@@ -73,10 +73,10 @@ class Tracker_Migration_V3_ReportsDao extends DataAccessObject
                            @previous := report_id,
                            tracker_report_criteria.*
                     FROM tracker_report_criteria
-                    ORDER BY report_id, rank, field_id
+                    ORDER BY report_id, `rank`, field_id
                     ) as R1 USING(report_id,field_id)
                 INNER JOIN tracker_report ON (tracker_report.id = tracker_report_criteria.report_id AND tracker_report.tracker_id = $tv5_id)
-                    SET tracker_report_criteria.rank = R1.new_rank";
+                    SET tracker_report_criteria.`rank` = R1.new_rank";
         $this->update($sql);
     }
 }

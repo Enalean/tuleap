@@ -118,7 +118,7 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
 // Get list of services
-            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
+            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`");
             $serv_label      = [];
             $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {
@@ -271,7 +271,7 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
             // Get list of services
-            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
+            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`");
             $serv_label      = [];
             $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {

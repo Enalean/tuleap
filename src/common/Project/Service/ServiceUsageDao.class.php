@@ -34,7 +34,7 @@ class Project_Service_ServiceUsageDao extends DataAccessObject
         $sql = "SELECT service_id, short_name, is_used
                 FROM service
                 WHERE group_id = $group_id
-                ORDER BY rank";
+                ORDER BY `rank`";
 
         return $this->retrieve($sql);
     }

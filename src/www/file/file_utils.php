@@ -117,7 +117,7 @@ function frs_show_processor_popup($group_id, $name = 'processor_id', $checked_va
     */
     global $FRS_PROCESSOR_RES,$Language;
     if (! isset($FRS_PROCESSOR_RES)) {
-        $FRS_PROCESSOR_RES = db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=" . db_ei($group_id) . " ORDER BY rank");
+        $FRS_PROCESSOR_RES = db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=" . db_ei($group_id) . " ORDER BY `rank`");
     }
     return html_build_select_box($FRS_PROCESSOR_RES, $name, $checked_val, true, $Language->getText('file_file_utils', 'must_choose_one'), false, '', false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML);
 }
@@ -231,7 +231,7 @@ function file_utils_add_proc($pname, $prank)
 
     $sql    = sprintf(
         'INSERT INTO frs_processor' .
-           ' (name,group_id,rank)' .
+           ' (name,group_id,`rank`)' .
            ' VALUES' .
            '("%s",%d,%d)',
         db_es($pname),
@@ -253,7 +253,7 @@ function file_utils_update_proc($pid, $pname, $prank)
 
     $sql    = sprintf(
         'UPDATE frs_processor' .
-           ' SET name = "%s",rank = %d' .
+           ' SET name = "%s",`rank` = %d' .
            ' WHERE processor_id=%d' .
            ' AND group_id=%d',
         db_es($pname),
@@ -385,7 +385,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         ), 'help' => 'frs.html#delivery-manager-administration']);
 
     echo '<H3>' . $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) . '</H3>';
-    $sql          = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = " . db_ei($group_id) . ") ORDER BY rank";
+    $sql          = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = " . db_ei($group_id) . ") ORDER BY `rank`";
     $result       = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
     foreach ($processor_id as $key => $id) {

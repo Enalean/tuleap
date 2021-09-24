@@ -41,7 +41,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
         $sql       = "SELECT *
                 FROM $this->table_name
                 WHERE report_id = $report_id
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -67,7 +67,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
         $rank        = (int) $this->prepareRanking('tracker_report_criteria', 0, (int) $report_id, 'end', 'id', 'report_id');
         $is_advanced = $this->da->escapeInt($is_advanced);
         $sql         = "INSERT INTO $this->table_name
-                       (report_id, field_id, rank, is_advanced)
+                       (report_id, field_id, `rank`, is_advanced)
                 VALUES ($report_id, $field_id, $rank, $is_advanced)";
         return $this->updateAndGetLastId($sql);
     }

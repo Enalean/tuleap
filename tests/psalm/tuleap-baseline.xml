@@ -54610,8 +54610,8 @@
     <DeprecatedFunction occurrences="6">
       <code>db_fetch_array($result)</code>
       <code>db_fetch_array($result)</code>
-      <code>db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank")</code>
-      <code>db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank")</code>
+      <code>db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`")</code>
+      <code>db_query("SELECT * FROM service WHERE group_id=100 ORDER BY `rank`")</code>
       <code>html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name")</code>
       <code>html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name", $ref-&gt;getServiceShortName())</code>
     </DeprecatedFunction>
@@ -73019,7 +73019,7 @@
       <code>db_es($pname)</code>
       <code>db_numrows($result)</code>
       <code>db_query("SELECT * FROM frs_filetype ORDER BY type_id")</code>
-      <code>db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=" . db_ei($group_id) . " ORDER BY rank")</code>
+      <code>db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=" . db_ei($group_id) . " ORDER BY `rank`")</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>

@@ -326,7 +326,7 @@ class ArtifactFieldSet
         $sql = "UPDATE artifact_field_set
                 SET name='" . db_es($name) . "',
                     description='" . db_es($description) . "',
-                    rank='" . db_ei($rank) . "'
+                    `rank`='" . db_ei($rank) . "'
                 WHERE field_set_id='" .  db_ei($this->getID())  . "'";
 
         $res = db_query($sql);

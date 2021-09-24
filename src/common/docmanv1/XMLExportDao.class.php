@@ -33,7 +33,7 @@ class DocmanV1_XMLExportDao extends DataAccessObject
 
     public function searchAllDocs($doc_group_id)
     {
-        return $this->retrieve("SELECT * FROM doc_data WHERE doc_group = " . $this->da->escapeInt($doc_group_id) . ' ORDER BY rank');
+        return $this->retrieve("SELECT * FROM doc_data WHERE doc_group = " . $this->da->escapeInt($doc_group_id) . ' ORDER BY `rank`');
     }
 
     public function searchUGroupForObjectPermission($permission_type, $object_id)

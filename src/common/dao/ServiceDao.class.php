@@ -48,7 +48,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
                 FROM service
                 WHERE group_id = $project_id
                     AND short_name IN ($allowed_shortnames)
-                ORDER BY rank";
+                ORDER BY `rank`";
 
         return $this->retrieve($sql);
     }
@@ -154,7 +154,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
                      is_active,
                      is_used,
                      scope,
-                     rank,
+                     `rank`,
                      is_in_iframe,
                      is_in_new_tab,
                      icon
@@ -200,7 +200,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
                     icon = $icon_name,
                     description = $description,
                     link = $link,
-                    rank = $rank,
+                    `rank` = $rank,
                     is_in_iframe = $is_in_iframe,
                     is_in_new_tab = $is_in_new_tab
                 WHERE service_id = $service_id";

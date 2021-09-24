@@ -154,8 +154,8 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
     private function duplicatedFields(array $field_mapping, $to_report_id, $from_report_id): void
     {
         foreach ($field_mapping as $mapping) {
-            $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, rank, is_advanced)
-                SELECT ?, field_id, rank, is_advanced
+            $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, `rank`, is_advanced)
+                SELECT ?, field_id, `rank`, is_advanced
                 FROM tracker_report_criteria
                 WHERE report_id = ? AND field_id = ?";
             $this->getDB()->run($sql, $to_report_id, $from_report_id, $mapping['from']);

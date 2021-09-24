@@ -58,7 +58,7 @@ class FieldDao extends DataAccessObject
                 FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND use_it = 0
-                ORDER BY parent_id, rank";
+                ORDER BY parent_id, `rank`";
         return $this->retrieve($sql);
     }
 
@@ -70,7 +70,7 @@ class FieldDao extends DataAccessObject
                 WHERE tracker_id = $tracker_id
                   AND parent_id = 0
                   AND use_it = 1
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -90,7 +90,7 @@ class FieldDao extends DataAccessObject
                   AND id = $field_id
                   AND use_it = 1
                   AND formElement_type $type_stm
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -102,7 +102,7 @@ class FieldDao extends DataAccessObject
                 WHERE f.tracker_id = $tracker_id
                   AND use_it = 1
                   AND f.id = lbu.field_id
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -116,7 +116,7 @@ class FieldDao extends DataAccessObject
                   AND f.id = $field_id
                   AND use_it = 1
                   AND f.id = lbu.field_id
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -130,7 +130,7 @@ class FieldDao extends DataAccessObject
                   AND use_it = 1
                   AND f.id = lbu.field_id
                   AND formElement_type IN ('sb', 'msb', 'cb', 'rb')
-                ORDER BY rank";
+                ORDER BY `rank`";
 
         return $this->retrieve($sql);
     }
@@ -146,7 +146,7 @@ class FieldDao extends DataAccessObject
                   AND use_it = 1
                   AND f.id = lbu.field_id
                   AND formElement_type IN ('sb', 'msb', 'cb', 'rb')
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -159,7 +159,7 @@ class FieldDao extends DataAccessObject
                 WHERE f.tracker_id = $tracker_id
                   AND use_it = 1
                   AND formElement_type IN ('sb', 'msb')
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -169,7 +169,7 @@ class FieldDao extends DataAccessObject
         $sql       = "SELECT *
                 FROM tracker_field
                 WHERE parent_id = $parent_id
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -180,7 +180,7 @@ class FieldDao extends DataAccessObject
                 FROM tracker_field
                 WHERE parent_id = $parent_id
                   AND use_it = 1
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -201,7 +201,7 @@ class FieldDao extends DataAccessObject
         if ($used) {
             $sql .= " AND use_it = 1";
         }
-        $sql .= " ORDER BY rank";
+        $sql .= " ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -218,7 +218,7 @@ class FieldDao extends DataAccessObject
                 FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND formElement_type $type_stm
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -251,10 +251,10 @@ class FieldDao extends DataAccessObject
         $id         = $this->da->escapeInt($id);
         $sql        = "SELECT R2.*
                 FROM tracker_field AS R1 INNER JOIN
-                     tracker_field AS R2 ON (R1.tracker_id = R2.tracker_id AND R1.parent_id = R2.parent_id AND R2. rank > R1.rank)
+                     tracker_field AS R2 ON (R1.tracker_id = R2.tracker_id AND R1.parent_id = R2.parent_id AND R2.`rank` > R1.`rank`)
                 WHERE R1.id = $id
                   AND R2.use_it = 1
-                ORDER BY R2.rank
+                ORDER BY R2.`rank`
                 LIMIT 1";
         return $this->retrieve($sql);
     }
@@ -265,10 +265,10 @@ class FieldDao extends DataAccessObject
         $id         = $this->da->escapeInt($id);
         $sql        = "SELECT R2.*
                 FROM tracker_field AS R1 INNER JOIN
-                     tracker_field AS R2 ON (R1.tracker_id = R2.tracker_id AND R1.parent_id = R2.parent_id AND R2. rank < R1.rank)
+                     tracker_field AS R2 ON (R1.tracker_id = R2.tracker_id AND R1.parent_id = R2.parent_id AND R2.`rank` < R1.`rank`)
                 WHERE R1.id = $id
                   AND R2.use_it = 1
-                ORDER BY R2.rank DESC
+                ORDER BY R2.`rank` DESC
                 LIMIT 1";
         return $this->retrieve($sql);
     }
@@ -279,7 +279,7 @@ class FieldDao extends DataAccessObject
         $sql        = "SELECT *
                 FROM tracker_field
                 WHERE tracker_id = $tracker_id
-                ORDER BY parent_id, rank";
+                ORDER BY parent_id, `rank`";
         return $this->retrieve($sql);
     }
 
@@ -288,8 +288,8 @@ class FieldDao extends DataAccessObject
         //TODO: duplicate tracker_id
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_tracker_id = $this->da->escapeInt($to_tracker_id);
-        $sql           = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id)
-                SELECT $to_tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id
+        $sql           = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, `rank`, notifications, original_field_id)
+                SELECT $to_tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, `rank`, notifications, original_field_id
                 FROM tracker_field
                 WHERE id = $from_field_id";
         return $this->updateAndGetLastId($sql);
@@ -336,7 +336,7 @@ class FieldDao extends DataAccessObject
                     required          = " . $this->da->escapeInt($field->required ? 1 : 0) . ",
                     notifications     = " . ($field->notifications ? 1 : "NULL") . ",
                     use_it            = " . $this->da->escapeInt($field->use_it ? 1 : 0) . ",
-                    rank              = " . $this->da->escapeInt($rank) . ",
+                    `rank`            = " . $this->da->escapeInt($rank) . ",
                     original_field_id = " . $this->da->escapeInt($field->getOriginalFieldId()) . "
                 WHERE id = " . $this->da->escapeInt($field->id);
         if ($this->update($sql)) {
@@ -554,7 +554,7 @@ class FieldDao extends DataAccessObject
         }
         $original_field_id = $this->da->escapeInt($original_field_id);
 
-        $sql = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id) ";
+        $sql = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, `rank`, notifications, original_field_id) ";
         if ($name) {
             $name = $this->da->quoteSmart($name);
             $sql .= "

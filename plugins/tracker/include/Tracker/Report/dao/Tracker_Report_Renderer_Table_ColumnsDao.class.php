@@ -28,7 +28,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
                 FROM tracker_report_renderer_table_columns AS col
                     INNER JOIN tracker_field ON (col.field_id = tracker_field.id)
                 WHERE renderer_id = $renderer_id
-                ORDER BY col.rank";
+                ORDER BY col.`rank`";
         return $this->retrieve($sql);
     }
 
@@ -44,7 +44,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
         } else {
             $rank = $this->da->escapeInt($rank);
         }
-        $sql = "INSERT INTO tracker_report_renderer_table_columns (renderer_id, field_id, rank, width, artlink_nature, artlink_nature_format)
+        $sql = "INSERT INTO tracker_report_renderer_table_columns (renderer_id, field_id, `rank`, width, artlink_nature, artlink_nature_format)
                      VALUES ($renderer_id, $field_id, $rank, $width, $artlink_nature, $artlink_nature_format)";
 
         return $this->update($sql);
@@ -74,7 +74,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
         $rank        = (int) $this->prepareRanking('tracker_report_renderer_table_columns', (int) $field_id, (int) $renderer_id, $new_rank, 'field_id', 'renderer_id');
 
         $sql = "UPDATE tracker_report_renderer_table_columns
-                SET rank = $rank
+                SET `rank` = $rank
                 WHERE renderer_id = $renderer_id
                   AND field_id = $field_id";
         return $this->update($sql);
@@ -98,7 +98,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
         $sql              = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format)
-                SELECT $to_renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format
+                SELECT $to_renderer_id, field_id, width, `rank`, artlink_nature, artlink_nature_format
                 FROM tracker_report_renderer_table_columns
                 WHERE renderer_id = $from_renderer_id";
         $this->update($sql);

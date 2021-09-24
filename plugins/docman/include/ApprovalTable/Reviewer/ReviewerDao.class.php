@@ -42,7 +42,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
         $sql = sprintf(
             'SELECT * FROM plugin_docman_approval_user au' .
                        ' WHERE table_id = %d' .
-                       ' ORDER BY rank',
+                       ' ORDER BY `rank`',
             $tableId
         );
         return $this->retrieve($sql);
@@ -75,7 +75,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
                        ' FROM plugin_docman_approval_user au' .
                        ' WHERE table_id = %d' .
                        '  AND ' . $state .
-                       ' ORDER BY rank' .
+                       ' ORDER BY `rank`' .
                        ' LIMIT 1',
             $tableId
         );
@@ -92,7 +92,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
         $newRank = $this->prepareUserRanking($tableId, $userId, 'end');
         $sql     = sprintf(
             'INSERT INTO plugin_docman_approval_user' .
-                       '(table_id, reviewer_id, rank)' .
+                       '(table_id, reviewer_id, `rank`)' .
                        ' VALUES' .
                        '(%d, %d, %d)',
             $tableId,
@@ -108,7 +108,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
         if ($newRank !== false) {
             $sql = sprintf(
                 'UPDATE plugin_docman_approval_user' .
-                           ' SET rank = %d' .
+                           ' SET `rank` = %d' .
                            ' WHERE table_id = %d' .
                            ' AND reviewer_id = %d',
                 $newRank,
@@ -183,10 +183,10 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
     public function _copyReviewers($srcTableId, $dstTableId, $date, $state, $comment, $version)
     {
         $sql = 'INSERT INTO plugin_docman_approval_user' .
-            '(table_id, reviewer_id, rank, date, state, comment, version) ' .
+            '(table_id, reviewer_id, `rank`, date, state, comment, version) ' .
             'SELECT ' .
             $this->da->escapeInt($dstTableId) . ',' .
-            ' reviewer_id, rank, ' . $date . ', ' . $state . ', ' .
+            ' reviewer_id, `rank`, ' . $date . ', ' . $state . ', ' .
             $comment . ', ' . $version .
             ' FROM plugin_docman_approval_user' .
             ' WHERE table_id = ' . $srcTableId;

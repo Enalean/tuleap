@@ -27,7 +27,7 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject
 
     private function insertRendererTable($tv3_id, $tv5_id)
     {
-        $sql = "INSERT INTO tracker_report_renderer(report_id, renderer_type, name, description, rank)
+        $sql = "INSERT INTO tracker_report_renderer(report_id, renderer_type, name, description, `rank`)
                 SELECT id, 'table', 'Results', '', 1
                 FROM tracker_report
                 WHERE tracker_id = $tv5_id";
@@ -40,7 +40,7 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject
                     INNER JOIN tracker_report R ON (R.id = RR.report_id AND R.tracker_id = $tv5_id)";
         $this->update($sql);
 
-        $sql = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, rank, width)
+        $sql = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, `rank`, width)
                 SELECT TRR.id, TF.id, ARF.place_result, 0
                 FROM artifact_report_field AS ARF
                     INNER JOIN artifact_report AS R ON ((ARF.report_id = 100 AND R.group_artifact_id = 100) OR (R.report_id = ARF.report_id AND R.group_artifact_id = $tv3_id))
@@ -59,11 +59,11 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject
                                    @previous := renderer_id, 
                                    tracker_report_renderer_table_columns.* 
                             FROM tracker_report_renderer_table_columns 
-                            ORDER BY renderer_id, rank, field_id
+                            ORDER BY renderer_id, `rank`, field_id
                 ) as R1 USING(renderer_id,field_id)
                 INNER JOIN tracker_report_renderer ON (tracker_report_renderer.id = tracker_report_renderer_table_columns.renderer_id)
                 INNER JOIN tracker_report ON (tracker_report_renderer.report_id = tracker_report.id AND tracker_report.tracker_id = $tv5_id)
-                SET tracker_report_renderer_table_columns.rank = R1.new_rank";
+                SET tracker_report_renderer_table_columns.`rank` = R1.new_rank";
         $this->update($sql);
     }
 }

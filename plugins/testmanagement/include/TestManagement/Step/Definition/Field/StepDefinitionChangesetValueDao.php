@@ -44,7 +44,7 @@ class StepDefinitionChangesetValueDao extends FieldValueDao
         $sql = "SELECT *
                 FROM plugin_testmanagement_changeset_value_stepdef
                 WHERE changeset_value_id = $changeset_value_id
-                ORDER BY rank ASC";
+                ORDER BY `rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -69,7 +69,7 @@ class StepDefinitionChangesetValueDao extends FieldValueDao
         }
         if ($values) {
             $values = implode(',', $values);
-            $sql    = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, expected_results, expected_results_format, rank)
+            $sql    = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, expected_results, expected_results_format, `rank`)
                     VALUES $values";
 
             return $this->update($sql);
@@ -87,8 +87,8 @@ class StepDefinitionChangesetValueDao extends FieldValueDao
     {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql  = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, expected_results, expected_results_format, rank)
-                SELECT $to, description, description_format, expected_results, expected_results_format, rank
+        $sql  = "INSERT INTO plugin_testmanagement_changeset_value_stepdef(changeset_value_id, description, description_format, expected_results, expected_results_format, `rank`)
+                SELECT $to, description, description_format, expected_results, expected_results_format, `rank`
                 FROM plugin_testmanagement_changeset_value_stepdef
                 WHERE changeset_value_id = $from";
 
