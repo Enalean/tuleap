@@ -44,7 +44,7 @@ final class SiteDeployImagesCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        ForgeConfig::loadLocalInc();
+        ForgeConfig::loadInSequence();
         (new SiteDeployImages())->deploy($output);
         return 0;
     }

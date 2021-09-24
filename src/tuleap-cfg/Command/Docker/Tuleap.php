@@ -118,7 +118,7 @@ final class Tuleap
         $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
         ForgeConfig::store();
 
-        ForgeConfig::loadLocalInc();
+        ForgeConfig::loadInSequence();
         $server_name = ForgeConfig::get('sys_default_domain', null);
         if (! $server_name) {
             throw new \RuntimeException('No `sys_default_domain` defined, abort');
@@ -156,7 +156,6 @@ final class Tuleap
 
 
         $output->writeln('<info>Run forgeupgrade</info>');
-        ForgeConfig::loadDatabaseInc();
         $forge_upgrade = new ForgeUpgrade(
             DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
             $logger,

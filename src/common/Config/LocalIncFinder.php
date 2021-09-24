@@ -25,7 +25,7 @@ class Config_LocalIncFinder
     {
         $default_path = '/etc/tuleap/conf/local.inc';
         $centos5_path = '/etc/codendi/conf/local.inc';
-        $local_inc    = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
+        $local_inc    = getenv('TULEAP_LOCAL_INC') ?: getenv('CODENDI_LOCAL_INC');
 
         if (! $local_inc) {
             if (is_file($default_path)) {

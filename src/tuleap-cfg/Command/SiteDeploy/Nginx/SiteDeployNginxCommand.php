@@ -50,7 +50,7 @@ final class SiteDeployNginxCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        ForgeConfig::loadLocalInc();
+        ForgeConfig::loadInSequence();
 
         $development    = $input->getOption(self::OPT_DEVELOPMENT) === true;
         $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);

@@ -49,8 +49,7 @@ final class LogToSyslog
         if (getenv(self::ENV_LOGGER) !== LogToSyslogAlias::CONFIG_LOGGER_SYSLOG) {
             return;
         }
-        \ForgeConfig::loadLocalInc();
-        \ForgeConfig::loadDatabaseInc();
+        \ForgeConfig::loadInSequence();
 
         $this->tuleap();
         $this->nginx();
