@@ -109,7 +109,7 @@ class TaskBuilder
             new PlanningAdapter(\PlanningFactory::build(), $retrieve_user),
             $mirror_creator,
             $logger,
-            new PendingArtifactCreationDao(),
+            new PendingProgramIncrementCreationDAO(),
             $user_stories_planner,
             $program_dao,
             new ProgramManagementProjectAdapter(\ProjectManager::instance()),

@@ -35,6 +35,7 @@ use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
+use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
@@ -42,9 +43,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepr
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetAdder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
@@ -495,7 +496,7 @@ final class program_managementPlugin extends Plugin
                         $logger
                     ),
                     new ProgramDao(),
-                    $this->getProgramManagementProjectAdapter(),
+                    new ProgramManagementProjectAdapter($project_manager),
                     $user_manager_adapter
                 ),
                 new PlanDao(),
@@ -657,14 +658,12 @@ final class program_managementPlugin extends Plugin
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
         $handler = new ArtifactCreatedHandler(
-            new ProgramDao(),
-            $this->getProgramIncrementRunner(),
-            new PendingArtifactCreationDao(),
-            new ProgramIncrementsDAO(),
             new ArtifactsExplicitTopBacklogDAO(),
-            $this->getLogger()
+            new ProgramIncrementsDAO(),
+            new PendingProgramIncrementCreationDAO(),
+            $this->getProgramIncrementRunner(),
         );
-        $handler->handle($event);
+        $handler->handle(ArtifactCreatedProxy::fromArtifactCreated($event));
     }
 
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
@@ -1163,24 +1162,21 @@ final class program_managementPlugin extends Plugin
         return BackendLogger::getDefaultLogger("program_management_syslog");
     }
 
-    private function getProgramManagementProjectAdapter(): ProgramManagementProjectAdapter
-    {
-        return new ProgramManagementProjectAdapter(ProjectManager::instance());
-    }
-
-    private function getProgramIncrementRunner(): CreateProgramIncrementsRunner
+    private function getProgramIncrementRunner(): ProgramIncrementCreationDispatcher
     {
         $logger = $this->getLogger();
 
-        return new CreateProgramIncrementsRunner(
+        return new ProgramIncrementCreationDispatcher(
             $this->getLogger(),
             new QueueFactory($logger),
             new ReplicationDataAdapter(
                 Tracker_ArtifactFactory::instance(),
                 UserManager::instance(),
-                new PendingArtifactCreationDao(),
+                new PendingProgramIncrementCreationDAO(),
                 Tracker_Artifact_ChangesetFactoryBuilder::build(),
-                new ProgramIncrementsDAO()
+                new ProgramIncrementsDAO(),
+                new ProgramDao(),
+                new ProgramManagementProjectAdapter(ProjectManager::instance())
             ),
             new TaskBuilder()
         );
@@ -1314,7 +1310,7 @@ final class program_managementPlugin extends Plugin
                     $logger
                 ),
                 new ProgramDao(),
-                $this->getProgramManagementProjectAdapter(),
+                new ProgramManagementProjectAdapter(ProjectManager::instance()),
                 $retrieve_user
             )
         );

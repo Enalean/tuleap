@@ -29,20 +29,21 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Replicatio
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 
-final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementCreationDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 18;
     private const USER_ID     = 120;
@@ -57,24 +58,25 @@ final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->task_builder           = $this->createMock(TaskBuilder::class);
     }
 
-    private function getRunner(): CreateProgramIncrementsRunner
+    private function getDispatcher(): ProgramIncrementCreationDispatcher
     {
-        $logger = new NullLogger();
-        $task   = new CreateProgramIncrementsTask(
+        $logger          = new NullLogger();
+        $project_builder = new BuildProjectStub();
+        $task            = new CreateProgramIncrementsTask(
             RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(51),
             $this->createStub(ProgramIncrementsCreator::class),
             $logger,
             $this->pending_creation_store,
             $this->createStub(PlanUserStoriesInMirroredProgramIncrements::class),
             SearchTeamsOfProgramStub::buildTeams(163, 120),
-            new BuildProjectStub(),
+            $project_builder,
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer(GatherFieldValuesStub::withDefault()),
             RetrieveChangesetSubmissionDateStub::withDefaults()
         );
         $this->task_builder->method('build')->willReturn($task);
 
-        return new CreateProgramIncrementsRunner(
+        return new ProgramIncrementCreationDispatcher(
             $logger,
             $this->queue_factory,
             new ReplicationDataAdapter(
@@ -82,13 +84,15 @@ final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestC
                 $this->createStub(\UserManager::class),
                 $this->pending_creation_store,
                 $this->createStub(\Tracker_Artifact_ChangesetFactory::class),
-                VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement()
+                VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+                RetrieveProgramOfProgramIncrementStub::withProgram(197),
+                $project_builder
             ),
             $this->task_builder
         );
     }
 
-    public function testItExecuteMirrorsCreation(): void
+    public function testItDispatchesAMessageForProgramIncrementCreation(): void
     {
         $queue = $this->createMock(PersistentQueue::class);
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
@@ -100,9 +104,9 @@ final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestC
                 ['artifact_id' => self::ARTIFACT_ID, 'user_id' => self::USER_ID]
             );
 
-        $replication_data = ReplicationDataBuilder::buildWithArtifactIdAndUserId(self::ARTIFACT_ID, self::USER_ID);
+        $creation = ProgramIncrementCreationBuilder::buildWithIds(self::USER_ID, self::ARTIFACT_ID, 73, 4043);
 
-        $this->getRunner()->executeProgramIncrementsCreation($replication_data);
+        $this->getDispatcher()->dispatchCreation($creation);
     }
 
     public function testSkipsEventWhenReplicationDataDoesNotExist(): void
@@ -114,9 +118,10 @@ final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestC
                 'payload'    => ['artifact_id' => self::ARTIFACT_ID, 'user_id' => self::USER_ID]
             ]
         );
+
         $this->pending_creation_store->method('getPendingArtifactById')->willReturn(null);
 
         $this->task_builder->expects(self::never())->method('build');
-        $this->getRunner()->addListener($event);
+        $this->getDispatcher()->addListener($event);
     }
 }

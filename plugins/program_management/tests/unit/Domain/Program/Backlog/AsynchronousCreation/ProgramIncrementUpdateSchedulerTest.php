@@ -25,8 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\StoreProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
@@ -34,21 +36,20 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
 final class ProgramIncrementUpdateSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramIncrementUpdate $update;
+    private StoreProgramIncrementUpdateStub $update_store;
+    private DispatchProgramIncrementUpdateStub $update_dispatcher;
 
     protected function setUp(): void
     {
-        $this->update = ProgramIncrementUpdateBuilder::build();
+        $this->update            = ProgramIncrementUpdateBuilder::build();
+        $this->update_store      = StoreProgramIncrementUpdateStub::withCount();
+        $this->update_dispatcher = DispatchProgramIncrementUpdateStub::withCount();
     }
 
     private function getScheduler(): ProgramIncrementUpdateScheduler
     {
         return new ProgramIncrementUpdateScheduler(
-            new class implements StoreProgramIncrementUpdate {
-                public function storeUpdate(ProgramIncrementUpdate $update): void
-                {
-                    // Side effects
-                }
-            },
+            $this->update_store,
             new IterationCreationDetector(
                 VerifyIterationsFeatureActiveStub::withActiveFeature(),
                 SearchIterationsStub::withIterationIds(101, 102),
@@ -63,18 +64,14 @@ final class ProgramIncrementUpdateSchedulerTest extends \Tuleap\Test\PHPUnit\Tes
                     // Side effects
                 }
             },
-            new class implements DispatchProgramIncrementUpdate {
-                public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
-                {
-                    // Side effects
-                }
-            }
+            $this->update_dispatcher
         );
     }
 
     public function testItSchedulesAnUpdateAndIterationCreations(): void
     {
         $this->getScheduler()->replicateProgramIncrementUpdate($this->update);
-        $this->expectNotToPerformAssertions();
+        self::assertSame(1, $this->update_store->getCallCount());
+        self::assertSame(1, $this->update_dispatcher->getCallCount());
     }
 }

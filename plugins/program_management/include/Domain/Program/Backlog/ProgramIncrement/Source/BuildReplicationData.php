@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredP
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactUserNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 
 interface BuildReplicationData
 {
@@ -36,4 +37,5 @@ interface BuildReplicationData
      * @throws StoredProgramIncrementNoLongerValidException
      */
     public function buildFromArtifactAndUserId(int $artifact_id, int $user_id): ?ReplicationData;
+    public function buildFromProgramIncrementCreation(ProgramIncrementCreation $creation): ReplicationData;
 }

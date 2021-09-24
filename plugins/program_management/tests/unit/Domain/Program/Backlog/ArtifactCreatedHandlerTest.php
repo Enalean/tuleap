@@ -22,97 +22,65 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Psr\Log\NullLogger;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
-use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
+use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementCreationStub;
+use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
+use Tuleap\ProgramManagement\Tests\Stub\StoreProgramIncrementCreationStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private int $artifact_id     = 1;
-    private int $current_user_id = 1001;
-    private int $changeset_id    = 21;
-    private ArtifactCreated $event;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PendingArtifactCreationStore
-     */
-    private $pending_artifact_creation_store;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&RunProgramIncrementCreation
-     */
-    private $asyncronous_runner;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&RemovePlannedFeaturesFromTopBacklog
-     */
-    private $feature_remover;
-    private VerifyIsProgram $program_verifier;
+    private ArtifactCreatedEvent $event;
+    private RemovePlannedFeaturesFromTopBacklogStub $feature_remover;
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
+    private StoreProgramIncrementCreationStub $creation_store;
+    private DispatchProgramIncrementCreationStub $creation_dispatcher;
 
     protected function setUp(): void
     {
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
+        $this->event = ArtifactCreatedEventStub::withIds(
+            1,
+            TrackerIdentifierStub::withId(15),
+            UserIdentifierStub::withId(1001),
+            21
+        );
 
-        $current_user = UserTestBuilder::aUser()->withId($this->current_user_id)->build();
-        $artifact     = new Artifact($this->artifact_id, $tracker->getId(), $current_user->getId(), 12345678, false);
-        $artifact->setTracker($tracker);
-        $changeset   = new \Tracker_Artifact_Changeset($this->changeset_id, $artifact, 36, 12345678, '');
-        $this->event = new ArtifactCreated($artifact, $changeset, $current_user);
-
-        $this->program_increment_verifier      = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
-        $this->program_verifier                = VerifyIsProgramStub::withValidProgram();
-        $this->pending_artifact_creation_store = $this->createMock(PendingArtifactCreationStore::class);
-        $this->asyncronous_runner              = $this->createMock(RunProgramIncrementCreation::class);
-        $this->feature_remover                 = $this->createMock(RemovePlannedFeaturesFromTopBacklog::class);
+        $this->feature_remover            = RemovePlannedFeaturesFromTopBacklogStub::withCount();
+        $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->creation_store             = StoreProgramIncrementCreationStub::withCount();
+        $this->creation_dispatcher        = DispatchProgramIncrementCreationStub::withCount();
     }
 
     private function getHandler(): ArtifactCreatedHandler
     {
         return new ArtifactCreatedHandler(
-            $this->program_verifier,
-            $this->asyncronous_runner,
-            $this->pending_artifact_creation_store,
-            $this->program_increment_verifier,
             $this->feature_remover,
-            new NullLogger()
+            $this->program_increment_verifier,
+            $this->creation_store,
+            $this->creation_dispatcher
         );
     }
 
-    public function testHandleCleansUpTopBacklogAndDelegatesToAsynchronousMirrorCreator(): void
+    public function testHandleCleansUpTopBacklogAndDispatchesProgramIncrementCreation(): void
     {
-        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
-        $this->pending_artifact_creation_store->expects(self::once())
-            ->method('addArtifactToPendingCreation')
-            ->with($this->artifact_id, $this->current_user_id, $this->changeset_id);
-
-        $this->asyncronous_runner->expects(self::once())->method('executeProgramIncrementsCreation');
-
         $this->getHandler()->handle($this->event);
+
+        self::assertSame(1, $this->feature_remover->getCallCount());
+        self::assertSame(1, $this->creation_store->getCallCount());
+        self::assertSame(1, $this->creation_dispatcher->getCallCount());
     }
 
-    public function testHandleReactsOnlyToArtifactsFromProgramProjects(): void
-    {
-        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
-        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
-        $this->asyncronous_runner->expects(self::never())->method('executeProgramIncrementsCreation');
-
-        $this->getHandler()->handle($this->event);
-    }
-
-    public function testHandleReactsOnlyToTrackersThatAreProgramIncrements(): void
+    public function testItOnlyCleansUpTopBacklogWhenArtifactIsNotAProgramIncrement(): void
     {
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
-        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
-        $this->asyncronous_runner->expects(self::never())->method('executeProgramIncrementsCreation');
 
         $this->getHandler()->handle($this->event);
+
+        self::assertSame(1, $this->feature_remover->getCallCount());
+        self::assertSame(0, $this->creation_store->getCallCount());
+        self::assertSame(0, $this->creation_dispatcher->getCallCount());
     }
 }

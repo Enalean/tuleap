@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\Queue\WorkerEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 
-interface RunProgramIncrementCreation
+interface StoreProgramIncrementCreation
 {
-    /**
-     * @throw ProgramIncrementCreationException
-     */
-    public function addListener(WorkerEvent $event): void;
-
-    public function executeProgramIncrementsCreation(ReplicationData $replication_data): void;
+    public function storeCreation(ProgramIncrementCreation $creation): void;
 }

@@ -68,12 +68,10 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             self::CHANGESET_ID
         );
 
-        $user                   = UserIdentifierStub::withId(self::USER_ID);
-        $tracker                = TrackerIdentifierStub::withId(self::PROGRAM_INCREMENT_TRACKER_ID);
         $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
-            $tracker,
-            $user,
+            TrackerIdentifierStub::withId(self::PROGRAM_INCREMENT_TRACKER_ID),
+            UserIdentifierStub::withId(self::USER_ID),
             self::CHANGESET_ID
         );
     }

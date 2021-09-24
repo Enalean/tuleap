@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -38,6 +39,7 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
     private ArtifactUpdatedEventStub $artifact_updated;
+    private ArtifactCreatedEventStub $artifact_created;
 
     protected function setUp(): void
     {
@@ -50,6 +52,12 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker                = TrackerIdentifierStub::withId(127);
         $changeset_id           = 919;
         $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
+            self::PROGRAM_INCREMENT_ID,
+            $tracker,
+            $this->user,
+            $changeset_id
+        );
+        $this->artifact_created = ArtifactCreatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
             $tracker,
             $this->user,
@@ -90,21 +98,35 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsNullWhenArtifactUpdatedIsNotAProgramIncrement(): void
+    public function dataProviderEvent(): array
+    {
+        return [
+            'with ArtifactUpdated' => ['artifact_updated'],
+            'with ArtifactCreated' => ['artifact_created'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderEvent
+     */
+    public function testItReturnsNullWhenArtifactFromEventIsNotAProgramIncrement(string $property_to_call): void
     {
         self::assertNull(
-            ProgramIncrementIdentifier::fromArtifactUpdated(
+            ProgramIncrementIdentifier::fromArtifactEvent(
                 VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
-                $this->artifact_updated
+                $this->{$property_to_call}
             )
         );
     }
 
-    public function testItReturnsAProgramIncrementFromArtifactUpdated(): void
+    /**
+     * @dataProvider dataProviderEvent
+     */
+    public function testItReturnsAProgramIncrementFromArtifactEvent(string $property_to_call): void
     {
-        $program_increment = ProgramIncrementIdentifier::fromArtifactUpdated(
+        $program_increment = ProgramIncrementIdentifier::fromArtifactEvent(
             $this->tracker_verifier,
-            $this->artifact_updated
+            $this->{$property_to_call}
         );
         self::assertSame(self::PROGRAM_INCREMENT_ID, $program_increment->getId());
     }
