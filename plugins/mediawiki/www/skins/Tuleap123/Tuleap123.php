@@ -329,9 +329,7 @@ class Tuleap123Template extends BaseTemplate
             }
 
             if ($boxName == 'SEARCH') {
-                if ($this->isCompatibilityViewEnabled()) {
-                    $this->searchBox();
-                }
+                $this->searchBox();
             } elseif ($boxName == 'TOOLBOX') {
                 $this->toolbox();
             } elseif ($boxName == 'LANGUAGES') {
