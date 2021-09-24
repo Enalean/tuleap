@@ -16,7 +16,7 @@ CREATE TABLE plugin_docman_item (
   user_id INT(11) UNSIGNED NULL,
   status TINYINT(4) DEFAULT 100 NOT NULL,
   obsolescence_date int(11) DEFAULT 0 NOT NULL,
-  rank INT(11) DEFAULT 0 NOT NULL,
+  `rank` INT(11) DEFAULT 0 NOT NULL,
   item_type INT(11) UNSIGNED NULL,
   link_url TEXT NULL,
   wiki_page TEXT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE plugin_docman_item (
   PRIMARY KEY(item_id),
   KEY idx_group_id (group_id),
   KEY parent_id (parent_id),
-  KEY rank (rank),
+  KEY `rank` (`rank`),
   KEY search (group_id, delete_date, obsolescence_date),
   KEY idx_create_date (create_date),
   KEY idx_delete_date (delete_date),
@@ -47,7 +47,7 @@ CREATE TABLE plugin_docman_item_deleted (
   user_id INT(11) UNSIGNED NULL,
   status TINYINT(4) DEFAULT 100 NOT NULL,
   obsolescence_date int(11) DEFAULT 0 NOT NULL,
-  rank INT(11) DEFAULT 0 NOT NULL,
+  `rank` INT(11) DEFAULT 0 NOT NULL,
   item_type INT(11) UNSIGNED NULL,
   link_url TEXT NULL,
   wiki_page TEXT NULL,
@@ -237,10 +237,10 @@ CREATE TABLE plugin_docman_metadata_love (
   value_id int(11) NOT NULL auto_increment,
   name text NOT NULL,
   description text NOT NULL,
-  rank int(11) NOT NULL default '0',
+  `rank` int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
   PRIMARY KEY  (value_id),
-  KEY rank (rank),
+  KEY `rank` (`rank`),
   KEY name (name (10)),
   KEY idx_fv_status (status)
 );
@@ -315,13 +315,13 @@ DROP TABLE IF EXISTS plugin_docman_approval_user;
 CREATE TABLE plugin_docman_approval_user (
   table_id INT(11) UNSIGNED NOT NULL,
   reviewer_id INT(11) UNSIGNED NOT NULL,
-  rank INT(11) DEFAULT 0 NOT NULL,
+  `rank` INT(11) DEFAULT 0 NOT NULL,
   date INT(11) UNSIGNED NULL,
   state TINYINT(4) DEFAULT 0 NOT NULL,
   comment TEXT NULL,
   version INT(11) UNSIGNED NULL,
   PRIMARY KEY(table_id, reviewer_id),
-  INDEX rank (rank),
+  INDEX `rank` (`rank`),
   INDEX idx_reviewer (reviewer_id, table_id)
 );
 
@@ -452,10 +452,10 @@ INSERT INTO forgeconfig VALUES ('plugin_docman_max_number_of_files', 50);
 INSERT INTO forgeconfig VALUES ('plugin_docman_max_file_size', 67108864);
 
 -- Enable service for project 1 and 100
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
 
 -- Create service for all other projects (but disabled)
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
 SELECT DISTINCT group_id , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', CONCAT('/plugins/docman/?group_id=', group_id), 1 , 0 , 'system',  95
 FROM service
 WHERE group_id NOT IN (SELECT group_id
@@ -549,11 +549,11 @@ INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 2, 0);
 INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 3, 0);
 INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 4, 1);
 
-INSERT INTO plugin_docman_metadata_love(value_id, name, description, rank, status) VALUES (100, 'love_special_none_name_key', 'love_special_none_desc_key', 0, 'P');
+INSERT INTO plugin_docman_metadata_love(value_id, name, description, `rank`, status) VALUES (100, 'love_special_none_name_key', 'love_special_none_desc_key', 0, 'P');
 
 -- Instanciate docman in default template project
 INSERT INTO plugin_docman_item_id VALUES (NULL);
-INSERT INTO plugin_docman_item (item_id, parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded)
+INSERT INTO plugin_docman_item (item_id, parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, `rank`, item_type, link_url, wiki_page, file_is_embedded)
 VALUES (LAST_INSERT_ID(), 0, 100, 'roottitle_lbl_key', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
 
 INSERT INTO  plugin_docman_project_settings (group_id, view, use_obsolescence_date, use_status)

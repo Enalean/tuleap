@@ -48,7 +48,7 @@ EOT;
                      ' user_id INT(11) UNSIGNED NULL,' .
                      ' status TINYINT(4) DEFAULT 100 NOT NULL,' .
                      ' obsolescence_date int(11) DEFAULT 0 NOT NULL,' .
-                     ' rank INT(11) DEFAULT 0 NOT NULL,' .
+                     ' `rank` INT(11) DEFAULT 0 NOT NULL,' .
                      ' item_type INT(11) UNSIGNED NULL,' .
                      ' link_url TEXT NULL,' .
                      ' wiki_page TEXT NULL,' .
@@ -59,11 +59,11 @@ EOT;
 
         $sql = 'INSERT INTO plugin_docman_item_deleted (item_id, parent_id, group_id, title, ' .
                         ' description, create_date, update_date, delete_date, purge_date, ' .
-                        ' user_id, status, obsolescence_date, rank, item_type, link_url, ' .
+                        ' user_id, status, obsolescence_date, `rank`, item_type, link_url, ' .
                         ' wiki_page, file_is_embedded) ' .
                         ' SELECT item_id, parent_id, group_id, title, ' .
                         ' description, create_date, update_date, delete_date, delete_date, ' .
-                        ' user_id, status, obsolescence_date, rank, item_type, link_url,' .
+                        ' user_id, status, obsolescence_date, `rank`, item_type, link_url,' .
                         ' wiki_page, file_is_embedded ' .
                         ' FROM plugin_docman_item ' .
                         ' WHERE delete_date IS NOT NULL';
