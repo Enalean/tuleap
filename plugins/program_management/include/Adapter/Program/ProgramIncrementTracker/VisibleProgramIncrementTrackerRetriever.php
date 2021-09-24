@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTra
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisibleProgramIncrementTracker

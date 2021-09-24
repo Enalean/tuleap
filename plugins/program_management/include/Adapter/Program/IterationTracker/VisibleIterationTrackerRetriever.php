@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVis
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VisibleIterationTrackerRetriever implements RetrieveVisibleIterationTracker

@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Retrie
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 use Tuleap\Project\REST\ProjectReference;
