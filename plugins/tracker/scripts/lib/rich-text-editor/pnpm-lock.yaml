@@ -1,0 +1,93 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
+  '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
+  '@types/bootstrap': ^3.4.0
+  '@types/ckeditor': ^4.9.10
+  '@types/dompurify': ^2.2.2
+  '@types/marked': ^2.0.2
+  '@types/turndown': ^5.0.0
+  dompurify: ^2.2.9
+  lit-html: ^1.4.1
+  marked: ^2.0.3
+  turndown: ^7.0.0
+
+dependencies:
+  '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
+  '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
+  dompurify: 2.3.1
+  lit-html: 1.4.1
+  marked: 2.0.3
+  turndown: 7.1.1
+
+devDependencies:
+  '@types/bootstrap': 3.4.0
+  '@types/ckeditor': 4.9.10
+  '@types/dompurify': 2.2.2
+  '@types/marked': 2.0.2
+  '@types/turndown': 5.0.1
+
+packages:
+
+  /@types/bootstrap/3.4.0:
+    resolution: {integrity: sha512-LS05hVAAsX86qbHg7W+ydwBlNHrVCoFw6wEP3/uW4eYmRXl08bWmPeN/+onM+8qZTFfDgUlG/OItJI8SW972oQ==}
+    dependencies:
+      '@types/jquery': 3.5.5
+    dev: true
+
+  /@types/ckeditor/4.9.10:
+    resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
+    dev: true
+
+  /@types/dompurify/2.2.2:
+    resolution: {integrity: sha512-8nNWfAa8/oZjH3OLY5Wsxu9ueo0NwVUotIi353g0P2+N5BuTLJyAVOnF4xBUY0NyFUGJHY05o1pO2bqLto+lmA==}
+    dependencies:
+      '@types/trusted-types': 2.0.1
+    dev: true
+
+  /@types/jquery/3.5.5:
+    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
+    dependencies:
+      '@types/sizzle': 2.3.2
+    dev: true
+
+  /@types/marked/2.0.2:
+    resolution: {integrity: sha512-P4zanhCQKs4tiWPPBGpB7lHflgFCP9DFGNI5YtpW9MALKoy2qs9rHNWJ+z55cegD9uCfnmsKuaosq9FNvbxrOw==}
+    dev: true
+
+  /@types/sizzle/2.3.2:
+    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
+    dev: true
+
+  /@types/trusted-types/2.0.1:
+    resolution: {integrity: sha512-TmhE+/eI8PP7EwT9EbK8i74F1ryNn0LToCyEaLpN+X+A3LS1j4CpsCk9Jwq6Y2Uu7w9wdrKl6bujdj5LSsDKKA==}
+    dev: true
+
+  /@types/turndown/5.0.1:
+    resolution: {integrity: sha512-N8Ad4e3oJxh9n9BiZx9cbe/0M3kqDpOTm2wzj13wdDUxDPjfjloWIJaquZzWE1cYTAHpjOH3rcTnXQdpEfS/SQ==}
+    dev: true
+
+  /domino/2.1.6:
+    resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
+    dev: false
+
+  /dompurify/2.3.1:
+    resolution: {integrity: sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==}
+    dev: false
+
+  /lit-html/1.4.1:
+    resolution: {integrity: sha512-B9btcSgPYb1q4oSOb/PrOT6Z/H+r6xuNzfH4lFli/AWhYwdtrgQkQWBbIc6mdnf6E2IL3gDXdkkqNktpU0OZQA==}
+    dev: false
+
+  /marked/2.0.3:
+    resolution: {integrity: sha512-5otztIIcJfPc2qGTN8cVtOJEjNJZ0jwa46INMagrYfk0EvqtRuEHLsEe0LrFS0/q+ZRKT0+kXK7P2T1AN5lWRA==}
+    engines: {node: '>= 8.16.2'}
+    hasBin: true
+    dev: false
+
+  /turndown/7.1.1:
+    resolution: {integrity: sha512-BEkXaWH7Wh7e9bd2QumhfAXk5g34+6QUmmWx+0q6ThaVOLuLUqsnkq35HQ5SBHSaxjSfSM7US5o4lhJNH7B9MA==}
+    dependencies:
+      domino: 2.1.6
+    dev: false

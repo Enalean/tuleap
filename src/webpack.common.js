@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const loadJsonFile = require("load-json-file");
+const fs = require("fs");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const path = require("path");
@@ -30,8 +30,10 @@ const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./www/assets/core");
 const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/");
 
-const pkg = loadJsonFile.sync(path.resolve(__dirname, "package-lock.json"));
-const ckeditor_version = pkg.dependencies.ckeditor4.version;
+const pkg = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, "./node_modules/ckeditor4/package.json"))
+);
+const ckeditor_version = pkg.version;
 
 // Prototype doesn't like to have its "$super" argument mangled due to the fact
 // that it checks for its presence during class initialization

@@ -17,11 +17,8 @@
   "devDependencies": {
     "@types/jquery": "^3.5.5"
   },
-  "config": {
-    "bin": "../../../node_modules/.bin"
-  },
   "scripts": {
-    "build": "echo 'I exist only to make lerna build things that depend on me in the right order'",
-    "test": "$npm_package_config_bin/jest"
+    "build": "echo 'I exist only to make pnpm build things that depend on me in the right order'",
+    "test": "jest"
   }
 }

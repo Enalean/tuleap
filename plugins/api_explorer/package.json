@@ -4,14 +4,12 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "config": {
-    "bin": "../../node_modules/.bin/"
-  },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
   },
   "dependencies": {
+    "react": "^17.0.2",
     "swagger-ui": "^3.49.0"
   },
   "devDependencies": {

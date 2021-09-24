@@ -23,8 +23,17 @@ import type { RootState } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import ProjectInformationInputPrivacyList from "./ProjectInformationInputPrivacyList.vue";
 import type { ConfigurationState } from "../../../store/configuration";
+import * as list_picker from "@tuleap/list-picker";
 
 describe("ProjectInformationInputPrivacyList", () => {
+    beforeEach(() => {
+        jest.spyOn(list_picker, "createListPicker").mockResolvedValue({
+            destroy: () => {
+                // Nothing to do since we did not really create something
+            },
+        });
+    });
+
     describe("The selected default project visibility when the component is mounted -", () => {
         it("Should select the 'Public' by default", async () => {
             const configuration_state: ConfigurationState = {

@@ -1,0 +1,13 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@popperjs/core': ^2.9.2
+
+dependencies:
+  '@popperjs/core': 2.9.2
+
+packages:
+
+  /@popperjs/core/2.9.2:
+    resolution: {integrity: sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==}
+    dev: false

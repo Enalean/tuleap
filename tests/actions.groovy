@@ -24,7 +24,7 @@ def runJestTests(String name, String path, Boolean with_coverage = false) {
     export JEST_JUNIT_OUTPUT_DIR="\$WORKSPACE/results/jest/"
     export JEST_JUNIT_OUTPUT_NAME="test-${name}-results.xml"
     export JEST_SUITE_NAME="Jest ${name} test suite"
-    npm --prefix "sources/" test -- '${path}' --ci --maxWorkers=2 --reporters=default --reporters=jest-junit ${coverage_params}
+    pnpm --prefix "sources/" test -- '${path}' --ci --maxWorkers=2 --reporters=default --reporters=jest-junit ${coverage_params}
     """
 }
 
@@ -63,13 +63,13 @@ def runBuildAndRun(String os) {
 
 def runESLint() {
     dir ('sources') {
-        sh 'npm run eslint -- --quiet --format=checkstyle --output-file=../results/eslint/checkstyle.xml .'
+        sh 'pnpm run eslint -- --quiet --format=checkstyle --output-file=../results/eslint/checkstyle.xml .'
     }
 }
 
 def runStylelint() {
     dir ('sources') {
-        sh 'npm run stylelint **/*.scss **/*.vue'
+        sh 'pnpm run stylelint **/*.scss **/*.vue'
     }
 }
 

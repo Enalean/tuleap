@@ -1,0 +1,32 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/ckeditor-image-upload': file:../../../../../src/scripts/lib/ckeditor-image-upload
+  '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
+  css.escape: ^1.5.1
+  pretty-kibibytes: ^4.0.4
+  sprintf-js: ^1.1.2
+
+dependencies:
+  '@tuleap/ckeditor-image-upload': link:../../../../../src/scripts/lib/ckeditor-image-upload
+  '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
+  pretty-kibibytes: 4.0.4
+  sprintf-js: 1.1.2
+
+devDependencies:
+  css.escape: 1.5.1
+
+packages:
+
+  /css.escape/1.5.1:
+    resolution: {integrity: sha1-QuJ9T6BK4y+TGktNQZH6nN3ul8s=}
+    dev: true
+
+  /pretty-kibibytes/4.0.4:
+    resolution: {integrity: sha1-JGKqemGMKjqLQ5Rm4isEolBG3s4=}
+    engines: {node: '>=4'}
+    dev: false
+
+  /sprintf-js/1.1.2:
+    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
+    dev: false

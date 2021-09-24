@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/html-escaper': file:../../src/scripts/lib/html-escaper
+
+dependencies:
+  '@tuleap/html-escaper': link:../../src/scripts/lib/html-escaper

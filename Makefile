@@ -128,15 +128,16 @@ generate-templates-plugins:
 # Tests and all
 #
 
-post-checkout-build: composer generate-mo generate-templates npm-build ## Rebuild the application, can be run without stack up
+post-checkout-build: composer generate-mo generate-templates js-build ## Rebuild the application, can be run without stack up
 
 post-checkout-reload-env: dev-clear-cache dev-forgeupgrade restart-services ## Clear caches, forgeupgrade and restart services
 
 post-checkout: post-checkout-build post-checkout-reload-env ## Clear caches, run forgeupgrade, build assets and generate language files
 
-npm-build:
-	npm install
-	npm run build
+.PHONY: js-build
+js-build:
+	pnpm install
+	pnpm run build
 
 redeploy-nginx: ## Redeploy nginx configuration
 	@$(DOCKER_COMPOSE) exec web tuleap-cfg site-deploy:nginx
@@ -233,7 +234,7 @@ psalm-unused-code: ## Run Psalm (PHP static analysis tool) detection of unused c
 psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
 	$(eval TMPPSALM := $(shell mktemp -d))
 	git checkout-index -a --prefix="$(TMPPSALM)/"
-	$(MAKE) -C "$(TMPPSALM)/" composer npm-build
+	$(MAKE) -C "$(TMPPSALM)/" composer js-build
 	pushd "$(TMPPSALM)"; \
 	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline; \
 	popd
@@ -244,7 +245,7 @@ psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch,
 	$(eval TMPPSALM := $(shell mktemp -d))
 	git checkout-index -a --prefix="$(TMPPSALM)/"
 	rm "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml
-	$(MAKE) -C "$(TMPPSALM)/" composer npm-build
+	$(MAKE) -C "$(TMPPSALM)/" composer js-build
 	pushd "$(TMPPSALM)"; \
 	$(PHP) -d display_errors=1 -d display_startup_errors=1 -d memory_limit=-1 \
 	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml; \
@@ -266,11 +267,11 @@ deptrac: ## Execute deptrac. Use CONFIG to choose the configuration file to eval
 
 eslint: ## Execute eslint. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@npm run eslint -- --quiet $(FILES)
+	@pnpm run eslint -- --quiet $(FILES)
 
 eslint-fix: ## Execute eslint with --fix to try to fix problems automatically. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@npm run eslint -- --fix --quiet $(FILES)
+	@pnpm run eslint -- --fix --quiet $(FILES)
 
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash

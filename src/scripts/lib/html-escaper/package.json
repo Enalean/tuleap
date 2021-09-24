@@ -17,11 +17,8 @@
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {},
-  "config": {
-    "bin": "../../../../node_modules/.bin"
-  },
   "scripts": {
-    "build": "$npm_package_config_bin/vite build",
-    "watch": "$npm_package_config_bin/vite build --watch --mode development --minify false"
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
   }
 }

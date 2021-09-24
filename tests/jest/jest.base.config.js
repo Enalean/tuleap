@@ -74,7 +74,12 @@ module.exports = {
     // Transpile lit-html because of esmodules in nodejs
     // lit-html is not used globally but by some of the internal Tuleap libs
     // To avoid wasting more developers time than needed we consider it's present everywhere
-    transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
+    transformIgnorePatterns: [
+        `/(?!${esModules})/`,
+        "/angular-locker/",
+        "/dragular/",
+        "/ckeditor4/",
+    ],
     resetModules: true,
     restoreMocks: true,
 };

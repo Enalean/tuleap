@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/concurrency-limit-pool': file:../concurrency-limit-pool
+
+dependencies:
+  '@tuleap/concurrency-limit-pool': link:../concurrency-limit-pool

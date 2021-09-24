@@ -1,2 +1,2 @@
 composer.lock -merge
-package-lock.json -merge
+pnpm-lock.yaml -merge

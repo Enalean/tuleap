@@ -73,8 +73,8 @@ mo:
 
 node:
 	cd $(BASE_DIR) &&\
-	     CYPRESS_INSTALL_BINARY=0 npm install --no-audit &&\
-	     npm run build
+	     CYPRESS_INSTALL_BINARY=0 pnpm install --frozen-lockfile &&\
+	     pnpm run build
 
 composer:
 	$(MAKE) -C $(BASE_DIR) composer preload MODE=Prod
@@ -86,8 +86,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo gener
 			-path '*/.svn' -o\
 			-name '*.less' -o\
 			-name '*.scss' -o\
-			-name '.scss-lint.yml' -o\
-			-name 'package-lock.json' -o\
+			-name 'pnpm-lock.yaml' -o\
 			-name ".git" -o\
 			-name ".gitignore" -o\
 			-name ".gitmodules" -o\
