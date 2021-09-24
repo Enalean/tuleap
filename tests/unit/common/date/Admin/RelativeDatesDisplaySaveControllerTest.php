@@ -41,7 +41,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
     private $preferences_dao;
 
     /**
-     * @var \ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \Tuleap\Config\ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $config_dao;
 
@@ -50,7 +50,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
         $csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
         $csrf_token->shouldReceive('check');
         $date_display_preference_validator = new SelectedDateDisplayPreferenceValidator();
-        $this->config_dao                  = Mockery::mock(\ConfigDao::class);
+        $this->config_dao                  = Mockery::mock(\Tuleap\Config\ConfigDao::class);
         $this->preferences_dao             = Mockery::mock(\UserPreferencesDao::class);
 
         $this->controller = new RelativeDatesDisplaySaveController(

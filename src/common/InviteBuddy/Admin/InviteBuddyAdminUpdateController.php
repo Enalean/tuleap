@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\Admin;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use HTTPRequest;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
@@ -93,7 +93,7 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
         }
 
         if (
-            $this->dao->save(
+            $this->dao->saveInt(
                 InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY,
                 $submitted_max_invitations_by_day
             )

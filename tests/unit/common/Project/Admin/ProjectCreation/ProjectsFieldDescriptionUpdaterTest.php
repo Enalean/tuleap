@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Admin\ProjectCreation;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use Mockery;
 use Project_CustomDescription_CustomDescriptionDao;
 use Tuleap\Admin\ProjectCreation\ProjetFields\ProjectsFieldDescriptionUpdater;
@@ -88,7 +88,7 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $layout = \Mockery::mock(BaseLayout::class);
 
-        $this->config_dao->shouldReceive('save')->withArgs(['enable_not_mandatory_description', false])->once();
+        $this->config_dao->shouldReceive('saveBool')->withArgs(['enable_not_mandatory_description', false])->once();
         $layout->shouldReceive('addFeedback')->once()->withArgs([\Feedback::INFO, Mockery::any()]);
         $layout->shouldReceive('redirect')->once();
 
@@ -103,7 +103,7 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $layout = \Mockery::mock(BaseLayout::class);
 
-        $this->config_dao->shouldReceive('save')->withArgs(['enable_not_mandatory_description', true])->once();
+        $this->config_dao->shouldReceive('saveBool')->withArgs(['enable_not_mandatory_description', true])->once();
         $layout->shouldReceive('addFeedback')->once()->withArgs([\Feedback::INFO, Mockery::any()]);
         $layout->shouldReceive('redirect')->once();
 

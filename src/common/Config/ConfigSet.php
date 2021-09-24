@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-use ConfigDao;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 

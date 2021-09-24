@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery;

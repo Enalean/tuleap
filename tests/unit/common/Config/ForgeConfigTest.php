@@ -107,7 +107,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLoadsFromDatabase(): void
     {
-        $dao = \Mockery::mock(\ConfigDao::class);
+        $dao = \Mockery::mock(\Tuleap\Config\ConfigDao::class);
         $dao->shouldReceive('searchAll')->andReturns([['name' => 'a_var', 'value' => 'its_value']]);
         (new class extends ForgeConfig {
             public static function load(ConfigValueProvider $value_provider): void

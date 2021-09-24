@@ -28,11 +28,11 @@ use Tuleap\Layout\BaseLayout;
 class DocumentFilesUploadLimitsSaver
 {
     /**
-     * @var \ConfigDao
+     * @var \Tuleap\Config\ConfigDao
      */
     private $config_dao;
 
-    public function __construct(\ConfigDao $dao)
+    public function __construct(\Tuleap\Config\ConfigDao $dao)
     {
         $this->config_dao = $dao;
     }
@@ -48,7 +48,7 @@ class DocumentFilesUploadLimitsSaver
             return;
         }
 
-        $this->config_dao->save(DocmanPlugin::PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING, $nb_files);
+        $this->config_dao->saveInt(DocmanPlugin::PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING, $nb_files);
     }
 
     public function saveMaxFileSize(\HTTPRequest $request, BaseLayout $layout): void
@@ -62,6 +62,6 @@ class DocumentFilesUploadLimitsSaver
             return;
         }
 
-        $this->config_dao->save(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, $max_file_size);
+        $this->config_dao->saveInt(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, $max_file_size);
     }
 }

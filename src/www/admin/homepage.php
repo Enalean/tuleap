@@ -19,6 +19,7 @@
   */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Config\ConfigDao;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';

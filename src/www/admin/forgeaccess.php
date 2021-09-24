@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
+use Tuleap\Config\ConfigDao;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 

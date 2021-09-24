@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Admin;
 
-use ConfigDao;
+use Tuleap\Config\ConfigDao;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use Tuleap\Document\Config\FileDownloadLimits;
@@ -101,15 +101,14 @@ class FilesDownloadLimitsAdminSaveController implements DispatchableWithRequest
 
     private function save(int $max_archive_size, int $warning_threshold, BaseLayout $layout): void
     {
-        $success = $this->config_dao->save(FileDownloadLimits::WARNING_THRESHOLD_NAME, $warning_threshold);
-        $success = $this->config_dao->save(FileDownloadLimits::MAX_ARCHIVE_SIZE_NAME, $max_archive_size) && $success;
-
-        if ($success) {
+        try {
+            $this->config_dao->saveInt(FileDownloadLimits::WARNING_THRESHOLD_NAME, $warning_threshold);
+            $this->config_dao->saveInt(FileDownloadLimits::MAX_ARCHIVE_SIZE_NAME, $max_archive_size);
             $layout->addFeedback(
                 \Feedback::INFO,
                 dgettext('tuleap-document', 'Settings have been saved successfully.')
             );
-        } else {
+        } catch (\Exception) {
             $layout->addFeedback(
                 \Feedback::ERROR,
                 dgettext('tuleap-document', 'An error occurred while saving configuration.')
