@@ -141,7 +141,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                     $this->iteration_checker,
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
-                    RetrieveUserStub::withUser($this->user)
                 ),
                 RetrievePlannableTrackersStub::buildIds(1, 2),
                 VerifyTrackerSemanticsStub::withAllSemantics(),

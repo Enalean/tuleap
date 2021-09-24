@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 interface PossibleParentSelectorEvent
 {
-    public function getUser(): UserIdentifier;
+    public function getUser(): UserReference;
 
     public function trackerIsInRootPlanning(): bool;
 

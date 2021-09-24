@@ -31,8 +31,7 @@ use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class TeamCreator implements CreateTeam
@@ -42,8 +41,7 @@ final class TeamCreator implements CreateTeam
         private VerifyIsTeam $team_verifier,
         private VerifyProjectPermission $permission_verifier,
         private BuildTeam $team_builder,
-        private TeamStore $team_store,
-        private RetrieveUser $retrieve_user
+        private TeamStore $team_store
     ) {
     }
 
@@ -54,7 +52,7 @@ final class TeamCreator implements CreateTeam
      * @throws ProgramIsTeamException
      * @throws ProgramCannotBeATeamException
      */
-    public function create(UserIdentifier $user_identifier, int $project_id, array $team_ids): void
+    public function create(UserReference $user, int $project_id, array $team_ids): void
     {
         if (in_array($project_id, $team_ids, true)) {
             throw new ProgramIsTeamException($project_id);
@@ -63,12 +61,11 @@ final class TeamCreator implements CreateTeam
         $program         = ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
-            $this->retrieve_user,
-            $user_identifier,
+            $user,
             ProjectProxy::buildFromProject($project)
         );
         $teams           = array_map(
-            fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $user_identifier),
+            fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $user),
             $team_ids
         );
         $team_collection = TeamCollection::fromProgramAndTeams($program, ...$teams);

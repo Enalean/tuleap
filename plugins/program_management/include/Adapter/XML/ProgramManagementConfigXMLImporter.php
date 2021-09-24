@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Domain\XML\ExtractXMLConfig;
 use Tuleap\ProgramManagement\Domain\XML\ParseXMLConfig;
 use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfig;
@@ -57,7 +57,7 @@ final class ProgramManagementConfigXMLImporter
         ProgramForAdministrationIdentifier $program_identifier,
         string $extraction_path,
         array $created_trackers_mapping,
-        UserIdentifier $user_identifier
+        UserReference $user
     ): void {
         if (! $this->xml_config_parser->isThereAConfigToImport($extraction_path)) {
             $this->logger->info('[ProgramManagementConfigXMLImporter] No config to be imported');
@@ -67,7 +67,7 @@ final class ProgramManagementConfigXMLImporter
         try {
             $this->createConfig(
                 $program_identifier,
-                $user_identifier,
+                $user,
                 ProgramManagementXMLConfig::fromXML(
                     $this->xml_config_parser,
                     $this->xml_config_extractor,
@@ -101,7 +101,7 @@ final class ProgramManagementConfigXMLImporter
      */
     private function createConfig(
         ProgramForAdministrationIdentifier $project,
-        UserIdentifier $user_identifier,
+        UserReference $user,
         ProgramManagementXMLConfig $xml_config
     ): void {
         $plan_program_increment_change = new PlanProgramIncrementChange(
@@ -121,7 +121,7 @@ final class ProgramManagementConfigXMLImporter
 
         $plan_change = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
-            $user_identifier,
+            $user,
             $project->id,
             $xml_config->increments_plannable_trackers_ids,
             $xml_config->ugroups_that_can_prioritize_increments,

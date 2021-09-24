@@ -22,23 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 class ProgramAccessException extends \Exception
 {
     private string $i18n_message;
 
-    public function __construct(int $program_id, RetrieveUser $retrieve_user, UserIdentifier $user_identifier)
+    public function __construct(int $program_id, UserReference $user_identifier)
     {
-        $user = $retrieve_user->getUserWithId($user_identifier);
-        parent::__construct(sprintf('User %s can not access to Program #%d', $user->getRealName(), $program_id));
+        parent::__construct(sprintf('User %s can not access to Program #%d', $user_identifier->getName(), $program_id));
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
                 'User %s can not access to Program #%d'
             ),
-            $user->getRealName(),
+            $user_identifier->getName(),
             $program_id
         );
     }

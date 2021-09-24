@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 interface RetrieveFeatureContent
@@ -43,5 +43,5 @@ interface RetrieveFeatureContent
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function retrieveProgramIncrementContent(int $id, UserIdentifier $user_identifier): array;
+    public function retrieveProgramIncrementContent(int $id, UserReference $user): array;
 }

@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 final class BuildProgramStub implements BuildProgram
 {
@@ -58,7 +58,7 @@ final class BuildProgramStub implements BuildProgram
 
     public function ensureProgramIsAProject(
         int $project_id,
-        UserIdentifier $user,
+        UserReference $user,
         ?PermissionBypass $bypass
     ): void {
         if (! $this->is_a_program) {
@@ -66,7 +66,7 @@ final class BuildProgramStub implements BuildProgram
         }
 
         if (! $this->is_access_allowed) {
-            throw new ProgramAccessException($project_id, RetrieveUserStub::withGenericUser(), $user);
+            throw new ProgramAccessException($project_id, $user);
         }
     }
 }

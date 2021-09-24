@@ -1393,7 +1393,6 @@ final class program_managementPlugin extends Plugin
                 new ProjectManagerAdapter(\ProjectManager::instance(), $retrieve_user),
                 new TeamDao(),
                 new ProjectPermissionVerifier($retrieve_user),
-                $retrieve_user
             ),
             new ProgramManagementXMLConfigParser(),
             new ProgramManagementXMLConfigExtractor(
@@ -1407,7 +1406,6 @@ final class program_managementPlugin extends Plugin
             ProgramForAdministrationIdentifier::fromProject(
                 new TeamDao(),
                 new ProjectPermissionVerifier($retrieve_user),
-                $retrieve_user,
                 $user_identifier,
                 ProjectProxy::buildFromProject($event->getProject())
             ),

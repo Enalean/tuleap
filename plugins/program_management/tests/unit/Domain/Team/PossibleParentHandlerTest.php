@@ -26,10 +26,10 @@ namespace Tuleap\ProgramManagement\Domain\Team;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use function PHPUnit\Framework\assertEquals;
@@ -95,9 +95,9 @@ final class PossibleParentHandlerTest extends TestCase
             public int $limit                        = 0;
             public int $total_size                   = 0;
 
-            public function getUser(): UserIdentifier
+            public function getUser(): UserReference
             {
-                return UserIdentifierStub::buildGenericUser();
+                return UserReferenceStub::withDefaults();
             }
 
             public function trackerIsInRootPlanning(): bool

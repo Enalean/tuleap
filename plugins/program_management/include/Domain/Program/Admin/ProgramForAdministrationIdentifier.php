@@ -26,8 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 /**
@@ -50,16 +49,15 @@ final class ProgramForAdministrationIdentifier
     public static function fromProject(
         VerifyIsTeam $team_verifier,
         VerifyProjectPermission $administrator_verifier,
-        RetrieveUser $retrieve_user,
-        UserIdentifier $user_identifier,
+        UserReference $user,
         ProjectIdentifier $project_identifier
     ): self {
         $project_id = $project_identifier->getId();
         if ($team_verifier->isATeam($project_id)) {
             throw new ProgramCannotBeATeamException($project_id);
         }
-        if (! $administrator_verifier->isProjectAdministrator($user_identifier, $project_identifier)) {
-            throw new ProgramAccessException($project_id, $retrieve_user, $user_identifier);
+        if (! $administrator_verifier->isProjectAdministrator($user, $project_identifier)) {
+            throw new ProgramAccessException($project_id, $user);
         }
         return new self($project_id);
     }

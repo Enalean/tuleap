@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
  * @psalm-immutable
@@ -48,9 +48,9 @@ final class Team
      * @throws \Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException
      * @throws \Tuleap\ProgramManagement\Domain\Team\TeamAccessException
      */
-    public static function build(BuildTeam $build_team, int $team_id, UserIdentifier $user_identifier): self
+    public static function build(BuildTeam $build_team, int $team_id, UserReference $user): self
     {
-        $build_team->checkProjectIsATeam($team_id, $user_identifier);
+        $build_team->checkProjectIsATeam($team_id, $user);
 
         return new self($team_id);
     }

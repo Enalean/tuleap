@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
  * @psalm-immutable
@@ -35,7 +35,7 @@ final class PlanChange
     */
     private function __construct(
         public PlanProgramIncrementChange $program_increment_change,
-        public UserIdentifier $user_identifier,
+        public UserReference $user,
         public int $project_id,
         public array $tracker_ids_that_can_be_planned,
         public array $can_possibly_prioritize_ugroups,
@@ -52,7 +52,7 @@ final class PlanChange
      */
     public static function fromProgramIncrementAndRaw(
         PlanProgramIncrementChange $program_increment_change,
-        UserIdentifier $user_identifier,
+        UserReference $user,
         int $project_id,
         array $tracker_ids_that_can_be_planned,
         array $can_possibly_prioritize_ugroups,
@@ -72,7 +72,7 @@ final class PlanChange
 
         return new self(
             $program_increment_change,
-            $user_identifier,
+            $user,
             $project_id,
             $tracker_ids_that_can_be_planned,
             $can_possibly_prioritize_ugroups,

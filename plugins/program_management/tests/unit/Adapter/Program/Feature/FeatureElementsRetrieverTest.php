@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -64,7 +64,7 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
      */
     private $parent_dao;
-    private UserIdentifier $user_identifier;
+    private UserIdentifier $user_reference_stub;
 
     protected function setUp(): void
     {
@@ -76,7 +76,7 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parent_dao           = $this->createMock(ArtifactsLinkedToParentDao::class);
         $user                       = UserTestBuilder::aUser()->build();
         $retrieve_user              = RetrieveUserStub::withUser($user);
-        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
+        $this->user_reference_stub  = UserReferenceStub::withDefaults();
 
         $this->retriever = new FeatureElementsRetriever(
             $build_program,
@@ -116,10 +116,11 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [2, $artifact_two],
         ]);
 
+
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
-             [$this->user_identifier, 1, $artifact_one],
-             [$this->user_identifier, 2, $artifact_two],
-        ]);
+               [ $this->user_reference_stub, 1, $artifact_one],
+               [ $this->user_reference_stub, 2, $artifact_two],
+           ]);
 
         $this->retrieve_background->method('retrieveBackgroundColor')
             ->willReturn(new BackgroundColor("lake-placid-blue"));
@@ -149,7 +150,7 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        self::assertEquals($collection, $this->retriever->retrieveFeaturesToBePlanned(202, $this->user_identifier));
+        self::assertEquals($collection, $this->retriever->retrieveFeaturesToBePlanned(202, $this->user_reference_stub));
     }
 
     private function buildTracker(int $tracker_id, string $name, Project $project): \Tracker

@@ -25,24 +25,25 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramIdentifierTest extends TestCase
 {
     private const PROGRAM_ID = 101;
     private BuildProgramStub $program_builder;
-    private UserIdentifierStub $user;
+    private UserIdentifier $user;
     private ProgramIncrementIdentifier $program_increment;
 
     protected function setUp(): void
     {
         $this->program_builder   = BuildProgramStub::stubValidProgram();
-        $this->user              = UserIdentifierStub::buildGenericUser();
+        $this->user              = UserReferenceStub::withDefaults();
         $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithId(785);
     }
 

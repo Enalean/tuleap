@@ -29,8 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
@@ -69,7 +69,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user                       = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
         $this->user->method('getName')->willReturn("John");
-        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier = UserReferenceStub::withDefaults();
     }
 
     public function testCanRetrievesOpenProgramIncrements(): void

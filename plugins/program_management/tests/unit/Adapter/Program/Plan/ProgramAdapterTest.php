@@ -26,8 +26,9 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -40,7 +41,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private VerifyIsProgram $program_verifier;
     private RetrieveUserStub $user_retriever;
-    private UserIdentifierStub $user_identifier;
+    private UserIdentifier $user_identifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
@@ -57,7 +58,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_verifier       = VerifyIsProgramStub::withValidProgram();
         $user                         = UserTestBuilder::aUser()->build();
         $this->user_retriever         = RetrieveUserStub::withUser($user);
-        $this->user_identifier        = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier        = UserReferenceStub::withDefaults();
     }
 
     private function getAdapter(): ProgramAdapter

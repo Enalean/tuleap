@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\Project\ProjectAccessChecker;
 
 final class ProgramAdapter implements BuildProgram
@@ -42,7 +42,7 @@ final class ProgramAdapter implements BuildProgram
     ) {
     }
 
-    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
+    public function ensureProgramIsAProject(int $project_id, UserReference $user, ?PermissionBypass $bypass): void
     {
         $this->ensureUserCanAccessToProject($project_id, $user, $bypass);
         if (! $this->program_verifier->isAProgram($project_id)) {
@@ -53,18 +53,18 @@ final class ProgramAdapter implements BuildProgram
     /**
      * @throws ProgramAccessException
      */
-    private function ensureUserCanAccessToProject(int $id, UserIdentifier $user_identifier, ?PermissionBypass $bypass): void
+    private function ensureUserCanAccessToProject(int $id, UserReference $user_reference, ?PermissionBypass $bypass): void
     {
         if ($bypass) {
             return;
         }
 
         $project = $this->project_manager->getProject($id);
-        $user    = $this->user_manager_adapter->getUserWithId($user_identifier);
+        $user    = $this->user_manager_adapter->getUserWithId($user_reference);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {
-            throw new ProgramAccessException($id, $this->user_manager_adapter, $user_identifier);
+            throw new ProgramAccessException($id, $user_reference);
         }
     }
 }

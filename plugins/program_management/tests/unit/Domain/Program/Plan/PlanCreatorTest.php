@@ -25,9 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -62,7 +61,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration_representation      = new PlanIterationChange(150, null, null);
         $plan_change                   = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
-            UserIdentifierStub::buildGenericUser(),
+            UserReferenceStub::withDefaults(),
             $this->project_id,
             [$plannable_tracker_id],
             ['102_4'],
@@ -80,8 +79,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->plan_store,
             $this->project_retriever,
             VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            RetrieveUserStub::withGenericUser()
+            VerifyProjectPermissionStub::withAdministrator()
         );
     }
 }

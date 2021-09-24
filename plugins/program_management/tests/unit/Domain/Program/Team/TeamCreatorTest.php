@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -46,7 +46,7 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $team_store;
     private \Project $program_project;
-    private UserIdentifierStub $user_identifier;
+    private UserIdentifier $user_identifier;
 
     protected function setUp(): void
     {
@@ -56,7 +56,7 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permission_verifier = VerifyProjectPermissionStub::withAdministrator();
         $this->team_builder        = $this->createStub(BuildTeam::class);
         $this->team_store          = $this->createMock(TeamStore::class);
-        $this->user_identifier     = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier     = UserReferenceStub::withDefaults();
     }
 
     private function getCreator(): TeamCreator
@@ -66,8 +66,7 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->team_verifier,
             $this->permission_verifier,
             $this->team_builder,
-            $this->team_store,
-            RetrieveUserStub::withGenericUser()
+            $this->team_store
         );
     }
 

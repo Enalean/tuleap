@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 
 final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,11 +35,11 @@ final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SECOND_TEAM_ID = 119;
     private ProgramForAdministrationIdentifier $program;
     private BuildTeam $team_builder;
-    private UserIdentifierStub $user_identifier;
+    private UserIdentifier $user_identifier;
 
     protected function setUp(): void
     {
-        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier = UserReferenceStub::withDefaults();
         $this->program         = ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM_ID);
         $this->team_builder    = BuildTeamStub::withValidTeam();
     }

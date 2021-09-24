@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class PlanCreator implements CreatePlan
@@ -40,7 +39,6 @@ final class PlanCreator implements CreatePlan
         private RetrieveProject $project_retriever,
         private VerifyIsTeam $team_verifier,
         private VerifyProjectPermission $permission_verifier,
-        private RetrieveUser $retrieve_user
     ) {
     }
 
@@ -50,8 +48,7 @@ final class PlanCreator implements CreatePlan
         $program           = ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
-            $this->retrieve_user,
-            $plan_change->user_identifier,
+            $plan_change->user,
             ProjectProxy::buildFromProject($project)
         );
         $program_tracker   = ProgramIncrementTracker::buildProgramIncrementTracker(
