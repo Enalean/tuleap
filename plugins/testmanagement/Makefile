@@ -1,3 +1,5 @@
+SHELL=/usr/bin/env bash
+
 .PHONY: generate-templates
 generate-templates:
 	cp -f $(CURDIR)/../../tools/utils/setup_templates/generate-templates/trackers/ttm-campaign.xml \
