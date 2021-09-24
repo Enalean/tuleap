@@ -32,7 +32,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 final class ConfigurationErrorsGatherer
@@ -42,22 +41,19 @@ final class ConfigurationErrorsGatherer
     private IterationCreatorChecker $iteration_creator_checker;
     private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_builder;
-    private RetrieveUser $retrieve_user;
 
     public function __construct(
         BuildProgram $build_program,
         ProgramIncrementCreatorChecker $program_increment_creator_checker,
         IterationCreatorChecker $iteration_creator_checker,
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_builder,
-        RetrieveUser $retrieve_user
+        BuildProject $project_builder
     ) {
         $this->build_program                     = $build_program;
         $this->program_increment_creator_checker = $program_increment_creator_checker;
         $this->iteration_creator_checker         = $iteration_creator_checker;
         $this->teams_searcher                    = $teams_searcher;
         $this->project_builder                   = $project_builder;
-        $this->retrieve_user                     = $retrieve_user;
     }
 
     public function gatherConfigurationErrors(
@@ -83,10 +79,7 @@ final class ConfigurationErrorsGatherer
             $program
         );
 
-        $user = $this->retrieve_user->getUserWithId($user_identifier);
-
         $this->program_increment_creator_checker->canCreateAProgramIncrement(
-            $user,
             $tracker,
             $program,
             $team_projects_collection,

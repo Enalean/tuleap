@@ -27,12 +27,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Mirrore
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SubmissionDateStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
@@ -46,17 +48,17 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactCreatorAdapter $adapter;
     private MockObject|TrackerArtifactCreator $creator;
     private TrackerReference $tracker;
-    private \PFUser $user;
+    private UserIdentifier $user;
     private SubmissionDateStub $submission_date;
 
     protected function setUp(): void
     {
         $tracker_factory       = $this->createStub(\TrackerFactory::class);
         $this->creator         = $this->createMock(TrackerArtifactCreator::class);
-        $this->adapter         = new ArtifactCreatorAdapter($this->creator, $tracker_factory);
+        $this->adapter         = new ArtifactCreatorAdapter($this->creator, $tracker_factory, RetrieveUserStub::withGenericUser());
         $full_tracker          = TrackerTestBuilder::aTracker()->build();
         $this->tracker         = TrackerReferenceStub::withDefaults();
-        $this->user            = UserTestBuilder::buildWithDefaults();
+        $this->user            = UserIdentifierStub::buildGenericUser();
         $this->submission_date = SubmissionDateStub::withDate(self::SUBMISSION_TIMESTAMP);
         $tracker_factory->method('getTrackerById')->willReturn($full_tracker);
     }
@@ -70,7 +72,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 self::isInstanceOf(\Tracker::class),
                 $changeset->toFieldsDataArray(),
-                $this->user,
+                self::isInstanceOf(\PFUser::class),
                 self::SUBMISSION_TIMESTAMP,
                 false,
                 false,

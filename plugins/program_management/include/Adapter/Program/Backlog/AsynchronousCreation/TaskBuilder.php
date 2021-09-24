@@ -77,7 +77,8 @@ class TaskBuilder
                 Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
                 $logger
             ),
-            $tracker_factory
+            $tracker_factory,
+            $retrieve_user
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
@@ -101,7 +102,6 @@ class TaskBuilder
             $transaction_executor,
             new StatusValueMapper($form_element_factory),
             $artifact_creator,
-            $retrieve_user,
             $synchronized_fields_gatherer
         );
 

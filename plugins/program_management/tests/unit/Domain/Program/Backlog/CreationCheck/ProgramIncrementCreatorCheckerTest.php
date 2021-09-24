@@ -30,13 +30,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Veri
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -52,7 +53,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
     private VerifyIsProgramIncrementTracker $program_verifier;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
-    private UserIdentifierStub $user_identifier;
+    private UserReference $user_identifier;
 
     protected function setUp(): void
     {
@@ -70,7 +71,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         );
 
         $this->user            = UserTestBuilder::aUser()->build();
-        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier = UserReferenceStub::withDefaults();
         $this->program         = ProgramIdentifierBuilder::build();
     }
 
@@ -91,7 +92,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
         self::assertFalse(
             $this->getChecker()->canCreateAProgramIncrement(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -112,7 +112,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
         self::assertTrue(
             $this->getChecker()->canCreateAProgramIncrement(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -132,7 +131,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
         self::assertTrue(
             $this->getChecker()->canCreateAProgramIncrement(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -152,7 +150,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
         self::assertTrue(
             $this->getChecker()->canCreateAProgramIncrement(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -173,7 +170,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
         self::assertFalse(
             $this->getChecker()->canCreateAProgramIncrement(
-                $this->user,
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollection::fromProgramIdentifier(
@@ -192,7 +188,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->root_milestone_retriever = RetrievePlanningMilestoneTrackerStub::withNoPlanning();
 
         self::assertFalse($this->getChecker()->canCreateAProgramIncrement(
-            $this->user,
             $this->tracker,
             $this->program,
             TeamProjectsCollection::fromProgramIdentifier(

@@ -32,7 +32,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 class ProgramIncrementsCreator
@@ -41,7 +40,6 @@ class ProgramIncrementsCreator
         private DBTransactionExecutor $transaction_executor,
         private MapStatusByValue $status_mapper,
         private CreateArtifact $artifact_creator,
-        private RetrieveUser $retrieve_user,
         private GatherSynchronizedFields $gather_synchronized_fields
     ) {
     }
@@ -56,10 +54,9 @@ class ProgramIncrementsCreator
         TrackerCollection $mirrored_timeboxes,
         UserIdentifier $user_identifier
     ): void {
-        $current_user        = $this->retrieve_user->getUserWithId($user_identifier);
         $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
         $this->transaction_executor->execute(
-            function () use ($values, $artifact_link_value, $mirrored_timeboxes, $current_user) {
+            function () use ($values, $artifact_link_value, $mirrored_timeboxes, $user_identifier) {
                 foreach ($mirrored_timeboxes->getTrackers() as $mirrored_timebox_tracker) {
                     $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
                         $this->gather_synchronized_fields,
@@ -77,7 +74,7 @@ class ProgramIncrementsCreator
                         $this->artifact_creator->create(
                             $mirrored_timebox_tracker,
                             $mirrored_program_increment_changeset,
-                            $current_user,
+                            $user_identifier,
                             $values->getSubmittedOn(),
                         );
                     } catch (ArtifactCreationException $e) {

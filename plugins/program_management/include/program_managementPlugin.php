@@ -496,8 +496,7 @@ final class program_managementPlugin extends Plugin
                         $logger
                     ),
                     new ProgramDao(),
-                    new ProgramManagementProjectAdapter($project_manager),
-                    $user_manager_adapter
+                    new ProgramManagementProjectAdapter($project_manager)
                 ),
                 new PlanDao(),
                 new TrackerSemantics($tracker_factory),
@@ -1311,7 +1310,6 @@ final class program_managementPlugin extends Plugin
                 ),
                 new ProgramDao(),
                 new ProgramManagementProjectAdapter(ProjectManager::instance()),
-                $retrieve_user
             )
         );
     }
