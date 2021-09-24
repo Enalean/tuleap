@@ -57,9 +57,9 @@ final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrement
             $queue->pushSinglePersistentMessage(
                 ProgramIncrementUpdateEvent::TOPIC,
                 [
-                    'artifact_id'  => $update->program_increment->getId(),
-                    'user_id'      => $update->user->getId(),
-                    'changeset_id' => $update->changeset->getId()
+                    'artifact_id'  => $update->getProgramIncrement()->getId(),
+                    'user_id'      => $update->getUser()->getId(),
+                    'changeset_id' => $update->getChangeset()->getId()
                 ]
             );
         } catch (NoQueueSystemAvailableException | QueueServerConnectionException $exception) {
@@ -72,9 +72,11 @@ final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrement
         ProgramIncrementUpdate $update,
         IterationCreation ...$creations
     ): void {
-        $program_increment_id = $update->program_increment->getId();
         $this->logger->error(
-            "Unable to queue program increment mirrors update for program increment #{$program_increment_id}",
+            sprintf(
+                'Unable to queue program increment mirrors update for program increment #%d',
+                $update->getProgramIncrement()->getId()
+            ),
             ['exception' => $exception]
         );
         $this->update_processor->processProgramIncrementUpdate($update);

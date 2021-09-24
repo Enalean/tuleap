@@ -31,7 +31,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArti
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -50,8 +52,10 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private Stub|PendingArtifactCreationStore $pending_artifact_creation_store;
     private Stub|\UserManager $user_manager;
     private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
+    private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
     private RetrieveProgramOfProgramIncrementStub $program_retriever;
+    private VerifyIsProgramIncrementStub $program_increment_verifier;
+    private VerifyIsVisibleArtifactStub $visibility_verifier;
     private array $pending_row;
     private Artifact $artifact;
     private \PFUser $user;
@@ -63,8 +67,10 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager                    = $this->createStub(\UserManager::class);
         $this->pending_artifact_creation_store = $this->createStub(PendingArtifactCreationStore::class);
         $this->changeset_factory               = $this->createStub(\Tracker_Artifact_ChangesetFactory::class);
-        $this->program_increment_verifier      = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->tracker_verifier                = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
         $this->program_retriever               = RetrieveProgramOfProgramIncrementStub::withProgram(self::PROJECT_ID);
+        $this->program_increment_verifier      = VerifyIsProgramIncrementStub::withValidProgramIncrement();
+        $this->visibility_verifier             = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
 
         $this->pending_row = ['program_artifact_id' => self::ARTIFACT_ID, 'user_id' => self::USER_ID, 'changeset_id' => self::CHANGESET_ID];
         $project           = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
@@ -94,9 +100,11 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->pending_artifact_creation_store,
             $this->changeset_factory,
-            $this->program_increment_verifier,
+            $this->tracker_verifier,
             $this->program_retriever,
-            new BuildProjectStub()
+            new BuildProjectStub(),
+            $this->program_increment_verifier,
+            $this->visibility_verifier
         );
     }
 
@@ -110,6 +118,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenPendingArtifactIsNotFound(): void
     {
         $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
+        $this->user_manager->method('getUserById')->willReturn($this->user);
         $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
         $this->expectException(PendingArtifactNotFoundException::class);
@@ -119,8 +128,9 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenArtifactIsNotAProgramIncrement(): void
     {
         $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
+        $this->user_manager->method('getUserById')->willReturn($this->user);
         $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
-        $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
+        $this->tracker_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
 
         $this->expectException(StoredProgramIncrementNoLongerValidException::class);
         $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
@@ -129,7 +139,6 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenUserIsNotFound(): void
     {
         $this->pending_artifact_creation_store->method('getPendingArtifactById')->willReturn($this->pending_row);
-        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
         $this->user_manager->method('getUserById')->willReturn(null);
 
         $this->expectException(PendingArtifactUserNotFoundException::class);
@@ -158,7 +167,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $replication = $this->getAdapter()->buildFromProgramIncrementCreation($creation);
 
-        self::assertSame(self::ARTIFACT_ID, $replication->getArtifact()->getId());
+        self::assertSame(self::ARTIFACT_ID, $replication->getTimebox()->getId());
         self::assertSame(self::USER_ID, $replication->getUserIdentifier()->getId());
         self::assertSame(self::CHANGESET_ID, $replication->getChangeset()->getId());
         self::assertSame(self::TRACKER_ID, $replication->getTracker()->getId());
@@ -173,7 +182,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset_factory->method('getChangeset')->willReturn($this->changeset);
 
         $replication = $this->getAdapter()->buildFromArtifactAndUserId(self::ARTIFACT_ID, self::USER_ID);
-        self::assertSame(self::ARTIFACT_ID, $replication->getArtifact()->getId());
+        self::assertSame(self::ARTIFACT_ID, $replication->getTimebox()->getId());
         self::assertSame(self::USER_ID, $replication->getUserIdentifier()->getId());
         self::assertSame(self::CHANGESET_ID, $replication->getChangeset()->getId());
         self::assertSame(self::TRACKER_ID, $replication->getTracker()->getId());

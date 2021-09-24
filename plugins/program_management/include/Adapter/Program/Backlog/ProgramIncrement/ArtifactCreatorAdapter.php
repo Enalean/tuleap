@@ -39,9 +39,6 @@ final class ArtifactCreatorAdapter implements CreateArtifact
     {
     }
 
-    /**
-     * @throws ArtifactCreationException
-     */
     public function create(
         TrackerReference $tracker,
         MirroredTimeboxChangesetValues $mirrored_program_increment_changeset,

@@ -22,29 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 
-final class RetrieveChangesetSubmissionDateStub implements RetrieveChangesetSubmissionDate
+final class ArtifactIdentifierStub implements ArtifactIdentifier
 {
-    private function __construct(private int $submission_date)
+    private function __construct(private int $id)
     {
     }
 
-    public static function withDefaults(): self
+    public static function withId(int $id): self
     {
-        return new self(1234567890);
+        return new self($id);
     }
 
-    public static function withDate(int $submission_date): self
+    public function getId(): int
     {
-        return new self($submission_date);
-    }
-
-    public function getSubmissionDate(ArtifactIdentifier $artifact, ChangesetIdentifier $changeset_identifier): SubmissionDate
-    {
-        return SubmissionDateStub::withDate($this->submission_date);
+        return $this->id;
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Artifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -58,12 +57,13 @@ final class ReplicationDataBuilder
         int $project_id
     ): ReplicationData {
         $tracker = ProgramIncrementTrackerIdentifierBuilder::buildWithId(1);
+        $user    = UserIdentifierStub::withId($user_id);
         return new ReplicationData(
             $tracker,
             DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), 2604),
-            new Artifact($artifact_id),
+            ProgramIncrementIdentifierBuilder::buildWithIdAndUser($artifact_id, $user),
             BuildProjectStub::build(ProjectTestBuilder::aProject()->withId($project_id)->build()),
-            UserIdentifierStub::withId($user_id)
+            $user
         );
     }
 }

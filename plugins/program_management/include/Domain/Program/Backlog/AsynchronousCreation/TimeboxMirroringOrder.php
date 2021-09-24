@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-interface CreateArtifact
+/**
+ * I am an order to create or update Mirrored Timeboxes from a Source Timebox.
+ * @psalm-immutable
+ */
+interface TimeboxMirroringOrder
 {
-    /**
-     * @throws ArtifactCreationException
-     */
-    public function create(
-        TrackerReference $tracker,
-        MirroredTimeboxChangesetValues $mirrored_program_increment_changeset,
-        UserIdentifier $user_identifier,
-        SubmissionDate $submission_date
-    ): void;
+    public function getTimebox(): TimeboxIdentifier;
+    public function getTracker(): TrackerIdentifier;
+    public function getChangeset(): ChangesetIdentifier;
+    public function getUser(): UserIdentifier;
 }

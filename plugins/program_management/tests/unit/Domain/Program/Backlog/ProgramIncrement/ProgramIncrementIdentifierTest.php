@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
@@ -43,24 +42,25 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->user = UserIdentifierStub::withId(101);
+        $user_id    = 101;
+        $this->user = UserIdentifierStub::withId($user_id);
 
         $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
         $this->visibility_verifier        = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->tracker_verifier           = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
 
-        $tracker                = TrackerIdentifierStub::withId(127);
+        $tracker_id             = 127;
         $changeset_id           = 919;
         $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
-            $tracker,
-            $this->user,
+            $tracker_id,
+            $user_id,
             $changeset_id
         );
         $this->artifact_created = ArtifactCreatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
-            $tracker,
-            $this->user,
+            $tracker_id,
+            $user_id,
             $changeset_id
         );
     }

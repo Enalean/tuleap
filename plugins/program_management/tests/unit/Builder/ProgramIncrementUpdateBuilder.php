@@ -24,8 +24,6 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ProgramIncrementUpdateBuilder
@@ -41,12 +39,7 @@ final class ProgramIncrementUpdateBuilder
         int $tracker_id,
         int $changeset_id
     ): ProgramIncrementUpdate {
-        $event = ArtifactUpdatedEventStub::withIds(
-            $program_increment_id,
-            TrackerIdentifierStub::withId($tracker_id),
-            UserIdentifierStub::withId($user_id),
-            $changeset_id
-        );
+        $event = ArtifactUpdatedEventStub::withIds($program_increment_id, $tracker_id, $user_id, $changeset_id);
         return ProgramIncrementUpdate::fromArtifactUpdatedEvent(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             $event

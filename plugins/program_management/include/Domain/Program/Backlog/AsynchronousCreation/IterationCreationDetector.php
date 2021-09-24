@@ -58,12 +58,12 @@ final class IterationCreationDetector
         $iterations             = IterationIdentifier::buildCollectionFromProgramIncrement(
             $this->iterations_searcher,
             $this->visibility_verifier,
-            $program_increment_update->program_increment,
-            $program_increment_update->user
+            $program_increment_update->getProgramIncrement(),
+            $program_increment_update->getUser()
         );
         $just_linked_iterations = JustLinkedIterationCollection::fromIterations(
             $this->iteration_link_verifier,
-            $program_increment_update->program_increment,
+            $program_increment_update->getProgramIncrement(),
             ...$iterations
         );
         if ($just_linked_iterations->isEmpty()) {
@@ -74,7 +74,7 @@ final class IterationCreationDetector
             $this->changeset_retriever,
             $this->logger,
             $just_linked_iterations,
-            $program_increment_update->user
+            $program_increment_update->getUser()
         );
     }
 

@@ -78,7 +78,7 @@ class ProgramIncrementsCreator
                             $values->getSubmittedOn(),
                         );
                     } catch (ArtifactCreationException $e) {
-                        throw new ProgramIncrementArtifactCreationException($values->getSourceArtifactId());
+                        throw new ProgramIncrementArtifactCreationException($values->getSourceTimebox()->getId());
                     }
                 }
             }

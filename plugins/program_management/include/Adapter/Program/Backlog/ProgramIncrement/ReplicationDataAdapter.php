@@ -33,12 +33,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactUserNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Artifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 
 final class ReplicationDataAdapter implements BuildReplicationData
 {
@@ -47,9 +50,11 @@ final class ReplicationDataAdapter implements BuildReplicationData
         private \UserManager $user_manager,
         private PendingArtifactCreationStore $pending_artifact_creation_store,
         private \Tracker_Artifact_ChangesetFactory $changeset_factory,
-        private VerifyIsProgramIncrementTracker $program_increment_verifier,
+        private VerifyIsProgramIncrementTracker $tracker_verifier,
         private RetrieveProgramOfProgramIncrement $program_retriever,
-        private BuildProject $project_builder
+        private BuildProject $project_builder,
+        private VerifyIsProgramIncrement $program_increment_verifier,
+        private VerifyIsVisibleArtifact $visibility_verifier
     ) {
     }
 
@@ -59,34 +64,39 @@ final class ReplicationDataAdapter implements BuildReplicationData
             $artifact_id,
             $user_id
         );
-
         if ($pending_artifact === null) {
             return null;
         }
-
         $program_increment_id = $pending_artifact['program_artifact_id'];
-        $source_artifact      = $this->artifact_factory->getArtifactById($program_increment_id);
-        if (! $source_artifact) {
-            throw new PendingArtifactNotFoundException(
+        $user_id_from_storage = $pending_artifact['user_id'];
+
+        $user = $this->user_manager->getUserById($user_id_from_storage);
+        if (! $user) {
+            throw new PendingArtifactUserNotFoundException($program_increment_id, $user_id_from_storage);
+        }
+        $user_identifier = UserProxy::buildFromPFUser($user);
+
+        try {
+            $program_increment = ProgramIncrementIdentifier::fromId(
+                $this->program_increment_verifier,
+                $this->visibility_verifier,
                 $program_increment_id,
-                $pending_artifact['user_id']
+                $user_identifier
             );
+        } catch (ProgramIncrementNotFoundException $e) {
+            throw new PendingArtifactNotFoundException($program_increment_id, $user_id_from_storage);
+        }
+        $source_artifact = $this->artifact_factory->getArtifactById($program_increment_id);
+        if (! $source_artifact) {
+            throw new PendingArtifactNotFoundException($program_increment_id, $user_id_from_storage);
         }
 
         $tracker = ProgramIncrementTrackerIdentifier::fromId(
-            $this->program_increment_verifier,
+            $this->tracker_verifier,
             TrackerIdentifierProxy::fromTracker($source_artifact->getTracker())
         );
         if (! $tracker) {
             throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
-        }
-
-        $user = $this->user_manager->getUserById($pending_artifact['user_id']);
-        if (! $user) {
-            throw new PendingArtifactUserNotFoundException(
-                $program_increment_id,
-                $pending_artifact['user_id']
-            );
         }
 
         $source_changeset = $this->changeset_factory->getChangeset(
@@ -100,28 +110,22 @@ final class ReplicationDataAdapter implements BuildReplicationData
             );
         }
 
-        return self::build($source_artifact, $user, $source_changeset, $tracker);
+        $changeset    = ChangesetProxy::fromChangeset($source_changeset);
+        $project_data = ProgramManagementProjectAdapter::build($source_artifact->getTracker()->getProject());
+
+        return new ReplicationData($tracker, $changeset, $program_increment, $project_data, $user_identifier);
     }
 
     public function buildFromProgramIncrementCreation(ProgramIncrementCreation $creation): ReplicationData
     {
-        $artifact   = new Artifact($creation->program_increment->getId());
-        $program_id = $this->program_retriever->getProgramOfProgramIncrement($creation->program_increment);
+        $program_id = $this->program_retriever->getProgramOfProgramIncrement($creation->getProgramIncrement());
         $project    = $this->project_builder->buildFromId($program_id);
-        return new ReplicationData($creation->tracker, $creation->changeset, $artifact, $project, $creation->user);
-    }
-
-    private static function build(
-        \Tuleap\Tracker\Artifact\Artifact $source_artifact,
-        \PFUser $user,
-        \Tracker_Artifact_Changeset $source_changeset,
-        ProgramIncrementTrackerIdentifier $source_tracker
-    ): ReplicationData {
-        $artifact_data   = new Artifact((int) $source_artifact->getId());
-        $changeset       = ChangesetProxy::fromChangeset($source_changeset);
-        $project_data    = ProgramManagementProjectAdapter::build($source_artifact->getTracker()->getProject());
-        $user_identifier = UserProxy::buildFromPFUser($user);
-
-        return new ReplicationData($source_tracker, $changeset, $artifact_data, $project_data, $user_identifier);
+        return new ReplicationData(
+            $creation->getProgramIncrementTracker(),
+            $creation->getChangeset(),
+            $creation->getProgramIncrement(),
+            $project,
+            $creation->getUser()
+        );
     }
 }

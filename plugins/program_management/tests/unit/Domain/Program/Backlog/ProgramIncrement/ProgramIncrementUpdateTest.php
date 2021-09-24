@@ -28,8 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredP
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredUserNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
@@ -70,8 +68,8 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
-            TrackerIdentifierStub::withId(self::PROGRAM_INCREMENT_TRACKER_ID),
-            UserIdentifierStub::withId(self::USER_ID),
+            self::PROGRAM_INCREMENT_TRACKER_ID,
+            self::USER_ID,
             self::CHANGESET_ID
         );
     }
@@ -82,10 +80,12 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_verifier,
             $this->artifact_updated
         );
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $update->program_increment->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->tracker->getId());
-        self::assertSame(self::CHANGESET_ID, $update->changeset->getId());
-        self::assertSame(self::USER_ID, $update->user->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getProgramIncrement()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getTimebox()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getProgramIncrementTracker()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getTracker()->getId());
+        self::assertSame(self::CHANGESET_ID, $update->getChangeset()->getId());
+        self::assertSame(self::USER_ID, $update->getUser()->getId());
     }
 
     public function testItReturnsNullWhenArtifactIsNotAProgramIncrement(): void
@@ -107,10 +107,12 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_retriever,
             $this->pending_update
         );
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $update->program_increment->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->tracker->getId());
-        self::assertSame(self::USER_ID, $update->user->getId());
-        self::assertSame(self::CHANGESET_ID, $update->changeset->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getProgramIncrement()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getTimebox()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getProgramIncrementTracker()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getTracker()->getId());
+        self::assertSame(self::USER_ID, $update->getUser()->getId());
+        self::assertSame(self::CHANGESET_ID, $update->getChangeset()->getId());
     }
 
     public function testItThrowsWhenStoredUserIsNotValid(): void

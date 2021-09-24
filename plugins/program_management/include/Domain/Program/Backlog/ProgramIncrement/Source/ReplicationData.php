@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -36,7 +37,7 @@ final class ReplicationData
     public function __construct(
         private ProgramIncrementTrackerIdentifier $tracker,
         private ChangesetIdentifier $changeset,
-        private Artifact $artifact,
+        private TimeboxIdentifier $timebox,
         private ProgramManagementProject $project,
         private UserIdentifier $user_identifier
     ) {
@@ -52,9 +53,9 @@ final class ReplicationData
         return $this->changeset;
     }
 
-    public function getArtifact(): Artifact
+    public function getTimebox(): TimeboxIdentifier
     {
-        return $this->artifact;
+        return $this->timebox;
     }
 
     public function getProject(): ProgramManagementProject

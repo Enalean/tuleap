@@ -35,8 +35,6 @@ use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\StoreProgramIncrementUpdateStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
@@ -57,12 +55,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->event = ArtifactUpdatedEventStub::withIds(
-            87,
-            TrackerIdentifierStub::withId(93),
-            UserIdentifierStub::buildGenericUser(),
-            4208
-        );
+        $this->event = ArtifactUpdatedEventStub::withIds(87, 93, 194, 4208);
 
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
         $this->user_stories_planner       = $this->createMock(PlanUserStoriesInMirroredProgramIncrements::class);

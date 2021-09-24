@@ -69,14 +69,14 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertEquals(self::STATUS_VALUE, $values->getStatusValue()->getListValues()[0]->getLabel());
         self::assertSame(self::START_DATE_VALUE, $values->getStartDateValue()->getValue());
         self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());
-        self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceArtifactId());
+        self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceTimebox()->getId());
         self::assertSame(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP, $values->getSubmittedOn()->getValue());
     }
 
-    public function testItBuildsFromUpdate(): void
+    public function testItBuildsFromMirroringOrder(): void
     {
         $update = ProgramIncrementUpdateBuilder::buildWithIds(102, self::SOURCE_TIMEBOX_ID, 19, 9926);
-        $values = SourceTimeboxChangesetValues::fromUpdate(
+        $values = SourceTimeboxChangesetValues::fromMirroringOrder(
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
             RetrieveChangesetSubmissionDateStub::withDate(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP),
@@ -89,7 +89,7 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertEquals(self::STATUS_VALUE, $values->getStatusValue()->getListValues()[0]->getLabel());
         self::assertSame(self::START_DATE_VALUE, $values->getStartDateValue()->getValue());
         self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());
-        self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceArtifactId());
+        self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceTimebox()->getId());
         self::assertSame(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP, $values->getSubmittedOn()->getValue());
     }
 }

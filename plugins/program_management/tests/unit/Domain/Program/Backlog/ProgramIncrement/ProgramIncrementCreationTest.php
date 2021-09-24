@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -42,8 +40,8 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->artifact_created = ArtifactCreatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
-            TrackerIdentifierStub::withId(self::PROGRAM_INCREMENT_TRACKER_ID),
-            UserIdentifierStub::withId(self::USER_ID),
+            self::PROGRAM_INCREMENT_TRACKER_ID,
+            self::USER_ID,
             self::CHANGESET_ID
         );
     }
@@ -54,9 +52,11 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_verifier,
             $this->artifact_created
         );
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->program_increment->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->tracker->getId());
-        self::assertSame(self::CHANGESET_ID, $creation->changeset->getId());
-        self::assertSame(self::USER_ID, $creation->user->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getProgramIncrement()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getTimebox()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getProgramIncrementTracker()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getTracker()->getId());
+        self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
+        self::assertSame(self::USER_ID, $creation->getUser()->getId());
     }
 }

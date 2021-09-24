@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface RetrieveFieldValuesGatherer
@@ -39,5 +39,5 @@ interface RetrieveFieldValuesGatherer
      * @throws PendingArtifactNotFoundException
      * @throws PendingArtifactChangesetNotFoundException
      */
-    public function getGathererFromUpdate(ProgramIncrementUpdate $update): GatherFieldValues;
+    public function getGathererFromUpdate(TimeboxMirroringOrder $order): GatherFieldValues;
 }

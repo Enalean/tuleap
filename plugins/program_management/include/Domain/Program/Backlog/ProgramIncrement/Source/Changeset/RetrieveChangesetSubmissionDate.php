@@ -23,8 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 
 interface RetrieveChangesetSubmissionDate
 {
-    public function getSubmissionDate(int $artifact_id, ChangesetIdentifier $changeset_identifier): SubmissionDate;
+    public function getSubmissionDate(
+        ArtifactIdentifier $artifact,
+        ChangesetIdentifier $changeset_identifier
+    ): SubmissionDate;
 }
