@@ -19,7 +19,6 @@
 
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { escaper } from "@tuleap/html-escaper";
 import { RichTextEditorsCreator } from "./rich-text-editor-creator/RichTextEditorsCreator";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -32,20 +31,5 @@ document.addEventListener("DOMContentLoaded", () => {
         new UploadImageFormFactory(document, locale),
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale)
     );
-    creator.createTextFieldEditors({
-        onEditorInit: (editor, textarea) => {
-            /*
-                CKEDITOR filters HTML tags
-                So, if your default text is like <blabla>, this will not be displayed.
-                To "fix" this, we escape the textarea content.
-                However, we don't need to escape this for non default values.
-            */
-            if (textarea.dataset.fieldDefaultValue) {
-                editor.once("instanceReady", () => {
-                    const escaped_value = escaper.html(textarea.value);
-                    editor.setData(escaped_value);
-                });
-            }
-        },
-    });
+    creator.createTextFieldEditors();
 });

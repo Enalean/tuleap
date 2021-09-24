@@ -31,12 +31,6 @@ const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
 const NEW_FOLLOWUP_ID_SUFFIX = "new";
 const TEXT_FIELDS_SELECTOR = ".tracker_artifact_field textarea";
 
-type OnEditorInitCallback = (editor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => void;
-
-export interface TextFieldEditorsOptions {
-    onEditorInit: OnEditorInitCallback;
-}
-
 export class RichTextEditorsCreator {
     constructor(
         private readonly doc: Document,
@@ -65,7 +59,7 @@ export class RichTextEditorsCreator {
     /**
      * @throws
      */
-    public createTextFieldEditors(text_fields_options?: TextFieldEditorsOptions): void {
+    public createTextFieldEditors(): void {
         const text_field_textareas = this.doc.querySelectorAll(TEXT_FIELDS_SELECTOR);
         for (const text_field_textarea of text_field_textareas) {
             if (!(text_field_textarea instanceof HTMLTextAreaElement)) {
@@ -91,7 +85,6 @@ export class RichTextEditorsCreator {
                 onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
                 onEditorInit: (ckeditor, textarea) => {
                     this.image_upload_factory.initiateImageUpload(ckeditor, textarea);
-                    text_fields_options?.onEditorInit(ckeditor, textarea);
                 },
                 onEditorDataReady: initMentionsOnEditorDataReady,
             };

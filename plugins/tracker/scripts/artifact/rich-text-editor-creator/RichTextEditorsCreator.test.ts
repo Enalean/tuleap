@@ -168,37 +168,6 @@ describe(`RichTextEditorsCreator`, () => {
                 expect(second_options.format_selectbox_name).toEqual("artifact[4567][format]");
                 expect(second_options.format_selectbox_value).toEqual(TEXT_FORMAT_TEXT);
             });
-
-            it(`and when options were passed,
-                it will set up the onEditorInit callback`, () => {
-                const wrapper_div = doc.createElement("div");
-                wrapper_div.classList.add("tracker_artifact_field");
-                const textarea = doc.createElement("textarea");
-                textarea.id = "field_1234";
-                const hidden_input = doc.createElement("input");
-                hidden_input.type = "hidden";
-                hidden_input.id = "artifact[1234]_body_format";
-                hidden_input.value = "html";
-                wrapper_div.append(textarea, hidden_input);
-                doc.body.append(wrapper_div);
-                const initiateImageUpload = jest.spyOn(image_upload_factory, "initiateImageUpload");
-                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
-
-                const options = { onEditorInit: jest.fn() };
-                creator.createTextFieldEditors(options);
-
-                const rte_options = createRichTextEditor.mock.calls[0][1];
-                const fake_ckeditor = {} as CKEDITOR.editor;
-
-                if (rte_options.onEditorInit === undefined) {
-                    throw new Error(
-                        "Expected an onEditorInit callback to be passed to rich text editor factory, but none was passed"
-                    );
-                }
-                rte_options.onEditorInit(fake_ckeditor, textarea);
-                expect(options.onEditorInit).toHaveBeenCalled();
-                expect(initiateImageUpload).toHaveBeenCalled();
-            });
         });
     });
 });

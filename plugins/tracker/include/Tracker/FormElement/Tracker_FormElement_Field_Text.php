@@ -219,15 +219,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $format = $value['format'];
         }
 
-        $data_attributes = [];
-        if ($value === $this->getDefaultValue()) {
-            $data_attributes[] = [
-                'name'  => 'field-default-value',
-                'value' => '1'
-            ];
-        }
-
-        return $this->getRichTextarea(null, $data_attributes, $format, $value['content']);
+        return $this->getRichTextarea(null, $format, $value['content']);
     }
 
      /**
@@ -287,13 +279,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $content = $value->getText();
         }
 
-        return $this->getRichTextarea($artifact, [], $format, $content);
+        return $this->getRichTextarea($artifact, $format, $content);
     }
 
     /**
      * @return string
      */
-    private function getRichTextarea(?Artifact $artifact, array $data_attributes, string $format, string $content)
+    private function getRichTextarea(?Artifact $artifact, string $format, string $content)
     {
         $tracker = $this->getTracker();
         if (! $tracker) {
@@ -324,7 +316,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $this->getProperty('cols'),
             $content,
             $this->isRequired(),
-            $data_attributes
         );
 
         return $html;
@@ -400,8 +391,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $html    = '';
         $content = '';
         if ($this->hasDefaultValue()) {
-            $value   = $this->getDefaultValue();
-            $content = $value['content'];
+            $content = $this->getProperty('default_value');
         }
         $html .= '<textarea rows="' . $this->getProperty('rows') . '" cols="' . $this->getProperty('cols') . '" autocomplete="off">';
         $html .=  $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
@@ -679,9 +669,16 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $user           = $this->getCurrentUser();
         $default_format = $this->getDefaultFormatForUser($user);
 
+        $default_value_in_text_format = $this->getProperty('default_value');
+        if ($default_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            $default_value = '<p>' . nl2br(htmlentities($default_value_in_text_format)) . '</p>';
+        } else {
+            $default_value = $default_value_in_text_format;
+        }
+
         return [
             'format'  => $default_format,
-            'content' => $this->getProperty('default_value'),
+            'content' => $default_value,
         ];
     }
 

@@ -55,7 +55,6 @@ class RichTextareaProvider
         int $cols,
         string $value,
         bool $is_required,
-        array $data_attributes
     ): string {
         $renderer = $this->template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/artifact');
 
@@ -64,6 +63,9 @@ class RichTextareaProvider
         $data_attributes_for_dragndrop = $this->upload_data_attributes_for_rich_text_editor_builder
             ->getDataAttributes($tracker, $user, $artifact);
 
+        $data_attributes      = [
+            ['name' => 'project-id', 'value' => $tracker->getGroupId()]
+        ];
         $is_dragndrop_allowed = ! empty($data_attributes_for_dragndrop);
         if ($is_dragndrop_allowed) {
             $data_attributes[] = [
@@ -71,7 +73,6 @@ class RichTextareaProvider
                 'value' => $help_id
             ];
         }
-        $data_attributes[] = ['name' => 'project-id', 'value' => $tracker->getGroupId()];
 
         return $renderer->renderToString(
             'rich-textarea',

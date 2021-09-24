@@ -116,16 +116,16 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    public function testTheFormatIsHTMLWhenTheUserHasHTMLFormatPreference(): void
+    public function testTheFormatIsHTMLAndContentConvertedToHTMLWhenTheUserHasHTMLFormatPreference(): void
     {
         $this->text_field->shouldReceive('getProperty')->with('default_value')
-                         ->andReturns(Mockery::any());
+                         ->andReturns("Eeny, meeny,\nminy, <b>moe");
         $this->user->shouldReceive('getPreference')->andReturn('html');
 
         $this->assertTrue($this->text_field->hasDefaultValue());
         $this->assertEquals(
             [
-                'content' => Mockery::any(),
+                'content' => "<p>Eeny, meeny,<br />\nminy, &lt;b&gt;moe</p>",
                 'format'  => 'html'
             ],
             $this->text_field->getDefaultValue()
