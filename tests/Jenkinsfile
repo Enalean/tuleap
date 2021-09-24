@@ -157,7 +157,7 @@ pipeline {
                             args '--network none'
                         }
                     }
-                    steps { script { execTestWithLimitedConcurrency({ actions.runDeptrac('tests/deptrac/core_on_plugins.yml', 'core_on_plugins') }) } }
+                    steps { script { execTestWithLimitedConcurrency({ actions.runDeptrac() }) } }
                     post { failure { junit 'results/deptrac/*.xml' } }
                 }
                 stage('ESLint static analysis') {

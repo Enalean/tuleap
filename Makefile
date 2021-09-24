@@ -261,9 +261,8 @@ phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase
 	$(eval FILES ?= .)
 	@$(PHP) -d memory_limit=512M ./src/vendor/bin/phpcbf --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
 
-deptrac: ## Execute deptrac. Use CONFIG to choose the configuration file to evaluate (default to tests/deptrac/core_on_plugins.yml).
-	$(eval CONFIG ?= tests/deptrac/core_on_plugins.yml)
-	@$(PHP) ./src/vendor/bin/deptrac analyze -- $(CONFIG)
+deptrac: ## Execute deptrac. Use SEARCH_PATH to look for deptrac config files under a specific path.
+	@PHP=$(PHP) ./tests/deptrac/run.sh
 
 eslint: ## Execute eslint. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
