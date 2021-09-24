@@ -23,6 +23,7 @@ import GetText from "node-gettext";
 export { GetText };
 
 export function getPOFileFromLocale(locale: string): string;
+export function getPOFileFromLocaleWithoutExtension(locale: string): string;
 
 export function initGettext(
     locale: string,

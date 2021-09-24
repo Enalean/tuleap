@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-class IncludeAssets
+class IncludeAssets implements IncludeAssetsGeneric
 {
     public const MANIFEST_FILE_NAME = 'manifest.json';
 
