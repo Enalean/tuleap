@@ -1,21 +1,21 @@
-<h1>{{ title }}</h1>
+<h1>{{# dgettext }} tuleap-botmattermost | Bot Mattermost configuration {{/ dgettext }}</h1>
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ table_title }}</h1>
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{# dgettext }} tuleap-botmattermost | Bots list {{/ dgettext }}</h1>
         </div>
         <section class="tlp-pane-section">
             <div class="tlp-table-actions">
                 <button id="button-modal-add-bot" type="button" data-target="modal-add-bot" class="tlp-button-primary">
-                    <i class="fa fa-plus tlp-button-icon"></i> {{ button_add_bot }}
+                    <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Add bot {{/ dgettext }}
                 </button>
                 {{> modal-add-bot }}
             </div>
             <table id="bot_list" class="tlp-table">
                 <thead>
                 <tr>
-                    <th>{{ table_col_name }}</th>
-                    <th>{{ table_col_webhook_url }}</th>
+                    <th>{{# dgettext }} tuleap-botmattermost | Name {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-botmattermost | Webhook URL {{/ dgettext }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -32,13 +32,13 @@
                                 <button id="button-modal-edit-bot-{{ getId }}" type="button"
                                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
                                         data-modal-id="modal-edit-bot-{{ getId }}">
-                                    <i class="fa fa-pencil tlp-button-icon"></i> {{ button_edit }}
+                                    <i class="fa fa-pencil tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Edit {{/ dgettext }}
                                 </button>
                                 {{> modal-edit-bot }}
                                 <button id="button-modal-delete-bot-{{ getId }}" type="submit"
                                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
                                         data-modal-id="modal-delete-bot-{{ getId }}">
-                                    <i class="fa fa-trash-o tlp-button-icon"></i> {{ button_delete }}
+                                    <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Delete {{/ dgettext }}
                                 </button>
                                 {{> modal-delete-bot }}
                             </td>
@@ -49,8 +49,8 @@
                 {{^ has_bots }}
                     <tbody>
                     <tr>
-                        <td colspan="6" class="tlp-table-cell-empty">
-                            {{ empty_bot_list }}
+                        <td colspan="2" class="tlp-table-cell-empty">
+                            {{# dgettext }} tuleap-botmattermost | No bot defined {{/ dgettext }}
                         </td>
                     </tr>
                     </tbody>

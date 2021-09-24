@@ -16,17 +16,8 @@ msgstr "Un robot avec le même nom et le même URL de webhook existe déjà"
 msgid "Add bot"
 msgstr "Ajouter un robot"
 
-msgid "Add one channel name per row"
-msgstr "Ajoutez un nom de canal par ligne"
-
-msgid "Avatar"
-msgstr "Avatar"
-
 msgid "Avatar URL"
 msgstr "URL de l'avatar"
-
-msgid "Bot Configuration"
-msgstr "Configuration"
 
 msgid "Bot Mattermost"
 msgstr "Robot Mattermost"
@@ -66,21 +57,6 @@ msgstr "Liste des robots"
 
 msgid "Cancel"
 msgstr "Annuler"
-
-msgid "Channel handles list"
-msgstr "Liste des canaux"
-
-msgid ""
-"Channel1\n"
-"Channel2\n"
-"Channel3"
-msgstr ""
-"Canal1\n"
-"Canal2\n"
-"Canal3"
-
-msgid "Channels handles"
-msgstr "Canaux"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -133,23 +109,12 @@ msgstr "Aucun canal n'a été trouvé"
 msgid "No message content to send"
 msgstr "Aucun contenu de message à envoyer"
 
-msgid "No results"
-msgstr "Aucun résultat"
-
 msgid "Project Mattermost bots"
 msgstr "Robot Mattermost du projet"
 
 #, php-format
 msgid "The bot #%d cannot be used in project #%d"
 msgstr "Le robot #%d ne peut être utilisé dans le projet #%d"
-
-msgid ""
-"The channel handle is display in its URL<br>example: https://example.com/"
-"myGroup/channels/mychannel<br>handle: mychannel"
-msgstr ""
-"L'indentifiant du canal est visible dans son URL<br>exemple: https://example."
-"com/monGroupe/channels/monsalondediscussion<br>identifiant : "
-"monsalondediscussion"
 
 msgid "The name and the webhook URL input must be filled"
 msgstr ""

@@ -5,7 +5,7 @@
     {{/ csrf_token }}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="modal-big-content-label">
-            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ modal_add_title }}
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{# dgettext }} tuleap-botmattermost | Add bot {{/ dgettext }}
         </h1>
         <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
             &times;
@@ -14,30 +14,32 @@
     <div class="tlp-modal-body">
         <div class="tlp-form-element">
             <label class="tlp-label" for="bot-mattermost-name">
-                {{ label_bot_name }} <i class="fa fa-asterisk"></i>
+                {{# dgettext }} tuleap-botmattermost | Bot name {{/ dgettext }} <i class="fa fa-asterisk"></i>
             </label>
             <input id="bot-mattermost-name" type="text" class="tlp-input" name="bot_name"
-                   placeholder="{{ input_bot_name }}" required>
+                   placeholder="{{# dgettext }} tuleap-botmattermost | Bot name... {{/ dgettext }}" required>
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" for="bot-mattermost-webhook-url">
-                {{ label_hook_url }} <i class="fa fa-asterisk"></i>
+                {{# dgettext }} tuleap-botmattermost | Webhook URL {{/ dgettext }} <i class="fa fa-asterisk"></i>
             </label>
             <input id="bot-mattermost-webhook-url" type="url" class="tlp-input" name="webhook_url"
-                   placeholder="{{ input_url }}" required pattern="{{ pattern_url }}">
+                   placeholder="{{# dgettext }} tuleap-botmattermost | https://... {{/ dgettext }}" required pattern="https?://.+">
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="bot-mattermost-avatar-url">{{ label_avatar_url }}</label>
+            <label class="tlp-label" for="bot-mattermost-avatar-url">
+                {{# dgettext }} tuleap-botmattermost | Avatar URL {{/ dgettext }}
+            </label>
             <input id="bot-mattermost-avatar-url" type="url" class="tlp-input" name="avatar_url"
-                   placeholder="{{ input_url }}" pattern="{{ pattern_url }}">
+                   placeholder="{{# dgettext }} tuleap-botmattermost | https://... {{/ dgettext }}" pattern="https?://.+">
         </div>
     </div>
     <div class="tlp-modal-footer">
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
-            {{ button_close }}
+            {{# dgettext }} tuleap-botmattermost | Cancel {{/ dgettext }}
         </button>
         <button type="submit" class="tlp-button-primary tlp-modal-action">
-            <i class="fa fa-plus tlp-button-icon"></i> {{ button_add_bot }}
+            <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Add bot {{/ dgettext }}
         </button>
     </div>
 </form>
