@@ -76,7 +76,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withSubmissionTimestamp(1234567890)
             ->inTracker($tracker)
             ->build();
-        $this->user        = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
+        $this->user        = UserTestBuilder::buildWithId(self::USER_ID);
 
         $this->changeset = new \Tracker_Artifact_Changeset(
             self::CHANGESET_ID,

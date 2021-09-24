@@ -136,4 +136,14 @@ class UserTestBuilder
         }
         return $user;
     }
+
+    public static function buildWithDefaults(): \PFUser
+    {
+        return self::aUser()->withId(110)->withUserName('John')->build();
+    }
+
+    public static function buildWithId(int $id): \PFUser
+    {
+        return self::aUser()->withId($id)->withUserName('John')->build();
+    }
 }

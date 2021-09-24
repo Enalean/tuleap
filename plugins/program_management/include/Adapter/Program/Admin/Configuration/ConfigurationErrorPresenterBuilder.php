@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationE
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyTrackerSemantics;
 
 final class ConfigurationErrorPresenterBuilder
@@ -46,19 +46,19 @@ final class ConfigurationErrorPresenterBuilder
     public function buildProgramIncrementErrorPresenter(
         TrackerReference $program_increment_tracker,
         ?ProgramIdentifier $program,
-        UserIdentifier $user_identifier,
+        UserReference $user,
         ConfigurationErrorsCollector $errors_collector
     ): ?TrackerErrorPresenter {
         if (! $program) {
             return null;
         }
 
-        return $this->buildTrackerErrorPresenter($program_increment_tracker, $user_identifier, $errors_collector);
+        return $this->buildTrackerErrorPresenter($program_increment_tracker, $user, $errors_collector);
     }
 
     public function buildIterationErrorPresenter(
         ?TrackerReference $iteration_tracker,
-        UserIdentifier $user_identifier,
+        UserReference $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): ?TrackerErrorPresenter {
         if (! $iteration_tracker) {
@@ -70,7 +70,7 @@ final class ConfigurationErrorPresenterBuilder
 
     private function buildTrackerErrorPresenter(
         TrackerReference $tracker,
-        UserIdentifier $user_identifier,
+        UserReference $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): ?TrackerErrorPresenter {
         return TrackerErrorPresenter::fromTracker(

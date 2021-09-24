@@ -58,7 +58,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
     {
         parent::setUp();
 
-        $this->user               = UserTestBuilder::aUser()->build();
+        $this->user               = UserTestBuilder::buildWithDefaults();
         $team_project             = ProjectTestBuilder::aProject()->withId(555)->build();
         $this->user_story_tracker = TrackerTestBuilder::aTracker()
             ->withId(789)

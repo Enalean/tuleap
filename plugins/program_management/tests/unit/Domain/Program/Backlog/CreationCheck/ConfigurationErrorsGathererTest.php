@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -67,7 +67,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $this->project_builder           = new BuildProjectStub();
         $this->retrieve_user             = RetrieveUserStub::withUser(UserTestBuilder::aUser()->build());
         $this->tracker                   = TrackerReferenceStub::withDefaults();
-        $this->user_identifier           = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier           = UserReferenceStub::withDefaults();
 
         $this->gatherer = new ConfigurationErrorsGatherer(
             $this->build_program,

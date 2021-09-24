@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationE
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
@@ -36,7 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -52,7 +53,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     private $iteration_checker;
     private ?TrackerReference $program_tracker;
     private \Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier $program_identifier;
-    private UserIdentifierStub $user_identifier;
+    private UserReference $user_identifier;
     private VerifyTrackerSemanticsStub $verify_tracker_semantics;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
@@ -66,7 +67,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
         $this->tracker_factory           = $this->createStub(\TrackerFactory::class);
         $this->program_identifier        = ProgramIdentifierBuilder::build();
-        $this->user_identifier           = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier           = UserReferenceStub::withDefaults();
         $this->program_tracker           = TrackerReferenceStub::withDefaults();
         $this->verify_tracker_semantics  = VerifyTrackerSemanticsStub::withAllSemantics();
         $this->tracker                   = TrackerTestBuilder::aTracker()

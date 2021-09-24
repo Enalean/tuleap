@@ -57,6 +57,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
         $this->user->method('getId')->willReturn(101);
+        $this->user->method('getName')->willReturn("John");
     }
 
     public function testBuildsActionForAnUnplannedArtifact(): void

@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 final class ConfigurationErrorsGatherer
 {
@@ -62,7 +62,7 @@ final class ConfigurationErrorsGatherer
 
     public function gatherConfigurationErrors(
         TrackerReference $tracker,
-        UserIdentifier $user_identifier,
+        UserReference $user_identifier,
         ConfigurationErrorsCollector $errors_collector
     ): void {
         try {
@@ -99,7 +99,6 @@ final class ConfigurationErrorsGatherer
         }
 
         $this->iteration_creator_checker->canCreateAnIteration(
-            $user,
             $tracker,
             $program,
             $team_projects_collection,

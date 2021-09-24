@@ -33,7 +33,7 @@ final class ArtifactUpdatedProxyTest extends TestCase
 {
     public function testItBuildsFromArtifactUpdated(): void
     {
-        $user      = UserTestBuilder::aUser()->withId(110)->build();
+        $user      = UserTestBuilder::buildWithId(110);
         $tracker   = TrackerTestBuilder::aTracker()->withId(33)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(228)->inTracker($tracker)->build();
         $changeset = ChangesetTestBuilder::aChangeset('884')
