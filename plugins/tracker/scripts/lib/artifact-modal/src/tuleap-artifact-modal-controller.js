@@ -110,6 +110,7 @@ function ArtifactModalController(
         isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
         setupTooltips,
         submit,
+        reopenFieldsetsWithInvalidInput,
         setFieldValue,
         setFieldValueForCustomElement,
         setFieldValueForRadioButtonsCustomElement,
@@ -183,6 +184,17 @@ function ArtifactModalController(
                     self.setupTooltips();
                 }
             });
+    }
+
+    function reopenFieldsetsWithInvalidInput(form) {
+        const closed_fieldsets_that_contain_invalid_elements = form.querySelectorAll(
+            "fieldset.tlp-pane-collapsed:invalid > div > legend"
+        );
+        for (const fieldset of closed_fieldsets_that_contain_invalid_elements) {
+            if (fieldset instanceof HTMLElement) {
+                fieldset.click();
+            }
+        }
     }
 
     function submit() {

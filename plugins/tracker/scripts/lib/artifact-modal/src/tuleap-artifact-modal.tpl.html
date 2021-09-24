@@ -1,16 +1,16 @@
 <script type="text/ng-template" id="field-fieldset.tpl.html">
-<div
+<fieldset
     class="tlp-pane tlp-pane-collapsable"
     ng-class="{ 'tlp-pane-collapsed': field.collapsed, 'tlp-pane-hidden': field.is_hidden }"
     data-test="fieldset"
 >
     <div class="tlp-pane-container">
-        <div class="tlp-pane-header" ng-click="modal.toggleFieldset(field)">
+        <legend class="tlp-pane-header" ng-click="modal.toggleFieldset(field)">
             <h1 class="tlp-pane-title" data-test="fieldset-label">
                 <i class="tlp-pane-title-icon fa fa-fw" ng-class="{ 'fa-caret-right': field.collapsed, 'fa-caret-down': ! field.collapsed }"></i>
                 {{ field.label }}
             </h1>
-        </div>
+        </legend>
         <section class="tlp-pane-section" data-test="fieldset-content">
             <ng-include
                 src="field.template_url"
@@ -18,7 +18,7 @@
             ></ng-include>
         </section>
     </div>
-</div>
+</fieldset>
 </script>
 
 <script type="text/ng-template" id="field-column.tpl.html">
@@ -457,6 +457,7 @@
             class="tlp-modal-action"
             ng-class="{'tlp-button-danger': modal.confirm_action_to_edit, 'tlp-button-primary': !modal.confirm_action_to_edit }"
             ng-value="modal.getButtonText()"
+            ng-click="modal.reopenFieldsetsWithInvalidInput($event.target.form)"
             ng-disabled="modal.isUploadingInCKEditor()"
         >
     </div>
