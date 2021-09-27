@@ -79,10 +79,10 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
         $data_access = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $data_access->shouldReceive('query')
-            ->with('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY rank DESC LIMIT 1', [])
+            ->with('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY `rank` DESC LIMIT 1', [])
             ->andReturns(TestHelper::arrayToDar($packageArray1));
         $data_access->shouldReceive('query')
-            ->with('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 2  ORDER BY rank DESC LIMIT 1', [])
+            ->with('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 2  ORDER BY `rank` DESC LIMIT 1', [])
             ->andReturns(TestHelper::arrayToDar($packageArray2));
         $data_access->shouldReceive('escapeInt')->andReturnUsing(function ($value) {
             return $value;

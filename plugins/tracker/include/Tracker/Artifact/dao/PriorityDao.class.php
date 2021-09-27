@@ -89,8 +89,8 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
-        $sql = "REPLACE INTO tracker_artifact_priority_rank (artifact_id, rank)
-                SELECT $artifact_id, MAX(rank) + 1
+        $sql = "REPLACE INTO tracker_artifact_priority_rank (artifact_id, `rank`)
+                SELECT $artifact_id, MAX(`rank`) + 1
                 FROM tracker_artifact_priority_rank";
 
         return $this->update($sql);
@@ -101,7 +101,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
         $artifact_id = $this->da->escapeInt($artifact_id);
         $rank        = $this->da->escapeInt($rank);
 
-        $sql = "REPLACE INTO tracker_artifact_priority_rank (artifact_id, rank)
+        $sql = "REPLACE INTO tracker_artifact_priority_rank (artifact_id, `rank`)
                 VALUES ($artifact_id, $rank)";
 
         $this->update($sql);
@@ -127,7 +127,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
-        $sql = "SELECT rank FROM tracker_artifact_priority_rank
+        $sql = "SELECT `rank` FROM tracker_artifact_priority_rank
                 WHERE artifact_id = $artifact_id";
 
         $result = $this->retrieve($sql);
@@ -152,7 +152,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
      */
     public function debug()
     {
-        $res = $this->retrieve("SELECT * FROM tracker_artifact_priority_rank ORDER BY rank");
+        $res = $this->retrieve("SELECT * FROM tracker_artifact_priority_rank ORDER BY `rank`");
         printf("%10s|%10s|\n", 'artifact_id', 'rank');
         printf("----------+----------+----------+\n");
         foreach ($res as $row) {
@@ -179,8 +179,8 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
                 $count = $this->da->escapeInt(count($list_of_artifact_ids));
 
                 $sql = "UPDATE tracker_artifact_priority_rank
-                        SET rank = rank + $count
-                        WHERE rank >= $rank";
+                        SET `rank` = `rank` + $count
+                        WHERE `rank` >= $rank";
                 if (! $this->update($sql)) {
                     throw new RuntimeException('Cannot update rank');
                 }
@@ -195,7 +195,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
                 $ids = $this->da->escapeIntImplode($list_of_artifact_ids);
 
                 $sql = "UPDATE tracker_artifact_priority_rank
-                        SET rank = CASE " . implode(' ', $new_ranks) . " ELSE rank END
+                        SET `rank` = CASE " . implode(' ', $new_ranks) . " ELSE `rank` END
                         WHERE artifact_id IN ($ids)";
                 if (! $this->update($sql)) {
                     throw new RuntimeException('Cannot update rank');

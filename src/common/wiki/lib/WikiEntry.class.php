@@ -166,7 +166,7 @@ class WikiEntry
         //@todo: transfer to a DAO
         $qry = ' SELECT * FROM wiki_group_list'
             . ' WHERE group_id=' . db_ei($gid)
-            . ' ORDER BY rank';
+            . ' ORDER BY `rank`';
 
         $res = db_query($qry);
 
@@ -188,7 +188,7 @@ class WikiEntry
     {
         $res = db_query(' INSERT INTO wiki_group_list SET' .
         ' group_id=' . db_ei($this->gid) . ',' .
-        ' rank=' . db_ei($this->rank) . ',' .
+        ' `rank`=' . db_ei($this->rank) . ',' .
         " language_id='" . db_es($this->language_id) . "'," .
         ' wiki_name="' . db_es($this->name) . '",' .
         ' wiki_link="' . db_es($this->page) . '",' .
@@ -235,7 +235,7 @@ class WikiEntry
         global $feedback;
         $sql = ' UPDATE wiki_group_list SET'
           . ' group_id=' . db_ei($this->gid) . ','
-          . ' rank=' . db_ei($this->rank) . ','
+          . ' `rank`=' . db_ei($this->rank) . ','
           . " language_id='" . db_es($this->language_id) . "',"
           . ' wiki_name="' . db_es($this->name) . '",'
           . ' wiki_link="' . db_es($this->page) . '",'

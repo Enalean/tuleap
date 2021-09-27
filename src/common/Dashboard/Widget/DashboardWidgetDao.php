@@ -56,7 +56,7 @@ class DashboardWidgetDao extends DataAccessObject
         $sql = "SELECT *
                 FROM dashboards_lines
                 WHERE dashboard_id=$dashboard_id AND dashboard_type=$dashboard_type
-                ORDER BY rank ASC";
+                ORDER BY `rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -68,7 +68,7 @@ class DashboardWidgetDao extends DataAccessObject
         $sql = "SELECT *
                 FROM dashboards_lines_columns
                 WHERE line_id=$line_id
-                ORDER BY rank ASC";
+                ORDER BY `rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -80,7 +80,7 @@ class DashboardWidgetDao extends DataAccessObject
         $sql = "SELECT *
                 FROM dashboards_lines_columns_widgets
                 WHERE column_id=$column_id
-                ORDER BY rank ASC";
+                ORDER BY `rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -286,9 +286,9 @@ class DashboardWidgetDao extends DataAccessObject
                     SELECT @counter := @counter + 1 AS new_rank, dashboards_lines.*
                     FROM dashboards_lines
                     WHERE id = $line_id
-                    ORDER BY rank, id
+                    ORDER BY `rank`, id
                 ) as R1 USING(id)
-                SET dashboards_lines.rank = R1.new_rank";
+                SET dashboards_lines.`rank` = R1.new_rank";
 
         $this->update($sql);
     }
@@ -304,9 +304,9 @@ class DashboardWidgetDao extends DataAccessObject
                     SELECT @counter := @counter + 1 AS new_rank, dashboards_lines_columns.*
                     FROM dashboards_lines_columns
                     WHERE line_id = $line_id
-                    ORDER BY rank, id
+                    ORDER BY `rank`, id
                 ) as R1 USING(id)
-                SET dashboards_lines_columns.rank = R1.new_rank";
+                SET dashboards_lines_columns.`rank` = R1.new_rank";
 
         $this->update($sql);
     }
@@ -322,9 +322,9 @@ class DashboardWidgetDao extends DataAccessObject
                 SELECT @counter := @counter + 1 AS new_rank, dashboards_lines_columns_widgets.*
                 FROM dashboards_lines_columns_widgets
                 WHERE column_id = $column_id
-                ORDER BY rank, id
+                ORDER BY `rank`, id
             ) as R1 USING(id)
-            SET dashboards_lines_columns_widgets.rank = R1.new_rank";
+            SET dashboards_lines_columns_widgets.`rank` = R1.new_rank";
 
         $this->update($sql);
     }
@@ -441,7 +441,7 @@ class DashboardWidgetDao extends DataAccessObject
                         AND line.dashboard_id = $id
                         AND line.dashboard_type = $type
                     )
-                ORDER BY line.rank ASC, col.rank ASC
+                ORDER BY line.`rank` ASC, col.`rank` ASC
                 LIMIT 1";
 
         $row = $this->retrieve($sql)->getRow();
@@ -457,13 +457,13 @@ class DashboardWidgetDao extends DataAccessObject
         $dashboard_id   = $this->da->escapeInt($dashboard_id);
         $dashboard_type = $this->da->quoteSmart($dashboard_type);
 
-        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, rank)
+        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, `rank`)
                 VALUES ($dashboard_id, $dashboard_type, 'one-column', 1)";
 
         $line_id = $this->updateAndGetLastId($sql);
 
         $line_id = $this->da->escapeInt($line_id);
-        $sql     = "INSERT INTO dashboards_lines_columns (line_id, rank) VALUES ($line_id, 1)";
+        $sql     = "INSERT INTO dashboards_lines_columns (line_id, `rank`) VALUES ($line_id, 1)";
 
         return $this->updateAndGetLastId($sql);
     }
@@ -474,7 +474,7 @@ class DashboardWidgetDao extends DataAccessObject
         $dashboard_type = $this->da->quoteSmart($dashboard_type);
         $new_line_rank  = $this->da->escapeInt($new_line_rank);
 
-        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, rank)
+        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, `rank`)
                 VALUES ($dashboard_id, $dashboard_type, 'one-column', $new_line_rank)";
 
         return $this->updateAndGetLastId($sql);
@@ -485,7 +485,7 @@ class DashboardWidgetDao extends DataAccessObject
         $line_id         = $this->da->escapeInt($line_id);
         $new_column_rank = $this->da->escapeInt($new_column_rank);
 
-        $sql = "INSERT INTO dashboards_lines_columns (line_id, rank) VALUES ($line_id, $new_column_rank)";
+        $sql = "INSERT INTO dashboards_lines_columns (line_id, `rank`) VALUES ($line_id, $new_column_rank)";
 
         return $this->updateAndGetLastId($sql);
     }
@@ -497,7 +497,7 @@ class DashboardWidgetDao extends DataAccessObject
         $rank       = $this->da->escapeInt($rank);
         $name       = $this->da->quoteSmart($name);
 
-        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, rank, name, content_id)
+        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id)
                 VALUES ($column_id, $rank, $name, $content_id)";
         return $this->update($sql);
     }
@@ -508,8 +508,8 @@ class DashboardWidgetDao extends DataAccessObject
         $content_id = $this->da->escapeInt($content_id);
         $name       = $this->da->quoteSmart($name);
 
-        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, rank, name, content_id)
-                SELECT $column_id, IFNULL(min(rank) - 1, 1), $name, $content_id
+        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id)
+                SELECT $column_id, IFNULL(min(`rank`) - 1, 1), $name, $content_id
                 FROM dashboards_lines_columns_widgets
                 WHERE column_id = $column_id";
         $this->update($sql);
@@ -520,7 +520,7 @@ class DashboardWidgetDao extends DataAccessObject
     private function adjustOrderOfWidgetsInColumn($column_id)
     {
         $sql = "UPDATE dashboards_lines_columns_widgets
-                SET rank = rank + 1
+                SET `rank` = `rank` + 1
                 WHERE column_id = $column_id";
         $this->update($sql);
     }
@@ -576,7 +576,7 @@ class DashboardWidgetDao extends DataAccessObject
         $rank      = $this->da->escapeInt($rank);
 
         $sql = "UPDATE dashboards_lines_columns_widgets
-                SET rank=$rank
+                SET `rank`=$rank
                 WHERE id=$widget_id";
 
         return $this->retrieve($sql);
@@ -588,7 +588,7 @@ class DashboardWidgetDao extends DataAccessObject
         $rank    = $this->da->escapeInt($rank);
 
         $sql = "UPDATE dashboards_lines
-                SET rank=$rank
+                SET `rank`=$rank
                 WHERE id=$line_id";
 
         return $this->retrieve($sql);
@@ -600,7 +600,7 @@ class DashboardWidgetDao extends DataAccessObject
         $rank      = $this->da->escapeInt($rank);
 
         $sql = "UPDATE dashboards_lines_columns
-                SET rank=$rank
+                SET `rank`=$rank
                 WHERE id=$column_id";
 
         return $this->retrieve($sql);
@@ -686,8 +686,8 @@ class DashboardWidgetDao extends DataAccessObject
         $template_line_id      = $this->da->escapeInt($template_line_id);
         $dashboard_type        = $this->da->quoteSmart($dashboard_type);
 
-        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, rank)
-                SELECT $new_dashboard_id, dashboard_type, layout, rank
+        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, `rank`)
+                SELECT $new_dashboard_id, dashboard_type, layout, `rank`
                 FROM dashboards_lines
                 WHERE dashboard_type = $dashboard_type
                   AND dashboard_id = $template_dashboard_id
@@ -702,8 +702,8 @@ class DashboardWidgetDao extends DataAccessObject
         $new_line_id        = $this->da->escapeInt($new_line_id);
         $template_colmun_id = $this->da->escapeInt($template_colmun_id);
 
-        $sql = "INSERT INTO dashboards_lines_columns (line_id, rank)
-                SELECT $new_line_id, rank
+        $sql = "INSERT INTO dashboards_lines_columns (line_id, `rank`)
+                SELECT $new_line_id, `rank`
                 FROM dashboards_lines_columns
                 WHERE line_id = $template_line_id
                   AND id = $template_colmun_id";
@@ -717,8 +717,8 @@ class DashboardWidgetDao extends DataAccessObject
         $new_content_id     = $this->da->escapeInt($new_content_id);
         $template_widget_id = $this->da->escapeInt($template_widget_id);
 
-        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, rank, name, content_id, is_minimized)
-                SELECT $new_column_id, rank, name, $new_content_id, is_minimized
+        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id, is_minimized)
+                SELECT $new_column_id, `rank`, name, $new_content_id, is_minimized
                 FROM dashboards_lines_columns_widgets
                 WHERE id = $template_widget_id";
 

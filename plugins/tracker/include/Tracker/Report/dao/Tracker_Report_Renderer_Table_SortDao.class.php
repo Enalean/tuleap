@@ -32,7 +32,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
         $sql         = "SELECT *
                 FROM $this->table_name
                 WHERE renderer_id = $renderer_id
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -60,7 +60,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
         } else {
             $is_desc = $this->da->escapeInt($is_desc);
         }
-        $sql = "INSERT INTO $this->table_name(renderer_id, field_id, is_desc, rank)
+        $sql = "INSERT INTO $this->table_name(renderer_id, field_id, is_desc, `rank`)
                                        VALUES($renderer_id, $field_id, $is_desc, $rank)";
         return $this->update($sql);
     }
@@ -96,8 +96,8 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
-        $sql              = "INSERT INTO $this->table_name(renderer_id, field_id, is_desc, rank)
-                SELECT $to_renderer_id, field_id, is_desc, rank
+        $sql              = "INSERT INTO $this->table_name(renderer_id, field_id, is_desc, `rank`)
+                SELECT $to_renderer_id, field_id, is_desc, `rank`
                 FROM $this->table_name
                 WHERE renderer_id = $from_renderer_id";
         $this->update($sql);

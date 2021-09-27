@@ -48,7 +48,7 @@ class BindStaticValueDao extends DataAccessObject
         $sql      = "SELECT *
                 FROM tracker_field_list_bind_static_value
                 WHERE field_id = $field_id
-                ORDER BY " . ($is_rank_alpha ? 'label' : 'rank');
+                ORDER BY " . ($is_rank_alpha ? 'label' : '`rank`');
         return $this->retrieve($sql);
     }
 
@@ -57,11 +57,11 @@ class BindStaticValueDao extends DataAccessObject
         $from_value_id = $this->da->escapeInt($from_value_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
         if ($by_reference) {
-            $insert = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden, original_value_id)
-                    SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
+            $insert = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, `rank`, is_hidden, original_value_id)
+                    SELECT $to_field_id, label, description, `rank`, is_hidden, $from_value_id";
         } else {
-            $insert = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden, original_value_id)
-                    SELECT $to_field_id, label, description, rank, is_hidden, original_value_id";
+            $insert = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, `rank`, is_hidden, original_value_id)
+                    SELECT $to_field_id, label, description, `rank`, is_hidden, original_value_id";
         }
         $sql = $insert . "
                 FROM tracker_field_list_bind_static_value
@@ -80,7 +80,7 @@ class BindStaticValueDao extends DataAccessObject
         );
         $is_hidden   = $this->da->escapeInt($is_hidden);
 
-        $sql = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden)
+        $sql = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, `rank`, is_hidden)
                 VALUES ($field_id, $label, $description, $rank, $is_hidden)";
         return $this->updateAndGetLastId($sql);
     }
@@ -90,8 +90,8 @@ class BindStaticValueDao extends DataAccessObject
         $field_id          = $this->da->escapeInt($field->id);
         $original_value_id = $this->da->escapeInt($original_value_id);
 
-        $sql = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden, original_value_id)
-                SELECT target.id, original_value.label, original_value.description, original_value.rank, original_value.is_hidden, $original_value_id
+        $sql = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, `rank`, is_hidden, original_value_id)
+                SELECT target.id, original_value.label, original_value.description, original_value.`rank`, original_value.is_hidden, $original_value_id
                     FROM tracker_field_list_bind_static_value AS original_value
                     INNER JOIN tracker_field AS target ON (target.original_field_id = original_value.field_id)
                     WHERE original_value.field_id = $field_id
@@ -139,7 +139,7 @@ class BindStaticValueDao extends DataAccessObject
         $sql = "UPDATE tracker_field_list_bind_static_value
                 SET label = $label,
                     description = $description,
-                    rank = $rank,
+                    `rank` = $rank,
                     is_hidden = $is_hidden
                 WHERE id = $id
                   OR original_value_id = $id";
@@ -168,7 +168,7 @@ class BindStaticValueDao extends DataAccessObject
                       AND c.changeset_id = $changeset_id
                       AND c.field_id = $field_id
                      )
-                ORDER BY f." . ($is_rank_alpha ? 'label' : 'rank');
+                ORDER BY f." . ($is_rank_alpha ? 'label' : '`rank`');
         return $this->retrieve($sql);
     }
 
@@ -343,7 +343,7 @@ class BindStaticValueDao extends DataAccessObject
         }
 
         $sql = "UPDATE tracker_field_list_bind_static_value
-                SET rank = CASE id $when_conditions END
+                SET `rank` = CASE id $when_conditions END
                 WHERE id IN ($ids)";
 
         if (! $this->update($sql) || ! $this->reorderChildren($ids)) {
@@ -357,7 +357,7 @@ class BindStaticValueDao extends DataAccessObject
     private function reorderChildren($ids)
     {
         $sql = "UPDATE tracker_field_list_bind_static_value AS children_values, tracker_field_list_bind_static_value AS parent_values
-                SET children_values.rank = parent_values.rank
+                SET children_values.`rank` = parent_values.`rank`
                 WHERE parent_values.id IN ($ids)
                     AND children_values.original_value_id = parent_values.id";
 

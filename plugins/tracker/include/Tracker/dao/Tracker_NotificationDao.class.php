@@ -48,7 +48,7 @@ class Tracker_NotificationDao extends DataAccessObject
         $sql        = "SELECT *
                 FROM $this->table_name" . "_role
                 WHERE tracker_id = $tracker_id 
-                ORDER BY rank ASC";
+                ORDER BY `rank` ASC";
         return $this->retrieve($sql);
     }
 
@@ -58,7 +58,7 @@ class Tracker_NotificationDao extends DataAccessObject
         $sql        = "SELECT *
                 FROM $this->table_name" . "_event
                 WHERE tracker_id = $tracker_id 
-                ORDER BY rank ASC";
+                ORDER BY `rank` ASC";
         return $this->retrieve($sql);
     }
 }

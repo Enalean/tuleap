@@ -41,7 +41,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
         $sql       = "SELECT *
                 FROM $this->table_name
                 WHERE report_id = $report_id
-                ORDER BY rank, name";
+                ORDER BY `rank`, name";
         return $this->retrieve($sql);
     }
 
@@ -73,7 +73,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
         $id        = $this->da->escapeInt($id);
         $report_id = $this->da->escapeInt($report_id);
         $rank      = (int) $this->prepareRanking('tracker_report_renderer', (int) $id, (int) $report_id, $rank, 'id', 'report_id');
-        $sql       = "UPDATE $this->table_name SET rank = $rank WHERE id = $id";
+        $sql       = "UPDATE $this->table_name SET `rank` = $rank WHERE id = $id";
         return $this->update($sql);
     }
 
@@ -86,7 +86,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
         $sql         = "UPDATE $this->table_name SET
                    name          = $name,
                    description   = $description,
-                   rank          = $rank
+                   `rank`          = $rank
                 WHERE id = $id ";
         return $this->update($sql);
     }
@@ -113,8 +113,8 @@ class Tracker_Report_RendererDao extends DataAccessObject
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_report_id     = $this->da->escapeInt($to_report_id);
-        $sql              = "INSERT INTO $this->table_name (report_id, renderer_type, name, description, rank)
-                SELECT $to_report_id, renderer_type, name, description, rank
+        $sql              = "INSERT INTO $this->table_name (report_id, renderer_type, name, description, `rank`)
+                SELECT $to_report_id, renderer_type, name, description, `rank`
                 FROM $this->table_name
                 WHERE id = $from_renderer_id";
         return $this->updateAndGetLastId($sql);
@@ -131,9 +131,9 @@ class Tracker_Report_RendererDao extends DataAccessObject
             $case[] = "WHEN $id THEN $rank ";
         }
         if (count($case)) {
-            $case = 'CASE id ' . implode('', $case) . ' ELSE rank END';
+            $case = 'CASE id ' . implode('', $case) . ' ELSE `rank` END';
             $sql  = "UPDATE $this->table_name
-                    SET rank = $case
+                    SET `rank` = $case
                     WHERE report_id = $report_id";
             return $this->update($sql);
         }

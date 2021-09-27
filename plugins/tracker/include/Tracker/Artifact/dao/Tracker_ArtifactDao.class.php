@@ -636,7 +636,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $limit        = $this->da->escapeInt($limit);
         $offset       = $this->da->escapeInt($offset);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.rank as rank" .
+        $sql = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.`rank` as `rank`" .
             $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids) .
             "LIMIT $limit
              OFFSET $offset";
@@ -668,7 +668,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                 WHERE parent_art.id IN ($artifact_ids)
                     AND child_tracker.deletion_date IS NULL
                     AND artlink.nature=$is_child_shortname
-                ORDER BY tracker_artifact_priority_rank.rank ASC ";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC ";
     }
 
     public function getParents(array $artifact_ids)
@@ -811,7 +811,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     $submile_null
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -860,7 +860,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     $exclude_where
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -914,7 +914,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     $exclude_where
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -939,7 +939,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                 WHERE parent_art.id = $artifact_id
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -964,7 +964,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                 WHERE parent_art.id = $artifact_id
                     AND linked_art.tracker_id IN ($tracker_ids)
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -1034,7 +1034,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                 WHERE parent_art.id = $artifact_id
                     AND linked_art.tracker_id IN ($tracker_ids)
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -1106,7 +1106,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                         CVL2.bindvalue_id = SS.open_value_id
                     )
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -1221,7 +1221,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     $exclude_where
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -1285,7 +1285,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                     SELECT artifact_id
                     FROM tracker_artifact_priority_rank
                     WHERE artifact_id IN ($artifact_ids)
-                    ORDER BY rank ASC
+                    ORDER BY `rank` ASC
                     ) AS R";
         $row = $this->retrieve($sql)->getRow();
         if ($row && $row['sorted_ids'] != null) {

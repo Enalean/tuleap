@@ -489,7 +489,7 @@ class Docman_ItemDao extends DataAccessObject
         }
 
         if ($rank !== null) {
-            $argArray[] = 'rank=' . ((int) $rank);
+            $argArray[] = '`rank`=' . ((int) $rank);
         }
 
         if ($item_type !== null) {
@@ -640,9 +640,9 @@ class Docman_ItemDao extends DataAccessObject
         switch ($ordering) {
             case 'beginning':
             case 'end':
-                $_select = $ordering == 'end' ? 'MAX(rank)+1' : 'MIN(rank)-1';
+                $_select = $ordering == 'end' ? 'MAX(`rank`)+1' : 'MIN(`rank`)-1';
                 $sql     = sprintf(
-                    'SELECT %s AS rank' .
+                    'SELECT %s AS `rank`' .
                                ' FROM plugin_docman_item' .
                                ' WHERE parent_id = %d',
                     $_select,
@@ -665,12 +665,12 @@ class Docman_ItemDao extends DataAccessObject
                         $order = 'DESC';
                     }
                     $sql = sprintf(
-                        'SELECT i1.item_id as item_id, i1.rank as rank' .
+                        'SELECT i1.item_id as item_id, i1.`rank` as `rank`' .
                                    ' FROM plugin_docman_item i1' .
                                    '  INNER JOIN plugin_docman_item i2 USING(parent_id)' .
                                    ' WHERE i2.item_id = %d' .
-                                   '  AND i1.rank %s i2.rank' .
-                                   ' ORDER BY i1.rank %s' .
+                                   '  AND i1.`rank` %s i2.`rank`' .
+                                   ' ORDER BY i1.`rank` %s' .
                                    ' LIMIT 1',
                         $item_id,
                         $op,
@@ -682,7 +682,7 @@ class Docman_ItemDao extends DataAccessObject
 
                         $sql = sprintf(
                             'UPDATE plugin_docman_item i1, plugin_docman_item i2' .
-                                       ' SET i1.rank = i2.rank, i2.rank = %d' .
+                                       ' SET i1.`rank` = i2.`rank`, i2.`rank` = %d' .
                                        ' WHERE i1.item_id = %d ' .
                                        '  AND i2.item_id = %d',
                             $row['rank'],
@@ -700,9 +700,9 @@ class Docman_ItemDao extends DataAccessObject
                 $rank = $ordering ? $ordering : 0;
                 $sql  = sprintf(
                     'UPDATE plugin_docman_item' .
-                               ' SET rank = rank + 1 ' .
+                               ' SET `rank` = `rank` + 1 ' .
                                ' WHERE  parent_id = %d ' .
-                               '  AND rank >= %d',
+                               '  AND `rank` >= %d',
                     $parentId,
                     $rank
                 );
@@ -724,7 +724,7 @@ class Docman_ItemDao extends DataAccessObject
         $res = false;
         if ($can_update) {
             $sql = sprintf(
-                'UPDATE plugin_docman_item SET parent_id = %s, rank = %s ' .
+                'UPDATE plugin_docman_item SET parent_id = %s, `rank` = %s ' .
                 ' WHERE  item_id = %s ',
                 $this->da->quoteSmart($new_parent_id),
                 $this->da->quoteSmart($rank),
@@ -738,7 +738,7 @@ class Docman_ItemDao extends DataAccessObject
     public function searchByParentsId($parents)
     {
         $sql = sprintf(
-            'SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL AND (obsolescence_date = 0 OR obsolescence_date > ' . $this->getObsoleteToday() . ') ORDER BY rank',
+            'SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL AND (obsolescence_date = 0 OR obsolescence_date > ' . $this->getObsoleteToday() . ') ORDER BY `rank`',
             implode(', ', $parents)
         );
         return $this->retrieve($sql);
@@ -966,11 +966,11 @@ class Docman_ItemDao extends DataAccessObject
     {
         $sql = 'INSERT INTO plugin_docman_item_deleted (item_id, parent_id, group_id, title, ' .
                         ' description, create_date, update_date, delete_date, ' .
-                        ' user_id, status, obsolescence_date, rank, item_type, link_url, ' .
+                        ' user_id, status, obsolescence_date, `rank`, item_type, link_url, ' .
                         ' wiki_page, file_is_embedded) ' .
                         ' SELECT item_id, parent_id, group_id, title, ' .
                         ' description, create_date, update_date, delete_date, ' .
-                        ' user_id, status, obsolescence_date, rank, item_type, link_url,' .
+                        ' user_id, status, obsolescence_date, `rank`, item_type, link_url,' .
                         ' wiki_page, file_is_embedded ' .
                         ' FROM plugin_docman_item ' .
                         ' WHERE item_id=' . $this->da->quoteSmart($itemId);
@@ -1029,7 +1029,7 @@ class Docman_ItemDao extends DataAccessObject
     {
         $sql = 'SELECT item_id, parent_id, group_id, title, ' .
                ' description, create_date, update_date, delete_date, ' .
-               ' user_id, status, obsolescence_date, rank, item_type, link_url, ' .
+               ' user_id, status, obsolescence_date, `rank`, item_type, link_url, ' .
                ' wiki_page, file_is_embedded ' .
                ' FROM plugin_docman_item_deleted ' .
                ' WHERE delete_date < ' . $this->da->escapeInt($time) .

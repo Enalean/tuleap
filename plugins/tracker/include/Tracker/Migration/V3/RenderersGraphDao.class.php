@@ -50,7 +50,7 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
-        $sql = "INSERT INTO tracker_report_renderer(old_id, report_id, renderer_type, name, description, rank)
+        $sql = "INSERT INTO tracker_report_renderer(old_id, report_id, renderer_type, name, description, `rank`)
                 SELECT G.report_graphic_id, R.id, 'plugin_graphontrackersv5', G.name, G.description, 2
                 FROM plugin_graphontrackers_report_graphic AS G, tracker_report AS R
                 WHERE G.user_id = R.user_id AND G.scope <> 'P' AND G.group_artifact_id = $tv3_id AND R.tracker_id = $tv5_id";
@@ -83,7 +83,7 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
-        $sql = "INSERT INTO tracker_report_criteria(report_id, field_id, rank, is_advanced)
+        $sql = "INSERT INTO tracker_report_criteria(report_id, field_id, `rank`, is_advanced)
                 SELECT R.id, F.id, 1, 0
                 FROM plugin_graphontrackers_report_graphic AS G, tracker_report AS R, tracker_field AS F
                 WHERE G.scope <> 'P' AND
@@ -100,13 +100,13 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
-        $sql = "INSERT INTO tracker_report_renderer(old_id, report_id, renderer_type, name, description, rank)
+        $sql = "INSERT INTO tracker_report_renderer(old_id, report_id, renderer_type, name, description, `rank`)
                 SELECT G.report_graphic_id, R.id, 'plugin_graphontrackersv5', G.name, G.description, 1
                 FROM plugin_graphontrackers_report_graphic AS G, tracker_report AS R
                 WHERE G.scope <> 'P' AND G.group_artifact_id = $tv3_id AND R.tracker_id = $tv5_id  AND R.old_id = G.report_graphic_id";
         $this->update($sql);
 
-        $sql = "INSERT INTO tracker_report_renderer(old_id, report_id, renderer_type, name, description, rank)
+        $sql = "INSERT INTO tracker_report_renderer(old_id, report_id, renderer_type, name, description, `rank`)
                 SELECT G.report_graphic_id, R.id, 'plugin_graphontrackersv5', G.name, G.description, 2
                 FROM plugin_graphontrackers_report_graphic AS G, tracker_report AS R
                 WHERE G.scope = 'P' AND G.group_artifact_id = $tv3_id AND R.tracker_id = $tv5_id";
@@ -123,19 +123,19 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
                                        @previous := report_id,
                                        tracker_report_renderer.*
                                 FROM tracker_report_renderer
-                                ORDER BY report_id, rank, id
+                                ORDER BY report_id, `rank`, id
                     ) as R1 USING(report_id, id)
                 INNER JOIN tracker_report ON (tracker_report_renderer.report_id = tracker_report.id
                                               AND tracker_report.tracker_id = $tv5_id)
-                SET tracker_report_renderer.rank = R1.new_rank";
+                SET tracker_report_renderer.`rank` = R1.new_rank";
         $this->update($sql);
     }
 
     private function updateGraphChartsWithFirstReport($tv5_id)
     {
         $tv5_id = $this->da->escapeInt($tv5_id);
-        $sql    = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_id, rank, chart_type, title,description, width, height)
-                SELECT Re.id, C.id, C.rank, C.chart_type, C.title, C.description, C.width, C.height
+        $sql    = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_id, `rank`, chart_type, title,description, width, height)
+                SELECT Re.id, C.id, C.`rank`, C.chart_type, C.title, C.description, C.width, C.height
                 FROM (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report WHERE tracker_id = $tv5_id GROUP BY tracker_id) AS M
                     INNER JOIN tracker_report AS R ON (M.tracker_id = R.tracker_id AND R.tracker_id = $tv5_id)
                     INNER JOIN tracker_report_renderer AS Re ON (R.id = Re.report_id AND Re.renderer_type='plugin_graphontrackersv5')

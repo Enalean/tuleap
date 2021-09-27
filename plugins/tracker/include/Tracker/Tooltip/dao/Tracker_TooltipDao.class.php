@@ -35,7 +35,7 @@ class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IR
         $sql        = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id
-                ORDER BY rank";
+                ORDER BY `rank`";
         return $this->retrieve($sql);
     }
 
@@ -44,7 +44,7 @@ class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IR
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
         $rank       = $this->da->escapeInt($this->prepareRanking('tracker_tooltip', 0, (int) $tracker_id, $rank, 'field_id', 'tracker_id'));
-        $sql        = "REPLACE INTO $this->table_name(tracker_id, field_id, rank)
+        $sql        = "REPLACE INTO $this->table_name(tracker_id, field_id, `rank`)
                 VALUES ($tracker_id, $field_id, $rank)";
         return $this->update($sql);
     }

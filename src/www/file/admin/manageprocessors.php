@@ -135,7 +135,7 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
     }
 }
 
-$sql    = "SELECT * FROM frs_processor WHERE group_id=" . db_ei($group_id) . " OR group_id=100 ORDER BY rank";
+$sql    = "SELECT * FROM frs_processor WHERE group_id=" . db_ei($group_id) . " OR group_id=100 ORDER BY `rank`";
 $result = db_query($sql);
 
 ?>

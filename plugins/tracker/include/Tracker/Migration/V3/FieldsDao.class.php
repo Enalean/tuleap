@@ -47,7 +47,7 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject
                     label,
                     description,
                     use_it,
-                    rank,
+                    `rank`,
                     scope,
                     required)
                 SELECT field_id,
@@ -75,7 +75,7 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject
     private function duplicateFieldUsageAndRanking($tv3_id, $tv5_id)
     {
         $sql = "UPDATE tracker_field AS f, artifact_field_usage AS u
-                    SET f.use_it = u.use_it, f.rank = u.place, f.parent_id = If(u.use_it, f.parent_id, 0)
+                    SET f.use_it = u.use_it, f.`rank` = u.place, f.parent_id = If(u.use_it, f.parent_id, 0)
                     WHERE f.old_id = u.field_id
                       AND f.tracker_id = $tv5_id AND u.group_artifact_id = $tv3_id";
         $this->update($sql);
@@ -91,9 +91,9 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject
                                        tracker_field.*
                                 FROM tracker_field
                                 WHERE tracker_id = $tv5_id
-                                ORDER BY parent_id, rank, id
+                                ORDER BY parent_id, `rank`, id
                                ) as R1 USING(parent_id,id)
-                SET tracker_field.rank = R1.new_rank
+                SET tracker_field.`rank` = R1.new_rank
                 WHERE tracker_field.tracker_id = $tv5_id";
         $this->update($sql);
     }
@@ -144,7 +144,7 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject
 
     private function insertIntoFieldListBindStaticValue($tv3_id, $tv5_id)
     {
-        $sql = "INSERT INTO tracker_field_list_bind_static_value(old_id, field_id, label, description, rank, is_hidden)
+        $sql = "INSERT INTO tracker_field_list_bind_static_value(old_id, field_id, label, description, `rank`, is_hidden)
                 SELECT v.value_id,
                     f.id,
                     REPLACE(REPLACE(v.value, '&gt;', '>'), '&lt;', '<'),

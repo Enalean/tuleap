@@ -24,7 +24,7 @@ class Tracker_Migration_V3_AttachmentFieldDao extends DataAccessObject
     public function addAttachmentField($tv5_id)
     {
         $tv5_id = $this->da->escapeInt($tv5_id);
-        $sql    = "INSERT INTO tracker_field(tracker_id, parent_id, formElement_type, name, label, description, use_it, rank, scope, required)
+        $sql    = "INSERT INTO tracker_field(tracker_id, parent_id, formElement_type, name, label, description, use_it, `rank`, scope, required)
                 SELECT $tv5_id, S1.id, 'file', 'attachment', 'Attachments', '', 1, 1, 'P', 0
                 FROM tracker_fieldset_$tv5_id AS S1
                 WHERE $tv5_id = S1.tracker_id
