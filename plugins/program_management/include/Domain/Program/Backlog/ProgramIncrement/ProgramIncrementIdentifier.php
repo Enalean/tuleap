@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -32,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  * I am the ID (identifier) of an Artifact from the Program Increment tracker.
  * @psalm-immutable
  */
-final class ProgramIncrementIdentifier
+final class ProgramIncrementIdentifier implements TimeboxIdentifier
 {
     private function __construct(private int $id)
     {

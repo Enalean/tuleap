@@ -38,7 +38,7 @@ final class ArtifactLinkValue
 
     public static function fromSourceTimeboxValues(SourceTimeboxChangesetValues $values): self
     {
-        return new self(false, $values->getSourceArtifactId());
+        return new self(false, $values->getSourceTimebox()->getId());
     }
 
     public static function buildEmptyValue(): self

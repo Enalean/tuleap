@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Changes
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
 
 final class ChangesetRetriever implements RetrieveChangesetSubmissionDate
@@ -35,13 +36,13 @@ final class ChangesetRetriever implements RetrieveChangesetSubmissionDate
     ) {
     }
 
-    public function getSubmissionDate(int $artifact_id, ChangesetIdentifier $changeset_identifier): SubmissionDate
+    public function getSubmissionDate(ArtifactIdentifier $artifact, ChangesetIdentifier $changeset_identifier): SubmissionDate
     {
-        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
-        if (! $artifact) {
-            throw new ArtifactNotFoundException($artifact_id);
+        $full_artifact = $this->artifact_factory->getArtifactById($artifact->getId());
+        if (! $full_artifact) {
+            throw new ArtifactNotFoundException($artifact->getId());
         }
-        $changeset = $artifact->getChangeset($changeset_identifier->getId());
+        $changeset = $full_artifact->getChangeset($changeset_identifier->getId());
         if (! $changeset) {
             throw new ChangesetNotFoundException($changeset_identifier->getId());
         }

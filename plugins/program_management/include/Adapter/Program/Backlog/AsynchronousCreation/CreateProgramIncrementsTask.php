@@ -106,12 +106,12 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         );
 
         $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(
-            $replication_data->getArtifact()->getId(),
+            $replication_data->getTimebox()->getId(),
             $user_identifier->getId()
         );
 
         $program_increment_changed = new ProgramIncrementChanged(
-            $replication_data->getArtifact()->getId(),
+            $replication_data->getTimebox()->getId(),
             $replication_data->getTracker()->getId(),
             $user_identifier
         );

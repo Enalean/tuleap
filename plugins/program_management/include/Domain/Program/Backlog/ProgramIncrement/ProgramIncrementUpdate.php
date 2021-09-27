@@ -29,12 +29,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Pending
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredUserNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\DomainUser;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
@@ -43,13 +46,13 @@ use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
  * to its Mirrored Program Increments.
  * @psalm-immutable
  */
-final class ProgramIncrementUpdate
+final class ProgramIncrementUpdate implements TimeboxMirroringOrder
 {
     private function __construct(
-        public ProgramIncrementIdentifier $program_increment,
-        public ProgramIncrementTrackerIdentifier $tracker,
-        public ChangesetIdentifier $changeset,
-        public UserIdentifier $user
+        private ProgramIncrementIdentifier $program_increment,
+        private ProgramIncrementTrackerIdentifier $tracker,
+        private ChangesetIdentifier $changeset,
+        private UserIdentifier $user
     ) {
     }
 
@@ -107,5 +110,35 @@ final class ProgramIncrementUpdate
             throw new StoredChangesetNotFoundException($changeset_id);
         }
         return new self($program_increment, $program_increment_tracker, $changeset, $user);
+    }
+
+    public function getTimebox(): TimeboxIdentifier
+    {
+        return $this->program_increment;
+    }
+
+    public function getProgramIncrement(): ProgramIncrementIdentifier
+    {
+        return $this->program_increment;
+    }
+
+    public function getTracker(): TrackerIdentifier
+    {
+        return $this->tracker;
+    }
+
+    public function getProgramIncrementTracker(): ProgramIncrementTrackerIdentifier
+    {
+        return $this->tracker;
+    }
+
+    public function getChangeset(): ChangesetIdentifier
+    {
+        return $this->changeset;
+    }
+
+    public function getUser(): UserIdentifier
+    {
+        return $this->user;
     }
 }

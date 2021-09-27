@@ -96,7 +96,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->pending_artifact_creation_store->expects(self::once())
             ->method('deleteArtifactFromPendingCreation')
-            ->with($replication->getArtifact()->getId(), (int) $replication->getUserIdentifier()->getId());
+            ->with($replication->getTimebox()->getId(), (int) $replication->getUserIdentifier()->getId());
 
         $this->user_stories_planner->expects(self::once())->method('plan');
 

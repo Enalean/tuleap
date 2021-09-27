@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
@@ -46,7 +46,7 @@ final class RetrieveFieldValuesGathererStub implements RetrieveFieldValuesGather
         return $this->gatherer;
     }
 
-    public function getGathererFromUpdate(ProgramIncrementUpdate $update): GatherFieldValues
+    public function getGathererFromUpdate(TimeboxMirroringOrder $order): GatherFieldValues
     {
         return $this->gatherer;
     }

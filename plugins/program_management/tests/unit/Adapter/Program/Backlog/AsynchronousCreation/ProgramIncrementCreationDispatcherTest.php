@@ -38,7 +38,9 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
@@ -86,7 +88,9 @@ final class ProgramIncrementCreationDispatcherTest extends \Tuleap\Test\PHPUnit\
                 $this->createStub(\Tracker_Artifact_ChangesetFactory::class),
                 VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
                 RetrieveProgramOfProgramIncrementStub::withProgram(197),
-                $project_builder
+                $project_builder,
+                VerifyIsProgramIncrementStub::withValidProgramIncrement(),
+                VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
             ),
             $this->task_builder
         );

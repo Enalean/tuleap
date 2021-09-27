@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Events;
 
+/**
+ * @psalm-immutable
+ */
 interface ProgramIncrementUpdateEvent
 {
     public const TOPIC = 'tuleap.program_management.program_increment.update';

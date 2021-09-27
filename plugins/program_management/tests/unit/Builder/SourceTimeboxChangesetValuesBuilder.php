@@ -50,20 +50,14 @@ final class SourceTimeboxChangesetValuesBuilder
 
     public static function buildWithSubmissionDate(int $submission_date): SourceTimeboxChangesetValues
     {
-        return SourceTimeboxChangesetValues::fromReplication(
-            GatherSynchronizedFieldsStub::withDefaults(),
-            RetrieveFieldValuesGathererStub::withGatherer(
-                GatherFieldValuesStub::withValues(
-                    'Program Release',
-                    'Description',
-                    'text',
-                    '2020-10-01',
-                    '2020-10-10',
-                    ['Planned']
-                )
-            ),
-            RetrieveChangesetSubmissionDateStub::withDate($submission_date),
-            ReplicationDataBuilder::buildWithArtifactId(112)
+        return self::buildWithValuesAndSubmissionDate(
+            'Program Release',
+            'Description',
+            'text',
+            ['Planned'],
+            '2020-10-01',
+            '2020-10-10',
+            $submission_date
         );
     }
 
@@ -92,7 +86,7 @@ final class SourceTimeboxChangesetValuesBuilder
         string $end_date,
         int $source_timebox_id
     ): SourceTimeboxChangesetValues {
-        return SourceTimeboxChangesetValues::fromReplication(
+        return SourceTimeboxChangesetValues::fromMirroringOrder(
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
@@ -105,7 +99,7 @@ final class SourceTimeboxChangesetValuesBuilder
                 )
             ),
             RetrieveChangesetSubmissionDateStub::withDefaults(),
-            ReplicationDataBuilder::buildWithArtifactId($source_timebox_id)
+            ProgramIncrementCreationBuilder::buildWithProgramIncrementId($source_timebox_id)
         );
     }
 
@@ -121,7 +115,7 @@ final class SourceTimeboxChangesetValuesBuilder
         string $end_date,
         int $submission_date
     ): SourceTimeboxChangesetValues {
-        return SourceTimeboxChangesetValues::fromReplication(
+        return SourceTimeboxChangesetValues::fromMirroringOrder(
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
@@ -134,7 +128,7 @@ final class SourceTimeboxChangesetValuesBuilder
                 )
             ),
             RetrieveChangesetSubmissionDateStub::withDate($submission_date),
-            ReplicationDataBuilder::build()
+            ProgramIncrementCreationBuilder::build()
         );
     }
 }

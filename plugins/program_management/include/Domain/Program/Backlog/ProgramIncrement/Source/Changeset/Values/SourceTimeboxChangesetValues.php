@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 
 /**
  * I hold all field values for a given changeset for a source Timebox
@@ -38,7 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Repl
 final class SourceTimeboxChangesetValues
 {
     private function __construct(
-        private int $source_artifact_id,
+        private TimeboxIdentifier $source_timebox,
         private SubmissionDate $submitted_on,
         private TitleValue $title_value,
         private DescriptionValue $description_value,
@@ -58,17 +59,15 @@ final class SourceTimeboxChangesetValues
         RetrieveChangesetSubmissionDate $submission_retriever,
         ReplicationData $replication
     ): self {
-        $program_increment_id = $replication->getArtifact()->getId();
-        $fields               = SynchronizedFieldReferences::fromTrackerIdentifier(
+        $fields            = SynchronizedFieldReferences::fromTrackerIdentifier(
             $fields_gatherer,
             $replication->getTracker(),
             null
         );
-        $submission_date      = $submission_retriever->getSubmissionDate(
-            $program_increment_id,
+        $submission_date   = $submission_retriever->getSubmissionDate(
+            $replication->getTimebox(),
             $replication->getChangeset()
         );
-
         $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
         $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
         $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);
@@ -77,7 +76,7 @@ final class SourceTimeboxChangesetValues
         $end_period_value  = EndPeriodValue::fromEndPeriodReference($values_gatherer, $fields->end_period);
 
         return new self(
-            $program_increment_id,
+            $replication->getTimebox(),
             $submission_date,
             $title_value,
             $description_value,
@@ -91,17 +90,20 @@ final class SourceTimeboxChangesetValues
      * @throws FieldSynchronizationException
      * @throws MirroredTimeboxReplicationException
      */
-    public static function fromUpdate(
+    public static function fromMirroringOrder(
         GatherSynchronizedFields $fields_gatherer,
         RetrieveFieldValuesGatherer $field_values_retriever,
         RetrieveChangesetSubmissionDate $submission_retriever,
-        ProgramIncrementUpdate $update
+        TimeboxMirroringOrder $order
     ): self {
-        $program_increment_id = $update->program_increment->getId();
-        $fields               = SynchronizedFieldReferences::fromTrackerIdentifier($fields_gatherer, $update->tracker, null);
-        $submission_date      = $submission_retriever->getSubmissionDate($program_increment_id, $update->changeset);
-
-        $values_gatherer   = $field_values_retriever->getGathererFromUpdate($update);
+        $timebox           = $order->getTimebox();
+        $fields            = SynchronizedFieldReferences::fromTrackerIdentifier(
+            $fields_gatherer,
+            $order->getTracker(),
+            null
+        );
+        $submission_date   = $submission_retriever->getSubmissionDate($timebox, $order->getChangeset());
+        $values_gatherer   = $field_values_retriever->getGathererFromUpdate($order);
         $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
         $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);
         $status_value      = StatusValue::fromStatusReference($values_gatherer, $fields->status);
@@ -109,7 +111,7 @@ final class SourceTimeboxChangesetValues
         $end_period_value  = EndPeriodValue::fromEndPeriodReference($values_gatherer, $fields->end_period);
 
         return new self(
-            $program_increment_id,
+            $timebox,
             $submission_date,
             $title_value,
             $description_value,
@@ -117,6 +119,16 @@ final class SourceTimeboxChangesetValues
             $start_date_value,
             $end_period_value
         );
+    }
+
+    public function getSourceTimebox(): TimeboxIdentifier
+    {
+        return $this->source_timebox;
+    }
+
+    public function getSubmittedOn(): SubmissionDate
+    {
+        return $this->submitted_on;
     }
 
     public function getTitleValue(): TitleValue
@@ -132,16 +144,6 @@ final class SourceTimeboxChangesetValues
     public function getStatusValue(): StatusValue
     {
         return $this->status_value;
-    }
-
-    public function getSubmittedOn(): SubmissionDate
-    {
-        return $this->submitted_on;
-    }
-
-    public function getSourceArtifactId(): int
-    {
-        return $this->source_artifact_id;
     }
 
     public function getStartDateValue(): StartDateValue

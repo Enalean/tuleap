@@ -81,14 +81,14 @@ final class ProgramIncrementCreationDispatcher implements DispatchProgramIncreme
 
     public function dispatchCreation(ProgramIncrementCreation $creation): void
     {
-        $artifact_id = $creation->program_increment->getId();
+        $artifact_id = $creation->getProgramIncrement()->getId();
         try {
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
                 self::TOPIC,
                 [
                     'artifact_id' => $artifact_id,
-                    'user_id'     => $creation->user->getId(),
+                    'user_id'     => $creation->getUser()->getId(),
                 ]
             );
         } catch (Exception $exception) {

@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+
 /**
  * I hold the identifier of a Mirrored Timebox Artifact.
+ * I never hold the identifier of a Source Timebox.
+ * @see TimeboxIdentifier
  * @psalm-immutable
  */
 interface MirroredTimeboxIdentifier

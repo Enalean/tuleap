@@ -27,8 +27,6 @@ use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
 use Tuleap\ProgramManagement\Tests\Stub\StoreProgramIncrementCreationStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -41,12 +39,7 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->event = ArtifactCreatedEventStub::withIds(
-            1,
-            TrackerIdentifierStub::withId(15),
-            UserIdentifierStub::withId(1001),
-            21
-        );
+        $this->event = ArtifactCreatedEventStub::withIds(1, 15, 1001, 21);
 
         $this->feature_remover            = RemovePlannedFeaturesFromTopBacklogStub::withCount();
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();

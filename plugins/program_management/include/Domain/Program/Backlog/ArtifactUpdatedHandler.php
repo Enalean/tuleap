@@ -56,9 +56,9 @@ final class ArtifactUpdatedHandler
     private function planArtifactIfNeeded(ProgramIncrementUpdate $program_increment_update): void
     {
         $program_increment_changed = new ProgramIncrementChanged(
-            $program_increment_update->program_increment->getId(),
-            $program_increment_update->tracker->getId(),
-            $program_increment_update->user
+            $program_increment_update->getProgramIncrement()->getId(),
+            $program_increment_update->getProgramIncrementTracker()->getId(),
+            $program_increment_update->getUser()
         );
         $this->user_stories_planner->plan($program_increment_changed);
     }

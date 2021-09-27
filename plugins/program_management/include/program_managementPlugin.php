@@ -43,11 +43,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepr
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetAdder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\StatusValueMapper;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -547,16 +547,33 @@ final class program_managementPlugin extends Plugin
 
     public function workerEvent(WorkerEvent $event): void
     {
-        $logger = $this->getLogger();
+        $logger                 = $this->getLogger();
+        $artifact_factory       = \Tracker_ArtifactFactory::instance();
+        $user_manager           = UserManager::instance();
+        $user_retriever         = new UserManagerAdapter($user_manager);
+        $program_increments_DAO = new ProgramIncrementsDAO();
 
-        $create_mirrors_runner = $this->getProgramIncrementRunner();
-        $create_mirrors_runner->addListener($event);
+        $creation_dispatcher = new ProgramIncrementCreationDispatcher(
+            $this->getLogger(),
+            new QueueFactory($logger),
+            new ReplicationDataAdapter(
+                $artifact_factory,
+                $user_manager,
+                new PendingProgramIncrementCreationDAO(),
+                Tracker_Artifact_ChangesetFactoryBuilder::build(),
+                $program_increments_DAO,
+                new ProgramDao(),
+                new ProgramManagementProjectAdapter(ProjectManager::instance()),
+                $program_increments_DAO,
+                new ArtifactVisibleVerifier($artifact_factory, $user_retriever)
+            ),
+            new TaskBuilder()
+        );
 
-        $user_retriever           = new UserManagerAdapter(UserManager::instance());
-        $artifact_factory         = \Tracker_ArtifactFactory::instance();
+        $creation_dispatcher->addListener($event);
+
         $iteration_creation_DAO   = new PendingIterationCreationDAO();
         $pending_updates_dao      = new PendingProgramIncrementUpdateDAO();
-        $program_increments_DAO   = new ProgramIncrementsDAO();
         $tracker_factory          = \TrackerFactory::instance();
         $form_element_factory     = \Tracker_FormElementFactory::instance();
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
@@ -655,11 +672,33 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
+        $logger                 = $this->getLogger();
+        $artifact_factory       = \Tracker_ArtifactFactory::instance();
+        $user_manager           = UserManager::instance();
+        $user_retriever         = new UserManagerAdapter($user_manager);
+        $program_increments_DAO = new ProgramIncrementsDAO();
+        $creation_DAO           = new PendingProgramIncrementCreationDAO();
+
         $handler = new ArtifactCreatedHandler(
             new ArtifactsExplicitTopBacklogDAO(),
-            new ProgramIncrementsDAO(),
-            new PendingProgramIncrementCreationDAO(),
-            $this->getProgramIncrementRunner(),
+            $program_increments_DAO,
+            $creation_DAO,
+            new ProgramIncrementCreationDispatcher(
+                $this->getLogger(),
+                new QueueFactory($logger),
+                new ReplicationDataAdapter(
+                    $artifact_factory,
+                    $user_manager,
+                    $creation_DAO,
+                    Tracker_Artifact_ChangesetFactoryBuilder::build(),
+                    $program_increments_DAO,
+                    new ProgramDao(),
+                    new ProgramManagementProjectAdapter(ProjectManager::instance()),
+                    $program_increments_DAO,
+                    new ArtifactVisibleVerifier($artifact_factory, $user_retriever)
+                ),
+                new TaskBuilder()
+            ),
         );
         $handler->handle(ArtifactCreatedProxy::fromArtifactCreated($event));
     }
@@ -1158,26 +1197,6 @@ final class program_managementPlugin extends Plugin
     private function getLogger(): \Psr\Log\LoggerInterface
     {
         return BackendLogger::getDefaultLogger("program_management_syslog");
-    }
-
-    private function getProgramIncrementRunner(): ProgramIncrementCreationDispatcher
-    {
-        $logger = $this->getLogger();
-
-        return new ProgramIncrementCreationDispatcher(
-            $this->getLogger(),
-            new QueueFactory($logger),
-            new ReplicationDataAdapter(
-                Tracker_ArtifactFactory::instance(),
-                UserManager::instance(),
-                new PendingProgramIncrementCreationDAO(),
-                Tracker_Artifact_ChangesetFactoryBuilder::build(),
-                new ProgramIncrementsDAO(),
-                new ProgramDao(),
-                new ProgramManagementProjectAdapter(ProjectManager::instance())
-            ),
-            new TaskBuilder()
-        );
     }
 
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
+
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 
 /**
+ * I am the id (identifier) of a Timebox. Either a Program Increment or an Iteration.
+ * I never hold the identifier of a Mirrored Timebox.
+ * @see MirroredTimeboxIdentifier
  * @psalm-immutable
  */
-final class Artifact
+interface TimeboxIdentifier extends ArtifactIdentifier
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    public function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
 }

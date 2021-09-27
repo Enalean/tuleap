@@ -50,14 +50,14 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
 
     public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void
     {
-        $program_increment_id = $update->program_increment->getId();
-        $user_id              = $update->user->getId();
+        $program_increment_id = $update->getProgramIncrement()->getId();
+        $user_id              = $update->getUser()->getId();
         $this->logger->debug(
             "Processing program increment update with program increment #$program_increment_id for user #$user_id"
         );
 
         try {
-            $source_values = SourceTimeboxChangesetValues::fromUpdate(
+            $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
                 $this->fields_gatherer,
                 $this->values_retriever,
                 $this->submission_date_retriever,
@@ -85,7 +85,7 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
                     $mirrored_program_increment,
                     $source_values,
                     ArtifactLinkValue::buildEmptyValue(),
-                    $update->user
+                    $update->getUser()
                 );
                 $this->changeset_adder->addChangeset($changeset);
             } catch (FieldSynchronizationException | MirroredTimeboxReplicationException $exception) {

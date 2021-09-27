@@ -74,19 +74,19 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $iterations                = IterationIdentifier::buildCollectionFromProgramIncrement(
             SearchIterationsStub::withIterationIds(54, 89),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            $this->program_increment_update->program_increment,
-            $this->program_increment_update->user
+            $this->program_increment_update->getProgramIncrement(),
+            $this->program_increment_update->getUser()
         );
         $just_linked_iterations    = JustLinkedIterationCollection::fromIterations(
             VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-            $this->program_increment_update->program_increment,
+            $this->program_increment_update->getProgramIncrement(),
             ...$iterations
         );
         $this->iteration_creations = IterationCreation::buildCollectionFromJustLinkedIterations(
             RetrieveLastChangesetStub::withLastChangesetIds(5539, 5174),
             $this->logger,
             $just_linked_iterations,
-            $this->program_increment_update->user
+            $this->program_increment_update->getUser()
         );
     }
 
@@ -129,7 +129,12 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
         self::assertTrue(
-            $this->logger->hasError('Unable to queue program increment mirrors update for program increment #83')
+            $this->logger->hasError(
+                sprintf(
+                    'Unable to queue program increment mirrors update for program increment #%d',
+                    self::PROGRAM_INCREMENT_ID
+                )
+            )
         );
     }
 
@@ -146,7 +151,12 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
         self::assertTrue(
-            $this->logger->hasError('Unable to queue program increment mirrors update for program increment #83')
+            $this->logger->hasError(
+                sprintf(
+                    'Unable to queue program increment mirrors update for program increment #%d',
+                    self::PROGRAM_INCREMENT_ID
+                )
+            )
         );
     }
 }

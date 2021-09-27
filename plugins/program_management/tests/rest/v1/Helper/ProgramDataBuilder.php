@@ -28,6 +28,7 @@ use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
@@ -46,6 +47,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -88,7 +90,9 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
             $changeset_factory,
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             $program_dao,
-            new ProgramManagementProjectAdapter($this->project_manager)
+            new ProgramManagementProjectAdapter($this->project_manager),
+            VerifyIsProgramIncrementStub::withValidProgramIncrement(),
+            new ArtifactVisibleVerifier($this->artifact_factory, $user_adapter)
         );
 
         $null_logger               = new NullLogger();

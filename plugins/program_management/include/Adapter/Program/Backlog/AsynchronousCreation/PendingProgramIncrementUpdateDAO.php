@@ -35,9 +35,9 @@ final class PendingProgramIncrementUpdateDAO extends DataAccessObject implements
     public function storeUpdate(ProgramIncrementUpdate $update): void
     {
         $this->getDB()->insert('plugin_program_management_pending_program_increment_update', [
-            'program_increment_id' => $update->program_increment->getId(),
-            'user_id'              => $update->user->getId(),
-            'changeset_id'         => $update->changeset->getId()
+            'program_increment_id' => $update->getProgramIncrement()->getId(),
+            'user_id'              => $update->getUser()->getId(),
+            'changeset_id'         => $update->getChangeset()->getId()
         ]);
     }
 
@@ -89,9 +89,9 @@ final class PendingProgramIncrementUpdateDAO extends DataAccessObject implements
 
         $this->getDB()->run(
             $sql,
-            $update->program_increment->getId(),
-            $update->user->getId(),
-            $update->changeset->getId()
+            $update->getProgramIncrement()->getId(),
+            $update->getUser()->getId(),
+            $update->getChangeset()->getId()
         );
     }
 }

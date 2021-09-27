@@ -24,24 +24,27 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ProgramIncrementCreationBuilder
 {
+    public static function build(): ProgramIncrementCreation
+    {
+        return self::buildWithProgramIncrementId(515);
+    }
+
+    public static function buildWithProgramIncrementId(int $program_increment_id): ProgramIncrementCreation
+    {
+        return self::buildWithIds(162, $program_increment_id, 60, 2045);
+    }
+
     public static function buildWithIds(
         int $user_id,
         int $program_increment_id,
         int $tracker_id,
         int $changeset_id
     ): ProgramIncrementCreation {
-        $event = ArtifactCreatedEventStub::withIds(
-            $program_increment_id,
-            TrackerIdentifierStub::withId($tracker_id),
-            UserIdentifierStub::withId($user_id),
-            $changeset_id
-        );
+        $event = ArtifactCreatedEventStub::withIds($program_increment_id, $tracker_id, $user_id, $changeset_id);
         return ProgramIncrementCreation::fromArtifactCreatedEvent(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             $event

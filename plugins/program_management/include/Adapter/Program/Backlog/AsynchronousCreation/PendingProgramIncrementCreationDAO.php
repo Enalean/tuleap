@@ -45,9 +45,9 @@ final class PendingProgramIncrementCreationDAO extends DataAccessObject implemen
     public function storeCreation(ProgramIncrementCreation $creation): void
     {
         $this->getDB()->insert('plugin_program_management_pending_mirrors', [
-            'program_artifact_id' => $creation->program_increment->getId(),
-            'user_id'             => $creation->user->getId(),
-            'changeset_id'        => $creation->changeset->getId()
+            'program_artifact_id' => $creation->getProgramIncrement()->getId(),
+            'user_id'             => $creation->getUser()->getId(),
+            'changeset_id'        => $creation->getChangeset()->getId()
         ]);
     }
 
