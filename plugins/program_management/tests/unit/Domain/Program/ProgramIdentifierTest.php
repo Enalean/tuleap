@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
@@ -61,13 +60,6 @@ final class ProgramIdentifierTest extends TestCase
             $this->user,
             new WorkflowUserPermissionBypass()
         );
-        self::assertSame(self::PROGRAM_ID, $program->getId());
-    }
-
-    public function testItBuildsFromReplicationData(): void
-    {
-        $replication_data = ReplicationDataBuilder::buildWithProjectId(self::PROGRAM_ID);
-        $program          = ProgramIdentifier::fromReplicationData($replication_data);
         self::assertSame(self::PROGRAM_ID, $program->getId());
     }
 

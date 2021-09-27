@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -35,8 +34,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
  * A program is a Tuleap Project that hosts Program Increments and Iterations and synchronizes them with Teams.
  * This represents its project ID number.
  * I have at least one Team. For a Program not yet configured, see ProgramForAdministrationIdentifier
- * @psalm-immutable
  * @see ProgramForAdministrationIdentifier
+ * @psalm-immutable
  */
 final class ProgramIdentifier
 {
@@ -65,12 +64,6 @@ final class ProgramIdentifier
         $build_program->ensureProgramIsAProject($id, $user, $bypass);
 
         return new self($id);
-    }
-
-    public static function fromReplicationData(ReplicationData $replication_data): self
-    {
-        // We assume that ReplicationData has already made sure that its project is a Program
-        return new self($replication_data->getProject()->getId());
     }
 
     /**

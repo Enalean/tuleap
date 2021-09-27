@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
@@ -51,26 +50,6 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
             self::END_PERIOD_VALUE,
             [self::STATUS_VALUE]
         );
-    }
-
-    public function testItBuildsFromReplication(): void
-    {
-        $replication = ReplicationDataBuilder::buildWithArtifactId(self::SOURCE_TIMEBOX_ID);
-        $values      = SourceTimeboxChangesetValues::fromReplication(
-            GatherSynchronizedFieldsStub::withDefaults(),
-            RetrieveFieldValuesGathererStub::withGatherer($this->values_gatherer),
-            RetrieveChangesetSubmissionDateStub::withDate(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP),
-            $replication
-        );
-
-        self::assertSame(self::TITLE_VALUE, $values->getTitleValue()->getValue());
-        self::assertContains(self::DESCRIPTION_VALUE, $values->getDescriptionValue()->getValue());
-        self::assertContains(self::DESCRIPTION_FORMAT, $values->getDescriptionValue()->getValue());
-        self::assertEquals(self::STATUS_VALUE, $values->getStatusValue()->getListValues()[0]->getLabel());
-        self::assertSame(self::START_DATE_VALUE, $values->getStartDateValue()->getValue());
-        self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());
-        self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceTimebox()->getId());
-        self::assertSame(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP, $values->getSubmittedOn()->getValue());
     }
 
     public function testItBuildsFromMirroringOrder(): void

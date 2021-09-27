@@ -25,15 +25,11 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class RetrieveFieldValuesGathererStub implements RetrieveFieldValuesGatherer
 {
-    private GatherFieldValues $gatherer;
-
-    private function __construct(GatherFieldValues $gatherer)
+    private function __construct(private GatherFieldValues $gatherer)
     {
-        $this->gatherer = $gatherer;
     }
 
     public static function withGatherer(GatherFieldValues $gatherer): self
@@ -41,12 +37,7 @@ final class RetrieveFieldValuesGathererStub implements RetrieveFieldValuesGather
         return new self($gatherer);
     }
 
-    public function getFieldValuesGatherer(ReplicationData $replication): GatherFieldValues
-    {
-        return $this->gatherer;
-    }
-
-    public function getGathererFromUpdate(TimeboxMirroringOrder $order): GatherFieldValues
+    public function getFieldValuesGatherer(TimeboxMirroringOrder $order): GatherFieldValues
     {
         return $this->gatherer;
     }

@@ -18,7 +18,6 @@
  */
 
 DROP TABLE IF EXISTS plugin_program_management_team_projects;
-DROP TABLE IF EXISTS plugin_program_management_pending_mirrors;
 DROP TABLE IF EXISTS plugin_program_management_pending_program_increment_update;
 DROP TABLE IF EXISTS plugin_program_management_pending_iterations;
 DROP TABLE IF EXISTS plugin_program_management_plan;

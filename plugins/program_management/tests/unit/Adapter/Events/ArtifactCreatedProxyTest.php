@@ -32,7 +32,7 @@ final class ArtifactCreatedProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromArtifactCreated(): void
     {
-        $user      = UserTestBuilder::aUser()->withId(116)->build();
+        $user      = UserTestBuilder::buildWithId(116);
         $tracker   = TrackerTestBuilder::aTracker()->withId(15)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(246)->inTracker($tracker)->build();
         $changeset = ChangesetTestBuilder::aChangeset('1090')

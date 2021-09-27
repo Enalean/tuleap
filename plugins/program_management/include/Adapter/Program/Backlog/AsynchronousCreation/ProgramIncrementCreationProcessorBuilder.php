@@ -33,30 +33,37 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fie
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
-class TaskBuilder
+final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncrementCreationProcessor
 {
-    public function build(): CreateProgramIncrementsTask
+    public function getProcessor(): ProcessProgramIncrementCreation
     {
         $user_manager                   = \UserManager::instance();
         $program_dao                    = new ProgramDao();
         $form_element_factory           = \Tracker_FormElementFactory::instance();
-        $logger                         = \BackendLogger::getDefaultLogger("program_management_syslog");
+        $logger                         = \BackendLogger::getDefaultLogger('program_management_syslog');
         $artifact_factory               = \Tracker_ArtifactFactory::instance();
         $tracker_factory                = \TrackerFactory::instance();
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
         $retrieve_user                  = new UserManagerAdapter($user_manager);
+        $project_manager                = \ProjectManager::instance();
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -105,20 +112,27 @@ class TaskBuilder
             $synchronized_fields_gatherer
         );
 
-        return new CreateProgramIncrementsTask(
+
+        return new ProgramIncrementCreationProcessor(
             new PlanningAdapter(\PlanningFactory::build(), $retrieve_user),
             $mirror_creator,
             $logger,
-            new PendingProgramIncrementCreationDAO(),
             $user_stories_planner,
             $program_dao,
-            new ProgramManagementProjectAdapter(\ProjectManager::instance()),
+            new ProgramManagementProjectAdapter($project_manager),
             $synchronized_fields_gatherer,
-            new FieldValuesGathererRetriever(
-                $artifact_factory,
-                $form_element_factory
-            ),
-            new ChangesetRetriever($artifact_factory)
+            new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
+            new ChangesetRetriever($artifact_factory),
+            $program_dao,
+            new ProgramAdapter(
+                $project_manager,
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
+                $program_dao,
+                $retrieve_user
+            )
         );
     }
 }

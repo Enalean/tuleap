@@ -20,20 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
-/**
- * @psalm-immutable
- */
-interface ArtifactCreatedEvent
+final class ProgramIncrementCreationEventStub implements ProgramIncrementCreationEvent
 {
-    public function getArtifact(): ArtifactIdentifier;
-    public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserReference;
-    public function getChangeset(): ChangesetIdentifier;
+    private function __construct(private int $artifact_id, private UserReference $user, private int $changeset_id)
+    {
+    }
+
+    public static function withIds(int $artifact_id, int $user_id, int $changeset_id): self
+    {
+        return new self($artifact_id, UserReferenceStub::withIdAndName($user_id, 'Harold Goodpaster'), $changeset_id);
+    }
+
+    public function getArtifactId(): int
+    {
+        return $this->artifact_id;
+    }
+
+    public function getUser(): UserReference
+    {
+        return $this->user;
+    }
+
+    public function getChangesetId(): int
+    {
+        return $this->changeset_id;
+    }
 }

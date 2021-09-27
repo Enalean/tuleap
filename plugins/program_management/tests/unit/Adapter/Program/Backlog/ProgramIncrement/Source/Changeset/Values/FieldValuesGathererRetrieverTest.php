@@ -27,16 +27,13 @@ use Tracker_FormElementFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Stub|\Tracker_ArtifactFactory $artifact_factory;
     private Stub|\Tracker_FormElementFactory $factory;
-    private ReplicationData $replication;
     private ProgramIncrementUpdate $update;
 
     protected function setUp(): void
@@ -44,8 +41,7 @@ final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
         $this->factory          = $this->createStub(Tracker_FormElementFactory::class);
 
-        $this->replication = ReplicationDataBuilder::build();
-        $this->update      = ProgramIncrementUpdateBuilder::build();
+        $this->update = ProgramIncrementUpdateBuilder::build();
     }
 
     private function getRetriever(): FieldValuesGathererRetriever
@@ -60,7 +56,7 @@ final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $artifact->method('getChangeset')->willReturn($changeset);
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
 
-        $gatherer = $this->getRetriever()->getFieldValuesGatherer($this->replication);
+        $gatherer = $this->getRetriever()->getFieldValuesGatherer($this->update);
         self::assertNotNull($gatherer);
     }
 
@@ -69,7 +65,7 @@ final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
         $this->expectException(PendingArtifactNotFoundException::class);
-        $this->getRetriever()->getFieldValuesGatherer($this->replication);
+        $this->getRetriever()->getFieldValuesGatherer($this->update);
     }
 
     public function testItThrowsWhenChangesetCannotBeRetrieved(): void
@@ -79,35 +75,6 @@ final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
 
         $this->expectException(PendingArtifactChangesetNotFoundException::class);
-        $this->getRetriever()->getFieldValuesGatherer($this->replication);
-    }
-
-    public function testItReturnsAFieldValuesGathererForUpdate(): void
-    {
-        $changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
-        $artifact  = $this->createStub(Artifact::class);
-        $artifact->method('getChangeset')->willReturn($changeset);
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-
-        $gatherer = $this->getRetriever()->getGathererFromUpdate($this->update);
-        self::assertNotNull($gatherer);
-    }
-
-    public function testItThrowsWhenFullArtifactCannotBeRetrievedForUpdate(): void
-    {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-
-        $this->expectException(PendingArtifactNotFoundException::class);
-        $this->getRetriever()->getGathererFromUpdate($this->update);
-    }
-
-    public function testItThrowsWhenChangesetCannotBeRetrievedForUpdate(): void
-    {
-        $artifact = $this->createStub(Artifact::class);
-        $artifact->method('getChangeset')->willReturn(null);
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-
-        $this->expectException(PendingArtifactChangesetNotFoundException::class);
-        $this->getRetriever()->getGathererFromUpdate($this->update);
+        $this->getRetriever()->getFieldValuesGatherer($this->update);
     }
 }

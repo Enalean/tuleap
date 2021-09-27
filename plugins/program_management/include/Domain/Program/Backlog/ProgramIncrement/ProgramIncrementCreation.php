@@ -23,13 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
  * I hold all the information necessary to create new Mirrored Program Increments from
@@ -42,7 +48,7 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
         private ProgramIncrementIdentifier $program_increment,
         private ProgramIncrementTrackerIdentifier $tracker,
         private ChangesetIdentifier $changeset,
-        private UserIdentifier $user
+        private UserReference $user
     ) {
     }
 
@@ -59,6 +65,37 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
             return null;
         }
         return new self($program_increment, $tracker, $event->getChangeset(), $event->getUser());
+    }
+
+    public static function fromProgramIncrementCreationEvent(
+        VerifyIsProgramIncrement $program_increment_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        VerifyIsChangeset $changeset_verifier,
+        RetrieveProgramIncrementTracker $tracker_retriever,
+        ProgramIncrementCreationEvent $event
+    ): ?self {
+        $user                 = $event->getUser();
+        $program_increment_id = $event->getArtifactId();
+        try {
+            $program_increment = ProgramIncrementIdentifier::fromId(
+                $program_increment_verifier,
+                $visibility_verifier,
+                $program_increment_id,
+                $user
+            );
+        } catch (ProgramIncrementNotFoundException $e) {
+            return null;
+        }
+        $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromProgramIncrement(
+            $tracker_retriever,
+            $program_increment
+        );
+        $changeset_id              = $event->getChangesetId();
+        $changeset                 = DomainChangeset::fromId($changeset_verifier, $changeset_id);
+        if (! $changeset) {
+            return null;
+        }
+        return new self($program_increment, $program_increment_tracker, $changeset, $user);
     }
 
     public function getTimebox(): TimeboxIdentifier
@@ -79,6 +116,11 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
     public function getProgramIncrementTracker(): ProgramIncrementTrackerIdentifier
     {
         return $this->tracker;
+    }
+
+    public function getUserReference(): UserReference
+    {
+        return $this->user;
     }
 
     public function getUser(): UserIdentifier

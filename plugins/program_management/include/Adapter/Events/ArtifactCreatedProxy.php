@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 /**
@@ -43,19 +43,19 @@ final class ArtifactCreatedProxy implements ArtifactCreatedEvent
     private function __construct(
         private ArtifactIdentifier $artifact,
         private TrackerIdentifier $tracker,
-        private UserIdentifier $user,
+        private UserReference $user,
         private ChangesetIdentifier $changeset
     ) {
     }
 
     public static function fromArtifactCreated(ArtifactCreated $artifact_created): self
     {
-        $full_artifact   = $artifact_created->getArtifact();
-        $artifact        = ArtifactIdentifierProxy::fromArtifact($full_artifact);
-        $tracker         = TrackerIdentifierProxy::fromTracker($full_artifact->getTracker());
-        $user_identifier = UserProxy::buildFromPFUser($artifact_created->getUser());
-        $changeset       = ChangesetProxy::fromChangeset($artifact_created->getChangeset());
-        return new self($artifact, $tracker, $user_identifier, $changeset);
+        $full_artifact = $artifact_created->getArtifact();
+        $artifact      = ArtifactIdentifierProxy::fromArtifact($full_artifact);
+        $tracker       = TrackerIdentifierProxy::fromTracker($full_artifact->getTracker());
+        $user          = UserProxy::buildFromPFUser($artifact_created->getUser());
+        $changeset     = ChangesetProxy::fromChangeset($artifact_created->getChangeset());
+        return new self($artifact, $tracker, $user, $changeset);
     }
 
     public function getArtifact(): ArtifactIdentifier
@@ -68,7 +68,7 @@ final class ArtifactCreatedProxy implements ArtifactCreatedEvent
         return $this->tracker;
     }
 
-    public function getUser(): UserIdentifier
+    public function getUser(): UserReference
     {
         return $this->user;
     }

@@ -22,81 +22,55 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Exception;
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\QueueServerConnectionException;
 use Tuleap\Queue\Worker;
-use Tuleap\Queue\WorkerEvent;
 
 /**
  * I push a single Queue message to trigger the creation of mirrored Program Increments.
  */
 final class ProgramIncrementCreationDispatcher implements DispatchProgramIncrementCreation
 {
-    private const TOPIC = 'tuleap.program_management.program_increment.creation';
-
     public function __construct(
         private LoggerInterface $logger,
         private QueueFactory $queue_factory,
-        private BuildReplicationData $replication_data_adapter,
-        private TaskBuilder $task_builder
+        private BuildProgramIncrementCreationProcessor $processor_builder
     ) {
-    }
-
-    /**
-     * @throw ProgramIncrementCreationException
-     */
-    public function addListener(WorkerEvent $event): void
-    {
-        if ((string) $event->getEventName() === self::TOPIC) {
-            $message = $event->getPayload();
-
-            try {
-                $replication_data = $this->replication_data_adapter->buildFromArtifactAndUserId(
-                    $message['artifact_id'],
-                    $message['user_id']
-                );
-            } catch (StoredProgramIncrementNoLongerValidException $e) {
-                return;
-            }
-
-            if ($replication_data === null) {
-                return;
-            }
-
-            $this->processProgramIncrementCreation($replication_data);
-        }
-    }
-
-    public function processProgramIncrementCreation(ReplicationData $replication_data): void
-    {
-        $task = $this->task_builder->build();
-        $task->createProgramIncrements($replication_data);
     }
 
     public function dispatchCreation(ProgramIncrementCreation $creation): void
     {
-        $artifact_id = $creation->getProgramIncrement()->getId();
         try {
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
-                self::TOPIC,
+                ProgramIncrementCreationEvent::TOPIC,
                 [
-                    'artifact_id' => $artifact_id,
-                    'user_id'     => $creation->getUser()->getId(),
+                    'artifact_id'  => $creation->getProgramIncrement()->getId(),
+                    'user_id'      => $creation->getUser()->getId(),
+                    'changeset_id' => $creation->getChangeset()->getId()
                 ]
             );
-        } catch (Exception $exception) {
-            $this->logger->error("Unable to queue artifact mirrors creation for artifact #{$artifact_id}", ['exception' => $exception]);
-
-
-            $replication_data = $this->replication_data_adapter->buildFromProgramIncrementCreation($creation);
-            $this->processProgramIncrementCreation($replication_data);
+        } catch (NoQueueSystemAvailableException | QueueServerConnectionException $exception) {
+            $this->processCreationSynchronously($exception, $creation);
         }
+    }
+
+    private function processCreationSynchronously(\Throwable $exception, ProgramIncrementCreation $creation): void
+    {
+        $this->logger->error(
+            sprintf(
+                'Unable to queue program increment mirrors creation for program increment #%d',
+                $creation->getProgramIncrement()->getId()
+            ),
+            ['exception' => $exception]
+        );
+        $processor = $this->processor_builder->getProcessor();
+        $processor->processCreation($creation);
     }
 }
