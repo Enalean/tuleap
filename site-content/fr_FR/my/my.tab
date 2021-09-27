@@ -93,13 +93,6 @@ bookmark_delete	deleted	Favori détruit !
 bookmark_edit	title	Modifier un favori
 #
 #-----------------------------------------------
-# Script: SF/www/my/redirect.php
-#
-my_redirect	page_title	Redirection vers
-my_redirect	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
-my_redirect	default_txt	Vous êtes sur la page de redirection de Codendi. Vous trouverez des liens utiles sur votre <a href="/my">page personnelle</a>.
-#
-#-----------------------------------------------
 # Script: SF/www/my/stop_monitor.php
 #
 my_monitored_forum	title	Arrêt de la surveillance d'un forum.
