@@ -41,7 +41,6 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -146,7 +145,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                 VerifyTrackerSemanticsStub::withAllSemantics(),
                 $this->tracker_factory
             ),
-            RetrieveUserStub::withGenericUser(),
         );
     }
 

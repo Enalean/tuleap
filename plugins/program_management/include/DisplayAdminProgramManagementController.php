@@ -62,7 +62,6 @@ use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -90,8 +89,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private RetrieveIterationLabels $iteration_labels_retriever,
         private AllProgramSearcher $all_program_searcher,
         private VerifyIterationsFeatureActive $feature_flag_verifier,
-        private ConfigurationErrorPresenterBuilder $error_presenter_builder,
-        private RetrieveUser $retrieve_user
+        private ConfigurationErrorPresenterBuilder $error_presenter_builder
     ) {
     }
 
