@@ -22,65 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
+use Tuleap\ProgramManagement\Domain\Events\CollectLinkedProjectsEvent;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\Project\CheckProjectAccess;
-use Tuleap\Project\Sidebar\CollectLinkedProjects;
-use Tuleap\Project\Sidebar\LinkedProjectsCollection;
 
 final class CollectLinkedProjectsHandler
 {
-    private VerifyIsProgram $program_verifier;
-    private TeamsSearcher $teams_searcher;
-    private CheckProjectAccess $access_checker;
-    private VerifyIsTeam $team_verifier;
-    private ProgramsSearcher $programs_searcher;
-
     public function __construct(
-        VerifyIsProgram $program_verifier,
-        TeamsSearcher $teams_searcher,
-        CheckProjectAccess $access_checker,
-        VerifyIsTeam $team_verifier,
-        ProgramsSearcher $programs_searcher
+        private VerifyIsProgram $program_verifier,
+        private VerifyIsTeam $team_verifier,
     ) {
-        $this->program_verifier  = $program_verifier;
-        $this->teams_searcher    = $teams_searcher;
-        $this->access_checker    = $access_checker;
-        $this->team_verifier     = $team_verifier;
-        $this->programs_searcher = $programs_searcher;
     }
 
-    public function handle(CollectLinkedProjects $event): void
+    public function handle(CollectLinkedProjectsEvent $event): void
     {
-        $source_project_id = (int) $event->getSourceProject()->getID();
+        $source_project_id = $event->getSourceProject()->getId();
         if ($this->program_verifier->isAProgram($source_project_id)) {
-            $this->addAggregatedProjects($event);
+            $event->addTeams();
             return;
         }
         if ($this->team_verifier->isATeam($source_project_id)) {
-            $this->addParentProjects($event);
+            $event->addPrograms();
         }
-    }
-
-    private function addAggregatedProjects(CollectLinkedProjects $event): void
-    {
-        $collection = LinkedProjectsCollection::fromSourceProject(
-            $this->teams_searcher,
-            $this->access_checker,
-            $event->getSourceProject(),
-            $event->getCurrentUser()
-        );
-        $event->addChildrenProjects($collection);
-    }
-
-    private function addParentProjects(CollectLinkedProjects $event): void
-    {
-        $collection = LinkedProjectsCollection::fromSourceProject(
-            $this->programs_searcher,
-            $this->access_checker,
-            $event->getSourceProject(),
-            $event->getCurrentUser()
-        );
-        $event->addParentProjects($collection);
     }
 }

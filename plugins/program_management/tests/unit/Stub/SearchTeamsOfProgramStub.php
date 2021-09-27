@@ -48,4 +48,9 @@ final class SearchTeamsOfProgramStub implements SearchTeamsOfProgram
     {
         return new self($ids);
     }
+
+    public static function withNoTeams(): self
+    {
+        return new self([]);
+    }
 }
