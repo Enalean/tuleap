@@ -58,12 +58,20 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
 
     function attachFile(file) {
         ExecutionRestService.createFileInTestExecution(self.execution, file).then((new_file) => {
-            ExecutionService.addToFilesAddedThroughAttachmentArea(self.execution, {
+            const file_uploading = {
                 id: new_file.id,
                 filename: file.name,
-            });
+                progress: 0,
+            };
 
-            processUpload(file, new_file.upload_href);
+            ExecutionService.addToFilesAddedThroughAttachmentArea(self.execution, file_uploading);
+
+            processUpload(file, new_file.upload_href, (progress_in_percent) => {
+                ExecutionService.updateExecutionAttachment(self.execution, file_uploading.id, {
+                    progress: progress_in_percent,
+                });
+                $scope.$apply();
+            });
         });
     }
 

@@ -19,12 +19,15 @@
 
 import { Upload } from "tus-js-client";
 
-export function processUpload(file, file_upload_url) {
+export function processUpload(file, file_upload_url, on_progress_callback) {
     const uploader = new Upload(file, {
         uploadUrl: file_upload_url,
         metadata: {
             filename: file.name,
             filetype: file.type,
+        },
+        onProgress: (bytes_uploaded, bytes_total) => {
+            on_progress_callback(Math.trunc((bytes_uploaded / bytes_total) * 100));
         },
     });
 

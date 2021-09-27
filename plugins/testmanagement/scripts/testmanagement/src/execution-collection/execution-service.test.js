@@ -1274,4 +1274,24 @@ describe("ExecutionService", () => {
             expect(execution.linked_bugs).toEqual([{ id: 38, title: "thanan" }, artifact_to_link]);
         });
     });
+
+    describe("updateExecutionAttachment", () => {
+        it("Given an execution, an attachment id and attributes to update, Then it updates the right attachment", () => {
+            const execution = {
+                id: 74,
+                uploaded_files_through_attachment_area: [
+                    { id: 105, filename: "bug.png", progress: 0 },
+                ],
+            };
+
+            ExecutionService.updateExecutionAttachment(execution, 105, {
+                progress: 75,
+                filename: "bug_1.png",
+            });
+
+            expect(execution.uploaded_files_through_attachment_area).toEqual([
+                { id: 105, filename: "bug_1.png", progress: 75 },
+            ]);
+        });
+    });
 });
