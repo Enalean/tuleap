@@ -88,6 +88,10 @@ final class TrackerErrorPresenter
      * @var MissingArtifactLinkFieldPresenter[]
      */
     public array $missing_artifact_link_fields_errors;
+    /**
+     * @var TeamHasNoRootPlanningPresenter[]
+     */
+    public array $team_no_root_planning;
 
     /**
      * @param SemanticErrorPresenter[]               $semantic_errors
@@ -103,6 +107,7 @@ final class TrackerErrorPresenter
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
      * @param TitleHasIncorrectTypePresenter[]       $title_has_incorrect_type_error
      * @param MissingArtifactLinkFieldPresenter[]    $missing_artifact_link_fields_errors
+     * @param TeamHasNoRootPlanningPresenter[]       $team_no_root_planning
      */
     private function __construct(
         array $semantic_errors,
@@ -117,7 +122,8 @@ final class TrackerErrorPresenter
         array $semantic_status_no_field,
         array $semantic_status_missing_values,
         array $title_has_incorrect_type_error,
-        array $missing_artifact_link_fields_errors
+        array $missing_artifact_link_fields_errors,
+        array $team_no_root_planning
     ) {
         $has_semantic_errors   = count($semantic_errors) > 0;
         $this->semantic_errors = $semantic_errors;
@@ -156,13 +162,16 @@ final class TrackerErrorPresenter
         $has_synchronization_errors = count($title_has_incorrect_type_error) > 0 ||
             count($missing_artifact_link_fields_errors) > 0;
 
+        $this->team_no_root_planning = $team_no_root_planning;
+
         $this->has_presenter_errors = $has_semantic_errors
             || $has_required_field_errors
             || $has_workflow_error
             || $has_field_permission_errors
             || $user_can_not_submit_in_team
             || $has_semantic_status_errors
-            || $has_synchronization_errors;
+            || $has_synchronization_errors
+            || count($this->team_no_root_planning) > 0;
     }
 
     public static function fromTracker(
@@ -199,7 +208,8 @@ final class TrackerErrorPresenter
             $errors_collector->getSemanticStatusNoField(),
             $errors_collector->getSemanticStatusMissingValues(),
             $errors_collector->getTitleHasIncorrectTypeError(),
-            $errors_collector->getMissingArtifactLinkErrors()
+            $errors_collector->getMissingArtifactLinkErrors(),
+            $errors_collector->getNoRootPlanning()
         );
     }
 }

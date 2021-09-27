@@ -72,7 +72,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier);
+        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier, new ConfigurationErrorsCollector(false));
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->program_increment_tracker),
             ProgramIdentifierBuilder::build(),

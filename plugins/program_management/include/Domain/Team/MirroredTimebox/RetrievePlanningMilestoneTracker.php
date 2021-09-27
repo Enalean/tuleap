@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -33,10 +33,9 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 interface RetrievePlanningMilestoneTracker
 {
     /**
-     * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoProgramIncrementException
      */
-    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): TrackerReference;
+    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference;
 
     /**
      * @throws PlanningNotFoundException

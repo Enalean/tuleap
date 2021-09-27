@@ -87,7 +87,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrievePlanningMilestoneTrackerStub::withValidTrackers($this->program_increment_tracker),
             $first_team_project,
-            $this->user
+            $this->user,
+            new ConfigurationErrorsCollector(false)
         );
 
         $this->program_and_team_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(

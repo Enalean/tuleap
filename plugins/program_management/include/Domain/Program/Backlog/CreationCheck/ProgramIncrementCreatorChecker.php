@@ -24,13 +24,12 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
@@ -85,18 +84,29 @@ class ProgramIncrementCreatorChecker
         }
 
         try {
-            $team_trackers             = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
                 $this->milestone_retriever,
                 $team_projects_collection,
-                $user_reference
+                $user_reference,
+                $errors_collector
             );
+        } catch (PlanningHasNoProgramIncrementException $exception) {
+            $this->logger->error('Planning configuration is incorrect, it does not have a tracker', ['exception' => $exception]);
+            return false;
+        }
+        if ($team_trackers->isEmpty()) {
+            $this->logger->error('Cannot retrieve root planning milestone tracker of all teams');
+            return false;
+        }
+
+        try {
             $program_and_team_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
                 $this->program_increment_tracker_retriever,
                 $program,
                 $team_trackers,
                 $user_reference
             );
-        } catch (PlanningNotFoundException | TrackerRetrievalException | ProgramTrackerNotFoundException $exception) {
+        } catch (ProgramTrackerNotFoundException $exception) {
             $this->logger->error('Cannot retrieve all milestones', ['exception' => $exception]);
             return false;
         }

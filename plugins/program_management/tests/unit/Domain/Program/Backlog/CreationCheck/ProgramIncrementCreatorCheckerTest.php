@@ -39,7 +39,6 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -48,7 +47,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $timebox_creator_checker;
     private TrackerReference $tracker;
-    private \PFUser $user;
     private ProgramIdentifier $program;
     private VerifyIsProgramIncrementTracker $program_verifier;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
@@ -70,7 +68,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             TrackerReferenceStub::withDefaults()
         );
 
-        $this->user            = UserTestBuilder::aUser()->build();
         $this->user_identifier = UserReferenceStub::withDefaults();
         $this->program         = ProgramIdentifierBuilder::build();
     }

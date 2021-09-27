@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
@@ -75,7 +76,8 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mirrored_program_increment_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048),
             $teams,
-            $this->user_identifier
+            $this->user_identifier,
+            new ConfigurationErrorsCollector(false)
         );
     }
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Source;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -67,7 +68,8 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 TrackerReferenceStub::withId(self::RED_TEAM_TRACKER_ID),
             ),
             $this->teams,
-            $this->user
+            $this->user,
+            new ConfigurationErrorsCollector(false)
         );
     }
 

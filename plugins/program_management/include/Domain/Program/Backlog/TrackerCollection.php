@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
@@ -45,18 +44,22 @@ final class TrackerCollection
     }
 
     /**
-     * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoProgramIncrementException
      */
     public static function buildRootPlanningMilestoneTrackers(
         RetrievePlanningMilestoneTracker $retriever,
         TeamProjectsCollection $teams,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
+        ConfigurationErrorsCollector $errors_collector
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
-            $trackers[] = $retriever->retrieveRootPlanningMilestoneTracker($team, $user_identifier);
+            $milestone_tracker = $retriever->retrieveRootPlanningMilestoneTracker($team, $user_identifier, $errors_collector);
+            if ($milestone_tracker !== null) {
+                $trackers[] = $milestone_tracker;
+            }
         }
+
         return new self($trackers);
     }
 
@@ -73,6 +76,7 @@ final class TrackerCollection
         foreach ($teams->getTeamProjects() as $team) {
             $trackers[] = $retriever->retrieveSecondPlanningMilestoneTracker($team, $user_identifier);
         }
+
         return new self($trackers);
     }
 
@@ -95,6 +99,11 @@ final class TrackerCollection
     public function getTrackers(): array
     {
         return $this->mirrored_timebox_trackers;
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->mirrored_timebox_trackers);
     }
 
     public function canUserSubmitAnArtifactInAllTrackers(
