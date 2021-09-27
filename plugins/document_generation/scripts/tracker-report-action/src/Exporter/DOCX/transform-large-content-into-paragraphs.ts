@@ -17,13 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { transformHTMLIntoAParagraph } from "./transform-html-into-paragraph";
-import { Paragraph } from "docx";
+import { Paragraph, TextRun } from "docx";
+import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
 
-describe("transform-html-into-paragraph", () => {
-    it("strips HTML and transforms it as if it is raw plaintext", () => {
-        const paragraph = transformHTMLIntoAParagraph("<p>A</p>");
-
-        expect(paragraph).toStrictEqual(new Paragraph("A"));
-    });
-});
+export function transformLargeContentIntoParagraphs(
+    content: string,
+    format: "plaintext" | "html"
+): Paragraph[] {
+    if (format === "html") {
+        return transformHTMLIntoParagraphs(content);
+    }
+    return [
+        new Paragraph({
+            children: content.split("\n").map((text: string, index: number) => {
+                const is_first_line = index === 0;
+                return new TextRun({ text, break: is_first_line ? 0 : 1 });
+            }),
+        }),
+    ];
+}

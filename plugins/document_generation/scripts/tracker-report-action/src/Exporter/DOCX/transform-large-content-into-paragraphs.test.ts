@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { transformLargeContentIntoAParagraph } from "./transform-large-content-into-paragraph";
+import { transformLargeContentIntoParagraphs } from "./transform-large-content-into-paragraphs";
 import { Paragraph, TextRun } from "docx";
-import * as html_transformer from "./transform-html-into-paragraph";
+import * as html_transformer from "./transform-html-into-paragraphs";
 
 describe("transform-large-content-into-paragraph", () => {
     it("transforms large plaintext content", () => {
-        const paragraph = transformLargeContentIntoAParagraph("My\ncontent", "plaintext");
+        const paragraph = transformLargeContentIntoParagraphs("My\ncontent", "plaintext");
 
-        expect(paragraph).toStrictEqual(
+        expect(paragraph).toStrictEqual([
             new Paragraph({
                 children: [
                     new TextRun("My"),
@@ -34,16 +34,18 @@ describe("transform-large-content-into-paragraph", () => {
                         break: 1,
                     }),
                 ],
-            })
-        );
+            }),
+        ]);
     });
 
     it("transforms large HTML content", () => {
         const expected_value = new Paragraph("Some HTML");
-        jest.spyOn(html_transformer, "transformHTMLIntoAParagraph").mockReturnValue(expected_value);
+        jest.spyOn(html_transformer, "transformHTMLIntoParagraphs").mockReturnValue([
+            expected_value,
+        ]);
 
-        const paragraph = transformLargeContentIntoAParagraph("Some HTML", "html");
+        const paragraph = transformLargeContentIntoParagraphs("Some HTML", "html");
 
-        expect(paragraph).toStrictEqual(expected_value);
+        expect(paragraph).toStrictEqual([expected_value]);
     });
 });
