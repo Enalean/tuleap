@@ -21,7 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
+
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface RetrieveUser
 {

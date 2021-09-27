@@ -34,7 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneTracker
