@@ -47,6 +47,7 @@ class FormattedChangesetValueForFileFieldRetriever
      */
     public function getFormattedChangesetValueForFieldFile(
         array $uploaded_file_ids,
+        array $deleted_file_ids,
         Artifact $artifact,
         PFUser $user
     ): ArtifactValuesRepresentation {
@@ -68,12 +69,12 @@ class FormattedChangesetValueForFileFieldRetriever
 
         $changeset_value = $field_upload_data->getField()->getLastChangesetValue($artifact);
         $field_values_id = [];
+
         if ($changeset_value instanceof Tracker_Artifact_ChangesetValue_File) {
             $field_values_id = $this->getExistingFilesIdFromChangesetValue($changeset_value);
         }
 
-
-        $values_representation->value = array_merge($uploaded_file_ids, $field_values_id);
+        $values_representation->value = array_values(array_diff(array_merge($uploaded_file_ids, $field_values_id), $deleted_file_ids));
 
         return $values_representation;
     }

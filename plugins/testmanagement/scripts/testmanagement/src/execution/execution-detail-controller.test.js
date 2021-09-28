@@ -185,6 +185,7 @@ describe("ExecutionDetailController -", () => {
             execution.results = "psychoanalyzer rupture solidish";
             execution.uploaded_files_through_text_field = [];
             execution.uploaded_files_through_attachment_area = [];
+            execution.removed_files = [];
             $scope.execution = execution;
             $scope.displayTestCommentEditor = true;
         });
@@ -198,6 +199,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "passed",
                     execution.results,
+                    [],
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
@@ -231,6 +233,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "passed",
                     execution.results,
+                    [],
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
@@ -253,6 +256,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "passed",
                     execution.results,
+                    [],
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
@@ -284,6 +288,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "failed",
                     execution.results,
+                    [],
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
@@ -299,6 +304,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "blocked",
                     execution.results,
+                    [],
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
@@ -315,6 +321,12 @@ describe("ExecutionDetailController -", () => {
                     {
                         id: 16,
                         filename: "bug_2.png",
+                    },
+                ];
+                execution.removed_files = [
+                    {
+                        id: 18,
+                        filename: "bug_18.png",
                     },
                 ];
             });
@@ -335,7 +347,8 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "notrun",
                     execution.results,
-                    [13, 15, 16]
+                    [13, 15, 16],
+                    [18]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -360,7 +373,8 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "notrun",
                     execution.results,
-                    [13, 15, 16]
+                    [13, 15, 16],
+                    [18]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
             });
@@ -393,6 +407,7 @@ describe("ExecutionDetailController -", () => {
         it("When the user updates the comment, Then the status does not change", () => {
             execution.uploaded_files_through_text_field = [];
             execution.uploaded_files_through_attachment_area = [];
+            execution.removed_files = [];
 
             $scope.updateComment(event, execution);
             $scope.$apply();
@@ -401,6 +416,7 @@ describe("ExecutionDetailController -", () => {
                 execution.id,
                 status,
                 execution.results,
+                [],
                 []
             );
             expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
@@ -415,6 +431,7 @@ describe("ExecutionDetailController -", () => {
             time: "",
             results: "",
             previous_result: { result: "", submitted_by: { id: 666 } },
+            removed_files: [],
         };
         beforeEach(() => {
             execution.previous_result.result = "";

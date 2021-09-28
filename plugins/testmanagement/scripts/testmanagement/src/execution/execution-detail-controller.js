@@ -127,6 +127,7 @@ function ExecutionDetailCtrl(
         }
         ExecutionService.clearEditor(execution);
         ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
+        ExecutionService.clearRemovedFiles(execution);
         $scope.displayTestCommentEditor = !execution.previous_result.result;
     });
 
@@ -336,6 +337,7 @@ function ExecutionDetailCtrl(
             $scope.execution.definition.automated_tests !== "";
         $scope.execution.uploaded_files_through_text_field = [];
         $scope.execution.uploaded_files_through_attachment_area = [];
+        $scope.execution.removed_files = [];
         $scope.displayTestCommentEditor = !$scope.execution.previous_result.result;
     }
 
@@ -379,7 +381,15 @@ function ExecutionDetailCtrl(
             ExecutionService.getUploadedFilesThroughAttachmentAreaIds(execution)
         );
 
-        ExecutionRestService.putTestExecution(execution.id, new_status, comment, uploaded_file_ids)
+        const deleted_file_ids = ExecutionService.getFilesIdToRemove(execution);
+
+        ExecutionRestService.putTestExecution(
+            execution.id,
+            new_status,
+            comment,
+            uploaded_file_ids,
+            deleted_file_ids
+        )
             .then(
                 function (data) {
                     ExecutionService.updateTestExecution(
@@ -410,6 +420,7 @@ function ExecutionDetailCtrl(
             if (execution.userCanReloadTestBecauseDefinitionIsUpdated) {
                 ExecutionService.clearEditor(execution);
                 ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
+                ExecutionService.clearRemovedFiles(execution);
             }
         }
     }
@@ -419,6 +430,7 @@ function ExecutionDetailCtrl(
         $scope.displayTestCommentEditor = true;
         ExecutionService.clearEditor(execution);
         ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
+        ExecutionService.clearRemovedFiles(execution);
         execution.userCanReloadTestBecauseDefinitionIsUpdated();
     }
 
@@ -502,6 +514,7 @@ function ExecutionDetailCtrl(
         $scope.displayTestCommentEditor = !execution.previous_result.result;
         ExecutionService.clearEditor(execution);
         ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
+        ExecutionService.clearRemovedFiles(execution);
     }
 
     function onLoadNewComment(execution) {
@@ -510,6 +523,7 @@ function ExecutionDetailCtrl(
         if ($scope.displayTestCommentEditor) {
             ExecutionService.clearEditor(execution);
             ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
+            ExecutionService.clearRemovedFiles(execution);
         }
     }
 

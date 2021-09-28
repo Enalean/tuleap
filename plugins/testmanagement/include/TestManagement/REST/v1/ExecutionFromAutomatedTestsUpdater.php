@@ -110,6 +110,7 @@ class ExecutionFromAutomatedTestsUpdater
                 $this->execution_change_extractor->getChanges(
                     $test_case->getStatus(),
                     [],
+                    [],
                     $test_case->getTime(),
                     $test_case->getResult(),
                     $execution_artifact,

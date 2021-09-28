@@ -9,7 +9,35 @@
             rel="noreferrer"
         >
             <i class="fas fa-paperclip" aria-hidden="true"></i>
-            <span class="current-test-comment-attachment-label">{{ file.filename }}</span>
+            <span
+                class="current-test-comment-attachment-label"
+                ng-class="{'current-test-comment-attachment-label-deleted': $ctrl.isInCommentMode && file.is_deleted}"
+                data-test="comment-file-attachment">
+                {{ file.filename }}
+            </span>
+            <div class="current-test-comment-attachment-buttons-container">
+                <button
+                    ng-if="$ctrl.isInCommentMode && !file.is_deleted"
+                    type="button"
+                    class="tlp-button-danger tlp-button-outline current-test-comment-attachment-delete-button"
+                    title="{{ 'Remove file' | translate }}"
+                    aria-label="{{ 'Remove file' | translate }}"
+                    ng-click="$ctrl.addFileToRemovedFiles($event, file)"
+                    data-test="remove-attachment-file-button"
+                >
+                    <i class="far fa-fw fa-trash-alt tlp-button-icon current-test-comment-attachment-delete-button-icon" aria-hidden="true"></i>
+                </button>
+                <button
+                    ng-if="$ctrl.isInCommentMode && file.is_deleted"
+                    type="button"
+                    class="tlp-button-outline current-test-comment-attachment-delete-button"
+                    title="{{ 'Undo remove file' | translate }}"
+                    aria-label="{{ 'Undo remove file' | translate }}"
+                    ng-click="$ctrl.cancelFileRemoval($event, file)"
+                >
+                    <i class="fas fa-fw fa-times tlp-button-icon" aria-hidden="true"></i>
+                </button>
+            </div>
         </a>
         <span
             ng-repeat="file in $ctrl.execution.uploaded_files_through_attachment_area track by file.id"
@@ -29,6 +57,18 @@
                     <i class="fas fa-times-circle"></i>
                 </span>
             </span>
+            <div class="current-test-comment-attachment-buttons-container">
+                <button
+                    ng-if="$ctrl.isInCommentMode && !file.is_deleted && file.progress >= 100"
+                    type="button"
+                    class="tlp-button-danger tlp-button-outline current-test-comment-attachment-delete-button"
+                    title="{{ 'Remove file' | translate }}"
+                    aria-label="{{ 'Remove file' | translate }}"
+                    ng-click="$ctrl.removeFileUploadedThroughAttachmentArea(file)"
+                >
+                <i class="far fa-fw fa-trash-alt tlp-button-icon current-test-comment-attachment-delete-button-icon" aria-hidden="true"></i>
+            </button>
+            </div>
         </span>
     </div>
     <div ng-if="$ctrl.isInCommentMode" class="current-test-comment-attachements-controls" ng-class="{'current-test-comment-attachements-controls-no-placeholder': $ctrl.execution.attachments.length > 0}">

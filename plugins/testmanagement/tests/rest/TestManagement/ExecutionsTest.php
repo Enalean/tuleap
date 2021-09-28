@@ -155,6 +155,32 @@ final class ExecutionsTest extends BaseTest
         ]))));
     }
 
+    /**
+     * @depends testPutExecutionsWithFileAttachment
+     */
+    public function testPutExecutionDeletesFileAttachment(): void
+    {
+        $execution = $this->getLastExecutionForValid130Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
+        $this->assertCount(1, $execution['attachments']);
+        $attachment_id = $execution['attachments'][0]['id'];
+
+        $put_resource = [
+            'status'            => 'failed',
+            'time'              => 0,
+            'deleted_file_ids' => [$attachment_id],
+        ];
+        $response     = $this->getResponse(
+            $this->request_factory
+                ->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])
+                ->withBody($this->stream_factory->createStream(json_encode($put_resource)))
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $execution = $this->getLastExecutionForValid130Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
+        $this->assertCount(0, $execution['attachments']);
+    }
+
     public function testPutExecutionsReturnErrorIfWeAddFilesWithoutFileField(): void
     {
         $initial_value = 'failed';

@@ -99,6 +99,7 @@ class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $result = $this->execution_changes_extractor->getChanges(
             'passed',
             [12],
+            [],
             123,
             "result",
             $this->artifact,
@@ -128,6 +129,7 @@ class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->execution_changes_extractor->getChanges(
             'passed',
+            [],
             [],
             0,
             "result",

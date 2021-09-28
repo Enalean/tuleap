@@ -156,4 +156,56 @@ describe("execution-attachments-component", () => {
             expect(execution.uploaded_files_through_attachment_area.length).toEqual(0);
         });
     });
+
+    describe("addFileToRemovedFiles()", () => {
+        it("remove attachment file", () => {
+            const removed_file = {
+                id: 1234,
+                name: "bug.png",
+                is_deleted: false,
+            };
+            const event = { preventDefault: jest.fn() };
+
+            jest.spyOn(ExecutionService, "addFileToDeletedFiles").mockImplementation(() => {});
+
+            controller.addFileToRemovedFiles(event, removed_file);
+
+            $scope.$digest();
+
+            expect(event.preventDefault).toHaveBeenCalled();
+            expect(ExecutionService.addFileToDeletedFiles).toHaveBeenCalledWith(execution, {
+                id: removed_file.id,
+                name: removed_file.name,
+                is_deleted: true,
+            });
+
+            expect(removed_file.is_deleted).toBeTruthy();
+        });
+    });
+
+    describe("cancelFileRemoval()", () => {
+        it("deletes file from removed files", () => {
+            const removed_file = {
+                id: 1234,
+                name: "bug.png",
+                is_deleted: true,
+            };
+            const event = { preventDefault: jest.fn() };
+
+            jest.spyOn(ExecutionService, "removeFileFromDeletedFiles").mockImplementation(() => {});
+
+            controller.cancelFileRemoval(event, removed_file);
+
+            $scope.$digest();
+
+            expect(event.preventDefault).toHaveBeenCalled();
+            expect(ExecutionService.removeFileFromDeletedFiles).toHaveBeenCalledWith(execution, {
+                id: removed_file.id,
+                name: removed_file.name,
+                is_deleted: false,
+            });
+
+            expect(removed_file.is_deleted).toBeFalsy();
+        });
+    });
 });

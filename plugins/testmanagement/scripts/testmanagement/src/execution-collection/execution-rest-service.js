@@ -76,10 +76,17 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
         );
     }
 
-    function putTestExecution(execution_id, new_status, results, uploaded_file_ids) {
+    function putTestExecution(
+        execution_id,
+        new_status,
+        results,
+        uploaded_file_ids,
+        deleted_file_ids
+    ) {
         let param = {
             status: new_status,
             uploaded_file_ids: uploaded_file_ids,
+            deleted_file_ids: deleted_file_ids,
             results: results,
         };
 
