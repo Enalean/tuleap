@@ -20,53 +20,68 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\BuildProject;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
-final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
+final class ProgramIncrementCreationProcessor implements ProcessProgramIncrementCreation
 {
     public function __construct(
         private RetrievePlanningMilestoneTracker $root_milestone_retriever,
         private ProgramIncrementsCreator $program_increment_creator,
         private LoggerInterface $logger,
-        private PendingArtifactCreationStore $pending_artifact_creation_store,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         private SearchTeamsOfProgram $teams_searcher,
         private BuildProject $project_builder,
         private GatherSynchronizedFields $fields_gatherer,
         private RetrieveFieldValuesGatherer $values_retriever,
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
+        private RetrieveProgramOfProgramIncrement $program_retriever,
+        private BuildProgram $program_builder
     ) {
     }
 
-    public function createProgramIncrements(ReplicationData $replication_data): void
+    public function processCreation(ProgramIncrementCreation $creation): void
     {
+        $this->logger->debug(
+            sprintf(
+                'Processing program increment creation with program increment #%d for user #%d',
+                $creation->getProgramIncrement()->getId(),
+                $creation->getUser()->getId()
+            )
+        );
         try {
-            $this->create($replication_data);
-        } catch (TrackerRetrievalException | MirroredTimeboxReplicationException | FieldSynchronizationException $exception) {
-            $this->logger->error('Error during creation of project increments ', ['exception' => $exception]);
+            $this->create($creation);
+        } catch (
+            TopPlanningNotFoundInProjectException
+            | TrackerRetrievalException
+            | MirroredTimeboxReplicationException
+            | FieldSynchronizationException
+            | ProgramAccessException
+            | ProjectIsNotAProgramException $exception
+        ) {
+            $this->logger->error('Error during creation of mirror program increments ', ['exception' => $exception]);
         }
     }
 
@@ -76,44 +91,48 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      * @throws FieldRetrievalException
      * @throws FieldSynchronizationException
      * @throws TopPlanningNotFoundInProjectException
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
      */
-    private function create(ReplicationData $replication_data): void
+    private function create(ProgramIncrementCreation $creation): void
     {
-        $source_values = SourceTimeboxChangesetValues::fromReplication(
+        $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
             $this->fields_gatherer,
             $this->values_retriever,
             $this->submission_date_retriever,
-            $replication_data
+            $creation
+        );
+
+        $user    = $creation->getUserReference();
+        $program = ProgramIdentifier::fromProgramIncrement(
+            $this->program_retriever,
+            $this->program_builder,
+            $creation->getProgramIncrement(),
+            $user
         );
 
         $team_projects = TeamProjectsCollection::fromProgramIdentifier(
             $this->teams_searcher,
             $this->project_builder,
-            ProgramIdentifier::fromReplicationData($replication_data)
+            $program
         );
 
-        $user_identifier            = $replication_data->getUserIdentifier();
         $root_planning_tracker_team = TrackerCollection::buildRootPlanningMilestoneTrackers(
             $this->root_milestone_retriever,
             $team_projects,
-            $user_identifier
+            $user
         );
 
         $this->program_increment_creator->createProgramIncrements(
             $source_values,
             $root_planning_tracker_team,
-            $user_identifier
-        );
-
-        $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(
-            $replication_data->getTimebox()->getId(),
-            $user_identifier->getId()
+            $user
         );
 
         $program_increment_changed = new ProgramIncrementChanged(
-            $replication_data->getTimebox()->getId(),
-            $replication_data->getTracker()->getId(),
-            $user_identifier
+            $creation->getProgramIncrement()->getId(),
+            $creation->getTracker()->getId(),
+            $user
         );
 
         $this->user_stories_planner->plan($program_increment_changed);

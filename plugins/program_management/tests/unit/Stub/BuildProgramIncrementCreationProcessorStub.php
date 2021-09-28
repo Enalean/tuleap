@@ -20,20 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
 
-/**
- * @psalm-immutable
- */
-interface ArtifactCreatedEvent
+final class BuildProgramIncrementCreationProcessorStub implements BuildProgramIncrementCreationProcessor
 {
-    public function getArtifact(): ArtifactIdentifier;
-    public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserReference;
-    public function getChangeset(): ChangesetIdentifier;
+    private function __construct(private ProcessProgramIncrementCreation $processor)
+    {
+    }
+
+    public static function withProcessor(ProcessProgramIncrementCreation $procesor): self
+    {
+        return new self($procesor);
+    }
+
+    public function getProcessor(): ProcessProgramIncrementCreation
+    {
+        return $this->processor;
+    }
 }

@@ -34,7 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-class ProgramIncrementsCreator
+final class ProgramIncrementsCreator
 {
     public function __construct(
         private DBTransactionExecutor $transaction_executor,

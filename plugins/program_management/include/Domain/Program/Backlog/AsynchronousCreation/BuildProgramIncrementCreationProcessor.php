@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-
-interface CreateTaskProgramIncrement
+interface BuildProgramIncrementCreationProcessor
 {
-    public function createProgramIncrements(ReplicationData $replication_data): void;
+    public function getProcessor(): ProcessProgramIncrementCreation;
 }

@@ -29,7 +29,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 
 /**
@@ -53,43 +52,6 @@ final class SourceTimeboxChangesetValues
      * @throws FieldSynchronizationException
      * @throws MirroredTimeboxReplicationException
      */
-    public static function fromReplication(
-        GatherSynchronizedFields $fields_gatherer,
-        RetrieveFieldValuesGatherer $field_values_retriever,
-        RetrieveChangesetSubmissionDate $submission_retriever,
-        ReplicationData $replication
-    ): self {
-        $fields            = SynchronizedFieldReferences::fromTrackerIdentifier(
-            $fields_gatherer,
-            $replication->getTracker(),
-            null
-        );
-        $submission_date   = $submission_retriever->getSubmissionDate(
-            $replication->getTimebox(),
-            $replication->getChangeset()
-        );
-        $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($replication);
-        $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
-        $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);
-        $status_value      = StatusValue::fromStatusReference($values_gatherer, $fields->status);
-        $start_date_value  = StartDateValue::fromStartDateReference($values_gatherer, $fields->start_date);
-        $end_period_value  = EndPeriodValue::fromEndPeriodReference($values_gatherer, $fields->end_period);
-
-        return new self(
-            $replication->getTimebox(),
-            $submission_date,
-            $title_value,
-            $description_value,
-            $status_value,
-            $start_date_value,
-            $end_period_value
-        );
-    }
-
-    /**
-     * @throws FieldSynchronizationException
-     * @throws MirroredTimeboxReplicationException
-     */
     public static function fromMirroringOrder(
         GatherSynchronizedFields $fields_gatherer,
         RetrieveFieldValuesGatherer $field_values_retriever,
@@ -103,7 +65,7 @@ final class SourceTimeboxChangesetValues
             null
         );
         $submission_date   = $submission_retriever->getSubmissionDate($timebox, $order->getChangeset());
-        $values_gatherer   = $field_values_retriever->getGathererFromUpdate($order);
+        $values_gatherer   = $field_values_retriever->getFieldValuesGatherer($order);
         $title_value       = TitleValue::fromTitleReference($values_gatherer, $fields->title);
         $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);
         $status_value      = StatusValue::fromStatusReference($values_gatherer, $fields->status);

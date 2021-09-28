@@ -24,18 +24,14 @@ namespace Tuleap\ProgramManagement\REST\v1\Helper;
 
 use Psr\Log\NullLogger;
 use REST_TestDataBuilder;
-use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
@@ -47,8 +43,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -59,55 +53,39 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
     public const PROJECT_TEAM_NAME    = 'team';
     public const PROJECT_PROGRAM_NAME = 'program';
 
-    public ReplicationDataAdapter $replication_data_adapter;
     private ProgramIncrementCreationDispatcher $creation_dispatcher;
     private ?\PFUser $user;
     private \Tracker $program_increment;
     private \Tracker $user_story;
     private \Tracker $feature;
     private \Tracker_ArtifactFactory $artifact_factory;
-    private PendingProgramIncrementCreationDAO $pending_program_increments_dao;
+    private ProgramIncrementsDAO $program_increment_DAO;
 
     public function setUp(): void
     {
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
 
-        $user_manager                         = UserManager::instance();
-        $user_adapter                         = new UserManagerAdapter($user_manager);
-        $this->artifact_factory               = Tracker_ArtifactFactory::instance();
-        $changeset_factory                    = Tracker_Artifact_ChangesetFactoryBuilder::build();
-        $team_dao                             = new TeamDao();
-        $program_dao                          = new ProgramDao();
-        $project_permissions_verifier         = new ProjectPermissionVerifier(RetrieveUserStub::withGenericUser());
-        $this->pending_program_increments_dao = new PendingProgramIncrementCreationDAO();
+        $user_manager                 = UserManager::instance();
+        $user_adapter                 = new UserManagerAdapter($user_manager);
+        $this->artifact_factory       = Tracker_ArtifactFactory::instance();
+        $team_dao                     = new TeamDao();
+        $program_dao                  = new ProgramDao();
+        $this->program_increment_DAO  = new ProgramIncrementsDAO();
+        $project_permissions_verifier = new ProjectPermissionVerifier(RetrieveUserStub::withGenericUser());
 
         $team_builder = new TeamAdapter($this->project_manager, $program_dao, new ExplicitBacklogDao(), $user_adapter);
-
-        $this->replication_data_adapter = new ReplicationDataAdapter(
-            $this->artifact_factory,
-            $user_manager,
-            $this->pending_program_increments_dao,
-            $changeset_factory,
-            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
-            $program_dao,
-            new ProgramManagementProjectAdapter($this->project_manager),
-            VerifyIsProgramIncrementStub::withValidProgramIncrement(),
-            new ArtifactVisibleVerifier($this->artifact_factory, $user_adapter)
-        );
 
         $null_logger               = new NullLogger();
         $this->creation_dispatcher = new ProgramIncrementCreationDispatcher(
             $null_logger,
             new QueueFactory($null_logger),
-            $this->replication_data_adapter,
-            new TaskBuilder()
+            new ProgramIncrementCreationProcessorBuilder()
         );
 
         $this->user = $user_manager->getUserByUserName(\TestDataBuilder::TEST_USER_1_NAME);
 
         $program_project = $this->getProjectByShortName(self::PROJECT_PROGRAM_NAME);
         $team_project    = $this->getProjectByShortName(self::PROJECT_TEAM_NAME);
-
 
         $program = ProgramForAdministrationIdentifier::fromProject(
             $team_dao,
@@ -173,23 +151,13 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $tracker_event              = new ArtifactCreated($pi, $pi->getLastChangeset(), $this->user);
         $created_event              = ArtifactCreatedProxy::fromArtifactCreated($tracker_event);
         $program_increment_creation = ProgramIncrementCreation::fromArtifactCreatedEvent(
-            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+            $this->program_increment_DAO,
             $created_event
         );
         if (! $program_increment_creation) {
             return;
         }
-        $this->pending_program_increments_dao->storeCreation($program_increment_creation);
-        $replication_data = $this->replication_data_adapter->buildFromArtifactAndUserId(
-            $pi->getId(),
-            (int) $pi->getSubmittedBy()
-        );
-
-        if ($replication_data === null) {
-            return;
-        }
-
-        $this->creation_dispatcher->processProgramIncrementCreation($replication_data);
+        $this->creation_dispatcher->dispatchCreation($program_increment_creation);
     }
 
     /**

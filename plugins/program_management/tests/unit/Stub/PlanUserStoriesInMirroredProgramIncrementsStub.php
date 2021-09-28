@@ -20,11 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 
-interface StoreProgramIncrementCreation
+final class PlanUserStoriesInMirroredProgramIncrementsStub implements PlanUserStoriesInMirroredProgramIncrements
 {
-    public function storeCreation(ProgramIncrementCreation $creation): void;
+    private function __construct(private int $call_count)
+    {
+    }
+
+    public static function withCount(): self
+    {
+        return new self(0);
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
+
+    public function plan(ProgramIncrementChanged $program_increment_changed): void
+    {
+        $this->call_count++;
+    }
 }

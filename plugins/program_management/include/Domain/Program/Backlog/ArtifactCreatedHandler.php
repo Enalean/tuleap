@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
@@ -34,7 +33,6 @@ final class ArtifactCreatedHandler
     public function __construct(
         private RemovePlannedFeaturesFromTopBacklog $feature_remover,
         private VerifyIsProgramIncrementTracker $program_increment_verifier,
-        private StoreProgramIncrementCreation $creation_store,
         private DispatchProgramIncrementCreation $creation_dispatcher,
     ) {
     }
@@ -50,7 +48,6 @@ final class ArtifactCreatedHandler
         if (! $creation) {
             return;
         }
-        $this->creation_store->storeCreation($creation);
         $this->creation_dispatcher->dispatchCreation($creation);
     }
 }

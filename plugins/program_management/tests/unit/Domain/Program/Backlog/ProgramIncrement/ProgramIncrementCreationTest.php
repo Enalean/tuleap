@@ -23,7 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementCreationEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -32,15 +37,32 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private const USER_ID                      = 106;
     private const CHANGESET_ID                 = 6023;
     private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
+    private VerifyIsProgramIncrementStub $program_increment_verifier;
+    private VerifyIsVisibleArtifactStub $visibility_verifier;
+    private VerifyIsChangesetStub $changeset_verifier;
+    private RetrieveProgramIncrementTrackerStub $tracker_retriever;
     private ArtifactCreatedEventStub $artifact_created;
+    private ProgramIncrementCreationEventStub $creation_event;
 
     protected function setUp(): void
     {
-        $this->tracker_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->tracker_verifier           = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
+        $this->visibility_verifier        = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
+        $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
+        $this->tracker_retriever          = RetrieveProgramIncrementTrackerStub::withValidTracker(
+            self::PROGRAM_INCREMENT_TRACKER_ID
+        );
 
         $this->artifact_created = ArtifactCreatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
             self::PROGRAM_INCREMENT_TRACKER_ID,
+            self::USER_ID,
+            self::CHANGESET_ID
+        );
+
+        $this->creation_event = ProgramIncrementCreationEventStub::withIds(
+            self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
             self::CHANGESET_ID
         );
@@ -58,5 +80,60 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getTracker()->getId());
         self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
         self::assertSame(self::USER_ID, $creation->getUser()->getId());
+        self::assertSame(self::USER_ID, $creation->getUserReference()->getId());
+    }
+
+    public function testItReturnsNullWhenArtifactIsNotAProgramIncrement(): void
+    {
+        self::assertNull(
+            ProgramIncrementCreation::fromArtifactCreatedEvent(
+                VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
+                $this->artifact_created
+            )
+        );
+    }
+
+    public function testItBuildsFromProgramIncrementCreationEvent(): void
+    {
+        $creation = ProgramIncrementCreation::fromProgramIncrementCreationEvent(
+            $this->program_increment_verifier,
+            $this->visibility_verifier,
+            $this->changeset_verifier,
+            $this->tracker_retriever,
+            $this->creation_event
+        );
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getProgramIncrement()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getTimebox()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getProgramIncrementTracker()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getTracker()->getId());
+        self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
+        self::assertSame(self::USER_ID, $creation->getUser()->getId());
+        self::assertSame(self::USER_ID, $creation->getUserReference()->getId());
+    }
+
+    public function testItReturnsNullWhenArtifactFromEventIsNotAProgramIncrement(): void
+    {
+        self::assertNull(
+            ProgramIncrementCreation::fromProgramIncrementCreationEvent(
+                VerifyIsProgramIncrementStub::withNotProgramIncrement(),
+                $this->visibility_verifier,
+                $this->changeset_verifier,
+                $this->tracker_retriever,
+                $this->creation_event
+            )
+        );
+    }
+
+    public function testItReturnsNullWhenChangesetFromEventIsNotValid(): void
+    {
+        self::assertNull(
+            ProgramIncrementCreation::fromProgramIncrementCreationEvent(
+                $this->program_increment_verifier,
+                $this->visibility_verifier,
+                VerifyIsChangesetStub::withNotValidChangeset(),
+                $this->tracker_retriever,
+                $this->creation_event
+            )
+        );
     }
 }

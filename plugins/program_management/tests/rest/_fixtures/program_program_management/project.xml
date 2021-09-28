@@ -24,7 +24,7 @@
     <service shortname="summary" enabled="1"/>
     <service shortname="admin" enabled="1"/>
     <service shortname="plugin_tracker" enabled="1"/>
-    <service shortname="plugin_agiledashboard" enabled="1"/>
+    <service shortname="plugin_program_management" enabled="1"/>
   </services>
   <ugroups>
     <ugroup name="project_admins" description="Project administrators">
@@ -233,35 +233,6 @@
           </open_values>
         </semantic>
       </semantics>
-      <rules />
-      <reports>
-        <report is_default="0">
-          <name><![CDATA[All Bugs]]></name>
-          <description><![CDATA[Bugs Report]]></description>
-          <criterias>
-            <criteria rank="0">
-              <field REF="F18517"/>
-            </criteria>
-            <criteria rank="1" is_advanced="1">
-              <field REF="F18521"/>
-            </criteria>
-            <criteria rank="2">
-              <field REF="F18522"/>
-            </criteria>
-          </criterias>
-          <renderers>
-            <renderer ID="R2383" type="table" rank="0" chunksz="15">
-              <name><![CDATA[All Bugs]]></name>
-              <columns>
-                <field REF="F18517"/>
-                <field REF="F18521"/>
-                <field REF="F18522"/>
-                <field REF="F18524"/>
-              </columns>
-            </renderer>
-          </renderers>
-        </report>
-      </reports>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
         <permission scope="field" REF="F18517" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
@@ -496,37 +467,6 @@
           <end_date_field REF="F14279"/>
         </semantic>
       </semantics>
-      <rules/>
-      <reports>
-        <report is_default="0">
-          <name><![CDATA[Releases]]></name>
-          <description><![CDATA[The system default artifact report]]></description>
-          <criterias>
-            <criteria rank="0" is_advanced="1">
-              <field REF="F14282"/>
-            </criteria>
-            <criteria rank="1">
-              <field REF="F14278"/>
-            </criteria>
-            <criteria rank="2">
-              <field REF="F14279"/>
-            </criteria>
-          </criterias>
-          <renderers>
-            <renderer ID="R2393" type="table" rank="0" chunksz="15">
-              <name><![CDATA[Releases]]></name>
-              <columns>
-                <field REF="F14274"/>
-                <field REF="F14282"/>
-                <field REF="F14278"/>
-                <field REF="F14280"/>
-                <field REF="F14283"/>
-                <field REF="F14286"/>
-              </columns>
-            </renderer>
-          </renderers>
-        </report>
-      </reports>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
         <permission scope="field" REF="F14274" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
@@ -672,31 +612,6 @@
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
       </semantics>
-      <rules>
-        <date_rules/>
-        <list_rules/>
-      </rules>
-      <reports>
-        <report is_default="0">
-          <name><![CDATA[ Features ]]></name>
-          <description><![CDATA[ The system default artifact report ]]></description>
-          <criterias>
-            <criteria rank="0" is_advanced="1">
-              <field REF="F20509"/>
-            </criteria>
-          </criterias>
-          <renderers>
-            <renderer ID="R3209" type="table" rank="0" chunksz="15">
-              <name><![CDATA[ Features ]]></name>
-              <columns>
-                <field REF="F20506"/>
-                <field REF="F20509"/>
-                <field REF="F20511"/>
-              </columns>
-            </renderer>
-          </renderers>
-        </report>
-      </reports>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
         <permission scope="field" REF="F20506" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
@@ -798,11 +713,6 @@
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
       </semantics>
-      <rules>
-        <date_rules/>
-        <list_rules/>
-      </rules>
-      <reports/>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
         <permission scope="field" REF="F20515" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
@@ -815,16 +725,7 @@
         <permission scope="field" REF="F20520" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F20520" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
-      <artifacts />
+      <artifacts/>
     </tracker>
   </trackers>
-  <natures />
-  <agiledashboard>
-    <admin>
-      <scrum>
-        <explicit_backlog is_used="1"/>
-      </scrum>
-    </admin>
-    <plannings/>
-  </agiledashboard>
 </project>

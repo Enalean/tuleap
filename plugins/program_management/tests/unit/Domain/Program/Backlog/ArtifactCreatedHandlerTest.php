@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactCreatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
-use Tuleap\ProgramManagement\Tests\Stub\StoreProgramIncrementCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -34,7 +33,6 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactCreatedEvent $event;
     private RemovePlannedFeaturesFromTopBacklogStub $feature_remover;
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
-    private StoreProgramIncrementCreationStub $creation_store;
     private DispatchProgramIncrementCreationStub $creation_dispatcher;
 
     protected function setUp(): void
@@ -43,7 +41,6 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->feature_remover            = RemovePlannedFeaturesFromTopBacklogStub::withCount();
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
-        $this->creation_store             = StoreProgramIncrementCreationStub::withCount();
         $this->creation_dispatcher        = DispatchProgramIncrementCreationStub::withCount();
     }
 
@@ -52,7 +49,6 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ArtifactCreatedHandler(
             $this->feature_remover,
             $this->program_increment_verifier,
-            $this->creation_store,
             $this->creation_dispatcher
         );
     }
@@ -62,7 +58,6 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getHandler()->handle($this->event);
 
         self::assertSame(1, $this->feature_remover->getCallCount());
-        self::assertSame(1, $this->creation_store->getCallCount());
         self::assertSame(1, $this->creation_dispatcher->getCallCount());
     }
 
@@ -73,7 +68,6 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getHandler()->handle($this->event);
 
         self::assertSame(1, $this->feature_remover->getCallCount());
-        self::assertSame(0, $this->creation_store->getCallCount());
         self::assertSame(0, $this->creation_dispatcher->getCallCount());
     }
 }

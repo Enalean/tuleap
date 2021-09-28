@@ -27,14 +27,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Changes
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
 {
     private function __construct(
         private ArtifactIdentifier $artifact,
         private TrackerIdentifier $tracker,
-        private UserIdentifier $user,
+        private UserReference $user,
         private ChangesetIdentifier $changeset
     ) {
     }
@@ -48,7 +48,7 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
         return new self(
             ArtifactIdentifierStub::withId($artifact_id),
             TrackerIdentifierStub::withId($tracker_id),
-            UserIdentifierStub::withId($user_id),
+            UserReferenceStub::withIdAndName($user_id, 'Alix Burriesci'),
             DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id)
         );
     }
@@ -63,7 +63,7 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
         return $this->tracker;
     }
 
-    public function getUser(): UserIdentifier
+    public function getUser(): UserReference
     {
         return $this->user;
     }

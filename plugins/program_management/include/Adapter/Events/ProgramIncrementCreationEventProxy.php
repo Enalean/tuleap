@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\Queue\WorkerEvent;
 
 /**
@@ -31,14 +33,17 @@ use Tuleap\Queue\WorkerEvent;
  * @see WorkerEvent
  * @psalm-immutable
  */
-final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEvent
+final class ProgramIncrementCreationEventProxy implements ProgramIncrementCreationEvent
 {
-    private function __construct(private int $artifact_id, private int $user_id, private int $changeset_id)
+    private function __construct(private int $artifact_id, private UserReference $user, private int $changeset_id)
     {
     }
 
-    public static function fromWorkerEvent(LoggerInterface $logger, WorkerEvent $event): ?self
-    {
+    public static function fromWorkerEvent(
+        LoggerInterface $logger,
+        \UserManager $user_manager,
+        WorkerEvent $event
+    ): ?self {
         $event_name = $event->getEventName();
         if ($event_name !== self::TOPIC) {
             return null;
@@ -49,7 +54,15 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
             $logger->debug("Malformed payload for $event_name: " . var_export($payload, true));
             return null;
         }
-        return new self($payload['artifact_id'], $payload['user_id'], $payload['changeset_id']);
+        $user_id = $payload['user_id'];
+        $pfuser  = $user_manager->getUserById($user_id);
+        if (! $pfuser) {
+            $logger->error("Could not find user with id #$user_id");
+            return null;
+        }
+        $user = UserProxy::buildFromPFUser($pfuser);
+
+        return new self($payload['artifact_id'], $user, $payload['changeset_id']);
     }
 
     public function getArtifactId(): int
@@ -57,9 +70,9 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         return $this->artifact_id;
     }
 
-    public function getUserId(): int
+    public function getUser(): UserReference
     {
-        return $this->user_id;
+        return $this->user;
     }
 
     public function getChangesetId(): int

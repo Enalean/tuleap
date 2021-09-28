@@ -20,29 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Events;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
-final class StoreProgramIncrementCreationStub implements StoreProgramIncrementCreation
+/**
+ * @psalm-immutable
+ */
+interface ProgramIncrementCreationEvent
 {
-    private function __construct(private int $call_count)
-    {
-    }
-
-    public static function withCount(): self
-    {
-        return new self(0);
-    }
-
-    public function storeCreation(ProgramIncrementCreation $creation): void
-    {
-        $this->call_count++;
-    }
-
-    public function getCallCount(): int
-    {
-        return $this->call_count;
-    }
+    public const TOPIC = 'tuleap.program_management.program_increment.creation';
+    public function getArtifactId(): int;
+    public function getUser(): UserReference;
+    public function getChangesetId(): int;
 }

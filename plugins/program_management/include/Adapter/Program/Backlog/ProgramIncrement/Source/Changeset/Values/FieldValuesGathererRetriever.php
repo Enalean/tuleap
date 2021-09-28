@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
 {
@@ -42,35 +41,17 @@ final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function getFieldValuesGatherer(ReplicationData $replication): GatherFieldValues
+    public function getFieldValuesGatherer(TimeboxMirroringOrder $order): GatherFieldValues
     {
-        $timebox_id    = $replication->getTimebox()->getId();
+        $timebox_id    = $order->getTimebox()->getId();
         $full_artifact = $this->artifact_factory->getArtifactById($timebox_id);
         if (! $full_artifact) {
-            throw new PendingArtifactNotFoundException(
-                $timebox_id,
-                $replication->getUserIdentifier()->getId()
-            );
-        }
-        $changeset_id   = $replication->getChangeset()->getId();
-        $full_changeset = $full_artifact->getChangeset($changeset_id);
-        if (! $full_changeset) {
-            throw new PendingArtifactChangesetNotFoundException($timebox_id, $changeset_id);
-        }
-        return new FieldValuesGatherer($full_changeset, $this->form_element_factory);
-    }
-
-    public function getGathererFromUpdate(TimeboxMirroringOrder $order): GatherFieldValues
-    {
-        $program_increment_id = $order->getTimebox()->getId();
-        $full_artifact        = $this->artifact_factory->getArtifactById($program_increment_id);
-        if (! $full_artifact) {
-            throw new PendingArtifactNotFoundException($program_increment_id, $order->getUser()->getId());
+            throw new PendingArtifactNotFoundException($timebox_id, $order->getUser()->getId());
         }
         $changeset_id   = $order->getChangeset()->getId();
         $full_changeset = $full_artifact->getChangeset($changeset_id);
         if (! $full_changeset) {
-            throw new PendingArtifactChangesetNotFoundException($program_increment_id, $changeset_id);
+            throw new PendingArtifactChangesetNotFoundException($timebox_id, $changeset_id);
         }
         return new FieldValuesGatherer($full_changeset, $this->form_element_factory);
     }
