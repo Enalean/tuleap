@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -105,6 +106,12 @@ final class ConfigurationErrorsCollectorTest extends TestCase
     public function testItHasErrorWhenStatusHasMissingValues(): void
     {
         $this->collector->addMissingValueInSemantic(['Planned', 'On going'], [TrackerReferenceStub::withId(1), TrackerReferenceStub::withId(2)]);
+        self::assertTrue($this->collector->hasError());
+    }
+
+    public function testItHasErrorWhenNoPlanningIsFound(): void
+    {
+        $this->collector->addTeamRootPlanningNotFoundOrNotAccessible(new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue'));
         self::assertTrue($this->collector->hasError());
     }
 

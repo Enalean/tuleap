@@ -21,6 +21,7 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
@@ -79,6 +80,10 @@ final class ConfigurationErrorsCollector
      * @var MissingArtifactLinkFieldPresenter[]
      */
     private array $missing_artifact_link = [];
+    /**
+     * @var TeamHasNoRootPlanningPresenter[]
+     */
+    private array $no_root_planning = [];
 
 
     public function __construct(bool $should_collect_all_issues)
@@ -185,6 +190,12 @@ final class ConfigurationErrorsCollector
         $this->missing_artifact_link[] =  new MissingArtifactLinkFieldPresenter($field_administration_url, $tracker_name, $project_name);
     }
 
+
+    public function addTeamRootPlanningNotFoundOrNotAccessible(ProgramManagementProject $project_reference): void
+    {
+        $this->no_root_planning[] = new TeamHasNoRootPlanningPresenter($project_reference);
+    }
+
     public function hasError(): bool
     {
         return count($this->semantic_errors) > 0 ||
@@ -199,7 +210,8 @@ final class ConfigurationErrorsCollector
             count($this->semantic_status_no_field) > 0 ||
             count($this->semantic_status_missing_values) > 0 ||
             count($this->missing_artifact_link) > 0 ||
-            count($this->title_has_incorrect_type_error) > 0;
+            count($this->title_has_incorrect_type_error) > 0 ||
+            count($this->no_root_planning) > 0;
     }
 
     /**
@@ -304,5 +316,13 @@ final class ConfigurationErrorsCollector
     public function getMissingArtifactLinkErrors(): array
     {
         return $this->missing_artifact_link;
+    }
+
+    /**
+     * @return TeamHasNoRootPlanningPresenter[]
+     */
+    public function getNoRootPlanning(): array
+    {
+        return $this->no_root_planning;
     }
 }

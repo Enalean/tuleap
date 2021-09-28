@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
@@ -39,7 +40,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
@@ -74,8 +74,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
         try {
             $this->create($creation);
         } catch (
-            TopPlanningNotFoundInProjectException
-            | TrackerRetrievalException
+            TrackerRetrievalException
             | MirroredTimeboxReplicationException
             | FieldSynchronizationException
             | ProgramAccessException
@@ -90,7 +89,6 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
      * @throws TrackerRetrievalException
      * @throws FieldRetrievalException
      * @throws FieldSynchronizationException
-     * @throws TopPlanningNotFoundInProjectException
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
      */
@@ -120,7 +118,8 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
         $root_planning_tracker_team = TrackerCollection::buildRootPlanningMilestoneTrackers(
             $this->root_milestone_retriever,
             $team_projects,
-            $user
+            $user,
+            new ConfigurationErrorsCollector(false)
         );
 
         $this->program_increment_creator->createProgramIncrements(

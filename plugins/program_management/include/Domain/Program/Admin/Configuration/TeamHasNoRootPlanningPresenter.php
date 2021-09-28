@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
-final class PlanningHasNoProgramIncrementException extends \Exception implements TrackerRetrievalException
+/**
+ * @psalm-immutable
+ */
+final class TeamHasNoRootPlanningPresenter
 {
-    public function __construct(int $planning_id)
+    public string $project_label;
+    public int $project_id;
+
+    public function __construct(ProgramManagementProject $project_reference)
     {
-        parent::__construct("Planning with id $planning_id has no program increment tracker");
+        $this->project_label = $project_reference->getPublicName();
+        $this->project_id    = $project_reference->getId();
     }
 }

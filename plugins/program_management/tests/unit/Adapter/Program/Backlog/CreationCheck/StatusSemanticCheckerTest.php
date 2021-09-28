@@ -103,7 +103,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             TrackerReferenceStub::fromTracker($this->tracker_team_02),
         );
 
-        $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier);
+        $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier, new ConfigurationErrorsCollector(false));
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_program_tracker),
             ProgramIdentifierBuilder::build(),

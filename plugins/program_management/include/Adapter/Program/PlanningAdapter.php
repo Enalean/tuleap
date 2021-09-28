@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
@@ -71,10 +72,16 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         return ProgramManagementProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
     }
 
-    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): TrackerReference
+    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference
     {
-        $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
-        return TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker());
+        try {
+            $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
+            return TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker());
+        } catch (TopPlanningNotFoundInProjectException $exception) {
+            $errors_collector->addTeamRootPlanningNotFoundOrNotAccessible($project);
+        }
+
+        return null;
     }
 
     /**

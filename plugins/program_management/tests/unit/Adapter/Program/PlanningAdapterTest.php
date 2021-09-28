@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Planning;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
@@ -98,9 +99,27 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $tracker->getId(),
             $this->adapter->retrieveRootPlanningMilestoneTracker(
                 $wrapper_project,
-                UserIdentifierStub::buildGenericUser()
+                UserIdentifierStub::buildGenericUser(),
+                new ConfigurationErrorsCollector(false)
             )->getId()
         );
+    }
+
+    public function testItCollectErrorWhenNoPlanning(): void
+    {
+        $project_id = 101;
+        $this->planning_factory->method('getRootPlanning')->willReturn(false);
+
+        $wrapper_project  = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
+        $errors_collector = new ConfigurationErrorsCollector(false);
+
+        $this->adapter->retrieveRootPlanningMilestoneTracker(
+            $wrapper_project,
+            UserIdentifierStub::buildGenericUser(),
+            $errors_collector
+        );
+
+        self::assertCount(1, $errors_collector->getNoRootPlanning());
     }
 
     public function testItThrowErrorIfNoSecondPlanningMilestoneInProject(): void

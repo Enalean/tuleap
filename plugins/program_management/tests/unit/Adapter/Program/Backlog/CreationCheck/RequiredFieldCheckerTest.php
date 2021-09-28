@@ -132,17 +132,17 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $other_tracker_with_no_required_field->method('getFormElementFields')->willReturn(
             [$other_non_required_field]
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             TrackerReferenceStub::fromTracker($tracker),
             TrackerReferenceStub::fromTracker($other_tracker_with_no_required_field)
         );
-        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $this->teams, $this->user);
+        $errors_collector = new ConfigurationErrorsCollector(false);
+        $trackers         = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $this->teams, $this->user, $errors_collector);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls(
             $tracker,
             $other_tracker_with_no_required_field
         );
 
-        $errors_collector         = new ConfigurationErrorsCollector(false);
         $no_other_required_fields = $this->getChecker()->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             $trackers,
             $this->collection,
@@ -185,11 +185,11 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             [$required_title, $required_artifact_link, $other_required_field]
         );
 
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(TrackerReferenceStub::withDefaults());
-        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user);
+        $retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(TrackerReferenceStub::withDefaults());
+        $errors_collector = new ConfigurationErrorsCollector(true);
+        $trackers         = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user, $errors_collector);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker);
 
-        $errors_collector         = new ConfigurationErrorsCollector(true);
         $no_other_required_fields = $this->getChecker()->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             $trackers,
             $this->collection,
