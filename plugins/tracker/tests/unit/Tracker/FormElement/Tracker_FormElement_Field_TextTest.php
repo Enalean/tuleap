@@ -219,6 +219,16 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
+    public function testHasChangesWithoutFormat(): void
+    {
+        $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class);
+        $value->shouldReceive('getText')->andReturns('v1');
+
+        $this->assertTrue(
+            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $value, 'v2')
+        );
+    }
+
     public function testIsValidRequiredField(): void
     {
         $this->text_field->shouldReceive('isRequired')->andReturns(true);
