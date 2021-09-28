@@ -29,7 +29,7 @@ final class ProjectReferenceProxyTest extends TestCase
 {
     public function testItBuildsPrimitive(): void
     {
-        $project = new \Project(['group_id' => 101, 'group_name' => "My project"]);
+        $project = new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "project"]);
         $proxy   = ProjectReferenceProxy::buildFromProject($project);
 
         self::assertEquals($project->getID(), $proxy->getProjectId());

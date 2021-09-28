@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -49,7 +49,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(78);
@@ -62,7 +62,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(78);
@@ -75,7 +75,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $first_tracker = $this->createMock(\Tracker::class);
@@ -115,7 +115,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $first_tracker = $this->createMock(\Tracker::class);
@@ -145,7 +145,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
@@ -161,7 +161,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
@@ -177,7 +177,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
@@ -195,7 +195,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->program_identifier
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(

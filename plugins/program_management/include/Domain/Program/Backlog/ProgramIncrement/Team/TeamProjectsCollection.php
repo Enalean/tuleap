@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
-use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 /**
  * I am a collection of Team Projects. I can be empty.
@@ -35,12 +35,12 @@ use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 final class TeamProjectsCollection
 {
     /**
-     * @var ProgramManagementProject[]
+     * @var ProjectReference[]
      */
     private array $team_projects;
 
     /**
-     * @param ProgramManagementProject[] $team_projects
+     * @param ProjectReference[] $team_projects
      */
     private function __construct(array $team_projects)
     {
@@ -53,7 +53,7 @@ final class TeamProjectsCollection
     }
 
     /**
-     * @return ProgramManagementProject[]
+     * @return ProjectReference[]
      */
     public function getTeamProjects(): array
     {
@@ -62,7 +62,7 @@ final class TeamProjectsCollection
 
     public static function fromProgramIdentifier(
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_builder,
+        RetrieveProjectReference $project_builder,
         ProgramIdentifier $program
     ): self {
         return self::buildFromProjectId($teams_searcher, $project_builder, $program->getId());
@@ -70,7 +70,7 @@ final class TeamProjectsCollection
 
     public static function fromProgramForAdministration(
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_builder,
+        RetrieveProjectReference $project_builder,
         ProgramForAdministrationIdentifier $program
     ): self {
         return self::buildFromProjectId($teams_searcher, $project_builder, $program->id);
@@ -78,7 +78,7 @@ final class TeamProjectsCollection
 
     private static function buildFromProjectId(
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_builder,
+        RetrieveProjectReference $project_builder,
         int $program_project_id
     ): self {
         $team_projects = [];

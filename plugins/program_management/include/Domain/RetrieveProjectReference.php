@@ -22,11 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain;
 
-use Project;
-
-interface BuildProject
+interface RetrieveProjectReference
 {
-    public static function build(Project $project): ProgramManagementProject;
-
-    public function buildFromId(int $id): ProgramManagementProject;
+    public function buildFromId(int $id): ProjectReference;
 }

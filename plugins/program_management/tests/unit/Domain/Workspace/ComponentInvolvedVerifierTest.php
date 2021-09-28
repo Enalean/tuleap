@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
@@ -63,8 +64,8 @@ final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($this->getVerifier()->isInvolvedInAProgramWorkspace($this->buildProjectData()));
     }
 
-    private function buildProjectData(): ProgramManagementProject
+    private function buildProjectData(): ProjectReference
     {
-        return new ProgramManagementProject(12, 'Name', 'Public name', '/project');
+        return ProjectReferenceBuilder::buildWithValues(12, 'Public name', 'Name');
     }
 }

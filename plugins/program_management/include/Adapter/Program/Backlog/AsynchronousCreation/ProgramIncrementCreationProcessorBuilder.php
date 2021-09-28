@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgra
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementCreation;
@@ -119,7 +119,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $logger,
             $user_stories_planner,
             $program_dao,
-            new ProgramManagementProjectAdapter($project_manager),
+            new ProjectReferenceRetriever($project_manager),
             $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
             new ChangesetRetriever($artifact_factory),

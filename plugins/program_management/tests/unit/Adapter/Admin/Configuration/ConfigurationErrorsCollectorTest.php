@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -111,7 +110,7 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenNoPlanningIsFound(): void
     {
-        $this->collector->addTeamRootPlanningNotFoundOrNotAccessible(new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue'));
+        $this->collector->addTeamRootPlanningNotFoundOrNotAccessible(ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 

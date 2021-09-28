@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter;
 
 use Project;
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
 
 final class ProgramManagementProjectAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -33,9 +33,9 @@ final class ProgramManagementProjectAdapterTest extends \Tuleap\Test\PHPUnit\Tes
         $project_manager = $this->createMock(\ProjectManager::class);
         $project_manager->expects(self::once())->method('getProject')->with(101)->willReturn($project);
 
-        $project_data = new ProgramManagementProject($project->getID(), $project->getUnixName(), $project->getPublicName(), $project->getUrl());
+        $project_data = ProjectReferenceProxy::buildFromProject($project);
 
-        $adapter = new ProgramManagementProjectAdapter($project_manager);
+        $adapter = new ProjectReferenceRetriever($project_manager);
         $this->assertEquals($project_data, $adapter->buildFromId(101));
     }
 }

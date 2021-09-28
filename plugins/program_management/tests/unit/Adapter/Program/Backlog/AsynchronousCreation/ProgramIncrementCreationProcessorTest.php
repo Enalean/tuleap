@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
@@ -86,7 +86,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
             $this->logger,
             $this->user_stories_planner,
             SearchTeamsOfProgramStub::buildTeams(102, 149),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             $this->fields_gatherer,
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withDefault()

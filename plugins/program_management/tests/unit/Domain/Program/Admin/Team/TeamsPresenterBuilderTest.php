@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 
 final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -33,7 +33,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $collection = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(150, 666),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             ProgramIdentifierBuilder::build()
         );
 

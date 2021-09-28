@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
-use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMilestoneTrackerException;
@@ -32,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
@@ -67,15 +66,10 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         return $root_planning;
     }
 
-    public function getProjectFromPlanning(\Planning $root_planning): ProgramManagementProject
-    {
-        return ProgramManagementProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
-    }
-
-    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference
+    public function retrieveRootPlanningMilestoneTracker(ProjectReference $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference
     {
         try {
-            $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
+            $root_planning = $this->getRootPlanning($user_identifier, $project->getProjectId());
             return TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker());
         } catch (TopPlanningNotFoundInProjectException $exception) {
             $errors_collector->addTeamRootPlanningNotFoundOrNotAccessible($project);
@@ -88,21 +82,21 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
      * @throws PlanningNotFoundException
      * @throws TrackerRetrievalException
      */
-    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, UserIdentifier $user_identifier): TrackerReference
+    public function retrieveSecondPlanningMilestoneTracker(ProjectReference $project, UserIdentifier $user_identifier): TrackerReference
     {
         $user          = $this->retrieve_user->getUserWithId($user_identifier);
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,
-            $project->getId()
+            $project->getProjectId()
         );
 
         if (! $root_planning) {
-            throw new TopPlanningNotFoundInProjectException($project->getId());
+            throw new TopPlanningNotFoundInProjectException($project->getProjectId());
         }
 
         $children_planning = $this->planning_factory->getChildrenPlanning($root_planning);
         if (! $children_planning) {
-            throw new SecondPlanningNotFoundInProjectException($project->getId());
+            throw new SecondPlanningNotFoundInProjectException($project->getProjectId());
         }
         if ($children_planning->getPlanningTracker() instanceof \NullTracker) {
             throw new PlanningHasNoMilestoneTrackerException($children_planning->getId());

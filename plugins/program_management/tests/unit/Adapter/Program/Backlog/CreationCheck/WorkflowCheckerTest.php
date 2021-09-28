@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
@@ -97,7 +97,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             ProgramIdentifierBuilder::build()
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(123);
@@ -127,7 +127,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             ProgramIdentifierBuilder::build()
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
@@ -155,7 +155,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             ProgramIdentifierBuilder::build()
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
@@ -184,7 +184,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             ProgramIdentifierBuilder::build()
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
@@ -215,7 +215,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
-            new BuildProjectStub(),
+            new RetrieveProjectReferenceStub(),
             ProgramIdentifierBuilder::build()
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
@@ -253,7 +253,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function getTrackerWithIdWithGenericProject(int $tracker_id, string $tracker_name): \Tracker
     {
-        $project = new \Project(['group_id' => 101, 'group_name' => "My project"]);
+        $project = new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "my_project"]);
         return TrackerTestBuilder::aTracker()->withId($tracker_id)->withName($tracker_name)->withProject($project)->build();
     }
 }

@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -38,8 +37,7 @@ final class Planning
         private TrackerReference $planning_tracker,
         private int $id,
         private string $name,
-        private array $backlog_tracker_ids,
-        private ProgramManagementProject $project_data
+        private array $backlog_tracker_ids
     ) {
     }
 
@@ -63,11 +61,6 @@ final class Planning
         return $this->backlog_tracker_ids;
     }
 
-    public function getProjectData(): ProgramManagementProject
-    {
-        return $this->project_data;
-    }
-
     /**
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoProgramIncrementException
@@ -83,8 +76,7 @@ final class Planning
             TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker()),
             $root_planning->getId(),
             $root_planning->getName(),
-            $root_planning->getBacklogTrackersIds(),
-            $build_planning->getProjectFromPlanning($root_planning)
+            $root_planning->getBacklogTrackersIds()
         );
     }
 }

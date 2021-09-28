@@ -54,7 +54,7 @@ final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItRetrievesProjectReference(): void
     {
-        $project = new \Project(['group_id' => 101, 'group_name' => "My project"]);
+        $project = new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "project"]);
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
 

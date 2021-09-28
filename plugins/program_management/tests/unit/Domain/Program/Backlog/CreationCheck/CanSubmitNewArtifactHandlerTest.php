@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use ProjectManager;
-use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -65,8 +64,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
                 $program_increment_creator_checker,
                 $iteration_creator_checker,
                 SearchTeamsOfProgramStub::buildTeams(104),
-                new ProgramManagementProjectAdapter($project_manager),
-                RetrieveUserStub::withUser($this->user)
+                new ProjectReferenceRetriever($project_manager),
             )
         );
     }

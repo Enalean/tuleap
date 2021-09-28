@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
 
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 /**
  * @psalm-immutable
@@ -33,10 +33,10 @@ final class TeamPresenter
     public string $public_name;
     public string $url;
 
-    public function __construct(ProgramManagementProject $team)
+    public function __construct(ProjectReference $team)
     {
-        $this->id          = $team->getId();
-        $this->public_name = $team->getPublicName();
+        $this->id          = $team->getProjectId();
+        $this->public_name = $team->getProjectLabel();
         $this->url         = $team->getUrl();
     }
 }
