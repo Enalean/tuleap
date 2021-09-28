@@ -607,3 +607,15 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     background: $attachment-progress-bar-bg-color;
     color: var(--tlp-success-color);
 }
+
+.attachment-upload-cancel {
+    margin: 0 0 0 var(--tlp-small-spacing);
+    transition: color ease-in-out 150ms;
+    color: var(--tlp-success-color);
+    font-size: 15px;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--tlp-danger-color);
+    }
+}

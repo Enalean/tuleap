@@ -83,6 +83,7 @@ function ExecutionService(
         addToFilesAddedThroughAttachmentArea,
         getUploadedFilesThroughAttachmentAreaIds,
         updateExecutionAttachment,
+        removeFileUploadedThroughAttachmentArea,
     });
 
     initialization();
@@ -500,6 +501,17 @@ function ExecutionService(
         }
 
         Object.assign(attachment, attachment_attributes);
+    }
+
+    function removeFileUploadedThroughAttachmentArea(execution, attachment_id) {
+        const index = execution.uploaded_files_through_attachment_area.findIndex(
+            (attachment) => attachment.id === attachment_id
+        );
+        if (index === -1) {
+            return;
+        }
+
+        execution.uploaded_files_through_attachment_area.splice(index, 1);
     }
 
     function removeViewTestExecution(execution_id, user_to_remove) {

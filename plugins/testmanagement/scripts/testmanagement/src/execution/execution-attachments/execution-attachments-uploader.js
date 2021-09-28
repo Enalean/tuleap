@@ -33,3 +33,7 @@ export function processUpload(file, file_upload_url, on_progress_callback) {
 
     uploader.start();
 }
+
+export function abortFileUpload(file_upload_url) {
+    return Upload.terminate(file_upload_url);
+}
