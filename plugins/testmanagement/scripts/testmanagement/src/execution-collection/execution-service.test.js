@@ -1294,4 +1294,17 @@ describe("ExecutionService", () => {
             ]);
         });
     });
+
+    describe("removeFileUploadedThroughAttachmentArea()", () => {
+        it("Given an execution and an attachment id, then it should remove it from the execution uploaded attachments", () => {
+            const execution = {
+                id: 74,
+                uploaded_files_through_attachment_area: [{ id: 105 }],
+            };
+
+            ExecutionService.removeFileUploadedThroughAttachmentArea(execution, 105);
+
+            expect(execution.uploaded_files_through_attachment_area.length).toEqual(0);
+        });
+    });
 });

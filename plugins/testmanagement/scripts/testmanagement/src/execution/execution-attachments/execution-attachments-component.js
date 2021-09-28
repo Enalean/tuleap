@@ -18,7 +18,7 @@
  */
 
 import "./execution-attachments.tpl.html";
-import { processUpload } from "./execution-attachments-uploader.js";
+import { processUpload, abortFileUpload } from "./execution-attachments-uploader.js";
 
 export default {
     bindings: {
@@ -37,6 +37,7 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
     Object.assign(self, {
         $onInit,
         attachFile,
+        abortUpload,
     });
 
     function $onInit() {
@@ -61,6 +62,7 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
             const file_uploading = {
                 id: new_file.id,
                 filename: file.name,
+                upload_url: new_file.upload_href,
                 progress: 0,
             };
 
@@ -77,5 +79,15 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
 
     function getFileInput() {
         return $element[0].querySelector("#test-files-upload-button");
+    }
+
+    function abortUpload(file_uploading) {
+        abortFileUpload(file_uploading.upload_url).then(() => {
+            ExecutionService.removeFileUploadedThroughAttachmentArea(
+                self.execution,
+                file_uploading.id
+            );
+            $scope.$apply();
+        });
     }
 }

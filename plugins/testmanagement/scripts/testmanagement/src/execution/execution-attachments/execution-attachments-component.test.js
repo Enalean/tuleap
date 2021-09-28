@@ -47,6 +47,7 @@ describe("execution-attachments-component", () => {
                 execution = {
                     id: 1260,
                     upload_url: "/api/v1/tracker_fields/7756/file",
+                    uploaded_files_through_attachment_area: [],
                 };
 
                 controller = $componentController(
@@ -124,6 +125,7 @@ describe("execution-attachments-component", () => {
                     id: new_file.id,
                     filename: file_to_attach.name,
                     progress: 0,
+                    upload_url: "/upload-me.here",
                 }
             );
             expect(attachments_uploader.processUpload).toHaveBeenCalledWith(
@@ -131,6 +133,27 @@ describe("execution-attachments-component", () => {
                 new_file.upload_href,
                 expect.any(Function)
             );
+        });
+    });
+
+    describe("abortUpload()", () => {
+        it("should abort the upload and remove the attachment from the list", () => {
+            const file_uploading = {
+                id: 1234,
+                filename: "bug.png",
+                progress: 25,
+                upload_url: "/upload-me.here",
+            };
+            execution.uploaded_files_through_attachment_area.push();
+
+            jest.spyOn(attachments_uploader, "abortFileUpload").mockReturnValue($q.when());
+
+            controller.abortUpload(file_uploading);
+
+            expect(attachments_uploader.abortFileUpload).toHaveBeenCalledWith(
+                file_uploading.upload_url
+            );
+            expect(execution.uploaded_files_through_attachment_area.length).toEqual(0);
         });
     });
 });

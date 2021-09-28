@@ -25,6 +25,9 @@
                     max="100"
                     value="{{ file.progress }}"
                 ></progress>
+                <span class="attachment-upload-cancel" ng-click="$ctrl.abortUpload(file)">
+                    <i class="fas fa-times-circle"></i>
+                </span>
             </span>
         </span>
     </div>
