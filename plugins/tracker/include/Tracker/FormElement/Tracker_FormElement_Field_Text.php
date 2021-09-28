@@ -515,7 +515,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
      */
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
-        return $old_value->getText() !== (string) $new_value['content'];
+        assert($old_value instanceof Tracker_Artifact_ChangesetValue_Text);
+
+        if (is_array($new_value)) {
+            return $old_value->getText() !== (string) $new_value['content'];
+        }
+        return $old_value->getText() !== (string) $new_value;
     }
 
     /**
