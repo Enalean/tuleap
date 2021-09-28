@@ -23,9 +23,8 @@ $tlp-switch-large-height: 48px;
 $tlp-switch-large-width: 96px;
 $tlp-switch-mini-height: 16px;
 $tlp-switch-mini-width: 40px;
-$tlp-switch-mini-background: var(--tlp-main-color);
 $tlp-switch-background: var(--tlp-neutral-dark-color);
-$tlp-switch-button-background: #ffffff;
+$tlp-switch-button-background: var(--tlp-white-color);
 $tlp-switch-button-width: 37px;
 $tlp-switch-large-button-width: 57px;
 $tlp-switch-mini-button-width: 22px;
@@ -73,21 +72,21 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
 
     &::after {
         content: "\f00c"; // fa-check
-        display: block;
+        display: flex;
         position: absolute;
         top: $tlp-switch-button-padding + $tlp-switch-button-slider-margin;
         bottom: $tlp-switch-button-padding + $tlp-switch-button-slider-margin;
         left: $tlp-switch-button-padding + $tlp-switch-button-slider-margin;
+        align-items: center;
+        justify-content: center;
         width: $tlp-switch-button-width;
         transition: left 200ms, color 200ms, width 200ms;
         border-radius: ($tlp-switch-height - (2 * $tlp-switch-button-padding)) / 2;
         background-color: $tlp-switch-button-background;
         color: #ffffff;
         font-family: "Font Awesome 5 Free";
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
-        line-height: $tlp-switch-height - $tlp-switch-button-padding;
-        text-align: center;
     }
 
     &.loading {
@@ -118,18 +117,17 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
         width: $tlp-switch-large-button-width;
         border-radius: ($tlp-switch-large-height - (2 * $tlp-switch-button-padding)) / 2;
         font-size: 18px;
-        line-height: $tlp-switch-large-height - $tlp-switch-button-padding;
     }
 }
 
 .tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading) {
     &::before {
-        background-color: var(--tlp-success-color);
+        background-color: var(--tlp-main-color);
     }
 
     &::after {
         left: 25px;
-        color: var(--tlp-success-color);
+        color: var(--tlp-main-color);
     }
 }
 
@@ -153,19 +151,12 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
     }
 
     &::after {
-        content: "";
         width: $tlp-switch-mini-button-width;
         border-radius: ($tlp-switch-mini-height - (2 * $tlp-switch-button-padding)) / 2;
+        font-size: 8px;
     }
 }
 
-.tlp-switch-mini > .tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading) {
-    &::before {
-        background-color: $tlp-switch-mini-background;
-    }
-
-    &::after {
-        left: 16px;
-        color: $tlp-switch-mini-background;
-    }
+.tlp-switch-mini > .tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading)::after {
+    left: 16px;
 }
