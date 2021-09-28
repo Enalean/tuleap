@@ -123,11 +123,13 @@ describe("execution-attachments-component", () => {
                 {
                     id: new_file.id,
                     filename: file_to_attach.name,
+                    progress: 0,
                 }
             );
             expect(attachments_uploader.processUpload).toHaveBeenCalledWith(
                 file_to_attach,
-                new_file.upload_href
+                new_file.upload_href,
+                expect.any(Function)
             );
         });
     });

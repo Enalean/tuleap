@@ -82,6 +82,7 @@ function ExecutionService(
         getDataInEditor,
         addToFilesAddedThroughAttachmentArea,
         getUploadedFilesThroughAttachmentAreaIds,
+        updateExecutionAttachment,
     });
 
     initialization();
@@ -488,6 +489,17 @@ function ExecutionService(
 
     function getUploadedFilesThroughAttachmentAreaIds(execution) {
         return execution.uploaded_files_through_attachment_area.map((file) => file.id);
+    }
+
+    function updateExecutionAttachment(execution, attachment_id, attachment_attributes) {
+        const attachment = execution.uploaded_files_through_attachment_area.find(
+            (attachment) => attachment.id === attachment_id
+        );
+        if (!attachment) {
+            return;
+        }
+
+        Object.assign(attachment, attachment_attributes);
     }
 
     function removeViewTestExecution(execution_id, user_to_remove) {

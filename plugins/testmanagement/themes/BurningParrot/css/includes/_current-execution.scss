@@ -2,6 +2,7 @@
 
 $attachments-gap: var(--tlp-small-spacing) / 2;
 $attachment-height: var(--tlp-large-spacing);
+$attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 
 .current-test {
     display: flex;
@@ -564,4 +565,45 @@ $attachment-height: var(--tlp-large-spacing);
     font-size: 0.875rem;
     line-height: 1.125rem;
     text-align: center;
+}
+
+.execution-attachment-progress {
+    display: flex;
+    align-items: center;
+}
+
+.execution-attachment-upload-progress-bar-value {
+    margin: 0 5px;
+    color: var(--tlp-success-color);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.execution-attachment-upload-progress-bar::-moz-progress-bar {
+    border-radius: 20px;
+    background: var(--tlp-success-color);
+}
+
+.execution-attachment-upload-progress-bar::-webkit-progress-bar {
+    border-radius: 20px;
+    background: $attachment-progress-bar-bg-color;
+}
+
+.execution-attachment-upload-progress-bar::-webkit-progress-value {
+    border-radius: 20px;
+    background: var(--tlp-success-color);
+}
+
+.execution-attachment-upload-progress-bar[value] {
+    appearance: none;
+    height: 5px;
+}
+
+.execution-attachment-upload-progress-bar {
+    width: 100%;
+    min-width: 50px;
+    border: 0;
+    border-radius: 20px;
+    background: $attachment-progress-bar-bg-color;
+    color: var(--tlp-success-color);
 }
