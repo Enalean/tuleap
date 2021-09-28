@@ -381,12 +381,14 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $workflow_field = $this->getWorkflowField($xml, $xml_mapping);
         $transitions    = [];
 
-        foreach ($xml->states->state as $state_xml) {
-            $state       = $this->state_factory->getInstanceFromXML($state_xml, $xml_mapping, $project);
-            $transitions = array_merge(
-                $transitions,
-                $state->getTransitions()
-            );
+        if ($xml->states->state !== null) {
+            foreach ($xml->states->state as $state_xml) {
+                $state       = $this->state_factory->getInstanceFromXML($state_xml, $xml_mapping, $project);
+                $transitions = array_merge(
+                    $transitions,
+                    $state->getTransitions()
+                );
+            }
         }
 
         $workflow = new Workflow(

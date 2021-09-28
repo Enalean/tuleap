@@ -37,7 +37,6 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const TRANSITION_PATH = '/transitions';
 
     public $workflow_id;
-    public $tracker_id;
     public $field_id;
     public $transitions;
     public $is_used;
@@ -88,7 +87,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         WorkflowBackendLogger $logger,
         $workflow_id,
-        $tracker_id,
+        public int $tracker_id,
         $field_id,
         $is_used,
         $is_advanced,
@@ -96,7 +95,6 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $transitions = null
     ) {
         $this->workflow_id           = $workflow_id;
-        $this->tracker_id            = $tracker_id;
         $this->field_id              = $field_id;
         $this->is_used               = $is_used;
         $this->transitions           = $transitions;
@@ -142,10 +140,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->workflow_id;
     }
 
-    /**
-     * @return string
-     */
-    public function getTrackerId()
+    public function getTrackerId(): int
     {
         return $this->tracker_id;
     }

@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use Project;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
@@ -36,6 +37,7 @@ use TrackerFactory;
 use Transition;
 use Transition_PostAction_Field_Date;
 use TransitionFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -43,9 +45,11 @@ use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 use WorkflowFactory;
 
-class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    private Project $project;
 
     protected function setUp(): void
     {
@@ -54,7 +58,7 @@ class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_manager = Mockery::mock(PermissionsManager::class);
         PermissionsManager::setInstance($permission_manager);
 
-        $this->project = Mockery::mock(Project::class);
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     protected function tearDown(): void
@@ -230,5 +234,33 @@ class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $transitions = $workflow->getTransitions();
         $this->assertEquals(count($transitions[0]->getPostActions()), 1);
         $this->assertEquals(count($transitions[1]->getPostActions()), 1);
+    }
+
+    public function testImportsSimpleWorkflowWithNoStates(): void
+    {
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importSimpleWorkflowNoStates.xml'), SimpleXMLElement::class);
+
+        $transition_factory = $this->createStub(TransitionFactory::class);
+
+        $workflow_factory = new WorkflowFactory(
+            $transition_factory,
+            $this->createStub(TrackerFactory::class),
+            $this->createStub(Tracker_FormElementFactory::class),
+            $this->createStub(Tracker_Workflow_Trigger_RulesManager::class),
+            new WorkflowBackendLogger(new NullLogger(), \Psr\Log\LogLevel::DEBUG),
+            $this->createStub(FrozenFieldsDao::class),
+            $this->createStub(StateFactory::class)
+        );
+
+        $field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
+        $field->method('getId')->willReturn(32);
+        $mapping  = [
+            'F32' => $field,
+        ];
+        $workflow = $workflow_factory->getSimpleInstanceFromXML($xml, $mapping, new \NullTracker(), $this->project);
+
+        $this->assertEquals(1, $workflow->isUsed());
+        $this->assertEquals(32, $workflow->getFieldId());
+        $this->assertEmpty($workflow->getTransitions());
     }
 }
