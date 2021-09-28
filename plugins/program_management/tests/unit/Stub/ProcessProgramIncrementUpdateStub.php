@@ -20,12 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 
-interface DeletePendingProgramIncrementUpdates
+final class ProcessProgramIncrementUpdateStub implements ProcessProgramIncrementUpdate
 {
-    public function deletePendingProgramIncrementUpdatesByProgramIncrementId(int $program_increment_id): void;
-    public function deletePendingProgramIncrementUpdate(ProgramIncrementUpdate $update): void;
+    private function __construct(private int $call_count)
+    {
+    }
+
+    public static function withCount(): self
+    {
+        return new self(0);
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
+
+    public function processUpdate(ProgramIncrementUpdate $update): void
+    {
+        $this->call_count++;
+    }
 }

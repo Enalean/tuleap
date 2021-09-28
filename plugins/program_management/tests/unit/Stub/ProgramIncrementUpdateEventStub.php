@@ -20,16 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-/**
- * I am a storage row for a pending program increment update. DO NOT trust my values: the program increment artifact
- * could have been deleted since its storage.
- * @psalm-immutable
- */
-interface PendingProgramIncrementUpdate
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+
+final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEvent
 {
-    public function getProgramIncrementId(): int;
-    public function getUserId(): int;
-    public function getChangesetId(): int;
+    private function __construct(private int $artifact_id, private int $user_id, private int $changeset_id)
+    {
+    }
+
+    public static function withIds(int $artifact_id, int $user_id, int $changeset_id): self
+    {
+        return new self($artifact_id, $user_id, $changeset_id);
+    }
+
+    public function getArtifactId(): int
+    {
+        return $this->artifact_id;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
+    }
+
+    public function getChangesetId(): int
+    {
+        return $this->changeset_id;
+    }
 }

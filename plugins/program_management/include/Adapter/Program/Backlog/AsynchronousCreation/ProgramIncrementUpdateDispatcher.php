@@ -24,10 +24,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementUpdateProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
@@ -45,7 +45,7 @@ final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrement
     public function __construct(
         private LoggerInterface $logger,
         private QueueFactory $queue_factory,
-        private ProcessProgramIncrementUpdate $update_processor,
+        private BuildProgramIncrementUpdateProcessor $update_processor_builder,
         private ProcessIterationCreation $iteration_processor,
     ) {
     }
@@ -79,7 +79,8 @@ final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrement
             ),
             ['exception' => $exception]
         );
-        $this->update_processor->processProgramIncrementUpdate($update);
+        $update_processor = $this->update_processor_builder->getProcessor();
+        $update_processor->processUpdate($update);
         foreach ($creations as $iteration_creation) {
             $this->iteration_processor->processIterationCreation($iteration_creation);
         }

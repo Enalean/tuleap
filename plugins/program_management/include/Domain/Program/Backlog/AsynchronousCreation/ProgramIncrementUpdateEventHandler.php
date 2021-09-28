@@ -42,10 +42,8 @@ final class ProgramIncrementUpdateEventHandler
         private VerifyIsProgramIncrement $program_increment_verifier,
         private VerifyIsChangeset $changeset_verifier,
         private DeletePendingIterations $iteration_deleter,
-        private SearchPendingProgramIncrementUpdates $update_searcher,
         private RetrieveProgramIncrementTracker $tracker_retriever,
-        private DeletePendingProgramIncrementUpdates $pending_update_deleter,
-        private ProcessProgramIncrementUpdate $update_processor,
+        private BuildProgramIncrementUpdateProcessor $update_processor_builder,
         private ProcessIterationCreation $iteration_processor
     ) {
     }
@@ -55,10 +53,7 @@ final class ProgramIncrementUpdateEventHandler
         if (! $event) {
             return;
         }
-        $pending_update = $this->update_searcher->searchUpdate($event->getArtifactId(), $event->getUserId(), $event->getChangesetId());
-        if ($pending_update) {
-            $this->buildAndProcessProgramIncrementUpdate($pending_update);
-        }
+        $this->buildAndProcessProgramIncrementUpdate($event);
         $pending_creations = $this->iteration_searcher->searchIterationCreationsByProgramIncrement(
             $event->getArtifactId(),
             $event->getUserId()
@@ -68,29 +63,29 @@ final class ProgramIncrementUpdateEventHandler
         }
     }
 
-    private function buildAndProcessProgramIncrementUpdate(PendingProgramIncrementUpdate $pending_update): void
+    private function buildAndProcessProgramIncrementUpdate(ProgramIncrementUpdateEvent $event): void
     {
-        try {
-            $update = ProgramIncrementUpdate::fromPendingUpdate(
-                $this->user_verifier,
-                $this->program_increment_verifier,
-                $this->visibility_verifier,
-                $this->changeset_verifier,
-                $this->tracker_retriever,
-                $pending_update
+        $update = ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
+            $this->user_verifier,
+            $this->program_increment_verifier,
+            $this->visibility_verifier,
+            $this->changeset_verifier,
+            $this->tracker_retriever,
+            $event
+        );
+        if (! $update) {
+            $this->logger->error(
+                sprintf(
+                    'Invalid data given in payload, skipping program increment update for artifact #%d, user #%d and changeset #%d',
+                    $event->getArtifactId(),
+                    $event->getUserId(),
+                    $event->getChangesetId()
+                )
             );
-        } catch (StoredProgramIncrementNoLongerValidException $e) {
-            $program_increment_id = $e->getProgramIncrementId();
-            $this->logger->debug(
-                sprintf('Stored program increment #%d is no longer valid, cleaning up pending update', $program_increment_id)
-            );
-            $this->pending_update_deleter->deletePendingProgramIncrementUpdatesByProgramIncrementId($program_increment_id);
-            return;
-        } catch (StoredChangesetNotFoundException | StoredUserNotFoundException $e) {
-            $this->logger->error('Invalid data found in the database, skipping pending update', ['exception' => $e]);
             return;
         }
-        $this->update_processor->processProgramIncrementUpdate($update);
+        $processor = $this->update_processor_builder->getProcessor();
+        $processor->processUpdate($update);
     }
 
     private function buildAndProcessIterationCreation(PendingIterationCreation $pending_creation): void

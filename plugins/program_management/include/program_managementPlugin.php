@@ -42,15 +42,13 @@ use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetAdder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\StatusValueMapper;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusSemanticChecker;
@@ -60,8 +58,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedT
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
@@ -104,7 +100,6 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
@@ -126,7 +121,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Iterati
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateEventHandler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
@@ -172,28 +166,19 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
-use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
-use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
-use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
-use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
@@ -205,17 +190,10 @@ use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
-use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
-use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
-use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -565,56 +543,7 @@ final class program_managementPlugin extends Plugin
         );
         $creation_handler->handle(ProgramIncrementCreationEventProxy::fromWorkerEvent($logger, $user_manager, $event));
 
-        $iteration_creation_DAO   = new PendingIterationCreationDAO();
-        $pending_updates_dao      = new PendingProgramIncrementUpdateDAO();
-        $tracker_factory          = \TrackerFactory::instance();
-        $form_element_factory     = \Tracker_FormElementFactory::instance();
-        $artifact_links_usage_dao = new ArtifactLinksUsageDao();
-        $artifact_changeset_dao   = new \Tracker_Artifact_ChangesetDao();
-        $transaction_executor     = new DBTransactionExecutorWithConnection(
-            DBFactory::getMainTuleapDBConnection()
-        );
-        $changeset_creator        = new \Tracker_Artifact_Changeset_NewChangesetCreator(
-            new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $form_element_factory,
-                new ArtifactLinkValidator(
-                    $artifact_factory,
-                    new NaturePresenterFactory(
-                        new NatureDao(),
-                        $artifact_links_usage_dao
-                    ),
-                    $artifact_links_usage_dao
-                ),
-                new WorkflowUpdateChecker(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                TransitionFactory::instance(),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
-                        ),
-                        FrozenFieldsRetriever::instance()
-                    ),
-                ),
-            ),
-            new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory),
-            $artifact_changeset_dao,
-            new \Tracker_Artifact_Changeset_CommentDao(),
-            $artifact_factory,
-            EventManager::instance(),
-            ReferenceManager::instance(),
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
-            $transaction_executor,
-            new ArtifactChangesetSaver(
-                $artifact_changeset_dao,
-                $transaction_executor,
-                new \Tracker_ArtifactDao(),
-                new ChangesetFromXmlDao()
-            ),
-            new ParentLinkAction($artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
-        );
+        $iteration_creation_DAO = new PendingIterationCreationDAO();
 
         $handler = new ProgramIncrementUpdateEventHandler(
             $logger,
@@ -625,39 +554,8 @@ final class program_managementPlugin extends Plugin
             $program_increments_DAO,
             $changeset_verifier,
             $iteration_creation_DAO,
-            $pending_updates_dao,
             $program_increments_DAO,
-            $pending_updates_dao,
-            new ProgramIncrementUpdateProcessor(
-                $logger,
-                new SynchronizedFieldsGatherer(
-                    $tracker_factory,
-                    new \Tracker_Semantic_TitleFactory(),
-                    new \Tracker_Semantic_DescriptionFactory(),
-                    new \Tracker_Semantic_StatusFactory(),
-                    new SemanticTimeframeBuilder(
-                        new SemanticTimeframeDao(),
-                        $form_element_factory,
-                        $tracker_factory,
-                        new LinksRetriever(
-                            new ArtifactLinkFieldValueDao(),
-                            $artifact_factory
-                        )
-                    ),
-                    $form_element_factory
-                ),
-                new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
-                new ChangesetRetriever($artifact_factory),
-                new MirroredTimeboxesDao(),
-                new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory),
-                new StatusValueMapper($form_element_factory),
-                new ChangesetAdder(
-                    $artifact_factory,
-                    $user_retriever,
-                    $changeset_creator
-                ),
-                $pending_updates_dao
-            ),
+            new ProgramIncrementUpdateProcessorBuilder(),
             new IterationCreationProcessor($logger),
         );
         $handler->handle(ProgramIncrementUpdateEventProxy::fromWorkerEvent($logger, $event));
@@ -689,56 +587,9 @@ final class program_managementPlugin extends Plugin
         $iteration_creation_DAO         = new PendingIterationCreationDAO();
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $program_increments_DAO         = new ProgramIncrementsDAO();
-        $form_element_factory           = \Tracker_FormElementFactory::instance();
-        $tracker_factory                = \TrackerFactory::instance();
         $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
-        $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
-        $artifact_changeset_dao         = new \Tracker_Artifact_ChangesetDao();
         $transaction_executor           = new DBTransactionExecutorWithConnection(
             DBFactory::getMainTuleapDBConnection()
-        );
-        $pending_updates_dao            = new PendingProgramIncrementUpdateDAO();
-
-        $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
-            new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                $form_element_factory,
-                new ArtifactLinkValidator(
-                    $artifact_factory,
-                    new NaturePresenterFactory(
-                        new NatureDao(),
-                        $artifact_links_usage_dao
-                    ),
-                    $artifact_links_usage_dao
-                ),
-                new WorkflowUpdateChecker(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                TransitionFactory::instance(),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
-                        ),
-                        FrozenFieldsRetriever::instance()
-                    ),
-                ),
-            ),
-            new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory),
-            $artifact_changeset_dao,
-            new \Tracker_Artifact_Changeset_CommentDao(),
-            $artifact_factory,
-            EventManager::instance(),
-            ReferenceManager::instance(),
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
-            $transaction_executor,
-            new ArtifactChangesetSaver(
-                $artifact_changeset_dao,
-                $transaction_executor,
-                new \Tracker_ArtifactDao(),
-                new ChangesetFromXmlDao()
-            ),
-            new ParentLinkAction($artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
         );
 
         $handler = new ArtifactUpdatedHandler(
@@ -755,7 +606,6 @@ final class program_managementPlugin extends Plugin
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new ProgramIncrementUpdateScheduler(
-                $pending_updates_dao,
                 new IterationCreationDetector(
                     new ForgeConfigAdapter(),
                     $iterations_linked_dao,
@@ -768,36 +618,7 @@ final class program_managementPlugin extends Plugin
                 new ProgramIncrementUpdateDispatcher(
                     $logger,
                     new QueueFactory($logger),
-                    new ProgramIncrementUpdateProcessor(
-                        $logger,
-                        new SynchronizedFieldsGatherer(
-                            $tracker_factory,
-                            new \Tracker_Semantic_TitleFactory(),
-                            new \Tracker_Semantic_DescriptionFactory(),
-                            new \Tracker_Semantic_StatusFactory(),
-                            new SemanticTimeframeBuilder(
-                                new SemanticTimeframeDao(),
-                                $form_element_factory,
-                                $tracker_factory,
-                                new LinksRetriever(
-                                    new ArtifactLinkFieldValueDao(),
-                                    $artifact_factory
-                                )
-                            ),
-                            $form_element_factory
-                        ),
-                        new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
-                        new ChangesetRetriever($artifact_factory),
-                        $mirrored_timeboxes_dao,
-                        new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory),
-                        new StatusValueMapper($form_element_factory),
-                        new ChangesetAdder(
-                            $artifact_factory,
-                            $user_retriever,
-                            $changeset_creator
-                        ),
-                        $pending_updates_dao
-                    ),
+                    new ProgramIncrementUpdateProcessorBuilder(),
                     new IterationCreationProcessor($logger),
                 )
             )
