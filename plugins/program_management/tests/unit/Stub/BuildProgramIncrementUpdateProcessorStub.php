@@ -20,11 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementUpdateProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
 
-interface StoreProgramIncrementUpdate
+final class BuildProgramIncrementUpdateProcessorStub implements BuildProgramIncrementUpdateProcessor
 {
-    public function storeUpdate(ProgramIncrementUpdate $update): void;
+    private function __construct(private ProcessProgramIncrementUpdate $processor)
+    {
+    }
+
+    public function getProcessor(): ProcessProgramIncrementUpdate
+    {
+        return $this->processor;
+    }
+
+    public static function withProcessor(ProcessProgramIncrementUpdate $processor): self
+    {
+        return new self($processor);
+    }
 }

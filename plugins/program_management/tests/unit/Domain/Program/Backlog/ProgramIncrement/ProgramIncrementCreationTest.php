@@ -113,6 +113,8 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenArtifactFromEventIsNotAProgramIncrement(): void
     {
+        // It can happen if Program configuration changes between storage and processing; for example someone
+        // changed the Program Increment tracker.
         self::assertNull(
             ProgramIncrementCreation::fromProgramIncrementCreationEvent(
                 VerifyIsProgramIncrementStub::withNotProgramIncrement(),
@@ -126,6 +128,7 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenChangesetFromEventIsNotValid(): void
     {
+        // It's not supposed to happen as changesets cannot be deleted in Tuleap.
         self::assertNull(
             ProgramIncrementCreation::fromProgramIncrementCreationEvent(
                 $this->program_increment_verifier,

@@ -28,11 +28,12 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementUpdateProcessorStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -49,7 +50,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
     private const CHANGESET_ID         = 6104;
     private TestLogger $logger;
     private Stub|QueueFactory $queue_factory;
-    private MockObject|ProcessProgramIncrementUpdate $update_processor;
+    private ProcessProgramIncrementUpdateStub $update_processor;
     private MockObject|ProcessIterationCreation $iteration_processor;
     private ProgramIncrementUpdate $program_increment_update;
     /**
@@ -61,7 +62,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->logger              = new TestLogger();
         $this->queue_factory       = $this->createStub(QueueFactory::class);
-        $this->update_processor    = $this->createMock(ProcessProgramIncrementUpdate::class);
+        $this->update_processor    = ProcessProgramIncrementUpdateStub::withCount();
         $this->iteration_processor = $this->createMock(ProcessIterationCreation::class);
 
         $this->program_increment_update = ProgramIncrementUpdateBuilder::buildWithIds(
@@ -95,7 +96,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         return new ProgramIncrementUpdateDispatcher(
             $this->logger,
             $this->queue_factory,
-            $this->update_processor,
+            BuildProgramIncrementUpdateProcessorStub::withProcessor($this->update_processor),
             $this->iteration_processor,
         );
     }
@@ -123,11 +124,11 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->queue_factory->method('getPersistentQueue')->willThrowException(
             new NoQueueSystemAvailableException('No queue system')
         );
-        $this->update_processor->expects(self::once())->method('processProgramIncrementUpdate');
         $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
         $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
+        self::assertSame(1, $this->update_processor->getCallCount());
         self::assertTrue(
             $this->logger->hasError(
                 sprintf(
@@ -145,11 +146,11 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
             new QueueServerConnectionException('Error with queue')
         );
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
-        $this->update_processor->expects(self::once())->method('processProgramIncrementUpdate');
         $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
         $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
+        self::assertSame(1, $this->update_processor->getCallCount());
         self::assertTrue(
             $this->logger->hasError(
                 sprintf(

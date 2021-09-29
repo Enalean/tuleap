@@ -43,12 +43,11 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
         private RetrieveTrackerOfArtifact $tracker_retriever,
         private MapStatusByValue $status_mapper,
-        private AddChangeset $changeset_adder,
-        private DeletePendingProgramIncrementUpdates $pending_update_deleter
+        private AddChangeset $changeset_adder
     ) {
     }
 
-    public function processProgramIncrementUpdate(ProgramIncrementUpdate $update): void
+    public function processUpdate(ProgramIncrementUpdate $update): void
     {
         $program_increment_id = $update->getProgramIncrement()->getId();
         $user_id              = $update->getUser()->getId();
@@ -92,6 +91,5 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
                 $this->logger->error('Error during update of program increments', ['exception' => $exception]);
             }
         }
-        $this->pending_update_deleter->deletePendingProgramIncrementUpdate($update);
     }
 }

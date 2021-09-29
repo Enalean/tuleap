@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingProgramIncrementUpdateProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredChangesetNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredProgramIncrementNoLongerValidException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoredUserNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
@@ -47,7 +44,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsChangesetStub $changeset_verifier;
     private RetrieveProgramIncrementTrackerStub $tracker_retriever;
     private ArtifactUpdatedEventStub $artifact_updated;
-    private PendingProgramIncrementUpdateProxy $pending_update;
+    private ProgramIncrementUpdateEventStub $update_event;
 
     protected function setUp(): void
     {
@@ -60,15 +57,15 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             self::PROGRAM_INCREMENT_TRACKER_ID
         );
 
-        $this->pending_update = new PendingProgramIncrementUpdateProxy(
+        $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
+            self::PROGRAM_INCREMENT_TRACKER_ID,
             self::USER_ID,
             self::CHANGESET_ID
         );
 
-        $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
+        $this->update_event = ProgramIncrementUpdateEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
-            self::PROGRAM_INCREMENT_TRACKER_ID,
             self::USER_ID,
             self::CHANGESET_ID
         );
@@ -90,22 +87,23 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenArtifactIsNotAProgramIncrement(): void
     {
-        $update = ProgramIncrementUpdate::fromArtifactUpdatedEvent(
-            VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
-            $this->artifact_updated
+        self::assertNull(
+            ProgramIncrementUpdate::fromArtifactUpdatedEvent(
+                VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
+                $this->artifact_updated
+            )
         );
-        self::assertNull($update);
     }
 
-    public function testItBuildsFromPendingProgramIncrementUpdate(): void
+    public function testItBuildsFromProgramIncrementUpdateEvent(): void
     {
-        $update = ProgramIncrementUpdate::fromPendingUpdate(
+        $update = ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
             $this->user_verifier,
             $this->program_increment_verifier,
             $this->visibility_verifier,
             $this->changeset_verifier,
             $this->tracker_retriever,
-            $this->pending_update
+            $this->update_event
         );
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getProgramIncrement()->getId());
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getTimebox()->getId());
@@ -115,46 +113,49 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::CHANGESET_ID, $update->getChangeset()->getId());
     }
 
-    public function testItThrowsWhenStoredUserIsNotValid(): void
-    {
-        // It's not supposed to happen as users cannot be deleted in Tuleap. They change status.
-        $this->expectException(StoredUserNotFoundException::class);
-        ProgramIncrementUpdate::fromPendingUpdate(
-            VerifyIsUserStub::withNotValidUser(),
-            $this->program_increment_verifier,
-            $this->visibility_verifier,
-            $this->changeset_verifier,
-            $this->tracker_retriever,
-            $this->pending_update
-        );
-    }
-
-    public function testItThrowsWhenStoredProgramIncrementIsNotValid(): void
+    public function testItReturnsNullWhenArtifactFromEventIsNotAProgramIncrement(): void
     {
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Program Increment tracker.
-        $this->expectException(StoredProgramIncrementNoLongerValidException::class);
-        ProgramIncrementUpdate::fromPendingUpdate(
-            $this->user_verifier,
-            VerifyIsProgramIncrementStub::withNotProgramIncrement(),
-            $this->visibility_verifier,
-            $this->changeset_verifier,
-            $this->tracker_retriever,
-            $this->pending_update
+        self::assertNull(
+            ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
+                $this->user_verifier,
+                VerifyIsProgramIncrementStub::withNotProgramIncrement(),
+                $this->visibility_verifier,
+                $this->changeset_verifier,
+                $this->tracker_retriever,
+                $this->update_event
+            )
+        );
+    }
+
+    public function testItReturnsNullWhenUserFromEventIsNotValid(): void
+    {
+        // It's not supposed to happen as users cannot be deleted in Tuleap. They change status.
+        self::assertNull(
+            ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
+                VerifyIsUserStub::withNotValidUser(),
+                $this->program_increment_verifier,
+                $this->visibility_verifier,
+                $this->changeset_verifier,
+                $this->tracker_retriever,
+                $this->update_event
+            )
         );
     }
 
     public function testItThrowsWhenStoredChangesetIsNotValid(): void
     {
         // It's not supposed to happen as changesets cannot be deleted in Tuleap.
-        $this->expectException(StoredChangesetNotFoundException::class);
-        ProgramIncrementUpdate::fromPendingUpdate(
-            $this->user_verifier,
-            $this->program_increment_verifier,
-            $this->visibility_verifier,
-            VerifyIsChangesetStub::withNotValidChangeset(),
-            $this->tracker_retriever,
-            $this->pending_update
+        self::assertNull(
+            ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
+                $this->user_verifier,
+                $this->program_increment_verifier,
+                $this->visibility_verifier,
+                VerifyIsChangesetStub::withNotValidChangeset(),
+                $this->tracker_retriever,
+                $this->update_event
+            )
         );
     }
 }

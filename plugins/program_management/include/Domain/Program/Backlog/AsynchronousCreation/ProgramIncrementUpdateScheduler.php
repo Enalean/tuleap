@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 final class ProgramIncrementUpdateScheduler
 {
     public function __construct(
-        private StoreProgramIncrementUpdate $update_store,
         private IterationCreationDetector $iteration_creation_detector,
         private StoreIterationCreations $iteration_store,
         private DispatchProgramIncrementUpdate $update_dispatcher
@@ -36,7 +35,6 @@ final class ProgramIncrementUpdateScheduler
 
     public function replicateProgramIncrementUpdate(ProgramIncrementUpdate $update): void
     {
-        $this->update_store->storeUpdate($update);
         $creations = $this->iteration_creation_detector->detectNewIterationCreations($update);
         $this->iteration_store->storeCreations(...$creations);
         $this->update_dispatcher->dispatchUpdate($update, ...$creations);

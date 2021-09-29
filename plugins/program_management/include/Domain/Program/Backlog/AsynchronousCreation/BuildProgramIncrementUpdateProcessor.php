@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface SearchPendingProgramIncrementUpdates
+interface BuildProgramIncrementUpdateProcessor
 {
-    public function searchUpdate(int $program_increment_id, int $user_id, int $changeset_id): ?PendingProgramIncrementUpdate;
+    public function getProcessor(): ProcessProgramIncrementUpdate;
 }
