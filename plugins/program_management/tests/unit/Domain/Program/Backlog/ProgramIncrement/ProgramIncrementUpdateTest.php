@@ -25,11 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,22 +34,14 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     private const USER_ID                      = 183;
     private const CHANGESET_ID                 = 8996;
     private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
-    private VerifyIsUserStub $user_verifier;
-    private VerifyIsProgramIncrementStub $program_increment_verifier;
-    private VerifyIsVisibleArtifactStub $visibility_verifier;
-    private VerifyIsChangesetStub $changeset_verifier;
     private RetrieveProgramIncrementTrackerStub $tracker_retriever;
     private ArtifactUpdatedEventStub $artifact_updated;
     private ProgramIncrementUpdateEventStub $update_event;
 
     protected function setUp(): void
     {
-        $this->tracker_verifier           = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
-        $this->user_verifier              = VerifyIsUserStub::withValidUser();
-        $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
-        $this->visibility_verifier        = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
-        $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
-        $this->tracker_retriever          = RetrieveProgramIncrementTrackerStub::withValidTracker(
+        $this->tracker_verifier  = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->tracker_retriever = RetrieveProgramIncrementTrackerStub::withValidTracker(
             self::PROGRAM_INCREMENT_TRACKER_ID
         );
 
@@ -98,10 +86,6 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromProgramIncrementUpdateEvent(): void
     {
         $update = ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
-            $this->user_verifier,
-            $this->program_increment_verifier,
-            $this->visibility_verifier,
-            $this->changeset_verifier,
             $this->tracker_retriever,
             $this->update_event
         );
@@ -111,51 +95,5 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getTracker()->getId());
         self::assertSame(self::USER_ID, $update->getUser()->getId());
         self::assertSame(self::CHANGESET_ID, $update->getChangeset()->getId());
-    }
-
-    public function testItReturnsNullWhenArtifactFromEventIsNotAProgramIncrement(): void
-    {
-        // It can happen if Program configuration changes between storage and processing; for example someone
-        // changed the Program Increment tracker.
-        self::assertNull(
-            ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
-                $this->user_verifier,
-                VerifyIsProgramIncrementStub::withNotProgramIncrement(),
-                $this->visibility_verifier,
-                $this->changeset_verifier,
-                $this->tracker_retriever,
-                $this->update_event
-            )
-        );
-    }
-
-    public function testItReturnsNullWhenUserFromEventIsNotValid(): void
-    {
-        // It's not supposed to happen as users cannot be deleted in Tuleap. They change status.
-        self::assertNull(
-            ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
-                VerifyIsUserStub::withNotValidUser(),
-                $this->program_increment_verifier,
-                $this->visibility_verifier,
-                $this->changeset_verifier,
-                $this->tracker_retriever,
-                $this->update_event
-            )
-        );
-    }
-
-    public function testItThrowsWhenStoredChangesetIsNotValid(): void
-    {
-        // It's not supposed to happen as changesets cannot be deleted in Tuleap.
-        self::assertNull(
-            ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
-                $this->user_verifier,
-                $this->program_increment_verifier,
-                $this->visibility_verifier,
-                VerifyIsChangesetStub::withNotValidChangeset(),
-                $this->tracker_retriever,
-                $this->update_event
-            )
-        );
     }
 }

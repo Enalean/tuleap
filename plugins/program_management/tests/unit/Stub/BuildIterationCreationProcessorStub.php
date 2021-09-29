@@ -20,12 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-interface SearchPendingIterations
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildIterationCreationProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+
+final class BuildIterationCreationProcessorStub implements BuildIterationCreationProcessor
 {
-    /**
-     * @return PendingIterationCreation[]
-     */
-    public function searchIterationCreationsByProgramIncrement(int $program_increment_id, int $user_id): array;
+    private function __construct(private ProcessIterationCreation $processor)
+    {
+    }
+
+    public static function withProcessor(ProcessIterationCreation $processor): self
+    {
+        return new self($processor);
+    }
+
+    public function getProcessor(): ProcessIterationCreation
+    {
+        return $this->processor;
+    }
 }

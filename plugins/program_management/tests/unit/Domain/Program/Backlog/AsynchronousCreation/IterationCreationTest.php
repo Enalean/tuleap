@@ -21,39 +21,32 @@
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\PendingIterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID              = 101;
-    private const PROGRAM_INCREMENT_ID = 54;
-    private const FIRST_ITERATION_ID   = 573;
-    private const SECOND_ITERATION_ID  = 268;
-    private const FIRST_CHANGESET_ID   = 4021;
-    private const SECOND_CHANGESET_ID  = 4997;
+    private const USER_ID                        = 101;
+    private const PROGRAM_INCREMENT_ID           = 54;
+    private const PROGRAM_INCREMENT_CHANGESET_ID = 8769;
+    private const FIRST_ITERATION_ID             = 573;
+    private const SECOND_ITERATION_ID            = 268;
+    private const FIRST_CHANGESET_ID             = 4021;
+    private const SECOND_CHANGESET_ID            = 4997;
     private UserIdentifier $user;
     private JustLinkedIterationCollection $just_linked_iterations;
     private RetrieveLastChangesetStub $changeset_retriever;
     private TestLogger $logger;
-    private VerifyIsUserStub $user_verifier;
-    private VerifyIsIterationStub $iteration_verifier;
-    private VerifyIsVisibleArtifactStub $visibility_verifier;
-    private VerifyIsProgramIncrementStub $program_increment_verifier;
-    private VerifyIsChangesetStub $changeset_verifier;
-    private PendingIterationCreation $pending_iteration;
+    private ProgramIncrementUpdateEventStub $update_event;
 
     protected function setUp(): void
     {
@@ -79,18 +72,21 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->logger                 = new TestLogger();
 
-        $this->pending_iteration = new PendingIterationCreationProxy(
+        $first_iteration    = PendingIterationCreationBuilder::buildWithIds(
             self::FIRST_ITERATION_ID,
-            self::PROGRAM_INCREMENT_ID,
-            self::USER_ID,
             self::FIRST_CHANGESET_ID
         );
-
-        $this->user_verifier              = VerifyIsUserStub::withValidUser();
-        $this->iteration_verifier         = VerifyIsIterationStub::withValidIteration();
-        $this->visibility_verifier        = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
-        $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();
-        $this->changeset_verifier         = VerifyIsChangesetStub::withValidChangeset();
+        $second_iteration   = PendingIterationCreationBuilder::buildWithIds(
+            self::SECOND_ITERATION_ID,
+            self::SECOND_CHANGESET_ID
+        );
+        $this->update_event = ProgramIncrementUpdateEventStub::withIds(
+            self::PROGRAM_INCREMENT_ID,
+            self::USER_ID,
+            self::PROGRAM_INCREMENT_CHANGESET_ID,
+            $first_iteration,
+            $second_iteration
+        );
     }
 
     public function testItRetrievesLastChangesetOfEachIterationAndBuildsCollection(): void
@@ -101,15 +97,15 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->just_linked_iterations,
             $this->user
         );
-        self::assertSame(self::FIRST_ITERATION_ID, $first_creation->iteration->id);
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $first_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $first_creation->user->getId());
-        self::assertSame(self::FIRST_CHANGESET_ID, $first_creation->changeset->getId());
+        self::assertSame(self::FIRST_ITERATION_ID, $first_creation->getIteration()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $first_creation->getProgramIncrement()->getId());
+        self::assertSame(self::USER_ID, $first_creation->getUser()->getId());
+        self::assertSame(self::FIRST_CHANGESET_ID, $first_creation->getChangeset()->getId());
 
-        self::assertSame(self::SECOND_ITERATION_ID, $second_creation->iteration->id);
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $second_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $second_creation->user->getId());
-        self::assertSame(self::SECOND_CHANGESET_ID, $second_creation->changeset->getId());
+        self::assertSame(self::SECOND_ITERATION_ID, $second_creation->getIteration()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $second_creation->getProgramIncrement()->getId());
+        self::assertSame(self::USER_ID, $second_creation->getUser()->getId());
+        self::assertSame(self::SECOND_CHANGESET_ID, $second_creation->getChangeset()->getId());
     }
 
     public function testItSkipsIterationWhenItHasNoLastChangeset(): void
@@ -129,77 +125,32 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItBuildsFromPendingIterationCreation(): void
+    public function testItBuildsCollectionFromProgramIncrementUpdateEvent(): void
     {
-        $iteration_creation = IterationCreation::fromPendingIterationCreation(
-            $this->user_verifier,
-            $this->iteration_verifier,
-            $this->visibility_verifier,
-            $this->program_increment_verifier,
-            $this->changeset_verifier,
-            $this->pending_iteration
+        [$first_creation, $second_creation] = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent(
+            $this->update_event
         );
-        self::assertSame(self::FIRST_ITERATION_ID, $iteration_creation->iteration->id);
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $iteration_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $iteration_creation->user->getId());
-        self::assertSame(self::FIRST_CHANGESET_ID, $iteration_creation->changeset->getId());
+        self::assertSame(self::FIRST_ITERATION_ID, $first_creation->getIteration()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $first_creation->getProgramIncrement()->getId());
+        self::assertSame(self::USER_ID, $first_creation->getUser()->getId());
+        self::assertSame(self::FIRST_CHANGESET_ID, $first_creation->getChangeset()->getId());
+
+        self::assertSame(self::SECOND_ITERATION_ID, $second_creation->getIteration()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $second_creation->getProgramIncrement()->getId());
+        self::assertSame(self::USER_ID, $second_creation->getUser()->getId());
+        self::assertSame(self::SECOND_CHANGESET_ID, $second_creation->getChangeset()->getId());
     }
 
-    public function testItThrowsWhenStoredUserIsNotValid(): void
+    public function testItBuildsEmptyCollectionWhenEventHasNoPendingIterations(): void
     {
-        // It's not supposed to happen as users cannot be deleted in Tuleap. They change status.
-        $this->expectException(StoredUserNotFoundException::class);
-        IterationCreation::fromPendingIterationCreation(
-            VerifyIsUserStub::withNotValidUser(),
-            $this->iteration_verifier,
-            $this->visibility_verifier,
-            $this->program_increment_verifier,
-            $this->changeset_verifier,
-            $this->pending_iteration
+        $update_event = ProgramIncrementUpdateEventStub::withNoIterations(
+            self::PROGRAM_INCREMENT_ID,
+            self::USER_ID,
+            self::PROGRAM_INCREMENT_CHANGESET_ID
         );
-    }
 
-    public function testItThrowsWhenStoredIterationIsNotValid(): void
-    {
-        // It can happen if Program configuration changes between storage and processing; for example someone
-        // changed the Iteration tracker.
-        $this->expectException(StoredIterationNoLongerValidException::class);
-        IterationCreation::fromPendingIterationCreation(
-            $this->user_verifier,
-            VerifyIsIterationStub::withNotIteration(),
-            $this->visibility_verifier,
-            $this->program_increment_verifier,
-            $this->changeset_verifier,
-            $this->pending_iteration
-        );
-    }
-
-    public function testItThrowsWhenStoredProgramIncrementIsNotValid(): void
-    {
-        // It can happen if Program configuration changes between storage and processing; for example someone
-        // changed the Program Increment tracker.
-        $this->expectException(StoredProgramIncrementNoLongerValidException::class);
-        IterationCreation::fromPendingIterationCreation(
-            $this->user_verifier,
-            $this->iteration_verifier,
-            $this->visibility_verifier,
-            VerifyIsProgramIncrementStub::withNotProgramIncrement(),
-            $this->changeset_verifier,
-            $this->pending_iteration
-        );
-    }
-
-    public function testItThrowsWhenStoredChangesetIsNotValid(): void
-    {
-        // It's not supposed to happen as changesets cannot be deleted in Tuleap.
-        $this->expectException(StoredChangesetNotFoundException::class);
-        IterationCreation::fromPendingIterationCreation(
-            $this->user_verifier,
-            $this->iteration_verifier,
-            $this->visibility_verifier,
-            $this->program_increment_verifier,
-            VerifyIsChangesetStub::withNotValidChangeset(),
-            $this->pending_iteration
+        self::assertEmpty(
+            IterationCreation::buildCollectionFromProgramIncrementUpdateEvent($update_event)
         );
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -32,13 +33,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  * @see ProgramIncrementIdentifier
  * @psalm-immutable
  */
-final class IterationIdentifier
+final class IterationIdentifier implements TimeboxIdentifier
 {
-    public int $id;
-
-    private function __construct(int $id)
+    private function __construct(private int $id)
     {
-        $this->id = $id;
     }
 
     public static function fromId(
@@ -74,5 +72,10 @@ final class IterationIdentifier
             static fn(int $iteration_id): self => new self($iteration_id),
             array_values($visible_ids)
         );
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

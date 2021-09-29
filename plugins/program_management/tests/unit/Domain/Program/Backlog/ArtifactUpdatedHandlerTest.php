@@ -24,10 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StoreIterationCreations;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\PlanUserStoriesInMirroredProgramIncrementsStub;
@@ -64,27 +61,19 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             $this->program_increment_verifier,
             $this->user_stories_planner,
             $this->feature_remover,
-            new ProgramIncrementUpdateScheduler(
-                new IterationCreationDetector(
-                    VerifyIterationsFeatureActiveStub::withActiveFeature(),
-                    SearchIterationsStub::withIterationIds(101, 102),
-                    VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-                    VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-                    new NullLogger(),
-                    RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
-                ),
-                new class implements StoreIterationCreations {
-                    public function storeCreations(IterationCreation ...$creations): void
-                    {
-                        // Side effects
-                    }
-                },
-                $this->update_dispatcher
-            )
+            new IterationCreationDetector(
+                VerifyIterationsFeatureActiveStub::withActiveFeature(),
+                SearchIterationsStub::withIterationIds(101, 102),
+                VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+                VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
+                new NullLogger(),
+                RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
+            ),
+            $this->update_dispatcher
         );
     }
 
-    public function testItCleansUpTopBacklogAndPlansUserStoriesAndSchedulesProgramIncrementUpdate(): void
+    public function testItCleansUpTopBacklogAndPlansUserStoriesAndDispatchesProgramIncrementUpdate(): void
     {
         $this->getHandler()->handle($this->event);
 

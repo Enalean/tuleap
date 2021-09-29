@@ -21,30 +21,24 @@
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const CHANGESET_ID = 7715;
     private IterationIdentifier $iteration;
 
     protected function setUp(): void
     {
-        $this->iteration = IterationIdentifier::fromId(
-            VerifyIsIterationStub::withValidIteration(),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            37,
-            UserIdentifierStub::buildGenericUser()
-        );
+        $this->iteration = IterationIdentifierBuilder::buildWithId(37);
     }
 
     public function testItBuildsFromId(): void
     {
-        $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), 7715);
-        self::assertSame(7715, $changeset->getId());
+        $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), self::CHANGESET_ID);
+        self::assertSame(self::CHANGESET_ID, $changeset->getId());
     }
 
     public function testItReturnsNullWhenIdIsNotAChangeset(): void
@@ -54,12 +48,11 @@ final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromIterationLastChangeset(): void
     {
-        $last_changeset_id = 94;
-        $changeset         = DomainChangeset::fromIterationLastChangeset(
-            RetrieveLastChangesetStub::withLastChangesetIds($last_changeset_id),
+        $changeset = DomainChangeset::fromIterationLastChangeset(
+            RetrieveLastChangesetStub::withLastChangesetIds(self::CHANGESET_ID),
             $this->iteration
         );
-        self::assertSame($last_changeset_id, $changeset->getId());
+        self::assertSame(self::CHANGESET_ID, $changeset->getId());
     }
 
     public function testItReturnsNullWhenThereIsNoLastChangeset(): void

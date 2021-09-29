@@ -37,15 +37,15 @@ use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
-use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
+use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
@@ -122,10 +122,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateEventHandler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
@@ -545,22 +543,22 @@ final class program_managementPlugin extends Plugin
         );
         $creation_handler->handle(ProgramIncrementCreationEventProxy::fromWorkerEvent($logger, $user_manager, $event));
 
-        $iteration_creation_DAO = new PendingIterationCreationDAO();
-
-        $handler = new ProgramIncrementUpdateEventHandler(
-            $logger,
-            $iteration_creation_DAO,
-            $user_retriever,
-            new IterationsDAO(),
-            $visibility_verifier,
-            $program_increments_DAO,
-            $changeset_verifier,
-            $iteration_creation_DAO,
+        $update_handler = new ProgramIncrementUpdateEventHandler(
             $program_increments_DAO,
             new ProgramIncrementUpdateProcessorBuilder(),
-            new IterationCreationProcessor($logger),
+            new IterationCreationProcessorBuilder()
         );
-        $handler->handle(ProgramIncrementUpdateEventProxy::fromWorkerEvent($logger, $event));
+        $update_handler->handle(
+            ProgramIncrementUpdateEventProxy::fromWorkerEvent(
+                $logger,
+                $user_retriever,
+                $program_increments_DAO,
+                $visibility_verifier,
+                new IterationsDAO(),
+                $changeset_verifier,
+                $event
+            )
+        );
     }
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
@@ -586,7 +584,6 @@ final class program_managementPlugin extends Plugin
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
         $user_retriever                 = new UserManagerAdapter(UserManager::instance());
         $iterations_linked_dao          = new IterationsLinkedToProgramIncrementDAO();
-        $iteration_creation_DAO         = new PendingIterationCreationDAO();
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $program_increments_DAO         = new ProgramIncrementsDAO();
         $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
@@ -607,22 +604,19 @@ final class program_managementPlugin extends Plugin
                 $artifacts_linked_to_parent_dao
             ),
             new ArtifactsExplicitTopBacklogDAO(),
-            new ProgramIncrementUpdateScheduler(
-                new IterationCreationDetector(
-                    new ForgeConfigAdapter(),
-                    $iterations_linked_dao,
-                    $visibility_verifier,
-                    $iterations_linked_dao,
-                    $logger,
-                    new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
-                ),
-                $iteration_creation_DAO,
-                new ProgramIncrementUpdateDispatcher(
-                    $logger,
-                    new QueueFactory($logger),
-                    new ProgramIncrementUpdateProcessorBuilder(),
-                    new IterationCreationProcessor($logger),
-                )
+            new IterationCreationDetector(
+                new ForgeConfigAdapter(),
+                $iterations_linked_dao,
+                $visibility_verifier,
+                $iterations_linked_dao,
+                $logger,
+                new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
+            ),
+            new ProgramIncrementUpdateDispatcher(
+                $logger,
+                new QueueFactory($logger),
+                new ProgramIncrementUpdateProcessorBuilder(),
+                new IterationCreationProcessorBuilder()
             )
         );
 

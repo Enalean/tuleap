@@ -40,7 +40,7 @@ final class LastChangesetRetriever implements RetrieveLastChangeset
 
     public function retrieveLastChangesetId(IterationIdentifier $iteration_identifier): ?int
     {
-        $iteration_artifact = $this->artifact_factory->getArtifactById($iteration_identifier->id);
+        $iteration_artifact = $this->artifact_factory->getArtifactById($iteration_identifier->getId());
         if ($iteration_artifact === null) {
             return null;
         }

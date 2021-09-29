@@ -50,9 +50,8 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
                         ON (iteration.tracker_id = ti.id AND ti.deletion_date IS NULL)
                 WHERE program_increment.id = ? AND artifact_link.nature = ?";
 
-        $rows = $this->getDB()->col(
+        $rows = $this->getDB()->first(
             $sql,
-            0,
             $program_increment->getId(),
             \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
         ) ?? [];
@@ -86,7 +85,7 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
         return $this->getDB()->exists(
             $sql,
             $program_increment->getId(),
-            $iteration->id,
+            $iteration->getId(),
             \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
         );
     }

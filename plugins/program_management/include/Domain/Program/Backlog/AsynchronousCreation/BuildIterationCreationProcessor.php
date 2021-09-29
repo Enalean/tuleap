@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface DeletePendingIterations
+interface BuildIterationCreationProcessor
 {
-    public function deletePendingIterationCreationsByIterationId(int $iteration_id): void;
-
-    public function deletePendingIterationCreationsByProgramIncrementId(int $program_increment_id): void;
+    public function getProcessor(): ProcessIterationCreation;
 }

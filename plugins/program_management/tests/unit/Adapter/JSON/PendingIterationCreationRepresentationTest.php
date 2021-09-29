@@ -20,9 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\JSON;
 
-interface StoreIterationCreations
+use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
+
+final class PendingIterationCreationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function storeCreations(IterationCreation ...$creations): void;
+    private const ITERATION_ID = 758;
+    private const CHANGESET_ID = 3867;
+
+    public function testItBuildsFromIterationCreation(): void
+    {
+        $creation = IterationCreationBuilder::buildWithIds(
+            self::ITERATION_ID,
+            54,
+            199,
+            self::CHANGESET_ID
+        );
+
+        $presenter = PendingIterationCreationRepresentation::fromIterationCreation($creation);
+        self::assertSame(self::ITERATION_ID, $presenter->id);
+        self::assertSame(self::CHANGESET_ID, $presenter->changeset_id);
+    }
 }

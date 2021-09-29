@@ -22,24 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
-use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
+use Tuleap\ProgramManagement\Domain\Events\PendingIterationCreation;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
-final class IterationCreationBuilder
+final class PendingIterationCreationBuilder
 {
-    public static function buildWithIds(
-        int $iteration_id,
-        int $program_increment_id,
-        int $user_id,
-        int $changeset_id
-    ): IterationCreation {
-        $update_event      = ProgramIncrementUpdateEventStub::withIds(
-            $program_increment_id,
-            $user_id,
-            1072,
-            PendingIterationCreationBuilder::buildWithIds($iteration_id, $changeset_id)
+    public static function buildWithIds(int $iteration_id, int $changeset_id): PendingIterationCreation
+    {
+        return PendingIterationCreation::fromIds(
+            VerifyIsIterationStub::withValidIteration(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            VerifyIsChangesetStub::withValidChangeset(),
+            $iteration_id,
+            $changeset_id,
+            UserIdentifierStub::buildGenericUser()
         );
-        [$first_iteration] = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent($update_event);
-        return $first_iteration;
     }
 }

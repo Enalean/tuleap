@@ -42,7 +42,7 @@ final class VerifyIterationHasBeenLinkedBeforeStub implements VerifyIterationHas
         ProgramIncrementIdentifier $program_increment,
         IterationIdentifier $iteration
     ): bool {
-        return in_array($iteration->id, $this->iterations_that_have_been_linked_before, true);
+        return in_array($iteration->getId(), $this->iterations_that_have_been_linked_before, true);
     }
 
     public static function withIterationIds(int ...$iterations_that_have_been_linked_before): self

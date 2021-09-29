@@ -25,18 +25,13 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
-use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\DomainUser;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 /**
  * I hold all the information necessary to apply updates from a source Program Increment
@@ -69,38 +64,15 @@ final class ProgramIncrementUpdate implements TimeboxMirroringOrder
     }
 
     public static function fromProgramIncrementUpdateEvent(
-        VerifyIsUser $user_verifier,
-        VerifyIsProgramIncrement $program_increment_verifier,
-        VerifyIsVisibleArtifact $visibility_verifier,
-        VerifyIsChangeset $changeset_verifier,
         RetrieveProgramIncrementTracker $tracker_retriever,
         ProgramIncrementUpdateEvent $event
-    ): ?self {
-        $user_id = $event->getUserId();
-        $user    = DomainUser::fromId($user_verifier, $user_id);
-        if (! $user) {
-            return null;
-        }
-        try {
-            $program_increment = ProgramIncrementIdentifier::fromId(
-                $program_increment_verifier,
-                $visibility_verifier,
-                $event->getArtifactId(),
-                $user
-            );
-        } catch (ProgramIncrementNotFoundException $e) {
-            return null;
-        }
+    ): self {
+        $program_increment         = $event->getProgramIncrement();
         $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromProgramIncrement(
             $tracker_retriever,
             $program_increment
         );
-        $changeset_id              = $event->getChangesetId();
-        $changeset                 = DomainChangeset::fromId($changeset_verifier, $changeset_id);
-        if (! $changeset) {
-            return null;
-        }
-        return new self($program_increment, $program_increment_tracker, $changeset, $user);
+        return new self($program_increment, $program_increment_tracker, $event->getChangeset(), $event->getUser());
     }
 
     public function getTimebox(): TimeboxIdentifier

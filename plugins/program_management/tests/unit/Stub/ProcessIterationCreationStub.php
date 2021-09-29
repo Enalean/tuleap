@@ -20,12 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-final class StoredChangesetNotFoundException extends \Exception
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+
+final class ProcessIterationCreationStub implements ProcessIterationCreation
 {
-    public function __construct(int $changeset_id)
+    private function __construct(private int $call_count)
     {
-        parent::__construct(sprintf('Changeset with id #%d could not be found in database', $changeset_id));
+    }
+
+    public static function withCount(): self
+    {
+        return new self(0);
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
+
+    public function processCreation(IterationCreation $iteration_creation): void
+    {
+        $this->call_count++;
     }
 }

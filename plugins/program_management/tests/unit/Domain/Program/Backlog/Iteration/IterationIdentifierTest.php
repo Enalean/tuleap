@@ -54,7 +54,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             32,
             $this->user
         );
-        self::assertSame(32, $iteration->id);
+        self::assertSame(32, $iteration->getId());
     }
 
     public function testItReturnsNullWhenIdIsNotAnIteration(): void
@@ -100,7 +100,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         );
 
-        $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->id, $iterations);
+        $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->getId(), $iterations);
         self::assertNotContains(self::FIRST_NOT_VISIBLE_ARTIFACT_ID, $ids);
         self::assertNotContains(self::SECOND_NOT_VISIBLE_ARTIFACT_ID, $ids);
         self::assertContains(self::FIRST_VISIBLE_ARTIFACT_ID, $ids);
