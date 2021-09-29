@@ -28,11 +28,33 @@ use Tuleap\Config\FeatureFlagConfigKey;
 
 final class ProjectIconChecker
 {
+
     #[FeatureFlagConfigKey("Display the project icon")]
     public const FEATURE_FLAG_KEY = 'project_icon_display';
 
     public static function isProjectIconFeatureActive(): bool
     {
         return (ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY) === '1');
+    }
+
+    /**
+     * @throws InvalidProjectIconException
+     */
+    public static function isIconValid(string $icon): void
+    {
+        if (! self::isProjectIconFeatureActive()) {
+            throw new InvalidProjectIconException();
+        }
+
+        if ($icon === '') {
+            return;
+        }
+
+        $allowed_icon_and_category = json_decode(file_get_contents(__DIR__ . '/icons-for-project.json'), true);
+        $all_icon_data             = $allowed_icon_and_category['emoji'];
+
+        if (! in_array($icon, array_column($all_icon_data, 'emoji'))) {
+            throw new InvalidProjectIconException();
+        }
     }
 }

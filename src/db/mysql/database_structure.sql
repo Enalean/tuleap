@@ -503,6 +503,7 @@ CREATE TABLE `groups` (
   svn_accessfile_version_id INT(11) NULL,
   svn_commit_to_tag_denied TINYINT(1) NOT NULL DEFAULT '0',
   truncated_emails TINYINT(1) NOT NULL DEFAULT 0,
+  icon_codepoint VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_access (access),

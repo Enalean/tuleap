@@ -94,6 +94,10 @@ class ProjectDetailsPresenter
      * @var bool
      */
     public $is_project_icon_enabled;
+    /**
+     * @var string | null
+     */
+    public $project_icon;
 
     public function __construct(
         Project $project,
@@ -107,7 +111,8 @@ class ProjectDetailsPresenter
         array $project_trove_categories,
         array $projects_created_from_this_template,
         CSRFSynchronizerToken $csrf_token,
-        bool $is_description_mandatory
+        bool $is_description_mandatory,
+        ?string $project_icon
     ) {
         $this->group_id                            = $project->getID();
         $this->group_info                          = $group_info;
@@ -152,6 +157,7 @@ class ProjectDetailsPresenter
 
         $this->icon_label_name         = _('Icon');
         $this->is_project_icon_enabled = ProjectIconChecker::isProjectIconFeatureActive();
+        $this->project_icon            = $project_icon;
     }
 
     private function getLocalizedType($project_type_id)

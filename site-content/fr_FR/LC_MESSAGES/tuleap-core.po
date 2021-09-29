@@ -4053,6 +4053,12 @@ msgstr "Mettre à jour le statut du forum"
 msgid "Update failed"
 msgstr "La mise à jour a échoué"
 
+msgid "Update failed: icon conversion error"
+msgstr "La mise à jour a échoué : erreur lors de la conversion de l'icône"
+
+msgid "Update failed: invalid project icon selected"
+msgstr "La mise à jour a échoué : l'icône de projet selectionné est invalide"
+
 msgid "Update information"
 msgstr "Mettre à jour les informations"
 

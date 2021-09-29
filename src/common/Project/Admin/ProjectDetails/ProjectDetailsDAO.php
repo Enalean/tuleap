@@ -78,15 +78,21 @@ class ProjectDetailsDAO extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function updateGroupNameAndDescription($form_group_name, $form_shortdesc, $group_id)
-    {
-        $escaped_form_group_name = $this->da->quoteSmart($form_group_name);
-        $escaped_form_shortdesc  = $this->da->quoteSmart($form_shortdesc);
-        $escaped_group_id        = $this->da->escapeInt($group_id);
+    public function updateGroupNameAndDescription(
+        $form_group_name,
+        $form_shortdesc,
+        $group_id,
+        ?string $project_icon_codepoint
+    ) {
+        $escaped_form_group_name        = $this->da->quoteSmart($form_group_name);
+        $escaped_form_shortdesc         = $this->da->quoteSmart($form_shortdesc);
+        $escaped_group_id               = $this->da->escapeInt($group_id);
+        $escaped_project_icon_codepoint = $this->da->quoteSmart($project_icon_codepoint);
 
         $sql = "UPDATE `groups`
                 SET   group_name        = $escaped_form_group_name,
-                      short_description = $escaped_form_shortdesc
+                      short_description = $escaped_form_shortdesc,
+                      icon_codepoint    = $escaped_project_icon_codepoint
                 WHERE group_id          = $escaped_group_id";
 
         return $this->update($sql);

@@ -170,12 +170,14 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateIsValidWhenDescriptionIsNotProvidedAndDescriptionIsNOTMandatoryForProject(): void
     {
         ForgeConfig::set('enable_not_mandatory_description', true);
+        ForgeConfig::set('feature_flag_project_icon_display', '1');
 
         $this->csrf_token->shouldReceive('check')->once();
 
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('get')->twice()->withArgs(['form_group_name'])->andReturn('project_name');
         $request->shouldReceive('get')->twice()->withArgs(['form_shortdesc'])->andReturn(false);
+        $request->shouldReceive('get')->atLeast()->once()->withArgs(['form-group-name-icon'])->andReturn("😬");
         $request->shouldReceive('get')->atLeast()->once()->withArgs(['group_id'])->andReturn(102);
         $request->shouldReceive('getCurrentUser')->atLeast()->once()->andReturn(Mockery::mock(PFUser::class));
         $request->shouldReceive('existAndNonEmpty')->atLeast()->once()->andReturnFalse();
@@ -200,11 +202,14 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesProject(): void
     {
+        ForgeConfig::set('feature_flag_project_icon_display', '1');
+
         $this->csrf_token->shouldReceive('check')->once();
 
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('get')->twice()->withArgs(['form_group_name'])->andReturn('project_name');
         $request->shouldReceive('get')->twice()->withArgs(['form_shortdesc'])->andReturn('decription');
+        $request->shouldReceive('get')->atLeast()->once()->withArgs(['form-group-name-icon'])->andReturn("");
         $request->shouldReceive('get')->atLeast()->once()->withArgs(['group_id'])->andReturn(102);
         $request->shouldReceive('getCurrentUser')->atLeast()->once()->andReturn(Mockery::mock(PFUser::class));
         $request->shouldReceive('existAndNonEmpty')->atLeast()->once()->andReturnFalse();
