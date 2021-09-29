@@ -23,21 +23,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ConfigurationErrorsGathererTest extends TestCase
@@ -55,8 +52,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
     private ConfigurationErrorsGatherer $gatherer;
     private BuildProgram $build_program;
     private SearchTeamsOfProgram $teams_searcher;
-    private BuildProject $project_builder;
-    private RetrieveUser $retrieve_user;
+    private RetrieveProjectReference $project_builder;
 
     protected function setUp(): void
     {
@@ -64,8 +60,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
         $this->build_program             = BuildProgramStub::stubValidProgram();
         $this->teams_searcher            = SearchTeamsOfProgramStub::buildTeams(1);
-        $this->project_builder           = new BuildProjectStub();
-        $this->retrieve_user             = RetrieveUserStub::withUser(UserTestBuilder::aUser()->build());
+        $this->project_builder           = new RetrieveProjectReferenceStub();
         $this->tracker                   = TrackerReferenceStub::withDefaults();
         $this->user_identifier           = UserReferenceStub::withDefaults();
 
@@ -75,7 +70,6 @@ final class ConfigurationErrorsGathererTest extends TestCase
             $this->iteration_checker,
             $this->teams_searcher,
             $this->project_builder,
-            $this->retrieve_user
         );
     }
 
@@ -90,7 +84,6 @@ final class ConfigurationErrorsGathererTest extends TestCase
             $this->iteration_checker,
             $this->teams_searcher,
             $this->project_builder,
-            $this->retrieve_user
         );
 
         $gatherer->gatherConfigurationErrors(

@@ -22,24 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Project;
-use Tuleap\ProgramManagement\Domain\BuildProject;
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
+use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 
-final class BuildProjectStub implements BuildProject
+final class RetrieveProjectReferenceStub implements RetrieveProjectReference
 {
-    public static function build(Project $project): ProgramManagementProject
+    public function buildFromId(int $id): ProjectReference
     {
-        return new ProgramManagementProject(
-            (int) $project->getID(),
-            (string) $project->getUnixName(),
-            (string) $project->getPublicName(),
-            $project->getUrl()
-        );
-    }
-
-    public function buildFromId(int $id): ProgramManagementProject
-    {
-        return new ProgramManagementProject($id, 'Project', 'project', '/project/project');
+        return ProjectReferenceBuilder::buildWithValues($id, 'Project', 'project');
     }
 }

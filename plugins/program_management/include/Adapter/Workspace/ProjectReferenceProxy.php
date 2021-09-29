@@ -30,13 +30,13 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
  */
 final class ProjectReferenceProxy implements ProjectReference
 {
-    private function __construct(private int $project_id, private string $project_label)
+    private function __construct(private int $project_id, private string $project_label, private string $project_url)
     {
     }
 
     public static function buildFromProject(\Project $project): self
     {
-        return new self((int) $project->getID(), $project->getPublicName());
+        return new self((int) $project->getID(), $project->getPublicName(), $project->getUrl());
     }
 
     public function getProjectId(): int
@@ -47,5 +47,10 @@ final class ProjectReferenceProxy implements ProjectReference
     public function getProjectLabel(): string
     {
         return $this->project_label;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->project_url;
     }
 }

@@ -21,7 +21,6 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
@@ -191,7 +190,7 @@ final class ConfigurationErrorsCollector
     }
 
 
-    public function addTeamRootPlanningNotFoundOrNotAccessible(ProgramManagementProject $project_reference): void
+    public function addTeamRootPlanningNotFoundOrNotAccessible(ProjectReference $project_reference): void
     {
         $this->no_root_planning[] = new TeamHasNoRootPlanningPresenter($project_reference);
     }

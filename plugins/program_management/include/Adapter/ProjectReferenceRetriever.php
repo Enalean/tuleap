@@ -20,43 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain;
+namespace Tuleap\ProgramManagement\Adapter;
 
-/**
- * @psalm-immutable
- */
-final class ProgramManagementProject
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
+
+final class ProjectReferenceRetriever implements RetrieveProjectReference
 {
-    private int $id;
-    private string $name;
-    private string $public_name;
-    private string $url;
-
-    public function __construct(int $id, string $name, string $public_name, string $url)
+    public function __construct(private \ProjectManager $project_manager)
     {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->public_name = $public_name;
-        $this->url         = $url;
     }
 
-    public function getId(): int
+    public function buildFromId(int $id): ProjectReference
     {
-        return $this->id;
-    }
+        $team_project = $this->project_manager->getProject($id);
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getPublicName(): string
-    {
-        return $this->public_name;
-    }
-
-    public function getUrl(): string
-    {
-        return $this->url;
+        return ProjectReferenceProxy::buildFromProject($team_project);
     }
 }

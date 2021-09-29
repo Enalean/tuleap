@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
@@ -53,7 +53,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
         private LoggerInterface $logger,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         private SearchTeamsOfProgram $teams_searcher,
-        private BuildProject $project_builder,
+        private RetrieveProjectReference $project_builder,
         private GatherSynchronizedFields $fields_gatherer,
         private RetrieveFieldValuesGatherer $values_retriever,
         private RetrieveChangesetSubmissionDate $submission_date_retriever,

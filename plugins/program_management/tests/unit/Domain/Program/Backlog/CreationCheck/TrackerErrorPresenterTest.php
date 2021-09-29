@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -50,7 +50,7 @@ final class TrackerErrorPresenterTest extends TestCase
         $iteration_checker         = $this->createStub(IterationCreatorChecker::class);
         $build_program             = BuildProgramStub::stubValidProgram();
         $teams_searcher            = SearchTeamsOfProgramStub::buildTeams(1);
-        $project_builder           = new BuildProjectStub();
+        $project_builder           = new RetrieveProjectReferenceStub();
         $retrieve_user             = RetrieveUserStub::withUser(UserTestBuilder::aUser()->build());
         $this->tracker             = TrackerReferenceStub::withDefaults();
         $this->user_identifier     = UserReferenceStub::withDefaults();

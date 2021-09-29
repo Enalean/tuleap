@@ -32,9 +32,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
@@ -181,8 +180,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
                 $this->program_increment_checker,
                 $this->iteration_checker,
                 SearchTeamsOfProgramStub::buildTeams(),
-                new BuildProjectStub(),
-                RetrieveUserStub::withGenericUser()
+                new RetrieveProjectReferenceStub()
             ),
             RetrievePlannableTrackersStub::buildIds(1),
             $this->verify_tracker_semantics,

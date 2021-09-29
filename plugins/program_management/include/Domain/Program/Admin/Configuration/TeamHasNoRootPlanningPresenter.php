@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 /**
  * @psalm-immutable
@@ -33,9 +33,9 @@ final class TeamHasNoRootPlanningPresenter
     public string $project_label;
     public int $project_id;
 
-    public function __construct(ProgramManagementProject $project_reference)
+    public function __construct(ProjectReference $project_reference)
     {
-        $this->project_label = $project_reference->getPublicName();
-        $this->project_id    = $project_reference->getId();
+        $this->project_label = $project_reference->getProjectLabel();
+        $this->project_id    = $project_reference->getProjectId();
     }
 }

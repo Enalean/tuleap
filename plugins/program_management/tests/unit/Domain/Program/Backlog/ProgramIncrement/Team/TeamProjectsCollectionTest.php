@@ -25,19 +25,19 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 
 final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SearchTeamsOfProgramStub $search_teams;
-    private BuildProjectStub $project_builder;
+    private RetrieveProjectReferenceStub $project_builder;
     private ProgramIdentifier $program;
 
     protected function setUp(): void
     {
         $this->search_teams    = SearchTeamsOfProgramStub::buildTeams(103, 125);
-        $this->project_builder = new BuildProjectStub();
+        $this->project_builder = new RetrieveProjectReferenceStub();
         $this->program         = ProgramIdentifierBuilder::build();
     }
 
@@ -48,8 +48,8 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_builder,
             $this->program
         );
-        self::assertSame(103, $collection->getTeamProjects()[0]->getId());
-        self::assertSame(125, $collection->getTeamProjects()[1]->getId());
+        self::assertSame(103, $collection->getTeamProjects()[0]->getProjectId());
+        self::assertSame(125, $collection->getTeamProjects()[1]->getProjectId());
         self::assertFalse($collection->isEmpty());
     }
 
@@ -61,8 +61,8 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_builder,
             $program
         );
-        self::assertSame(103, $collection->getTeamProjects()[0]->getId());
-        self::assertSame(125, $collection->getTeamProjects()[1]->getId());
+        self::assertSame(103, $collection->getTeamProjects()[0]->getProjectId());
+        self::assertSame(125, $collection->getTeamProjects()[1]->getProjectId());
         self::assertFalse($collection->isEmpty());
     }
 

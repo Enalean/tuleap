@@ -31,4 +31,6 @@ interface ProjectReference
     public function getProjectId(): int;
 
     public function getProjectLabel(): string;
+
+    public function getUrl(): string;
 }

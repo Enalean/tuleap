@@ -31,7 +31,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
@@ -76,7 +76,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private \TemplateRenderer $template_renderer,
         private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
         private SearchTeamsOfProgram $teams_searcher,
-        private BuildProject $project_data_adapter,
+        private RetrieveProjectReference $project_reference_retriever,
         private VerifyIsTeam $verify_is_team,
         private BuildProgram $build_program,
         private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
@@ -220,7 +220,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 TeamsPresenterBuilder::buildTeamsPresenter(
                     TeamProjectsCollection::fromProgramForAdministration(
                         $this->teams_searcher,
-                        $this->project_data_adapter,
+                        $this->project_reference_retriever,
                         $admin_program
                     )
                 ),

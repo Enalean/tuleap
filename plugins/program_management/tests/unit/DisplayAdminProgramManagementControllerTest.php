@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement;
 
 use Project;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
-use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncreme
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
@@ -71,7 +71,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private array $variables;
     private SearchTeamsOfProgramStub $team_searcher;
-    private BuildProject $build_project;
+    private RetrieveProjectReference $build_project;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_builder;
@@ -99,7 +99,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->template_renderer         = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder       = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
         $this->team_searcher             = SearchTeamsOfProgramStub::buildTeams(150);
-        $this->build_project             = new BuildProjectStub();
+        $this->build_project             = new RetrieveProjectReferenceStub();
         $this->plannable_tracker_builder = new PotentialPlannableTrackersConfigurationPresentersBuilder(RetrievePlannableTrackersStub::buildIds());
         $this->build_program             = BuildProgramStub::stubValidProgram();
         $this->team_verifier             = VerifyIsTeamStub::withNotValidTeam();
@@ -139,7 +139,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                     $this->program_increment_checker,
                     $this->iteration_checker,
                     SearchTeamsOfProgramStub::buildTeams(),
-                    new BuildProjectStub(),
+                    new RetrieveProjectReferenceStub(),
                 ),
                 RetrievePlannableTrackersStub::buildIds(1, 2),
                 VerifyTrackerSemanticsStub::withAllSemantics(),

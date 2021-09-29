@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -40,14 +40,14 @@ final class ConfigurationErrorsGatherer
     private ProgramIncrementCreatorChecker $program_increment_creator_checker;
     private IterationCreatorChecker $iteration_creator_checker;
     private SearchTeamsOfProgram $teams_searcher;
-    private BuildProject $project_builder;
+    private RetrieveProjectReference $project_builder;
 
     public function __construct(
         BuildProgram $build_program,
         ProgramIncrementCreatorChecker $program_increment_creator_checker,
         IterationCreatorChecker $iteration_creator_checker,
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_builder
+        RetrieveProjectReference $project_builder
     ) {
         $this->build_program                     = $build_program;
         $this->program_increment_creator_checker = $program_increment_creator_checker;

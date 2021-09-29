@@ -92,7 +92,7 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
-use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
@@ -102,6 +102,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
@@ -432,7 +433,7 @@ final class program_managementPlugin extends Plugin
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             new ProgramManagementBreadCrumbsBuilder(),
             $program_dao,
-            new ProgramManagementProjectAdapter($project_manager),
+            new ProjectReferenceRetriever($project_manager),
             new TeamDao(),
             new ProgramAdapter(
                 $project_manager,
@@ -475,7 +476,7 @@ final class program_managementPlugin extends Plugin
                         $logger
                     ),
                     new ProgramDao(),
-                    new ProgramManagementProjectAdapter($project_manager)
+                    new ProjectReferenceRetriever($project_manager)
                 ),
                 new PlanDao(),
                 new TrackerSemantics($tracker_factory),
@@ -651,7 +652,7 @@ final class program_managementPlugin extends Plugin
         PlanningAdministrationDelegation $planning_administration_delegation
     ): void {
         $component_involved_verifier = $this->getComponentInvolvedVerifier();
-        $project_data                = ProgramManagementProjectAdapter::build(
+        $project_data                = ProjectReferenceProxy::buildFromProject(
             $planning_administration_delegation->getProject()
         );
         if ($component_involved_verifier->isInvolvedInAProgramWorkspace($project_data)) {
@@ -1130,7 +1131,7 @@ final class program_managementPlugin extends Plugin
                     $logger
                 ),
                 new ProgramDao(),
-                new ProgramManagementProjectAdapter(ProjectManager::instance()),
+                new ProjectReferenceRetriever(ProjectManager::instance()),
             )
         );
     }

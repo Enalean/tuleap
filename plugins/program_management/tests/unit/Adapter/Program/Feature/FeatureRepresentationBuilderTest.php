@@ -154,8 +154,6 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         );
         $this->build_planning->method("getRootPlanning")->willReturn($planning);
 
-        $this->build_planning->method("getProjectFromPlanning")->willReturn(new \Tuleap\ProgramManagement\Domain\ProgramManagementProject(1, 'my-project', "My project", '/project'));
-
         $expected = new FeatureRepresentation(
             1,
             'title',
