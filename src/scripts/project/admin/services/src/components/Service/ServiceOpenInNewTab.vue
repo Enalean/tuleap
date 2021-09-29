@@ -19,18 +19,16 @@
 
 <template functional>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="props.id" v-translate>Open in a new tab</label>
-        <div class="tlp-switch">
+        <label class="tlp-label tlp-checkbox" v-bind:for="props.id">
             <input
                 type="checkbox"
-                class="tlp-switch-checkbox"
                 v-bind:id="props.id"
                 name="is_in_new_tab"
                 value="1"
                 v-bind:checked="props.value"
                 v-on="listeners"
             />
-            <label class="tlp-switch-button" v-bind:for="props.id" aria-hidden></label>
-        </div>
+            <translate>Open in a new tab</translate>
+        </label>
     </div>
 </template>

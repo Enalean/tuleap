@@ -19,23 +19,14 @@
   -->
 <template>
     <div class="tlp-form-element" v-if="is_item_a_folder">
-        <label class="tlp-label" for="document-permissions-update-children" v-translate>
-            Apply same permissions to all sub-items of this folder
-        </label>
-        <div class="tlp-switch">
+        <label class="tlp-label tlp-checkbox">
             <input
                 type="checkbox"
-                id="document-permissions-update-children"
-                class="tlp-switch-checkbox"
                 v-bind:value="value"
                 v-on:input="$emit('input', $event.target.checked)"
             />
-            <label
-                class="tlp-switch-button"
-                for="document-permissions-update-children"
-                aria-hidden
-            ></label>
-        </div>
+            <translate>Apply same permissions to all sub-items of this folder</translate>
+        </label>
     </div>
 </template>
 <script>

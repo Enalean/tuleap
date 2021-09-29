@@ -21,18 +21,13 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="docman-item-update-property">
-        <div class="docman-item-title-update-property">
-            <version-title-property
-                v-model="version.title"
-                data-test="update-property-version-title"
-            />
-            <lock-property
-                v-if="!isOpenAfterDnd"
-                v-model="version.is_file_locked"
-                v-bind:item="item"
-                data-test="update-property-lock-version"
-            />
-        </div>
+        <version-title-property v-model="version.title" data-test="update-property-version-title" />
+        <lock-property
+            v-if="!isOpenAfterDnd"
+            v-model="version.is_file_locked"
+            v-bind:item="item"
+            data-test="update-property-lock-version"
+        />
         <changelog-property v-model="version.changelog" data-test="update-property-changelog" />
         <slot></slot>
         <approval-update-properties

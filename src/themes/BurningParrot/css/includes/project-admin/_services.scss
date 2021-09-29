@@ -24,12 +24,6 @@
     margin: 0 5px 0 0;
 }
 
-.project-admin-services-modals-top-fields {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0 var(--tlp-x-large-spacing);
-}
-
 .project-admin-services-modal-preview {
     display: flex;
     align-items: center;
