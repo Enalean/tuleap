@@ -80,9 +80,13 @@ final class ConfigurationErrorsCollector
      */
     private array $missing_artifact_link = [];
     /**
-     * @var TeamHasNoRootPlanningPresenter[]
+     * @var TeamHasNoPlanningPresenter[]
      */
-    private array $no_root_planning = [];
+    private array $no_milestone_planning = [];
+    /**
+     * @var TeamHasNoPlanningPresenter[]
+     */
+    private array $no_sprint_planning = [];
 
 
     public function __construct(bool $should_collect_all_issues)
@@ -189,10 +193,14 @@ final class ConfigurationErrorsCollector
         $this->missing_artifact_link[] =  new MissingArtifactLinkFieldPresenter($field_administration_url, $tracker_name, $project_name);
     }
 
-
-    public function addTeamRootPlanningNotFoundOrNotAccessible(ProjectReference $project_reference): void
+    public function addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReference $project_reference): void
     {
-        $this->no_root_planning[] = new TeamHasNoRootPlanningPresenter($project_reference);
+        $this->no_milestone_planning[] = new TeamHasNoPlanningPresenter($project_reference);
+    }
+
+    public function addTeamSprintPlanningNotFoundOrNotAccessible(ProjectReference $project): void
+    {
+        $this->no_sprint_planning[] = new TeamHasNoPlanningPresenter($project);
     }
 
     public function hasError(): bool
@@ -210,7 +218,8 @@ final class ConfigurationErrorsCollector
             count($this->semantic_status_missing_values) > 0 ||
             count($this->missing_artifact_link) > 0 ||
             count($this->title_has_incorrect_type_error) > 0 ||
-            count($this->no_root_planning) > 0;
+            count($this->no_milestone_planning) > 0 ||
+            count($this->no_sprint_planning) > 0;
     }
 
     /**
@@ -318,10 +327,18 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return TeamHasNoRootPlanningPresenter[]
+     * @return TeamHasNoPlanningPresenter[]
      */
-    public function getNoRootPlanning(): array
+    public function getNoMilestonePlanning(): array
     {
-        return $this->no_root_planning;
+        return $this->no_milestone_planning;
+    }
+
+    /**
+     * @return TeamHasNoPlanningPresenter[]
+     */
+    public function getNoSprintPlanning(): array
+    {
+        return $this->no_sprint_planning;
     }
 }

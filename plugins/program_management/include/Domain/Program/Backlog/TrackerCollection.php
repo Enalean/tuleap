@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
@@ -54,7 +53,11 @@ final class TrackerCollection
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
-            $milestone_tracker = $retriever->retrieveRootPlanningMilestoneTracker($team, $user_identifier, $errors_collector);
+            $milestone_tracker = $retriever->retrieveRootPlanningMilestoneTracker(
+                $team,
+                $user_identifier,
+                $errors_collector
+            );
             if ($milestone_tracker !== null) {
                 $trackers[] = $milestone_tracker;
             }
@@ -64,17 +67,20 @@ final class TrackerCollection
     }
 
     /**
-     * @throws PlanningNotFoundException
      * @throws TrackerRetrievalException
      */
     public static function buildSecondPlanningMilestoneTracker(
         RetrievePlanningMilestoneTracker $retriever,
         TeamProjectsCollection $teams,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
+        ConfigurationErrorsCollector $errors_collector
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
-            $trackers[] = $retriever->retrieveSecondPlanningMilestoneTracker($team, $user_identifier);
+            $team_tracker = $retriever->retrieveSecondPlanningMilestoneTracker($team, $user_identifier, $errors_collector);
+            if ($team_tracker) {
+                $trackers[] = $team_tracker;
+            }
         }
 
         return new self($trackers);
@@ -121,6 +127,7 @@ final class TrackerCollection
                 }
             }
         }
+
         return $can_submit;
     }
 }

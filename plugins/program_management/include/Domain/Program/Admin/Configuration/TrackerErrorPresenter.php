@@ -89,9 +89,13 @@ final class TrackerErrorPresenter
      */
     public array $missing_artifact_link_fields_errors;
     /**
-     * @var TeamHasNoRootPlanningPresenter[]
+     * @var TeamHasNoPlanningPresenter[]
      */
-    public array $team_no_root_planning;
+    public array $team_no_milestone_planning;
+    /**
+     * @var TeamHasNoPlanningPresenter[]
+     */
+    public array $team_no_sprint_planning;
 
     /**
      * @param SemanticErrorPresenter[]               $semantic_errors
@@ -107,7 +111,8 @@ final class TrackerErrorPresenter
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
      * @param TitleHasIncorrectTypePresenter[]       $title_has_incorrect_type_error
      * @param MissingArtifactLinkFieldPresenter[]    $missing_artifact_link_fields_errors
-     * @param TeamHasNoRootPlanningPresenter[]       $team_no_root_planning
+     * @param TeamHasNoPlanningPresenter[]           $team_no_milestone_planning
+     * @param TeamHasNoPlanningPresenter[]           $team_no_sprint_planning
      */
     private function __construct(
         array $semantic_errors,
@@ -123,7 +128,8 @@ final class TrackerErrorPresenter
         array $semantic_status_missing_values,
         array $title_has_incorrect_type_error,
         array $missing_artifact_link_fields_errors,
-        array $team_no_root_planning
+        array $team_no_milestone_planning,
+        array $team_no_sprint_planning
     ) {
         $has_semantic_errors   = count($semantic_errors) > 0;
         $this->semantic_errors = $semantic_errors;
@@ -162,7 +168,10 @@ final class TrackerErrorPresenter
         $has_synchronization_errors = count($title_has_incorrect_type_error) > 0 ||
             count($missing_artifact_link_fields_errors) > 0;
 
-        $this->team_no_root_planning = $team_no_root_planning;
+        $this->team_no_milestone_planning = $team_no_milestone_planning;
+        $this->team_no_sprint_planning    = $team_no_sprint_planning;
+
+        $has_planning_error = count($this->team_no_milestone_planning) > 0 || count($this->team_no_sprint_planning) > 0;
 
         $this->has_presenter_errors = $has_semantic_errors
             || $has_required_field_errors
@@ -171,7 +180,7 @@ final class TrackerErrorPresenter
             || $user_can_not_submit_in_team
             || $has_semantic_status_errors
             || $has_synchronization_errors
-            || count($this->team_no_root_planning) > 0;
+            || $has_planning_error;
     }
 
     public static function fromTracker(
@@ -209,7 +218,8 @@ final class TrackerErrorPresenter
             $errors_collector->getSemanticStatusMissingValues(),
             $errors_collector->getTitleHasIncorrectTypeError(),
             $errors_collector->getMissingArtifactLinkErrors(),
-            $errors_collector->getNoRootPlanning()
+            $errors_collector->getNoMilestonePlanning(),
+            $errors_collector->getNoSprintPlanning()
         );
     }
 }

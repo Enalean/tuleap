@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-final class SecondPlanningNotFoundInProjectException extends \Exception implements PlanningNotFoundException
+use Tuleap\ProgramManagement\Domain\ProjectReference;
+
+/**
+ * @psalm-immutable
+ */
+final class TeamHasNoPlanningPresenter
 {
-    public function __construct(int $project_id)
+    public string $project_label;
+    public int $project_id;
+
+    public function __construct(ProjectReference $project_reference)
     {
-        parent::__construct("Second-level planning not found in project #$project_id.");
+        $this->project_label = $project_reference->getProjectLabel();
+        $this->project_id    = $project_reference->getProjectId();
     }
 }

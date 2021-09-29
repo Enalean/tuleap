@@ -108,11 +108,18 @@ final class ConfigurationErrorsCollectorTest extends TestCase
         self::assertTrue($this->collector->hasError());
     }
 
-    public function testItHasErrorWhenNoPlanningIsFound(): void
+    public function testItHasErrorWhenNoMilestonePlanningIsFound(): void
     {
-        $this->collector->addTeamRootPlanningNotFoundOrNotAccessible(ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReferenceBuilder::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
+
+    public function testItHasErrorWhenNoSprintPlanningIsFound(): void
+    {
+        $this->collector->addTeamSprintPlanningNotFoundOrNotAccessible(ProjectReferenceBuilder::buildGeneric());
+        self::assertTrue($this->collector->hasError());
+    }
+
 
     public function testItDoesNotHaveAnyError(): void
     {

@@ -1,4 +1,4 @@
-{{# team_no_root_planning }}
+{{# team_no_milestone_planning }}
   <li>
     {{# dgettext }}
       tuleap-program_management |
@@ -7,4 +7,15 @@
       {{ project_label }}
     {{/ dgettext }}
   </li>
-{{/ team_no_root_planning }}
+{{/ team_no_milestone_planning }}
+
+{{# team_no_sprint_planning }}
+  <li>
+    {{# dgettext }}
+      tuleap-program_management |
+      Second-level planning not found in project <a href='/plugins/agiledashboard/?group_id=%s&action=admin'>%s</a> or you can't access it|
+      {{ project_id }} |
+      {{ project_label }}
+    {{/ dgettext }}
+  </li>
+{{/ team_no_sprint_planning }}

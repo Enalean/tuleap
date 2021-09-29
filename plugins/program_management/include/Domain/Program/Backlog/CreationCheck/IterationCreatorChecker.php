@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
@@ -87,7 +86,8 @@ class IterationCreatorChecker
             $team_trackers = TrackerCollection::buildSecondPlanningMilestoneTracker(
                 $this->root_milestone_retriever,
                 $team_projects_collection,
-                $user_identifier
+                $user_identifier,
+                $errors_collector
             );
 
             $iteration_and_team_trackers = SourceTrackerCollection::fromIterationAndTeamTrackers(
@@ -96,7 +96,7 @@ class IterationCreatorChecker
                 $team_trackers,
                 $user_identifier
             );
-        } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
+        } catch (TrackerRetrievalException $exception) {
             $this->logger->error('Cannot retrieve all milestones', ['exception' => $exception]);
             return false;
         }
