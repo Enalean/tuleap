@@ -20,16 +20,10 @@
 <template>
     <div>
         <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
-            <label class="tlp-label" for="toggle" v-translate>Activate banner</label>
-            <div class="tlp-switch">
-                <input
-                    type="checkbox"
-                    id="toggle"
-                    class="tlp-switch-checkbox"
-                    v-model="banner_is_activated"
-                />
-                <label for="toggle" class="tlp-switch-button" aria-hidden></label>
-            </div>
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" v-model="banner_is_activated" />
+                <translate>Activate banner</translate>
+            </label>
         </div>
         <div v-if="!banner_is_activated">
             <p v-translate>No banner defined</p>

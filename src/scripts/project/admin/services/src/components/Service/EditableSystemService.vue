@@ -21,27 +21,22 @@
     <div class="tlp-modal-body">
         <service-id v-bind:value="service.id" />
         <hidden-service-shortname v-if="service.short_name" v-bind:value="service.short_name" />
-
-        <div class="project-admin-services-modals-top-fields">
-            <service-label id="project-service-edit-modal-label" v-model="service.label" />
-            <service-is-used
-                v-if="can_update_is_used"
-                id="project-service-edit-modal-enabled"
-                v-bind:value="service.is_used"
-                v-bind:disabled-reason="service.is_disabled_reason"
-            />
-            <read-only-service-icon v-bind:value="service.icon_name" />
-            <service-is-active
-                id="project-service-edit-modal-active"
-                v-bind:value="service.is_active"
-            />
-        </div>
-
+        <service-label id="project-service-edit-modal-label" v-model="service.label" />
+        <read-only-service-icon v-bind:value="service.icon_name" />
+        <service-is-used
+            v-if="can_update_is_used"
+            id="project-service-edit-modal-enabled"
+            v-bind:value="service.is_used"
+            v-bind:disabled-reason="service.is_disabled_reason"
+        />
+        <service-is-active
+            id="project-service-edit-modal-active"
+            v-bind:value="service.is_active"
+        />
         <div class="tlp-property" v-if="service.shortname">
             <label class="tlp-label" v-translate>Short name</label>
             <span>{{ service.short_name }}</span>
         </div>
-
         <read-only-service-rank v-if="is_summary_service" v-bind:value="service.rank" />
         <service-rank
             v-else

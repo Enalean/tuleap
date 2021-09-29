@@ -76,20 +76,14 @@
             </section>
             <section class="tlp-pane-section">
                 <h2 class="tlp-pane-subtitle">{{# gettext }}Platform statistics{{/ gettext }}</h2>
-                <label class="tlp-label" for="use_statistics_homepage">
-                    {{# gettext }}Display platform statistics on home page.{{/ gettext}}
-                </label>
-                <div class="tlp-switch">
-                    <input type="checkbox"
-                           id="use_statistics_homepage"
-                           name="use_statistics_homepage"
-                           class="tlp-switch-checkbox"
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        type="checkbox"
+                        name="use_statistics_homepage"
                         {{# display_statistics_on_home_page }} checked {{/display_statistics_on_home_page}}
                     >
-                    <label for="use_statistics_homepage" class="tlp-switch-button">
-                        {{# gettext }}Display platform statistics on home page.{{/ gettext }}
-                    </label>
-                </div>
+                    {{# gettext }}Display platform statistics on home page.{{/ gettext}}
+                </label>
             </section>
 
             <section class="tlp-pane-section">
@@ -99,20 +93,14 @@
                         {{# gettext }}You still have <code>$sys_display_homepage_news</code> variable defined in local.inc. It's now stored in DB, you should remove it from the file to avoid confusion.{{/ gettext }}
                     </div>
                 {{/ warn_local_inc }}
-                <label class="tlp-label" for="use_news_homepage">
-                    {{# gettext }}Display site news on home page.{{/ gettext}}
-                </label>
-                <div class="tlp-switch">
-                    <input type="checkbox"
-                           id="use_news_homepage"
-                           name="use_news_homepage"
-                           class="tlp-switch-checkbox"
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        type="checkbox"
+                        name="use_news_homepage"
                         {{# display_news_on_home_page }} checked {{/display_news_on_home_page}}
                     >
-                    <label for="use_news_homepage" class="tlp-switch-button">
-                        {{# gettext }}Display site news on home page.{{/ gettext }}
-                    </label>
-                </div>
+                    {{# gettext }}Display site news on home page.{{/ gettext}}
+                </label>
             </section>
 
             <section class="tlp-pane-section tlp-pane-section-submit">

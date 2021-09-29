@@ -19,19 +19,15 @@
 
 <template functional>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="props.id" v-translate>
-            Available (also available for new projects)
-        </label>
-        <div class="tlp-switch">
+        <label class="tlp-label tlp-checkbox" v-bind:for="props.id">
             <input
-                class="tlp-switch-checkbox"
                 v-bind:id="props.id"
                 type="checkbox"
                 name="is_active"
                 value="1"
                 v-bind:checked="props.value"
             />
-            <label class="tlp-switch-button" v-bind:for="props.id" aria-hidden></label>
-        </div>
+            <translate>Available (also available for new projects)</translate>
+        </label>
     </div>
 </template>

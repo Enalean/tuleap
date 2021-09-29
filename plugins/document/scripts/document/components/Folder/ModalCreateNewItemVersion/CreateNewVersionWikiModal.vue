@@ -33,13 +33,8 @@
         <modal-feedback />
         <div class="tlp-modal-body">
             <div class="docman-item-update-property">
-                <div class="docman-item-title-update-property">
-                    <wiki-properties
-                        v-model="wiki_model.wiki_properties"
-                        v-bind:item="wiki_model"
-                    />
-                    <lock-property v-model="version.is_file_locked" v-bind:item="item" />
-                </div>
+                <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model" />
+                <lock-property v-model="version.is_file_locked" v-bind:item="item" />
             </div>
         </div>
         <modal-footer

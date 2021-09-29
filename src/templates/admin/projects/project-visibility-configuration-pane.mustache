@@ -15,37 +15,27 @@
                     </div>
                     <section class="tlp-pane-section">
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="toggle-project-admin-can-choose-visibility">
-                                {{# gettext }}Project administrators can choose project visibility{{/ gettext }}
-                            </label>
-                            <div class="tlp-switch">
+                            <label class="tlp-label tlp-checkbox">
                                 <input
                                     type="checkbox"
                                     name="project_admin_can_choose_visibility"
-                                    id="toggle-project-admin-can-choose-visibility"
-                                    class="tlp-switch-checkbox"
                                     value="1"
                                     {{# project_admin_can_choose }}checked{{/ project_admin_can_choose }}
                                 >
-                                <label for="toggle-project-admin-can-choose-visibility" class="tlp-switch-button" aria-hidden></label>
-                            </div>
+                                {{# gettext }}Project administrators can choose project visibility{{/ gettext }}
+                            </label>
                             <p class="tlp-text-info">{{# gettext }}If, in your organization, the strict privacy of the projects must be preserved by 'design', then you should uncheck this option so that project admins cannot disclose confidential resources to other platform users.{{/ gettext }}</p>
                         </div>
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="toggle-send-mail-on-visibility-change">
-                                {{# gettext }}Send an email when the project visibility changes{{/ gettext }}
-                            </label>
-                            <div class="tlp-switch">
+                            <label class="tlp-label tlp-checkbox">
                                 <input
                                     type="checkbox"
                                     name="send_mail_on_visibility_change"
-                                    id="toggle-send-mail-on-visibility-change"
-                                    class="tlp-switch-checkbox"
                                     value="1"
                                     {{# send_mail_on_project_visibility_change }}checked{{/ send_mail_on_project_visibility_change }}
                                 >
-                                <label for="toggle-send-mail-on-visibility-change" class="tlp-switch-button" aria-hidden></label>
-                            </div>
+                                {{# gettext }}Send an email when the project visibility changes{{/ gettext }}
+                            </label>
                             <p class="tlp-text-info">{{# gettext }}If enabled, an email will be sent to all the project members if the visibility of the project is changed.{{/ gettext }}</p>
                         </div>
                         <div class="tlp-form-element">

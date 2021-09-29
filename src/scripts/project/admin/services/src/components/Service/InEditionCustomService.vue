@@ -20,23 +20,20 @@
 <template>
     <div class="tlp-modal-body">
         <service-id v-bind:value="service.id" />
-        <div class="project-admin-services-modals-top-fields">
-            <service-label id="project-service-edit-modal-label" v-model="service.label" />
-            <service-is-used
-                id="project-service-edit-modal-enabled"
-                v-bind:value="service.is_used"
-                v-bind:disabled-reason="service.is_disabled_reason"
-            />
-            <icon-selector
-                id="project-service-edit-modal-icon"
-                v-model="service.icon_name"
-                v-bind:allowed_icons="allowed_icons"
-            />
-            <slot name="is_active">
-                <hidden-service-is-active v-bind:value="service.is_active" />
-            </slot>
-        </div>
-
+        <service-label id="project-service-edit-modal-label" v-model="service.label" />
+        <icon-selector
+            id="project-service-edit-modal-icon"
+            v-model="service.icon_name"
+            v-bind:allowed_icons="allowed_icons"
+        />
+        <service-is-used
+            id="project-service-edit-modal-enabled"
+            v-bind:value="service.is_used"
+            v-bind:disabled-reason="service.is_disabled_reason"
+        />
+        <slot name="is_active">
+            <hidden-service-is-active v-bind:value="service.is_active" />
+        </slot>
         <service-rank
             id="project-service-edit-modal-rank"
             v-bind:minimal_rank="minimal_rank"
@@ -59,13 +56,8 @@
             v-bind:class="{ 'tlp-form-element-disabled': service.is_in_new_tab }"
             v-if="has_used_iframe"
         >
-            <label class="tlp-label" for="project-service-edit-modal-iframe" v-translate>
-                Display in iframe
-            </label>
-            <div class="tlp-switch">
+            <label class="tlp-label tlp-checkbox">
                 <input
-                    class="tlp-switch-checkbox"
-                    id="project-service-edit-modal-iframe"
                     type="checkbox"
                     name="is_in_iframe"
                     value="1"
@@ -73,12 +65,8 @@
                     v-bind:disabled="service.is_in_new_tab"
                     data-test="iframe-switch"
                 />
-                <label
-                    class="tlp-switch-button"
-                    for="project-service-edit-modal-iframe"
-                    aria-hidden
-                ></label>
-            </div>
+                <translate>Display in iframe</translate>
+            </label>
         </div>
 
         <div

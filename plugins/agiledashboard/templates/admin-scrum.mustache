@@ -29,17 +29,14 @@
                     </div>
                     <section class="tlp-pane-section">
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="activate-scrum">{{ activate_scrum_label }}</label>
-                            <div class="tlp-switch">
+                            <label class="tlp-label tlp-checkbox">
                                 <input type="checkbox"
                                     id="activate-scrum"
-                                    class="tlp-switch-checkbox"
                                     name="activate-scrum"
                                     value="1"
                                     {{# scrum_activated }} checked {{/ scrum_activated }}
-                                >
-                                <label for="activate-scrum" class="tlp-switch-button" aria-hidden="true"></label>
-                            </div>
+                                > {{ activate_scrum_label }}
+                            </label>
                             {{^ scrum_activated }}
                                 {{^ has_plannings }}
                                     <p class="tlp-text-info">
@@ -51,17 +48,14 @@
 
                         {{# can_scrum_mono_milestone_be_enabled }}
                             <div class="tlp-form-element">
-                                <label class="tlp-label" for="activate-scrum-v2">{{ activate_scrum_mono_milestone_label }} ({{ scrum_monomilestone_title }})</label>
-                                <div class="tlp-switch">
+                                <label class="tlp-label tlp-checkbox">
                                     <input type="checkbox"
                                         id="activate-scrum-v2"
-                                        class="tlp-switch-checkbox"
                                         name="activate-scrum-v2"
                                         value="1"
                                         {{# use_mono_milestone }} checked {{/ use_mono_milestone }}
-                                    >
-                                    <label for="activate-scrum-v2" class="tlp-switch-button" aria-hidden="true"></label>
-                                </div>
+                                    > {{ activate_scrum_mono_milestone_label }} ({{ scrum_monomilestone_title }})
+                                </label>
                                 <p class="tlp-text-warning">
                                     <i class="fas fa-exclamation-triangle"></i> {{ warning_feature_under_construction }}
                                 </p>
@@ -90,26 +84,22 @@
 
                         <input type="hidden" name="use-explicit-top-backlog" value="0">
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="use-explicit-top-backlog">
-                                {{# dgettext }}tuleap-agiledashboard | Explicit top backlog{{/ dgettext }}
-                            </label>
-                            <div class="tlp-switch">
+                            <label class="tlp-label tlp-checkbox">
                                 <input type="checkbox"
                                        id="use-explicit-top-backlog"
-                                       class="tlp-switch-checkbox {{# is_planning_administration_delegated }}tlp-form-element-disabled{{/ is_planning_administration_delegated }}"
+                                       class="{{# is_planning_administration_delegated }}tlp-form-element-disabled{{/ is_planning_administration_delegated }}"
                                        name="use-explicit-top-backlog"
                                        value="1"
                                     {{# explicit_top_backlog_enabled }} checked {{/ explicit_top_backlog_enabled }}
                                     {{# is_planning_administration_delegated }} disabled {{/ is_planning_administration_delegated }}
-                                >
-                                <label for="use-explicit-top-backlog" class="tlp-switch-button" aria-hidden="true"></label>
-                            </div>
+                                > {{# dgettext }}tuleap-agiledashboard | Explicit top backlog{{/ dgettext }}
+                            </label>
                             <p class="tlp-text-info">
                                 <i class="fa fa-info-circle"></i>
                                 {{# dgettext }}tuleap-agiledashboard | Explicit backlog allows to select, item per item, what goes in Scrum top backlog.{{/ dgettext }}
-                                    <a href="/doc/en/user-guide/agile-dashboard.html?#explicit-backlog">
-                                        {{# dgettext }}tuleap-agiledashboard | See documentation for more details. {{/ dgettext }}
-                                    </a>
+                                <a href="/doc/en/user-guide/agile-dashboard.html?#explicit-backlog">
+                                    {{# dgettext }}tuleap-agiledashboard | See documentation for more details. {{/ dgettext }}
+                                </a>
                             </p>
                         </div>
 

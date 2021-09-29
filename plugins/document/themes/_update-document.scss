@@ -24,26 +24,6 @@
     white-space: nowrap;
 }
 
-.docman-item-title-update-property {
-    display: flex;
-    justify-content: space-between;
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-
-.docman-item-version-title-update {
-    width: 100%;
-    margin: 0 var(--tlp-medium-spacing) 0 0;
-}
-
-.tlp-form-element.docman-item-lock-update {
-    margin: 0 var(--tlp-small-spacing) 0 var(--tlp-small-spacing);
-
-    > .tlp-label {
-        margin: 0 0 13px;
-        white-space: nowrap;
-    }
-}
-
 .document-new-item-version-button-disabled {
     box-shadow: none;
     color: var(--tlp-main-color-transparent-50);

@@ -23,8 +23,6 @@
     $(function () {
         var selector = $("#admin-headline-select-language");
 
-        bindSwitchStatisticsOnHomePage();
-        bindSwitchNewsOnHomePage();
         initCKEditor();
         selector.change(switchHeadline);
 
@@ -51,17 +49,6 @@
                 } else {
                     cke_instance.hide();
                 }
-            });
-        }
-
-        function bindSwitchStatisticsOnHomePage() {
-            $("#use_statistics_homepage").on("change", function () {
-                $("#admin-homepage").submit();
-            });
-        }
-        function bindSwitchNewsOnHomePage() {
-            $("#use_news_homepage").on("change", function () {
-                $("#admin-homepage").submit();
             });
         }
     });

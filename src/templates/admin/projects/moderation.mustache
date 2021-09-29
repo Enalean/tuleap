@@ -28,20 +28,15 @@
 
 
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="toggle-projects-must-be-approved">
+                            <label class="tlp-label tlp-checkbox">
+                                <input
+                                    type="checkbox"
+                                    name="projects_must_be_approved"
+                                    value="1"
+                                    {{# projects_must_be_approved }}checked{{/ projects_must_be_approved }}
+                                >
                                 {{# gettext }}Project must be approved by administrators{{/ gettext}}
                             </label>
-                            <div class="tlp-switch">
-                                <input
-                                        type="checkbox"
-                                        name="projects_must_be_approved"
-                                        id="toggle-projects-must-be-approved"
-                                        class="tlp-switch-checkbox"
-                                        value="1"
-                                        {{# projects_must_be_approved }}checked{{/ projects_must_be_approved }}
-                                >
-                                <label for="toggle-projects-must-be-approved" class="tlp-switch-button" aria-hidden></label>
-                            </div>
                         </div>
 
                         {{# platform_have_restricted }}

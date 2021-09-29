@@ -6,29 +6,18 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
     class="tlp-form-element tlp-form-element-disabled"
   >
     <label
-      class="tlp-label"
-      data-current-language="en_US"
-      data-msgid="Activate banner"
-      for="toggle"
-    >
-      Activate banner
-    </label>
-     
-    <div
-      class="tlp-switch"
+      class="tlp-label tlp-checkbox"
     >
       <input
-        class="tlp-switch-checkbox"
-        id="toggle"
         type="checkbox"
       />
        
-      <label
-        aria-hidden=""
-        class="tlp-switch-button"
-        for="toggle"
-      />
-    </div>
+      <translate-stub
+        tag="span"
+      >
+        Activate banner
+      </translate-stub>
+    </label>
   </div>
    
   <!---->
@@ -99,29 +88,18 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
     class="tlp-form-element"
   >
     <label
-      class="tlp-label"
-      data-current-language="en_US"
-      data-msgid="Activate banner"
-      for="toggle"
-    >
-      Activate banner
-    </label>
-     
-    <div
-      class="tlp-switch"
+      class="tlp-label tlp-checkbox"
     >
       <input
-        class="tlp-switch-checkbox"
-        id="toggle"
         type="checkbox"
       />
        
-      <label
-        aria-hidden=""
-        class="tlp-switch-button"
-        for="toggle"
-      />
-    </div>
+      <translate-stub
+        tag="span"
+      >
+        Activate banner
+      </translate-stub>
+    </label>
   </div>
    
   <div>
@@ -198,29 +176,18 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
     class="tlp-form-element"
   >
     <label
-      class="tlp-label"
-      data-current-language="en_US"
-      data-msgid="Activate banner"
-      for="toggle"
-    >
-      Activate banner
-    </label>
-     
-    <div
-      class="tlp-switch"
+      class="tlp-label tlp-checkbox"
     >
       <input
-        class="tlp-switch-checkbox"
-        id="toggle"
         type="checkbox"
       />
        
-      <label
-        aria-hidden=""
-        class="tlp-switch-button"
-        for="toggle"
-      />
-    </div>
+      <translate-stub
+        tag="span"
+      >
+        Activate banner
+      </translate-stub>
+    </label>
   </div>
    
   <!---->
