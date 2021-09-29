@@ -58,7 +58,7 @@ import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/ge
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
 import { loadImage } from "./Image/image-loader";
-import { transformLargeContentIntoAParagraph } from "./transform-large-content-into-paragraph";
+import { transformLargeContentIntoParagraphs } from "./transform-large-content-into-paragraphs";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
@@ -675,7 +675,7 @@ function buildFieldValuesDisplayZone(
                         heading: HeadingLevel.HEADING_4,
                         children: [new TextRun(field.field_name)],
                     }),
-                    transformLargeContentIntoAParagraph(field.field_value, field.content_format)
+                    ...transformLargeContentIntoParagraphs(field.field_value, field.content_format)
                 );
                 break;
             default:
