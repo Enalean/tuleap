@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
+use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
+use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -35,112 +38,105 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
 final class CollectLinkedProjectsHandlerTest extends TestCase
 {
-    private VerifyIsProgramStub $program_verifier;
-    private TeamsSearcher $teams_searcher;
-    private CollectLinkedProjects $event;
+    private CollectLinkedProjects $original_event;
     private CheckProjectAccessStub $access_checker;
-    private VerifyIsTeamStub $team_verifier;
-    private ProgramsSearcher $programs_searcher;
 
     protected function setUp(): void
     {
-        $this->program_verifier  = VerifyIsProgramStub::withNotValidProgram();
-        $this->team_verifier     = VerifyIsTeamStub::withNotValidTeam();
-        $this->teams_searcher    = new TeamsSearcher(
-            SearchTeamsOfProgramStub::buildTeams(),
-            RetrieveProjectStub::withValidProjects(),
-        );
-        $this->programs_searcher = new ProgramsSearcher(
-            SearchProgramsOfTeamStub::buildPrograms(),
-            RetrieveProjectStub::withValidProjects(),
-        );
-        $this->access_checker    = CheckProjectAccessStub::withValidAccess();
-
-        $source_project = ProjectTestBuilder::aProject()->build();
-        $user           = UserTestBuilder::aUser()->build();
-        $this->event    = new CollectLinkedProjects($source_project, $user);
+        $source_project       = ProjectTestBuilder::aProject()->build();
+        $this->original_event = new CollectLinkedProjects($source_project, UserTestBuilder::aUser()->build());
+        $this->access_checker = CheckProjectAccessStub::withValidAccess();
     }
 
-    private function getHandler(): CollectLinkedProjectsHandler
+    public function testItBuildsACollectionOfTeamProjects(): void
     {
-        return new CollectLinkedProjectsHandler(
-            $this->program_verifier,
-            $this->teams_searcher,
-            $this->access_checker,
-            $this->team_verifier,
-            $this->programs_searcher
+        $handler = new CollectLinkedProjectsHandler(
+            VerifyIsProgramStub::withValidProgram(),
+            VerifyIsTeamStub::withNotValidTeam()
         );
-    }
 
-    public function testItBuildsACollectionOfTeamProjectsAndMutatesTheEvent(): void
-    {
-        $this->setProgramContext();
-        $this->getHandler()->handle($this->event);
+        $event = $this->buildEventForProgram();
+        $handler->handle($event);
 
-        $collection = $this->event->getChildrenProjects();
+        $collection = $this->original_event->getChildrenProjects();
         self::assertFalse($collection->isEmpty());
         self::assertCount(2, $collection->getProjects());
     }
 
-    public function testWhenUserCannotAccessAnyTeamItDoesNotMutateTheEvent(): void
+    public function testItBuildsACollectionOfProgramProjects(): void
     {
-        $this->setProgramContext();
-        $this->access_checker = CheckProjectAccessStub::withPrivateProjectWithoutAccess();
+        $handler = new CollectLinkedProjectsHandler(
+            VerifyIsProgramStub::withNotValidProgram(),
+            VerifyIsTeamStub::withValidTeam()
+        );
 
-        $this->getHandler()->handle($this->event);
+        $event = $this->buildEventForTeam();
+        $handler->handle($event);
 
-        self::assertTrue($this->event->getChildrenProjects()->isEmpty());
-        self::assertTrue($this->event->getParentProjects()->isEmpty());
-    }
-
-    public function testItBuildsACollectionOfProgramProjectsAndMutatesTheEvent(): void
-    {
-        $this->setTeamContext();
-        $this->getHandler()->handle($this->event);
-
-        $collection = $this->event->getParentProjects();
+        $collection = $this->original_event->getParentProjects();
         self::assertFalse($collection->isEmpty());
         self::assertCount(2, $collection->getProjects());
     }
 
-    public function testWhenUserCannotAccessAnyProgramItDoesNotMutateTheEvent(): void
+    public function testDoesNothingWhenProjectIsNotAProgramAndNotATeam(): void
     {
-        $this->setTeamContext();
-        $this->access_checker = CheckProjectAccessStub::withPrivateProjectWithoutAccess();
+        $handler = new CollectLinkedProjectsHandler(
+            VerifyIsProgramStub::withNotValidProgram(),
+            VerifyIsTeamStub::withNotValidTeam()
+        );
 
-        $this->getHandler()->handle($this->event);
+        $event = $this->buildEventForTeam();
+        $handler->handle($event);
 
-        self::assertTrue($this->event->getChildrenProjects()->isEmpty());
-        self::assertTrue($this->event->getParentProjects()->isEmpty());
+        $collection = $this->original_event->getParentProjects();
+        self::assertTrue($collection->isEmpty());
+        self::assertEmpty($collection->getProjects());
+
+        $collection = $this->original_event->getChildrenProjects();
+        self::assertTrue($collection->isEmpty());
+        self::assertEmpty($collection->getProjects());
     }
 
-    public function testGivenAProjectThatIsNeitherAProgramNorATeamItDoesNotMutateTheEvent(): void
+    private function buildEventForProgram(): CollectLinkedProjectsProxy
     {
-        $this->getHandler()->handle($this->event);
-
-        self::assertTrue($this->event->getChildrenProjects()->isEmpty());
-        self::assertTrue($this->event->getParentProjects()->isEmpty());
-    }
-
-    private function setProgramContext(): void
-    {
-        $this->program_verifier = VerifyIsProgramStub::withValidProgram();
-        $red_team               = ProjectTestBuilder::aProject()->build();
-        $blue_team              = ProjectTestBuilder::aProject()->build();
-        $this->teams_searcher   = new TeamsSearcher(
+        $red_team          = ProjectTestBuilder::aProject()->build();
+        $blue_team         = ProjectTestBuilder::aProject()->build();
+        $teams_searcher    = new TeamsSearcher(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
             RetrieveProjectStub::withValidProjects($red_team, $blue_team)
         );
+        $programs_searcher = new ProgramsSearcher(
+            SearchProgramsOfTeamStub::withNoPrograms(),
+            RetrieveProjectStub::withoutProjects()
+        );
+
+        return CollectLinkedProjectsProxy::fromCollectLinkedProjects(
+            $teams_searcher,
+            $this->access_checker,
+            $programs_searcher,
+            $this->original_event
+        );
     }
 
-    private function setTeamContext(): void
+    private function buildEventForTeam(): CollectLinkedProjectsProxy
     {
-        $this->team_verifier     = VerifyIsTeamStub::withValidTeam();
-        $red_program             = ProjectTestBuilder::aProject()->build();
-        $blue_program            = ProjectTestBuilder::aProject()->build();
-        $this->programs_searcher = new ProgramsSearcher(
+        $red_program    = ProjectTestBuilder::aProject()->build();
+        $blue_program   = ProjectTestBuilder::aProject()->build();
+        $teams_searcher = new TeamsSearcher(
+            SearchTeamsOfProgramStub::withNoTeams(),
+            RetrieveProjectStub::withoutProjects(),
+        );
+
+        $programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms(110, 111),
             RetrieveProjectStub::withValidProjects($red_program, $blue_program)
+        );
+
+        return CollectLinkedProjectsProxy::fromCollectLinkedProjects(
+            $teams_searcher,
+            $this->access_checker,
+            $programs_searcher,
+            $this->original_event
         );
     }
 }

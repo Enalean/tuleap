@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
+use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
@@ -96,9 +97,11 @@ use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuild
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
@@ -140,8 +143,6 @@ use Tuleap\ProgramManagement\Domain\Team\PossibleParentHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ProgramsSearcher;
-use Tuleap\ProgramManagement\Domain\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfigExtractor;
 use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfigParser;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
@@ -977,18 +978,23 @@ final class program_managementPlugin extends Plugin
     {
         $program_dao       = new ProgramDao();
         $team_dao          = new TeamDao();
-        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), new UserManagerAdapter(UserManager::instance()));
+        $retrieve_user     = new UserManagerAdapter(UserManager::instance());
+        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), $retrieve_user);
         $handler           = new CollectLinkedProjectsHandler(
             $program_dao,
+            $team_dao,
+        );
+
+        $event_proxy = CollectLinkedProjectsProxy::fromCollectLinkedProjects(
             new TeamsSearcher($program_dao, $project_retriever),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
-            $team_dao,
-            new ProgramsSearcher($team_dao, $project_retriever)
+            new ProgramsSearcher($team_dao, $project_retriever),
+            $event
         );
-        $handler->handle($event);
+        $handler->handle($event_proxy);
     }
 
     private function getLogger(): \Psr\Log\LoggerInterface
