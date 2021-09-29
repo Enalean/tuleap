@@ -25,9 +25,6 @@
                 <translate>Activate the banner on the whole platform</translate>
             </label>
         </div>
-        <div v-if="!banner_is_activated">
-            <p v-translate>No banner defined</p>
-        </div>
         <div v-show="banner_is_activated">
             <div class="tlp-form-element siteadmin-platform-banner-importance">
                 <label class="tlp-label">
@@ -86,8 +83,10 @@
             <button
                 type="button"
                 class="tlp-button-primary"
+                v-bind:data-tlp-tooltip="$gettext('Message is mandatory')"
+                v-bind:class="{ 'tlp-tooltip tlp-tooltip-top': should_tooltip_be_displayed }"
                 v-on:click="save"
-                v-bind:disabled="loading"
+                v-bind:disabled="is_save_button_disabled"
             >
                 <i v-if="loading" class="tlp-button-icon fas fa-fw fa-spin fa-circle-notch"></i>
                 <i class="tlp-button-icon fas fa-save" v-else></i>
@@ -125,6 +124,14 @@ export default class BannerPresenter extends Vue {
     current_expiration_date: string = this.expiration_date;
     // eslint-disable-next-line no-undef
     editor: CKEDITOR.editor | null = null;
+
+    get should_tooltip_be_displayed(): boolean {
+        return this.current_message.length === 0 && this.banner_is_activated && !this.loading;
+    }
+
+    get is_save_button_disabled(): boolean {
+        return (this.current_message.length === 0 && this.banner_is_activated) || this.loading;
+    }
 
     public mounted(): void {
         this.createEditor();

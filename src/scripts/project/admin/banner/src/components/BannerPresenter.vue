@@ -22,11 +22,8 @@
         <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
             <label class="tlp-label tlp-checkbox">
                 <input type="checkbox" v-model="banner_is_activated" />
-                <translate>Activate banner</translate>
+                <translate>Activate the banner on this project</translate>
             </label>
-        </div>
-        <div v-if="!banner_is_activated">
-            <p v-translate>No banner defined</p>
         </div>
         <div v-show="banner_is_activated">
             <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
@@ -46,16 +43,18 @@
             <button
                 type="button"
                 class="tlp-button-primary"
+                v-bind:data-tlp-tooltip="$gettext('Message is mandatory')"
+                v-bind:class="{ 'tlp-tooltip tlp-tooltip-top': should_tooltip_be_displayed }"
                 v-on:click="save"
-                v-bind:disabled="loading"
+                v-bind:disabled="is_save_button_disabled"
             >
                 <i
                     v-if="loading"
                     class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"
                 ></i>
-                <i class="tlp-button-icon fa fa-save"></i>
+                <i v-if="!loading" class="tlp-button-icon fa fa-save"></i>
                 &nbsp;
-                <span v-translate>Save</span>
+                <span v-translate>Save the configuration</span>
             </button>
         </div>
     </div>
@@ -79,6 +78,14 @@ export default class BannerPresenter extends Vue {
     current_message: string = this.message;
     // eslint-disable-next-line no-undef
     editor: CKEDITOR.editor | null = null;
+
+    get should_tooltip_be_displayed(): boolean {
+        return this.current_message.length === 0 && this.banner_is_activated && !this.loading;
+    }
+
+    get is_save_button_disabled(): boolean {
+        return (this.current_message.length === 0 && this.banner_is_activated) || this.loading;
+    }
 
     public mounted(): void {
         this.createEditor();
