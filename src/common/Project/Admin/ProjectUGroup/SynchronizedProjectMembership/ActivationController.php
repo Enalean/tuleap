@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership;
 
 use HTTPRequest;
+use Feedback;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
@@ -93,6 +94,11 @@ class ActivationController implements DispatchableWithRequest
 
         $activation = $request->get('activation') === 'on';
         $this->toggleProjectMembership($project, $activation);
+
+        $layout->addFeedback(
+            Feedback::INFO,
+            _('Synchronized project membership configuration has been updated successfully.')
+        );
 
         $layout->redirect($this->getRedirectUrl($project));
     }

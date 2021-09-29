@@ -114,6 +114,8 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('enable')
             ->once();
         $this->dao->shouldNotReceive('disable');
+
+        $this->layout->shouldReceive('addFeedback');
         $this->layout->shouldReceive('redirect')
             ->with('/project/admin/ugroup.php?group_id=104')
             ->once();
@@ -146,6 +148,7 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
         $this->dao->shouldNotReceive('enable');
 
+        $this->layout->shouldReceive('addFeedback');
         $this->layout->shouldReceive('redirect')
             ->with('/project/admin/ugroup.php?group_id=104')
             ->once();
