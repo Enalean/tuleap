@@ -3,6 +3,8 @@
 # Run the phpunit tests in Jenkins: make -C tuleap BUILD_ENV=ci ci_phpunit
 # Run docker as a priviledged user: make SUDO=sudo ... or make SUDO=pkexec ...
 
+SHELL=/usr/bin/env bash
+
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
 DOCKER_COMPOSE_FILE=-f docker-compose.yml -f docker-compose-mac.yml

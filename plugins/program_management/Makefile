@@ -1,3 +1,5 @@
+SHELL=/usr/bin/env bash
+
 generate-templates:
 	xsltproc resources/templates/generate-program_management_program.xml \
 		-o resources/templates/program_template.xml
