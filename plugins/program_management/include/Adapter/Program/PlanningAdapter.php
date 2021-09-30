@@ -28,12 +28,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMiles
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -72,17 +70,16 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
             $root_planning = $this->getRootPlanning($user_identifier, $project->getProjectId());
             return TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker());
         } catch (TopPlanningNotFoundInProjectException $exception) {
-            $errors_collector->addTeamRootPlanningNotFoundOrNotAccessible($project);
+            $errors_collector->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
         }
 
         return null;
     }
 
     /**
-     * @throws PlanningNotFoundException
      * @throws TrackerRetrievalException
      */
-    public function retrieveSecondPlanningMilestoneTracker(ProjectReference $project, UserIdentifier $user_identifier): TrackerReference
+    public function retrieveSecondPlanningMilestoneTracker(ProjectReference $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference
     {
         $user          = $this->retrieve_user->getUserWithId($user_identifier);
         $root_planning = $this->planning_factory->getRootPlanning(
@@ -91,12 +88,14 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         );
 
         if (! $root_planning) {
-            throw new TopPlanningNotFoundInProjectException($project->getProjectId());
+            $errors_collector->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
+            return null;
         }
 
         $children_planning = $this->planning_factory->getChildrenPlanning($root_planning);
         if (! $children_planning) {
-            throw new SecondPlanningNotFoundInProjectException($project->getProjectId());
+            $errors_collector->addTeamSprintPlanningNotFoundOrNotAccessible($project);
+            return null;
         }
         if ($children_planning->getPlanningTracker() instanceof \NullTracker) {
             throw new PlanningHasNoMilestoneTrackerException($children_planning->getId());
