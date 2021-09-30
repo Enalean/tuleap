@@ -1605,7 +1605,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     private function getProvider(Project $project): ILinkUrlProvider
     {
         $provider      = new LegacyLinkProvider(
-            HTTPRequest::instance()->getServerUrl() . '/?group_id=' . urlencode((string) $project->getID())
+            \Tuleap\ServerHostname::HTTPSUrl() . '/?group_id=' . urlencode((string) $project->getID())
         );
         $link_provider = new DocmanLinkProvider($project, $provider);
         EventManager::instance()->processEvent($link_provider);

@@ -92,7 +92,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                  . " WHERE user_id IN ($users_ids)");
 
          // Send a notification message to the user when account is activated by the Site Administrator
-        $base_url = HTTPRequest::instance()->getServerUrl();
+        $base_url = \Tuleap\ServerHostname::HTTPSUrl();
         while ($row_user = db_fetch_array($res_user)) {
             if (! send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
                  $GLOBALS['Response']->addFeedback(

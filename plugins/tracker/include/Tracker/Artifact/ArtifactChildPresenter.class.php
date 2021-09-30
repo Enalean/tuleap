@@ -59,7 +59,7 @@ class Tracker_ArtifactChildPresenter
         Tracker_Semantic_Status $semantic,
         NatureIsChildLinkRetriever $retriever
     ) {
-        $base_url = HTTPRequest::instance()->getServerUrl();
+        $base_url = \Tuleap\ServerHostname::HTTPSUrl();
 
         $this->xref         = $artifact->getXRef();
         $this->title        = $artifact->getTitle() ?? '';

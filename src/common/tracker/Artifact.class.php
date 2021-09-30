@@ -2560,7 +2560,7 @@ class Artifact
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
 
-        $server_url = HTTPRequest::instance()->getServerUrl();
+        $server_url = \Tuleap\ServerHostname::HTTPSUrl();
 
         $artifact_href = $server_url . "/tracker/?func=detail&aid=" . $this->getID() . "&atid=$group_artifact_id&group_id=$group_id";
         $used_fields   = $art_field_fact->getAllUsedFields();
@@ -2761,7 +2761,7 @@ class Artifact
         $fmt_len       = 40;
         $fmt_left      = sprintf("%%-%ds ", $fmt_len - 1);
         $fmt_right     = "%s";
-        $artifact_href = HTTPRequest::instance()->getServerUrl() . "/tracker/?func=detail&aid=" . $this->getID() . "&atid=$group_artifact_id&group_id=$group_id";
+        $artifact_href = \Tuleap\ServerHostname::HTTPSUrl() . "/tracker/?func=detail&aid=" . $this->getID() . "&atid=$group_artifact_id&group_id=$group_id";
         $used_fields   = $art_field_fact->getAllUsedFields();
         assert($this->ArtifactType instanceof ArtifactType);
          $art_fieldset_fact = new ArtifactFieldSetFactory($this->ArtifactType);
@@ -3670,7 +3670,7 @@ class Artifact
         }
 
         // Determine which protocl to use for embedded URL in ASCII format
-        $server = HTTPRequest::instance()->getServerUrl();
+        $server = \Tuleap\ServerHostname::HTTPSUrl();
 
         // Loop throuh the attached files and format them
         for ($i = 0; $i < $rows; $i++) {

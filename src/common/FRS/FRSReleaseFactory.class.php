@@ -537,7 +537,7 @@ class FRSReleaseFactory
         $body_text    = $this->getEmailBody($release, $package);
         $body_html    = '';
         $service_name = 'Files';
-        $goto_link    = HTTPRequest::instance()->getServerUrl() . '/goto?key=release&val=' . $release->getReleaseID() .
+        $goto_link    = \Tuleap\ServerHostname::HTTPSUrl() . '/goto?key=release&val=' . $release->getReleaseID() .
                         '&group_id=' . $release->getProject()->getID();
 
         return new Notification(
@@ -572,7 +572,7 @@ class FRSReleaseFactory
 
     private function getEmailBody(FRSRelease $release, FRSPackage $package)
     {
-        $server_url = HTTPRequest::instance()->getServerUrl();
+        $server_url = \Tuleap\ServerHostname::HTTPSUrl();
 
         $fileUrl  = $server_url . "/file/showfiles.php?group_id=" . $package->getGroupID() . "&release_id=" . $release->getReleaseID();
         $notifUrl = $server_url . "/file/filemodule_monitor.php?filemodule_id=" . $package->getPackageID() . "&group_id=" . $package->getGroupID();

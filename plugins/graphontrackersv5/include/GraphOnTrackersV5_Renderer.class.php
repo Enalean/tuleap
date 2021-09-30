@@ -235,7 +235,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             'widget-additionnal-button',
             new WidgetAdditionalButtonPresenter(
                 $this->report->getTracker(),
-                HTTPRequest::instance(),
                 $is_a_table_renderer
             )
         );

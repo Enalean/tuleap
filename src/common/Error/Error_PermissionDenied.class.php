@@ -145,8 +145,8 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         $messageToAdmin = '>' . $messageToAdmin;
         $messageToAdmin = str_replace(["\r\n"], "\n>", $messageToAdmin);
 
-        $hrefApproval = $request->getServerUrl() . '/project/admin/?group_id=' . $request->get('groupId');
-        $urlData      = $request->getServerUrl() . $request->get('url_data');
+        $hrefApproval = \Tuleap\ServerHostname::HTTPSUrl() . '/project/admin/?group_id=' . $request->get('groupId');
+        $urlData      = \Tuleap\ServerHostname::HTTPSUrl() . $request->get('url_data');
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
 

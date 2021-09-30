@@ -30,12 +30,11 @@ class GitBackendTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
+    use \Tuleap\ForgeConfigSandbox;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->http_request = \Mockery::spy(\HTTPRequest::class);
-        HTTPRequest::setInstance($this->http_request);
 
         $this->fixturesPath = __DIR__ . '/_fixtures';
 
@@ -47,14 +46,13 @@ class GitBackendTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         @unlink($this->fixturesPath . '/tmp/hooks/post-receive');
-        HTTPRequest::clearInstance();
 
         parent::tearDown();
     }
 
     public function testAddMailingShowRev(): void
     {
-        $this->http_request->shouldReceive('getServerUrl')->andReturns('https://localhost');
+        \ForgeConfig::set('sys_default_domain', 'localhost');
 
         $prj = \Mockery::spy(\Project::class);
         $prj->shouldReceive('getId')->andReturns(1750);

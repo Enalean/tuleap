@@ -653,7 +653,7 @@ class GitRepository
 
     public function getDiffLink(Git_GitRepositoryUrlManager $url_manager, $revision_hash)
     {
-        $url  = HTTPRequest::instance()->getServerUrl();
+        $url  = \Tuleap\ServerHostname::HTTPSUrl();
         $url .= $url_manager->getRepositoryBaseUrl($this);
         $url .= '?a=commitdiff&h=' . $revision_hash;
 
@@ -1027,7 +1027,7 @@ class GitRepository
      */
     public function getFullHTTPUrlWithDotGit()
     {
-        return HTTPRequest::instance()->getServerUrl() . $this->getRelativeHTTPUrl() . '.git';
+        return \Tuleap\ServerHostname::HTTPSUrl() . $this->getRelativeHTTPUrl() . '.git';
     }
 
     /**

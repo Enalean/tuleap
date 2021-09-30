@@ -407,7 +407,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $purifier = Codendi_HTMLPurifier::instance();
         $output   = '';
         if ($format == Codendi_Mail::FORMAT_HTML) {
-            $output .= '<img src="' . HTTPRequest::instance()->getServerUrl() . $this->getBurndownImageUrl($artifact) . '" alt="' . $purifier->purify($this->getLabel()) . '" width="640" height="480" />';
+            $output .= '<img src="' . \Tuleap\ServerHostname::HTTPSUrl() . $this->getBurndownImageUrl($artifact) . '" alt="' . $purifier->purify($this->getLabel()) . '" width="640" height="480" />';
             $output .= '<p><em>' . dgettext('tuleap-tracker', 'Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.') . '</em></p>';
         }
         return $output;

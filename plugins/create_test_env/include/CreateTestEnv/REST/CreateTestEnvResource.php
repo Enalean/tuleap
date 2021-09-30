@@ -29,6 +29,7 @@ use Tuleap\CreateTestEnv\CreateTestEnvironment;
 use Tuleap\CreateTestEnv\Exception\CreateTestEnvException;
 use Tuleap\CreateTestEnv\Exception\InvalidInputException;
 use Luracast\Restler\RestException;
+use Tuleap\ServerHostname;
 
 class CreateTestEnvResource
 {
@@ -77,7 +78,7 @@ class CreateTestEnvResource
 
             return (new TestEnvironmentRepresentation())->build(
                 $test_env->getProject(),
-                \HTTPRequest::instance()->getServerUrl()
+                ServerHostname::HTTPSUrl()
             );
         } catch (InvalidPasswordException $exception) {
             throw new RestException(400, $exception->getMessage(), ['exception' => $exception::class, 'password_exceptions' => $exception->getPasswordErrors()]);

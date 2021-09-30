@@ -101,8 +101,7 @@ final class DisplayMigrateFromCoreController implements DispatchableWithRequest,
                 $project,
                 self::generateToken($project),
                 $project->usesSVN(),
-                $repository,
-                $request
+                $repository
             )
         );
     }

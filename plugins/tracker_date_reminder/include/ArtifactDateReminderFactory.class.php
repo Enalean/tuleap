@@ -528,7 +528,7 @@ class ArtifactDateReminderFactory
         "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Artifact: \'%1$s\''), $art->getSummary()) .
         "\n" . $field->getLabel() . ": " . date("D j F Y", $this->getDateValue()) .
         "\n\n" . dgettext('tuleap-tracker_date_reminder', 'You can access the artifact here:') .
-        "\n" . HTTPRequest::instance()->getServerUrl() . "/tracker/?func=detail&aid=" . $this->getArtifactId() . "&atid=" . $this->getGroupArtifactId() . "&group_id=" . $this->getGroupId() .
+        "\n" . \Tuleap\ServerHostname::HTTPSUrl() . "/tracker/?func=detail&aid=" . $this->getArtifactId() . "&atid=" . $this->getGroupArtifactId() . "&group_id=" . $this->getGroupId() .
         "\n\n______________________________________________________________________" .
         "\n" . dgettext('tuleap-tracker_date_reminder', 'This is an automatic message sent by Codex. Please do not reply to this email.') . "\n";
         $mail->setBodyText($body);

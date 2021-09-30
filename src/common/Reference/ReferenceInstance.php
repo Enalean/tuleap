@@ -70,7 +70,7 @@ class ReferenceInstance
     */
     public function getFullGotoLink()
     {
-        return HTTPRequest::instance()->getServerUrl() . $this->gotoLink;
+        return \Tuleap\ServerHostname::HTTPSUrl() . $this->gotoLink;
     }
 
     /**

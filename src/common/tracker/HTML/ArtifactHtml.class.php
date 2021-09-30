@@ -1099,7 +1099,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $uh         = UserHelper::instance();
         $hp         = Codendi_HTMLPurifier::instance();
         $group      = $this->ArtifactType->getGroup();
-        $server_url = HTTPRequest::instance()->getServerUrl();
+        $server_url = \Tuleap\ServerHostname::HTTPSUrl();
         $rss        = new RSS([
             'title'       => $group->getPublicName() . ' ' . $this->ArtifactType->getName() . ' #' . $this->getId() . ' - ' . $this->getValue('summary') . ' - ' . $GLOBALS['Language']->getText('tracker_include_artifact', 'follow_ups'),
             'description' => '',

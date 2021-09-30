@@ -59,7 +59,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
         $mail        = new Codendi_Mail();
         $breadcrumbs = [];
 
-        $breadcrumbs[] = '<a href="' . HTTPRequest::instance()->getServerUrl() . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->addAdditionalHeader("X-Codendi-Project", $project->getUnixName());

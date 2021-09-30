@@ -59,7 +59,7 @@ to change your password:
 
 %2$s
 
- -- The %1$s Team'), ForgeConfig::get('sys_name'), $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier)));
+ -- The %1$s Team'), ForgeConfig::get('sys_name'), \Tuleap\ServerHostname::HTTPSUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier)));
 
     $mail = new Codendi_Mail();
     $mail->setTo($user->getEmail(), true);

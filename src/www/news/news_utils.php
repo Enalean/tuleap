@@ -410,7 +410,7 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
     $body .= $Language->getText('news_utils', 'news_request_mail_summary', [$summary]) . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_details', [$details]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_approve_link') . ForgeConfig::get('sys_lf');
-    $body .= HTTPRequest::instance()->getServerUrl() . "/news/admin/?approve=1&id=" . $news_bytes_id . ForgeConfig::get('sys_lf');
+    $body .= \Tuleap\ServerHostname::HTTPSUrl() . "/news/admin/?approve=1&id=" . $news_bytes_id . ForgeConfig::get('sys_lf');
     $mail->setBodyText($body);
 
     $is_sent = $mail->send();

@@ -21,7 +21,6 @@ namespace Tuleap\REST;
 
 use PFUser;
 use Exception;
-use HTTPRequest;
 
 /**
  * Ensure that request has the right properties before going RESTFul
@@ -29,12 +28,12 @@ use HTTPRequest;
 class GateKeeper
 {
 
-    public function assertAccess(PFUser $user, HTTPRequest $request)
+    public function assertAccess(PFUser $user)
     {
         if ($this->isTokenBasedAuthentication($user)) {
             return true;
         }
-        if ($this->isCSRFSafe($request)) {
+        if ($this->isCSRFSafe()) {
             return true;
         }
         throw new Exception('Referer doesn\'t match host. CSRF tentative ?');
@@ -49,21 +48,21 @@ class GateKeeper
      * @todo We should really check based on a csrf token but no way to get it done yet
      * @return bool
      */
-    private function isCSRFSafe(HTTPRequest $request)
+    private function isCSRFSafe()
     {
-        if ($this->isRequestFromSelf($request)) {
+        if ($this->isRequestFromSelf()) {
             return true;
         }
         return false;
     }
 
-    private function isRequestFromSelf(HTTPRequest $request): bool
+    private function isRequestFromSelf(): bool
     {
         $sec_fetch_site = $this->getSecFetchSite();
         if ($sec_fetch_site === '') {
             // We are still supporting browsers that does not send Fetch Metadata headers
             // so we need a fallback to a check of the Referer header
-            return strtolower($this->getQueryHost($request)) === strtolower($this->getRefererHost());
+            return strtolower($this->getQueryHost()) === strtolower($this->getRefererHost());
         }
 
         return $sec_fetch_site === 'same-origin' && $this->getSecFetchMode() === 'cors';
@@ -79,9 +78,9 @@ class GateKeeper
         return $_SERVER['HTTP_SEC_FETCH_MODE'] ?? '';
     }
 
-    private function getQueryHost(HTTPRequest $request)
+    private function getQueryHost()
     {
-        return $this->getUrlBase($request->getServerUrl());
+        return $this->getUrlBase(\Tuleap\ServerHostname::HTTPSUrl());
     }
 
     private function getRefererHost()

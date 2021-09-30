@@ -251,7 +251,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
         $html = $this->getTemplateRenderer()->renderToString(
             'widget-additionnal-button',
-            new WidgetAdditionalButtonPresenter($this->getTracker(), HTTPRequest::instance(), $is_a_table_renderer)
+            new WidgetAdditionalButtonPresenter($this->getTracker(), $is_a_table_renderer)
         );
 
         return $html;

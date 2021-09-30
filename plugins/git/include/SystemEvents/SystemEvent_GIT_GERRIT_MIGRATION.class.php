@@ -96,7 +96,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
         if (! $user->isAnonymous()) {
             $factory  = new BaseLanguageFactory();
             $language = $factory->getBaseLanguage($user->getLocale());
-            $url      = HTTPRequest::instance()->getServerUrl() . GIT_BASE_URL . '/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '&pane=gerrit';
+            $url      = \Tuleap\ServerHostname::HTTPSUrl() . GIT_BASE_URL . '/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '&pane=gerrit';
 
             $notification = new Notification(
                 [$user->getEmail()],

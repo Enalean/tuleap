@@ -90,7 +90,7 @@ class MailProjectNotificationPresenter extends MailOutlinePresenter
 
     public function get_url()
     {
-        return HTTPRequest::instance()->getServerUrl() . '/admin/groupedit.php?group_id=' . $this->project->getID();
+        return \Tuleap\ServerHostname::HTTPSUrl() . '/admin/groupedit.php?group_id=' . $this->project->getID();
     }
 
     public function getMessageText()

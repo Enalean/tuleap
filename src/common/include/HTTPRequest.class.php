@@ -185,6 +185,9 @@ class HTTPRequest extends Codendi_Request
         return 0 === substr_compare(sprintf('%032b', ip2long($request_ip)), sprintf('%032b', ip2long($address)), 0, $netmask);
     }
 
+    /**
+     * @deprecated
+     */
     public function getServerUrl(): string
     {
         return \Tuleap\ServerHostname::HTTPSUrl();

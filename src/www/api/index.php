@@ -42,7 +42,7 @@ $request_instrumentation = new RequestInstrumentation(Prometheus::instance());
 $http_request = HTTPRequest::instance();
 try {
     $gate_keeper = new GateKeeper();
-    $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser(), $http_request);
+    $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser());
 } catch (Exception $exception) {
     $request_instrumentation->incrementRest(
         403,
@@ -83,7 +83,7 @@ $restler->onComplete(static function () use ($restler, $request_instrumentation,
 
 // Do not let Restler find itself the domain, when behind a reverse proxy, it's
 // a mess.
-$restler->setBaseUrls($http_request->getServerUrl());
+$restler->setBaseUrls(\Tuleap\ServerHostname::HTTPSUrl());
 
 $restler->addAuthenticationClass('\\' . TuleapRESTAuthentication::class);
 $restler->addAuthenticationClass('\\' . BasicAuthentication::class);

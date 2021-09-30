@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Codendi_HTMLPurifier;
 use EventManager;
-use HTTPRequest;
 use MailBuilder;
 use MailEnhancer;
 use MailNotificationBuilder;
@@ -68,7 +67,7 @@ class MailSender
             $mail_enhancer->setMessageId($message_id);
         }
 
-        $server_url = HTTPRequest::instance()->getServerUrl();
+        $server_url = \Tuleap\ServerHostname::HTTPSUrl();
 
         $breadcrumbs[] = '<a href="' . $server_url . '/projects/' . $project_unix_name . '" />' . $hp->purify($project->getPublicName()) . '</a>';
         $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?tracker=' . (int) $tracker->getId() . '" />' . $hp->purify($changeset->getTracker()->getName()) . '</a>';
@@ -140,7 +139,7 @@ class MailSender
      */
     private function getUnsubscribeLink(Artifact $artifact)
     {
-        $link = HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?aid=' . (int) $artifact->getId() . '&func=manage-subscription';
+        $link = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?aid=' . (int) $artifact->getId() . '&func=manage-subscription';
 
         return '<a href="' . $link . '" target="_blank" rel="noreferrer">' .
             dgettext('tuleap-tracker', 'Unsubscribe') .

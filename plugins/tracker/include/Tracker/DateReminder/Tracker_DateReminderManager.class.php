@@ -233,7 +233,7 @@ class Tracker_DateReminderManager
         $artifactId    = $artifact->getID();
         $mail_enhancer = new MailEnhancer();
 
-        $server_url = HTTPRequest::instance()->getServerUrl();
+        $server_url = \Tuleap\ServerHostname::HTTPSUrl();
 
         $breadcrumbs[] = '<a href="' . $server_url . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
         $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?tracker=' . (int) $trackerId . '" />' . $hp->purify($this->getTracker()->getName()) . '</a>';

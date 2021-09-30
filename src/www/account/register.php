@@ -355,7 +355,7 @@ if ($request->isPost() && $request->exist('Register')) {
         } else {
             // Registration requires approval
             // inform the user that approval is required
-            $href_approval    = HTTPRequest::instance()->getServerUrl() . '/admin/approve_pending_users.php?page=pending';
+            $href_approval    = \Tuleap\ServerHostname::HTTPSUrl() . '/admin/approve_pending_users.php?page=pending';
             $title            = _('Your account has been created,</br> it must be approved by an administrator.');
             $content          = _('Once approved click the confirm button in this email.<i class="fa fa-envelope-o"></i>');
             $redirect_url     = '/';

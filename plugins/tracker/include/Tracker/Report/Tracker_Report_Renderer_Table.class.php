@@ -1037,7 +1037,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             'widget-additionnal-button',
             new WidgetAdditionalButtonPresenter(
                 $this->report->getTracker(),
-                HTTPRequest::instance(),
                 $is_a_table_renderer
             )
         );
@@ -2025,7 +2024,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //export
             if (isset($renderer_parameters['export']) && ! $current_user->isAnonymous()) {
-                $event = new ProcessExportEvent($renderer_parameters, $this, $current_user, $request->getServerUrl());
+                $event = new ProcessExportEvent($renderer_parameters, $this, $current_user, \Tuleap\ServerHostname::HTTPSUrl());
                 EventManager::instance()->processEvent($event);
                 $only_columns = isset($renderer_parameters['export_only_displayed_fields']) && $renderer_parameters['export_only_displayed_fields'];
                 $this->exportToCSV($only_columns);

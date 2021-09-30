@@ -193,7 +193,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      */
     protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id)
     {
-        $url = HTTPRequest::instance()->getServerUrl() . TRACKER_BASE_URL . '/?aid=' . $artifact_id . '#followup_' . $changeset_id;
+        $url = \Tuleap\ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?aid=' . $artifact_id . '#followup_' . $changeset_id;
 
         return '<a href="' . $url . '">' . dgettext('tuleap-tracker', 'Go to diff') . '</a>';
     }

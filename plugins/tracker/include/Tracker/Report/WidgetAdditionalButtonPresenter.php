@@ -26,13 +26,13 @@ class WidgetAdditionalButtonPresenter
     public $url_artifact_submit;
     public $is_a_table_renderer;
 
-    public function __construct(\Tracker $tracker, \HTTPRequest $request, $is_a_table_renderer)
+    public function __construct(\Tracker $tracker, $is_a_table_renderer)
     {
         $this->new_artifact        = sprintf(
             dgettext('tuleap-tracker', 'Add a new %s'),
             $tracker->getItemName()
         );
-        $this->url_artifact_submit = $request->getServerUrl() .
+        $this->url_artifact_submit = \Tuleap\ServerHostname::HTTPSUrl() .
             "/plugins/tracker/?tracker=" . urlencode($tracker->getId()) . "&func=new-artifact";
 
         $this->is_a_table_renderer = $is_a_table_renderer;

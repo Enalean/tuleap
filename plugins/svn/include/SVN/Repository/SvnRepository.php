@@ -21,7 +21,6 @@
 namespace Tuleap\SVN\Repository;
 
 use ForgeConfig;
-use HTTPRequest;
 use Project;
 
 final class SvnRepository implements Repository
@@ -145,7 +144,7 @@ final class SvnRepository implements Repository
     public function getSvnDomain(): string
     {
         // Domain name must be lowercase (issue with some SVN clients)
-        return strtolower(HTTPRequest::instance()->getServerUrl());
+        return strtolower(\Tuleap\ServerHostname::HTTPSUrl());
     }
 
     public function getHtmlPath(): string

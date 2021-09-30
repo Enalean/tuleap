@@ -328,7 +328,7 @@ class StatisticsPlugin extends Plugin
 
     private function getSoapUri()
     {
-        return HTTPRequest::instance()->getServerUrl() . '/plugins/statistics/soap';
+        return \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/statistics/soap';
     }
 
     public function renderWSDL()

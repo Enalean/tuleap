@@ -103,7 +103,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
 
         $wanted_email = $request->getValidated('email', new \Valid_Email(), false);
         if ($wanted_email && $account_information_collection->isUserAllowedToChangeEmail()) {
-            $something_changed = $this->updateEmail($request, $layout, $user, (string) $wanted_email) || $something_changed;
+            $something_changed = $this->updateEmail($layout, $user, (string) $wanted_email) || $something_changed;
         }
 
         $wanted_timezone = $request->get('timezone');
@@ -142,7 +142,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
         return false;
     }
 
-    private function updateEmail(HTTPRequest $request, BaseLayout $layout, \PFUser $user, string $wanted_email): bool
+    private function updateEmail(BaseLayout $layout, \PFUser $user, string $wanted_email): bool
     {
         try {
             if ($user->getEmail() === $wanted_email) {
@@ -153,7 +153,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
             $user->setConfirmHash((new \RandomNumberGenerator())->getNumber());
 
             if ($this->user_manager->updateDb($user)) {
-                $this->email_updater->sendEmailChangeConfirm($request->getServerUrl(), $user);
+                $this->email_updater->sendEmailChangeConfirm(\Tuleap\ServerHostname::HTTPSUrl(), $user);
 
                 $layout->addFeedback(\Feedback::INFO, _('New email was successfully saved. To complete the change, <strong>please click on the confirmation link</strong> you will receive by email (new address).'), CODENDI_PURIFIER_LIGHT);
                 return true;

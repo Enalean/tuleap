@@ -24,7 +24,6 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 use ForgeConfig;
-use HTTPRequest;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use ProjectManager;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -110,7 +109,7 @@ final class RemoveFromProjectController extends DispatchablePSR15Compatible
         $mail = new \Codendi_Mail();
         $mail->setTo(implode(',', $administrators));
         $mail->setSubject(sprintf(_("%s : user %s removed from project '%s'"), ForgeConfig::get('sys_name'), $user->getName(), $project_name));
-        $link_members = sprintf('%s/project/%s/admin/members', HTTPRequest::instance()->getServerUrl(), urlencode((string) $project_id));
+        $link_members = sprintf('%s/project/%s/admin/members', \Tuleap\ServerHostname::HTTPSUrl(), urlencode((string) $project_id));
         $mail->setBodyText(
             sprintf(
                 _("This message is being sent to notify the administrator(s) of\nproject '%s' that user %s has chosen to\nremove him/herself from the project.\n\nFollow this link to see the current members of your project:\n%s\n\n"),

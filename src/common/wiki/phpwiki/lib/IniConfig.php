@@ -631,7 +631,7 @@ function fixup_dynamic_configs($file)
         }
     }
 
-    define('SERVER_URL', $tuleap_request->getServerUrl());
+    define('SERVER_URL', \Tuleap\ServerHostname::HTTPSUrl());
 
     if (! defined('VIRTUAL_PATH')) {
         // We'd like to auto-detect when the cases where apaches

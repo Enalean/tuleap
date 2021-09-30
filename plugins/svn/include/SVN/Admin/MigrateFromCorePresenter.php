@@ -46,12 +46,12 @@ final class MigrateFromCorePresenter extends BaseGlobalAdminPresenter
      */
     public $already_migrated;
 
-    public function __construct(Project $project, CSRFSynchronizerToken $token, bool $has_migrate_from_core, Repository $repository, \HTTPRequest $request)
+    public function __construct(Project $project, CSRFSynchronizerToken $token, bool $has_migrate_from_core, Repository $repository)
     {
         parent::__construct($project, $token, $has_migrate_from_core);
 
         $this->update_url       = UpdateMigrateFromCoreController::getURL($project);
-        $this->svn_url          = rtrim($request->getServerUrl(), '/') . $repository->getPublicPath();
+        $this->svn_url          = rtrim(\Tuleap\ServerHostname::HTTPSUrl(), '/') . $repository->getPublicPath();
         $this->already_migrated = $repository->getId() !== CoreRepository::TO_BE_CREATED_REPOSITORY_ID;
     }
 }

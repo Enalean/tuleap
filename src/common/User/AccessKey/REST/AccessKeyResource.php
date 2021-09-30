@@ -109,7 +109,7 @@ class AccessKeyResource extends AuthenticatedResource
             new SplitTokenVerificationStringHasher(),
             new AccessKeyScopeSaver(new AccessKeyScopeDAO()),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new AccessKeyCreationNotifier(\HTTPRequest::instance()->getServerUrl(), \Codendi_HTMLPurifier::instance())
+            new AccessKeyCreationNotifier(\Tuleap\ServerHostname::HTTPSUrl(), \Codendi_HTMLPurifier::instance())
         );
 
         $expiration_date          = null;

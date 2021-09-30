@@ -89,7 +89,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 //Trust Mediawiki security
     \libxml_disable_entity_loader(false); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
 
-    $wgServer = HTTPRequest::instance()->getServerUrl();
+    $wgServer = \Tuleap\ServerHostname::HTTPSUrl();
 
     if (! isset($fusionforgeproject)) {
         $fusionforgeproject = null;

@@ -74,7 +74,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
             new SplitTokenVerificationStringHasher(),
             new AccessKeyScopeSaver(new AccessKeyScopeDAO()),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new AccessKeyCreationNotifier($request->getServerUrl(), \Codendi_HTMLPurifier::instance())
+            new AccessKeyCreationNotifier(\Tuleap\ServerHostname::HTTPSUrl(), \Codendi_HTMLPurifier::instance())
         );
 
         $description     = $request->get('access-key-description') ?: '';

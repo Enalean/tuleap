@@ -117,9 +117,9 @@ class ForgeAccess_AdminController
         $this->redirectToIndex();
     }
 
-    public function notSiteAdmin(HTTPRequest $request)
+    public function notSiteAdmin()
     {
-        $this->response->redirect($request->getServerUrl());
+        $this->response->redirect(\Tuleap\ServerHostname::HTTPSUrl());
     }
 
     private function getTemplateDir()

@@ -63,14 +63,14 @@ class LatestNewsController implements DispatchableWithRequest
         $feed->setTitle(sprintf(_('%s news'), ForgeConfig::get('sys_name')));
         $feed->setCopyright(sprintf(_('Copyright (c) %s, %s Team, 2001-%d. All Rights Reserved'), ForgeConfig::get('sys_long_org_name'), ForgeConfig::get('sys_name'), date('Y')));
         $feed->setDescription(sprintf(_('%s project news highlights'), ForgeConfig::get('sys_name')));
-        $feed->setLink($request->getServerUrl());
+        $feed->setLink(\Tuleap\ServerHostname::HTTPSUrl());
         $feed->setLanguage('en-us');
         $feed->setDateModified($request->getTime());
 
         foreach ($this->dao->getNewsForSitePublicRSSFeed() as $row) {
             $entry = $feed->createEntry();
             $entry->setTitle($this->html_purifier->purify($row['summary']));
-            $entry->setLink($request->getServerUrl() . '/forum/forum.php?forum_id=' . (int) $row['forum_id']);
+            $entry->setLink(\Tuleap\ServerHostname::HTTPSUrl() . '/forum/forum.php?forum_id=' . (int) $row['forum_id']);
             $entry->setDescription($this->html_purifier->purify($row['details']));
             $feed->addEntry($entry);
         }
