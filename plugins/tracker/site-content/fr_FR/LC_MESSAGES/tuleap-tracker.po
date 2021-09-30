@@ -1783,6 +1783,9 @@ msgstr ""
 msgid "Invalid tracker template."
 msgstr "Le modèle d'outil de suivi selectionné est invalide"
 
+msgid "Is enabled"
+msgstr "Est activé"
+
 msgid "Is promoted"
 msgstr "Est promu"
 
