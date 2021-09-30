@@ -96,14 +96,28 @@ class BotDao extends DataAccessObject
         return true;
     }
 
-    public function isABotWithNameAndWebhookUrlAlreadyExisting(string $bot_name, string $bot_webhook_url): bool
+    public function isASystemBotWithNameAndWebhookUrlAlreadyExisting(string $bot_name, string $bot_webhook_url): bool
     {
         $sql = "SELECT NULL
                 FROM plugin_botmattermost_bot
                 WHERE name = ?
-                    AND webhook_url = ?";
+                    AND webhook_url = ?
+                    AND project_id is NULL";
 
         $rows = $this->getDB()->run($sql, $bot_name, $bot_webhook_url);
+
+        return count($rows) > 0;
+    }
+
+    public function isAProjectBotWithNameWebhookUrlAndProjectIdAlreadyExisting(string $bot_name, string $bot_webhook_url, int $project_id): bool
+    {
+        $sql = "SELECT NULL
+                FROM plugin_botmattermost_bot
+                WHERE name = ?
+                    AND webhook_url = ?
+                    AND project_id = ?";
+
+        $rows = $this->getDB()->run($sql, $bot_name, $bot_webhook_url, $project_id);
 
         return count($rows) > 0;
     }
