@@ -63,13 +63,6 @@ class PluginsAdministration extends Controler
                         $this->action = 'uninstall';
                     }
                     break;
-
-                case 'change_plugin_properties':
-                    if ($request->exist('plugin_id')) {
-                        $this->action = 'changePluginProperties';
-                        $this->view   = 'properties';
-                    }
-                    break;
                 case 'set-plugin-restriction':
                     $this->action = 'setPluginRestriction';
                     $this->view   = 'restrict';

@@ -141,9 +141,6 @@ msgstr "Le plugin \"%1$s\" n'a pas été désinstallé."
 msgid "Plugin installation failed: %1s"
 msgstr "L'installation du plugin a échoué: %1s"
 
-msgid "Plugin properties have been successfully updated"
-msgstr "Les propriétés du plugin ont été mises à jour avec succès"
-
 msgid "Plugins"
 msgstr "Plugins"
 
@@ -282,12 +279,3 @@ msgid ""
 msgstr ""
 "l'espace web et les scripts cgi de ce plugin resteront accessible tant que "
 "vous ne supprimerez pas ou ne déplacerez pas les répertoires correspondants"
-
-#~ msgid ""
-#~ "Depending on the plugin, it may lead to misconfigurations or data loss."
-#~ msgstr ""
-#~ "En fonction du plugin, cela peut conduire à un problème de configuration "
-#~ "ou des pertes de données."
-
-#~ msgid "The plugin will stop listening to events."
-#~ msgstr "Le plugin arrêtera d'écouter les événements."

@@ -26,6 +26,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
+use Tuleap\CLI\Command\ConfigDumpEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
@@ -174,6 +175,8 @@ class LdapPlugin extends Plugin
 
         $this->addHook(CollectRoutesEvent::NAME);
 
+        $this->addHook(ConfigDumpEvent::NAME);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -243,8 +246,7 @@ class LdapPlugin extends Plugin
     private function getLDAPParams()
     {
         $ldap_params = [];
-        $keys        = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
-        foreach ($keys as $k) {
+        foreach (LDAP::CONFIGURATION_VARIABLES as $k) {
             $nk               = str_replace('sys_ldap_', '', $k);
             $ldap_params[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
         }
@@ -1418,5 +1420,11 @@ class LdapPlugin extends Plugin
     private function getUserManager(): UserManager
     {
         return UserManager::instance();
+    }
+
+    public function configDumpEvent(ConfigDumpEvent $event): void
+    {
+        // load properties
+        $this->getPluginInfo();
     }
 }

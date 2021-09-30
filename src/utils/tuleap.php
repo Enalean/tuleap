@@ -106,7 +106,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     ConfigDumpCommand::NAME,
-    static fn () => new ConfigDumpCommand()
+    static fn () => new ConfigDumpCommand($event_manager)
 );
 
 $CLI_command_collector->addCommand(

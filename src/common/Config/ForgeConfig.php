@@ -93,6 +93,13 @@ class ForgeConfig
         self::$config_dao = $config_dao;
     }
 
+    public static function getAll(): Generator
+    {
+        foreach (self::$conf_stack[0] as $name => $value) {
+            yield $name => $value;
+        }
+    }
+
     /**
      * Get the $name configuration variable
      *

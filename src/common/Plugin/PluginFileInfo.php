@@ -25,7 +25,7 @@
 /**
  * File based plugin options management
  */
-class PluginFileInfo extends PluginInfo
+class PluginFileInfo extends PluginInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var string */
     private $conf_path;
@@ -33,13 +33,7 @@ class PluginFileInfo extends PluginInfo
     /** @var string */
     private $default_conf_path;
 
-    /**
-     * Constructor
-     *
-     * @param Plugin $plugin  The plugin on which PluginInfo applies
-     * @param String $incname Name of the '.inc' file in plugin 'etc' directory
-     */
-    public function __construct(Plugin $plugin, $incname)
+    public function __construct(Plugin $plugin, string $incname)
     {
         parent::__construct($plugin);
 
@@ -62,161 +56,29 @@ class PluginFileInfo extends PluginInfo
     /**
      * Load properties from the configuration file
      */
-    public function loadProperties()
+    public function loadProperties(): void
     {
+        if (is_file($this->default_conf_path)) {
+            \ForgeConfig::loadFromFile($this->default_conf_path);
+        }
         if (is_file($this->conf_path)) {
-            $this->checkConfigurationFiles($this->conf_path);
-
-            $variables = $this->getVariablesFromConfigurationFile($this->conf_path);
-            if (is_file($this->default_conf_path)) {
-                $variables = array_merge(
-                    $this->getVariablesFromConfigurationFile($this->default_conf_path),
-                    $variables
-                );
-            }
-            foreach ($variables as $variable) {
-                $key = $variable['name'];
-                if (
-                    preg_match('`^"(.*)"$`', $variable['value'], $match) ||
-                    preg_match('`^\'(.*)\'$`', $variable['value'], $match)
-                ) {
-                    $value = $match[1];
-                } else {
-                    $value = $variable['value'];
-                }
-                $descriptor = new PropertyDescriptor($key, $value);
-                $this->_addPropertyDescriptor($descriptor);
-            }
+            \ForgeConfig::loadFromFile($this->conf_path);
         }
-    }
-
-    /**
-     * Save in memory properties in the configuration file
-     */
-    public function saveProperties()
-    {
-        copy($this->conf_path, $this->conf_path . '.' . date('YmdHis'));
-        $content = file_get_contents($this->conf_path);
-        $descs   =& $this->getPropertyDescriptors();
-        $keys    =& $descs->getKeys();
-        $iter    =& $keys->iterator();
-        $content = $this->cleanContentFromClosingPHPTag($content);
-        while ($iter->valid()) {
-            $key       =& $iter->current();
-            $desc      =& $descs->get($key);
-            $desc_name =& $desc->getName();
-
-            if (is_bool($desc->getValue())) {
-                $value = ($desc->getValue() ? 'true' : 'false') . ';';
-            } else {
-                $value = "'" . addslashes($desc->getValue()) . "';";
-            }
-
-            $replace = '$1' . $value;
-            $content = preg_replace(
-                '`((?:^|\n)\$' . preg_quote($desc_name, '`') . '\s*=\s*)(.*)\s*;`',
-                $replace,
-                $content
-            );
-
-            if (! preg_match('`(?:^|\n)\$' . preg_quote($desc_name, '`') . '\s*=`', $content)) {
-                $content .= '$' . $desc_name . ' = ' . $value . PHP_EOL;
-            }
-            $iter->next();
-        }
-        $f = fopen($this->conf_path, 'w');
-        if ($f) {
-            fwrite($f, $content);
-            fclose($f);
-        }
-    }
-
-    private function cleanContentFromClosingPHPTag($content)
-    {
-        return str_replace('?>', '', $content);
     }
 
     /**
      * Return the property value for given property name
-     *
-     * @param string $name Label of the property
-     *
-     * @return string
      */
-    public function getPropertyValueForName($name)
+    public function getPropertyValueForName(string $name): mixed
     {
-        $desc = $this->getPropertyDescriptorForName($name);
-        return $desc ? $desc->getValue() : $desc;
+        return \ForgeConfig::get($name);
     }
 
     /**
      * Alias for getPropertyValueForName
-     *
      */
     public function getPropVal($name)
     {
         return $this->getPropertyValueForName($name);
-    }
-
-    /**
-     * Extract PHP variables from the config file
-     *
-     * @param String $file Full path to the configuration file
-     *
-     * @return Array All the variables defined in the file
-     */
-    protected function getVariablesFromConfigurationFile($file)
-    {
-        if (! is_file($file)) {
-            return [];
-        }
-
-        $tokens = token_get_all(file_get_contents($file));
-
-        $variables = [];
-        $current   = 0;
-        foreach ($tokens as $token) {
-            switch ($token[0]) {
-                case T_VARIABLE:
-                    $variables[$current] = ['name' => substr($token[1], 1), 'value' => ''];
-                    break;
-                case T_STRING:
-                case T_CONSTANT_ENCAPSED_STRING:
-                case T_DNUMBER:
-                case T_LNUMBER:
-                case T_NUM_STRING:
-                    if (T_STRING == $token[0] && (! strcasecmp($token[1], "false") || ! strcasecmp($token[1], "true"))) {
-                        $val = (bool) strcasecmp($token[1], "false");
-                        if (isset($variables[$current])) {
-                            $variables[$current]['value'] = $val;
-                        }
-                    } else {
-                        if (isset($variables[$current])) {
-                            $variables[$current]['value'] .= $token[1];
-                        }
-                    }
-                    break;
-                case '*':
-                    if (isset($variables[$current])) {
-                        $variables[$current]['value'] .= $token[0];
-                    }
-                    break;
-                case ';':
-                    $current++;
-                    break;
-                default:
-                    break;
-            }
-        }
-        return $variables;
-    }
-
-    /**
-     * Check if the configuration file is valid or not
-     *
-     */
-    private function checkConfigurationFiles($path)
-    {
-        require $path;
     }
 }

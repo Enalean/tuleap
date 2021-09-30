@@ -31,6 +31,45 @@ use Tuleap\Cryptography\ConcealedString;
  */
 class LDAP
 {
+    public const CONFIGURATION_VARIABLES = [
+        'sys_ldap_server_common_name',
+        'sys_ldap_server',
+        'sys_ldap_server_type',
+        'sys_ldap_dn',
+        'sys_ldap_bind_dn',
+        'sys_ldap_bind_passwd',
+        'sys_ldap_uid',
+        'sys_ldap_eduid',
+        'sys_ldap_cn',
+        'sys_ldap_mail',
+        'sys_ldap_people_dn',
+        'sys_ldap_search_user',
+        'sys_ldap_tooltip_search_user',
+        'sys_ldap_tooltip_search_attrs',
+        'sys_ldap_default_user_status',
+        'sys_ldap_svn_auth',
+        'sys_ldap_daily_sync',
+        'sys_ldap_daily_sync_retention_period',
+        'sys_ldap_user_management',
+        'sys_ldap_grp_enabled',
+        'sys_ldap_grp_sync_admin_notifications_enabled',
+        'sys_ldap_grp_dn',
+        'sys_ldap_grp_search_scope',
+        'sys_ldap_grp_cn',
+        'sys_ldap_grp_member',
+        'sys_ldap_grp_oc',
+        'sys_ldap_user_oc',
+        'sys_ldap_grp_display_name',
+        'sys_ldap_tooltip_search_grp',
+        'sys_ldap_threshold_users_suspension',
+        'search_depth',
+        'sys_ldap_write_server',
+        'sys_ldap_write_dn',
+        'sys_ldap_write_password',
+        'sys_ldap_write_people_dn',
+        'sys_ldap_write_group_dn',
+    ];
+
     /**
      * This is equivalent to searching the entire directory.
      */

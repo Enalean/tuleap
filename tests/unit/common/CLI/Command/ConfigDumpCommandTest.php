@@ -43,7 +43,7 @@ final class ConfigDumpCommandTest extends TestCase
         }
 
         $command_tester = new CommandTester(
-            new ConfigDumpCommand()
+            new ConfigDumpCommand(new \EventManager())
         );
         $command_tester->execute([
             'keys' => array_keys($variables_defined),
@@ -92,7 +92,7 @@ final class ConfigDumpCommandTest extends TestCase
     {
         \ForgeConfig::set('sys_dbhost', 'db');
         $command_tester = new CommandTester(
-            new ConfigDumpCommand()
+            new ConfigDumpCommand(new \EventManager())
         );
         $command_tester->execute(
             [
@@ -106,5 +106,37 @@ final class ConfigDumpCommandTest extends TestCase
         assertEquals(0, $command_tester->getStatusCode());
         assertEmpty($command_tester->getErrorOutput());
         assertEquals(['sys_dbhost' => 'db'], \json_decode($command_tester->getDisplay(), true, JSON_THROW_ON_ERROR));
+    }
+
+    public function testGetAllVariables(): void
+    {
+        \ForgeConfig::set('sys_dbhost', 'db');
+        \ForgeConfig::set('sys_dbport', 3306);
+        \ForgeConfig::set('sys_enablessl', 0);
+
+
+        $command_tester = new CommandTester(
+            new ConfigDumpCommand(new \EventManager())
+        );
+        $command_tester->execute([]);
+
+        assertEquals(0, $command_tester->getStatusCode());
+        assertEquals(['sys_dbhost' => 'db', 'sys_dbport' => 3306, 'sys_enablessl' => 0], \json_decode($command_tester->getDisplay(), true, JSON_THROW_ON_ERROR));
+    }
+
+    public function testLdapPluginShouldHaveAWayToAddItsVariablesIntoForgeConfigPriorToDump(): void
+    {
+        \ForgeConfig::set('sys_dbhost', 'db');
+
+        $event_manager = new \EventManager();
+        $event_manager->addListener(ConfigDumpEvent::NAME, null, fn (ConfigDumpEvent $event) => \ForgeConfig::set('sys_ldap_server', 'foo-bar'), false);
+
+        $command_tester = new CommandTester(
+            new ConfigDumpCommand($event_manager)
+        );
+        $command_tester->execute([]);
+
+        assertEquals(0, $command_tester->getStatusCode());
+        assertEquals(['sys_dbhost' => 'db', 'sys_ldap_server' => 'foo-bar'], \json_decode($command_tester->getDisplay(), true, JSON_THROW_ON_ERROR));
     }
 }
