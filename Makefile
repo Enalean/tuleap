@@ -41,14 +41,11 @@ install:
 	# Required by tuleap/tools/utils/githooks/pre-commit-02-phpcs, which is executed by
 	# baseline git hook chain.
 	composer install --working-dir=src/
-	npm install
+	pnpm install
 	cp ../../.eslintrc.js .
 
 all:
 	$(MAKE) rpm
-
-npm:
-	npm install
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE).noarch.rpm
 	@echo "Results: $^"
@@ -66,11 +63,11 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 		> $@
 
 .PHONY: build
-build: export HOME = "/build"
-build: export TMPDIR = "/build"
+build: export HOME = /build
+build: export TMPDIR = /build
 build:
-	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
-	cd /build/src/ && ./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-baseline --include-dependencies "npm install --no-audit" && ./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-baseline --include-dependencies "npm run build" && \
+	cd /build/src && CYPRESS_INSTALL_BINARY=0 pnpm install && \
+	cd /build/src/ && pnpm --filter '@tuleap/plugin-baseline...' --workspace-concurrency=-2 run build && \
 	cd /build/src/plugins/baseline/ && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
@@ -116,6 +113,6 @@ sonarqube-analyze: ## Run tests and analyze code with Sonarqube (Sonarqube must 
 	@rm -Rf phpunit-output && mkdir phpunit-output
 	@docker run --rm -v $(CURDIR)/../..:/tuleap:ro -v $(CURDIR)/phpunit-output:/phpunit-output -w /tuleap enalean/tuleap-test-phpunit:c7-php73 scl enable php73 "php -d pcov.directory=. src/vendor/bin/phpunit -c plugins/baseline/phpunit/phpunit.xml --log-junit /phpunit-output/junit.xml --coverage-clover /phpunit-output/clover.xml --do-not-cache-result"
 	@sed -i.bak -e "s#<file name=\"/tuleap/plugins/baseline/#<file name=\"#g" phpunit-output/clover.xml
-	@cd scripts && npm run coverage
+	@cd scripts && pnpm run coverage
 	@sed -i.bak -e "s#^SF:.*/tuleap/plugins/baseline/scripts#SF:scripts#g" scripts/coverage/lcov.info
 	@docker-compose run sonarscanner

@@ -50,7 +50,7 @@ pipeline {
         stage('Check lockfiles') {
             steps { script {
                 actions = load 'sources/tests/actions.groovy'
-                actions.runFilesStatusChangesDetection('plugins/baseline', 'lockfiles', 'package-lock.json composer.lock')
+                actions.runFilesStatusChangesDetection('plugins/baseline', 'lockfiles', 'composer.lock')
             } }
             post {
                 failure {
@@ -86,10 +86,11 @@ pipeline {
                 }
                 stage ('Jest') {
                     agent {
-                        docker {
-                            image 'node:14.5-alpine'
+                        dockerfile {
+                            dir 'sources/tools/utils/nix/'
+                            filename 'build-tools.dockerfile'
                             reuseNode true
-                            args '--network none'
+                            args '--network none --tmpfs /tmp/jest_cache:rw,noexec,nosuid -e TMPDIR=/tmp/jest_cache/'
                         }
                     }
                     steps { script { actions.runJestTests('Baseline', 'plugins/baseline/') } }
@@ -120,8 +121,9 @@ pipeline {
                 }
                 stage('SCSS coding standards') {
                     agent {
-                        docker {
-                            image 'node:14.5-alpine'
+                        dockerfile {
+                            dir 'sources/tools/utils/nix/'
+                            filename 'build-tools.dockerfile'
                             reuseNode true
                             args '--network none'
                         }
