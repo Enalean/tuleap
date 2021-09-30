@@ -35,7 +35,6 @@ class ProjectCreationModerationPresenter
     public $nb_max_projects_waiting_for_validation_per_user = -1;
     public $navbar;
     public $csrf_token;
-    public $warn_local_inc;
 
     public function __construct(
         ProjectCreationNavBarPresenter $navbar,
@@ -45,7 +44,6 @@ class ProjectCreationModerationPresenter
         int $max_per_user,
         bool $platform_have_restricted,
         bool $restricted_users_can_create_projects,
-        bool $warn_local_inc
     ) {
         $this->navbar                                          = $navbar;
         $this->csrf_token                                      = $csrf_token;
@@ -54,6 +52,5 @@ class ProjectCreationModerationPresenter
         $this->nb_max_projects_waiting_for_validation_per_user = $max_per_user;
         $this->platform_have_restricted                        = $platform_have_restricted;
         $this->restricted_users_can_create_projects            = $restricted_users_can_create_projects;
-        $this->warn_local_inc                                  = $warn_local_inc;
     }
 }

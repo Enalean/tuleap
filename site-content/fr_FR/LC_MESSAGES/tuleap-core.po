@@ -4812,12 +4812,6 @@ msgstr ""
 "dans local.inc. La valeur est désormais stockée en base de données, vous "
 "devriez supprimer l'entrée dans local.inc pour éviter la confusion."
 
-msgid ""
-"You still have <code>$sys_project_approval</code> variable defined in local."
-"inc. It's now stored in DB, you should remove it from the file to avoid "
-"confusion."
-msgstr "La variable <code>$sys_project_approval</code> est toujours présente"
-
 msgid "You will not receive any more emails from this forum."
 msgstr ""
 "Vous ne recevrez plus de courrier électronique en provenance de ce forum."

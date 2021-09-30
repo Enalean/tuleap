@@ -5,7 +5,7 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #
-# 
+#
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public
@@ -16,12 +16,8 @@
 #    Chain all the stats scripts that have to be run daily
 #
 
-# Read util directory location from local.inc
-if [ -z "$CODENDI_LOCAL_INC" ]; then 
-    CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
-fi
-CODENDI_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
-dump_dir=`/bin/grep '^\$dump_dir' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+CODENDI_UTILS_PREFIX="/usr/share/tuleap/src/utils"
+dump_dir=`/usr/bin/tuleap config-get dump_dir`
 export dump_dir
 
 # First the script that do the analysis
