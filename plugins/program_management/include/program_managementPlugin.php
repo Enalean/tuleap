@@ -65,6 +65,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fie
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TimeboxArtifactLinkPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogActionBuilder;
@@ -133,10 +134,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncreme
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
 use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
 use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
@@ -496,7 +497,7 @@ final class program_managementPlugin extends Plugin
      */
     public function getArtifactLinkNatures(array $params): void
     {
-        $params['natures'][] = new TimeboxArtifactLinkType();
+        $params['natures'][] = new TimeboxArtifactLinkPresenter();
     }
 
     /**
@@ -505,7 +506,7 @@ final class program_managementPlugin extends Plugin
     public function getNaturePresenter(array $params): void
     {
         if ($params['shortname'] === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
-            $params['presenter'] = new TimeboxArtifactLinkType();
+            $params['presenter'] = new TimeboxArtifactLinkPresenter();
         }
     }
 

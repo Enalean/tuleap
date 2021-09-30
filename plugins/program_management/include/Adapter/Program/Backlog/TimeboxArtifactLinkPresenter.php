@@ -21,9 +21,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog;
 
-interface TimeboxArtifactLinkType
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+
+final class TimeboxArtifactLinkPresenter extends NaturePresenter
 {
-    public const ART_LINK_SHORT_NAME = '_mirrored_milestone';
+    /**
+     * @psalm-readonly
+     */
+    public $is_system = true;
+
+    public function __construct()
+    {
+        parent::__construct(
+            TimeboxArtifactLinkType::ART_LINK_SHORT_NAME,
+            dgettext('tuleap-program_management', 'Mirror of'),
+            dgettext('tuleap-program_management', 'Mirrored by'),
+            false
+        );
+    }
 }
