@@ -409,7 +409,8 @@ class ExecutionsResource
      *
      * @param string $id Id of the artifact
      * @param string $status Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
-     * @param int[] $uploaded_file_ids files_ids to pass the execution {@from body}
+     * @param int[] $uploaded_file_ids files_ids to add during the execution {@from body}
+     * @param int[] $deleted_file_ids files_ids to delete during the execution {@from body}
      * @param int $time Time to pass the execution {@from body}
      * @param string $results Result of the execution {@from body}
      * @return ExecutionRepresentation
@@ -418,7 +419,7 @@ class ExecutionsResource
      * @throws RestException 403
      * @throws RestException 500
      */
-    protected function putId($id, $status, array $uploaded_file_ids = [], $time = 0, $results = '')
+    protected function putId($id, $status, array $uploaded_file_ids = [], array $deleted_file_ids = [], $time = 0, $results = '')
     {
         $user     = $this->getCurrentUser();
         $artifact = $this->getArtifactById($user, (int) $id);
@@ -429,7 +430,7 @@ class ExecutionsResource
 
         $this->execution_status_updater->update(
             $artifact,
-            $this->getExecutionChangesExtractor()->getChanges($status, $uploaded_file_ids, $time, $results, $artifact, $user),
+            $this->getExecutionChangesExtractor()->getChanges($status, $uploaded_file_ids, $deleted_file_ids, $time, $results, $artifact, $user),
             $user
         );
 

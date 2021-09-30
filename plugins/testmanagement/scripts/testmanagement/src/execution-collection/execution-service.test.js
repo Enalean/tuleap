@@ -1307,4 +1307,53 @@ describe("ExecutionService", () => {
             expect(execution.uploaded_files_through_attachment_area.length).toEqual(0);
         });
     });
+
+    describe("addFileToDeletedFiles", () => {
+        it("should add file to deleted files", () => {
+            const execution = {
+                removed_files: [],
+            };
+            ExecutionService.addFileToDeletedFiles(execution, { id: 666, name: "bug.png" });
+            expect(execution.removed_files.length).toEqual(1);
+        });
+    });
+
+    describe("removeFileFromDeletedFiles", () => {
+        it("should remove file to deleted files", () => {
+            const execution = {
+                removed_files: [{ id: 666, name: "bug.png" }],
+            };
+            ExecutionService.removeFileFromDeletedFiles(execution, { id: 666, name: "bug.png" });
+            expect(execution.removed_files.length).toEqual(0);
+        });
+    });
+
+    describe("getFilesIdToRemove", () => {
+        it("should return all removed files ids", () => {
+            const execution = {
+                removed_files: [
+                    { id: 666, name: "bug.png" },
+                    { id: 18, name: "bug_2.png" },
+                ],
+            };
+            const ids = ExecutionService.getFilesIdToRemove(execution);
+            expect(ids).toEqual([666, 18]);
+        });
+    });
+
+    describe("clearRemovedFiles", () => {
+        it("should clear removed files ids", () => {
+            const files = [
+                { id: 666, name: "bug.png", is_deleted: true },
+                { id: 18, name: "bug_2.png", is_deleted: true },
+            ];
+            const execution = {
+                removed_files: files,
+            };
+            ExecutionService.clearRemovedFiles(execution);
+            expect(execution.removed_files).toEqual([]);
+            expect(files[0].is_deleted).toBeFalsy();
+            expect(files[1].is_deleted).toBeFalsy();
+        });
+    });
 });

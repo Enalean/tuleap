@@ -67,6 +67,7 @@ class ExecutionChangesExtractor
     public function getChanges(
         string $status,
         array $uploaded_file_ids,
+        array $deleted_file_ids,
         int $time,
         string $results,
         Artifact $artifact,
@@ -92,9 +93,9 @@ class ExecutionChangesExtractor
             $changes[] = $result_value;
         }
 
-        if ($uploaded_file_ids !== []) {
+        if ($uploaded_file_ids !== [] || $deleted_file_ids !== []) {
             $changes[] = $this->formatted_changeset_value_for_file_field_retriever
-                ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $artifact, $user);
+                ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $deleted_file_ids, $artifact, $user);
         }
 
         if ($time !== 0) {

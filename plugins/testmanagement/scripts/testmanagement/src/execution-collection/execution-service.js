@@ -84,6 +84,10 @@ function ExecutionService(
         getUploadedFilesThroughAttachmentAreaIds,
         updateExecutionAttachment,
         removeFileUploadedThroughAttachmentArea,
+        addFileToDeletedFiles,
+        removeFileFromDeletedFiles,
+        getFilesIdToRemove,
+        clearRemovedFiles,
     });
 
     initialization();
@@ -263,6 +267,14 @@ function ExecutionService(
     function clearEditor(execution) {
         self.editor.setData("", { noSnapshot: true });
         execution.uploaded_files_through_text_field = [];
+        clearRemovedFiles(execution);
+    }
+
+    function clearRemovedFiles(execution) {
+        execution.removed_files.forEach((file) => {
+            file.is_deleted = false;
+        });
+        execution.removed_files = [];
     }
 
     function clearFilesUploadedThroughAttachmentArea(execution) {
@@ -512,6 +524,20 @@ function ExecutionService(
         }
 
         execution.uploaded_files_through_attachment_area.splice(index, 1);
+    }
+
+    function addFileToDeletedFiles(execution, removed_file) {
+        execution.removed_files.push(removed_file);
+    }
+
+    function removeFileFromDeletedFiles(execution, removed_file) {
+        execution.removed_files = execution.removed_files.filter(
+            (files) => files.id !== removed_file.id
+        );
+    }
+
+    function getFilesIdToRemove(execution) {
+        return execution.removed_files.map((file) => file.id);
     }
 
     function removeViewTestExecution(execution_id, user_to_remove) {

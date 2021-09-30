@@ -449,6 +449,35 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        &.current-test-comment-attachment-label-deleted {
+            text-decoration-line: line-through;
+        }
+    }
+
+    > .current-test-comment-attachment-buttons-container {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
+
+        > .current-test-comment-attachment-delete-button {
+            height: max-content;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: inherit;
+            box-shadow: none;
+
+            &:hover {
+                transition: none;
+                background: inherit;
+                cursor: pointer;
+            }
+
+            > .current-test-comment-attachment-delete-button-icon {
+                margin: 0;
+            }
+        }
     }
 }
 

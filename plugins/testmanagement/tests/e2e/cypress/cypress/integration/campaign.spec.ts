@@ -292,7 +292,7 @@ describe("TTM campaign", () => {
                     cy.get("[data-test=expand-details-button]").click();
 
                     cy.get("[data-test=current-test-comment]")
-                        .trigger("focus")
+                        .trigger("focus", { force: true })
                         .then(($element) => {
                             fetch(
                                 "data:image/gif;base64,R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
@@ -326,7 +326,14 @@ describe("TTM campaign", () => {
                         // eslint-disable-next-line cypress/require-data-selectors
                         cy.get("img").should("have.attr", "src").should("include", "blank.gif");
                     });
-                    cy.get("[data-test=expand-details-button]").click();
+                });
+
+                it("Remove an image from comment box", () => {
+                    cy.get("[data-test=comment-file-attachment]").should("exist");
+                    cy.get("[data-test=edit-comment-button]").click();
+                    cy.get("[data-test=remove-attachment-file-button]").click();
+                    cy.get("[data-test=save-comment-button]").click();
+                    cy.get("[data-test=comment-file-attachment]").should("not.exist");
                 });
             });
         });

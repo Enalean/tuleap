@@ -139,6 +139,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
             [
                 'passed',
                 [],
+                [],
                 5,
                 "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
                 $execution_1,
@@ -220,6 +221,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
             [
                 'passed',
                 [],
+                [],
                 5,
                 "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
                 $execution_1,
@@ -238,6 +240,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->execution_change_extractor->shouldReceive('getChanges')->withArgs(
             [
                 'failed',
+                [],
                 [],
                 9,
                 "Executed 'failtest' test case. Got a failure:</br><p>this is a failure</p><p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",

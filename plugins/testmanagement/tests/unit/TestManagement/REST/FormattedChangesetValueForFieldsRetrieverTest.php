@@ -93,11 +93,12 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
 
         $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
         $uploaded_file_ids = [14];
+        $deleted_file_ids  = [1];
 
         $result = $this->formatted_changeset_value_for_field_retriever
-            ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $deleted_file_ids, $this->artifact, $this->user);
 
-        $this->assertEquals([14, 1, 2], $result->value);
+        $this->assertEquals([14, 2], $result->value);
         $this->assertEquals(112, $result->field_id);
     }
 
@@ -106,13 +107,12 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
         $field_upload_data = null;
 
         $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
-        $uploaded_file_ids = [14];
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
         $this->formatted_changeset_value_for_field_retriever
-            ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldFile([], [], $this->artifact, $this->user);
     }
 
     public function testGetFormattedChangesetValueForFieldFileShouldReturnsOnlyNewValueIfTheirIsNoChangesetValue(): void
@@ -129,9 +129,10 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
         $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
 
         $uploaded_file_ids = [14];
+        $deleted_file_ids  = [666];
 
         $result = $this->formatted_changeset_value_for_field_retriever
-            ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $deleted_file_ids, $this->artifact, $this->user);
 
         $this->assertEquals([14], $result->value);
         $this->assertEquals(112, $result->field_id);
@@ -151,9 +152,10 @@ class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit
 
         $this->file_upload_data_provider->shouldReceive('getFileUploadData')->andReturn($field_upload_data);
         $uploaded_file_ids = [14];
+        $deleted_file_ids  = [666];
 
         $result = $this->formatted_changeset_value_for_field_retriever
-            ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $deleted_file_ids, $this->artifact, $this->user);
 
         $this->assertEquals([14], $result->value);
         $this->assertEquals(112, $result->field_id);

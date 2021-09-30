@@ -124,7 +124,7 @@ describe("ExecutionRestService", () => {
         const tlpPutSpy = jest.spyOn(tlp, "put");
         mockFetchSuccess(tlpPutSpy, { return_json: execution_representation });
 
-        const promise = ExecutionRestService.putTestExecution(4, "passed", "nothing", [13]);
+        const promise = ExecutionRestService.putTestExecution(4, "passed", "nothing", [13], [14]);
         const execution_updated = await wrapPromise(promise);
 
         expect(execution_updated).toEqual(execution_representation);
@@ -133,6 +133,7 @@ describe("ExecutionRestService", () => {
             body: JSON.stringify({
                 status: "passed",
                 uploaded_file_ids: [13],
+                deleted_file_ids: [14],
                 results: "nothing",
             }),
         });

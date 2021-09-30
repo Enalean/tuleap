@@ -286,6 +286,9 @@ msgstr "Pré-sélectionner les tests d'un rapport"
 msgid "Reload the test"
 msgstr "Recharger le test"
 
+msgid "Remove file"
+msgstr "Supprimer le fichier"
+
 msgid "Rename campaign"
 msgstr "Renommer la campagne"
 
@@ -412,6 +415,9 @@ msgstr "Ouvrir ou fermer la liste de filtres"
 
 msgid "Unable to upload the image"
 msgstr "Impossible d'inserer l'image"
+
+msgid "Undo remove file"
+msgstr "Annuler la suppression du fichier"
 
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."

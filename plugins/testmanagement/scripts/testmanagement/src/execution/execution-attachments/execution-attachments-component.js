@@ -38,6 +38,9 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
         $onInit,
         attachFile,
         abortUpload,
+        addFileToRemovedFiles,
+        cancelFileRemoval,
+        removeFileUploadedThroughAttachmentArea,
     });
 
     function $onInit() {
@@ -89,5 +92,21 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
             );
             $scope.$apply();
         });
+    }
+
+    function removeFileUploadedThroughAttachmentArea(file) {
+        ExecutionService.removeFileUploadedThroughAttachmentArea(self.execution, file.id);
+    }
+
+    function addFileToRemovedFiles($event, file) {
+        $event.preventDefault();
+        file.is_deleted = true;
+        ExecutionService.addFileToDeletedFiles(self.execution, file);
+    }
+
+    function cancelFileRemoval($event, file) {
+        $event.preventDefault();
+        file.is_deleted = false;
+        ExecutionService.removeFileFromDeletedFiles(self.execution, file);
     }
 }
