@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
 /**
  * @psalm-immutable
