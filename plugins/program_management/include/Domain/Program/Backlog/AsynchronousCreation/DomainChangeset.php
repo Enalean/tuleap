@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 
 /**
  * I am a Changeset identifier that can be built in the Domain, without dependency
  * on Tracker objects.
- * @see ChangesetProxy
  * @psalm-immutable
  */
 final class DomainChangeset implements ChangesetIdentifier
