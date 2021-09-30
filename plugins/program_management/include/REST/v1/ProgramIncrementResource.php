@@ -206,7 +206,6 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             $plan_dao,
             new FeaturePlanner(
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 $this->linked_to_feature_checker,
                 new FeatureRemovalProcessor(
                     $program_increments_dao,
@@ -229,13 +228,22 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $this->user_manager_adapter
             )
         );
+        $transaction_executor   = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         try {
             $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
-            $modifier->modifyContent(
-                $id,
-                ContentChange::fromRESTRepresentation($potential_feature_id_to_add, $patch_representation->order),
-                UserProxy::buildFromPFUser($user)
+
+            $transaction_executor->execute(
+                function () use ($modifier, $potential_feature_id_to_add, $patch_representation, $user, $id) {
+                    $modifier->modifyContent(
+                        $id,
+                        ContentChange::fromRESTRepresentation(
+                            $potential_feature_id_to_add,
+                            $patch_representation->order
+                        ),
+                        UserProxy::buildFromPFUser($user)
+                    );
+                }
             );
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | ProjectIsNotAProgramException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());

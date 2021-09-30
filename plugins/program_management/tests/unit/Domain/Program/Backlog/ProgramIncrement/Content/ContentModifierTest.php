@@ -42,7 +42,6 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
-use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use function PHPUnit\Framework\assertTrue;
 
 final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -73,7 +72,6 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->visible_feature_verifier,
             $this->can_be_planned_verifier,
             new FeaturePlanner(
-                new DBTransactionExecutorPassthrough(),
                 VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
                 $this->buildFeatureRemoverStub(),
                 $this->buildTopBacklogStoreStub(),
