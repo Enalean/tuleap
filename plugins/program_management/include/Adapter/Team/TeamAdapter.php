@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
@@ -81,7 +82,7 @@ final class TeamAdapter implements BuildTeam
         }
 
         if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getId())) {
-            throw new TeamMustHaveExplicitBacklogEnabledException($project);
+            throw new TeamMustHaveExplicitBacklogEnabledException(ProjectProxy::buildFromProject($project));
         }
     }
 }

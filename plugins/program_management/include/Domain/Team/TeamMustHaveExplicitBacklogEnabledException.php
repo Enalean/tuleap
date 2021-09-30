@@ -22,19 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+
 final class TeamMustHaveExplicitBacklogEnabledException extends \RuntimeException implements TeamException
 {
     private string $i18n_message;
 
-    public function __construct(\Project $project_wanted_as_a_team)
+    public function __construct(ProjectIdentifier $project_wanted_as_a_team)
     {
-        parent::__construct(sprintf('Project #%d cannot be a Team because it is not in the explicit backlog mode', $project_wanted_as_a_team->getID()));
+        parent::__construct(sprintf('Project #%d cannot be a Team because it is not in the explicit backlog mode', $project_wanted_as_a_team->getId()));
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
                 'Project #%d cannot be a Team because it is not in the explicit backlog mode'
             ),
-            $project_wanted_as_a_team->getID()
+            $project_wanted_as_a_team->getId()
         );
     }
 
