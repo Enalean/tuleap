@@ -501,7 +501,15 @@ function ExecutionService(
     }
 
     function getUploadedFilesThroughAttachmentAreaIds(execution) {
-        return execution.uploaded_files_through_attachment_area.map((file) => file.id);
+        const files_to_upload_ids = [];
+
+        execution.uploaded_files_through_attachment_area.forEach((file) => {
+            if (file.upload_error_message.length === 0 && file.progress === 100) {
+                files_to_upload_ids.push(file.id);
+            }
+        });
+
+        return files_to_upload_ids;
     }
 
     function updateExecutionAttachment(execution, attachment_id, attachment_attributes) {

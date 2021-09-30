@@ -56,6 +56,9 @@ msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
 msgid "Attach files..."
 msgstr "Joindre des fichiers..."
 
+msgid "Attachment upload error"
+msgstr "Erreur de téléversement de fichier"
+
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
 
@@ -94,6 +97,9 @@ msgstr "Annuler l'édition"
 
 msgid "Choose tests"
 msgstr "Sélectionner les tests"
+
+msgid "Click to see the error message"
+msgstr "Cliquer pour voir le message d'erreur"
 
 msgid "Close"
 msgstr "Fermer"

@@ -317,10 +317,14 @@ describe("ExecutionDetailController -", () => {
                     {
                         id: 15,
                         filename: "bug_1.png",
+                        upload_error_message: "",
+                        progress: 100,
                     },
                     {
                         id: 16,
                         filename: "bug_2.png",
+                        upload_error_message: "Upload is fucked up",
+                        progress: 100,
                     },
                 ];
                 execution.removed_files = [
@@ -347,7 +351,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "notrun",
                     execution.results,
-                    [13, 15, 16],
+                    [13, 15],
                     [18]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
@@ -373,7 +377,7 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "notrun",
                     execution.results,
-                    [13, 15, 16],
+                    [13, 15],
                     [18]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);

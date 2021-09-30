@@ -21,8 +21,10 @@ import angular from "angular";
 import "angular-mocks";
 import execution_module from "../execution.js";
 import * as attachments_uploader from "./execution-attachments-uploader.js";
+import * as tlp from "tlp";
 
 jest.mock("./execution-attachments-uploader");
+jest.mock("tlp");
 
 describe("execution-attachments-component", () => {
     let controller, $scope, $q, $element, ExecutionService, ExecutionRestService, execution;
@@ -89,6 +91,26 @@ describe("execution-attachments-component", () => {
         });
     });
 
+    describe("$onDestroy", () => {
+        it("should destroy all the popover instances", () => {
+            const popover_1 = { destroy: jest.fn() };
+            const popover_2 = { destroy: jest.fn() };
+            const popover_3 = { destroy: jest.fn() };
+
+            controller.upload_error_messages_popovers = new Map([
+                [1, popover_1],
+                [2, popover_2],
+                [3, popover_3],
+            ]);
+
+            controller.$onDestroy();
+
+            expect(popover_1.destroy).toHaveBeenCalled();
+            expect(popover_2.destroy).toHaveBeenCalled();
+            expect(popover_3.destroy).toHaveBeenCalled();
+        });
+    });
+
     describe("attachFile()", () => {
         it("attaches a file to the current test execution", () => {
             const new_file = {
@@ -125,12 +147,14 @@ describe("execution-attachments-component", () => {
                     id: new_file.id,
                     filename: file_to_attach.name,
                     progress: 0,
+                    upload_error_message: "",
                     upload_url: "/upload-me.here",
                 }
             );
             expect(attachments_uploader.processUpload).toHaveBeenCalledWith(
                 file_to_attach,
                 new_file.upload_href,
+                expect.any(Function),
                 expect.any(Function)
             );
         });
@@ -206,6 +230,49 @@ describe("execution-attachments-component", () => {
             });
 
             expect(removed_file.is_deleted).toBeFalsy();
+        });
+    });
+
+    describe("handleUploadError()", () => {
+        it("should create a popover and update the upload state", () => {
+            const uploading_file = {
+                id: 110,
+                progress: 25,
+                upload_error_message: "",
+            };
+
+            jest.spyOn(tlp, "createPopover");
+            jest.spyOn(ExecutionService, "updateExecutionAttachment");
+
+            controller.handleUploadError(uploading_file, new Error("Upload is fucked up"));
+
+            expect(tlp.createPopover).toHaveBeenCalled();
+            expect(ExecutionService.updateExecutionAttachment).toHaveBeenCalledWith(
+                execution,
+                110,
+                {
+                    progress: 100,
+                    upload_error_message: "Upload is fucked up",
+                }
+            );
+        });
+    });
+
+    describe("removeAttachmentFromList", () => {
+        it("should remove the file upload and delete its error message popover", () => {
+            jest.spyOn(ExecutionService, "removeFileUploadedThroughAttachmentArea");
+
+            const popover_110 = { destroy: jest.fn() };
+
+            controller.upload_error_messages_popovers = new Map([[110, popover_110]]);
+
+            controller.removeAttachmentFromList({ id: 110 });
+
+            expect(ExecutionService.removeFileUploadedThroughAttachmentArea).toHaveBeenCalledWith(
+                execution,
+                110
+            );
+            expect(popover_110.destroy).toHaveBeenCalled();
         });
     });
 });

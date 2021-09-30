@@ -479,6 +479,15 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             }
         }
     }
+
+    &.current-test-comment-attachment-upload-error {
+        background: var(--tlp-alert-warning-background);
+        color: var(--tlp-alert-warning-color);
+    }
+}
+
+.current-test-comment-attachment-upload-error-icon {
+    cursor: pointer;
 }
 
 .current-test-comment-displayer {

@@ -1356,4 +1356,20 @@ describe("ExecutionService", () => {
             expect(files[1].is_deleted).toBeFalsy();
         });
     });
+
+    describe("getUploadedFilesThroughAttachmentAreaIds()", () => {
+        it("should return the ids of attachments successfully uploaded", () => {
+            const execution = {
+                uploaded_files_through_attachment_area: [
+                    { id: 105, progress: 25, upload_error_message: "" },
+                    { id: 106, progress: 100, upload_error_message: "Upload is fucked up" },
+                    { id: 107, progress: 100, upload_error_message: "" },
+                ],
+            };
+
+            expect(ExecutionService.getUploadedFilesThroughAttachmentAreaIds(execution)).toEqual([
+                107,
+            ]);
+        });
+    });
 });
