@@ -67,7 +67,7 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
     public function testGetPostActionValue(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTrackerId')->willReturn('140');
+        $workflow->method('getTrackerId')->willReturn(140);
         $this->plan_store->method('isPlannable')->willReturn(true);
 
         $post_action = $this->parser->parse($workflow, []);
@@ -78,7 +78,7 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
     public function testThrowsAnExceptionWhenTheWorkflowIsNotPartOfAPlannableTracker(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTrackerId')->willReturn('403');
+        $workflow->method('getTrackerId')->willReturn(403);
         $this->plan_store->method('isPlannable')->willReturn(false);
 
         $this->expectException(I18NRestException::class);

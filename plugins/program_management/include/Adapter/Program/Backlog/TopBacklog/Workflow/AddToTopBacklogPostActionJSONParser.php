@@ -47,7 +47,7 @@ final class AddToTopBacklogPostActionJSONParser implements PostActionUpdateJsonP
 
     public function parse(Workflow $workflow, array $json): PostAction
     {
-        $tracker_id = (int) $workflow->getTrackerId();
+        $tracker_id = $workflow->getTrackerId();
 
         if (! $this->plan_store->isPlannable($tracker_id)) {
             throw new I18NRestException(

@@ -173,7 +173,7 @@ class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
             new WorkflowBackendLogger(new NullLogger(), 0),
             '123',
-            '444',
+            444,
             '333',
             null,
             null
