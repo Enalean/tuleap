@@ -40,6 +40,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
+use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
@@ -101,6 +102,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\ScrumBlocksServiceVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
@@ -1018,9 +1020,12 @@ final class program_managementPlugin extends Plugin
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        $handler = new ProjectServiceBeforeActivationHandler(new TeamDao(), PlanningFactory::build());
+        $handler = new ProjectServiceBeforeActivationHandler(
+            new TeamDao(),
+            new ScrumBlocksServiceVerifier(PlanningFactory::build(), new UserManagerAdapter(UserManager::instance()))
+        );
 
-        $handler->handle($event, $this->getServiceShortname());
+        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), $this->getServiceShortname());
     }
 
     private function getComponentInvolvedVerifier(): ComponentInvolvedVerifier

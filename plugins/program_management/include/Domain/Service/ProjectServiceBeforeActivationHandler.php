@@ -23,41 +23,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Service;
 
-use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
-use Tuleap\AgileDashboard\Planning\RetrievePlannings;
+use Tuleap\ProgramManagement\Domain\Events\ProjectServiceBeforeActivationEvent;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyScrumBlocksServiceActivation;
 
 final class ProjectServiceBeforeActivationHandler
 {
-    private VerifyIsTeam $verify_is_team;
-    private RetrievePlannings $retrieve_plannings;
-
     public function __construct(
-        VerifyIsTeam $verify_is_team,
-        RetrievePlannings $retrieve_plannings
+        private VerifyIsTeam $verify_is_team,
+        private VerifyScrumBlocksServiceActivation $check_scrum_configuration
     ) {
-        $this->verify_is_team     = $verify_is_team;
-        $this->retrieve_plannings = $retrieve_plannings;
     }
 
-    public function handle(ProjectServiceBeforeActivation $event, string $shortname): void
+    public function handle(ProjectServiceBeforeActivationEvent $event, string $shortname): void
     {
-        if (! $event->isForService($shortname)) {
+        if (! $event->isForServiceShortName($shortname)) {
             return;
         }
 
-        if ($this->verify_is_team->isATeam((int) $event->getProject()->getID())) {
-            $event->pluginSetAValue();
-            $event->setWarningMessage(
+        if ($this->verify_is_team->isATeam($event->getProjectIdentifier()->getId())) {
+            $event->preventActivation(
                 dgettext('tuleap-program_management', 'Program service cannot be enabled for Team projects.')
             );
         }
 
-        $configuration = ScrumConfiguration::fromProjectId($this->retrieve_plannings, (int) $event->getProject()->getID(), $event->getUser());
-        if ($configuration->isNotEmpty()) {
-            $event->pluginSetAValue();
-            $event->setWarningMessage(
+        if ($this->check_scrum_configuration->doesScrumBlockServiceUsage($event)) {
+            $event->preventActivation(
                 dgettext('tuleap-program_management', 'Program service cannot be enabled when project have a Scrum configuration in AgileDashboard service.')
             );
         }
