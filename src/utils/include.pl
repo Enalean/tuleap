@@ -5,16 +5,18 @@
 # include.pl - Include file for all the perl scripts that contains reusable functions
 #
 
+use JSON;
+
 #Codendi is full utf-8
 $ENV{LANG} = 'en_US.UTF-8';
 
 ##############################
 # Global Variables
 ##############################
-$db_include	=	$ENV{'CODENDI_LOCAL_INC'} || "/etc/tuleap/conf/local.inc"; # Local Include file for database username and password
 $date           =       int(time()/3600/24);    # Get the number of days since 1/1/1970 for /etc/shadow
 
-&load_local_config($db_include);
+load_local_config();
+
 1;
 
 ##############################
@@ -22,29 +24,17 @@ $date           =       int(time()/3600/24);    # Get the number of days since 1
 ##############################
 
 sub load_local_config {
-        my $filename = shift(@_);
-	my ($foo, $bar);
-
-        if (! $filename) {$filename=$db_include;} # backward compatibility
-	# open up database include file and get the database variables
-	open(FILE, $filename) || die "Can't open $filename: $!\n";
-	while (<FILE>) {
-		next if ( /^\s*\/\// );
-                # remove trailing comment if any
-                s/;\s*\/\/.*//;
-		($foo, $bar) = split /=/;
-		if ($foo) { eval $_ };
-	}
-	close(FILE);
+    $perl_scalar = decode_json(`/usr/bin/tuleap config-dump`);
+    while (my ($key, $value) = each($perl_scalar)) {
+        $$key=$value;
+    }
 }
-
 
 ##############################
 # Database Connect Functions
 ##############################
 sub db_connect {
 
-        &load_local_config($db_config_file);
 	# connect to the database
 	my $dbopt = '';
 	if ($sys_enablessl) {

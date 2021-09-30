@@ -12,8 +12,6 @@
 use DBI qw(:sql_types);
 
 sub ldap_connect {
-    &load_local_config($db_config_file);
-
     # Connect LDAP
     @servers = split /[ ]*,[ ]*/, $sys_ldap_server;
     $ldap = Net::LDAP->new( \@servers )
@@ -89,7 +87,7 @@ sub ldap_connect {
             $realname =~ s/'/\\'/g;
             $email =~ s/`/\\`/g;
             $email =~ s/'/\\'/g;
-            
+
             my $cmd = "$codendi_utils_prefix/php-launcher.sh ./registerUser.php";
             my $cwd = getcwd();
             chdir("$sys_pluginsroot/ldap/bin");
