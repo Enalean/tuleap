@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-
 /**
  * I am a User identifier that can be built in the Domain, without depending on Tuleap Core objects.
- * @see UserProxy
  * @psalm-immutable
  */
 final class DomainUser implements UserIdentifier
