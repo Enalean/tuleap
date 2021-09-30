@@ -29,12 +29,11 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 		> $@
 
 .PHONY: build
-build: export HOME = "/build"
-build: export TMPDIR = "/build"
+build: export HOME = /build
+build: export TMPDIR = /build
 build:
-	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
-	cd /build/src/ && ./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-botmattermost_git --include-dependencies "npm install --no-audit" && \
-	./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-botmattermost_git --include-dependencies "npm run build"	 && \
+	cd /build/src && CYPRESS_INSTALL_BINARY=0 pnpm install && \
+	cd /build/src/ && pnpm --filter '@tuleap/plugin-botmattermost_git...' --workspace-concurrency=-2 run build && \
 	cd /build/src/plugins/botmattermost_git && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
