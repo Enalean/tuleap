@@ -15,12 +15,10 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
       <translate-stub
         tag="span"
       >
-        Activate banner
+        Activate the banner on this project
       </translate-stub>
     </label>
   </div>
-   
-  <!---->
    
   <div>
     <div
@@ -58,6 +56,7 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
   >
     <button
       class="tlp-button-primary"
+      data-tlp-tooltip="Message is mandatory"
       disabled="disabled"
       type="button"
     >
@@ -65,17 +64,15 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
         class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"
       />
        
-      <i
-        class="tlp-button-icon fa fa-save"
-      />
+      <!---->
       
              
             
       <span
         data-current-language="en_US"
-        data-msgid="Save"
+        data-msgid="Save the configuration"
       >
-        Save
+        Save the configuration
       </span>
     </button>
   </div>
@@ -97,18 +94,9 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
       <translate-stub
         tag="span"
       >
-        Activate banner
+        Activate the banner on this project
       </translate-stub>
     </label>
-  </div>
-   
-  <div>
-    <p
-      data-current-language="en_US"
-      data-msgid="No banner defined"
-    >
-      No banner defined
-    </p>
   </div>
    
   <div
@@ -149,6 +137,7 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
   >
     <button
       class="tlp-button-primary"
+      data-tlp-tooltip="Message is mandatory"
       type="button"
     >
       <!---->
@@ -161,9 +150,9 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
             
       <span
         data-current-language="en_US"
-        data-msgid="Save"
+        data-msgid="Save the configuration"
       >
-        Save
+        Save the configuration
       </span>
     </button>
   </div>
@@ -185,12 +174,10 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
       <translate-stub
         tag="span"
       >
-        Activate banner
+        Activate the banner on this project
       </translate-stub>
     </label>
   </div>
-   
-  <!---->
    
   <div>
     <div
@@ -228,6 +215,7 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
   >
     <button
       class="tlp-button-primary"
+      data-tlp-tooltip="Message is mandatory"
       type="button"
     >
       <!---->
@@ -240,9 +228,9 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
             
       <span
         data-current-language="en_US"
-        data-msgid="Save"
+        data-msgid="Save the configuration"
       >
-        Save
+        Save the configuration
       </span>
     </button>
   </div>

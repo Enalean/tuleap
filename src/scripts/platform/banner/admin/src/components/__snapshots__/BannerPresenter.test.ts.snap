@@ -20,8 +20,6 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
     </label>
   </div>
    
-  <!---->
-   
   <div>
     <div
       class="tlp-form-element siteadmin-platform-banner-importance"
@@ -139,6 +137,7 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
   >
     <button
       class="tlp-button-primary"
+      data-tlp-tooltip="Message is mandatory"
       disabled="disabled"
       type="button"
     >
@@ -175,15 +174,6 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
         Activate the banner on the whole platform
       </translate-stub>
     </label>
-  </div>
-   
-  <div>
-    <p
-      data-current-language="en_US"
-      data-msgid="No banner defined"
-    >
-      No banner defined
-    </p>
   </div>
    
   <div
@@ -305,6 +295,7 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
   >
     <button
       class="tlp-button-primary"
+      data-tlp-tooltip="Message is mandatory"
       type="button"
     >
       <i
@@ -341,8 +332,6 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
       </translate-stub>
     </label>
   </div>
-   
-  <!---->
    
   <div>
     <div
@@ -461,6 +450,7 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
   >
     <button
       class="tlp-button-primary"
+      data-tlp-tooltip="Message is mandatory"
       type="button"
     >
       <i
