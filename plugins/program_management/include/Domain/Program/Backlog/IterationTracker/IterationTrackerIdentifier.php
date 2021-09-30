@@ -20,27 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\JSON;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
-use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
-final class PendingIterationCreationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * I am the id (identifier) of the Iteration Tracker
+ * @psalm-immutable
+ */
+final class IterationTrackerIdentifier implements TrackerIdentifier
 {
-    private const ITERATION_ID = 758;
-    private const CHANGESET_ID = 3867;
-
-    public function testItBuildsFromIterationCreation(): void
+    private function __construct(private int $id)
     {
-        $creation = IterationCreationBuilder::buildWithIds(
-            self::ITERATION_ID,
-            87,
-            54,
-            199,
-            self::CHANGESET_ID
-        );
+    }
 
-        $presenter = PendingIterationCreationRepresentation::fromIterationCreation($creation);
-        self::assertSame(self::ITERATION_ID, $presenter->id);
-        self::assertSame(self::CHANGESET_ID, $presenter->changeset_id);
+    public static function fromIteration(
+        RetrieveIterationTracker $tracker_retriever,
+        IterationIdentifier $iteration
+    ): self {
+        return new self($tracker_retriever->getIterationTrackerIdFromIteration($iteration));
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

@@ -23,17 +23,44 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 
 final class IterationCreationProcessor implements ProcessIterationCreation
 {
-    public function __construct(private LoggerInterface $logger)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+        private GatherSynchronizedFields $fields_gatherer,
+        private RetrieveFieldValuesGatherer $values_retriever,
+        private RetrieveChangesetSubmissionDate $submission_date_retriever
+    ) {
     }
 
     public function processCreation(IterationCreation $iteration_creation): void
     {
-        $iteration_id = $iteration_creation->getIteration()->getId();
-        $user_id      = $iteration_creation->getUser()->getId();
-        $this->logger->debug("Processing iteration creation with iteration #$iteration_id for user #$user_id");
+        $this->logger->debug(
+            sprintf(
+                'Processing iteration creation with iteration #%d for user #%d',
+                $iteration_creation->getIteration()->getId(),
+                $iteration_creation->getUser()->getId()
+            )
+        );
+
+        try {
+            $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
+                $this->fields_gatherer,
+                $this->values_retriever,
+                $this->submission_date_retriever,
+                $iteration_creation
+            );
+        } catch (FieldSynchronizationException | MirroredTimeboxReplicationException $exception) {
+            $this->logger->error('Error during creation of mirror iterations', ['exception' => $exception]);
+            return;
+        }
+
+        $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
     }
 }

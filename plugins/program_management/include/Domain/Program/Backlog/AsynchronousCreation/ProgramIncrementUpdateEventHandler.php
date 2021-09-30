@@ -23,13 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 
 final class ProgramIncrementUpdateEventHandler
 {
     public function __construct(
-        private RetrieveProgramIncrementTracker $tracker_retriever,
+        private RetrieveProgramIncrementTracker $program_increment_tracker_retriever,
+        private RetrieveIterationTracker $iteration_tracker_retriever,
         private BuildProgramIncrementUpdateProcessor $update_processor_builder,
         private BuildIterationCreationProcessor $iteration_processor_builder
     ) {
@@ -47,7 +49,7 @@ final class ProgramIncrementUpdateEventHandler
     private function buildAndProcessProgramIncrementUpdate(ProgramIncrementUpdateEvent $event): void
     {
         $update    = ProgramIncrementUpdate::fromProgramIncrementUpdateEvent(
-            $this->tracker_retriever,
+            $this->program_increment_tracker_retriever,
             $event
         );
         $processor = $this->update_processor_builder->getProcessor();
@@ -56,7 +58,10 @@ final class ProgramIncrementUpdateEventHandler
 
     private function buildAndProcessIterationCreations(ProgramIncrementUpdateEvent $event): void
     {
-        $creations = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent($event);
+        $creations = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent(
+            $this->iteration_tracker_retriever,
+            $event
+        );
         if (empty($creations)) {
             return;
         }

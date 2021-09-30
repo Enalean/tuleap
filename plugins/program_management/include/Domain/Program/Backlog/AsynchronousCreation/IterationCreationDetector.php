@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifie
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIterationHasBeenLinkedBefore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 
@@ -44,6 +45,7 @@ final class IterationCreationDetector
         private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
         private LoggerInterface $logger,
         private RetrieveLastChangeset $changeset_retriever,
+        private RetrieveIterationTracker $tracker_retriever,
     ) {
     }
 
@@ -72,6 +74,7 @@ final class IterationCreationDetector
         $this->logNewIterationIds($just_linked_iterations);
         return IterationCreation::buildCollectionFromJustLinkedIterations(
             $this->changeset_retriever,
+            $this->tracker_retriever,
             $this->logger,
             $just_linked_iterations,
             $program_increment_update->getUser()

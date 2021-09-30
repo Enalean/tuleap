@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 
 final class RetrieveIterationTrackerStub implements RetrieveIterationTracker
 {
-    private ?int $tracker_id;
-
-    private function __construct(?int $tracker_id)
+    private function __construct(private ?int $tracker_id)
     {
-        $this->tracker_id = $tracker_id;
     }
 
     public function getIterationTrackerId(int $project_id): ?int
@@ -38,12 +36,22 @@ final class RetrieveIterationTrackerStub implements RetrieveIterationTracker
         return $this->tracker_id;
     }
 
-    public static function buildValidTrackerId(int $tracker_id): self
+    public function getIterationTrackerIdFromIteration(IterationIdentifier $iteration): int
+    {
+        if ($this->tracker_id === null) {
+            throw new \LogicException(
+                'Expected stub to return a valid iteration tracker id, but it was setup with null'
+            );
+        }
+        return $this->tracker_id;
+    }
+
+    public static function withValidTracker(int $tracker_id): self
     {
         return new self($tracker_id);
     }
 
-    public static function buildNoIterationTracker(): self
+    public static function withNoIterationTracker(): self
     {
         return new self(null);
     }

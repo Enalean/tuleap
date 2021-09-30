@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementUpdateProcessorStub
 use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 
 final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -59,6 +60,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     {
         return new ProgramIncrementUpdateEventHandler(
             RetrieveProgramIncrementTrackerStub::withValidTracker(36),
+            RetrieveIterationTrackerStub::withValidTracker(9),
             BuildProgramIncrementUpdateProcessorStub::withProcessor($this->update_processor),
             BuildIterationCreationProcessorStub::withProcessor($this->iteration_processor)
         );

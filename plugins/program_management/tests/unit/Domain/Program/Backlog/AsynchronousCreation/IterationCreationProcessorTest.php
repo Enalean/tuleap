@@ -24,6 +24,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 
 final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -31,21 +36,49 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const USER_ID      = 191;
     private TestLogger $logger;
     private IterationCreation $creation;
+    private GatherSynchronizedFieldsStub $fields_gatherer;
 
     protected function setUp(): void
     {
-        $this->creation = IterationCreationBuilder::buildWithIds(self::ITERATION_ID, 53, self::USER_ID, 8612);
-        $this->logger   = new TestLogger();
+        $this->creation        = IterationCreationBuilder::buildWithIds(self::ITERATION_ID, 2, 53, self::USER_ID, 8612);
+        $this->logger          = new TestLogger();
+        $this->fields_gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
+            new SynchronizedFieldsStubPreparation(444, 819, 242, 757, 123, 226)
+        );
     }
 
     private function getProcessor(): IterationCreationProcessor
     {
-        return new IterationCreationProcessor($this->logger);
+        return new IterationCreationProcessor(
+            $this->logger,
+            $this->fields_gatherer,
+            RetrieveFieldValuesGathererStub::withGatherer(
+                GatherFieldValuesStub::withDefault()
+            ),
+            RetrieveChangesetSubmissionDateStub::withDate(1781713922)
+        );
     }
 
     public function testItProcessesIterationCreation(): void
     {
         $this->getProcessor()->processCreation($this->creation);
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #20 for user #191'));
+        self::assertTrue(
+            $this->logger->hasDebug(
+                sprintf(
+                    'Processing iteration creation with iteration #%d for user #%d',
+                    self::ITERATION_ID,
+                    self::USER_ID
+                )
+            )
+        );
+    }
+
+    public function testItStopsExecutionIfThereIsAnIssueInTheSourceIteration(): void
+    {
+        $this->fields_gatherer = GatherSynchronizedFieldsStub::withError();
+
+        $this->getProcessor()->processCreation($this->creation);
+
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 }

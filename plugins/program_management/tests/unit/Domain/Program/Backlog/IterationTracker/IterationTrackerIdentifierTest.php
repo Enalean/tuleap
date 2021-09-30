@@ -20,27 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\JSON;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
-use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 
-final class PendingIterationCreationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class IterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_ID = 758;
-    private const CHANGESET_ID = 3867;
+    private const ITERATION_TRACKER_ID = 99;
 
-    public function testItBuildsFromIterationCreation(): void
+    public function testItBuildsFromIteration(): void
     {
-        $creation = IterationCreationBuilder::buildWithIds(
-            self::ITERATION_ID,
-            87,
-            54,
-            199,
-            self::CHANGESET_ID
+        $iteration         = IterationIdentifierBuilder::buildWithId(237);
+        $iteration_tracker = IterationTrackerIdentifier::fromIteration(
+            RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID),
+            $iteration
         );
-
-        $presenter = PendingIterationCreationRepresentation::fromIterationCreation($creation);
-        self::assertSame(self::ITERATION_ID, $presenter->id);
-        self::assertSame(self::CHANGESET_ID, $presenter->changeset_id);
+        self::assertSame(self::ITERATION_TRACKER_ID, $iteration_tracker->getId());
     }
 }

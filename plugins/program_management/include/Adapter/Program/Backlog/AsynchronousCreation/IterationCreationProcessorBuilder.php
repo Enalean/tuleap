@@ -22,16 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildIterationCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class IterationCreationProcessorBuilder implements BuildIterationCreationProcessor
 {
     public function getProcessor(): ProcessIterationCreation
     {
-        $logger = \BackendLogger::getDefaultLogger('program_management_syslog');
+        $logger               = \BackendLogger::getDefaultLogger('program_management_syslog');
+        $artifact_factory     = \Tracker_ArtifactFactory::instance();
+        $tracker_factory      = \TrackerFactory::instance();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
 
-        return new IterationCreationProcessor($logger);
+        $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
+            $tracker_factory,
+            new \Tracker_Semantic_TitleFactory(),
+            new \Tracker_Semantic_DescriptionFactory(),
+            new \Tracker_Semantic_StatusFactory(),
+            new SemanticTimeframeBuilder(
+                new SemanticTimeframeDao(),
+                $form_element_factory,
+                $tracker_factory,
+                new LinksRetriever(
+                    new ArtifactLinkFieldValueDao(),
+                    $artifact_factory
+                )
+            ),
+            $form_element_factory
+        );
+
+        return new IterationCreationProcessor(
+            $logger,
+            $synchronized_fields_gatherer,
+            new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
+            new ChangesetRetriever($artifact_factory),
+        );
     }
 }

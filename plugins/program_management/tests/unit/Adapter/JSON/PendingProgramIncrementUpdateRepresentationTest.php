@@ -51,12 +51,14 @@ final class PendingProgramIncrementUpdateRepresentationTest extends \Tuleap\Test
     {
         $first_creation  = IterationCreationBuilder::buildWithIds(
             self::FIRST_ITERATION_ID,
+            53,
             self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
             self::FIRST_ITERATION_CHANGESET_ID
         );
         $second_creation = IterationCreationBuilder::buildWithIds(
             self::SECOND_ITERATION_ID,
+            53,
             self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
             self::SECOND_ITERATION_CHANGESET_ID
