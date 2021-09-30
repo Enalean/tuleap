@@ -97,6 +97,7 @@ function ExecutionDetailCtrl(
     $scope.onLoadNewComment = onLoadNewComment;
     $scope.onContinueToEditComment = onContinueToEditComment;
     $scope.getWarningTestCommentHasBeenUpdatedMessage = getWarningTestCommentHasBeenUpdatedMessage;
+    $scope.areFilesUploading = areFilesUploading;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -125,9 +126,7 @@ function ExecutionDetailCtrl(
             $scope.displayTestCommentEditor = true;
             return;
         }
-        ExecutionService.clearEditor(execution);
-        ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
-        ExecutionService.clearRemovedFiles(execution);
+        clearCommentZone(execution);
         $scope.displayTestCommentEditor = !execution.previous_result.result;
     });
 
@@ -418,9 +417,7 @@ function ExecutionDetailCtrl(
         if (!has_test_comment) {
             showTestCommentEditor(execution);
             if (execution.userCanReloadTestBecauseDefinitionIsUpdated) {
-                ExecutionService.clearEditor(execution);
-                ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
-                ExecutionService.clearRemovedFiles(execution);
+                clearCommentZone(execution);
             }
         }
     }
@@ -428,9 +425,7 @@ function ExecutionDetailCtrl(
     function onReloadTestBecauseDefinitionIsUpdated(execution) {
         $scope.onlyStatusHasBeenChanged = false;
         $scope.displayTestCommentEditor = true;
-        ExecutionService.clearEditor(execution);
-        ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
-        ExecutionService.clearRemovedFiles(execution);
+        clearCommentZone(execution);
         execution.userCanReloadTestBecauseDefinitionIsUpdated();
     }
 
@@ -512,18 +507,14 @@ function ExecutionDetailCtrl(
 
     function onCancelEditionComment(execution) {
         $scope.displayTestCommentEditor = !execution.previous_result.result;
-        ExecutionService.clearEditor(execution);
-        ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
-        ExecutionService.clearRemovedFiles(execution);
+        clearCommentZone(execution);
     }
 
     function onLoadNewComment(execution) {
         $scope.displayTestCommentEditor = !execution.previous_result.result;
         $scope.displayTestCommentWarningOveriding = false;
         if ($scope.displayTestCommentEditor) {
-            ExecutionService.clearEditor(execution);
-            ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
-            ExecutionService.clearRemovedFiles(execution);
+            clearCommentZone(execution);
         }
     }
 
@@ -539,5 +530,15 @@ function ExecutionDetailCtrl(
             ),
             execution.previous_result.submitted_by.real_name
         );
+    }
+
+    function areFilesUploading(execution) {
+        return ExecutionService.hasFileBeingUploaded(execution);
+    }
+
+    function clearCommentZone(execution) {
+        ExecutionService.clearEditor(execution);
+        ExecutionService.clearFilesUploadedThroughAttachmentArea(execution);
+        ExecutionService.clearRemovedFiles(execution);
     }
 }

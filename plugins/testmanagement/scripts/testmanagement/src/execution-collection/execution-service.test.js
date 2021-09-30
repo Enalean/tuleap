@@ -1355,6 +1355,27 @@ describe("ExecutionService", () => {
             expect(files[0].is_deleted).toBeFalsy();
             expect(files[1].is_deleted).toBeFalsy();
         });
+
+        describe("hasFileBeingUploaded", () => {
+            it("should return true if files are uploading", function () {
+                const execution = {
+                    uploaded_files_through_attachment_area: [{ id: 666, progress: 60 }],
+                };
+                expect(ExecutionService.hasFileBeingUploaded(execution)).toBe(true);
+            });
+            it("should return false if there are no files while uploading", function () {
+                const execution = {
+                    uploaded_files_through_attachment_area: [],
+                };
+                expect(ExecutionService.hasFileBeingUploaded(execution)).toBe(false);
+            });
+            it("should return false when all files are uploaded", function () {
+                const execution = {
+                    uploaded_files_through_attachment_area: [{ id: 666, progress: 100 }],
+                };
+                expect(ExecutionService.hasFileBeingUploaded(execution)).toBe(false);
+            });
+        });
     });
 
     describe("getUploadedFilesThroughAttachmentAreaIds()", () => {

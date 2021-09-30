@@ -538,6 +538,13 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
         background: var(--tlp-dimmed-color);
         color: var(--tlp-white-color);
 
+        &:disabled,
+        &:disabled:hover {
+            border-color: transparent;
+            background: var(--tlp-dimmed-color-lighter-30);
+            color: var(--tlp-white-color-transparent-40);
+        }
+
         &:hover {
             border-color: var(--tlp-dimmed-color-darker-10);
             background: var(--tlp-dimmed-color-darker-10);
