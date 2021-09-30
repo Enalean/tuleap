@@ -27,17 +27,22 @@ use Tuleap\ProgramManagement\Domain\Events\PendingIterationCreation;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I hold all the information necessary to create Mirrored Iterations from a source Iteration.
  * @psalm-immutable
  */
-final class IterationCreation
+final class IterationCreation implements TimeboxMirroringOrder
 {
     private function __construct(
         private IterationIdentifier $iteration,
+        private IterationTrackerIdentifier $tracker,
         private ProgramIncrementIdentifier $program_increment,
         private UserIdentifier $user,
         private ChangesetIdentifier $changeset
@@ -49,10 +54,16 @@ final class IterationCreation
      */
     public static function buildCollectionFromJustLinkedIterations(
         RetrieveLastChangeset $changeset_retriever,
+        RetrieveIterationTracker $tracker_retriever,
         LoggerInterface $logger,
         JustLinkedIterationCollection $iterations,
         UserIdentifier $user
     ): array {
+        if (count($iterations->ids) === 0) {
+            return [];
+        }
+        // IterationIdentifier always come from the same tracker, so we retrieve it only once
+        $tracker   = IterationTrackerIdentifier::fromIteration($tracker_retriever, $iterations->ids[0]);
         $creations = [];
         foreach ($iterations->ids as $iteration_identifier) {
             $last_changeset_id = DomainChangeset::fromIterationLastChangeset(
@@ -68,7 +79,13 @@ final class IterationCreation
                 );
                 continue;
             }
-            $creations[] = new self($iteration_identifier, $iterations->program_increment, $user, $last_changeset_id);
+            $creations[] = new self(
+                $iteration_identifier,
+                $tracker,
+                $iterations->program_increment,
+                $user,
+                $last_changeset_id
+            );
         }
         return $creations;
     }
@@ -77,22 +94,43 @@ final class IterationCreation
      * @return IterationCreation[]
      */
     public static function buildCollectionFromProgramIncrementUpdateEvent(
+        RetrieveIterationTracker $tracker_retriever,
         ProgramIncrementUpdateEvent $event
     ): array {
+        $pending_iterations = $event->getIterations();
+        if (count($pending_iterations) === 0) {
+            return [];
+        }
+        // IterationIdentifier always come from the same tracker, so we retrieve it only once
+        $tracker = IterationTrackerIdentifier::fromIteration(
+            $tracker_retriever,
+            $pending_iterations[0]->getIteration()
+        );
         return array_map(
             static fn(PendingIterationCreation $pending_iteration) => new self(
                 $pending_iteration->getIteration(),
+                $tracker,
                 $event->getProgramIncrement(),
                 $event->getUser(),
                 $pending_iteration->getChangeset()
             ),
-            $event->getIterations()
+            $pending_iterations
         );
+    }
+
+    public function getTimebox(): TimeboxIdentifier
+    {
+        return $this->iteration;
     }
 
     public function getIteration(): IterationIdentifier
     {
         return $this->iteration;
+    }
+
+    public function getTracker(): TrackerIdentifier
+    {
+        return $this->tracker;
     }
 
     public function getProgramIncrement(): ProgramIncrementIdentifier

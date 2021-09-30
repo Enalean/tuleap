@@ -24,11 +24,13 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 
 final class IterationCreationBuilder
 {
     public static function buildWithIds(
         int $iteration_id,
+        int $iteration_tracker_id,
         int $program_increment_id,
         int $user_id,
         int $changeset_id
@@ -39,7 +41,10 @@ final class IterationCreationBuilder
             1072,
             PendingIterationCreationBuilder::buildWithIds($iteration_id, $changeset_id)
         );
-        [$first_iteration] = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent($update_event);
+        [$first_iteration] = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent(
+            RetrieveIterationTrackerStub::withValidTracker($iteration_tracker_id),
+            $update_event
+        );
         return $first_iteration;
     }
 }

@@ -534,6 +534,7 @@ final class program_managementPlugin extends Plugin
         $artifact_factory       = \Tracker_ArtifactFactory::instance();
         $visibility_verifier    = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $changeset_verifier     = new ChangesetDAO();
+        $iterations_DAO         = new IterationsDAO();
 
         $creation_handler = new ProgramIncrementCreationEventHandler(
             $logger,
@@ -547,6 +548,7 @@ final class program_managementPlugin extends Plugin
 
         $update_handler = new ProgramIncrementUpdateEventHandler(
             $program_increments_DAO,
+            $iterations_DAO,
             new ProgramIncrementUpdateProcessorBuilder(),
             new IterationCreationProcessorBuilder()
         );
@@ -556,7 +558,7 @@ final class program_managementPlugin extends Plugin
                 $user_retriever,
                 $program_increments_DAO,
                 $visibility_verifier,
-                new IterationsDAO(),
+                $iterations_DAO,
                 $changeset_verifier,
                 $event
             )
@@ -613,6 +615,7 @@ final class program_managementPlugin extends Plugin
                 $iterations_linked_dao,
                 $logger,
                 new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
+                new IterationsDAO()
             ),
             new ProgramIncrementUpdateDispatcher(
                 $logger,

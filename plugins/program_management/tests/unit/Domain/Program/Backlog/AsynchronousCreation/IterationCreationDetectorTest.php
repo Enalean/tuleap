@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -40,7 +41,6 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private SearchIterationsStub $iterations_searcher;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
-    private RetrieveLastChangesetStub $changeset_retriever;
 
     protected function setUp(): void
     {
@@ -52,7 +52,6 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->visibility_verifier      = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->iteration_link_verifier  = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
-        $this->changeset_retriever      = RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872);
     }
 
     private function getDetector(): IterationCreationDetector
@@ -63,7 +62,8 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->visibility_verifier,
             $this->iteration_link_verifier,
             new NullLogger(),
-            $this->changeset_retriever,
+            RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872),
+            RetrieveIterationTrackerStub::withValidTracker(4)
         );
     }
 

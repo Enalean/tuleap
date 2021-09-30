@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildIterationCreationProcessorStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementUpdateProcessorStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementUpdateStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -84,6 +85,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         );
         $this->iteration_creations = IterationCreation::buildCollectionFromJustLinkedIterations(
             RetrieveLastChangesetStub::withLastChangesetIds(5539, 5174),
+            RetrieveIterationTrackerStub::withValidTracker(25),
             $this->logger,
             $just_linked_iterations,
             $this->program_increment_update->getUser()

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
@@ -58,6 +59,16 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
         }
 
         return $tracker_id;
+    }
+
+    public function getIterationTrackerIdFromIteration(IterationIdentifier $iteration): int
+    {
+        $sql = <<<SQL
+            SELECT program.iteration_tracker_id FROM plugin_program_management_program AS program
+            JOIN tracker_artifact ON tracker_artifact.tracker_id = program.iteration_tracker_id
+            WHERE tracker_artifact.id = ?
+        SQL;
+        return $this->getDB()->cell($sql, $iteration->getId());
     }
 
     /**

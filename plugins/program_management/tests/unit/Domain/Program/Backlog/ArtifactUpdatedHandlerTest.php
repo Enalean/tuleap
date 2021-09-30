@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\PlanUserStoriesInMirroredProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
@@ -68,6 +69,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                 VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
                 new NullLogger(),
                 RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
+                RetrieveIterationTrackerStub::withValidTracker(100)
             ),
             $this->update_dispatcher
         );

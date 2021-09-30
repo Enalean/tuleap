@@ -48,13 +48,13 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->tracker_factory      = $this->createStub(TrackerFactory::class);
         $this->user_identifier      = UserIdentifierStub::buildGenericUser();
         $this->program              = ProgramIdentifierBuilder::build();
-        $this->tracker_id_retriever = RetrieveIterationTrackerStub::buildValidTrackerId(self::ITERATION_TRACKER_ID);
+        $this->tracker_id_retriever = RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID);
         $this->retrieve_user        = RetrieveUserStub::withGenericUser();
     }
 
     public function testGetNullIfNoTrackerIdFoundInConfiguration(): void
     {
-        $this->tracker_id_retriever = RetrieveIterationTrackerStub::buildNoIterationTracker();
+        $this->tracker_id_retriever = RetrieveIterationTrackerStub::withNoIterationTracker();
         self::assertNull(
             $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)
         );
