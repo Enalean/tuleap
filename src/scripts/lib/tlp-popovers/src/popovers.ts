@@ -24,7 +24,7 @@ import { findClosestElement } from "../../../../themes/tlp/src/js/dom-walker";
 export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
 
 export type PopoverOptions = Partial<Options> & {
-    anchor?: HTMLElement;
+    anchor?: HTMLElement | undefined;
     trigger?: "click" | "hover";
 };
 

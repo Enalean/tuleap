@@ -21,7 +21,7 @@ import type { TextFieldFormat } from "../../../../../constants/fields-constants"
 
 export interface EditorAreaStateInterface {
     readonly selectbox_id: string;
-    readonly selectbox_name?: string;
+    readonly selectbox_name: string | undefined;
     readonly current_format: TextFieldFormat;
     readonly textarea: HTMLTextAreaElement;
     readonly mount_point: HTMLDivElement;

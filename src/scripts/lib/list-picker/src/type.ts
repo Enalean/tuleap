@@ -24,7 +24,7 @@ export interface ListPicker {
 }
 
 export interface ListPickerOptions {
-    readonly locale?: string;
+    readonly locale?: string | undefined;
     placeholder?: string;
     is_filterable?: boolean;
     none_value?: string | null;

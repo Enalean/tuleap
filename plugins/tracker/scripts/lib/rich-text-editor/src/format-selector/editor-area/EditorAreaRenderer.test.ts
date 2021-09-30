@@ -34,7 +34,10 @@ const emptyFunction = (): void => {
     //Do nothing
 };
 
-function createState(selectbox_id: string, selectbox_name?: string): EditorAreaStateInterface {
+function createState(
+    selectbox_id: string,
+    selectbox_name: string | undefined
+): EditorAreaStateInterface {
     const doc = document.implementation.createHTMLDocument();
     const mount_point = doc.createElement("div");
     const textarea = doc.createElement("textarea");
@@ -44,7 +47,7 @@ function createState(selectbox_id: string, selectbox_name?: string): EditorAreaS
             public mount_point: HTMLDivElement,
             public textarea: HTMLTextAreaElement,
             public selectbox_id: string,
-            public selectbox_name?: string,
+            public selectbox_name: string | undefined,
             public current_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK,
             public rendered_html = null,
             private is_in_preview_mode = false

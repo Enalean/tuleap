@@ -6,6 +6,7 @@
         "sourceMap": true,
         "importHelpers": true,
         "strict": true,
+        "exactOptionalPropertyTypes": true,
         "isolatedModules": true,
         "noImplicitOverride": true,
         "moduleResolution": "node",

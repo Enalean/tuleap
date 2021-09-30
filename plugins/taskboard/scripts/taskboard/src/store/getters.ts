@@ -33,8 +33,8 @@ export const column_and_swimlane_of_cell =
     (
         cell: HTMLElement
     ): {
-        swimlane?: Swimlane;
-        column?: ColumnDefinition;
+        swimlane: Swimlane | undefined;
+        column: ColumnDefinition | undefined;
     } => {
         const swimlane = root_state.swimlane.swimlanes.find(
             (swimlane) => swimlane.card.id === Number(cell.dataset.swimlaneId)
