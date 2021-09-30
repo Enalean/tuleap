@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Paragraph, TextRun } from "docx";
-import type { ParagraphChild } from "docx";
+import type { IRunStylePropertiesOptions, ParagraphChild } from "docx";
+import { Paragraph, TextRun, UnderlineType } from "docx";
 
 export function transformHTMLIntoParagraphs(content: string): Paragraph[] {
     const doc = new DOMParser().parseFromString(content, "text/html");
@@ -64,7 +64,7 @@ function processTopLevelPhrasingContent(tree_state: TreeState): Paragraph[] {
 }
 
 function buildParagraphFromPhrasingContent(phrasing_content: ChildNode[]): Paragraph[] {
-    const paragraph_children: ParagraphChild[] = parsePhrasingContent(phrasing_content);
+    const paragraph_children: ParagraphChild[] = parsePhrasingContent(phrasing_content, {});
 
     if (paragraph_children.length <= 0) {
         return [];
@@ -77,7 +77,10 @@ function buildParagraphFromPhrasingContent(phrasing_content: ChildNode[]): Parag
     ];
 }
 
-function parsePhrasingContent(phrasing_content: ChildNode[]): ParagraphChild[] {
+function parsePhrasingContent(
+    phrasing_content: ChildNode[],
+    style: IRunStylePropertiesOptions
+): ParagraphChild[] {
     const paragraph_children: ParagraphChild[] = [];
 
     for (const child of phrasing_content) {
@@ -85,9 +88,53 @@ function parsePhrasingContent(phrasing_content: ChildNode[]): ParagraphChild[] {
             case "BR":
                 paragraph_children.push(new TextRun({ break: 1 }));
                 break;
+            case "SPAN":
+                paragraph_children.push(
+                    ...parsePhrasingContent(Array.from(child.childNodes), style)
+                );
+                break;
+            case "EM":
+            case "I":
+                paragraph_children.push(
+                    ...parsePhrasingContent(Array.from(child.childNodes), {
+                        ...style,
+                        italics: true,
+                    })
+                );
+                break;
+            case "STRONG":
+            case "B":
+                paragraph_children.push(
+                    ...parsePhrasingContent(Array.from(child.childNodes), { ...style, bold: true })
+                );
+                break;
+            case "SUP":
+                paragraph_children.push(
+                    ...parsePhrasingContent(Array.from(child.childNodes), {
+                        ...style,
+                        superScript: true,
+                    })
+                );
+                break;
+            case "SUB":
+                paragraph_children.push(
+                    ...parsePhrasingContent(Array.from(child.childNodes), {
+                        ...style,
+                        subScript: true,
+                    })
+                );
+                break;
+            case "U":
+                paragraph_children.push(
+                    ...parsePhrasingContent(Array.from(child.childNodes), {
+                        ...style,
+                        underline: { type: UnderlineType.SINGLE },
+                    })
+                );
+                break;
             default:
                 if (child.textContent !== null && child.textContent !== "") {
-                    paragraph_children.push(new TextRun(child.textContent));
+                    paragraph_children.push(new TextRun({ text: child.textContent, ...style }));
                 }
         }
     }

@@ -18,7 +18,7 @@
  */
 
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
-import { Paragraph, TextRun } from "docx";
+import { Paragraph, TextRun, UnderlineType } from "docx";
 
 describe("transform-html-into-paragraph", () => {
     it("transforms paragraphs that are the root of the document", () => {
@@ -53,6 +53,45 @@ describe("transform-html-into-paragraph", () => {
         expect(paragraphs).toStrictEqual([
             new Paragraph({ children: [new TextRun("A"), new TextRun({ break: 1 })] }),
             new Paragraph({ children: [new TextRun("B"), new TextRun({ break: 1 })] }),
+        ]);
+    });
+
+    it("transforms inline markup style elements", () => {
+        const paragraphs = transformHTMLIntoParagraphs(
+            "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>"
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [
+                    new TextRun({ text: "A", italics: true }),
+                    new TextRun({ text: "B", italics: true }),
+                    new TextRun({ text: "C", bold: true }),
+                    new TextRun({ text: "D", bold: true }),
+                    new TextRun({ text: "E", superScript: true }),
+                    new TextRun({ text: "F", subScript: true }),
+                    new TextRun({ text: "G", underline: { type: UnderlineType.SINGLE } }),
+                    new TextRun({ break: 1 }),
+                ],
+            }),
+        ]);
+    });
+
+    it("transforms inline nested markup elements", () => {
+        const paragraphs = transformHTMLIntoParagraphs(
+            "<span><strong>A<em>B</em>C</strong></span>D"
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [
+                    new TextRun({ text: "A", bold: true }),
+                    new TextRun({ text: "B", bold: true, italics: true }),
+                    new TextRun({ text: "C", bold: true }),
+                    new TextRun({ text: "D" }),
+                    new TextRun({ break: 1 }),
+                ],
+            }),
         ]);
     });
 });
