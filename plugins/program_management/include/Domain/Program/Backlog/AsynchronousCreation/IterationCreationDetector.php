@@ -81,7 +81,7 @@ final class IterationCreationDetector
     private function logNewIterationIds(JustLinkedIterationCollection $just_linked_iterations): void
     {
         $ids        = array_map(
-            static fn(IterationIdentifier $iteration): int => $iteration->id,
+            static fn(IterationIdentifier $iteration): int => $iteration->getId(),
             $just_linked_iterations->ids
         );
         $ids_string = implode(',', $ids);

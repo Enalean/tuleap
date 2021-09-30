@@ -23,16 +23,6 @@ CREATE TABLE plugin_program_management_team_projects(
     PRIMARY KEY (program_project_id, team_project_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE plugin_program_management_pending_iterations(
-    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    iteration_id INT(11) NOT NULL,
-    program_increment_id INT(11) NOT NULL,
-    user_id INT(11) NOT NULL,
-    iteration_changeset_id INT(11) NOT NULL,
-    INDEX idx_iteration_id(iteration_id),
-    INDEX idx_program_increment_id(program_increment_id)
-) ENGINE=InnoDB;
-
 CREATE TABLE plugin_program_management_plan(
     project_id INT(11) NOT NULL,
     plannable_tracker_id INT(11) NOT NULL,

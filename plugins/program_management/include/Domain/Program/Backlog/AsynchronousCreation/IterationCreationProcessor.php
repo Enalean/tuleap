@@ -30,10 +30,10 @@ final class IterationCreationProcessor implements ProcessIterationCreation
     {
     }
 
-    public function processIterationCreation(IterationCreation $iteration_creation): void
+    public function processCreation(IterationCreation $iteration_creation): void
     {
-        $iteration_id = $iteration_creation->iteration->id;
-        $user_id      = $iteration_creation->user->getId();
+        $iteration_id = $iteration_creation->getIteration()->getId();
+        $user_id      = $iteration_creation->getUser()->getId();
         $this->logger->debug("Processing iteration creation with iteration #$iteration_id for user #$user_id");
     }
 }

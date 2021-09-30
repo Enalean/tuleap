@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 interface ProcessIterationCreation
 {
-    public function processIterationCreation(IterationCreation $iteration_creation): void;
+    public function processCreation(IterationCreation $iteration_creation): void;
 }

@@ -20,23 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\JSON;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 
-final class ProgramIncrementUpdateScheduler
+/**
+ * I represent a pending iteration creation in JSON format
+ * @psalm-immutable
+ */
+final class PendingIterationCreationRepresentation
 {
-    public function __construct(
-        private IterationCreationDetector $iteration_creation_detector,
-        private StoreIterationCreations $iteration_store,
-        private DispatchProgramIncrementUpdate $update_dispatcher
-    ) {
+    private function __construct(public int $id, public int $changeset_id)
+    {
     }
 
-    public function replicateProgramIncrementUpdate(ProgramIncrementUpdate $update): void
+    public static function fromIterationCreation(IterationCreation $creation): self
     {
-        $creations = $this->iteration_creation_detector->detectNewIterationCreations($update);
-        $this->iteration_store->storeCreations(...$creations);
-        $this->update_dispatcher->dispatchUpdate($update, ...$creations);
+        return new self($creation->getIteration()->getId(), $creation->getChangeset()->getId());
     }
 }

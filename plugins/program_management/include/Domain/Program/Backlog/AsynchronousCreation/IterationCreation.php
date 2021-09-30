@@ -23,16 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Events\PendingIterationCreation;
+use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
-use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\DomainUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 /**
  * I hold all the information necessary to create Mirrored Iterations from a source Iteration.
@@ -40,21 +36,12 @@ use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
  */
 final class IterationCreation
 {
-    public IterationIdentifier $iteration;
-    public ProgramIncrementIdentifier $program_increment;
-    public UserIdentifier $user;
-    public ChangesetIdentifier $changeset;
-
     private function __construct(
-        IterationIdentifier $iteration,
-        ProgramIncrementIdentifier $program_increment,
-        UserIdentifier $user,
-        ChangesetIdentifier $changeset
+        private IterationIdentifier $iteration,
+        private ProgramIncrementIdentifier $program_increment,
+        private UserIdentifier $user,
+        private ChangesetIdentifier $changeset
     ) {
-        $this->iteration         = $iteration;
-        $this->program_increment = $program_increment;
-        $this->user              = $user;
-        $this->changeset         = $changeset;
     }
 
     /**
@@ -76,7 +63,7 @@ final class IterationCreation
                 $logger->error(
                     sprintf(
                         'Could not retrieve last changeset of iteration #%s, skipping it',
-                        $iteration_identifier->id
+                        $iteration_identifier->getId()
                     ),
                 );
                 continue;
@@ -87,50 +74,39 @@ final class IterationCreation
     }
 
     /**
-     * @throws StoredIterationNoLongerValidException
-     * @throws StoredProgramIncrementNoLongerValidException
-     * @throws StoredUserNotFoundException
-     * @throws StoredChangesetNotFoundException
+     * @return IterationCreation[]
      */
-    public static function fromPendingIterationCreation(
-        VerifyIsUser $user_verifier,
-        VerifyIsIteration $iteration_verifier,
-        VerifyIsVisibleArtifact $visibility_verifier,
-        VerifyIsProgramIncrement $program_increment_verifier,
-        VerifyIsChangeset $changeset_verifier,
-        PendingIterationCreation $pending_creation
-    ): self {
-        $user_id = $pending_creation->getUserId();
-        $user    = DomainUser::fromId($user_verifier, $user_id);
-        if (! $user) {
-            throw new StoredUserNotFoundException($user_id);
-        }
-        $iteration_id = $pending_creation->getIterationId();
-        $iteration    = IterationIdentifier::fromId(
-            $iteration_verifier,
-            $visibility_verifier,
-            $iteration_id,
-            $user
+    public static function buildCollectionFromProgramIncrementUpdateEvent(
+        ProgramIncrementUpdateEvent $event
+    ): array {
+        return array_map(
+            static fn(PendingIterationCreation $pending_iteration) => new self(
+                $pending_iteration->getIteration(),
+                $event->getProgramIncrement(),
+                $event->getUser(),
+                $pending_iteration->getChangeset()
+            ),
+            $event->getIterations()
         );
-        if (! $iteration) {
-            throw new StoredIterationNoLongerValidException($iteration_id);
-        }
-        $program_increment_id = $pending_creation->getProgramIncrementId();
-        try {
-            $program_increment = ProgramIncrementIdentifier::fromId(
-                $program_increment_verifier,
-                $visibility_verifier,
-                $program_increment_id,
-                $user
-            );
-        } catch (ProgramIncrementNotFoundException $e) {
-            throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
-        }
-        $changeset_id = $pending_creation->getIterationChangesetId();
-        $changeset    = DomainChangeset::fromId($changeset_verifier, $changeset_id);
-        if (! $changeset) {
-            throw new StoredChangesetNotFoundException($changeset_id);
-        }
-        return new self($iteration, $program_increment, $user, $changeset);
+    }
+
+    public function getIteration(): IterationIdentifier
+    {
+        return $this->iteration;
+    }
+
+    public function getProgramIncrement(): ProgramIncrementIdentifier
+    {
+        return $this->program_increment;
+    }
+
+    public function getUser(): UserIdentifier
+    {
+        return $this->user;
+    }
+
+    public function getChangeset(): ChangesetIdentifier
+    {
+        return $this->changeset;
     }
 }

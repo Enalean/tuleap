@@ -72,7 +72,7 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
             ...$this->iterations
         );
 
-        $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->id, $collection->ids);
+        $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->getId(), $collection->ids);
         self::assertNotContains(self::FIRST_PREVIOUS_ITERATION_ID, $ids);
         self::assertNotContains(self::SECOND_PREVIOUS_ITERATION_ID, $ids);
         self::assertContains(self::FIRST_JUST_ADDED_ITERATION_ID, $ids);

@@ -98,7 +98,7 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsIterationCreations(): void
     {
         $creations     = $this->getDetector()->detectNewIterationCreations($this->program_increment_update);
-        $iteration_ids = array_map(static fn(IterationCreation $creation): int => $creation->iteration->id, $creations);
+        $iteration_ids = array_map(static fn(IterationCreation $creation): int => $creation->getIteration()->getId(), $creations);
 
         self::assertContains(self::FIRST_ITERATION_ID, $iteration_ids);
         self::assertContains(self::SECOND_ITERATION_ID, $iteration_ids);

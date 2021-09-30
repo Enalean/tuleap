@@ -45,7 +45,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItProcessesIterationCreation(): void
     {
-        $this->getProcessor()->processIterationCreation($this->creation);
+        $this->getProcessor()->processCreation($this->creation);
         self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #20 for user #191'));
     }
 }

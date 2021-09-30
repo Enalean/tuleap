@@ -20,38 +20,27 @@
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 final class LastChangesetRetrieverTest extends TestCase
 {
     private const ITERATION_ID      = 52;
     private const LAST_CHANGESET_ID = 3862;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
+    private Stub|\Tracker_ArtifactFactory $artifact_factory;
+    private Stub|\Tracker_Artifact_ChangesetFactory $changeset_factory;
     private IterationIdentifier $iteration;
 
     protected function setUp(): void
     {
-        $this->artifact_factory  = $this->createMock(\Tracker_ArtifactFactory::class);
-        $this->changeset_factory = $this->createMock(\Tracker_Artifact_ChangesetFactory::class);
+        $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
+        $this->changeset_factory = $this->createStub(\Tracker_Artifact_ChangesetFactory::class);
 
-        $this->iteration = IterationIdentifier::fromId(
-            VerifyIsIterationStub::withValidIteration(),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            self::ITERATION_ID,
-            UserIdentifierStub::buildGenericUser()
-        );
+        $this->iteration = IterationIdentifierBuilder::buildWithId(self::ITERATION_ID);
     }
 
     private function getRetriever(): LastChangesetRetriever
@@ -64,7 +53,7 @@ final class LastChangesetRetrieverTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(self::ITERATION_ID)->build();
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
         $this->changeset_factory->method('getLastChangeset')->willReturn(
-            new \Tracker_Artifact_Changeset(self::LAST_CHANGESET_ID, $artifact, 101, 1234567890, '')
+            ChangesetTestBuilder::aChangeset((string) self::LAST_CHANGESET_ID)->ofArtifact($artifact)->build()
         );
 
         $last_changeset_id = $this->getRetriever()->retrieveLastChangesetId($this->iteration);

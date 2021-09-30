@@ -22,17 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Adapter\JSON\PendingProgramIncrementUpdateRepresentation;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildIterationCreationProcessorStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementUpdateProcessorStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
@@ -45,13 +46,11 @@ use Tuleap\Queue\QueueServerConnectionException;
 
 final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID              = 110;
     private const PROGRAM_INCREMENT_ID = 83;
-    private const CHANGESET_ID         = 6104;
     private TestLogger $logger;
     private Stub|QueueFactory $queue_factory;
     private ProcessProgramIncrementUpdateStub $update_processor;
-    private MockObject|ProcessIterationCreation $iteration_processor;
+    private ProcessIterationCreationStub $iteration_processor;
     private ProgramIncrementUpdate $program_increment_update;
     /**
      * @var IterationCreation[]
@@ -63,13 +62,13 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->logger              = new TestLogger();
         $this->queue_factory       = $this->createStub(QueueFactory::class);
         $this->update_processor    = ProcessProgramIncrementUpdateStub::withCount();
-        $this->iteration_processor = $this->createMock(ProcessIterationCreation::class);
+        $this->iteration_processor = ProcessIterationCreationStub::withCount();
 
         $this->program_increment_update = ProgramIncrementUpdateBuilder::buildWithIds(
-            self::USER_ID,
+            110,
             self::PROGRAM_INCREMENT_ID,
             17,
-            self::CHANGESET_ID
+            6104
         );
 
         $iterations                = IterationIdentifier::buildCollectionFromProgramIncrement(
@@ -97,7 +96,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
             $this->logger,
             $this->queue_factory,
             BuildProgramIncrementUpdateProcessorStub::withProcessor($this->update_processor),
-            $this->iteration_processor,
+            BuildIterationCreationProcessorStub::withProcessor($this->iteration_processor),
         );
     }
 
@@ -108,11 +107,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
             ->method('pushSinglePersistentMessage')
             ->with(
                 ProgramIncrementUpdateEvent::TOPIC,
-                [
-                    'artifact_id'  => self::PROGRAM_INCREMENT_ID,
-                    'user_id'      => self::USER_ID,
-                    'changeset_id' => self::CHANGESET_ID
-                ]
+                self::isInstanceOf(PendingProgramIncrementUpdateRepresentation::class)
             );
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 
@@ -124,11 +119,11 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->queue_factory->method('getPersistentQueue')->willThrowException(
             new NoQueueSystemAvailableException('No queue system')
         );
-        $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
         $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
         self::assertSame(1, $this->update_processor->getCallCount());
+        self::assertSame(2, $this->iteration_processor->getCallCount());
         self::assertTrue(
             $this->logger->hasError(
                 sprintf(
@@ -146,11 +141,11 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
             new QueueServerConnectionException('Error with queue')
         );
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
-        $this->iteration_processor->expects(self::exactly(2))->method('processIterationCreation');
 
         $this->getDispatcher()->dispatchUpdate($this->program_increment_update, ...$this->iteration_creations);
 
         self::assertSame(1, $this->update_processor->getCallCount());
+        self::assertSame(2, $this->iteration_processor->getCallCount());
         self::assertTrue(
             $this->logger->hasError(
                 sprintf(

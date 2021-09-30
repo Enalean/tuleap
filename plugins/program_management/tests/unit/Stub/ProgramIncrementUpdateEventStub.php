@@ -22,31 +22,66 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Events\PendingIterationCreation;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 
 final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEvent
 {
-    private function __construct(private int $artifact_id, private int $user_id, private int $changeset_id)
-    {
+    /**
+     * @var PendingIterationCreation[]
+     */
+    private array $iterations;
+
+    private function __construct(
+        private ProgramIncrementIdentifier $program_increment,
+        private UserIdentifier $user,
+        private ChangesetIdentifier $changeset,
+        PendingIterationCreation ...$iterations
+    ) {
+        $this->iterations = $iterations;
     }
 
-    public static function withIds(int $artifact_id, int $user_id, int $changeset_id): self
-    {
-        return new self($artifact_id, $user_id, $changeset_id);
+    public static function withIds(
+        int $program_increment_id,
+        int $user_id,
+        int $changeset_id,
+        PendingIterationCreation ...$iterations
+    ): self {
+        $user              = UserIdentifierStub::withId($user_id);
+        $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser($program_increment_id, $user);
+        $changeset         = ChangesetIdentifierStub::withId($changeset_id);
+        return new self($program_increment, $user, $changeset, ...$iterations);
     }
 
-    public function getArtifactId(): int
+    public static function withNoIterations(int $program_increment_id, int $user_id, int $changeset_id): self
     {
-        return $this->artifact_id;
+        $user              = UserIdentifierStub::withId($user_id);
+        $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser($program_increment_id, $user);
+        $changeset         = ChangesetIdentifierStub::withId($changeset_id);
+        return new self($program_increment, $user, $changeset);
     }
 
-    public function getUserId(): int
+    public function getProgramIncrement(): ProgramIncrementIdentifier
     {
-        return $this->user_id;
+        return $this->program_increment;
     }
 
-    public function getChangesetId(): int
+    public function getUser(): UserIdentifier
     {
-        return $this->changeset_id;
+        return $this->user;
+    }
+
+    public function getChangeset(): ChangesetIdentifier
+    {
+        return $this->changeset;
+    }
+
+    public function getIterations(): array
+    {
+        return $this->iterations;
     }
 }

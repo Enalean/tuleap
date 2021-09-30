@@ -22,13 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Events;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
 /**
  * @psalm-immutable
  */
 interface ProgramIncrementUpdateEvent
 {
     public const TOPIC = 'tuleap.program_management.program_increment.update';
-    public function getArtifactId(): int;
-    public function getUserId(): int;
-    public function getChangesetId(): int;
+    public function getProgramIncrement(): ProgramIncrementIdentifier;
+    public function getUser(): UserIdentifier;
+    public function getChangeset(): ChangesetIdentifier;
+
+    /**
+     * @return PendingIterationCreation[]
+     */
+    public function getIterations(): array;
 }

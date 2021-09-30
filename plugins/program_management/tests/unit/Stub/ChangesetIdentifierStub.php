@@ -20,25 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-/**
- * @psalm-immutable
- */
-final class StoredProgramIncrementNoLongerValidException extends \Exception
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+
+final class ChangesetIdentifierStub implements ChangesetIdentifier
 {
-    private int $program_increment_id;
-
-    public function __construct(int $program_increment_id)
+    private function __construct(private int $id)
     {
-        parent::__construct(
-            sprintf('Artifact #%d is no longer a valid program increment per program configuration', $program_increment_id)
-        );
-        $this->program_increment_id = $program_increment_id;
     }
 
-    public function getProgramIncrementId(): int
+    public static function withId(int $changeset_id): self
     {
-        return $this->program_increment_id;
+        return new self($changeset_id);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

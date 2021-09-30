@@ -20,25 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
-/**
- * @psalm-immutable
- */
-final class StoredIterationNoLongerValidException extends \Exception
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
+
+final class IterationIdentifierBuilder
 {
-    private int $iteration_id;
-
-    public function __construct(int $iteration_id)
+    public static function buildWithId(int $iteration_id): IterationIdentifier
     {
-        parent::__construct(
-            sprintf('Artifact #%d is no longer a valid iteration per program configuration', $iteration_id)
+        return IterationIdentifier::fromId(
+            VerifyIsIterationStub::withValidIteration(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            $iteration_id,
+            UserIdentifierStub::buildGenericUser()
         );
-        $this->iteration_id = $iteration_id;
-    }
-
-    public function getIterationId(): int
-    {
-        return $this->iteration_id;
     }
 }
