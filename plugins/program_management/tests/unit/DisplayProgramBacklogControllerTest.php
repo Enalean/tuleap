@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement;
 use ForgeAccess;
 use ForgeConfig;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramBacklogPresenter;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;

@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Project\ProjectPrivacyPresenter;
