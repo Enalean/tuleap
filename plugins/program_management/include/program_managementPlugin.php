@@ -481,7 +481,8 @@ final class program_managementPlugin extends Plugin
                 new PlanDao(),
                 new TrackerSemantics($tracker_factory),
                 $tracker_factory
-            )
+            ),
+            $project_manager
         );
     }
 
