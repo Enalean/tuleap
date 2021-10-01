@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
+use Tuleap\ProgramManagement\Adapter\Team\RootPlanning\MilestoneTrackerUpdateProhibited;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 
 final class RootPlanningEditionHandler
