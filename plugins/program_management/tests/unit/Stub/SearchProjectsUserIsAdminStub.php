@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,34 +16,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class ProjectManagerAdapter implements RetrieveProject, SearchProjectsUserIsAdmin
+final class SearchProjectsUserIsAdminStub implements SearchProjectsUserIsAdmin
 {
-    public function __construct(private \ProjectManager $project_manager, private RetrieveUser $retrieve_user)
+
+    private function __construct(private array $projects)
     {
     }
 
-    public function getProjectWithId(int $project_id): \Project
+    public static function buildWithoutProject(): self
     {
-        return $this->project_manager->getProject($project_id);
+        return new self([]);
+    }
+
+    public static function buildWithProjects(ProjectReference ...$projects): self
+    {
+        return new self($projects);
     }
 
     public function getProjectsUserIsAdmin(UserIdentifier $user_identifier): array
     {
-        $user         = $this->retrieve_user->getUserWithId($user_identifier);
-        $project_list = [];
-        foreach ($this->project_manager->getProjectsUserIsAdmin($user) as $project) {
-            $project_list[] = ProjectReferenceProxy::buildFromProject($project);
-        }
-        return $project_list;
+        return $this->projects;
     }
 }

@@ -60,7 +60,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -72,7 +72,7 @@ use Tuleap\Request\NotFoundException;
 final class DisplayAdminProgramManagementController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
     public function __construct(
-        private RetrieveProject $project_retriever,
+        private SearchProjectsUserIsAdmin $search_project_user_is_admin,
         private \TemplateRenderer $template_renderer,
         private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
         private SearchTeamsOfProgram $teams_searcher,
@@ -90,7 +90,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private AllProgramSearcher $all_program_searcher,
         private VerifyIterationsFeatureActive $feature_flag_verifier,
         private ConfigurationErrorPresenterBuilder $error_presenter_builder,
-        private \ProjectManager $project_manager
+        private \ProjectManager $project_manager,
     ) {
     }
 
@@ -211,9 +211,9 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $admin_program,
                 PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
                     PotentialTeamsCollection::buildPotentialTeams(
-                        $this->project_retriever,
                         $this->teams_searcher,
                         $this->all_program_searcher,
+                        $this->search_project_user_is_admin,
                         $admin_program,
                         $user_identifier
                     )->getPotentialTeams()

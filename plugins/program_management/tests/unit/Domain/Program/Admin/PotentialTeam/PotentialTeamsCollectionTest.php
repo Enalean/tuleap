@@ -25,13 +25,17 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
-final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const TEAM    = 123;
+    private const PROGRAM = 126;
+
     private SearchTeamsOfProgramStub $teams_of_program_searcher;
     private UserIdentifier $user_identifier;
     private AllProgramSearcherStub $all_program_searcher;
@@ -39,10 +43,11 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(123);
-        $this->all_program_searcher      = AllProgramSearcherStub::buildPrograms(126);
-        $this->user_identifier           = UserIdentifierStub::buildGenericUser();
-        $this->program                   = ProgramForAdministrationIdentifierBuilder::build();
+        $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(self::TEAM);
+
+        $this->all_program_searcher = AllProgramSearcherStub::buildPrograms(self::PROGRAM);
+        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
+        $this->program              = ProgramForAdministrationIdentifierBuilder::build();
     }
 
     public function testBuildEmptyTeamsIfNoAggregatedTeamsAndNoProjectUserIsAdminOf(): void
@@ -50,9 +55,9 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams();
         self::assertEmpty(
             PotentialTeamsCollection::buildPotentialTeams(
-                RetrieveProjectStub::withValidProjects(),
                 $this->teams_of_program_searcher,
                 $this->all_program_searcher,
+                SearchProjectsUserIsAdminStub::buildWithoutProject(),
                 $this->program,
                 $this->user_identifier
             )->getPotentialTeams()
@@ -63,9 +68,11 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertEmpty(
             PotentialTeamsCollection::buildPotentialTeams(
-                RetrieveProjectStub::withValidProjects(new \Project(['group_id' => 123])),
                 $this->teams_of_program_searcher,
                 $this->all_program_searcher,
+                SearchProjectsUserIsAdminStub::buildWithProjects(
+                    ProjectReferenceBuilder::buildWithValues(self::TEAM, 'project', "project")
+                ),
                 $this->program,
                 $this->user_identifier
             )->getPotentialTeams()
@@ -74,18 +81,17 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildPotentialTeamWhenUserIsAdminOfPotentialTeamThatNotAggregatedTeamAndPotentialTeamIsNotProgram(): void
     {
-        $program_project = new \Project(['group_id' => '125', 'group_name' => 'a_project']);
+        $program_project = ProjectReferenceBuilder::buildWithValues(self::PROGRAM, 'a_project', "a_project");
 
         $potential_teams = PotentialTeamsCollection::buildPotentialTeams(
-            RetrieveProjectStub::withValidProjects(
-                new \Project(['group_id' => '123', 'group_name' => 'is_team']),
-                new \Project(['group_id' => '124', 'group_name' => 'potential_team']),
-                $program_project,
-                new \Project(['group_id' => '126', 'group_name' => 'program']),
-            ),
             $this->teams_of_program_searcher,
             $this->all_program_searcher,
-            ProgramForAdministrationIdentifierBuilder::buildWithId(125),
+            SearchProjectsUserIsAdminStub::buildWithProjects(
+                ProjectReferenceBuilder::buildWithValues(self::TEAM, 'is_team', "is_team"),
+                ProjectReferenceBuilder::buildWithValues(124, 'potential_team', "potential_team"),
+                $program_project,
+            ),
+            ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM),
             $this->user_identifier
         );
 
