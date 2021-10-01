@@ -1,5 +1,9 @@
 <?xml version='1.0'?>
-<phpunit bootstrap="./vendor/autoload.php" verbose="true" backupGlobals="true">
+<phpunit bootstrap="./vendor/autoload.php"
+         verbose="true"
+         backupGlobals="true"
+         convertDeprecationsToExceptions="true"
+>
     <php>
         <includePath>../../src/www/include:../../src</includePath>
     </php>

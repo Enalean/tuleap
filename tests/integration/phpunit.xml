@@ -24,6 +24,7 @@
          beStrictAboutChangesToGlobalState="true" backupGlobals="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
+         convertDeprecationsToExceptions="true"
          executionOrder="random">
     <php>
         <ini name="assert.exception" value="1"/>
