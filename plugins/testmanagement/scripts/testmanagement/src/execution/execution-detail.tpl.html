@@ -288,6 +288,7 @@
                     class="tlp-button-secondary tlp-button-small tlp-button-outline"
                     data-test="cancel-edit-comment-button"
                     ng-click="onCancelEditionComment(execution)"
+                    ng-disabled="execution.saving || areFilesUploading(execution)"
                 >
                     {{ 'Cancel edition' | translate }}
                 </button>
@@ -297,6 +298,7 @@
                     class="tlp-button-secondary tlp-button-small tlp-button-outline"
                     data-test="save-comment-button"
                     ng-click="updateComment($event, execution)"
+                    ng-disabled="execution.saving || areFilesUploading(execution)"
                 >
                     {{ 'Save comment' | translate }}
                 </button>
@@ -308,7 +310,7 @@
                         title="{{ 'Passed' | translate }}"
                         ng-click="pass($event, execution)"
                         data-shortcut-passed
-                        ng-disabled="execution.saving">
+                        ng-disabled="execution.saving || areFilesUploading(execution)">
                     <i class="fas fa-fw fa-check"></i>
                 </button>
                 <button id="test-result-failed" type="button"
@@ -316,7 +318,7 @@
                         class="current-test-result tlp-button-large tlp-button-danger"
                         title="{{ 'Failed' | translate }}"
                         ng-click="fail($event, execution)"
-                        ng-disabled="execution.saving">
+                        ng-disabled="execution.saving || areFilesUploading(execution)">
                     <i class="fas fa-fw fa-times"></i>
                 </button>
                 <button id="test-result-blocked" type="button"
@@ -325,7 +327,7 @@
                         title="{{ 'Blocked' | translate }}"
                         ng-click="block($event, execution)"
                         data-shortcut-blocked
-                        ng-disabled="execution.saving">
+                        ng-disabled="execution.saving || areFilesUploading(execution)">
                     <i class="fas fa-fw fa-exclamation"></i>
                 </button>
                 <button id="test-result-notrun" type="button"
@@ -334,7 +336,7 @@
                         title="{{ 'Not run' | translate }}"
                         ng-click="notrun($event, execution)"
                         data-shortcut-not-run
-                        ng-disabled="execution.saving">
+                        ng-disabled="execution.saving || areFilesUploading(execution)">
                     <i class="fas fa-fw fa-question"></i>
                 </button>
             </div>

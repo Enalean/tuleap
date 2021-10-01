@@ -88,6 +88,7 @@ function ExecutionService(
         removeFileFromDeletedFiles,
         getFilesIdToRemove,
         clearRemovedFiles,
+        hasFileBeingUploaded,
     });
 
     initialization();
@@ -510,6 +511,10 @@ function ExecutionService(
         });
 
         return files_to_upload_ids;
+    }
+
+    function hasFileBeingUploaded(execution) {
+        return execution.uploaded_files_through_attachment_area.some((file) => file.progress < 100);
     }
 
     function updateExecutionAttachment(execution, attachment_id, attachment_attributes) {
