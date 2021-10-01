@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -39,11 +40,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 final class ProgramIdentifier
 {
-    private int $id;
-
-    private function __construct(int $id)
+    private function __construct(private int $id)
     {
-        $this->id = $id;
     }
 
     public function getId(): int
@@ -77,6 +75,22 @@ final class ProgramIdentifier
         UserIdentifier $user
     ): self {
         $program_id = $program_retriever->getProgramOfProgramIncrement($program_increment);
+        $program_builder->ensureProgramIsAProject($program_id, $user, null);
+
+        return new self($program_id);
+    }
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    public static function fromIteration(
+        RetrieveProgramOfIteration $program_retriever,
+        BuildProgram $program_builder,
+        IterationIdentifier $iteration,
+        UserIdentifier $user
+    ): self {
+        $program_id = $program_retriever->getProgramOfIteration($iteration);
         $program_builder->ensureProgramIsAProject($program_id, $user, null);
 
         return new self($program_id);

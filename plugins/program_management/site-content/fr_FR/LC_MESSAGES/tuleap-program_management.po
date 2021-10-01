@@ -89,8 +89,12 @@ msgid "Could not find feature with id #%d"
 msgstr "La fonctionnalité avec l'id #%d n'a pas pu être trouvée"
 
 #, php-format
+msgid "Could not find the program of iteration #%d"
+msgstr "Le programme de l'itération #%d n'a pas été trouvé"
+
+#, php-format
 msgid "Could not find the program of program increment #%d"
-msgstr "Le Programme de l'incrément de programme #%d n'a pas été trouvé"
+msgstr "Le programme de l'incrément de programme #%d n'a pas été trouvé"
 
 #, php-format
 msgid "Could not remove feature #%d from all program increments"

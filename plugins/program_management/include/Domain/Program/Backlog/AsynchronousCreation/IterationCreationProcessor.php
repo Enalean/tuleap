@@ -28,6 +28,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
+use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 
 final class IterationCreationProcessor implements ProcessIterationCreation
 {
@@ -35,7 +43,11 @@ final class IterationCreationProcessor implements ProcessIterationCreation
         private LoggerInterface $logger,
         private GatherSynchronizedFields $fields_gatherer,
         private RetrieveFieldValuesGatherer $values_retriever,
-        private RetrieveChangesetSubmissionDate $submission_date_retriever
+        private RetrieveChangesetSubmissionDate $submission_date_retriever,
+        private RetrieveProgramOfIteration $program_retriever,
+        private BuildProgram $program_builder,
+        private SearchTeamsOfProgram $teams_searcher,
+        private RetrieveProjectReference $project_reference_retriever
     ) {
     }
 
@@ -48,19 +60,50 @@ final class IterationCreationProcessor implements ProcessIterationCreation
                 $iteration_creation->getUser()->getId()
             )
         );
-
         try {
-            $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
-                $this->fields_gatherer,
-                $this->values_retriever,
-                $this->submission_date_retriever,
-                $iteration_creation
-            );
-        } catch (FieldSynchronizationException | MirroredTimeboxReplicationException $exception) {
+            $this->create($iteration_creation);
+        } catch (
+            FieldSynchronizationException
+            | MirroredTimeboxReplicationException
+            | ProgramAccessException
+            | ProjectIsNotAProgramException $exception
+        ) {
             $this->logger->error('Error during creation of mirror iterations', ['exception' => $exception]);
             return;
         }
+    }
 
+    /**
+     * @throws MirroredTimeboxReplicationException
+     * @throws FieldSynchronizationException
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    private function create(IterationCreation $creation): void
+    {
+        $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
+            $this->fields_gatherer,
+            $this->values_retriever,
+            $this->submission_date_retriever,
+            $creation
+        );
+
+        $user    = $creation->getUser();
+        $program = ProgramIdentifier::fromIteration(
+            $this->program_retriever,
+            $this->program_builder,
+            $creation->getIteration(),
+            $user
+        );
+
+        $team_projects = TeamProjectsCollection::fromProgramIdentifier(
+            $this->teams_searcher,
+            $this->project_reference_retriever,
+            $program
+        );
+
+        [$first_team] = $team_projects->getTeamProjects();
         $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
+        $this->logger->debug(sprintf('Team name: %s', $first_team->getProjectLabel()));
     }
 }

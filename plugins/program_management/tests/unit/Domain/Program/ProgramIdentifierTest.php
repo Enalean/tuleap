@@ -23,11 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program;
 
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationHasNoProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -38,12 +42,14 @@ final class ProgramIdentifierTest extends TestCase
     private BuildProgramStub $program_builder;
     private UserIdentifier $user;
     private ProgramIncrementIdentifier $program_increment;
+    private IterationIdentifier $iteration;
 
     protected function setUp(): void
     {
         $this->program_builder   = BuildProgramStub::stubValidProgram();
         $this->user              = UserIdentifierStub::buildGenericUser();
         $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithId(785);
+        $this->iteration         = IterationIdentifierBuilder::buildWithId(712);
     }
 
     public function testItBuildsFromAProjectId(): void
@@ -81,6 +87,28 @@ final class ProgramIdentifierTest extends TestCase
             RetrieveProgramOfProgramIncrementStub::withNoProgram(),
             $this->program_builder,
             $this->program_increment,
+            $this->user
+        );
+    }
+
+    public function testItBuildsFromAnIteration(): void
+    {
+        $program = ProgramIdentifier::fromIteration(
+            RetrieveProgramOfIterationStub::withProgram(self::PROGRAM_ID),
+            $this->program_builder,
+            $this->iteration,
+            $this->user
+        );
+        self::assertSame(self::PROGRAM_ID, $program->getId());
+    }
+
+    public function testItThrowsWhenIterationHasNoProgram(): void
+    {
+        $this->expectException(IterationHasNoProgramException::class);
+        ProgramIdentifier::fromIteration(
+            RetrieveProgramOfIterationStub::withNoProgram(),
+            $this->program_builder,
+            $this->iteration,
             $this->user
         );
     }
