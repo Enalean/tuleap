@@ -40,7 +40,7 @@ specifiers:
   dompurify: ^2.2.9
   dragula: ^3.7.2
   jquery: ^3.6.0
-  marked: ^2.0.3
+  marked: ^3.0.4
   mermaid: ^8.10.2
   moment: ^2.29.1
   mustache: ^4.2.0
@@ -86,7 +86,7 @@ dependencies:
   d3-transition: 3.0.1_d3-selection@3.0.0
   dompurify: 2.3.0
   dragula: 3.7.3
-  marked: 2.0.3
+  marked: 3.0.4
   mermaid: 8.11.3
   moment: 2.29.1
   mustache: 4.2.0
@@ -2441,9 +2441,9 @@ packages:
       object-visit: 1.0.1
     dev: false
 
-  /marked/2.0.3:
-    resolution: {integrity: sha512-5otztIIcJfPc2qGTN8cVtOJEjNJZ0jwa46INMagrYfk0EvqtRuEHLsEe0LrFS0/q+ZRKT0+kXK7P2T1AN5lWRA==}
-    engines: {node: '>= 8.16.2'}
+  /marked/3.0.4:
+    resolution: {integrity: sha512-jBo8AOayNaEcvBhNobg6/BLhdsK3NvnKWJg33MAAPbvTWiG4QBn9gpW1+7RssrKu4K1dKlN+0goVQwV41xEfOA==}
+    engines: {node: '>= 12'}
     hasBin: true
     dev: false
 
