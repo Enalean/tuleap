@@ -55,9 +55,8 @@
         box-shadow: none;
 
         > .tlp-tab {
-            padding: calc(var(--tlp-medium-spacing) - 2px) var(--tlp-large-spacing) var(--tlp-medium-spacing);
             border: 0;
-            border-top: 2px solid transparent;
+            border-top: 3px solid transparent;
             color: var(--tlp-white-color);
 
             &:hover,
@@ -70,6 +69,12 @@
             &:hover > .tlp-tab-menu,
             &:focus > .tlp-tab-menu {
                 bottom: 0;
+            }
+
+            > .tlp-tab-badge-append {
+                border-color: var(--tlp-white-color);
+                background: var(--tlp-white-color-transparent-80);
+                color: var(--tlp-white-color);
             }
         }
     }

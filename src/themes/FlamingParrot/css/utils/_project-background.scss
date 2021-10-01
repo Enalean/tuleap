@@ -100,29 +100,30 @@
         > li {
             border: 0;
 
-            &:hover {
-                border: 0;
+            &.active,
+            &:hover,
+            &:focus {
                 box-shadow: none;
-            }
 
-            > a {
-                padding: calc(var(--tlp-medium-spacing) - 2px) var(--tlp-large-spacing) var(--tlp-medium-spacing);
-                border: 0;
-                border-top: 2px solid transparent;
-                color: var(--tlp-white-color);
-
-                &.active,
-                &:focus,
-                &:hover {
+                > a,
+                > a:hover,
+                > a:focus {
                     @include background.background-for-links();
-                    border-bottom: 0;
-                    border-top-color: var(--tlp-white-color);
+                    border: 0;
+                    border-top: 3px solid var(--tlp-white-color);
+                    color: var(--tlp-white-color);
 
                     > .caret {
                         border-top-color: var(--tlp-white-color);
                         border-bottom-color: var(--tlp-white-color);
                     }
                 }
+            }
+
+            > a {
+                border: 0;
+                border-top: 3px solid transparent;
+                color: var(--tlp-white-color);
             }
 
             &.dropdown.open > a:hover > .caret {

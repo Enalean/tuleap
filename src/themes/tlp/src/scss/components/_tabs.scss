@@ -17,23 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-tabs-radius: var(--tlp-large-radius);
-$tlp-tabs-shadow: 0 4px 15px rgba(0, 0, 0, 0.175);
 $tlp-tabs-transition: 75ms ease-out;
 
-$active-tab-right-border-width: 3px;
+$active-tab-border-width: 3px;
 $inactive-tab-right-border-width: 1px;
-$inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right-border-width} - #{$inactive-tab-right-border-width});
+$inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-border-width} - #{$inactive-tab-right-border-width});
 
 .tlp-tabs {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    min-height: 44px;
     margin: 0 0 var(--tlp-medium-spacing);
     padding: 0 var(--tlp-medium-spacing);
-    background: var(--tlp-white-color);
-    box-shadow: inset 0 1px 0 var(--tlp-neutral-normal-color), inset 0 -1px 0 var(--tlp-neutral-normal-color);
+    box-shadow: inset 0 -1px 0 var(--tlp-neutral-normal-color);
 }
 
 .tlp-tabs-vertical {
@@ -41,7 +37,6 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right
     align-items: flex-start;
     padding: 0;
     border-radius: var(--tlp-large-radius);
-    background: none;
     box-shadow: none;
 }
 
@@ -62,10 +57,9 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right
     padding: var(--tlp-medium-spacing) / 2 0;
     transform: translateY(100%);
     transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition, box-shadow $tlp-tabs-transition;
-    border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
     border-bottom: 0;
-    border-radius: 0 0 $tlp-tabs-radius $tlp-tabs-radius;
+    border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
     opacity: 0;
     background: $tlp-white-color;
     box-shadow: none;
@@ -107,31 +101,26 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right
 }
 
 .tlp-tab {
-    $tab-vertical-padding: 16px;
-
     display: flex;
     position: relative;
     flex: 0 0 auto;
     align-items: center;
-    padding: $tab-vertical-padding var(--tlp-large-spacing) ($tab-vertical-padding - 2);
+    align-self: stretch;
+    min-height: var(--tlp-jumbo-spacing);
+    padding: 0 var(--tlp-large-spacing);
     transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
-    border-bottom: 2px solid transparent;
+    border-bottom: $active-tab-border-width solid transparent;
     color: var(--tlp-dimmed-color);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    letter-spacing: 0.02rem;
     text-decoration: none;
-    text-transform: uppercase;
+    text-transform: capitalize;
 
     &.tlp-tab-active,
     &:hover {
         border-bottom-color: var(--tlp-main-color);
         color: var(--tlp-main-color);
         text-decoration: none;
-
-        > .tlp-tab-badge-append {
-            opacity: 1;
-        }
     }
 
     &.tlp-tab-disabled,
@@ -142,20 +131,21 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right
         cursor: not-allowed;
 
         > .tlp-tab-badge-append {
-            opacity: 0.5;
+            opacity: 0.25;
         }
     }
 
     &:hover > .tlp-tab-menu {
-        bottom: -2px;
+        bottom: -$active-tab-border-width;
         transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition;
         opacity: 1;
-        box-shadow: $tlp-tabs-shadow;
+        box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
     }
 
     > .fa-caret-down {
-        margin: 0 0 0 8px;
+        margin: 0 0 0 var(--tlp-small-spacing);
+        font-size: 0.7rem;
     }
 }
 
@@ -163,7 +153,7 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right
     justify-content: flex-end;
     width: 100%;
     padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    transition: color $tlp-tabs-transition;
+    transition: color $tlp-tabs-transition, border-right-color $tlp-tabs-transition;
     border: 0;
     border-right: $inactive-tab-right-border-width solid var(--tlp-neutral-dark-color-transparent-50);
     line-height: 0.875rem;
@@ -173,7 +163,7 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right
     &:hover {
         padding: var(--tlp-medium-spacing);
         border: 0;
-        border-right: $active-tab-right-border-width solid var(--tlp-main-color);
+        border-right: $active-tab-border-width solid var(--tlp-main-color);
     }
 
     &.tlp-tab-disabled,
@@ -190,24 +180,23 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-right
 
     > .tlp-tab-icon {
         order: 1;
-        margin: 0 0 0 8px;
+        margin: 0 0 0 var(--tlp-small-spacing);
     }
 }
 
 .tlp-tab-icon {
-    margin: 0 8px 0 0;
-    font-size: 12px;
+    margin: 0 var(--tlp-small-spacing) 0 0;
+    font-size: 0.75rem;
 
     &.fa-external-link-alt {
-        margin: 0 0 0 5px;
-        font-size: 10px;
+        margin: 0 0 0 var(--tlp-small-spacing);
+        font-size: 0.625rem;
     }
 }
 
 .tlp-tab-badge-append {
-    margin: -10px 0 -9px 10px;
+    margin: calc(-1 * var(--tlp-small-spacing)) 0 calc(-1 * var(--tlp-small-spacing)) var(--tlp-small-spacing);
     transition: opacity $tlp-tabs-transition;
-    opacity: 0.5;
     letter-spacing: normal;
     line-height: unset;
     text-transform: none;
