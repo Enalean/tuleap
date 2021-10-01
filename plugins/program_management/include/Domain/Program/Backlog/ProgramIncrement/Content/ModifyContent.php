@@ -34,7 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrem
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I add and/or reorder the contents of a Program Increment
@@ -58,5 +58,5 @@ interface ModifyContent
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function modifyContent(int $program_increment_id, ContentChange $content_change, UserReference $user): void;
+    public function modifyContent(int $program_increment_id, ContentChange $content_change, UserIdentifier $user): void;
 }

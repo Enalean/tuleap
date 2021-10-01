@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\ProjectAccessChecker;
 
 final class ProgramAdapter implements BuildProgram
@@ -42,7 +43,7 @@ final class ProgramAdapter implements BuildProgram
     ) {
     }
 
-    public function ensureProgramIsAProject(int $project_id, UserReference $user, ?PermissionBypass $bypass): void
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
     {
         $this->ensureUserCanAccessToProject($project_id, $user, $bypass);
         if (! $this->program_verifier->isAProgram($project_id)) {
@@ -53,18 +54,18 @@ final class ProgramAdapter implements BuildProgram
     /**
      * @throws ProgramAccessException
      */
-    private function ensureUserCanAccessToProject(int $id, UserReference $user_reference, ?PermissionBypass $bypass): void
+    private function ensureUserCanAccessToProject(int $id, UserIdentifier $user, ?PermissionBypass $bypass): void
     {
         if ($bypass) {
             return;
         }
 
         $project = $this->project_manager->getProject($id);
-        $user    = $this->user_manager_adapter->getUserWithId($user_reference);
+        $pfuser  = $this->user_manager_adapter->getUserWithId($user);
         try {
-            $this->project_access_checker->checkUserCanAccessProject($user, $project);
+            $this->project_access_checker->checkUserCanAccessProject($pfuser, $project);
         } catch (Project_AccessException $exception) {
-            throw new ProgramAccessException($id, $user_reference);
+            throw new ProgramAccessException($id, UserProxy::buildFromPFUser($pfuser));
         }
     }
 }

@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class FeatureContentRetriever implements RetrieveFeatureContent
 {
@@ -45,7 +45,7 @@ final class FeatureContentRetriever implements RetrieveFeatureContent
     ) {
     }
 
-    public function retrieveProgramIncrementContent(int $id, UserReference $user): array
+    public function retrieveProgramIncrementContent(int $id, UserIdentifier $user): array
     {
         $program_increment = ProgramIncrementIdentifier::fromId(
             $this->program_increment_verifier,

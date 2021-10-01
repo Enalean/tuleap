@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramIdentifierTest extends TestCase
@@ -42,7 +42,7 @@ final class ProgramIdentifierTest extends TestCase
     protected function setUp(): void
     {
         $this->program_builder   = BuildProgramStub::stubValidProgram();
-        $this->user              = UserReferenceStub::withDefaults();
+        $this->user              = UserIdentifierStub::buildGenericUser();
         $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithId(785);
     }
 

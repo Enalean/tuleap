@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Events;
 
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
@@ -31,6 +31,6 @@ interface ProgramIncrementCreationEvent
 {
     public const TOPIC = 'tuleap.program_management.program_increment.creation';
     public function getArtifactId(): int;
-    public function getUser(): UserReference;
+    public function getUser(): UserIdentifier;
     public function getChangesetId(): int;
 }

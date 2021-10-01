@@ -35,7 +35,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
  * I hold all the information necessary to create new Mirrored Program Increments from
@@ -48,7 +47,7 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
         private ProgramIncrementIdentifier $program_increment,
         private ProgramIncrementTrackerIdentifier $tracker,
         private ChangesetIdentifier $changeset,
-        private UserReference $user
+        private UserIdentifier $user
     ) {
     }
 
@@ -116,11 +115,6 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
     public function getProgramIncrementTracker(): ProgramIncrementTrackerIdentifier
     {
         return $this->tracker;
-    }
-
-    public function getUserReference(): UserReference
-    {
-        return $this->user;
     }
 
     public function getUser(): UserIdentifier
