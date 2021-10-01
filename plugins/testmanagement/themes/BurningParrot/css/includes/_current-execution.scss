@@ -664,3 +664,29 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
         color: var(--tlp-danger-color);
     }
 }
+
+.attachments-uploads-error-list {
+    padding: 0;
+
+    > .attachment-upload-error {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0;
+        border-bottom: 1px solid var(--tlp-danger-color-transparent-90);
+        background: var(--tlp-danger-color-transparent-90);
+
+        > .attachment-upload-error-file-name {
+            overflow: hidden;
+            line-height: 20px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        > .attachment-upload-error-message {
+            margin: var(--tlp-small-spacing) 0 0;
+            color: var(--tlp-danger-color);
+        }
+    }
+}

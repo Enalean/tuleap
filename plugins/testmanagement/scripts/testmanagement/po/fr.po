@@ -56,6 +56,9 @@ msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
 msgid "Attach files..."
 msgstr "Joindre des fichiers..."
 
+msgid "Attachment creation errors"
+msgstr "Erreurs de création de fichier"
+
 msgid "Attachment upload error"
 msgstr "Erreur de téléversement de fichier"
 
