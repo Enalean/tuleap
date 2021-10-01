@@ -688,13 +688,12 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->last_pwd_update;
     }
-    /**
-     * @return string the timezone of the user (GMT, Europe/Paris, etc ...)
-     */
-    public function getTimezone()
+
+    public function getTimezone(): ?string
     {
         return $this->timezone;
     }
+
     /**
      * @return int 1 if the user accept to receive site mail updates, 0 if he does'nt
      */

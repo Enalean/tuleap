@@ -25,7 +25,7 @@ class Account_TimezoneSelectorPresenter
     public array $list_of_timezones;
 
     /**
-     * @param string|false $current_timezone falsy if no current timezone
+     * @param string|false|null $current_timezone falsy if no current timezone
      */
     public function __construct($current_timezone)
     {

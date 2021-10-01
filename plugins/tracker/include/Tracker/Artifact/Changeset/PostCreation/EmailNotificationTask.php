@@ -25,6 +25,7 @@ use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tuleap\Date\TimezoneSwitcher;
 use Tuleap\ServerHostname;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
@@ -315,28 +316,35 @@ final class EmailNotificationTask implements PostCreationTask
 
     private function getMessageContent(Tracker_Artifact_Changeset $changeset, \PFUser $user, $is_update, $check_perms)
     {
-        $ignore_perms = ! $check_perms;
-
-        $lang = $user->getLanguage();
-
-        $mailManager = new \MailManager();
-        $format      = $mailManager->getMailPreferencesByUser($user);
-
-        $htmlBody = '';
-        if ($format == \Codendi_Mail_Interface::FORMAT_HTML) {
-            $htmlBody .= $this->getBodyHtml($changeset, $is_update, $user, $lang, $ignore_perms);
-            $htmlBody .= $this->getHTMLAssignedToFilter($changeset->getArtifact(), $user);
-        }
-
-        $txtBody  = $this->getBodyText($changeset, $is_update, $user, $lang, $ignore_perms);
-        $txtBody .= $this->getTextAssignedToFilter($changeset->getArtifact(), $user);
-        $subject  = $this->getSubject($changeset->getArtifact(), $user, $ignore_perms);
-
         $message = [];
 
-        $message['htmlBody'] = $htmlBody;
-        $message['txtBody']  = $txtBody;
-        $message['subject']  = $subject;
+        (new TimezoneSwitcher())->setTimezoneForSpecificUserExecutionContext(
+            $changeset->getSubmitter(),
+            function () use ($changeset, $user, $is_update, $check_perms, &$message) {
+                $ignore_perms = ! $check_perms;
+
+                $lang = $user->getLanguage();
+
+                $mailManager = new \MailManager();
+                $format      = $mailManager->getMailPreferencesByUser($user);
+
+                $htmlBody = '';
+                if ($format === \Codendi_Mail_Interface::FORMAT_HTML) {
+                    $htmlBody .= $this->getBodyHtml($changeset, $is_update, $user, $lang, $ignore_perms);
+                    $htmlBody .= $this->getHTMLAssignedToFilter($changeset->getArtifact(), $user);
+                }
+
+                $txtBody  = $this->getBodyText($changeset, $is_update, $user, $lang, $ignore_perms);
+                $txtBody .= $this->getTextAssignedToFilter($changeset->getArtifact(), $user);
+                $subject  = $this->getSubject($changeset->getArtifact(), $user, $ignore_perms);
+
+
+                $message['htmlBody'] = $htmlBody;
+                $message['txtBody']  = $txtBody;
+                $message['subject']  = $subject;
+            }
+        );
+
 
         return $message;
     }

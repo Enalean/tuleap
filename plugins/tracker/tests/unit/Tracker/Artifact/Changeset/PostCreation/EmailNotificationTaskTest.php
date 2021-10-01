@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
@@ -60,6 +61,9 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->changeset->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
+        $this->changeset->shouldReceive('getSubmitter')->andReturns(
+            UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->build()
+        );
     }
 
     public function testNotify()
