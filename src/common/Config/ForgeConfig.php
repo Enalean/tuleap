@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Config\ConfigDao;
+use Tuleap\Config\ConfigValueEnvironmentProvider;
 
 class ForgeConfig
 {
@@ -50,6 +51,7 @@ class ForgeConfig
     {
         self::loadLocalInc();
         self::loadDatabaseInc();
+        self::loadDatabaseParametersFromEnvironment();
         self::loadFromDatabase();
         self::loadFromFile(self::get('redis_config_file'));
     }
@@ -68,6 +70,11 @@ class ForgeConfig
             throw new RuntimeException('Database configuration file cannot be read, did you loadLocalInc first ?');
         }
         self::loadFromFile($database_config_file);
+    }
+
+    private static function loadDatabaseParametersFromEnvironment(): void
+    {
+        self::load(new ConfigValueEnvironmentProvider(\Tuleap\DB\DBConfig::class));
     }
 
     public static function loadFromFile($file): void

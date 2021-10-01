@@ -25,6 +25,8 @@ services:
     tmpfs: /run
     env_file:
     - .env
+    environment:
+    - TULEAP_SYS_DBHOST=db
     depends_on:
     - ldap
     - db
