@@ -22,9 +22,18 @@
 declare(strict_types=1);
 
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Domain\Events;
 
-interface VerifyScrumBlocksServiceActivation
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
+interface ServiceDisabledCollectorEvent
 {
-    public function doesScrumBlockServiceUsage(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool;
+    public function isForServiceShortName(string $service): bool;
+
+    public function getProjectIdentifier(): ProjectIdentifier;
+
+    public function disableWithMessage(string $message): void;
+
+    public function getUserIdentifier(): UserIdentifier;
 }

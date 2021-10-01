@@ -23,39 +23,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Service;
 
-use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
-use Tuleap\AgileDashboard\Planning\RetrievePlannings;
+use Tuleap\ProgramManagement\Domain\Events\ServiceDisabledCollectorEvent;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyScrumBlocksServiceActivation;
 
 final class ServiceDisabledCollectorHandler
 {
-    private VerifyIsTeam $verify_is_team;
-    private RetrievePlannings $retrieve_plannings;
-
     public function __construct(
-        VerifyIsTeam $verify_is_team,
-        RetrievePlannings $retrieve_plannings
+        private VerifyIsTeam $verify_is_team,
+        private VerifyScrumBlocksServiceActivation $scrum_verifier
     ) {
-        $this->verify_is_team     = $verify_is_team;
-        $this->retrieve_plannings = $retrieve_plannings;
     }
 
-    public function handle(ServiceDisabledCollector $collector, string $shortname): void
+    public function handle(ServiceDisabledCollectorEvent $collector, string $shortname): void
     {
-        if (! $collector->isForService($shortname)) {
+        if (! $collector->isForServiceShortName($shortname)) {
             return;
         }
 
-        if ($this->verify_is_team->isATeam((int) $collector->getProject()->getID())) {
-            $collector->setIsDisabled(
+        if ($this->verify_is_team->isATeam($collector->getProjectIdentifier()->getId())) {
+            $collector->disableWithMessage(
                 dgettext('tuleap-program_management', 'Program service cannot be enabled for Team projects.')
             );
         }
 
-        $configuration = ScrumConfiguration::fromProjectId($this->retrieve_plannings, (int) $collector->getProject()->getID(), $collector->getUser());
-        if ($configuration->isNotEmpty()) {
-            $collector->setIsDisabled(
+        if ($this->scrum_verifier->doesScrumBlockServiceUsage($collector->getUserIdentifier(), $collector->getProjectIdentifier())) {
+            $collector->disableWithMessage(
                 dgettext('tuleap-program_management', 'Program service cannot be enabled when project have a Scrum configuration in AgileDashboard service.')
             );
         }
