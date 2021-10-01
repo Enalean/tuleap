@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * A program is a Tuleap Project that hosts Program Increments and Iterations and synchronizes them with Teams.
@@ -58,7 +58,7 @@ final class ProgramIdentifier
     public static function fromId(
         BuildProgram $build_program,
         int $id,
-        UserReference $user,
+        UserIdentifier $user,
         ?PermissionBypass $bypass
     ): self {
         $build_program->ensureProgramIsAProject($id, $user, $bypass);
@@ -74,7 +74,7 @@ final class ProgramIdentifier
         RetrieveProgramOfProgramIncrement $program_retriever,
         BuildProgram $program_builder,
         ProgramIncrementIdentifier $program_increment,
-        UserReference $user
+        UserIdentifier $user
     ): self {
         $program_id = $program_retriever->getProgramOfProgramIncrement($program_increment);
         $program_builder->ensureProgramIsAProject($program_id, $user, null);

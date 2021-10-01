@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Queue\WorkerEvent;
 
 /**
@@ -35,7 +35,7 @@ use Tuleap\Queue\WorkerEvent;
  */
 final class ProgramIncrementCreationEventProxy implements ProgramIncrementCreationEvent
 {
-    private function __construct(private int $artifact_id, private UserReference $user, private int $changeset_id)
+    private function __construct(private int $artifact_id, private UserIdentifier $user, private int $changeset_id)
     {
     }
 
@@ -70,7 +70,7 @@ final class ProgramIncrementCreationEventProxy implements ProgramIncrementCreati
         return $this->artifact_id;
     }
 
-    public function getUser(): UserReference
+    public function getUser(): UserIdentifier
     {
         return $this->user;
     }

@@ -34,7 +34,7 @@ use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepres
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckFeatureIsPlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -56,7 +56,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->user                           = UserReferenceStub::withDefaults();
+        $this->user                           = UserIdentifierStub::buildGenericUser();
         $this->prioritize_permission_verifier = VerifyPrioritizeFeaturesPermissionStub::canPrioritize();
         $this->visible_feature_verifier       = VerifyIsVisibleFeatureStub::buildVisibleFeature();
         $this->can_be_planned_verifier        = VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier();

@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ContentStoreStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
@@ -68,7 +68,7 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory       = $this->createStub(\Tracker_FormElementFactory::class);
         $this->background_color_retriever = $this->createStub(BackgroundColorRetriever::class);
 
-        $this->user = UserReferenceStub::withDefaults();
+        $this->user = UserIdentifierStub::buildGenericUser();
     }
 
     private function getRetriever(): FeatureContentRetriever

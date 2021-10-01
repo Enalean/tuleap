@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -158,7 +158,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
      */
     private function buildConfigurationForExistingProgram(
         Project $project,
-        UserReference $user
+        UserIdentifier $user
     ): ProgramBacklogConfigurationPresenter {
         $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user, null);
 

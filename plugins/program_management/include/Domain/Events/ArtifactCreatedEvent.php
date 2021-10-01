@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Events;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
@@ -34,6 +34,6 @@ interface ArtifactCreatedEvent
 {
     public function getArtifact(): ArtifactIdentifier;
     public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserReference;
+    public function getUser(): UserIdentifier;
     public function getChangeset(): ChangesetIdentifier;
 }

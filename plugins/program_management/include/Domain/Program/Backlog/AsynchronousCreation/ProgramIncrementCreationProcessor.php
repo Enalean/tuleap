@@ -101,7 +101,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
             $creation
         );
 
-        $user    = $creation->getUserReference();
+        $user    = $creation->getUser();
         $program = ProgramIdentifier::fromProgramIncrement(
             $this->program_retriever,
             $this->program_builder,

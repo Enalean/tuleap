@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 final class FeatureElementsRetriever implements RetrieveFeatures
@@ -51,7 +51,7 @@ final class FeatureElementsRetriever implements RetrieveFeatures
      * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException
      * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException
      */
-    public function retrieveFeaturesToBePlanned(int $program_id, UserReference $user): array
+    public function retrieveFeaturesToBePlanned(int $program_id, UserIdentifier $user): array
     {
         $program = ProgramIdentifier::fromId($this->build_program, $program_id, $user, null);
 

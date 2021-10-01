@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 /**
@@ -43,7 +43,7 @@ final class ArtifactCreatedProxy implements ArtifactCreatedEvent
     private function __construct(
         private ArtifactIdentifier $artifact,
         private TrackerIdentifier $tracker,
-        private UserReference $user,
+        private UserIdentifier $user,
         private ChangesetIdentifier $changeset
     ) {
     }
@@ -68,7 +68,7 @@ final class ArtifactCreatedProxy implements ArtifactCreatedEvent
         return $this->tracker;
     }
 
-    public function getUser(): UserReference
+    public function getUser(): UserIdentifier
     {
         return $this->user;
     }

@@ -80,7 +80,6 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getTracker()->getId());
         self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
         self::assertSame(self::USER_ID, $creation->getUser()->getId());
-        self::assertSame(self::USER_ID, $creation->getUserReference()->getId());
     }
 
     public function testItReturnsNullWhenArtifactIsNotAProgramIncrement(): void
@@ -108,7 +107,6 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getTracker()->getId());
         self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
         self::assertSame(self::USER_ID, $creation->getUser()->getId());
-        self::assertSame(self::USER_ID, $creation->getUserReference()->getId());
     }
 
     public function testItReturnsNullWhenArtifactFromEventIsNotAProgramIncrement(): void

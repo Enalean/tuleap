@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramIncrementCreationEventStub implements ProgramIncrementCreationEvent
 {
-    private function __construct(private int $artifact_id, private UserReference $user, private int $changeset_id)
+    private function __construct(private int $artifact_id, private UserIdentifier $user, private int $changeset_id)
     {
     }
 
@@ -41,7 +41,7 @@ final class ProgramIncrementCreationEventStub implements ProgramIncrementCreatio
         return $this->artifact_id;
     }
 
-    public function getUser(): UserReference
+    public function getUser(): UserIdentifier
     {
         return $this->user;
     }
