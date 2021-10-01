@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
+use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
@@ -489,7 +490,7 @@ final class program_managementPlugin extends Plugin
     public function rootPlanningEditionEvent(RootPlanningEditionEvent $event): void
     {
         $handler = new RootPlanningEditionHandler(new TeamDao());
-        $handler->handle($event);
+        $handler->handle(RootPlanningEditionEventProxy::buildFromEvent($event));
     }
 
     /**
