@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TimeboxArtifactLinkPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -34,7 +35,7 @@ final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
         $params  = ['natures' => &$natures];
         $plugin->getArtifactLinkNatures($params);
 
-        self::assertEquals([new TimeboxArtifactLinkType()], $natures);
+        self::assertEquals([new TimeboxArtifactLinkPresenter()], $natures);
     }
 
     public function testProvidesNaturePresenterWhenTheTypeIsExposedByThePlugin(): void
@@ -44,7 +45,7 @@ final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
         $params    = ['shortname' => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, 'presenter' => &$presenter];
         $plugin->getNaturePresenter($params);
 
-        self::assertEquals(new TimeboxArtifactLinkType(), $presenter);
+        self::assertEquals(new TimeboxArtifactLinkPresenter(), $presenter);
     }
 
     public function testDoesNotProvideNaturePresenterWhenTheTypeIsNotExposedByThePlugin(): void
