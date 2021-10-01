@@ -25,6 +25,7 @@ import type { ITableOfContentsOptions } from "docx";
 import {
     InternalHyperlink,
     LeaderType,
+    PageReference,
     Paragraph,
     Run,
     TabStopPosition,
@@ -36,7 +37,6 @@ import {
 import { TOCFieldInstruction } from "./toc-field-instruction";
 import type { FormattedArtifact } from "../../../type";
 import { getAnchorToArtifactContent } from "../sections-anchor";
-import { PageRef } from "../PageRef/pageref";
 import { ComplexFieldCharacter } from "../base-elements";
 
 class AliasAttributes extends XmlAttributeComponent<{ readonly alias: string }> {
@@ -114,14 +114,12 @@ export class TableOfContentsPrefilled extends XmlComponent {
         for (const artifact of artifacts) {
             const artifact_anchor = getAnchorToArtifactContent(artifact);
             const link = new InternalHyperlink({
-                child: new TextRun({
-                    text: `${artifact.title}\t`,
-                }),
+                children: [new TextRun(`${artifact.title}\t`)],
                 anchor: artifact_anchor,
             });
             links_to_content.push(
                 new Paragraph({
-                    children: [link, new PageRef(artifact_anchor)],
+                    children: [link, new PageReference(artifact_anchor)],
                     tabStops: [
                         {
                             type: TabStopType.RIGHT,
