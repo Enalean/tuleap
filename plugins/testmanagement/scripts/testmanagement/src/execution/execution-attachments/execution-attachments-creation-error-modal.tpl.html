@@ -1,0 +1,21 @@
+<div id="execution-attachment-creation-modal" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="modal-danger-label">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-danger-label" translate>Attachment creation errors</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">
+            ×
+        </button>
+    </div>
+    <div class="tlp-modal-body attachments-uploads-error-list">
+        <div class="tlp-pane-section attachment-upload-error" ng-repeat="error in $ctrl.errors">
+            <span class="attachment-upload-error-file-name">
+                {{ error.filename }}
+            </span>
+            <span class="attachment-upload-error-message">
+                {{ error.message }}
+            </span>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-modal-action" data-dismiss="modal" translate>Close</button>
+    </div>
+</div>

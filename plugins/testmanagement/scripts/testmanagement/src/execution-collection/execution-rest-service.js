@@ -225,7 +225,11 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
                     file_size: file.size,
                     file_type: file.type,
                 }),
-            }).then((response) => response.json())
+            })
+                .then((response) => response.json())
+                .catch((exception) => {
+                    return exception.response.json().then((json) => $q.reject(json.error));
+                })
         );
     }
 }

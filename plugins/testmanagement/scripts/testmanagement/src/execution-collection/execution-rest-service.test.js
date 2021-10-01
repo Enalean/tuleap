@@ -379,21 +379,24 @@ describe("ExecutionRestService", () => {
     });
 
     describe("createFileInTestExecution()", () => {
-        it("should create a file for the given test execution and return its representation", async () => {
-            const test_execution = {
+        let test_execution, file;
+
+        beforeEach(() => {
+            test_execution = {
                 upload_url: "/api/v1/tracker_fields/1260/file",
             };
 
+            file = {
+                name: "bug.png",
+                size: 12345678910,
+                type: "image/png",
+            };
+        });
+        it("should create a file for the given test execution and return its representation", async () => {
             const created_file = {
                 id: 1234,
                 upload_href: "/upload-me.here",
                 download_href: "/download-me.there",
-            };
-
-            const file = {
-                name: "bug.png",
-                size: 12345678910,
-                type: "image/png",
             };
 
             const tlpPost = jest.spyOn(tlp, "post");
@@ -411,6 +414,32 @@ describe("ExecutionRestService", () => {
                 }),
             });
             expect(result).toEqual(created_file);
+        });
+
+        it("should return the error sent by the backend", () => {
+            const test_execution = {
+                upload_url: "/api/v1/tracker_fields/1260/file",
+            };
+
+            const file = {
+                name: "bug.png",
+                size: 12345678910,
+                type: "image/png",
+            };
+
+            const tlpPost = jest.spyOn(tlp, "post");
+            mockFetchError(tlpPost, { status: 400, error_json: { error: "File is too big" } });
+
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            const promise = ExecutionRestService.createFileInTestExecution(
+                test_execution,
+                file
+            ).catch((error) => {
+                // eslint-disable-next-line jest/no-conditional-expect
+                expect(error).toEqual("File is too big");
+            });
+
+            return wrapPromise(promise);
         });
     });
 });

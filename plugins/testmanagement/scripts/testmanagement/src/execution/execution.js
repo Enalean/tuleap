@@ -24,6 +24,7 @@ import ExecutionWithSteps from "./execution-with-steps/execution-with-steps-comp
 import Step from "./execution-with-steps/step/step-component.js";
 import RobotSvgDisplayer from "./svg/robot-svg-displayer-component.js";
 import ExecutionAttachments from "./execution-attachments/execution-attachments-component.js";
+import ExecutionAttachmentsCreationErrorModal from "./execution-attachments/execution-attachments-creation-error-modal.js";
 
 export default angular
     .module("execution", [
@@ -42,6 +43,7 @@ export default angular
     .controller("ExecutionListCtrl", ExecutionListCtrl)
     .controller("ExecutionDetailCtrl", ExecutionDetailCtrl)
     .component("executionAttachments", ExecutionAttachments)
+    .component("executionAttachmentsCreationErrorModal", ExecutionAttachmentsCreationErrorModal)
     .component("executionDetailJustUpdated", ExecutionDetailJustUpdated)
     .component("executionListHeader", ExecutionListHeader)
     .component("executionWithSteps", ExecutionWithSteps)

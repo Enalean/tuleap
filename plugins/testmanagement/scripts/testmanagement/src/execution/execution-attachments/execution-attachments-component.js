@@ -46,6 +46,7 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
         removeAttachmentFromList,
         handleUploadError,
         upload_error_messages_popovers: new Map(),
+        file_creation_errors: [],
     });
 
     function $onInit() {
@@ -63,6 +64,10 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
                 });
             }
         );
+
+        $scope.$on("user-has-closed-the-file-creation-errors-modal", () => {
+            this.file_creation_errors = [];
+        });
     }
 
     function $onDestroy() {
@@ -72,8 +77,8 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
     }
 
     function attachFile(file) {
-        return ExecutionRestService.createFileInTestExecution(self.execution, file).then(
-            (new_file) => {
+        return ExecutionRestService.createFileInTestExecution(self.execution, file)
+            .then((new_file) => {
                 const file_uploading = {
                     id: new_file.id,
                     filename: file.name,
@@ -104,8 +109,13 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
                         handleUploadError(file_uploading, error);
                     }
                 );
-            }
-        );
+            })
+            .catch((error) => {
+                self.file_creation_errors.push({
+                    filename: file.name,
+                    message: error.message,
+                });
+            });
     }
 
     function getFileInput() {

@@ -160,6 +160,10 @@ describe("execution-attachments-component", () => {
         });
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe("abortUpload()", () => {
         it("should abort the upload and remove the attachment from the list", () => {
             const file_uploading = {
@@ -273,6 +277,38 @@ describe("execution-attachments-component", () => {
                 110
             );
             expect(popover_110.destroy).toHaveBeenCalled();
+        });
+    });
+
+    describe("Rest error handling", () => {
+        it("should store file creation errors in a list and should clear it when the error modal have been closed", () => {
+            jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
+                $q.reject({
+                    code: 400,
+                    message: "File too big",
+                })
+            );
+
+            controller.$onInit();
+            controller.attachFile({
+                name: "bug.png",
+                size: 12345678910,
+                type: "image/png",
+            });
+
+            $scope.$digest();
+
+            expect(controller.file_creation_errors).toEqual([
+                {
+                    filename: "bug.png",
+                    message: "File too big",
+                },
+            ]);
+
+            $scope.$emit("user-has-closed-the-file-creation-errors-modal");
+            $scope.$digest();
+
+            expect(controller.file_creation_errors).toEqual([]);
         });
     });
 });
