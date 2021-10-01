@@ -45,7 +45,7 @@ pipeline {
         stage('Check lockfiles') {
             steps { script {
                 actions = load 'sources/tests/actions.groovy'
-                actions.runFilesStatusChangesDetection('.', 'lockfiles', 'package-lock.json composer.lock')
+                actions.runFilesStatusChangesDetection('.', 'lockfiles', 'composer.lock')
             } }
             post {
                 failure {

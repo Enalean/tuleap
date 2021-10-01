@@ -12,12 +12,9 @@
     "@popperjs/core": "^2.9.2"
   },
   "devDependencies": {},
-  "config": {
-    "bin": "../../../../node_modules/.bin"
-  },
   "scripts": {
-    "build": "$npm_package_config_bin/vite build",
-    "watch": "$npm_package_config_bin/vite build --watch --mode development --minify false",
-    "test": "$npm_package_config_bin/jest"
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
   }
 }

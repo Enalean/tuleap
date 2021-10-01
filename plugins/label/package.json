@@ -13,12 +13,9 @@
   "devDependencies": {
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch"
   },
-  "config": {
-    "bin": "../../node_modules/.bin"
-  },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest"
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch",
+    "test": "jest"
   }
 }

@@ -42,6 +42,8 @@ import {
 } from "../store/getters";
 import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 
+jest.mock("tlp");
+
 describe("Feature Reordering", () => {
     describe("getFeatureReorderPosition", () => {
         it("When sibling is null, Then we get a position after the last feature of the list", () => {

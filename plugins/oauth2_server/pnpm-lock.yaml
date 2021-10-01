@@ -1,0 +1,21 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@types/sprintf-js': ^1.1.2
+  sprintf-js: ^1.1.2
+
+dependencies:
+  sprintf-js: 1.1.2
+
+devDependencies:
+  '@types/sprintf-js': 1.1.2
+
+packages:
+
+  /@types/sprintf-js/1.1.2:
+    resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
+    dev: true
+
+  /sprintf-js/1.1.2:
+    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
+    dev: false

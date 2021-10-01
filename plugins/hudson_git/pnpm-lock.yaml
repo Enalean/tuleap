@@ -1,0 +1,33 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@types/bootstrap': ^3.4.0
+  '@types/jquery': ^3.5.5
+  jquery: ^3.6.0
+
+devDependencies:
+  '@types/bootstrap': 3.4.0
+  '@types/jquery': 3.5.5
+  jquery: 3.6.0
+
+packages:
+
+  /@types/bootstrap/3.4.0:
+    resolution: {integrity: sha512-LS05hVAAsX86qbHg7W+ydwBlNHrVCoFw6wEP3/uW4eYmRXl08bWmPeN/+onM+8qZTFfDgUlG/OItJI8SW972oQ==}
+    dependencies:
+      '@types/jquery': 3.5.5
+    dev: true
+
+  /@types/jquery/3.5.5:
+    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
+    dependencies:
+      '@types/sizzle': 2.3.2
+    dev: true
+
+  /@types/sizzle/2.3.2:
+    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
+    dev: true
+
+  /jquery/3.6.0:
+    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
+    dev: true

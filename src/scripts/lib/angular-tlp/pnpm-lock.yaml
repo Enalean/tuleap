@@ -1,0 +1,19 @@
+lockfileVersion: 5.3
+
+specifiers:
+  angular: ^1.8.2
+  angular-mocks: ^1.8.2
+
+devDependencies:
+  angular: 1.8.2
+  angular-mocks: 1.8.2
+
+packages:
+
+  /angular-mocks/1.8.2:
+    resolution: {integrity: sha512-I5L3P0l21HPdVsP4A4qWmENt4ePjjbkDFdAzOaM7QiibFySbt14DptPbt2IjeG4vFBr4vSLbhIz8Fk03DISl8Q==}
+    dev: true
+
+  /angular/1.8.2:
+    resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
+    dev: true

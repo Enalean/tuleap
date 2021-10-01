@@ -19,11 +19,8 @@
     "node-gettext": "^3.0.0",
     "sprintf-js": "^1.1.2"
   },
-  "config": {
-    "bin": "../../node_modules/.bin"
-  },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
   }
 }

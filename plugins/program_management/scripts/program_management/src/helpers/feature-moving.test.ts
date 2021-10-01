@@ -39,6 +39,8 @@ import {
 import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
 import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
 
+jest.mock("tlp");
+
 describe("FeatureMoving", () => {
     let context: ActionContext<State, State>;
     beforeEach(() => {

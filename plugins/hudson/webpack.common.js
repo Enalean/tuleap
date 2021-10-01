@@ -39,12 +39,6 @@ module.exports = [
         externals: {
             jquery: "jQuery",
         },
-        resolve: {
-            modules: [path.resolve(__dirname, "node_modules")],
-            alias: {
-                "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
-            },
-        },
         module: {
             rules: [webpack_configurator.rule_po_files, webpack_configurator.rule_scss_loader],
         },

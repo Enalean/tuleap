@@ -74,7 +74,7 @@ class IncludeAssets
         }
         if (! isset($this->assets[$file_name])) {
             throw new IncludeAssetsException(
-                "manifest.json doesn't reference $file_name. Did you run `npm run build` ?"
+                "manifest.json doesn't reference $file_name. Did you run `pnpm run build` ?"
             );
         }
         return $this->assets[$file_name];
@@ -89,7 +89,7 @@ class IncludeAssets
             $this->assets = json_decode(file_get_contents($this->manifest_file), true);
         } else {
             throw new IncludeAssetsManifestException(
-                "Asset {$this->manifest_file} doesn't exist. Did you run `npm run build` ?"
+                "Asset {$this->manifest_file} doesn't exist. Did you run `pnpm run build` ?"
             );
         }
     }

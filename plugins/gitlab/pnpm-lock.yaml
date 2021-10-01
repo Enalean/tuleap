@@ -1,0 +1,86 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/concurrency-limit-pool': file:../../src/scripts/lib/concurrency-limit-pool
+  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@types/bootstrap': ^4.5.1
+  '@types/jquery': ^3.5.5
+  jquery: ^3.6.0
+  neverthrow: ^4.2.1
+  vue: ^2.6.14
+  vue-class-component: ^7.2.6
+  vue-gettext: ^2.1.12
+  vue-property-decorator: ^9.1.2
+
+dependencies:
+  '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
+  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  neverthrow: 4.2.1
+  vue: 2.6.14
+  vue-gettext: 2.1.12
+
+devDependencies:
+  '@types/bootstrap': 4.6.0
+  '@types/jquery': 3.5.5
+  jquery: 3.6.0
+  vue-class-component: 7.2.6_vue@2.6.14
+  vue-property-decorator: 9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5
+
+packages:
+
+  /@types/bootstrap/4.6.0:
+    resolution: {integrity: sha512-uf3yXgYm9bUGGIKNoXHrBzbmXtm8QEM9dDwI+EDarocllEMBx7f3Mv5yCEj4OqkLihkhGlEzT9L1TlZ5IN793g==}
+    dependencies:
+      '@types/jquery': 3.5.5
+      popper.js: 1.16.1
+    dev: true
+
+  /@types/jquery/3.5.5:
+    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
+    dependencies:
+      '@types/sizzle': 2.3.3
+    dev: true
+
+  /@types/sizzle/2.3.3:
+    resolution: {integrity: sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==}
+    dev: true
+
+  /jquery/3.6.0:
+    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
+    dev: true
+
+  /neverthrow/4.2.1:
+    resolution: {integrity: sha512-faWQGNqVQrXOuG8K7E0PRzsfBHzfVqeDX9nwawKDseuH/qEGIH02Nrq03OJOs5eTFML03xeol3otzagPoHyEPA==}
+    dev: false
+
+  /popper.js/1.16.1:
+    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
+    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+    dev: true
+
+  /vue-class-component/7.2.6_vue@2.6.14:
+    resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
+    peerDependencies:
+      vue: ^2.0.0
+    dependencies:
+      vue: 2.6.14
+    dev: true
+
+  /vue-gettext/2.1.12:
+    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
+    engines: {npm: '>= 3.0.0'}
+    dev: false
+
+  /vue-property-decorator/9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5:
+    resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
+    peerDependencies:
+      vue: '*'
+      vue-class-component: '*'
+    dependencies:
+      vue: 2.6.14
+      vue-class-component: 7.2.6_vue@2.6.14
+    dev: true
+
+  /vue/2.6.14:
+    resolution: {integrity: sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==}
+    dev: false

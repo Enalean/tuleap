@@ -1,0 +1,22 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/html-escaper': file:../../src/scripts/lib/html-escaper
+  vue: ^2.6.14
+  vue-gettext: ^2.1.12
+
+dependencies:
+  '@tuleap/html-escaper': link:../../src/scripts/lib/html-escaper
+  vue: 2.6.14
+  vue-gettext: 2.1.12
+
+packages:
+
+  /vue-gettext/2.1.12:
+    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
+    engines: {npm: '>= 3.0.0'}
+    dev: false
+
+  /vue/2.6.14:
+    resolution: {integrity: sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==}
+    dev: false

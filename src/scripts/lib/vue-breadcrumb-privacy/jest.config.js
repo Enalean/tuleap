@@ -27,5 +27,5 @@ module.exports = {
         "^vue$": "vue/dist/vue.esm.js",
     },
     // Ignore all node modules except Vue, to transpile it with Babel
-    transformIgnorePatterns: ["node_modules/(?!vue)"],
+    transformIgnorePatterns: ["node_modules/(?!(.*vue)/)"],
 };
