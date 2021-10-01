@@ -22,6 +22,7 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use Tuleap\CLI\Application;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\CLI\Command\ConfigDumpCommand;
 use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigListCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
@@ -102,6 +103,12 @@ $CLI_command_collector->addCommand(
         );
     }
 );
+
+$CLI_command_collector->addCommand(
+    ConfigDumpCommand::NAME,
+    static fn () => new ConfigDumpCommand()
+);
+
 $CLI_command_collector->addCommand(
     UserPasswordCommand::NAME,
     static function () use ($user_manager): UserPasswordCommand {
