@@ -8,6 +8,7 @@
          beStrictAboutChangesToGlobalState="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
+         convertDeprecationsToExceptions="true"
 >
     <php>
         <ini name="error_reporting" value="-1" />
