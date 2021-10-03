@@ -141,7 +141,7 @@ describe("Artifact additional action", () => {
 
             local_action.link_element.click();
 
-            setImmediate(() => {
+            setTimeout(() => {
                 expect(spyClearFeedbacks).toHaveBeenCalled();
                 expect(spyAddFeedback).toHaveBeenCalledWith("info", expect.anything());
                 expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
@@ -174,7 +174,7 @@ describe("Artifact additional action", () => {
 
             local_action.link_element.click();
 
-            setImmediate(() => {
+            setTimeout(() => {
                 expect(spyClearFeedbacks).toHaveBeenCalled();
                 expect(spyAddFeedback).toHaveBeenCalledWith("info", expect.anything());
                 expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
@@ -205,7 +205,7 @@ describe("Artifact additional action", () => {
 
             local_action.link_element.click();
 
-            setImmediate(() => {
+            setTimeout(() => {
                 expect(spyClearFeedbacks).not.toHaveBeenCalled();
                 expect(spyAddFeedback).not.toHaveBeenCalled();
                 expect(spyPatch).not.toHaveBeenCalled();
@@ -238,7 +238,7 @@ describe("Artifact additional action", () => {
 
         local_action.link_element.click();
 
-        setImmediate(() => {
+        setTimeout(() => {
             expect(spyClearFeedbacks).toHaveBeenCalled();
             expect(spyAddFeedback).toHaveBeenCalledWith("error", expect.anything());
             expect(current_button_title).toBe(local_action.title_element.textContent);

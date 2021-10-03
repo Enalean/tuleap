@@ -29,4 +29,5 @@ module.exports = {
         // The artifact modal module causes lots of WARNING: Tried to load AngularJS more than once.
         "^angular$": "<rootDir>/node_modules/angular/index.js",
     },
+    testRunner: "jest-jasmine2",
 };

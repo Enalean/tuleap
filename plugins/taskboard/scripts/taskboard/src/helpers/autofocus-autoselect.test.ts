@@ -40,8 +40,8 @@ describe("autoFocusAutoSelect", () => {
 
         autoFocusAutoSelect(element);
 
-        jest.runAllTimers();
-        expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 10);
+        expect(element.select).not.toHaveBeenCalled();
+        jest.advanceTimersByTime(10);
         expect(element.select).toHaveBeenCalled();
     });
 });

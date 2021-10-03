@@ -24,7 +24,8 @@ def runJestTests(String name, String path, Boolean with_coverage = false) {
     export JEST_JUNIT_OUTPUT_DIR="\$WORKSPACE/results/jest/"
     export JEST_JUNIT_OUTPUT_NAME="test-${name}-results.xml"
     export JEST_SUITE_NAME="Jest ${name} test suite"
-    pnpm --prefix "sources/" test -- '${path}' --ci --maxWorkers=2 --reporters=default --reporters=jest-junit ${coverage_params}
+    export NODE_OPTIONS="--max-old-space-size=6144"
+    timeout 1h pnpm --prefix "sources/" test -- '${path}' --ci --maxWorkers=30% --reporters=default --reporters=jest-junit ${coverage_params}
     """
 }
 

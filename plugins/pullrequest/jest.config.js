@@ -26,4 +26,5 @@ module.exports = {
         ...base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
     },
+    testRunner: "jest-jasmine2",
 };

@@ -22,4 +22,5 @@ const base_config = require("../../../../tests/jest/jest.base.config.js");
 module.exports = {
     ...base_config,
     displayName: "angular-tlp",
+    testRunner: "jest-jasmine2",
 };

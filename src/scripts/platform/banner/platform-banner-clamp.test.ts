@@ -120,7 +120,7 @@ describe("Platform banner clamp", () => {
                 );
             }
 
-            setImmediate(() => {
+            setTimeout(() => {
                 expect(banner_message.classList).toContain(
                     PLATFORM_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
                 );
