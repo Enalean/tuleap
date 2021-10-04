@@ -19,17 +19,21 @@
 
 @use "common-colors";
 
-// UI colors
-$tlp-info-color: #50b9d8;
-$tlp-success-color: #58b359;
-$tlp-warning-color: #f3b13a;
-$tlp-danger-color: #da5353;
+// ui colors
+$tlp-info-color: #1aacd8;
+$tlp-info-dark-color: #007699;
+$tlp-success-color: #1aa350;
+$tlp-success-dark-color: #007b4f;
+$tlp-warning-color: #ee9d00;
+$tlp-warning-dark-color: #996200;
+$tlp-danger-color: #e04b4b;
+$tlp-danger-dark-color: #c72b2b;
 
-$tlp-dimmed-color: #687a7c;
+$tlp-dimmed-color: #667080;
 
-$tlp-neutral-light-color: #f3f3f3;
-$tlp-neutral-normal-color: #e3e5ed;
-$tlp-neutral-dark-color: #d4d7e1;
+$tlp-neutral-light-color: #eff1f4;
+$tlp-neutral-normal-color: #e2e7ef;
+$tlp-neutral-dark-color: #d2d6dd;
 
 $tlp-main-color: common-colors.$tlp-theme-blue;
 $tlp-background-color: common-colors.$tlp-theme-background-blue;

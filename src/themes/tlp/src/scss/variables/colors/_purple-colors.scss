@@ -20,16 +20,20 @@
 @use "common-colors";
 
 // UI colors
-$tlp-info-color: #4db3d0;
-$tlp-success-color: #58b359;
-$tlp-warning-color: #f3b13a;
-$tlp-danger-color: #da5353;
+$tlp-info-color: #1aacd8;
+$tlp-info-dark-color: #007699;
+$tlp-success-color: #1aa350;
+$tlp-success-dark-color: #007b4f;
+$tlp-warning-color: #ee9d00;
+$tlp-warning-dark-color: #996200;
+$tlp-danger-color: #e04b4b;
+$tlp-danger-dark-color: #c72b2b;
 
-$tlp-dimmed-color: #7a747b;
+$tlp-dimmed-color: #6c6b71;
 
-$tlp-neutral-light-color: #f3f3f3;
-$tlp-neutral-normal-color: #e3e5ed;
-$tlp-neutral-dark-color: #d4d7e1;
+$tlp-neutral-light-color: #f3f2f5;
+$tlp-neutral-normal-color: #e5e7f0;
+$tlp-neutral-dark-color: #cfd2d8;
 
 $tlp-main-color: common-colors.$tlp-theme-purple;
 $tlp-background-color: common-colors.$tlp-theme-background-purple;
@@ -37,7 +41,7 @@ $tlp-dark-color: common-colors.$tlp-theme-dark-purple;
 
 $tlp-typo-default-text-color: $tlp-dark-color;
 
-$tlp-illustration-grey-on-background: #f2eff8;
+$tlp-illustration-grey-on-background: #ecebf0;
 $tlp-illustration-grey-on-white: #fbf9fd;
 
 // Deprecated
