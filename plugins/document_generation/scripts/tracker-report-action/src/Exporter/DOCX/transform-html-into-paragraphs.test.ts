@@ -94,4 +94,29 @@ describe("transform-html-into-paragraph", () => {
             }),
         ]);
     });
+
+    it("transforms unordered lists", () => {
+        const paragraphs = transformHTMLIntoParagraphs(
+            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul></li><li>B</li></ul>"
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "A" })],
+                bullet: { level: 0 },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "A.1" })],
+                bullet: { level: 1 },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "A.2", bold: true })],
+                bullet: { level: 1 },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "B" })],
+                bullet: { level: 0 },
+            }),
+        ]);
+    });
 });

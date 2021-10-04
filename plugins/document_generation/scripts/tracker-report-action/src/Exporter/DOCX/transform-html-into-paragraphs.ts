@@ -23,121 +23,161 @@ import { Paragraph, TextRun, UnderlineType } from "docx";
 export function transformHTMLIntoParagraphs(content: string): Paragraph[] {
     const doc = new DOMParser().parseFromString(content, "text/html");
 
-    return parseTree(doc.body.childNodes, { top_level_phrasing_content: [] });
+    return buildParagraphsFromTreeContent(
+        parseTreeContent(doc.body.childNodes, { style: {}, list_level: 0 }),
+        defaultParagraphBuilder
+    );
 }
 
-interface TreeState {
-    readonly top_level_phrasing_content: ChildNode[];
+type TreeContentChild = Paragraph | ParagraphChild;
+
+type ParagraphBuilder = (children: ParagraphChild[]) => Paragraph;
+
+function defaultParagraphBuilder(children: ParagraphChild[]): Paragraph {
+    return new Paragraph({ children: [...children, new TextRun({ break: 1 })] });
 }
 
-function parseTree(tree: NodeListOf<ChildNode>, tree_state: TreeState): Paragraph[] {
+function buildParagraphsFromTreeContent(
+    tree_content: TreeContentChild[],
+    builder: ParagraphBuilder
+): Paragraph[] {
     const paragraphs: Paragraph[] = [];
-    for (const child of tree) {
-        switch (child.nodeName) {
-            case "DIV":
-                paragraphs.push(...parseTree(child.childNodes, tree_state));
-                break;
-            case "P":
-                paragraphs.push(
-                    ...processTopLevelPhrasingContent(tree_state),
-                    ...buildParagraphFromPhrasingContent(Array.from(child.childNodes))
-                );
-                break;
-            default:
-                tree_state.top_level_phrasing_content.push(child);
+
+    const top_level_paragraph_children: ParagraphChild[] = [];
+
+    for (const child of tree_content) {
+        if (!(child instanceof Paragraph)) {
+            top_level_paragraph_children.push(child);
+            continue;
         }
+
+        paragraphs.push(
+            ...buildParagraphFromParagraphChildren(builder, top_level_paragraph_children),
+            child
+        );
+        top_level_paragraph_children.splice(0);
     }
 
-    paragraphs.push(...processTopLevelPhrasingContent(tree_state));
+    paragraphs.push(...buildParagraphFromParagraphChildren(builder, top_level_paragraph_children));
 
     return paragraphs;
 }
 
-function processTopLevelPhrasingContent(tree_state: TreeState): Paragraph[] {
-    if (tree_state.top_level_phrasing_content.length <= 0) {
-        return [];
-    }
-    const paragraphs = buildParagraphFromPhrasingContent(tree_state.top_level_phrasing_content);
-    tree_state.top_level_phrasing_content.splice(0);
-
-    return paragraphs;
-}
-
-function buildParagraphFromPhrasingContent(phrasing_content: ChildNode[]): Paragraph[] {
-    const paragraph_children: ParagraphChild[] = parsePhrasingContent(phrasing_content, {});
-
+function buildParagraphFromParagraphChildren(
+    builder: ParagraphBuilder,
+    paragraph_children: ParagraphChild[]
+): Paragraph[] {
     if (paragraph_children.length <= 0) {
         return [];
     }
 
-    return [
-        new Paragraph({
-            children: [...paragraph_children, new TextRun({ break: 1 })],
-        }),
-    ];
+    return [builder(paragraph_children)];
 }
 
-function parsePhrasingContent(
-    phrasing_content: ChildNode[],
-    style: IRunStylePropertiesOptions
-): ParagraphChild[] {
-    const paragraph_children: ParagraphChild[] = [];
+interface TreeContentState {
+    style: IRunStylePropertiesOptions;
+    list_level: number;
+}
 
-    for (const child of phrasing_content) {
+function parseTreeContent(
+    tree: NodeListOf<ChildNode>,
+    state: Readonly<TreeContentState>
+): TreeContentChild[] {
+    const content_children: TreeContentChild[] = [];
+
+    for (const child of tree) {
         switch (child.nodeName) {
+            case "DIV":
+                content_children.push(...parseTreeContent(child.childNodes, state));
+                break;
+            case "P":
+                content_children.push(
+                    ...buildParagraphsFromTreeContent(
+                        parseTreeContent(child.childNodes, state),
+                        defaultParagraphBuilder
+                    )
+                );
+                break;
             case "BR":
-                paragraph_children.push(new TextRun({ break: 1 }));
+                content_children.push(new TextRun({ break: 1 }));
                 break;
             case "SPAN":
-                paragraph_children.push(
-                    ...parsePhrasingContent(Array.from(child.childNodes), style)
-                );
+                content_children.push(...parseTreeContent(child.childNodes, state));
                 break;
             case "EM":
             case "I":
-                paragraph_children.push(
-                    ...parsePhrasingContent(Array.from(child.childNodes), {
-                        ...style,
-                        italics: true,
+                content_children.push(
+                    ...parseTreeContent(child.childNodes, {
+                        ...state,
+                        style: {
+                            ...state.style,
+                            italics: true,
+                        },
                     })
                 );
                 break;
             case "STRONG":
             case "B":
-                paragraph_children.push(
-                    ...parsePhrasingContent(Array.from(child.childNodes), { ...style, bold: true })
+                content_children.push(
+                    ...parseTreeContent(child.childNodes, {
+                        ...state,
+                        style: { ...state.style, bold: true },
+                    })
                 );
                 break;
             case "SUP":
-                paragraph_children.push(
-                    ...parsePhrasingContent(Array.from(child.childNodes), {
-                        ...style,
-                        superScript: true,
+                content_children.push(
+                    ...parseTreeContent(child.childNodes, {
+                        ...state,
+                        style: {
+                            ...state.style,
+                            superScript: true,
+                        },
                     })
                 );
                 break;
             case "SUB":
-                paragraph_children.push(
-                    ...parsePhrasingContent(Array.from(child.childNodes), {
-                        ...style,
-                        subScript: true,
+                content_children.push(
+                    ...parseTreeContent(child.childNodes, {
+                        ...state,
+                        style: {
+                            ...state.style,
+                            subScript: true,
+                        },
                     })
                 );
                 break;
             case "U":
-                paragraph_children.push(
-                    ...parsePhrasingContent(Array.from(child.childNodes), {
-                        ...style,
-                        underline: { type: UnderlineType.SINGLE },
+                content_children.push(
+                    ...parseTreeContent(child.childNodes, {
+                        ...state,
+                        style: {
+                            ...state.style,
+                            underline: { type: UnderlineType.SINGLE },
+                        },
                     })
                 );
                 break;
+            case "UL":
+                for (const list_item of child.childNodes) {
+                    content_children.push(
+                        ...buildParagraphsFromTreeContent(
+                            parseTreeContent(list_item.childNodes, {
+                                ...state,
+                                list_level: state.list_level + 1,
+                            }),
+                            (children: ParagraphChild[]): Paragraph =>
+                                new Paragraph({ children, bullet: { level: state.list_level } })
+                        )
+                    );
+                }
+                break;
             default:
                 if (child.textContent !== null && child.textContent !== "") {
-                    paragraph_children.push(new TextRun({ text: child.textContent, ...style }));
+                    content_children.push(new TextRun({ text: child.textContent, ...state.style }));
                 }
         }
     }
 
-    return paragraph_children;
+    return content_children;
 }
