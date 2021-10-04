@@ -17,7 +17,7 @@
             </span>
             <div class="current-test-comment-attachment-buttons-container">
                 <button
-                    ng-if="$ctrl.isInCommentMode && !file.is_deleted"
+                    ng-if="$ctrl.isInCommentMode && !file.is_deleted && $ctrl.can_user_attach_files"
                     type="button"
                     class="tlp-button-danger tlp-button-outline current-test-comment-attachment-delete-button"
                     title="{{ 'Remove file' | translate }}"
@@ -103,7 +103,7 @@
             </div>
         </span>
     </div>
-    <div ng-if="$ctrl.isInCommentMode" class="current-test-comment-attachements-controls" ng-class="{'current-test-comment-attachements-controls-no-placeholder': $ctrl.execution.attachments.length > 0}">
+    <div ng-if="$ctrl.isInCommentMode && $ctrl.can_user_attach_files" class="current-test-comment-attachements-controls" ng-class="{'current-test-comment-attachements-controls-no-placeholder': $ctrl.execution.attachments.length > 0}">
         <p ng-if="$ctrl.execution.attachments.length === 0 && $ctrl.execution.uploaded_files_through_attachment_area.length === 0" class="test-files-empty-placeholder" translate>
             Select files to attach or drop them in the text area...
         </p>

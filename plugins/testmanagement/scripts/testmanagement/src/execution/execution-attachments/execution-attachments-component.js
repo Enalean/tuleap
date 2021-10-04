@@ -55,9 +55,16 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
         handleUploadError,
         upload_error_messages_popovers: new Map(),
         file_creation_errors: [],
+        can_user_attach_files: null,
     });
 
     function $onInit() {
+        self.can_user_attach_files = self.execution.upload_url !== null;
+
+        if (!self.can_user_attach_files) {
+            return;
+        }
+
         $scope.$watch(
             () => getFileInput(),
             (file_input) => {

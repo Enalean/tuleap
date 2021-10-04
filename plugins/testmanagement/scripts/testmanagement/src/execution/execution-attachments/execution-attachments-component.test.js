@@ -89,6 +89,27 @@ describe("execution-attachments-component", () => {
                 expect.any(Function)
             );
         });
+
+        it("does nothing when there is no upload url on the execution", () => {
+            execution.upload_url = null;
+
+            controller.$onInit();
+
+            const file_input = document.createElement("input");
+            file_input.setAttribute("type", "file");
+            file_input.setAttribute("id", "test-files-upload-button");
+
+            jest.spyOn(file_input, "addEventListener");
+
+            $element[0].appendChild(file_input);
+
+            $scope.$digest();
+
+            expect(file_input.addEventListener).not.toHaveBeenCalledWith(
+                "change",
+                expect.any(Function)
+            );
+        });
     });
 
     describe("$onDestroy", () => {
