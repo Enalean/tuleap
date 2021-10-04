@@ -81,7 +81,7 @@ services:
       - tuleap
 
   ldap:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/ldap
+    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/ldap
     environment:
       LDAP_ROOT_PASSWORD: DumpPass4Tests
       LDAP_MANAGER_PASSWORD: DumpPass4Tests
