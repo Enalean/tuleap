@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -50,7 +51,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $program_DAO          = new ProgramDao();
         $project_manager      = \ProjectManager::instance();
         $event_manager        = \EventManager::instance();
-        $user_manager_adapter = new UserManagerAdapter(\UserManager::instance());
+        $user_retriever       = new UserManagerAdapter(\UserManager::instance());
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_factory,
@@ -82,10 +83,11 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                     $event_manager
                 ),
                 $program_DAO,
-                $user_manager_adapter
+                $user_retriever
             ),
             $program_DAO,
             new ProjectReferenceRetriever($project_manager),
+            new PlanningAdapter(\PlanningFactory::build(), $user_retriever)
         );
     }
 }
