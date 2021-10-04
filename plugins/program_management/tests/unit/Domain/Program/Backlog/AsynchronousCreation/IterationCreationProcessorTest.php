@@ -24,10 +24,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 
 final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -55,7 +59,11 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withDefault()
             ),
-            RetrieveChangesetSubmissionDateStub::withDate(1781713922)
+            RetrieveChangesetSubmissionDateStub::withDate(1781713922),
+            RetrieveProgramOfIterationStub::withProgram(154),
+            BuildProgramStub::stubValidProgram(),
+            SearchTeamsOfProgramStub::buildTeams(122, 127),
+            new RetrieveProjectReferenceStub()
         );
     }
 

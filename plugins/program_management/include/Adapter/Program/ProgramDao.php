@@ -24,14 +24,17 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationHasNoProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 
-final class ProgramDao extends DataAccessObject implements ProgramStore, RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher
+final class ProgramDao extends DataAccessObject implements ProgramStore, RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher, RetrieveProgramOfIteration
 {
     public function isAProgram(int $project_id): bool
     {
@@ -80,6 +83,22 @@ final class ProgramDao extends DataAccessObject implements ProgramStore, Retriev
         $result = $this->getDB()->cell($sql, $program_increment->getId());
         if ($result === false) {
             throw new ProgramIncrementHasNoProgramException($program_increment);
+        }
+        return (int) $result;
+    }
+
+    public function getProgramOfIteration(IterationIdentifier $iteration): int
+    {
+        $sql = <<<SQL
+        SELECT program.program_project_id
+        FROM plugin_program_management_program AS program
+             INNER JOIN tracker_artifact AS iteration ON program.iteration_tracker_id = iteration.tracker_id
+        WHERE iteration.id = ?
+        SQL;
+
+        $result = $this->getDB()->cell($sql, $iteration->getId());
+        if ($result === false) {
+            throw new IterationHasNoProgramException($iteration);
         }
         return (int) $result;
     }
