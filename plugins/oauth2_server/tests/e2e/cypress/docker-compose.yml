@@ -2,7 +2,7 @@ version: "2"
 
 services:
   oauth2-server-rp-oidc:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-test-phpunit:c7-php80
+    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:c7-php80
     command: scl enable php80 -- php /tuleap/plugins/oauth2_server/tests/e2e/cypress/rp-oidc/app.php
     volumes:
       - .:/tuleap:ro
