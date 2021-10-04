@@ -216,14 +216,14 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
         );
     }
 
-    function createFileInTestExecution(execution, file) {
+    function createFileInTestExecution(execution, { name, file_size, file_type }) {
         return $q.when(
             post(execution.upload_url, {
                 headers,
                 body: JSON.stringify({
-                    name: file.name,
-                    file_size: file.size,
-                    file_type: file.type,
+                    name,
+                    file_size,
+                    file_type,
                 }),
             })
                 .then((response) => response.json())
