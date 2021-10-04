@@ -58,12 +58,12 @@ class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         ProjectIconChecker::isIconValid("✖️");
     }
 
-    public function testItThrowsExceptionIfTheFeatureIsDisabled(): void
+    public function testItDoesNothingIfTheFeatureIsDisabled(): void
     {
         ForgeConfig::set('feature_flag_project_icon_display', '0');
-        self::expectException(InvalidProjectIconException::class);
 
         ProjectIconChecker::isIconValid("😇");
+        self::expectNotToPerformAssertions();
     }
 
     public function testItDoesNothingIfTheIconIsValid(): void

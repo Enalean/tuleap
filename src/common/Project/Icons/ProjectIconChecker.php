@@ -42,11 +42,7 @@ final class ProjectIconChecker
      */
     public static function isIconValid(string $icon): void
     {
-        if (! self::isProjectIconFeatureActive()) {
-            throw new InvalidProjectIconException();
-        }
-
-        if ($icon === '') {
+        if ($icon === '' || ! self::isProjectIconFeatureActive()) {
             return;
         }
 
