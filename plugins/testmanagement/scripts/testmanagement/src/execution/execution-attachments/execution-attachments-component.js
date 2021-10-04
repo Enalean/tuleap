@@ -20,6 +20,7 @@
 import "./execution-attachments.tpl.html";
 import { processUpload, abortFileUpload } from "./execution-attachments-uploader.js";
 import { createPopover } from "tlp";
+import { buildFileInfo } from "./execution-attachments-files-adapter.js";
 
 export default {
     bindings: {
@@ -77,7 +78,7 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
     }
 
     function attachFile(file) {
-        return ExecutionRestService.createFileInTestExecution(self.execution, file)
+        return ExecutionRestService.createFileInTestExecution(self.execution, buildFileInfo(file))
             .then((new_file) => {
                 const file_uploading = {
                     id: new_file.id,

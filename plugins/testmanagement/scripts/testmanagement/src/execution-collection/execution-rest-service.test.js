@@ -379,17 +379,17 @@ describe("ExecutionRestService", () => {
     });
 
     describe("createFileInTestExecution()", () => {
-        let test_execution, file;
+        let test_execution, file_info;
 
         beforeEach(() => {
             test_execution = {
                 upload_url: "/api/v1/tracker_fields/1260/file",
             };
 
-            file = {
+            file_info = {
                 name: "bug.png",
-                size: 12345678910,
-                type: "image/png",
+                file_size: 12345678910,
+                file_type: "image/png",
             };
         });
         it("should create a file for the given test execution and return its representation", async () => {
@@ -402,7 +402,10 @@ describe("ExecutionRestService", () => {
             const tlpPost = jest.spyOn(tlp, "post");
             mockFetchSuccess(tlpPost, { return_json: created_file });
 
-            const promise = ExecutionRestService.createFileInTestExecution(test_execution, file);
+            const promise = ExecutionRestService.createFileInTestExecution(
+                test_execution,
+                file_info
+            );
             const result = await wrapPromise(promise);
 
             expect(tlpPost).toHaveBeenCalledWith("/api/v1/tracker_fields/1260/file", {
@@ -421,19 +424,13 @@ describe("ExecutionRestService", () => {
                 upload_url: "/api/v1/tracker_fields/1260/file",
             };
 
-            const file = {
-                name: "bug.png",
-                size: 12345678910,
-                type: "image/png",
-            };
-
             const tlpPost = jest.spyOn(tlp, "post");
             mockFetchError(tlpPost, { status: 400, error_json: { error: "File is too big" } });
 
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = ExecutionRestService.createFileInTestExecution(
                 test_execution,
-                file
+                file_info
             ).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(error).toEqual("File is too big");

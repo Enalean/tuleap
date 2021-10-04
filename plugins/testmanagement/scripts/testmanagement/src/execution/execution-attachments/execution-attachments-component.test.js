@@ -137,10 +137,11 @@ describe("execution-attachments-component", () => {
 
             $scope.$digest();
 
-            expect(ExecutionRestService.createFileInTestExecution).toHaveBeenCalledWith(
-                execution,
-                file_to_attach
-            );
+            expect(ExecutionRestService.createFileInTestExecution).toHaveBeenCalledWith(execution, {
+                name: file_to_attach.name,
+                file_size: file_to_attach.size,
+                file_type: file_to_attach.type,
+            });
             expect(ExecutionService.addToFilesAddedThroughAttachmentArea).toHaveBeenCalledWith(
                 execution,
                 {
