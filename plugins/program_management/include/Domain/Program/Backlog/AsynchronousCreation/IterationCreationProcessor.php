@@ -23,12 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -36,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 final class IterationCreationProcessor implements ProcessIterationCreation
 {
@@ -47,7 +51,8 @@ final class IterationCreationProcessor implements ProcessIterationCreation
         private RetrieveProgramOfIteration $program_retriever,
         private BuildProgram $program_builder,
         private SearchTeamsOfProgram $teams_searcher,
-        private RetrieveProjectReference $project_reference_retriever
+        private RetrieveProjectReference $project_reference_retriever,
+        private RetrievePlanningMilestoneTracker $milestone_tracker_retriever
     ) {
     }
 
@@ -66,7 +71,8 @@ final class IterationCreationProcessor implements ProcessIterationCreation
             FieldSynchronizationException
             | MirroredTimeboxReplicationException
             | ProgramAccessException
-            | ProjectIsNotAProgramException $exception
+            | ProjectIsNotAProgramException
+            | TrackerRetrievalException $exception
         ) {
             $this->logger->error('Error during creation of mirror iterations', ['exception' => $exception]);
             return;
@@ -78,6 +84,7 @@ final class IterationCreationProcessor implements ProcessIterationCreation
      * @throws FieldSynchronizationException
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
+     * @throws TrackerRetrievalException
      */
     private function create(IterationCreation $creation): void
     {
@@ -102,8 +109,16 @@ final class IterationCreationProcessor implements ProcessIterationCreation
             $program
         );
 
-        [$first_team] = $team_projects->getTeamProjects();
+        $second_planning_trackers = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            $this->milestone_tracker_retriever,
+            $team_projects,
+            $user,
+            new ConfigurationErrorsCollector(false)
+        );
+
         $this->logger->debug(sprintf('Title value: %s', $source_values->getTitleValue()->getValue()));
-        $this->logger->debug(sprintf('Team name: %s', $first_team->getProjectLabel()));
+        foreach ($second_planning_trackers->getTrackers() as $second_planning_tracker) {
+            $this->logger->debug(sprintf('Mirrored Iteration tracker: %s', $second_planning_tracker->getLabel()));
+        }
     }
 }
