@@ -23,12 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
+use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
 final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private VerifyIsTeamStub $team_verifier;
     private RootPlanningEditionEvent $event;
+    private RootPlanningEditionEventProxy $event_proxy;
 
     protected function setUp(): void
     {
@@ -37,6 +39,7 @@ final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             new \Planning(50, 'Release Planning', 110, '', '')
         );
         $this->team_verifier = VerifyIsTeamStub::withValidTeam();
+        $this->event_proxy   = RootPlanningEditionEventProxy::buildFromEvent($this->event);
     }
 
     private function getHandler(): RootPlanningEditionHandler
@@ -46,7 +49,7 @@ final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testHandleProhibitsMilestoneTrackerUpdateForTeamProjects(): void
     {
-        $this->getHandler()->handle($this->event);
+        $this->getHandler()->handle($this->event_proxy);
 
         $this->assertNotNull($this->event->getMilestoneTrackerModificationBan());
     }
@@ -55,7 +58,7 @@ final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->team_verifier = VerifyIsTeamStub::withNotValidTeam();
 
-        $this->getHandler()->handle($this->event);
+        $this->getHandler()->handle($this->event_proxy);
 
         $this->assertNull($this->event->getMilestoneTrackerModificationBan());
     }

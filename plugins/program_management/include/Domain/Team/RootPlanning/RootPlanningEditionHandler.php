@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ProgramManagement\Adapter\Team\RootPlanning\MilestoneTrackerUpdateProhibited;
+use Tuleap\ProgramManagement\Domain\Events\RootPlanningEditionEvent;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 
 final class RootPlanningEditionHandler
@@ -37,8 +36,8 @@ final class RootPlanningEditionHandler
 
     public function handle(RootPlanningEditionEvent $event): void
     {
-        if ($this->team_verifier->isATeam((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
+        if ($this->team_verifier->isATeam($event->getProjectIdentifier()->getId())) {
+            $event->prohibitMilestoneTrackerModification();
         }
     }
 }
