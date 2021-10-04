@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
 
 final class CreateArtifactStub implements CreateArtifact
 {
@@ -50,15 +47,11 @@ final class CreateArtifactStub implements CreateArtifact
         return $this->call_count;
     }
 
-    public function create(
-        TrackerReference $tracker,
-        MirroredTimeboxChangesetValues $mirrored_program_increment_changeset,
-        UserIdentifier $user_identifier,
-        SubmissionDate $submission_date
-    ): void {
+    public function create(MirroredTimeboxFirstChangeset $first_changeset): void
+    {
+        $this->call_count++;
         if ($this->should_throw) {
             throw new ArtifactCreationException();
         }
-        $this->call_count++;
     }
 }
