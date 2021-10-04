@@ -45,7 +45,7 @@ class BotFactory
         string $bot_avatar_url,
         ?int $project_id
     ): void {
-        if (! $this->isABotWithNameAndWebhookUrlAlreadyExisting($bot_name, $bot_webhook_url)) {
+        if (! $this->isABotWithNameWebhookUrlAndProjectIdAlreadyExisting($bot_name, $bot_webhook_url, $project_id)) {
             $id = $this->dao->addBot(
                 trim($bot_name),
                 trim($bot_webhook_url),
@@ -112,9 +112,13 @@ class BotFactory
         return $this->buildBotsFromDAR($dar);
     }
 
-    public function isABotWithNameAndWebhookUrlAlreadyExisting(string $name, string $webhook_url): bool
+    private function isABotWithNameWebhookUrlAndProjectIdAlreadyExisting(string $name, string $webhook_url, ?int $project_id): bool
     {
-        return $this->dao->isABotWithNameAndWebhookUrlAlreadyExisting($name, $webhook_url);
+        if ($project_id === null) {
+            return $this->dao->isASystemBotWithNameAndWebhookUrlAlreadyExisting($name, $webhook_url);
+        }
+
+        return $this->dao->isAProjectBotWithNameWebhookUrlAndProjectIdAlreadyExisting($name, $webhook_url, $project_id);
     }
 
     public function getBotById($bot_id): Bot
