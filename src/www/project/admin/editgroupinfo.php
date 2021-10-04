@@ -35,6 +35,7 @@ use Tuleap\Project\Admin\RestrictedUsersProjectCounter;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Icons\ProjectIconRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
@@ -68,6 +69,8 @@ $project_visibility_presenter_builder = new ProjectVisibilityPresenterBuilder(
 
 $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
 
+$project_icons_retriever = new ProjectIconRetriever();
+
 $project_details_controller = new ProjectDetailsController(
     $fields_factory,
     $currentproject,
@@ -81,6 +84,7 @@ $project_details_controller = new ProjectDetailsController(
     $trove_cat_link_dao,
     $csrf_token,
     TemplateFactory::build(),
+    $project_icons_retriever
 );
 
 $project_details_router = new ProjectDetailsRouter(

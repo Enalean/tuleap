@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,24 +19,14 @@
  *
  */
 
-import type { EmojiButton } from "@joeattardi/emoji-button";
+declare(strict_types=1);
 
-const ICON_PICKER_EVENT = "emoji";
+namespace Tuleap\Project\Icons;
 
-export function initIconPicker(doc: Document, icon_picker: EmojiButton | null): void {
-    if (!icon_picker) {
-        return;
-    }
-    const icon_input = doc.getElementById("form-group-name-icon");
-    const icon_button = doc.getElementById("form-group-name-icon-button");
-
-    if (icon_button !== null && icon_input !== null) {
-        icon_picker.on(ICON_PICKER_EVENT, (selection) => {
-            icon_input.setAttribute("value", selection.emoji);
-        });
-
-        icon_button.addEventListener("click", () => {
-            icon_picker.togglePicker(icon_input);
-        });
+final class ProjectIconRetriever
+{
+    public function getAllCategoriesAndProjectIcons(): string
+    {
+        return file_get_contents(__DIR__ . '/icons-for-project.json');
     }
 }

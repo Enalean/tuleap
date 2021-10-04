@@ -20,9 +20,14 @@
 
 import { EmojiButton } from "@joeattardi/emoji-button";
 import type Gettext from "node-gettext";
-import iconsData from "./icons-for-project.json";
 
-export function buildIconPicker(gettext_provider: Gettext): EmojiButton {
+export function buildIconPicker(gettext_provider: Gettext, doc: Document): EmojiButton | null {
+    const project_icons_div = doc.getElementById("form-group-name-icon-input-container");
+    const project_icons = project_icons_div?.dataset.allProjectIcons;
+    if (!project_icons || project_icons === "") {
+        return null;
+    }
+
     return new EmojiButton({
         categories: [
             "smileys",
@@ -53,6 +58,6 @@ export function buildIconPicker(gettext_provider: Gettext): EmojiButton {
         },
         position: "bottom-start",
         zIndex: 10000, //avoid to be under the select2
-        emojiData: iconsData,
+        emojiData: JSON.parse(project_icons),
     });
 }

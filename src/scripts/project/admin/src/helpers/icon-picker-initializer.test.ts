@@ -33,7 +33,7 @@ jest.mock("@joeattardi/emoji-button", () => {
 });
 
 describe("icon-picker-initializer", () => {
-    let doc: HTMLDocument;
+    let doc: Document;
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
     });
@@ -52,6 +52,24 @@ describe("icon-picker-initializer", () => {
         initIconPicker(doc, icon_picker_instance);
         whatever_button.click();
         expect(icon_picker_instance.on).not.toHaveBeenCalled();
+    });
+
+    it("does not initialize the icon picker if the picker is not built", () => {
+        const icon_picker_instance = null;
+
+        const icon_button = doc.createElement("button");
+        icon_button.id = "form-group-name-icon-button";
+
+        const icon_input = doc.createElement("input");
+        icon_input.id = "form-group-name-icon";
+        const input_spy = jest.spyOn(icon_input, "setAttribute");
+
+        doc.body.append(icon_button, icon_input);
+
+        initIconPicker(doc, icon_picker_instance);
+        icon_button.click();
+
+        expect(input_spy).not.toHaveBeenCalled();
     });
 
     it("does initialize the icon picker if the button and the input are found", () => {

@@ -40,6 +40,7 @@ use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Icons\ProjectIconRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
@@ -114,6 +115,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trove_cat_link_dao,
             $this->csrf_token,
             Mockery::mock(TemplateFactory::class),
+            new ProjectIconRetriever()
         );
 
         $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);

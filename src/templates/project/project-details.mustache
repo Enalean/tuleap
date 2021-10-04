@@ -54,7 +54,7 @@
                         {{# is_project_icon_enabled }}
                             <div class="tlp-form-element">
                                 <label class="tlp-label" for="form-group-name-icon">{{ icon_label_name }}</label>
-                                <div class="tlp-form-element tlp-form-element-append">
+                                <div id="form-group-name-icon-input-container" class="tlp-form-element tlp-form-element-append"  {{# is_project_icon_enabled }} data-all-project-icons="{{all_project_icon}}" {{/ is_project_icon_enabled }}>
                                     <input type="text" readonly maxlength="1" class="tlp-input form-group-name-icon-input" id="form-group-name-icon" name="form-group-name-icon"
                                            value="{{ project_icon }}"/>
                                     <button id="form-group-name-icon-button" type="button"
