@@ -48,7 +48,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
@@ -194,7 +193,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $program_dao            = new ProgramDao();
         $modifier               = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter(\ProjectManager::instance(), $this->user_manager_adapter),
+                \ProjectManager::instance(),
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()

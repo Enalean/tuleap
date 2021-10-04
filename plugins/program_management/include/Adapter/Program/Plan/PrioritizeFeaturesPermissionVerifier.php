@@ -28,28 +28,18 @@ use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\CheckProjectAccess;
 
 final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
 {
-    private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao;
-    private RetrieveProject $project_manager;
-    private CheckProjectAccess $project_access_checker;
-    private RetrieveUser $user_manager;
-
     public function __construct(
-        RetrieveProject $project_manager,
-        CheckProjectAccess $project_access_checker,
-        RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao,
-        RetrieveUser $user_manager
+        private \ProjectManager $project_manager,
+        private CheckProjectAccess $project_access_checker,
+        private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao,
+        private RetrieveUser $user_manager
     ) {
-        $this->project_manager             = $project_manager;
-        $this->project_access_checker      = $project_access_checker;
-        $this->can_prioritize_features_dao = $can_prioritize_features_dao;
-        $this->user_manager                = $user_manager;
     }
 
     public function canUserPrioritizeFeatures(
@@ -67,7 +57,7 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
             return true;
         }
 
-        $project = $this->project_manager->getProjectWithId($program_id);
+        $project = $this->project_manager->getProject($program_id);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {

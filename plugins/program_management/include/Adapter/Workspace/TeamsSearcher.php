@@ -24,20 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\Project\Sidebar\SearchLinkedProjects;
 
 final class TeamsSearcher implements SearchLinkedProjects
 {
-    private SearchTeamsOfProgram $team_ids_searcher;
-    private RetrieveProject $project_retriever;
-
     public function __construct(
-        SearchTeamsOfProgram $team_ids_searcher,
-        RetrieveProject $project_retriever
+        private SearchTeamsOfProgram $team_ids_searcher,
+        private \ProjectManager $project_manager
     ) {
-        $this->team_ids_searcher = $team_ids_searcher;
-        $this->project_retriever = $project_retriever;
     }
 
     /**
@@ -48,7 +42,7 @@ final class TeamsSearcher implements SearchLinkedProjects
         $team_ids      = $this->team_ids_searcher->searchTeamIdsOfProgram((int) $source_project->getID());
         $team_projects = [];
         foreach ($team_ids as $team_id) {
-            $team_projects[] = $this->project_retriever->getProjectWithId($team_id);
+            $team_projects[] = $this->project_manager->getProject($team_id);
         }
         return $team_projects;
     }

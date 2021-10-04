@@ -173,7 +173,7 @@ final class ProjectResource extends AuthenticatedResource
             )
         );
         $this->features_permission_verifier = new PrioritizeFeaturesPermissionVerifier(
-            $project_retriever,
+            $project_manager,
             $project_access_checker,
             new CanPrioritizeFeaturesDAO(),
             $this->user_manager_adapter
