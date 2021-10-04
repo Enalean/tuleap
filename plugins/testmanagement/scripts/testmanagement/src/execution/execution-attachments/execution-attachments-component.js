@@ -80,11 +80,12 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
     function attachFile(file) {
         return ExecutionRestService.createFileInTestExecution(self.execution, buildFileInfo(file))
             .then((new_file) => {
+                const upload_url = new_file.upload_href || null;
                 const file_uploading = {
                     id: new_file.id,
                     filename: file.name,
-                    upload_url: new_file.upload_href,
-                    progress: 0,
+                    upload_url: upload_url,
+                    progress: upload_url ? 0 : 100,
                     upload_error_message: "",
                 };
 
@@ -93,9 +94,13 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
                     file_uploading
                 );
 
+                if (upload_url === null) {
+                    return;
+                }
+
                 processUpload(
                     file,
-                    new_file.upload_href,
+                    upload_url,
                     (progress_in_percent) => {
                         ExecutionService.updateExecutionAttachment(
                             self.execution,

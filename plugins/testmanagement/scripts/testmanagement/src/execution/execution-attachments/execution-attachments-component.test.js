@@ -159,6 +159,49 @@ describe("execution-attachments-component", () => {
                 expect.any(Function)
             );
         });
+
+        it("does not try to upload empty files", () => {
+            const new_file = {
+                id: 1234,
+                upload_href: "",
+                download_href: "/download-me.there",
+            };
+
+            jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
+                $q.when(new_file)
+            );
+            jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(attachments_uploader, "processUpload");
+
+            const file_to_attach = {
+                name: "empty.txt",
+                size: 0,
+                type: "text/plain",
+            };
+
+            controller.attachFile(file_to_attach);
+
+            $scope.$digest();
+
+            expect(ExecutionRestService.createFileInTestExecution).toHaveBeenCalledWith(execution, {
+                name: file_to_attach.name,
+                file_size: file_to_attach.size,
+                file_type: file_to_attach.type,
+            });
+            expect(ExecutionService.addToFilesAddedThroughAttachmentArea).toHaveBeenCalledWith(
+                execution,
+                {
+                    id: new_file.id,
+                    filename: file_to_attach.name,
+                    progress: 100,
+                    upload_error_message: "",
+                    upload_url: null,
+                }
+            );
+            expect(attachments_uploader.processUpload).not.toHaveBeenCalled();
+        });
     });
 
     afterEach(() => {
