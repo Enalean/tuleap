@@ -25,6 +25,7 @@ namespace Tuleap\Project\Icon;
 
 use ForgeConfig;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Project\Icons\InvalidProjectIconException;
 use Tuleap\Project\Icons\ProjectIconChecker;
 
 class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -47,5 +48,39 @@ class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('feature_flag_project_icon_display', '1');
         self::assertTrue(ProjectIconChecker::isProjectIconFeatureActive());
+    }
+
+    public function testItThrowsExceptionIfTheGivenIconIsAForbiddenIcon(): void
+    {
+        ForgeConfig::set('feature_flag_project_icon_display', '1');
+        self::expectException(InvalidProjectIconException::class);
+
+        ProjectIconChecker::isIconValid("✖️");
+    }
+
+    public function testItThrowsExceptionIfTheFeatureIsDisabled(): void
+    {
+        ForgeConfig::set('feature_flag_project_icon_display', '0');
+        self::expectException(InvalidProjectIconException::class);
+
+        ProjectIconChecker::isIconValid("😇");
+    }
+
+    public function testItDoesNothingIfTheIconIsValid(): void
+    {
+        ForgeConfig::set('feature_flag_project_icon_display', '1');
+
+        ProjectIconChecker::isIconValid("😇");
+
+        self::expectNotToPerformAssertions();
+    }
+
+    public function testItDoesNothingIfThereIsNoIcon(): void
+    {
+        ForgeConfig::set('feature_flag_project_icon_display', '1');
+
+        ProjectIconChecker::isIconValid("");
+
+        self::expectNotToPerformAssertions();
     }
 }

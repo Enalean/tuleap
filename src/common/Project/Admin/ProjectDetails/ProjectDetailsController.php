@@ -29,6 +29,7 @@ use EventManager;
 use Feedback;
 use ForgeConfig;
 use HTTPRequest;
+use JsonException;
 use PFUser;
 use Project;
 use Project_HierarchyManagerAlreadyAncestorException;
@@ -37,11 +38,14 @@ use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectFullName;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
-use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\HierarchyDisplayer;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
+use Tuleap\Project\Icons\InvalidProjectIconException;
+use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
@@ -119,7 +123,7 @@ class ProjectDetailsController
         UGroupBinding $ugroup_binding,
         TroveCatLinkDao $trove_cat_link_dao,
         CSRFSynchronizerToken $csrf_token,
-        TemplateFactory $template_factory
+        TemplateFactory $template_factory,
     ) {
         $this->description_fields_factory           = $description_fields_factory;
         $this->current_project                      = $current_project;
@@ -172,6 +176,11 @@ class ProjectDetailsController
         $template_project = $this->project_manager->getProject($project->getTemplate());
 
         $renderer = \TemplateRendererFactory::build()->getRenderer($template_path);
+
+        $project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
+            $group_info['icon_codepoint']
+        );
+
         $renderer->renderToPage(
             'project-details',
             new ProjectDetailsPresenter(
@@ -186,7 +195,8 @@ class ProjectDetailsController
                 $project_trove_categories,
                 $this->getProjectsCreatedFromTemplate($project),
                 $this->csrf_token,
-                ProjectDescriptionUsageRetriever::isDescriptionMandatory()
+                ProjectDescriptionUsageRetriever::isDescriptionMandatory(),
+                $project_icon
             )
         );
     }
@@ -213,6 +223,10 @@ class ProjectDetailsController
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("A project cannot be its own parent."));
         } catch (Project_HierarchyManagerAlreadyAncestorException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("These projects are already related."));
+        } catch (InvalidProjectIconException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed: invalid project icon selected"));
+        } catch (JsonException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed: icon conversion error"));
         }
     }
 
@@ -379,18 +393,31 @@ class ProjectDetailsController
         return $description_fields_representations;
     }
 
+    /**
+     * @throws InvalidProjectIconException
+     * @throws JsonException
+     */
     private function updateGroup(HTTPRequest $request)
     {
         $form_group_name = trim($request->get('form_group_name'));
         $form_shortdesc  = $request->get('form_shortdesc');
         $group_id        = $request->get('group_id');
+        $icon_character  = $request->get('form-group-name-icon');
+
+
+        ProjectIconChecker::isIconValid($icon_character);
+        $project_icon_unicode_codepoint = EmojiCodepointConverter::convertEmojiToStoreFormat(
+            $icon_character
+        );
+
 
         // in the database, these all default to '1',
         // so we have to explicity set 0
         $this->project_details_dao->updateGroupNameAndDescription(
             $form_group_name,
             $form_shortdesc,
-            $group_id
+            $group_id,
+            $project_icon_unicode_codepoint
         );
     }
 
@@ -435,7 +462,6 @@ class ProjectDetailsController
     {
         $children = $this->project_manager->getChildProjects($project->getID());
 
-        $purifier          = Codendi_HTMLPurifier::instance();
         $children_projects = [];
 
         foreach ($children as $child) {
@@ -445,8 +471,8 @@ class ProjectDetailsController
                 $url = '/projects/' . urlencode($child->getUnixName());
             }
 
-            $purified_url        = $purifier->purify($url);
-            $purified_name       = $purifier->purify($child->getPublicName());
+            $purified_url        = Codendi_HTMLPurifier::instance()->purify($url);
+            $purified_name       = Codendi_HTMLPurifier::instance()->purify($child->getPublicName());
             $children_projects[] = '<a href="' . $purified_url . '">' . $purified_name . '</a>';
         }
 
