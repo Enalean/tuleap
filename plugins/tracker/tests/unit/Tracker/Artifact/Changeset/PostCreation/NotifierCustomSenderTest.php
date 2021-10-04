@@ -130,6 +130,7 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $example->shouldReceive('getRealname')->andReturn($this->user_realname);
         $example->shouldReceive('getEmail')->andReturn('email@example.com');
         $example->shouldReceive('getLanguage')->andReturn($language);
+        $example->shouldReceive('getTimezone')->andReturn('Europe/Paris');
 
         $changeset->shouldReceive('getSubmitter')->andReturn($example);
         $this->recipients_manager->shouldReceive('getUserFromRecipientName')->andReturn($example);
