@@ -72,7 +72,7 @@ use Tuleap\Request\NotFoundException;
 final class DisplayAdminProgramManagementController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
     public function __construct(
-        private RetrieveProject $project_manager,
+        private RetrieveProject $project_retriever,
         private \TemplateRenderer $template_renderer,
         private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
         private SearchTeamsOfProgram $teams_searcher,
@@ -89,7 +89,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private RetrieveIterationLabels $iteration_labels_retriever,
         private AllProgramSearcher $all_program_searcher,
         private VerifyIterationsFeatureActive $feature_flag_verifier,
-        private ConfigurationErrorPresenterBuilder $error_presenter_builder
+        private ConfigurationErrorPresenterBuilder $error_presenter_builder,
+        private \ProjectManager $project_manager
     ) {
     }
 
@@ -210,7 +211,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $admin_program,
                 PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
                     PotentialTeamsCollection::buildPotentialTeams(
-                        $this->project_manager,
+                        $this->project_retriever,
                         $this->teams_searcher,
                         $this->all_program_searcher,
                         $admin_program,

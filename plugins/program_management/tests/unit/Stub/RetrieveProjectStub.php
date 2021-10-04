@@ -63,13 +63,4 @@ final class RetrieveProjectStub implements RetrieveProject
     {
         return $this->projects;
     }
-
-    public function getProjectByUnixName(string $project_name): ?\Project
-    {
-        if (count($this->projects) > 0) {
-            return array_shift($this->projects);
-        }
-
-        return null;
-    }
 }

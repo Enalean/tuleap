@@ -30,6 +30,4 @@ interface RetrieveProject
      * @return \Project[]
      */
     public function getProjectsUserIsAdmin(UserIdentifier $user_identifier): array;
-
-    public function getProjectByUnixName(string $project_name): ?\Project;
 }
