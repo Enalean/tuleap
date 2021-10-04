@@ -23,54 +23,58 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Service;
 
-use Tuleap\AgileDashboard\Stub\RetrievePlanningStub;
+use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyScrumBlocksServiceActivationStub;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private ServiceDisabledCollector $event;
+
+    protected function setUp(): void
+    {
+        $this->event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
+    }
+
     public function testItDoesNothingForOtherPlugins(): void
     {
         $checker = VerifyIsTeamStub::withValidTeam();
-        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubNoPlannings());
+        $handler = new ServiceDisabledCollectorHandler($checker, VerifyScrumBlocksServiceActivationStub::withoutScrum());
 
-        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
-        $handler->handle($event, 'other_plugin');
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), 'other_plugin');
 
-        self::assertEmpty($event->getReason());
+        self::assertEmpty($this->event->getReason());
     }
 
     public function testItDoesNothingWhenServiceShouldNotBeDisabled(): void
     {
         $checker = VerifyIsTeamStub::withNotValidTeam();
-        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubNoPlannings());
+        $handler = new ServiceDisabledCollectorHandler($checker, VerifyScrumBlocksServiceActivationStub::withoutScrum());
 
-        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
-        $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), \program_managementPlugin::SERVICE_SHORTNAME);
 
-        self::assertEmpty($event->getReason());
+        self::assertEmpty($this->event->getReason());
     }
 
     public function testItDisableServiceForTeam(): void
     {
         $checker = VerifyIsTeamStub::withValidTeam();
-        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubNoPlannings());
+        $handler = new ServiceDisabledCollectorHandler($checker, VerifyScrumBlocksServiceActivationStub::withoutScrum());
 
-        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
-        $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), \program_managementPlugin::SERVICE_SHORTNAME);
 
-        self::assertNotEmpty($event->getReason());
+        self::assertNotEmpty($this->event->getReason());
     }
 
     public function testItDisableServiceWhenScrumIsEnabled(): void
     {
         $checker = VerifyIsTeamStub::withNotValidTeam();
-        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubAllPlannings());
+        $handler = new ServiceDisabledCollectorHandler($checker, VerifyScrumBlocksServiceActivationStub::withScrum());
 
-        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
-        $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), \program_managementPlugin::SERVICE_SHORTNAME);
 
-        self::assertNotEmpty($event->getReason());
+        self::assertNotEmpty($this->event->getReason());
     }
 }

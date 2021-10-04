@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Events\ProjectServiceBeforeActivationEvent;
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyScrumBlocksServiceActivation;
 
 final class VerifyScrumBlocksServiceActivationStub implements VerifyScrumBlocksServiceActivation
@@ -42,7 +43,7 @@ final class VerifyScrumBlocksServiceActivationStub implements VerifyScrumBlocksS
         return new self(false);
     }
 
-    public function doesScrumBlockServiceUsage(ProjectServiceBeforeActivationEvent $event): bool
+    public function doesScrumBlockServiceUsage(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool
     {
         return $this->is_blocked;
     }

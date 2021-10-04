@@ -24,28 +24,24 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\AgileDashboard\Stub\RetrievePlanningStub;
-use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
-use Tuleap\ProgramManagement\Domain\Events\ProjectServiceBeforeActivationEvent;
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\Project\Event\ProjectServiceBeforeActivation;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class VerifyScrumBlocksServiceVerifierTest extends TestCase
+final class ScrumBlocksServiceVerifierTest extends TestCase
 {
     private RetrieveUserStub $user_retriever;
-    private ProjectServiceBeforeActivationEvent $event;
+    private UserIdentifier $user;
+    private ProjectIdentifier $project;
 
     protected function setUp(): void
     {
         $this->user_retriever = RetrieveUserStub::withGenericUser();
-        $this->event          = ProjectServiceBeforeActivationProxy::fromEvent(
-            new ProjectServiceBeforeActivation(
-                new \Project(['group_id' => 101]),
-                \program_managementPlugin::SERVICE_SHORTNAME,
-                UserTestBuilder::buildWithDefaults()
-            )
-        );
+        $this->user           = UserIdentifierStub::buildGenericUser();
+        $this->project        = ProjectIdentifierStub::buildWithId(101);
     }
 
     public function testItBlocsServiceWhenScrumBlocksUsage(): void
@@ -53,7 +49,7 @@ final class VerifyScrumBlocksServiceVerifierTest extends TestCase
         $retrieve_plannings = RetrievePlanningStub::stubAllPlannings();
         $verifier           = new ScrumBlocksServiceVerifier($retrieve_plannings, $this->user_retriever);
 
-        self::assertTrue($verifier->doesScrumBlockServiceUsage($this->event));
+        self::assertTrue($verifier->doesScrumBlockServiceUsage($this->user, $this->project));
     }
 
     public function testItDoesNotBlockService(): void
@@ -61,6 +57,6 @@ final class VerifyScrumBlocksServiceVerifierTest extends TestCase
         $retrieve_plannings = RetrievePlanningStub::stubNoPlannings();
         $verifier           = new ScrumBlocksServiceVerifier($retrieve_plannings, $this->user_retriever);
 
-        self::assertFalse($verifier->doesScrumBlockServiceUsage($this->event));
+        self::assertFalse($verifier->doesScrumBlockServiceUsage($this->user, $this->project));
     }
 }

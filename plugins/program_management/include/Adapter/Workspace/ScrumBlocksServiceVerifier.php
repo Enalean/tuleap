@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
 use Tuleap\AgileDashboard\Planning\RetrievePlannings;
-use Tuleap\ProgramManagement\Domain\Events\ProjectServiceBeforeActivationEvent;
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyScrumBlocksServiceActivation;
 
 final class ScrumBlocksServiceVerifier implements VerifyScrumBlocksServiceActivation
@@ -34,10 +35,10 @@ final class ScrumBlocksServiceVerifier implements VerifyScrumBlocksServiceActiva
     {
     }
 
-    public function doesScrumBlockServiceUsage(ProjectServiceBeforeActivationEvent $event): bool
+    public function doesScrumBlockServiceUsage(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool
     {
-        $user          = $this->user_retriever->getUserWithId($event->getUserIdentifier());
-        $configuration = ScrumConfiguration::fromProjectId($this->retrieve_plannings, $event->getProjectIdentifier()->getId(), $user);
+        $user          = $this->user_retriever->getUserWithId($user_identifier);
+        $configuration = ScrumConfiguration::fromProjectId($this->retrieve_plannings, $project_identifier->getId(), $user);
 
         return $configuration->isNotEmpty();
     }

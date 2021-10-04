@@ -42,6 +42,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
 use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
+use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
@@ -1020,8 +1021,14 @@ final class program_managementPlugin extends Plugin
 
     public function serviceDisabledCollector(ServiceDisabledCollector $collector): void
     {
-        $handler = new ServiceDisabledCollectorHandler(new TeamDao(), PlanningFactory::build());
-        $handler->handle($collector, $this->getServiceShortname());
+        $handler = new ServiceDisabledCollectorHandler(
+            new TeamDao(),
+            new ScrumBlocksServiceVerifier(
+                PlanningFactory::build(),
+                new UserManagerAdapter(UserManager::instance())
+            )
+        );
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($collector), $this->getServiceShortname());
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
