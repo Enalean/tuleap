@@ -404,6 +404,9 @@ msgstr "Il n'y a aucun test visible."
 msgid "This artifact is already linked to this test."
 msgstr "Cet artéfact est déjà lié à ce test."
 
+msgid "This file has already been attached to this comment"
+msgstr "Ce fichier a déjà été attaché à ce commentaire"
+
 msgid "This is an automated test"
 msgstr "Ceci est un test automatisé"
 

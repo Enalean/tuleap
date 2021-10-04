@@ -89,6 +89,7 @@ function ExecutionService(
         getFilesIdToRemove,
         clearRemovedFiles,
         hasFileBeingUploaded,
+        doesFileAlreadyExistInUploadedAttachments,
     });
 
     initialization();
@@ -479,6 +480,12 @@ function ExecutionService(
             }
         });
         return upload_files_id;
+    }
+
+    function doesFileAlreadyExistInUploadedAttachments(execution, file) {
+        return execution.uploaded_files_through_attachment_area.some(
+            (attachment) => attachment.id === file.id
+        );
     }
 
     function disablePasteOfImages() {
