@@ -3,12 +3,12 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@types/sprintf-js': ^1.1.2
-  docx: ^6.0.3
+  docx: ^7.1.1
   sprintf-js: ^1.1.2
 
 dependencies:
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  docx: 6.0.3
+  docx: 7.1.1
   sprintf-js: 1.1.2
 
 devDependencies:
@@ -16,33 +16,25 @@ devDependencies:
 
 packages:
 
-  /@types/jszip/3.4.1:
-    resolution: {integrity: sha512-TezXjmf3lj+zQ651r6hPqvSScqBLvyPI9FxdXBqpEwBijNGQ2NXpaFW/7joGzveYkKQUil7iiDHLo6LV71Pc0A==}
-    deprecated: This is a stub types definition. jszip provides its own type definitions, so you do not need this installed.
-    dependencies:
-      jszip: 3.7.0
-    dev: false
-
-  /@types/node/14.17.6:
-    resolution: {integrity: sha512-iBxsxU7eswQDGhlr3AiamBxOssaYxbM+NKXVil8jg9yFXvrfEFbDumLD/2dMTB+zYyg7w+Xjt8yuxfdbUHAtcQ==}
+  /@types/node/16.10.2:
+    resolution: {integrity: sha512-zCclL4/rx+W5SQTzFs9wyvvyCwoK9QtBpratqz2IYJ3O8Umrn0m3nsTv0wQBk9sRGpvUe9CwPDrQFB10f1FIjQ==}
     dev: false
 
   /@types/sprintf-js/1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
     dev: true
 
-  /core-util-is/1.0.2:
-    resolution: {integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=}
+  /core-util-is/1.0.3:
+    resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
     dev: false
 
-  /docx/6.0.3:
-    resolution: {integrity: sha512-e9bLznPAnZVNZS+Vddt/atphFy1GZ/ln/Xw1lGn19MIv8HHzP2ivTUUTjGPfpZpHinHdU+zsi8y32q8V8/guow==}
+  /docx/7.1.1:
+    resolution: {integrity: sha512-07V1mVSIQw4bnkLjQCJ39fkmPFpLuAdNPbDQT3ry9zxO4JW88C4DeqNkfseQEMPRMruXHO1eNhMRZmmwRxtTog==}
     engines: {node: '>=10'}
     dependencies:
-      '@types/jszip': 3.4.1
-      '@types/node': 14.17.6
-      jszip: 3.7.0
-      nanoid: 3.1.23
+      '@types/node': 16.10.2
+      jszip: 3.7.1
+      nanoid: 3.1.28
       xml: 1.0.1
       xml-js: 1.6.11
     dev: false
@@ -59,8 +51,8 @@ packages:
     resolution: {integrity: sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=}
     dev: false
 
-  /jszip/3.7.0:
-    resolution: {integrity: sha512-Y2OlFIzrDOPWUnpU0LORIcDn2xN7rC9yKffFM/7pGhQuhO+SUhfm2trkJ/S5amjFvem0Y+1EALz/MEPkvHXVNw==}
+  /jszip/3.7.1:
+    resolution: {integrity: sha512-ghL0tz1XG9ZEmRMcEN2vt7xabrDdqHHeykgARpmZ0BiIctWxM47Vt63ZO2dnp4QYt/xJVLLy5Zv1l/xRdh2byg==}
     dependencies:
       lie: 3.3.0
       pako: 1.0.11
@@ -74,8 +66,8 @@ packages:
       immediate: 3.0.6
     dev: false
 
-  /nanoid/3.1.23:
-    resolution: {integrity: sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw==}
+  /nanoid/3.1.28:
+    resolution: {integrity: sha512-gSu9VZ2HtmoKYe/lmyPFES5nknFrHa+/DT9muUFWFMi6Jh9E1I7bkvlQ8xxf1Kos9pi9o8lBnIOkatMhKX/YUw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
     dev: false
@@ -91,7 +83,7 @@ packages:
   /readable-stream/2.3.7:
     resolution: {integrity: sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==}
     dependencies:
-      core-util-is: 1.0.2
+      core-util-is: 1.0.3
       inherits: 2.0.4
       isarray: 1.0.0
       process-nextick-args: 2.0.1

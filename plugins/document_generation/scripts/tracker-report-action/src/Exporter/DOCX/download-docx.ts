@@ -487,7 +487,7 @@ function buildCoverTable(
             buildCoverTableRow(
                 gettext_provider.gettext("Report URL"),
                 new ExternalHyperlink({
-                    child: new TextRun(report_url),
+                    children: [new TextRun(report_url)],
                     link: report_url,
                 })
             ),
@@ -742,7 +742,7 @@ function buildTableCellHeaderLabel(name: string): TableCell {
         ],
         margins: TABLE_MARGINS,
         shading: {
-            val: ShadingType.CLEAR,
+            type: ShadingType.CLEAR,
             color: "auto",
             fill: "DDDDDD",
         },
@@ -759,7 +759,7 @@ function buildTableCellHeaderValue(name: string): TableCell {
         ],
         margins: TABLE_MARGINS,
         shading: {
-            val: ShadingType.CLEAR,
+            type: ShadingType.CLEAR,
             color: "auto",
             fill: "DDDDDD",
         },
