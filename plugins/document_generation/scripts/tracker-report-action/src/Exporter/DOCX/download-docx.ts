@@ -59,6 +59,7 @@ import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
 import { loadImage } from "./Image/image-loader";
 import { transformLargeContentIntoParagraphs } from "./transform-large-content-into-paragraphs";
+import { HTML_ORDERED_LIST_NUMBERING } from "./transform-html-into-paragraphs";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
@@ -315,6 +316,7 @@ export async function downloadDocx(
                         },
                     ],
                 },
+                HTML_ORDERED_LIST_NUMBERING,
             ],
         },
         sections: [

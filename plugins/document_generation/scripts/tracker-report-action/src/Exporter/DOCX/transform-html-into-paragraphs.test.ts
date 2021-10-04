@@ -119,4 +119,54 @@ describe("transform-html-into-paragraph", () => {
             }),
         ]);
     });
+
+    it("transforms ordered lists", () => {
+        const paragraphs = transformHTMLIntoParagraphs(
+            "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>"
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "A" })],
+                numbering: { level: 0, reference: "html-ordered-list" },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "A.1" })],
+                numbering: { level: 1, reference: "html-ordered-list" },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "A.2", bold: true })],
+                numbering: { level: 1, reference: "html-ordered-list" },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "B" })],
+                numbering: { level: 0, reference: "html-ordered-list" },
+            }),
+        ]);
+    });
+
+    it("transforms mixed ordered and unordered lists", () => {
+        const paragraphs = transformHTMLIntoParagraphs(
+            "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>"
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "A" })],
+                bullet: { level: 0 },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "A.1" })],
+                numbering: { level: 1, reference: "html-ordered-list" },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "A.2", bold: true })],
+                numbering: { level: 1, reference: "html-ordered-list" },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "B" })],
+                bullet: { level: 0 },
+            }),
+        ]);
+    });
 });
