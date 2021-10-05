@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryRepresentati
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\REST\AuthenticatedResource;
@@ -44,7 +43,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
     public const  ROUTE     = 'program_backlog_items';
 
     private \UserManager $user_manager;
-    private RetrieveFeatureUserStories $user_story_representation_builder;
+    private UserStoryRepresentationBuilder $user_story_representation_builder;
 
     public function __construct()
     {

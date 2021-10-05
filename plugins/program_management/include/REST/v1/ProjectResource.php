@@ -59,7 +59,6 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
@@ -96,7 +95,7 @@ final class ProjectResource extends AuthenticatedResource
 {
     private const MAX_LIMIT = 50;
 
-    private RetrieveFeatures $features_retriever;
+    private FeatureElementsRetriever $features_retriever;
     private CreateTeam $team_creator;
     private CreatePlan $plan_creator;
     private \UserManager $user_manager;
