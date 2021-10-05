@@ -22,13 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\Tracker\Artifact\Artifact;
 
 interface AnalyzeNatureOfSourceArtifact
 {
     /**
      * @throws NatureAnalyzerException
      */
-    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, UserIdentifier $user_identifier): \Project;
+    public function retrieveProjectOfMirroredArtifact(ArtifactIdentifier $artifact, UserIdentifier $user_identifier): ProjectIdentifier;
 }
