@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\BotMattermost\Bot;
 
+use Tuleap\BotMattermost\Exception\EmptyUpdateException;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 
@@ -59,5 +60,79 @@ class BotFactoryTest extends TestCase
 
         $this->expectException(BotAlreadyExistException::class);
         $this->bot_factory->save("testbot", "https://test.example.com", "", 101);
+    }
+
+    public function testItThrowsAnExceptionIfUpdateEndsUpCreatingAnAlreadyExistingBot(): void
+    {
+        $bot_to_be_updated = [
+            "id" =>10,
+            "name" => "testbot",
+            "webhook_url" => "https://test.example.com",
+            "avatar_url" => "",
+            "project_id" => 101
+        ];
+
+        $this->bot_dao
+            ->expects(self::once())
+            ->method('isThereAnotherProjectBotWithNameWebhookUrlAndProjectId')
+            ->willReturn(true);
+
+        $this->bot_dao
+            ->expects(self::once())
+            ->method('searchBotById')
+            ->with(10)
+            ->willReturn($bot_to_be_updated);
+
+        $this->expectException(BotAlreadyExistException::class);
+        $this->bot_factory->update("testbot", "https://test.example.com", "https://added.avatar.example.com", 10);
+    }
+
+    public function testItDoesNotThrowAnExceptionIfUpdateChangesTheAvatar(): void
+    {
+        $bot_to_be_updated = [
+            "id" =>10,
+            "name" => "testbot",
+            "webhook_url" => "https://test.example.com",
+            "avatar_url" => "",
+            "project_id" => 101
+        ];
+
+        $this->bot_dao
+            ->expects(self::once())
+            ->method('isThereAnotherProjectBotWithNameWebhookUrlAndProjectId')
+            ->willReturn(false);
+
+        $this->bot_dao
+            ->expects(self::once())
+            ->method('searchBotById')
+            ->with(10)
+            ->willReturn($bot_to_be_updated);
+
+        $this->bot_dao
+            ->expects(self::once())
+            ->method('updateBot')
+            ->willReturn(true);
+
+        $this->bot_factory->update("testbot", "https://test.example.com", "https://added.avatar.example.com", 10);
+    }
+
+    public function testItThrowsAnExceptionIfTheUpdateIsNotChangingAnything(): void
+    {
+        $bot_to_be_updated = [
+            "id" =>10,
+            "name" => "testbot",
+            "webhook_url" => "https://test.example.com",
+            "avatar_url" => "https://already.added.avatar.example.com",
+            "project_id" => 101
+        ];
+
+        $this->bot_dao
+            ->expects(self::once())
+            ->method('searchBotById')
+            ->with(10)
+            ->willReturn($bot_to_be_updated);
+
+        $this->expectException(EmptyUpdateException::class);
+        $this->bot_factory->update("testbot", "https://test.example.com", "https://already.added.avatar.example.com", 10);
     }
 }

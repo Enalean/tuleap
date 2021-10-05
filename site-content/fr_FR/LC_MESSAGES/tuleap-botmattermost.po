@@ -120,6 +120,9 @@ msgid "The name and the webhook URL input must be filled"
 msgstr ""
 "les champs \"nom du robot\" et \"URL du webhook\" doivent être renseignés"
 
+msgid "The update does not contain any change"
+msgstr "La mise à jour du robot ne contient aucun changement"
+
 msgid "Update"
 msgstr "Mettre à jour"
 

@@ -25,6 +25,7 @@ use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
 use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
+use Tuleap\BotMattermost\Exception\EmptyUpdateException;
 
 class BotFactory
 {
@@ -61,7 +62,7 @@ class BotFactory
     }
 
     /**
-     * @throws CannotUpdateBotException
+     * @throws CannotUpdateBotException | EmptyUpdateException | BotNotFoundException|BotAlreadyExistException
      */
     public function update(
         string $bot_name,
@@ -69,16 +70,54 @@ class BotFactory
         string $bot_avatar_url,
         int $bot_id
     ): void {
+        $original_bot = $this->getBotById($bot_id);
+        $trimmed_name = trim($bot_name);
+        $trimmed_webhook_url = trim($bot_webhook_url);
+        $trimmed_avatar_url = trim($bot_avatar_url);
+
+        if (
+            ! $this->updateContainsChanges(
+                $original_bot,
+                $trimmed_name,
+                $trimmed_webhook_url,
+                $trimmed_avatar_url
+            )
+        ) {
+            throw new EmptyUpdateException();
+        }
+
+        if (
+            $this->isThereAnotherBotWithNameWebhookUrlAndProjectIdAlreadyExisting(
+                $bot_id,
+                $trimmed_name,
+                $trimmed_webhook_url,
+                $original_bot->getProjectId()
+            )
+        ) {
+            throw new BotAlreadyExistException();
+        }
+
         if (
             ! $this->dao->updateBot(
-                trim($bot_name),
-                trim($bot_webhook_url),
-                trim($bot_avatar_url),
+                $trimmed_name,
+                $trimmed_webhook_url,
+                $trimmed_avatar_url,
                 $bot_id
             )
         ) {
             throw new CannotUpdateBotException();
         }
+    }
+
+    private function updateContainsChanges(
+        Bot $original_bot,
+        string $name,
+        string $webhook_url,
+        string $avatar_url
+    ): bool {
+        return $original_bot->getName() !== $name ||
+            $original_bot->getWebhookUrl() !== $webhook_url ||
+            $original_bot->getAvatarUrl() !== $avatar_url;
     }
 
     public function deleteBotById(int $id): void
@@ -119,6 +158,15 @@ class BotFactory
         }
 
         return $this->dao->isAProjectBotWithNameWebhookUrlAndProjectIdAlreadyExisting($name, $webhook_url, $project_id);
+    }
+
+    private function isThereAnotherBotWithNameWebhookUrlAndProjectIdAlreadyExisting(int $bot_id, string $name, string $webhook_url, ?int $project_id): bool
+    {
+        if ($project_id === null) {
+            return $this->dao->isThereAnotherSystemBotWithNameAndWebhookUrl($bot_id, $name, $webhook_url);
+        }
+
+        return $this->dao->isThereAnotherProjectBotWithNameWebhookUrlAndProjectId($bot_id, $name, $webhook_url, $project_id);
     }
 
     public function getBotById($bot_id): Bot

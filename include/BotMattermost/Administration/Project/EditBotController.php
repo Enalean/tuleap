@@ -27,8 +27,10 @@ use Feedback;
 use HTTPRequest;
 use Tuleap\BotMattermost\Bot\BotEditor;
 use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
+use Tuleap\BotMattermost\Exception\EmptyUpdateException;
 use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -103,7 +105,7 @@ class EditBotController implements DispatchableWithRequest
                 trim($avatar_url)
             );
             $layout->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot successfully updated'));
-        } catch (CannotUpdateBotException | ProvidedBotParameterIsNotValidException $exception) {
+        } catch (CannotUpdateBotException | EmptyUpdateException | BotAlreadyExistException | ProvidedBotParameterIsNotValidException $exception) {
             $layout->addFeedback(Feedback::ERROR, $exception->getMessage());
         } finally {
             $this->redirectToBotProjectAdmin($layout, $project_id);

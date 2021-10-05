@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\BotMattermost\Bot;
 
 use Tuleap\BotMattermost\Administration\Request\ParameterValidator;
+use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
+use Tuleap\BotMattermost\Exception\EmptyUpdateException;
 use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 
 class BotEditor
@@ -35,6 +37,8 @@ class BotEditor
     /**
      * @throws ProvidedBotParameterIsNotValidException
      * @throws CannotUpdateBotException
+     * @throws EmptyUpdateException
+     * @throws BotAlreadyExistException
      */
     public function editBotById(int $bot_id, string $bot_name, string $webhook_url, string $avatar_url): void
     {

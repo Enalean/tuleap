@@ -47,8 +47,8 @@ class BotPresenter
             $edit_bot_url   = '?action=edit_bot';
             $delete_bot_url = '?action=delete_bot';
         } else {
-            $edit_bot_url   = "/plugins/botmattermost/bot/$bot_id/delete";
-            $delete_bot_url = "/plugins/botmattermost/bot/$bot_id/edit";
+            $edit_bot_url   = "/plugins/botmattermost/bot/$bot_id/edit";
+            $delete_bot_url = "/plugins/botmattermost/bot/$bot_id/delete";
         }
 
         return new self(

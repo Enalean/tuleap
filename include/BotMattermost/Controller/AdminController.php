@@ -30,6 +30,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BotMattermost\Bot\BotCreator;
 use Tuleap\BotMattermost\Bot\BotDeletor;
 use Tuleap\BotMattermost\Bot\BotEditor;
+use Tuleap\BotMattermost\Exception\EmptyUpdateException;
 use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 use Tuleap\BotMattermost\Presenter\AdminPresenter;
 use Tuleap\Layout\BaseLayout;
@@ -135,7 +136,7 @@ class AdminController
                     $request->get('avatar_url'),
                 );
                 $response->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot successfully edited'));
-            } catch (CannotUpdateBotException | ProvidedBotParameterIsNotValidException $e) {
+            } catch (CannotUpdateBotException | EmptyUpdateException | BotAlreadyExistException | ProvidedBotParameterIsNotValidException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
