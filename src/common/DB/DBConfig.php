@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
+use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
 
 final class DBConfig
 {
     #[ConfigKey('Database server hostname or IP address')]
+    #[ConfigCannotBeModified]
     public const CONF_HOST             = 'sys_dbhost';
     public const CONF_PORT             = 'sys_dbport';
     public const CONF_DBNAME           = 'sys_dbname';

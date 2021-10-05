@@ -34,15 +34,9 @@ class ConfigListCommand extends Command
 {
     public const NAME = 'config-list';
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_manager;
-
-    public function __construct(EventDispatcherInterface $event_manager)
+    public function __construct(private EventDispatcherInterface $event_manager)
     {
         parent::__construct(self::NAME);
-        $this->event_manager = $event_manager;
     }
 
     protected function configure(): void
@@ -50,15 +44,15 @@ class ConfigListCommand extends Command
         $this->setDescription('List configuration values that can be modified with `config-set`');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $white_listed_keys = $this->event_manager->dispatch(new GetWhitelistedKeys());
 
         $table = new Table($output);
-        $table->setHeaders(['Variable', 'Documentation']);
+        $table->setHeaders(['Variable', 'Documentation', 'Can be set ?']);
 
-        foreach ($white_listed_keys->getSortedKeysWithMetadata() as $key => $summary) {
-            $table->addRow([$key, $summary]);
+        foreach ($white_listed_keys->getSortedKeysWithMetadata() as $key => $key_metadata) {
+            $table->addRow([$key, $key_metadata->description, $key_metadata->can_be_modified ? 'Yes' : 'No']);
         }
 
         $table->render();

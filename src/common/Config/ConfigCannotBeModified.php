@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,25 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-use Tuleap\CLI\Events\GetWhitelistedKeys;
-
-final class InvalidConfigKeyException extends \Exception
+#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
+final class ConfigCannotBeModified
 {
-    /**
-     * @var GetWhitelistedKeys
-     */
-    private $white_listed_keys;
 
-    public function __construct(GetWhitelistedKeys $white_listed_keys)
-    {
-        $this->white_listed_keys = $white_listed_keys;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getWhiteListedKeys(): array
-    {
-        return $this->white_listed_keys->getKeysThatCanBeModified();
-    }
 }
