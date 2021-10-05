@@ -33,7 +33,7 @@ final class RootPlanningEditionEventProxyTest extends TestCase
     protected function setUp(): void
     {
         $this->event = new \Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent(
-            new \Project(['group_id' => '110']),
+            new \Project(['group_id' => '110', 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
             new \Planning(50, 'Release Planning', 110, '', '')
         );
     }

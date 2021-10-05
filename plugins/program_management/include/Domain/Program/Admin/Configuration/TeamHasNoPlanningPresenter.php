@@ -36,6 +36,6 @@ final class TeamHasNoPlanningPresenter
     public function __construct(ProjectReference $project_reference)
     {
         $this->project_label = $project_reference->getProjectLabel();
-        $this->project_id    = $project_reference->getProjectId();
+        $this->project_id    = $project_reference->getId();
     }
 }

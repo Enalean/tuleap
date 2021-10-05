@@ -41,7 +41,7 @@ final class ComponentInvolvedVerifier
 
     public function isInvolvedInAProgramWorkspace(ProjectReference $project_data): bool
     {
-        return $this->team_verifier->isATeam($project_data->getProjectId())
-            || $this->program_verifier->isAProgram($project_data->getProjectId());
+        return $this->team_verifier->isATeam($project_data->getId())
+            || $this->program_verifier->isAProgram($project_data->getId());
     }
 }

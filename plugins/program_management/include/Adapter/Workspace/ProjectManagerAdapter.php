@@ -42,7 +42,7 @@ final class ProjectManagerAdapter implements RetrieveProject, SearchProjectsUser
         $user         = $this->retrieve_user->getUserWithId($user_identifier);
         $project_list = [];
         foreach ($this->project_manager->getProjectsUserIsAdmin($user) as $project) {
-            $project_list[] = ProjectReferenceProxy::buildFromProject($project);
+            $project_list[] = ProjectProxy::buildFromProject($project);
         }
         return $project_list;
     }

@@ -25,14 +25,15 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class ProjectReferenceProxyTest extends TestCase
+final class ProjectProxyTest extends TestCase
 {
     public function testItBuildsPrimitive(): void
     {
         $project = new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "project"]);
-        $proxy   = ProjectReferenceProxy::buildFromProject($project);
+        $proxy   = ProjectProxy::buildFromProject($project);
 
-        self::assertEquals($project->getID(), $proxy->getProjectId());
+        self::assertEquals($project->getID(), $proxy->getId());
         self::assertEquals($project->getPublicName(), $proxy->getProjectLabel());
+        self::assertEquals($project->getUrl(), $proxy->getUrl());
     }
 }

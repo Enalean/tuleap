@@ -23,21 +23,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 final class ProjectReferenceBuilder
 {
     public static function buildGeneric(): ProjectReference
     {
-        return ProjectReferenceProxy::buildFromProject(
+        return ProjectProxy::buildFromProject(
             new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "my_project"])
         );
     }
 
     public static function buildWithValues(int $group_id, string $group_name, string $short_name): ProjectReference
     {
-        return ProjectReferenceProxy::buildFromProject(
+        return ProjectProxy::buildFromProject(
             new \Project(['group_id' => $group_id, 'group_name' => $group_name, "unix_group_name" => $short_name])
         );
     }
