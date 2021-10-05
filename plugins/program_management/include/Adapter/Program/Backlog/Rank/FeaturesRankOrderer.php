@@ -24,32 +24,26 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\FeaturesToReorder;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 class FeaturesRankOrderer implements OrderFeatureRank
 {
-    /**
-     * @var \Tracker_Artifact_PriorityManager
-     */
-    private $priority_manager;
-
-    public function __construct(\Tracker_Artifact_PriorityManager $priority_manager)
+    public function __construct(private \Tracker_Artifact_PriorityManager $priority_manager)
     {
-        $this->priority_manager = $priority_manager;
         $this->priority_manager->enableExceptionsOnError();
     }
 
     /**
      * @throws FeatureCanNotBeRankedWithItselfException
      */
-    public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, ProgramIdentifier $program): void
+    public function reorder(FeaturesToReorder $order, string $context_id, ProgramIdentifier $program): void
     {
         try {
-            if ($order->direction === FeatureElementToOrderInvolvedInChangeRepresentation::BEFORE) {
+            if ($order->isBefore()) {
                 $this->priority_manager->moveListOfArtifactsBefore(
-                    $order->ids,
-                    $order->compared_to,
+                    $order->getIds(),
+                    $order->getComparedTo(),
                     $context_id,
                     $program->getID()
                 );
@@ -58,8 +52,8 @@ class FeaturesRankOrderer implements OrderFeatureRank
             }
 
             $this->priority_manager->moveListOfArtifactsAfter(
-                $order->ids,
-                $order->compared_to,
+                $order->getIds(),
+                $order->getComparedTo(),
                 $context_id,
                 $program->getID()
             );

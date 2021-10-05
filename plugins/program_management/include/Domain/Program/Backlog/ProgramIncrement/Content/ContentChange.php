@@ -22,36 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\FeaturesToReorder;
 
 /**
  * @psalm-immutable
  */
 final class ContentChange
 {
-    /**
-     * @var ?int
-     */
-    public $potential_feature_id_to_add;
-    /**
-     * @var FeatureElementToOrderInvolvedInChangeRepresentation|null
-     */
-    public $elements_to_order;
-
     private function __construct(
-        ?int $potential_feature_id_to_add,
-        ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order
+        public ?int $potential_feature_id_to_add,
+        public ?FeaturesToReorder $elements_to_order
     ) {
-        $this->potential_feature_id_to_add = $potential_feature_id_to_add;
-        $this->elements_to_order           = $elements_to_order;
     }
 
     /**
      * @throws AddOrOrderMustBeSetException
      */
-    public static function fromRESTRepresentation(
+    public static function fromFeatureAdditionAndReorder(
         ?int $potential_feature_id_to_add,
-        ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order
+        ?FeaturesToReorder $elements_to_order
     ): self {
         if ($potential_feature_id_to_add === null && $elements_to_order === null) {
             throw new AddOrOrderMustBeSetException();

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 
 use Tracker_Artifact_Exception_CannotRankWithMyself;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
@@ -49,6 +50,7 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
         $order->ids         = [111];
         $order->compared_to = 45;
         $order->direction   = "before";
+        $feature_reorder    = FeaturesToReorderProxy::buildFromRESTRepresentation($order);
 
         $this->priority_manager
             ->expects(self::once())
@@ -57,6 +59,6 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new Tracker_Artifact_Exception_CannotRankWithMyself(45));
 
         $this->expectException(FeatureCanNotBeRankedWithItselfException::class);
-        $this->orderer->reorder($order, "101", ProgramIdentifierBuilder::build());
+        $this->orderer->reorder($feature_reorder, "101", ProgramIdentifierBuilder::build());
     }
 }
