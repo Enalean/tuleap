@@ -901,6 +901,73 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     }
 
     /**
+     * Validate a required field
+     *
+     * @param Artifact $artifact The artifact to check
+     * @param mixed    $value    The submitted value
+     *
+     * @return bool true on success or false on failure
+     */
+    public function isValidRegardingRequiredProperty(Artifact $artifact, $value)
+    {
+        $this->has_errors = false;
+
+        if ($this->isEmpty($value, $artifact) && $this->isRequired()) {
+            $this->addRequiredError();
+            return false;
+        }
+
+        $invalid_values   = [];
+        $nb_filled_values = 0;
+        $extracted_values = explode(',', (string) $value);
+        foreach ($extracted_values as $extracted_value) {
+            $extracted_value = trim($extracted_value);
+            if (! $extracted_value) {
+                continue;
+            }
+
+            switch ($extracted_value[0]) {
+                case self::BIND_PREFIX: // bind value
+                case self::OPEN_PREFIX: // open value
+                    if ((int) substr($extracted_value, 1)) {
+                        $nb_filled_values++;
+                    }
+                    break;
+                case self::NEW_VALUE_PREFIX: // new open value
+                    if (substr($extracted_value, 1) !== "") {
+                        $nb_filled_values++;
+                    }
+                    break;
+                default:
+                    $invalid_values[] = $extracted_value;
+                    break;
+            }
+        }
+
+        if (! empty($invalid_values)) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                sprintf(
+                    dngettext(
+                        'tuleap-tracker',
+                        'Invalid value %s for field %s.',
+                        'Invalid values %s for field %s.',
+                        count($invalid_values),
+                    ),
+                    implode(', ', $invalid_values),
+                    $this->getLabel() . ' (' . $this->getName() . ')'
+                )
+            );
+        }
+
+        if ($this->isRequired() && $nb_filled_values === 0) {
+            $this->addRequiredError();
+        }
+
+        return ! $this->has_errors;
+    }
+
+    /**
      * @return bool true if the value corresponds to none
      */
     public function isNone($value)

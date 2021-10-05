@@ -28,6 +28,8 @@ use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\GlobalResponseMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OpenListValueDao
@@ -308,5 +310,64 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
             )
         );
         $this->assertTrue($field->isValid($artifact, ['b101', 'b102']));
+    }
+
+    public function testWhenFieldIsRequiredItDoesNotAcceptInvalidValues(): void
+    {
+        $artifact = $this->createMock(Artifact::class);
+        $field    = $this->aRequiredOpenListField();
+
+        $GLOBALS['Response']
+            ->method('addFeedback')
+            ->withConsecutive(
+                ['error', 'Invalid value dummytext for field My Open List (openlist).'],
+                ['error', 'The field My Open List (openlist) is required.']
+            );
+
+        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, 'dummytext'));
+    }
+
+    public function testWhenFieldIsRequiredItDoesNotAcceptInvalidBindOrOpenValues(): void
+    {
+        $artifact = $this->createMock(Artifact::class);
+        $field    = $this->aRequiredOpenListField();
+
+        $GLOBALS['Response']
+            ->method('addFeedback')
+            ->with('error', 'The field My Open List (openlist) is required.');
+
+        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, 'bdummy,otext'));
+    }
+
+    /**
+     * @testWith ["b102"]
+     *           ["o102"]
+     *           ["!new value"]
+     *           ["!0"]
+     */
+    public function testWhenFieldIsRequiredItAcceptsRegularValue(string $value): void
+    {
+        $artifact = $this->createMock(Artifact::class);
+        $field    = $this->aRequiredOpenListField();
+
+        $this->assertTrue($field->isValidRegardingRequiredProperty($artifact, $value));
+    }
+
+    private function aRequiredOpenListField(): \Tracker_FormElement_Field_OpenList
+    {
+        return new \Tracker_FormElement_Field_OpenList(
+            102,
+            null,
+            null,
+            'openlist',
+            'My Open List',
+            null,
+            null,
+            null,
+            true,
+            null,
+            null,
+            null
+        );
     }
 }
