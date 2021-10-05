@@ -52,7 +52,7 @@ final class RequiredFieldChecker implements CheckRequiredField
                 throw new \RuntimeException("Tracker with id #" . $program_increment_tracker->getId() . " is not found.");
             }
             foreach ($full_tracker->getFormElementFields() as $field) {
-                if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {
+                if ($field->isRequired() && ! $field_collection->isFieldIdSynchronized($field->getId())) {
                     $tracker_reference = $retrieve_tracker_from_field->fromFieldId($field->getId());
                     $project_reference = $retrieve_project_from_tracker->fromTrackerReference($tracker_reference);
                     $errors_collector->addRequiredFieldError(

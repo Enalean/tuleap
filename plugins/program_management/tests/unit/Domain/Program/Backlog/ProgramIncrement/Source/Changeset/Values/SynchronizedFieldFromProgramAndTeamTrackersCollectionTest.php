@@ -128,18 +128,14 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
     public function testCanDetermineIfAFieldIsSynchronized(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field::class);
-        $field->method('getId')->willReturn((string) self::ARTIFACT_LINK_ID);
-
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers();
 
         $collection = $this->getCollection(VerifyFieldPermissionsStub::withValidField());
         $collection->add($synchronized_field_data);
-        $this->assertTrue($collection->isFieldSynchronized($field));
+        $this->assertTrue($collection->isFieldIdSynchronized(self::ARTIFACT_LINK_ID));
 
-        $not_synchronized_field = $this->createMock(\Tracker_FormElement_Field::class);
-        $not_synchronized_field->method('getId')->willReturn('1024');
-        $this->assertFalse($collection->isFieldSynchronized($not_synchronized_field));
+        $not_synchronized_field_id = 1024;
+        $this->assertFalse($collection->isFieldIdSynchronized($not_synchronized_field_id));
     }
 
     public function testCanObtainsTheSynchronizedFieldIDs(): void

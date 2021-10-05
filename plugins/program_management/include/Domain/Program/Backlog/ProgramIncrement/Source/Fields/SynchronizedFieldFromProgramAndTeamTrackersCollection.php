@@ -108,9 +108,9 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
     /**
      * @psalm-readonly
      */
-    public function isFieldSynchronized(\Tracker_FormElement_Field $field): bool
+    public function isFieldIdSynchronized(int $field_id): bool
     {
-        return isset($this->synchronized_fields_ids[$field->getId()]);
+        return isset($this->synchronized_fields_ids[$field_id]);
     }
 
     /**
