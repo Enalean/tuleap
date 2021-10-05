@@ -18,7 +18,16 @@
  */
 
 import type { IRunStylePropertiesOptions, ParagraphChild } from "docx";
-import { Paragraph, TextRun, UnderlineType } from "docx";
+import {
+    AlignmentType,
+    convertInchesToTwip,
+    LevelFormat,
+    Paragraph,
+    TextRun,
+    UnderlineType,
+} from "docx";
+
+const HTML_ORDERED_LIST_NUMBERING_REFERENCE = "html-ordered-list";
 
 export function transformHTMLIntoParagraphs(content: string): Paragraph[] {
     const doc = new DOMParser().parseFromString(content, "text/html");
@@ -172,6 +181,26 @@ function parseTreeContent(
                     );
                 }
                 break;
+            case "OL":
+                for (const list_item of child.childNodes) {
+                    content_children.push(
+                        ...buildParagraphsFromTreeContent(
+                            parseTreeContent(list_item.childNodes, {
+                                ...state,
+                                list_level: state.list_level + 1,
+                            }),
+                            (children: ParagraphChild[]): Paragraph =>
+                                new Paragraph({
+                                    children,
+                                    numbering: {
+                                        level: state.list_level,
+                                        reference: HTML_ORDERED_LIST_NUMBERING_REFERENCE,
+                                    },
+                                })
+                        )
+                    );
+                }
+                break;
             default:
                 if (child.textContent !== null && child.textContent !== "") {
                     content_children.push(new TextRun({ text: child.textContent, ...state.style }));
@@ -181,3 +210,112 @@ function parseTreeContent(
 
     return content_children;
 }
+
+// This is based on the default implementation of the bullets to have a consistent rendering between unordered and
+// ordered lists
+// See https://github.com/dolanmiu/docx/blob/7.1.1/src/file/numbering/numbering.ts#L58-L158
+export const HTML_ORDERED_LIST_NUMBERING = {
+    levels: [
+        {
+            level: 0,
+            format: LevelFormat.DECIMAL,
+            text: "%1.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 1,
+            format: LevelFormat.DECIMAL,
+            text: "%2.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: convertInchesToTwip(1), hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 2,
+            format: LevelFormat.DECIMAL,
+            text: "%3.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: 2160, hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 3,
+            format: LevelFormat.DECIMAL,
+            text: "%4.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: 2880, hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 4,
+            format: LevelFormat.DECIMAL,
+            text: "%5.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: 3600, hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 5,
+            format: LevelFormat.DECIMAL,
+            text: "%6.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: 4320, hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 6,
+            format: LevelFormat.DECIMAL,
+            text: "%7.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: 5040, hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 7,
+            format: LevelFormat.DECIMAL,
+            text: "%8.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: 5760, hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+        {
+            level: 8,
+            format: LevelFormat.DECIMAL,
+            text: "%9.",
+            alignment: AlignmentType.LEFT,
+            style: {
+                paragraph: {
+                    indent: { left: 6480, hanging: convertInchesToTwip(0.25) },
+                },
+            },
+        },
+    ],
+
+    reference: HTML_ORDERED_LIST_NUMBERING_REFERENCE,
+};
