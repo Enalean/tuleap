@@ -139,6 +139,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
 
         $this->getProcessor()->processCreation($this->creation);
 
+        self::assertSame(1, $this->artifact_creator->getCallCount());
         self::assertSame(0, $this->user_stories_planner->getCallCount());
         self::assertTrue($this->logger->hasErrorRecords());
     }

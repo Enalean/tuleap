@@ -28,7 +28,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Mirrore
 
 final class CreateArtifactStub implements CreateArtifact
 {
-    private function __construct(private int $call_count, private bool $should_throw)
+    /**
+     * @var MirroredTimeboxFirstChangeset[] $arguments
+     */
+    private function __construct(private int $call_count, private bool $should_throw, private array $arguments = [])
     {
     }
 
@@ -47,9 +50,18 @@ final class CreateArtifactStub implements CreateArtifact
         return $this->call_count;
     }
 
+    /**
+     * @return MirroredTimeboxFirstChangeset[]
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
+
     public function create(MirroredTimeboxFirstChangeset $first_changeset): void
     {
         $this->call_count++;
+        $this->arguments[] = $first_changeset;
         if ($this->should_throw) {
             throw new ArtifactCreationException();
         }
