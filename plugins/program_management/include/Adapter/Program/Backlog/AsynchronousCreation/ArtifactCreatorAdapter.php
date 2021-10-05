@@ -20,42 +20,40 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
+use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
 final class ArtifactCreatorAdapter implements CreateArtifact
 {
-    public function __construct(private TrackerArtifactCreator $artifact_creator, private \TrackerFactory $tracker_factory, private RetrieveUser $retrieve_user)
-    {
+    public function __construct(
+        private TrackerArtifactCreator $artifact_creator,
+        private \TrackerFactory $tracker_factory,
+        private RetrieveUser $retrieve_user
+    ) {
     }
 
-    public function create(
-        TrackerReference $tracker,
-        MirroredTimeboxChangesetValues $mirrored_program_increment_changeset,
-        UserIdentifier $user_identifier,
-        SubmissionDate $submission_date
-    ): void {
-        $full_tracker = $this->tracker_factory->getTrackerById($tracker->getId());
+    public function create(MirroredTimeboxFirstChangeset $first_changeset): void
+    {
+        $tracker_id   = $first_changeset->mirrored_timebox_tracker->getId();
+        $full_tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $full_tracker) {
-            throw new \RuntimeException("Tracker with id #" . $tracker->getId() . " is not found.");
+            throw new TrackerNotFoundException($tracker_id);
         }
 
-        $user     = $this->retrieve_user->getUserWithId($user_identifier);
+        $pfuser   = $this->retrieve_user->getUserWithId($first_changeset->user);
         $artifact = $this->artifact_creator->create(
             $full_tracker,
-            $mirrored_program_increment_changeset->toFieldsDataArray(),
-            $user,
-            $submission_date->getValue(),
+            $first_changeset->values->toFieldsDataArray(),
+            $pfuser,
+            $first_changeset->submission_date->getValue(),
             false,
             false,
             new ChangesetWithFieldsValidationContext(new SystemActionContext())

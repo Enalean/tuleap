@@ -20,22 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
-
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 interface CreateArtifact
 {
     /**
      * @throws ArtifactCreationException
      */
-    public function create(
-        TrackerReference $tracker,
-        MirroredTimeboxChangesetValues $mirrored_program_increment_changeset,
-        UserIdentifier $user_identifier,
-        SubmissionDate $submission_date
-    ): void;
+    public function create(MirroredTimeboxFirstChangeset $first_changeset): void;
 }

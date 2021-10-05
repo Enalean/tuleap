@@ -28,11 +28,6 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ProgramIncrementCreationBuilder
 {
-    public static function build(): ProgramIncrementCreation
-    {
-        return self::buildWithProgramIncrementId(515);
-    }
-
     public static function buildWithProgramIncrementId(int $program_increment_id): ProgramIncrementCreation
     {
         return self::buildWithIds(162, $program_increment_id, 60, 2045);

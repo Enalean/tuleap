@@ -28,20 +28,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I hold all the information to create an additional (not initial) changeset in a Mirrored Timebox
+ * I hold all the information to create an initial (not additional) changeset in a Mirrored Timebox
  * Artifact.
- * @see MirroredTimeboxFirstChangeset
+ * @see MirroredTimeboxChangeset
  * @psalm-immutable
  */
-final class MirroredTimeboxChangeset
+final class MirroredTimeboxFirstChangeset
 {
     private function __construct(
-        public MirroredTimeboxIdentifier $mirrored_timebox,
+        public TrackerIdentifier $mirrored_timebox_tracker,
         public MirroredTimeboxChangesetValues $values,
         public UserIdentifier $user,
         public SubmissionDate $submission_date
@@ -51,27 +50,25 @@ final class MirroredTimeboxChangeset
     /**
      * @throws FieldSynchronizationException
      */
-    public static function fromMirroredTimebox(
-        RetrieveTrackerOfArtifact $tracker_retriever,
+    public static function fromMirroredTimeboxTracker(
         GatherSynchronizedFields $fields_gatherer,
         MapStatusByValue $status_mapper,
-        MirroredTimeboxIdentifier $timebox,
+        TrackerIdentifier $mirrored_timebox_tracker,
         SourceTimeboxChangesetValues $source_values,
         ArtifactLinkValue $artifact_link_value,
         UserIdentifier $user
     ): self {
-        $mirror_tracker = $tracker_retriever->getTrackerOfArtifact($timebox->getId());
-        $fields         = SynchronizedFieldReferences::fromTrackerIdentifier(
+        $fields = SynchronizedFieldReferences::fromTrackerIdentifier(
             $fields_gatherer,
-            $mirror_tracker,
+            $mirrored_timebox_tracker,
             null
         );
-        $values         = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
+        $values = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
             $status_mapper,
             $source_values,
             $artifact_link_value,
             $fields
         );
-        return new self($timebox, $values, $user, $source_values->getSubmittedOn());
+        return new self($mirrored_timebox_tracker, $values, $user, $source_values->getSubmittedOn());
     }
 }

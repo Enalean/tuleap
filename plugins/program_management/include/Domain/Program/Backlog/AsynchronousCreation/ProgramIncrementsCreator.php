@@ -23,15 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramIncrementsCreator
@@ -45,9 +42,8 @@ final class ProgramIncrementsCreator
     }
 
     /**
-     * @throws ProgramIncrementArtifactCreationException
-     * @throws FieldRetrievalException
      * @throws FieldSynchronizationException
+     * @throws ProgramIncrementArtifactCreationException
      */
     public function createProgramIncrements(
         SourceTimeboxChangesetValues $values,
@@ -58,30 +54,39 @@ final class ProgramIncrementsCreator
         $this->transaction_executor->execute(
             function () use ($values, $artifact_link_value, $mirrored_timeboxes, $user_identifier) {
                 foreach ($mirrored_timeboxes->getTrackers() as $mirrored_timebox_tracker) {
-                    $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
-                        $this->gather_synchronized_fields,
+                    $this->createOneProgramIncrement(
                         $mirrored_timebox_tracker,
-                        null
-                    );
-
-                    $mirrored_program_increment_changeset = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
-                        $this->status_mapper,
                         $values,
                         $artifact_link_value,
-                        $synchronized_fields
+                        $user_identifier
                     );
-                    try {
-                        $this->artifact_creator->create(
-                            $mirrored_timebox_tracker,
-                            $mirrored_program_increment_changeset,
-                            $user_identifier,
-                            $values->getSubmittedOn(),
-                        );
-                    } catch (ArtifactCreationException $e) {
-                        throw new ProgramIncrementArtifactCreationException($values->getSourceTimebox()->getId());
-                    }
                 }
             }
         );
+    }
+
+    /**
+     * @throws FieldSynchronizationException
+     * @throws ProgramIncrementArtifactCreationException
+     */
+    private function createOneProgramIncrement(
+        TrackerIdentifier $mirrored_timebox_tracker,
+        SourceTimeboxChangesetValues $values,
+        ArtifactLinkValue $artifact_link_value,
+        UserIdentifier $user
+    ): void {
+        $changeset = MirroredTimeboxFirstChangeset::fromMirroredTimeboxTracker(
+            $this->gather_synchronized_fields,
+            $this->status_mapper,
+            $mirrored_timebox_tracker,
+            $values,
+            $artifact_link_value,
+            $user
+        );
+        try {
+            $this->artifact_creator->create($changeset);
+        } catch (ArtifactCreationException $e) {
+            throw new ProgramIncrementArtifactCreationException($values->getSourceTimebox()->getId());
+        }
     }
 }

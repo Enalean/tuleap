@@ -44,62 +44,22 @@ final class SourceTimeboxChangesetValuesBuilder
             ['Planned'],
             '2020-10-01',
             '2020-10-10',
-            $source_timebox_id
+            $source_timebox_id,
+            1234567890
         );
     }
 
     public static function buildWithSubmissionDate(int $submission_date): SourceTimeboxChangesetValues
     {
-        return self::buildWithValuesAndSubmissionDate(
+        return self::buildWithValues(
             'Program Release',
             'Description',
             'text',
             ['Planned'],
             '2020-10-01',
             '2020-10-10',
+            112,
             $submission_date
-        );
-    }
-
-    public static function buildWithStatusValues(string ...$status_values): SourceTimeboxChangesetValues
-    {
-        return self::buildWithValues(
-            'Program Increment',
-            '<p>Description</p>',
-            'html',
-            $status_values,
-            '2021-08-01',
-            '2021-08-31',
-            123
-        );
-    }
-
-    /**
-     * @param string[] $status
-     */
-    public static function buildWithValues(
-        string $title,
-        string $description_content,
-        string $description_format,
-        array $status,
-        string $start_date,
-        string $end_date,
-        int $source_timebox_id
-    ): SourceTimeboxChangesetValues {
-        return SourceTimeboxChangesetValues::fromMirroringOrder(
-            GatherSynchronizedFieldsStub::withDefaults(),
-            RetrieveFieldValuesGathererStub::withGatherer(
-                GatherFieldValuesStub::withValues(
-                    $title,
-                    $description_content,
-                    $description_format,
-                    $start_date,
-                    $end_date,
-                    $status
-                )
-            ),
-            RetrieveChangesetSubmissionDateStub::withDefaults(),
-            ProgramIncrementCreationBuilder::buildWithProgramIncrementId($source_timebox_id)
         );
     }
 
@@ -115,6 +75,31 @@ final class SourceTimeboxChangesetValuesBuilder
         string $end_date,
         int $submission_date
     ): SourceTimeboxChangesetValues {
+        return self::buildWithValues(
+            $title,
+            $description_content,
+            $description_format,
+            $status,
+            $start_date,
+            $end_date,
+            112,
+            $submission_date
+        );
+    }
+
+    /**
+     * @param string[] $status
+     */
+    public static function buildWithValues(
+        string $title,
+        string $description_content,
+        string $description_format,
+        array $status,
+        string $start_date,
+        string $end_date,
+        int $source_timebox_id,
+        int $submission_date
+    ): SourceTimeboxChangesetValues {
         return SourceTimeboxChangesetValues::fromMirroringOrder(
             GatherSynchronizedFieldsStub::withDefaults(),
             RetrieveFieldValuesGathererStub::withGatherer(
@@ -128,7 +113,7 @@ final class SourceTimeboxChangesetValuesBuilder
                 )
             ),
             RetrieveChangesetSubmissionDateStub::withDate($submission_date),
-            ProgramIncrementCreationBuilder::build()
+            ProgramIncrementCreationBuilder::buildWithProgramIncrementId($source_timebox_id)
         );
     }
 }

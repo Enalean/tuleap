@@ -57,7 +57,8 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
             ['Planned'],
             self::START_DATE_VALUE,
             self::END_DATE_VALUE,
-            self::SOURCE_PROGRAM_INCREMENT_ID
+            self::SOURCE_PROGRAM_INCREMENT_ID,
+            1952272867
         );
         $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
         $target_fields       = SynchronizedFieldReferences::fromTrackerIdentifier(
