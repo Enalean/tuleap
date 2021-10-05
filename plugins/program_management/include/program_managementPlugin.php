@@ -354,7 +354,7 @@ final class program_managementPlugin extends Plugin
             $program_increments_dao,
             new TeamDao(),
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter(\ProjectManager::instance(), $retrieve_user),
+                $project_manager,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -751,7 +751,7 @@ final class program_managementPlugin extends Plugin
                 $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter($project_manager, $user_manager_adapter),
+                $project_manager,
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
                 $user_manager_adapter
@@ -796,7 +796,7 @@ final class program_managementPlugin extends Plugin
                 $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter($project_manager, $user_manager_adapter),
+                $project_manager,
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
                 $user_manager_adapter
@@ -860,7 +860,7 @@ final class program_managementPlugin extends Plugin
 
         return new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter),
+                ProjectManager::instance(),
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -980,22 +980,21 @@ final class program_managementPlugin extends Plugin
 
     public function collectLinkedProjects(CollectLinkedProjects $event): void
     {
-        $program_dao       = new ProgramDao();
-        $team_dao          = new TeamDao();
-        $retrieve_user     = new UserManagerAdapter(UserManager::instance());
-        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), $retrieve_user);
-        $handler           = new CollectLinkedProjectsHandler(
+        $program_dao     = new ProgramDao();
+        $team_dao        = new TeamDao();
+        $project_manager = ProjectManager::instance();
+        $handler         = new CollectLinkedProjectsHandler(
             $program_dao,
             $team_dao,
         );
 
         $event_proxy = CollectLinkedProjectsProxy::fromCollectLinkedProjects(
-            new TeamsSearcher($program_dao, $project_retriever),
+            new TeamsSearcher($program_dao, $project_manager),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
-            new ProgramsSearcher($team_dao, $project_retriever),
+            new ProgramsSearcher($team_dao, $project_manager),
             $event
         );
         $handler->handle($event_proxy);

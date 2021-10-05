@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -33,16 +31,20 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class TeamsSearcherTest extends TestCase
 {
     private SearchTeamsOfProgram $team_ids_searcher;
-    private RetrieveProject $project_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\ProjectManager
+     */
+    private $project_manager;
 
     protected function setUp(): void
     {
         $this->team_ids_searcher = SearchTeamsOfProgramStub::buildTeams(102, 103);
+        $this->project_manager   = $this->createStub(\ProjectManager::class);
     }
 
     private function getSearcher(): TeamsSearcher
     {
-        return new TeamsSearcher($this->team_ids_searcher, $this->project_retriever);
+        return new TeamsSearcher($this->team_ids_searcher, $this->project_manager);
     }
 
     public function testItReturnsTheTeamProjectsOfAProgram(): void
@@ -50,7 +52,7 @@ final class TeamsSearcherTest extends TestCase
         $team_red  = ProjectTestBuilder::aProject()->withId(102)->build();
         $team_blue = ProjectTestBuilder::aProject()->withId(103)->build();
 
-        $this->project_retriever = RetrieveProjectStub::withValidProjects($team_red, $team_blue);
+        $this->project_manager->method('getProject')->willReturnOnConsecutiveCalls($team_red, $team_blue);
 
         $program = ProjectTestBuilder::aProject()->withId(101)->build();
         $teams   = $this->getSearcher()->searchLinkedProjects($program);

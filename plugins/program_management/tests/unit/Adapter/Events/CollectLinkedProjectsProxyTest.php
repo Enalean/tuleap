@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
@@ -34,7 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
-final class CollectLinkProjectsProxyTest extends TestCase
+final class CollectLinkedProjectsProxyTest extends TestCase
 {
     private TeamsSearcher $teams_searcher;
     private CheckProjectAccessStub $access_checker;
@@ -47,13 +46,17 @@ final class CollectLinkProjectsProxyTest extends TestCase
         $this->source_project = ProjectTestBuilder::aProject()->withId(101)->build();
         $linked_project       = ProjectTestBuilder::aProject()->withId(102)->build();
 
+        $project_manager = $this->createMock(\ProjectManager::class);
+        $project_manager->method('getProject')->with($this->source_project->getId())->willReturn($this->source_project);
+        $project_manager->method('getProject')->with($linked_project->getId())->willReturn($linked_project);
+
         $this->teams_searcher    = new TeamsSearcher(
             SearchTeamsOfProgramStub::buildTeams((int) $linked_project->getID()),
-            RetrieveProjectStub::withValidProjects($linked_project)
+            $project_manager
         );
         $this->programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms((int) $this->source_project->getID()),
-            RetrieveProjectStub::withValidProjects($this->source_project)
+            $project_manager
         );
         $this->access_checker    = CheckProjectAccessStub::withValidAccess();
 
@@ -87,21 +90,25 @@ final class CollectLinkProjectsProxyTest extends TestCase
 
     private function setProgramContext(): void
     {
-        $red_team             = ProjectTestBuilder::aProject()->build();
-        $blue_team            = ProjectTestBuilder::aProject()->build();
+        $red_team        = ProjectTestBuilder::aProject()->build();
+        $blue_team       = ProjectTestBuilder::aProject()->build();
+        $project_manager = $this->createMock(\ProjectManager::class);
+        $project_manager->method('getProject')->willReturnOnConsecutiveCalls($red_team, $blue_team);
         $this->teams_searcher = new TeamsSearcher(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            RetrieveProjectStub::withValidProjects($red_team, $blue_team)
+            $project_manager
         );
     }
 
     private function setTeamContext(): void
     {
-        $red_program             = ProjectTestBuilder::aProject()->build();
-        $blue_program            = ProjectTestBuilder::aProject()->build();
+        $red_program     = ProjectTestBuilder::aProject()->build();
+        $blue_program    = ProjectTestBuilder::aProject()->build();
+        $project_manager = $this->createMock(\ProjectManager::class);
+        $project_manager->method('getProject')->willReturnOnConsecutiveCalls($red_program, $blue_program);
         $this->programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms(110, 111),
-            RetrieveProjectStub::withValidProjects($red_program, $blue_program)
+            $project_manager
         );
     }
 }

@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -39,6 +39,10 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
     private UserIdentifier $user_identifier;
     private CheckProjectAccessStub $access_checker;
     private RetrieveUserStub $user_retriever;
+    /**
+     * @var Stub&\ProjectManager
+     */
+    private $project_manager;
 
     protected function setUp(): void
     {
@@ -48,12 +52,14 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         $this->access_checker     = CheckProjectAccessStub::withValidAccess();
         $this->user_identifier    = UserIdentifierStub::buildGenericUser();
         $this->program_identifier = ProgramIdentifierBuilder::buildWithId(102);
+        $this->project_manager    = $this->createStub(\ProjectManager::class);
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
     }
 
     private function getVerifier(): PrioritizeFeaturesPermissionVerifier
     {
         return new PrioritizeFeaturesPermissionVerifier(
-            RetrieveProjectStub::withValidProjects(ProjectTestBuilder::aProject()->build()),
+            $this->project_manager,
             $this->access_checker,
             RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4),
             $this->user_retriever
