@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -63,7 +63,7 @@ final class Planning
 
     /**
      * @throws TopPlanningNotFoundInProjectException
-     * @throws PlanningHasNoProgramIncrementException
+     * @throws PlanningHasNoMilestoneTrackerException
      */
     public static function buildPlanning(BuildPlanning $build_planning, UserIdentifier $user_identifier, int $project_id): self
     {

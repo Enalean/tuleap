@@ -24,9 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Planning;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMilestoneTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -66,7 +65,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $this->expectException(PlanningHasNoProgramIncrementException::class);
+        $this->expectException(PlanningHasNoMilestoneTrackerException::class);
         $this->adapter->getRootPlanning($this->user_identifier, $project_id);
     }
 

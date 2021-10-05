@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class PlanningHasNoProgramIncrementException extends \Exception implements TrackerRetrievalException
+interface RetrieveMirroredIterationTracker
 {
-    public function __construct(int $planning_id)
-    {
-        parent::__construct("Planning with id $planning_id has no program increment tracker");
-    }
+    /**
+     * @throws PlanningHasNoMilestoneTrackerException
+     */
+    public function retrieveSecondPlanningMilestoneTracker(
+        ProjectReference $project,
+        UserIdentifier $user,
+        ?ConfigurationErrorsCollector $errors_collector
+    ): ?TrackerReference;
 }

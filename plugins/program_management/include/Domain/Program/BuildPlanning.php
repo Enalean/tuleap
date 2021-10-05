@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface BuildPlanning
 {
     /**
      * @throws TopPlanningNotFoundInProjectException
-     * @throws PlanningHasNoProgramIncrementException
+     * @throws PlanningHasNoMilestoneTrackerException
      */
     public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): \Planning;
 }

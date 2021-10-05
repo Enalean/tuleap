@@ -24,11 +24,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -36,66 +36,118 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private ProgramIdentifier $program_identifier;
+    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 78;
+    private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 57;
+    private const FIRST_MIRRORED_ITERATION_TRACKER_ID          = 49;
+    private const SECOND_MIRRORED_ITERATION_TRACKER_ID         = 3;
+
+    private RetrieveMirroredProgramIncrementTrackerStub $mirrored_program_increment_tracker_retriever;
+    private RetrieveMirroredIterationTrackerStub $mirrored_iteration_tracker_retriever;
     private UserIdentifier $user_identifier;
     private ConfigurationErrorsCollector $error_collector;
+    private TeamProjectsCollection $empty_teams;
+    private TeamProjectsCollection $teams;
 
     protected function setUp(): void
     {
-        $this->program_identifier = ProgramIdentifierBuilder::build();
-        $this->user_identifier    = UserIdentifierStub::buildGenericUser();
-        $this->error_collector    = new ConfigurationErrorsCollector(false);
+        $this->mirrored_program_increment_tracker_retriever = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withId(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID),
+            TrackerReferenceStub::withId(self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID),
+        );
+        $this->mirrored_iteration_tracker_retriever         = RetrieveMirroredIterationTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withId(self::FIRST_MIRRORED_ITERATION_TRACKER_ID),
+            TrackerReferenceStub::withId(self::SECOND_MIRRORED_ITERATION_TRACKER_ID),
+        );
+
+        $program_identifier    = ProgramIdentifierBuilder::build();
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
+        $this->error_collector = new ConfigurationErrorsCollector(false);
+
+        $this->empty_teams = TeamProjectsCollection::fromProgramIdentifier(
+            SearchTeamsOfProgramStub::withNoTeams(),
+            new RetrieveProjectReferenceStub(),
+            $program_identifier
+        );
+        $this->teams       = TeamProjectsCollection::fromProgramIdentifier(
+            SearchTeamsOfProgramStub::buildTeams(103, 104),
+            new RetrieveProjectReferenceStub(),
+            $program_identifier
+        );
     }
 
-    public function testGetEmptyTrackerArrayWhenNoRootPlanningTrackers(): void
+    public function testItBuildsEmptyMirroredProgramIncrementsWhenTeamsAreEmpty(): void
     {
-        $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $this->mirrored_program_increment_tracker_retriever,
+            $this->empty_teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(78);
-        $collection  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $empty_teams, $this->user_identifier, $this->error_collector);
+        self::assertTrue($collection->isEmpty());
         self::assertEmpty($collection->getTrackerIds());
         self::assertEmpty($collection->getTrackers());
     }
 
-    public function testGetEmptyTrackerArrayWhenNoSecondPlanningTrackers(): void
+    public function testItBuildsEmptyMirroredProgramIncrementsWhenNoVisibleRootPlanning(): void
     {
-        $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            RetrieveMirroredProgramIncrementTrackerStub::withNoRootPlanning(),
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(78);
-        $collection  = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $empty_teams, $this->user_identifier, $this->error_collector);
+        self::assertTrue($collection->isEmpty());
+        self::assertEmpty($collection->getTrackerIds());
+        self::assertEmpty($collection->getTrackers());
+    }
+
+    public function testItBuildsEmptyMirroredIterationsWhenTeamsAreEmpty(): void
+    {
+        $collection = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            $this->mirrored_iteration_tracker_retriever,
+            $this->empty_teams,
+            $this->user_identifier,
+            $this->error_collector
+        );
+        self::assertTrue($collection->isEmpty());
+        self::assertEmpty($collection->getTrackerIds());
+        self::assertEmpty($collection->getTrackers());
+    }
+
+    public function testItBuildsEmptyMirroredIterationsWhenNoVisibleRootPlanning(): void
+    {
+        $collection = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            RetrieveMirroredIterationTrackerStub::withNoVisibleRootPlanning(),
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
+        );
+        self::assertTrue($collection->isEmpty());
+        self::assertEmpty($collection->getTrackerIds());
+        self::assertEmpty($collection->getTrackers());
+    }
+
+    public function testItBuildsEmptyMirroredIterationsWhenNoVisibleSecondPlanning(): void
+    {
+        $collection = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            RetrieveMirroredIterationTrackerStub::withNoVisibleSecondPlanning(),
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
+        );
+        self::assertTrue($collection->isEmpty());
         self::assertEmpty($collection->getTrackerIds());
         self::assertEmpty($collection->getTrackers());
     }
 
     public function testReturnsTrueWhenUserCanSubmitInAllRootPlanningTrackers(): void
     {
-        $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $this->mirrored_program_increment_tracker_retriever,
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $first_tracker = $this->createMock(\Tracker::class);
-        $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
-        $first_tracker->method('getId')->willReturn(78);
-        $first_tracker->method('getName')->willReturn("tracker");
-        $first_tracker->method('getGroupId')->willReturn(101);
-        $second_tracker = $this->createMock(\Tracker::class);
-        $second_tracker->method('userCanSubmitArtifact')->willReturn(true);
-        $second_tracker->method('getId')->willReturn(57);
-        $second_tracker->method('getName')->willReturn("tracker B");
-        $second_tracker->method('getGroupId')->willReturn(101);
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            TrackerReferenceStub::fromTracker($first_tracker),
-            TrackerReferenceStub::fromTracker($second_tracker)
-        );
-
-        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user_identifier, $this->error_collector);
         self::assertTrue(
             $collection->canUserSubmitAnArtifactInAllTrackers(
                 $this->user_identifier,
@@ -104,110 +156,109 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $trackers = $collection->getTrackers();
-        self::assertEquals($first_tracker->getId(), $trackers[0]->getId());
-        self::assertEquals($second_tracker->getId(), $trackers[1]->getId());
+        [$first_tracker, $second_tracker] = $collection->getTrackers();
+        self::assertEquals(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, $first_tracker->getId());
+        self::assertEquals(self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, $second_tracker->getId());
 
         $ids = $collection->getTrackerIds();
-        self::assertContains(78, $ids);
-        self::assertContains(57, $ids);
+        self::assertContains(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, $ids);
+        self::assertContains(self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, $ids);
     }
 
     public function testReturnsTrueWhenUserCanSubmitInAllSecondPlanningTrackers(): void
     {
-        $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            $this->mirrored_iteration_tracker_retriever,
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $first_tracker = $this->createMock(\Tracker::class);
-        $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
-        $first_tracker->method('getId')->willReturn(78);
-        $first_tracker->method('getName')->willReturn("tracker");
-        $first_tracker->method('getGroupId')->willReturn(101);
-        $second_tracker = $this->createMock(\Tracker::class);
-        $second_tracker->method('userCanSubmitArtifact')->willReturn(true);
-        $second_tracker->method('getId')->willReturn(57);
-        $second_tracker->method('getName')->willReturn("tracker B");
-        $second_tracker->method('getGroupId')->willReturn(101);
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            TrackerReferenceStub::fromTracker($first_tracker),
-            TrackerReferenceStub::fromTracker($second_tracker)
+        self::assertTrue(
+            $collection->canUserSubmitAnArtifactInAllTrackers(
+                $this->user_identifier,
+                $this->error_collector,
+                VerifyUserCanSubmitStub::userCanSubmit()
+            )
         );
 
-        $collection = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier, $this->error_collector);
-        self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, $this->error_collector, VerifyUserCanSubmitStub::userCanSubmit()));
+        [$first_tracker, $second_tracker] = $collection->getTrackers();
+        self::assertEquals(self::FIRST_MIRRORED_ITERATION_TRACKER_ID, $first_tracker->getId());
+        self::assertEquals(self::SECOND_MIRRORED_ITERATION_TRACKER_ID, $second_tracker->getId());
 
-        $trackers = $collection->getTrackers();
-        self::assertEquals($first_tracker->getId(), $trackers[0]->getId());
-        self::assertEquals($second_tracker->getId(), $trackers[1]->getId());
+        $ids = $collection->getTrackerIds();
+        self::assertContains(self::FIRST_MIRRORED_ITERATION_TRACKER_ID, $ids);
+        self::assertContains(self::SECOND_MIRRORED_ITERATION_TRACKER_ID, $ids);
     }
 
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllRootPlanningTrackers(): void
     {
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $this->mirrored_program_increment_tracker_retriever,
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            TrackerReferenceStub::withId(1),
-            TrackerReferenceStub::withId(2)
+        self::assertFalse(
+            $collection->canUserSubmitAnArtifactInAllTrackers(
+                $this->user_identifier,
+                $this->error_collector,
+                VerifyUserCanSubmitStub::userCanNotSubmit()
+            )
         );
-
-        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user_identifier, $this->error_collector);
-        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, $this->error_collector, VerifyUserCanSubmitStub::userCanNotSubmit()));
     }
 
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllSecondPlanningTrackers(): void
     {
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            $this->mirrored_iteration_tracker_retriever,
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            TrackerReferenceStub::withId(1),
-            TrackerReferenceStub::withId(2)
+        self::assertFalse(
+            $collection->canUserSubmitAnArtifactInAllTrackers(
+                $this->user_identifier,
+                $this->error_collector,
+                VerifyUserCanSubmitStub::userCanNotSubmit()
+            )
         );
-
-        $collection = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier, $this->error_collector);
-        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, $this->error_collector, VerifyUserCanSubmitStub::userCanNotSubmit()));
     }
 
     public function testCollectsAllInvalidTrackers(): void
     {
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            $this->mirrored_iteration_tracker_retriever,
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            TrackerReferenceStub::withId(1),
-            TrackerReferenceStub::withId(2)
-        );
-
-        $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier, $this->error_collector);
         $configuration_errors = new ConfigurationErrorsCollector(true);
-        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, $configuration_errors, VerifyUserCanSubmitStub::userCanNotSubmit()));
+        self::assertFalse(
+            $collection->canUserSubmitAnArtifactInAllTrackers(
+                $this->user_identifier,
+                $configuration_errors,
+                VerifyUserCanSubmitStub::userCanNotSubmit()
+            )
+        );
         self::assertCount(2, $configuration_errors->getTeamTrackerIdErrors());
     }
 
     public function testCollectsTheFirstError(): void
     {
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new RetrieveProjectReferenceStub(),
-            $this->program_identifier
+        $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker(
+            $this->mirrored_iteration_tracker_retriever,
+            $this->teams,
+            $this->user_identifier,
+            $this->error_collector
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            TrackerReferenceStub::withId(1),
-            TrackerReferenceStub::withId(2)
-        );
-
-        $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $this->user_identifier, $this->error_collector);
         $configuration_errors = $this->error_collector;
-        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($this->user_identifier, $configuration_errors, VerifyUserCanSubmitStub::userCanNotSubmit()));
+        self::assertFalse(
+            $collection->canUserSubmitAnArtifactInAllTrackers(
+                $this->user_identifier,
+                $configuration_errors,
+                VerifyUserCanSubmitStub::userCanNotSubmit()
+            )
+        );
         self::assertCount(1, $configuration_errors->getTeamTrackerIdErrors());
     }
 }

@@ -39,7 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterationTracker;
 
 final class IterationCreationProcessor implements ProcessIterationCreation
 {
@@ -52,7 +52,7 @@ final class IterationCreationProcessor implements ProcessIterationCreation
         private BuildProgram $program_builder,
         private SearchTeamsOfProgram $teams_searcher,
         private RetrieveProjectReference $project_reference_retriever,
-        private RetrievePlanningMilestoneTracker $milestone_tracker_retriever
+        private RetrieveMirroredIterationTracker $milestone_tracker_retriever
     ) {
     }
 

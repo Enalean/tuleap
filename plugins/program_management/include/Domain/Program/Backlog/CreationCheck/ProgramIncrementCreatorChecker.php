@@ -24,38 +24,27 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 class ProgramIncrementCreatorChecker
 {
-    private TimeboxCreatorChecker $timebox_creator_checker;
-    private VerifyIsProgramIncrementTracker $verify_is_program_increment;
-    private RetrievePlanningMilestoneTracker $milestone_retriever;
-    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
-    private LoggerInterface $logger;
-
     public function __construct(
-        TimeboxCreatorChecker $timebox_creator_checker,
-        VerifyIsProgramIncrementTracker $verify_is_program_increment,
-        RetrievePlanningMilestoneTracker $milestone_retriever,
-        RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
-        LoggerInterface $logger
+        private TimeboxCreatorChecker $timebox_creator_checker,
+        private VerifyIsProgramIncrementTracker $verify_is_program_increment,
+        private RetrieveMirroredProgramIncrementTracker $milestone_retriever,
+        private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
+        private LoggerInterface $logger
     ) {
-        $this->timebox_creator_checker             = $timebox_creator_checker;
-        $this->verify_is_program_increment         = $verify_is_program_increment;
-        $this->milestone_retriever                 = $milestone_retriever;
-        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
-        $this->logger                              = $logger;
     }
 
     public function canCreateAProgramIncrement(
@@ -90,7 +79,7 @@ class ProgramIncrementCreatorChecker
                 $user_reference,
                 $errors_collector
             );
-        } catch (PlanningHasNoProgramIncrementException $exception) {
+        } catch (TrackerRetrievalException $exception) {
             $this->logger->error('Planning configuration is incorrect, it does not have a tracker', ['exception' => $exception]);
             return false;
         }

@@ -23,21 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-interface RetrievePlanningMilestoneTracker
+interface RetrieveMirroredProgramIncrementTracker
 {
     /**
-     * @throws PlanningHasNoProgramIncrementException
+     * @throws PlanningHasNoMilestoneTrackerException
      */
-    public function retrieveRootPlanningMilestoneTracker(ProjectReference $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference;
-
-    /**
-     * @throws TrackerRetrievalException
-     */
-    public function retrieveSecondPlanningMilestoneTracker(ProjectReference $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference;
+    public function retrieveRootPlanningMilestoneTracker(
+        ProjectReference $project,
+        UserIdentifier $user_identifier,
+        ConfigurationErrorsCollector $errors_collector
+    ): ?TrackerReference;
 }

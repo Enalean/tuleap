@@ -29,16 +29,18 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
+    private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
     private SemanticChecker $checker;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_TitleDao
@@ -71,8 +73,16 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ProgramIdentifierBuilder::build()
         );
 
-        $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier, new ConfigurationErrorsCollector(false));
+        $retriever             = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
+            TrackerReferenceStub::withId(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID),
+            TrackerReferenceStub::withId(self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
+        );
+        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $retriever,
+            $teams,
+            $user_identifier,
+            new ConfigurationErrorsCollector(false)
+        );
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->program_increment_tracker),
             ProgramIdentifierBuilder::build(),
@@ -96,22 +106,22 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->title_dao->expects(self::once())
             ->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->with([1, 1024, 2048])
+            ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);
         $this->description_dao->expects(self::once())
             ->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
-            ->with([1, 1024, 2048])
+            ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);
         $this->semantic_status_checker->expects(self::once())
             ->method('isStatusWellConfigured')
             ->willReturn(true);
         $this->timeframe_dao->expects(self::once())
             ->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
-            ->with([1, 1024, 2048])
+            ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);
         $this->timeframe_dao->expects(self::once())
             ->method('areTimeFrameSemanticsUsingSameTypeOfField')
-            ->with([1, 1024, 2048])
+            ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(true);
 
         $configuration_errors = new ConfigurationErrorsCollector(false);
