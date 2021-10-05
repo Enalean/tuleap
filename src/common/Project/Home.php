@@ -21,6 +21,7 @@
 
 namespace Tuleap\Project;
 
+use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use EventManager;
 use HTTPRequest;
@@ -120,6 +121,7 @@ class Home implements DispatchableWithRequest
                         $layout,
                         $core_assets,
                         $project_registration_creation_css_assets,
+                        Codendi_HTMLPurifier::instance()
                     ),
                     new WidgetDashboardController(
                         $csrf_token,
