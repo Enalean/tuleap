@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramInc
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
@@ -236,9 +237,9 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 function () use ($modifier, $potential_feature_id_to_add, $patch_representation, $user, $id) {
                     $modifier->modifyContent(
                         $id,
-                        ContentChange::fromRESTRepresentation(
+                        ContentChange::fromFeatureAdditionAndReorder(
                             $potential_feature_id_to_add,
-                            $patch_representation->order
+                            FeaturesToReorderProxy::buildFromRESTRepresentation($patch_representation->order)
                         ),
                         UserProxy::buildFromPFUser($user)
                     );

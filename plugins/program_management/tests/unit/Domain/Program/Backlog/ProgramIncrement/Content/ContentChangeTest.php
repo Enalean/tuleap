@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 final class ContentChangeTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -29,12 +30,12 @@ final class ContentChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenBothFeatureToAddAndReorderAreNull(): void
     {
         $this->expectException(AddOrOrderMustBeSetException::class);
-        ContentChange::fromRESTRepresentation(null, null);
+        ContentChange::fromFeatureAdditionAndReorder(null, null);
     }
 
     public function testItBuildsAValidPayloadWhenReorderIsNull(): void
     {
-        $change = ContentChange::fromRESTRepresentation(123, null);
+        $change = ContentChange::fromFeatureAdditionAndReorder(123, null);
         self::assertSame(123, $change->potential_feature_id_to_add);
         self::assertNull($change->elements_to_order);
     }
@@ -46,11 +47,12 @@ final class ContentChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $feature_to_order->direction   = 'after';
         $feature_to_order->compared_to = 123;
 
-        $change = ContentChange::fromRESTRepresentation(null, $feature_to_order);
+        $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($feature_to_order);
+        $change           = ContentChange::fromFeatureAdditionAndReorder(null, $feature_to_order);
 
         self::assertNull($change->potential_feature_id_to_add);
-        self::assertContainsEquals(456, $change->elements_to_order->ids);
-        self::assertSame(123, $change->elements_to_order->compared_to);
-        self::assertSame('after', $change->elements_to_order->direction);
+        self::assertContainsEquals(456, $change->elements_to_order->getIds());
+        self::assertSame(123, $change->elements_to_order->getComparedTo());
+        self::assertSame('after', $change->elements_to_order->getDirection());
     }
 }

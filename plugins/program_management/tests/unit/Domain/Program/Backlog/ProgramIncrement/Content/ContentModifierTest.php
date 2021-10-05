@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\FeaturesToReorder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
@@ -93,7 +95,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(NotAllowedToPrioritizeException::class);
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(201, null),
+            ContentChange::fromFeatureAdditionAndReorder(201, null),
             $this->user
         );
     }
@@ -105,7 +107,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(FeatureNotFoundException::class);
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(404, null),
+            ContentChange::fromFeatureAdditionAndReorder(404, null),
             $this->user
         );
     }
@@ -117,7 +119,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(404, null),
+            ContentChange::fromFeatureAdditionAndReorder(404, null),
             $this->user
         );
     }
@@ -127,7 +129,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectNotToPerformAssertions();
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(201, null),
+            ContentChange::fromFeatureAdditionAndReorder(201, null),
             $this->user
         );
     }
@@ -137,7 +139,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(AddOrOrderMustBeSetException::class);
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(null, null),
+            ContentChange::fromFeatureAdditionAndReorder(null, null),
             $this->user
         );
     }
@@ -147,7 +149,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->feature_reorderer = $this->getStubOrderFeature(true);
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
+            ContentChange::fromFeatureAdditionAndReorder(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
             $this->user
         );
     }
@@ -159,7 +161,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
+            ContentChange::fromFeatureAdditionAndReorder(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
             $this->user
         );
     }
@@ -171,7 +173,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
         $this->getModifier()->modifyContent(
             12,
-            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
+            ContentChange::fromFeatureAdditionAndReorder(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
             $this->user
         );
     }
@@ -180,14 +182,14 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         int $id,
         int $compared_to_id,
         string $direction = "before"
-    ): FeatureElementToOrderInvolvedInChangeRepresentation {
+    ): FeaturesToReorder {
         $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation();
 
         $feature_to_order->ids         = [$id];
         $feature_to_order->compared_to = $compared_to_id;
         $feature_to_order->direction   = $direction;
 
-        return $feature_to_order;
+        return FeaturesToReorderProxy::buildFromRESTRepresentation($feature_to_order);
     }
 
     private function buildFeatureRemoverStub(): RemoveFeature
@@ -238,7 +240,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             }
 
             public function reorder(
-                FeatureElementToOrderInvolvedInChangeRepresentation $order,
+                FeaturesToReorder $order,
                 string $context_id,
                 ProgramIdentifier $program
             ): void {

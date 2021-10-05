@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\FeaturesToReorder;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
@@ -43,7 +44,6 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
-use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 final class ContentModifier implements ModifyContent
 {
@@ -132,13 +132,13 @@ final class ContentModifier implements ModifyContent
      * @throws NotAllowedToPrioritizeException
      */
     private function reorderFeature(
-        FeatureElementToOrderInvolvedInChangeRepresentation $feature_to_order_representation,
+        FeaturesToReorder $feature_to_order_representation,
         ProgramIncrementIdentifier $program_increment,
         ProgramIdentifier $program,
         UserCanPrioritize $user
     ): void {
-        $this->checkFeatureCanBeReordered($feature_to_order_representation->ids[0], $program_increment, $user);
-        $this->checkFeatureCanBeReordered($feature_to_order_representation->compared_to, $program_increment, $user);
+        $this->checkFeatureCanBeReordered($feature_to_order_representation->getIds()[0], $program_increment, $user);
+        $this->checkFeatureCanBeReordered($feature_to_order_representation->getComparedTo(), $program_increment, $user);
         $this->features_rank_orderer->reorder($feature_to_order_representation, (string) $program_increment->getId(), $program);
     }
 

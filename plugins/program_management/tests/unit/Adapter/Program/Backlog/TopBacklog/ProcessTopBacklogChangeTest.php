@@ -250,13 +250,15 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $element_to_order->direction   = "before";
         $element_to_order->compared_to = 900;
 
+        $feature_reorder = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
+
         $program = ProgramIdentifierBuilder::buildWithId(666);
 
-        $this->feature_orderer->expects(self::once())->method('reorder')->with($element_to_order, $program->getId(), $program);
+        $this->feature_orderer->expects(self::once())->method('reorder')->with($feature_reorder, $program->getId(), $program);
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             $program,
-            new TopBacklogChange([], [], false, $element_to_order),
+            new TopBacklogChange([], [], false, $feature_reorder),
             $this->user_identifier,
             null
         );

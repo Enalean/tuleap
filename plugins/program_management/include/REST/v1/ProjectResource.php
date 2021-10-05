@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramInc
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
@@ -432,7 +433,7 @@ final class ProjectResource extends AuthenticatedResource
                     $feature_ids_to_add,
                     $feature_ids_to_remove,
                     $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog,
-                    $backlog_patch_representation->order
+                    FeaturesToReorderProxy::buildFromRESTRepresentation($backlog_patch_representation->order)
                 ),
                 $user_identifier,
                 null
