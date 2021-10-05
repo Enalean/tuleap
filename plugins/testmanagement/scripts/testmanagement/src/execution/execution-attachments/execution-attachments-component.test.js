@@ -202,6 +202,38 @@ describe("execution-attachments-component", () => {
             );
             expect(attachments_uploader.processUpload).not.toHaveBeenCalled();
         });
+
+        it("forbids to upload two files with the same name for the same comment", () => {
+            jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
+                $q.when({ id: 101 })
+            );
+            jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea");
+            jest.spyOn(
+                ExecutionService,
+                "doesFileAlreadyExistInUploadedAttachments"
+            ).mockReturnValue(true);
+            jest.spyOn(attachments_uploader, "processUpload");
+
+            const file_to_attach = {
+                name: "bug.png",
+                size: 12345678910,
+                type: "image/png",
+            };
+
+            controller.attachFile(file_to_attach);
+
+            $scope.$digest();
+
+            expect(ExecutionRestService.createFileInTestExecution).toHaveBeenCalled();
+            expect(ExecutionService.addToFilesAddedThroughAttachmentArea).not.toHaveBeenCalled();
+            expect(attachments_uploader.processUpload).not.toHaveBeenCalled();
+            expect(Array.from(controller.file_creation_errors)).toEqual([
+                {
+                    filename: "bug.png",
+                    message: "This file has already been attached to this comment",
+                },
+            ]);
+        });
     });
 
     afterEach(() => {

@@ -31,9 +31,16 @@ export default {
     controller,
 };
 
-controller.$inject = ["$scope", "$element", "$q", "ExecutionService", "ExecutionRestService"];
+controller.$inject = [
+    "$scope",
+    "$element",
+    "$q",
+    "ExecutionService",
+    "ExecutionRestService",
+    "gettextCatalog",
+];
 
-function controller($scope, $element, $q, ExecutionService, ExecutionRestService) {
+function controller($scope, $element, $q, ExecutionService, ExecutionRestService, gettextCatalog) {
     const self = this;
 
     Object.assign(self, {
@@ -68,6 +75,7 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
 
         $scope.$on("user-has-closed-the-file-creation-errors-modal", () => {
             this.file_creation_errors = [];
+            $scope.$apply();
         });
     }
 
@@ -80,6 +88,22 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
     function attachFile(file) {
         return ExecutionRestService.createFileInTestExecution(self.execution, buildFileInfo(file))
             .then((new_file) => {
+                if (
+                    ExecutionService.doesFileAlreadyExistInUploadedAttachments(
+                        self.execution,
+                        new_file
+                    )
+                ) {
+                    pushErrorInModal(
+                        file,
+                        gettextCatalog.getString(
+                            "This file has already been attached to this comment"
+                        )
+                    );
+
+                    return;
+                }
+
                 const upload_url = new_file.upload_href || null;
                 const file_uploading = {
                     id: new_file.id,
@@ -117,10 +141,7 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
                 );
             })
             .catch((error) => {
-                self.file_creation_errors.push({
-                    filename: file.name,
-                    message: error.message,
-                });
+                pushErrorInModal(file, error.message);
             });
     }
 
@@ -175,5 +196,12 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
         ExecutionService.removeFileUploadedThroughAttachmentArea(self.execution, file_uploading.id);
 
         self.upload_error_messages_popovers.get(file_uploading.id).destroy();
+    }
+
+    function pushErrorInModal(file, error_message) {
+        self.file_creation_errors.push({
+            filename: file.name,
+            message: error_message,
+        });
     }
 }

@@ -1393,4 +1393,22 @@ describe("ExecutionService", () => {
             ]);
         });
     });
+
+    describe("doesFileAlreadyExistInUploadedAttachments", () => {
+        it("returns true when a file with the same id is already in the list, false otherwise", () => {
+            const execution = {
+                uploaded_files_through_attachment_area: [
+                    { id: 101, filename: "bug_1.png" },
+                    { id: 102, filename: "bug_2.png" },
+                ],
+            };
+
+            expect(
+                ExecutionService.doesFileAlreadyExistInUploadedAttachments(execution, { id: 101 })
+            ).toBe(true);
+            expect(
+                ExecutionService.doesFileAlreadyExistInUploadedAttachments(execution, { id: 103 })
+            ).toBe(false);
+        });
+    });
 });
