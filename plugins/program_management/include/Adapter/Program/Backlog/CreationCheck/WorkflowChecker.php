@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckWorkflow;
@@ -96,7 +96,7 @@ final class WorkflowChecker implements CheckWorkflow
                 if ($tracker) {
                     $errors_collector->addWorkflowTransitionRulesError(
                         TrackerReferenceProxy::fromTracker($tracker),
-                        ProjectReferenceProxy::buildFromProject($tracker->getProject())
+                        ProjectProxy::buildFromProject($tracker->getProject())
                     );
                 }
             }
@@ -126,7 +126,7 @@ final class WorkflowChecker implements CheckWorkflow
                 if ($tracker) {
                     $errors_collector->addWorkflowTransitionDateRulesError(
                         TrackerReferenceProxy::fromTracker($tracker),
-                        ProjectReferenceProxy::buildFromProject($tracker->getProject())
+                        ProjectProxy::buildFromProject($tracker->getProject())
                     );
                 }
             }
@@ -156,7 +156,7 @@ final class WorkflowChecker implements CheckWorkflow
                 if ($tracker) {
                     $errors_collector->addWorkflowDependencyError(
                         TrackerReferenceProxy::fromTracker($tracker),
-                        ProjectReferenceProxy::buildFromProject($tracker->getProject())
+                        ProjectProxy::buildFromProject($tracker->getProject())
                     );
                 }
             }

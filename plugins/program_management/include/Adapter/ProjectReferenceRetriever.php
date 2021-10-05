@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
@@ -36,6 +36,6 @@ final class ProjectReferenceRetriever implements RetrieveProjectReference
     {
         $team_project = $this->project_manager->getProject($id);
 
-        return ProjectReferenceProxy::buildFromProject($team_project);
+        return ProjectProxy::buildFromProject($team_project);
     }
 }

@@ -56,12 +56,12 @@ final class PotentialTeamsCollection
 
         foreach ($projects_user_is_admin as $project_user_is_admin) {
             if (
-                $program->id !== $project_user_is_admin->getProjectId()
-                && ! \in_array($project_user_is_admin->getProjectId(), $aggregated_teams_id, true)
-                && ! \in_array($project_user_is_admin->getProjectId(), $existing_programs_id, true)
+                $program->id !== $project_user_is_admin->getId()
+                && ! \in_array($project_user_is_admin->getId(), $aggregated_teams_id, true)
+                && ! \in_array($project_user_is_admin->getId(), $existing_programs_id, true)
             ) {
                 $potential_teams[] = PotentialTeam::fromId(
-                    $project_user_is_admin->getProjectId(),
+                    $project_user_is_admin->getId(),
                     $project_user_is_admin->getProjectLabel()
                 );
             }

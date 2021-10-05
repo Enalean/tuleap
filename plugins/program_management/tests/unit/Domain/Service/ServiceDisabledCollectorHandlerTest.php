@@ -35,7 +35,7 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
 
     protected function setUp(): void
     {
-        $this->event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
+        $this->event = new ServiceDisabledCollector(new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
     }
 
     public function testItDoesNothingForOtherPlugins(): void

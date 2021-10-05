@@ -21,26 +21,36 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 /**
  * @psalm-immutable
  */
-final class ProjectProxy implements ProjectIdentifier
+final class ProjectProxy implements ProjectReference
 {
-    private function __construct(private int $project_id)
+    private function __construct(private int $project_id, private string $project_label, private string $project_url)
     {
     }
 
     public static function buildFromProject(\Project $project): self
     {
-        return new self((int) $project->getID());
+        return new self((int) $project->getID(), $project->getPublicName(), $project->getUrl());
     }
+
     public function getId(): int
     {
         return $this->project_id;
+    }
+
+    public function getProjectLabel(): string
+    {
+        return $this->project_label;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->project_url;
     }
 }

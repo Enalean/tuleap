@@ -69,7 +69,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
         ConfigurationErrorsCollector $errors_collector
     ): ?TrackerReference {
         try {
-            $root_planning = $this->getRootPlanning($user_identifier, $project->getProjectId());
+            $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
             return TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker());
         } catch (TopPlanningNotFoundInProjectException $exception) {
             $errors_collector->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
@@ -86,7 +86,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
         $pfuser        = $this->retrieve_user->getUserWithId($user);
         $root_planning = $this->planning_factory->getRootPlanning(
             $pfuser,
-            $project->getProjectId()
+            $project->getId()
         );
 
         if (! $root_planning) {

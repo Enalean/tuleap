@@ -107,7 +107,6 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ScrumBlocksServiceVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProjectReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
@@ -655,7 +654,7 @@ final class program_managementPlugin extends Plugin
         PlanningAdministrationDelegation $planning_administration_delegation
     ): void {
         $component_involved_verifier = $this->getComponentInvolvedVerifier();
-        $project_data                = ProjectReferenceProxy::buildFromProject(
+        $project_data                = ProjectProxy::buildFromProject(
             $planning_administration_delegation->getProject()
         );
         if ($component_involved_verifier->isInvolvedInAProgramWorkspace($project_data)) {

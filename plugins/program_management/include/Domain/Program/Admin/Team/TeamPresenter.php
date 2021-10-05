@@ -35,7 +35,7 @@ final class TeamPresenter
 
     public function __construct(ProjectReference $team)
     {
-        $this->id          = $team->getProjectId();
+        $this->id          = $team->getId();
         $this->public_name = $team->getProjectLabel();
         $this->url         = $team->getUrl();
     }

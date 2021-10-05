@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+
 /**
  * @psalm-immutable
  */
-interface ProjectReference
+interface ProjectReference extends ProjectIdentifier
 {
-    public function getProjectId(): int;
-
     public function getProjectLabel(): string;
 
     public function getUrl(): string;

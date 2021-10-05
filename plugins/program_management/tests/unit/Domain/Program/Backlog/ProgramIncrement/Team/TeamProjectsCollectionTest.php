@@ -48,8 +48,8 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_builder,
             $this->program
         );
-        self::assertSame(103, $collection->getTeamProjects()[0]->getProjectId());
-        self::assertSame(125, $collection->getTeamProjects()[1]->getProjectId());
+        self::assertSame(103, $collection->getTeamProjects()[0]->getId());
+        self::assertSame(125, $collection->getTeamProjects()[1]->getId());
         self::assertFalse($collection->isEmpty());
     }
 
@@ -61,8 +61,8 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_builder,
             $program
         );
-        self::assertSame(103, $collection->getTeamProjects()[0]->getProjectId());
-        self::assertSame(125, $collection->getTeamProjects()[1]->getProjectId());
+        self::assertSame(103, $collection->getTeamProjects()[0]->getId());
+        self::assertSame(125, $collection->getTeamProjects()[1]->getId());
         self::assertFalse($collection->isEmpty());
     }
 

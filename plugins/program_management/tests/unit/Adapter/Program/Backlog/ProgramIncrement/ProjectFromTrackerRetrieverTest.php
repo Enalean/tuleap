@@ -59,7 +59,7 @@ final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
 
         $project_reference = $this->retriever->fromTrackerReference($this->tracker_reference);
-        self::assertEquals($project->getID(), $project_reference->getProjectId());
+        self::assertEquals($project->getID(), $project_reference->getId());
         self::assertEquals($project->getPublicName(), $project_reference->getProjectLabel());
     }
 }
