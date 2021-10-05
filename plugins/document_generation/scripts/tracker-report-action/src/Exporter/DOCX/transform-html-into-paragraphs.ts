@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { IRunStylePropertiesOptions, ParagraphChild } from "docx";
+import type { IRunStylePropertiesOptions, ParagraphChild, ImageRun } from "docx";
 import {
     AlignmentType,
     convertInchesToTwip,
@@ -26,14 +26,15 @@ import {
     TextRun,
     UnderlineType,
 } from "docx";
+import { loadImage } from "./Image/image-loader";
 
 const HTML_ORDERED_LIST_NUMBERING_REFERENCE = "html-ordered-list";
 
-export function transformHTMLIntoParagraphs(content: string): Paragraph[] {
+export async function transformHTMLIntoParagraphs(content: string): Promise<Paragraph[]> {
     const doc = new DOMParser().parseFromString(content, "text/html");
 
     return buildParagraphsFromTreeContent(
-        parseTreeContent(doc.body.childNodes, { style: {}, list_level: 0 }),
+        await parseTreeContent(doc.body.childNodes, { style: {}, list_level: 0 }),
         defaultParagraphBuilder
     );
 }
@@ -88,21 +89,25 @@ interface TreeContentState {
     list_level: number;
 }
 
-function parseTreeContent(
+async function parseTreeContent(
     tree: NodeListOf<ChildNode>,
     state: Readonly<TreeContentState>
-): TreeContentChild[] {
+): Promise<TreeContentChild[]> {
     const content_children: TreeContentChild[] = [];
 
     for (const child of tree) {
+        if (!(child instanceof Element)) {
+            content_children.push(...defaultNodeHandling(child, state));
+            continue;
+        }
         switch (child.nodeName) {
             case "DIV":
-                content_children.push(...parseTreeContent(child.childNodes, state));
+                content_children.push(...(await parseTreeContent(child.childNodes, state)));
                 break;
             case "P":
                 content_children.push(
                     ...buildParagraphsFromTreeContent(
-                        parseTreeContent(child.childNodes, state),
+                        await parseTreeContent(child.childNodes, state),
                         defaultParagraphBuilder
                     )
                 );
@@ -111,67 +116,67 @@ function parseTreeContent(
                 content_children.push(new TextRun({ break: 1 }));
                 break;
             case "SPAN":
-                content_children.push(...parseTreeContent(child.childNodes, state));
+                content_children.push(...(await parseTreeContent(child.childNodes, state)));
                 break;
             case "EM":
             case "I":
                 content_children.push(
-                    ...parseTreeContent(child.childNodes, {
+                    ...(await parseTreeContent(child.childNodes, {
                         ...state,
                         style: {
                             ...state.style,
                             italics: true,
                         },
-                    })
+                    }))
                 );
                 break;
             case "STRONG":
             case "B":
                 content_children.push(
-                    ...parseTreeContent(child.childNodes, {
+                    ...(await parseTreeContent(child.childNodes, {
                         ...state,
                         style: { ...state.style, bold: true },
-                    })
+                    }))
                 );
                 break;
             case "SUP":
                 content_children.push(
-                    ...parseTreeContent(child.childNodes, {
+                    ...(await parseTreeContent(child.childNodes, {
                         ...state,
                         style: {
                             ...state.style,
                             superScript: true,
                         },
-                    })
+                    }))
                 );
                 break;
             case "SUB":
                 content_children.push(
-                    ...parseTreeContent(child.childNodes, {
+                    ...(await parseTreeContent(child.childNodes, {
                         ...state,
                         style: {
                             ...state.style,
                             subScript: true,
                         },
-                    })
+                    }))
                 );
                 break;
             case "U":
                 content_children.push(
-                    ...parseTreeContent(child.childNodes, {
+                    ...(await parseTreeContent(child.childNodes, {
                         ...state,
                         style: {
                             ...state.style,
                             underline: { type: UnderlineType.SINGLE },
                         },
-                    })
+                    }))
                 );
                 break;
             case "UL":
                 for (const list_item of child.childNodes) {
                     content_children.push(
                         ...buildParagraphsFromTreeContent(
-                            parseTreeContent(list_item.childNodes, {
+                            await parseTreeContent(list_item.childNodes, {
                                 ...state,
                                 list_level: state.list_level + 1,
                             }),
@@ -185,7 +190,7 @@ function parseTreeContent(
                 for (const list_item of child.childNodes) {
                     content_children.push(
                         ...buildParagraphsFromTreeContent(
-                            parseTreeContent(list_item.childNodes, {
+                            await parseTreeContent(list_item.childNodes, {
                                 ...state,
                                 list_level: state.list_level + 1,
                             }),
@@ -201,14 +206,35 @@ function parseTreeContent(
                     );
                 }
                 break;
+            case "IMG":
+                content_children.push(...(await getImageRun(child)));
+                break;
             default:
-                if (child.textContent !== null && child.textContent !== "") {
-                    content_children.push(new TextRun({ text: child.textContent, ...state.style }));
-                }
+                content_children.push(...defaultNodeHandling(child, state));
         }
     }
 
     return content_children;
+}
+
+async function getImageRun(element: Element): Promise<ImageRun[]> {
+    const source_image = element.getAttribute("src");
+    if (source_image === null) {
+        return [];
+    }
+
+    try {
+        return [await loadImage(source_image)];
+    } catch (e) {
+        return [];
+    }
+}
+
+function defaultNodeHandling(node: Node, state: Readonly<TreeContentState>): TextRun[] {
+    if (node.textContent === null || node.textContent === "") {
+        return [];
+    }
+    return [new TextRun({ text: node.textContent, ...state.style })];
 }
 
 // This is based on the default implementation of the bullets to have a consistent rendering between unordered and

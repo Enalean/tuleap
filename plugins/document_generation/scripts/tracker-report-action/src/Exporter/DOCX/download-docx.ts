@@ -143,9 +143,9 @@ export async function downloadDocx(
             })
         );
 
-        artifacts_content.push(...buildFieldValuesDisplayZone(artifact.fields));
+        artifacts_content.push(...(await buildFieldValuesDisplayZone(artifact.fields)));
 
-        artifacts_content.push(...buildContainersDisplayZone(artifact.containers));
+        artifacts_content.push(...(await buildContainersDisplayZone(artifact.containers)));
     }
 
     const table_of_contents = [
@@ -503,13 +503,13 @@ function buildCoverTableRow(label: string, value: TextRun | ExternalHyperlink): 
     });
 }
 
-function buildContainersDisplayZone(
+async function buildContainersDisplayZone(
     containers: ReadonlyArray<ArtifactContainer>
-): ReadonlyArray<XmlComponent> {
-    return containers.flatMap((container) => {
-        const sub_containers_display_zones = buildContainersDisplayZone(container.containers);
+): Promise<XmlComponent[]> {
+    const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
+        const sub_containers_display_zones = await buildContainersDisplayZone(container.containers);
         const field_values_display_zone: XmlComponent[] = [];
-        field_values_display_zone.push(...buildFieldValuesDisplayZone(container.fields));
+        field_values_display_zone.push(...(await buildFieldValuesDisplayZone(container.fields)));
 
         if (sub_containers_display_zones.length === 0 && field_values_display_zone.length === 0) {
             return [];
@@ -524,6 +524,13 @@ function buildContainersDisplayZone(
             ...sub_containers_display_zones,
         ];
     });
+
+    const xml_components: XmlComponent[] = [];
+    for (const xml_components_promise of xml_components_promises) {
+        xml_components.push(...(await xml_components_promise));
+    }
+
+    return xml_components;
 }
 
 function buildReportCriteriaDisplayZone(
@@ -660,9 +667,9 @@ function buildDateReportCriterionValue(
     });
 }
 
-function buildFieldValuesDisplayZone(
+async function buildFieldValuesDisplayZone(
     artifact_values: ReadonlyArray<ArtifactFieldValue>
-): XmlComponent[] {
+): Promise<XmlComponent[]> {
     const short_fields = [];
     const display_zone_long_fields: XmlComponent[] = [];
 
@@ -677,7 +684,10 @@ function buildFieldValuesDisplayZone(
                         heading: HeadingLevel.HEADING_4,
                         children: [new TextRun(field.field_name)],
                     }),
-                    ...transformLargeContentIntoParagraphs(field.field_value, field.content_format)
+                    ...(await transformLargeContentIntoParagraphs(
+                        field.field_value,
+                        field.content_format
+                    ))
                 );
                 break;
             default:

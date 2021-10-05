@@ -23,16 +23,16 @@ import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
 export function transformLargeContentIntoParagraphs(
     content: string,
     format: "plaintext" | "html"
-): Paragraph[] {
+): Promise<Paragraph[]> {
     if (format === "html") {
         return transformHTMLIntoParagraphs(content);
     }
-    return [
+    return Promise.resolve([
         new Paragraph({
             children: content.split("\n").map((text: string, index: number) => {
                 const is_first_line = index === 0;
                 return new TextRun({ text, break: is_first_line ? 0 : 1 });
             }),
         }),
-    ];
+    ]);
 }

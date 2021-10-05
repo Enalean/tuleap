@@ -19,6 +19,7 @@
 
 import { ImageRun } from "docx";
 import { get } from "@tuleap/tlp-fetch";
+import { computeTransformation } from "./image-transformation";
 
 export async function loadImage(image_url: string): Promise<ImageRun> {
     const response = await get(image_url);
@@ -29,15 +30,10 @@ export async function loadImage(image_url: string): Promise<ImageRun> {
 
     await image.decode();
 
-    const size = {
-        height: image.naturalHeight,
-        width: image.naturalWidth,
-    };
-
     URL.revokeObjectURL(image_blob_url);
 
     return new ImageRun({
         data: await response_blob.arrayBuffer(),
-        transformation: size,
+        transformation: computeTransformation(image),
     });
 }
