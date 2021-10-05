@@ -31,30 +31,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterationTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 class IterationCreatorChecker
 {
-    private RetrievePlanningMilestoneTracker $root_milestone_retriever;
-    private VerifyIsIterationTracker $verify_is_iteration;
-    private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
-    private TimeboxCreatorChecker $timebox_creator_checker;
-    private LoggerInterface $logger;
-
     public function __construct(
-        RetrievePlanningMilestoneTracker $root_milestone_retriever,
-        VerifyIsIterationTracker $verify_is_iteration,
-        RetrieveVisibleIterationTracker $iteration_tracker_retriever,
-        TimeboxCreatorChecker $timebox_creator_checker,
-        LoggerInterface $logger
+        private RetrieveMirroredIterationTracker $milestone_retriever,
+        private VerifyIsIterationTracker $verify_is_iteration,
+        private RetrieveVisibleIterationTracker $iteration_tracker_retriever,
+        private TimeboxCreatorChecker $timebox_creator_checker,
+        private LoggerInterface $logger
     ) {
-        $this->root_milestone_retriever    = $root_milestone_retriever;
-        $this->verify_is_iteration         = $verify_is_iteration;
-        $this->iteration_tracker_retriever = $iteration_tracker_retriever;
-        $this->timebox_creator_checker     = $timebox_creator_checker;
-        $this->logger                      = $logger;
     }
 
     public function canCreateAnIteration(
@@ -84,7 +73,7 @@ class IterationCreatorChecker
 
         try {
             $team_trackers = TrackerCollection::buildSecondPlanningMilestoneTracker(
-                $this->root_milestone_retriever,
+                $this->milestone_retriever,
                 $team_projects_collection,
                 $user_identifier,
                 $errors_collector

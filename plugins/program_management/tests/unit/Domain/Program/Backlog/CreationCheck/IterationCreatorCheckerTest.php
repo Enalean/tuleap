@@ -26,12 +26,11 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -43,7 +42,7 @@ final class IterationCreatorCheckerTest extends TestCase
 {
     private ProgramIdentifier $program;
     private TestLogger $logger;
-    private RetrievePlanningMilestoneTracker $milestone_retriever;
+    private RetrieveMirroredIterationTrackerStub $milestone_retriever;
     private VerifyIsIterationTrackerStub $iteration_tracker_verifier;
     private TrackerReference $tracker;
     private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
@@ -58,7 +57,7 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->logger                     = new TestLogger();
         $this->user_identifier            = UserReferenceStub::withDefaults();
         $this->program                    = ProgramIdentifierBuilder::build();
-        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $this->milestone_retriever        = RetrieveMirroredIterationTrackerStub::withValidTrackers(
             TrackerReferenceStub::withDefaults()
         );
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
@@ -118,9 +117,9 @@ final class IterationCreatorCheckerTest extends TestCase
         );
     }
 
-    public function testDisallowArtifactCreationAndLogsExceptionWhenAtLeastOneTeamHasNoSecondPlanning(): void
+    public function testDisallowArtifactCreationAndLogsExceptionWhenAtLeastOneTeamHasBrokenPlanning(): void
     {
-        $this->milestone_retriever = RetrievePlanningMilestoneTrackerStub::withNoPlanning();
+        $this->milestone_retriever = RetrieveMirroredIterationTrackerStub::withBrokenPlanning();
 
         self::assertFalse(
             $this->getChecker()->canCreateAnIteration(

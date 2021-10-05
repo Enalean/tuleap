@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -44,26 +43,30 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 758;
     private WorkflowChecker $checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Workflow_Dao
+     * @var MockObject&\Workflow_Dao
      */
     private $workflow_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Rule_Date_Dao
+     * @var MockObject&\Tracker_Rule_Date_Dao
      */
     private $rule_date_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Rule_List_Dao
+     * @var MockObject&\Tracker_Rule_List_Dao
      */
     private $rule_list_dao;
-    private RetrieveTrackerFromField $retrieve_tracker_from_field;
-    private VerifyFieldPermissions $retrieve_field_permissions;
-    private SynchronizedFieldFromProgramAndTeamTrackersCollection $collection;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
+     * @var MockObject&\TrackerFactory
      */
     private $tracker_factory;
+    private RetrieveTrackerFromFieldStub $retrieve_tracker_from_field;
+    private VerifyFieldPermissionsStub $retrieve_field_permissions;
+    private SynchronizedFieldFromProgramAndTeamTrackersCollection $collection;
+    private TrackerCollection $mirrored_program_increment_trackers;
+    private ConfigurationErrorsCollector $errors_collector;
+    private UserIdentifierStub $user;
 
     protected function setUp(): void
     {
@@ -81,11 +84,35 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_factory
         );
         $this->retrieve_field_permissions  = VerifyFieldPermissionsStub::withValidField();
-        $this->collection                  = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
+
+        $this->user = UserIdentifierStub::buildGenericUser();
+
+        $this->collection    = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             new NullLogger(),
             $this->retrieve_tracker_from_field,
             $this->retrieve_field_permissions,
             RetrieveProjectFromTrackerStub::buildGeneric()
+        );
+        $synchronized_fields = new SynchronizedFieldFromProgramAndTeamTrackers(
+            SynchronizedFieldReferencesBuilder::build()
+        );
+        $this->collection->add($synchronized_fields);
+
+        $teams = TeamProjectsCollection::fromProgramIdentifier(
+            SearchTeamsOfProgramStub::buildTeams(785),
+            new RetrieveProjectReferenceStub(),
+            ProgramIdentifierBuilder::build()
+        );
+
+        $this->errors_collector = new ConfigurationErrorsCollector(true);
+
+        $this->mirrored_program_increment_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
+                TrackerReferenceStub::withId(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
+            ),
+            $teams,
+            $this->user,
+            $this->errors_collector
         );
     }
 
@@ -94,27 +121,20 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn([]);
         $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([]);
         $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([]);
-
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
-        );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(123);
         $this->tracker_factory->method('getTrackerById')
-            ->with(123)
-            ->willReturn(TrackerTestBuilder::aTracker()->withId(123)->withName('tracker')->build());
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser(), new ConfigurationErrorsCollector(false));
-
-        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-
-        $this->collection->add($synchronized_fields);
+            ->with(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
+            ->willReturn(
+                TrackerTestBuilder::aTracker()
+                    ->withId(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
+                    ->withName('tracker')
+                    ->build()
+            );
 
         self::assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $trackers,
+                $this->mirrored_program_increment_trackers,
                 $this->collection,
-                new ConfigurationErrorsCollector(true)
+                $this->errors_collector
             )
         );
     }
@@ -122,26 +142,17 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRejectsWhenSomeWorkflowTransitionRulesAreDefinedWithASynchronizedField(): void
     {
         $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn(
-            [['tracker_id' => 758, 'field_id' => 963]]
+            [['tracker_id' => self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, 'field_id' => 963]]
         );
-
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(147),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
-        );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $this->tracker_factory->method('getTrackerById')
-            ->with(758)
-            ->willReturn($this->getTrackerWithIdWithGenericProject(758, 'tracker'));
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser(), new ConfigurationErrorsCollector(false));
-
-        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $this->collection->add($synchronized_fields);
+            ->with(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
+            ->willReturn(
+                $this->getTrackerWithIdWithGenericProject(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, 'tracker')
+            );
 
         self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $trackers,
+                $this->mirrored_program_increment_trackers,
                 $this->collection,
                 new ConfigurationErrorsCollector(false)
             )
@@ -151,25 +162,19 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRejectsWhenSomeDateRulesAreDefinedWithASynchronizedField(): void
     {
         $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn([]);
-        $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
-
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(147),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn(
+            [self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID]
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
-        $this->tracker_factory->method('getTrackerById')
-            ->with(758)
-            ->willReturn($this->getTrackerWithIdWithGenericProject(758, 'tracker'));
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser(), new ConfigurationErrorsCollector(false));
 
-        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $this->collection->add($synchronized_fields);
+        $this->tracker_factory->method('getTrackerById')
+            ->with(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
+            ->willReturn(
+                $this->getTrackerWithIdWithGenericProject(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, 'tracker')
+            );
 
         self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $trackers,
+                $this->mirrored_program_increment_trackers,
                 $this->collection,
                 new ConfigurationErrorsCollector(false)
             )
@@ -180,27 +185,21 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn([]);
         $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([]);
-        $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
-
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(147),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn(
+            [self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID]
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
-        $this->tracker_factory->method('getTrackerById')
-            ->with(758)
-            ->willReturn($this->getTrackerWithIdWithGenericProject(758, 'tracker'));
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser(), new ConfigurationErrorsCollector(false));
 
-        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $this->collection->add($synchronized_fields);
+        $this->tracker_factory->method('getTrackerById')
+            ->with(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
+            ->willReturn(
+                $this->getTrackerWithIdWithGenericProject(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, 'tracker')
+            );
 
         self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $trackers,
+                $this->mirrored_program_increment_trackers,
                 $this->collection,
-                new ConfigurationErrorsCollector(true)
+                $this->errors_collector
             )
         );
     }
@@ -208,47 +207,43 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCollectsAllErrors(): void
     {
         $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn(
-            [['tracker_id' => 758, 'field_id' => 963]]
+            [['tracker_id' => self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, 'field_id' => 963]]
         );
         $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([123]);
-        $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
-
-        $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(147),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn(
+            [self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID]
         );
-        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $this->tracker_factory->method('getTrackerById')
             ->willReturnOnConsecutiveCalls(
-                $this->getTrackerWithIdWithGenericProject(758, 'tracker A'),
+                $this->getTrackerWithIdWithGenericProject(
+                    self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID,
+                    'tracker A'
+                ),
                 $this->getTrackerWithIdWithGenericProject(123, 'tracker B'),
-                $this->getTrackerWithIdWithGenericProject(758, 'tracker A')
+                $this->getTrackerWithIdWithGenericProject(
+                    self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID,
+                    'tracker A'
+                )
             );
-        $trackers = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, UserIdentifierStub::buildGenericUser(), new ConfigurationErrorsCollector(false));
-
-        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $this->collection->add($synchronized_fields);
 
         $errors_collector = new ConfigurationErrorsCollector(true);
         self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $trackers,
+                $this->mirrored_program_increment_trackers,
                 $this->collection,
                 $errors_collector
             )
         );
 
-        self::assertSame(758, $errors_collector->getFieldDependencyError()[0]->tracker_id);
+        self::assertSame(
+            self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID,
+            $errors_collector->getFieldDependencyError()[0]->tracker_id
+        );
         self::assertSame(123, $errors_collector->getTransitionRuleDateError()[0]->tracker_id);
-        self::assertSame(758, $errors_collector->getTransitionRuleError()[0]->tracker_id);
-    }
-
-    private function buildSynchronizedFieldsCollectionFromProgramAndTeam(): SynchronizedFieldFromProgramAndTeamTrackers
-    {
-        $synchronized_fields = SynchronizedFieldReferencesBuilder::build();
-
-        return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_fields);
+        self::assertSame(
+            self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID,
+            $errors_collector->getTransitionRuleError()[0]->tracker_id
+        );
     }
 
     protected function getTrackerWithIdWithGenericProject(int $tracker_id, string $tracker_name): \Tracker

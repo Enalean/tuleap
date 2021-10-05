@@ -29,13 +29,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
@@ -50,7 +50,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
     private ProgramIdentifier $program;
     private VerifyIsProgramIncrementTracker $program_verifier;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
-    private RetrievePlanningMilestoneTracker $root_milestone_retriever;
+    private RetrieveMirroredProgramIncrementTracker $root_milestone_retriever;
     private UserReference $user_identifier;
 
     protected function setUp(): void
@@ -64,7 +64,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->tracker
         );
 
-        $this->root_milestone_retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $this->root_milestone_retriever = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
             TrackerReferenceStub::withDefaults()
         );
 
@@ -182,7 +182,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDisallowArtifactCreationIfOneProjectDoesNotHaveARootPlanningWithAMilestoneTracker(): void
     {
-        $this->root_milestone_retriever = RetrievePlanningMilestoneTrackerStub::withNoPlanning();
+        $this->root_milestone_retriever = RetrieveMirroredProgramIncrementTrackerStub::withNoRootPlanning();
 
         self::assertFalse($this->getChecker()->canCreateAProgramIncrement(
             $this->tracker,

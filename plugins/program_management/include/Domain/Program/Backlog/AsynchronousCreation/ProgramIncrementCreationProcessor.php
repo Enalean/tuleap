@@ -43,12 +43,12 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 
 final class ProgramIncrementCreationProcessor implements ProcessProgramIncrementCreation
 {
     public function __construct(
-        private RetrievePlanningMilestoneTracker $root_milestone_retriever,
+        private RetrieveMirroredProgramIncrementTracker $root_milestone_retriever,
         private ProgramIncrementsCreator $program_increment_creator,
         private LoggerInterface $logger,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,

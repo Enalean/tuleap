@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
@@ -36,10 +35,12 @@ use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\PlanUserStoriesInMirroredProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -76,7 +77,10 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
     private function getProcessor(): ProgramIncrementCreationProcessor
     {
         return new ProgramIncrementCreationProcessor(
-            RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(99, 34),
+            RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
+                TrackerReferenceStub::withId(99),
+                TrackerReferenceStub::withId(34)
+            ),
             new ProgramIncrementsCreator(
                 new DBTransactionExecutorPassthrough(),
                 MapStatusByValueStub::withValues(2271),

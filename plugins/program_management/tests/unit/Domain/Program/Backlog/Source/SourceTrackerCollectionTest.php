@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -63,7 +63,7 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timebox_tracker = TrackerReferenceStub::withId(self::TIMEBOX_TRACKER_ID);
 
         $this->team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
-            RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+            RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
                 TrackerReferenceStub::withId(self::BLUE_TEAM_TRACKER_ID),
                 TrackerReferenceStub::withId(self::RED_TEAM_TRACKER_ID),
             ),

@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -98,7 +98,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             new RetrieveProjectReferenceStub(),
             ProgramIdentifierBuilder::build()
         );
-        $retriever       = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $retriever       = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
             TrackerReferenceStub::fromTracker($this->tracker_team_01),
             TrackerReferenceStub::fromTracker($this->tracker_team_02),
         );

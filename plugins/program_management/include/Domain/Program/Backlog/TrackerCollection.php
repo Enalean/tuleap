@@ -23,15 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterationTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 
 /**
- * I contain all the Teams' Mirrored Program Increment trackers.
+ * I contain all the Teams' Mirrored Timebox trackers.
  */
 final class TrackerCollection
 {
@@ -43,10 +44,10 @@ final class TrackerCollection
     }
 
     /**
-     * @throws PlanningHasNoProgramIncrementException
+     * @throws PlanningHasNoMilestoneTrackerException
      */
     public static function buildRootPlanningMilestoneTrackers(
-        RetrievePlanningMilestoneTracker $retriever,
+        RetrieveMirroredProgramIncrementTracker $retriever,
         TeamProjectsCollection $teams,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
@@ -67,10 +68,10 @@ final class TrackerCollection
     }
 
     /**
-     * @throws TrackerRetrievalException
+     * @throws PlanningHasNoMilestoneTrackerException
      */
     public static function buildSecondPlanningMilestoneTracker(
-        RetrievePlanningMilestoneTracker $retriever,
+        RetrieveMirroredIterationTracker $retriever,
         TeamProjectsCollection $teams,
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $errors_collector
