@@ -49,7 +49,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
 {
     public function __construct(
         private RetrieveMirroredProgramIncrementTracker $root_milestone_retriever,
-        private ProgramIncrementsCreator $program_increment_creator,
+        private CreateProgramIncrements $program_increment_creator,
         private LoggerInterface $logger,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         private SearchTeamsOfProgram $teams_searcher,
