@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\RetrieveFeatureContent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -33,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class FeatureContentRetriever implements RetrieveFeatureContent
+final class FeatureContentRetriever
 {
     public function __construct(
         private VerifyIsProgramIncrement $program_increment_verifier,
