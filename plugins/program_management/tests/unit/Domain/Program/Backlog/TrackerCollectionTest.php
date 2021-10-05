@@ -25,11 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
@@ -45,7 +44,6 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveMirroredIterationTrackerStub $mirrored_iteration_tracker_retriever;
     private UserIdentifier $user_identifier;
     private ConfigurationErrorsCollector $error_collector;
-    private TeamProjectsCollection $empty_teams;
     private TeamProjectsCollection $teams;
 
     protected function setUp(): void
@@ -59,19 +57,12 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             TrackerReferenceStub::withId(self::SECOND_MIRRORED_ITERATION_TRACKER_ID),
         );
 
-        $program_identifier    = ProgramIdentifierBuilder::build();
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
         $this->error_collector = new ConfigurationErrorsCollector(false);
 
-        $this->empty_teams = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::withNoTeams(),
-            new RetrieveProjectReferenceStub(),
-            $program_identifier
-        );
-        $this->teams       = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
-            new RetrieveProjectReferenceStub(),
-            $program_identifier
+        $this->teams = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(103),
+            ProjectReferenceStub::withId(104),
         );
     }
 
@@ -79,7 +70,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $collection = TrackerCollection::buildRootPlanningMilestoneTrackers(
             $this->mirrored_program_increment_tracker_retriever,
-            $this->empty_teams,
+            TeamProjectsCollectionBuilder::withEmptyTeams(),
             $this->user_identifier,
             $this->error_collector
         );
@@ -105,7 +96,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $collection = TrackerCollection::buildSecondPlanningMilestoneTracker(
             $this->mirrored_iteration_tracker_retriever,
-            $this->empty_teams,
+            TeamProjectsCollectionBuilder::withEmptyTeams(),
             $this->user_identifier,
             $this->error_collector
         );

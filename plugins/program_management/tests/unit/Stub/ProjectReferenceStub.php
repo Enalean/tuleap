@@ -23,23 +23,41 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class RetrieveProjectFromTrackerStub implements RetrieveProjectFromTracker
+final class ProjectReferenceStub implements ProjectReference
 {
-    private function __construct(private ProjectReference $project_reference)
+    private function __construct(private int $id, private string $label, private string $short_name)
     {
     }
 
     public static function buildGeneric(): self
     {
-        return new self(ProjectReferenceStub::buildGeneric());
+        return new self(101, 'My project', 'my_project');
     }
 
-    public function fromTrackerReference(TrackerReference $tracker): ProjectReference
+    public static function withId(int $project_id): self
     {
-        return $this->project_reference;
+        return new self($project_id, 'My project', 'my_project');
+    }
+
+    public static function withValues(int $project_id, string $label, string $short_name): self
+    {
+        return new self($project_id, $label, $short_name);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getProjectLabel(): string
+    {
+        return $this->label;
+    }
+
+    public function getUrl(): string
+    {
+        return '/projects/' . urlencode($this->short_name);
     }
 }

@@ -24,15 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -67,10 +66,9 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_increment_tracker = TrackerReferenceStub::withDefaults();
 
         $user_identifier = UserIdentifierStub::buildGenericUser();
-        $teams           = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(101, 102),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $teams           = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(101),
+            ProjectReferenceStub::withId(102),
         );
 
         $retriever             = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(

@@ -23,14 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -59,8 +59,8 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $this->program_increment_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
         $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
         $this->build_program             = BuildProgramStub::stubValidProgram();
-        $this->teams_searcher            = SearchTeamsOfProgramStub::buildTeams(1);
-        $this->project_builder           = new RetrieveProjectReferenceStub();
+        $this->teams_searcher            = SearchTeamsOfProgramStub::buildTeams(101);
+        $this->project_builder           = RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(101));
         $this->tracker                   = TrackerReferenceStub::withDefaults();
         $this->user_identifier           = UserReferenceStub::withDefaults();
 
@@ -100,7 +100,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $errors_collector = new ConfigurationErrorsCollector(false);
         $errors_collector->addWorkflowDependencyError(
             $this->tracker,
-            ProjectReferenceBuilder::buildGeneric()
+            ProjectReferenceStub::buildGeneric()
         );
 
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
@@ -119,7 +119,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $errors_collector = new ConfigurationErrorsCollector(true);
         $errors_collector->addWorkflowDependencyError(
             $this->tracker,
-            ProjectReferenceBuilder::buildGeneric()
+            ProjectReferenceStub::buildGeneric()
         );
 
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');

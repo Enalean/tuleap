@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -50,37 +50,37 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenAFieldIsRequired(): void
     {
-        $this->collector->addRequiredFieldError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric(), 100, 'My field');
+        $this->collector->addRequiredFieldError(TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric(), 100, 'My field');
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasTransition(): void
     {
-        $this->collector->addWorkflowTransitionRulesError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowTransitionRulesError(TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasGlobalRules(): void
     {
-        $this->collector->addWorkflowTransitionDateRulesError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowTransitionDateRulesError(TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenWorkFlowHasFieldDependency(): void
     {
-        $this->collector->addWorkflowDependencyError(TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addWorkflowDependencyError(TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenFieldIsNotSubmittable(): void
     {
-        $this->collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addSubmitFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenFieldIsNotUpdatable(): void
     {
-        $this->collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addUpdateFieldPermissionError(100, "My custom field", TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
@@ -110,13 +110,13 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 
     public function testItHasErrorWhenNoMilestonePlanningIsFound(): void
     {
-        $this->collector->addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 
     public function testItHasErrorWhenNoSprintPlanningIsFound(): void
     {
-        $this->collector->addTeamSprintPlanningNotFoundOrNotAccessible(ProjectReferenceBuilder::buildGeneric());
+        $this->collector->addTeamSprintPlanningNotFoundOrNotAccessible(ProjectReferenceStub::buildGeneric());
         self::assertTrue($this->collector->hasError());
     }
 

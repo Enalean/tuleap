@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -71,7 +71,7 @@ final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->teams_of_program_searcher,
                 $this->all_program_searcher,
                 SearchProjectsUserIsAdminStub::buildWithProjects(
-                    ProjectReferenceBuilder::buildWithValues(self::TEAM, 'project', "project")
+                    ProjectReferenceStub::withValues(self::TEAM, 'project', "project")
                 ),
                 $this->program,
                 $this->user_identifier
@@ -81,14 +81,14 @@ final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildPotentialTeamWhenUserIsAdminOfPotentialTeamThatNotAggregatedTeamAndPotentialTeamIsNotProgram(): void
     {
-        $program_project = ProjectReferenceBuilder::buildWithValues(self::PROGRAM, 'a_project', "a_project");
+        $program_project = ProjectReferenceStub::withValues(self::PROGRAM, 'a_project', "a_project");
 
         $potential_teams = PotentialTeamsCollection::buildPotentialTeams(
             $this->teams_of_program_searcher,
             $this->all_program_searcher,
             SearchProjectsUserIsAdminStub::buildWithProjects(
-                ProjectReferenceBuilder::buildWithValues(self::TEAM, 'is_team', "is_team"),
-                ProjectReferenceBuilder::buildWithValues(124, 'potential_team', "potential_team"),
+                ProjectReferenceStub::withValues(self::TEAM, 'is_team', "is_team"),
+                ProjectReferenceStub::withValues(124, 'potential_team', "potential_team"),
                 $program_project,
             ),
             ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM),

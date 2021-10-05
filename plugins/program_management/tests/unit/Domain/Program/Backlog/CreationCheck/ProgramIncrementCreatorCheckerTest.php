@@ -32,9 +32,9 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
@@ -52,6 +52,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private RetrieveMirroredProgramIncrementTracker $root_milestone_retriever;
     private UserReference $user_identifier;
+    private TeamProjectsCollection $teams;
 
     protected function setUp(): void
     {
@@ -65,11 +66,17 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         );
 
         $this->root_milestone_retriever = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
-            TrackerReferenceStub::withDefaults()
+            TrackerReferenceStub::withId(90),
+            TrackerReferenceStub::withId(57),
         );
 
         $this->user_identifier = UserReferenceStub::withDefaults();
         $this->program         = ProgramIdentifierBuilder::build();
+
+        $this->teams = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(104),
+            ProjectReferenceStub::withId(176),
+        );
     }
 
     private function getChecker(): ProgramIncrementCreatorChecker
@@ -91,11 +98,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->getChecker()->canCreateAProgramIncrement(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(104),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -111,11 +114,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->getChecker()->canCreateAProgramIncrement(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -130,11 +129,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->getChecker()->canCreateAProgramIncrement(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(104),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -149,11 +144,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->getChecker()->canCreateAProgramIncrement(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                TeamProjectsCollectionBuilder::withEmptyTeams(),
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -169,11 +160,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->getChecker()->canCreateAProgramIncrement(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(104),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -187,11 +174,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         self::assertFalse($this->getChecker()->canCreateAProgramIncrement(
             $this->tracker,
             $this->program,
-            TeamProjectsCollection::fromProgramIdentifier(
-                SearchTeamsOfProgramStub::buildTeams(104),
-                new RetrieveProjectReferenceStub(),
-                $this->program
-            ),
+            $this->teams,
             new ConfigurationErrorsCollector(true),
             $this->user_identifier
         ));

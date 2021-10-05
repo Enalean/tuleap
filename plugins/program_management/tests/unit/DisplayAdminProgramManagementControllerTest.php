@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncreme
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
@@ -72,7 +73,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private array $variables;
     private SearchTeamsOfProgramStub $team_searcher;
-    private RetrieveProjectReference $build_project;
+    private RetrieveProjectReference $project_retriever;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_builder;
@@ -104,7 +105,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->template_renderer         = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder       = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
         $this->team_searcher             = SearchTeamsOfProgramStub::buildTeams(150);
-        $this->build_project             = new RetrieveProjectReferenceStub();
+        $this->project_retriever         = RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(150));
         $this->plannable_tracker_builder = new PotentialPlannableTrackersConfigurationPresentersBuilder(
             RetrievePlannableTrackersStub::buildIds()
         );
@@ -126,7 +127,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->template_renderer,
             $this->breadcrumbs_builder,
             $this->team_searcher,
-            $this->build_project,
+            $this->project_retriever,
             $this->team_verifier,
             $this->build_program,
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_tracker),
@@ -147,7 +148,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                     $this->program_increment_checker,
                     $this->iteration_checker,
                     SearchTeamsOfProgramStub::buildTeams(),
-                    new RetrieveProjectReferenceStub(),
+                    $this->project_retriever,
                 ),
                 RetrievePlannableTrackersStub::buildIds(1, 2),
                 VerifyTrackerSemanticsStub::withAllSemantics(),

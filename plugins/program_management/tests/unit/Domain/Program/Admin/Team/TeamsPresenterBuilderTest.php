@@ -22,19 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 
 final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildPresenterWithAllTeam(): void
     {
-        $collection = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(150, 666),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $collection = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(150),
+            ProjectReferenceStub::withId(666),
         );
 
         $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection);

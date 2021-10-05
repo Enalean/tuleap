@@ -31,13 +31,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -69,10 +68,9 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::withTracker($tracker);
         $this->retrieve_field_permissions  = VerifyFieldPermissionsStub::withValidField();
 
-        $this->teams = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(147, 148),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $this->teams = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(147),
+            ProjectReferenceStub::withId(148),
         );
 
         $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
@@ -156,11 +154,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
     {
-        $teams = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(147),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
-        );
+        $teams = TeamProjectsCollectionBuilder::withProjects(ProjectReferenceStub::withId(147));
 
         $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
         $required_title->method('isRequired')->willReturn(true);
@@ -181,11 +175,15 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('getId')->willReturn(412);
+        $tracker->method('getName')->willReturn('Tracker 1');
+        $tracker->method('getGroupId')->willReturn(147);
         $tracker->method('getFormElementFields')->willReturn(
             [$required_title, $required_artifact_link, $other_required_field]
         );
 
-        $retriever        = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(TrackerReferenceStub::withDefaults());
+        $retriever        = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
+            TrackerReferenceStub::fromTracker($tracker)
+        );
         $errors_collector = new ConfigurationErrorsCollector(true);
         $trackers         = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user, $errors_collector);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker);

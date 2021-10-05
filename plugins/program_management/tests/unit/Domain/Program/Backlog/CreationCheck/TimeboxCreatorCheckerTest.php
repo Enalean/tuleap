@@ -28,21 +28,20 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
@@ -72,21 +71,23 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_adapter              = GatherSynchronizedFieldsStub::withFieldsPreparations(
             new SynchronizedFieldsStubPreparation(770, 362, 544, 436, 341, 245),
             new SynchronizedFieldsStubPreparation(610, 360, 227, 871, 623, 440),
+            new SynchronizedFieldsStubPreparation(914, 977, 235, 435, 148, 475),
         );
         $this->user_can_submit             = VerifyUserCanSubmitStub::userCanSubmit();
 
         $this->user = UserIdentifierStub::buildGenericUser();
 
-
-        $first_team_project = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(104),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $teams = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(104),
+            ProjectReferenceStub::withId(142),
         );
 
         $this->team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
-            RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers($this->program_increment_tracker),
-            $first_team_project,
+            RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
+                TrackerReferenceStub::withId(71),
+                TrackerReferenceStub::withId(6),
+            ),
+            $teams,
             $this->user,
             new ConfigurationErrorsCollector(false)
         );
