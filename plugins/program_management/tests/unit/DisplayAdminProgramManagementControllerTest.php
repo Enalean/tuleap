@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
@@ -90,7 +91,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private $iteration_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\ProjectManager
      */
     private $project_manager;
 
@@ -121,7 +122,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $program_tracker = TrackerReferenceStub::withDefaults();
 
         return new DisplayAdminProgramManagementController(
-            $retrieve_project,
+            SearchProjectsUserIsAdminStub::buildWithoutProject(),
             $this->template_renderer,
             $this->breadcrumbs_builder,
             $this->team_searcher,

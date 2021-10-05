@@ -26,7 +26,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class PotentialTeamsCollection
@@ -42,27 +42,27 @@ final class PotentialTeamsCollection
     }
 
     public static function buildPotentialTeams(
-        RetrieveProject $project_manager,
         SearchTeamsOfProgram $teams_of_program_searcher,
         AllProgramSearcher $all_program_searcher,
+        SearchProjectsUserIsAdmin $retrieve_project_user_is_admin,
         ProgramForAdministrationIdentifier $program,
         UserIdentifier $user_identifier
     ): self {
         $aggregated_teams_id    = $teams_of_program_searcher->searchTeamIdsOfProgram($program->id);
         $existing_programs_id   = $all_program_searcher->getAllPrograms();
-        $projects_user_is_admin = $project_manager->getProjectsUserIsAdmin($user_identifier);
+        $projects_user_is_admin = $retrieve_project_user_is_admin->getProjectsUserIsAdmin($user_identifier);
 
         $potential_teams = [];
 
         foreach ($projects_user_is_admin as $project_user_is_admin) {
             if (
-                $program->id !== (int) $project_user_is_admin->getID()
-                && ! \in_array((int) $project_user_is_admin->getID(), $aggregated_teams_id, true)
-                && ! \in_array((int) $project_user_is_admin->getID(), $existing_programs_id, true)
+                $program->id !== $project_user_is_admin->getProjectId()
+                && ! \in_array($project_user_is_admin->getProjectId(), $aggregated_teams_id, true)
+                && ! \in_array($project_user_is_admin->getProjectId(), $existing_programs_id, true)
             ) {
                 $potential_teams[] = PotentialTeam::fromId(
-                    (int) $project_user_is_admin->getID(),
-                    $project_user_is_admin->getPublicName()
+                    $project_user_is_admin->getProjectId(),
+                    $project_user_is_admin->getProjectLabel()
                 );
             }
         }
