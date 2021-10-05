@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 
+namespace Tuleap\ProgramManagement\Adapter\Program;
+
+use Planning;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
-use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TeamPlanning;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
  */
-final class Planning
+final class TeamPlanningProxy implements TeamPlanning
 {
     private function __construct(
         private TrackerReference $planning_tracker,
@@ -61,17 +62,8 @@ final class Planning
         return $this->backlog_tracker_ids;
     }
 
-    /**
-     * @throws TopPlanningNotFoundInProjectException
-     * @throws PlanningHasNoMilestoneTrackerException
-     */
-    public static function buildPlanning(BuildPlanning $build_planning, UserIdentifier $user_identifier, int $project_id): self
+    public static function fromPlanning(Planning $root_planning): self
     {
-        $root_planning = $build_planning->getRootPlanning(
-            $user_identifier,
-            $project_id
-        );
-
         return new self(
             TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker()),
             $root_planning->getId(),

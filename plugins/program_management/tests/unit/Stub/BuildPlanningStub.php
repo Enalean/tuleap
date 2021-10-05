@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Project;
+use Tuleap\ProgramManagement\Adapter\Program\TeamPlanningProxy;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TeamPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -37,7 +39,7 @@ class BuildPlanningStub implements BuildPlanning
         $this->valid_root_planning = $valid_root_planning;
     }
 
-    public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): \Planning
+    public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): TeamPlanning
     {
         if ($this->valid_root_planning) {
             $planning = new \Planning(1, 'Root planning', $project_id, '', '');
@@ -46,7 +48,7 @@ class BuildPlanningStub implements BuildPlanning
                                               ->withProject(new Project(['group_id' => 1, 'group_name' => 'My project']))
                                               ->build()
             );
-            return $planning;
+            return TeamPlanningProxy::fromPlanning($planning);
         }
 
         throw new TopPlanningNotFoundInProjectException($project_id);
