@@ -2,7 +2,7 @@
     <div class="project-sidebar-header-name">
         <div class="project-title-container">
             <a href="{{ project_link }}" class="project-sidebar-title">
-                {{ project_name }}
+               {{# is_project_icon_enabled }} {{ project_icon }} {{/ is_project_icon_enabled }} {{ project_name }}
             </a>
             <span class="project-title-spacer"></span>
             {{# has_administration_link }}

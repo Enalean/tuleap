@@ -25,6 +25,8 @@ use Project;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
+use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
 
@@ -75,6 +77,8 @@ class ProjectSidebarPresenter
      */
     public string $administration_link;
     public ?LinkedProjectsCollectionPresenter $linked_projects;
+    public ?string $project_icon;
+    public bool $is_project_icon_enabled;
 
     public function __construct(
         PFUser $current_user,
@@ -109,5 +113,7 @@ class ProjectSidebarPresenter
         $this->has_administration_link = $administration_link_presenter !== null;
         $this->administration_link     = $administration_link_presenter->uri ?? '';
         $this->linked_projects         = $linked_projects_presenter;
+        $this->project_icon            = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
+        $this->is_project_icon_enabled = ProjectIconChecker::isProjectIconFeatureActive();
     }
 }

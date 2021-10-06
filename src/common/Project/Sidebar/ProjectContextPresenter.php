@@ -27,6 +27,8 @@ use Project;
 use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
+use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
 /**
@@ -52,6 +54,8 @@ final class ProjectContextPresenter
     public bool $has_administration_link;
     public string $administration_link;
     public ?LinkedProjectsCollectionPresenter $linked_projects;
+    public ?string $project_icon;
+    public bool $is_project_icon_enabled;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -63,7 +67,8 @@ final class ProjectContextPresenter
         ?LinkedProjectsCollectionPresenter $linked_projects_presenter,
         array $project_flags,
         ?BannerDisplay $banner,
-        string $purified_banner
+        string $purified_banner,
+        ?string $project_icon
     ) {
         $this->project_id                 = (int) $project->getID();
         $this->privacy                    = $privacy;
@@ -77,6 +82,8 @@ final class ProjectContextPresenter
         $this->purified_banner            = $purified_banner;
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->linked_projects            = $linked_projects_presenter;
+        $this->project_icon               = $project_icon;
+        $this->is_project_icon_enabled    = ProjectIconChecker::isProjectIconFeatureActive();
     }
 
     public static function build(
@@ -94,7 +101,9 @@ final class ProjectContextPresenter
                 Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE
             );
         }
-
+        $project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
+            $project->getIconUnicodeCodepoint()
+        );
         return new self(
             $project,
             $privacy,
@@ -102,7 +111,8 @@ final class ProjectContextPresenter
             $linked_projects_presenter,
             $project_flags,
             $banner,
-            $purified_banner
+            $purified_banner,
+            $project_icon
         );
     }
 }
