@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
 # Tuleap
 # Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
@@ -115,7 +115,7 @@ if (!$silent_mode) {
   print "***\n" if ($verbose_mode);
 }
 
-my @lang_tab_dir=`(cd $tab_dir && /bin/ls -d */)`;
+my @lang_tab_dir=`(cd $tab_dir && ls -d */)`;
 
 foreach my $my_tab_dir (@lang_tab_dir) {
   chomp $my_tab_dir;
