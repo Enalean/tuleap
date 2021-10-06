@@ -101,6 +101,7 @@ use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuild
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
@@ -686,10 +687,13 @@ final class program_managementPlugin extends Plugin
         );
         $artifact        = $original_project_collector->getOriginalArtifact();
         $user            = $original_project_collector->getUser();
+        $project_manager = ProjectManager::instance();
 
         try {
-            $project = $source_analyser->retrieveProjectOfMirroredArtifact($artifact, UserProxy::buildFromPFUser($user));
+            $project_reference = $source_analyser->retrieveProjectOfMirroredArtifact(ArtifactIdentifierProxy::fromArtifact($artifact), UserProxy::buildFromPFUser($user));
 
+
+            $project = $project_manager->getProject($project_reference->getId());
             $original_project_collector->setOriginalProject($project);
         } catch (NatureAnalyzerException $exception) {
             $logger = $this->getLogger();

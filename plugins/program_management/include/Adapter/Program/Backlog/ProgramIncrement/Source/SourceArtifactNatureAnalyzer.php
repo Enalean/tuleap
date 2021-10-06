@@ -22,13 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\Tracker\Artifact\Artifact;
 
 final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
 {
@@ -42,12 +44,12 @@ final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifac
     /**
      * @throws NatureAnalyzerException
      */
-    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, UserIdentifier $user_identifier): \Project
+    public function retrieveProjectOfMirroredArtifact(ArtifactIdentifier $artifact, UserIdentifier $user_identifier): ProjectIdentifier
     {
         $program_increment_id = $this->timebox_retriever->getTimeboxFromMirroredTimeboxId($artifact->getId());
 
         if (! $program_increment_id) {
-            throw new TimeboxOfMirroredTimeboxNotFoundException((int) $artifact->getTracker()->getGroupId());
+            throw new TimeboxOfMirroredTimeboxNotFoundException($artifact->getId());
         }
 
         $program_increment = $this->artifact_factory->getArtifactById($program_increment_id);
@@ -57,6 +59,6 @@ final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifac
             throw new TimeboxOfMirroredTimeboxNotFoundException($program_increment_id);
         }
 
-        return $program_increment->getTracker()->getProject();
+        return ProjectProxy::buildFromProject($program_increment->getTracker()->getProject());
     }
 }
