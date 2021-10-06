@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
+use Tuleap\ProgramManagement\Domain\Events\CanSubmitNewArtifactEvent;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
-use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
 final class CanSubmitNewArtifactHandler
 {
@@ -37,15 +35,12 @@ final class CanSubmitNewArtifactHandler
     }
 
     public function handle(
-        CanSubmitNewArtifact $event,
-        ConfigurationErrorsCollector $errors_collector,
-        UserReference $user_identifier
+        CanSubmitNewArtifactEvent $event,
+        ConfigurationErrorsCollector $errors_collector
     ): void {
-        $tracker = TrackerReferenceProxy::fromTracker($event->getTracker());
-
         $this->configuration_errors_gatherer->gatherConfigurationErrors(
-            $tracker,
-            $user_identifier,
+            $event->getTrackerReference(),
+            $event->getUserIdentifier(),
             $errors_collector
         );
 

@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use ProjectManager;
+use Tuleap\ProgramManagement\Adapter\Events\CanSubmitNewArtifactEventProxy;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -38,9 +38,9 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CanSubmitNewArtifactHandlerTest extends TestCase
 {
-    private \PFUser $user;
-    private \Tracker $tracker;
     private CanSubmitNewArtifactHandler $handler;
+    private CanSubmitNewArtifact $event;
+    private CanSubmitNewArtifactEventProxy $proxy;
 
     protected function setUp(): void
     {
@@ -48,9 +48,9 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $iteration_creator_checker         = $this->createStub(IterationCreatorChecker::class);
         $project_manager                   = $this->createMock(ProjectManager::class);
         $program_builder                   = BuildProgramStub::stubValidProgram();
-        $this->user                        = UserTestBuilder::aUser()->build();
+        $user                              = UserTestBuilder::aUser()->build();
         $project                           = ProjectTestBuilder::aProject()->withId(101)->build();
-        $this->tracker                     = TrackerTestBuilder::aTracker()->withId(98)
+        $tracker                           = TrackerTestBuilder::aTracker()->withId(98)
             ->withProject($project)
             ->build();
 
@@ -67,24 +67,26 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
                 new ProjectReferenceRetriever($project_manager),
             )
         );
+
+        $this->event = new CanSubmitNewArtifact($user, $tracker);
+        $this->proxy = CanSubmitNewArtifactEventProxy::buildFromEvent($this->event);
     }
 
     public function testItDisableArtifactSubmissionWhenCollectorFoundErrors(): void
     {
         $error_collector = new ConfigurationErrorsCollector(true);
         $error_collector->addWorkflowDependencyError(TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
-        $event = new CanSubmitNewArtifact($this->user, $this->tracker);
 
-        $this->handler->handle($event, $error_collector, UserReferenceStub::withDefaults());
-        self::assertFalse($event->canSubmitNewArtifact());
+
+        $this->handler->handle($this->proxy, $error_collector);
+        self::assertFalse($this->event->canSubmitNewArtifact());
     }
 
     public function testKeepsSubmissionEnabled(): void
     {
         $error_collector = new ConfigurationErrorsCollector(true);
-        $event           = new CanSubmitNewArtifact($this->user, $this->tracker);
 
-        $this->handler->handle($event, $error_collector, UserReferenceStub::withDefaults());
-        self::assertTrue($event->canSubmitNewArtifact());
+        $this->handler->handle($this->proxy, $error_collector);
+        self::assertTrue($this->event->canSubmitNewArtifact());
     }
 }
