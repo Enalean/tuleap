@@ -46,6 +46,7 @@ use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\Icons\InvalidProjectIconException;
 use Tuleap\Project\Icons\ProjectIconChecker;
+use Tuleap\Project\Icons\ProjectIconRetriever;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
@@ -124,6 +125,7 @@ class ProjectDetailsController
         TroveCatLinkDao $trove_cat_link_dao,
         CSRFSynchronizerToken $csrf_token,
         TemplateFactory $template_factory,
+        private ProjectIconRetriever $project_icon_retriever
     ) {
         $this->description_fields_factory           = $description_fields_factory;
         $this->current_project                      = $current_project;
@@ -196,7 +198,8 @@ class ProjectDetailsController
                 $this->getProjectsCreatedFromTemplate($project),
                 $this->csrf_token,
                 ProjectDescriptionUsageRetriever::isDescriptionMandatory(),
-                $project_icon
+                $project_icon,
+                $this->project_icon_retriever->getAllCategoriesAndProjectIcons()
             )
         );
     }

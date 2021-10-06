@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initTOSCheckbox();
     initHierarchyModal();
     initWarningRestrictedUsersRemovalOnProjectVisibilityChange();
-    initIconPicker(document, buildIconPicker(gettext_provider));
+    initIconPicker(document, buildIconPicker(gettext_provider, document));
 
     const select_element = document.getElementById(
         "project-admin-details-hierarchy-project-select"

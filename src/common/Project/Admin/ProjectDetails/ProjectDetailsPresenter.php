@@ -98,6 +98,10 @@ class ProjectDetailsPresenter
      * @var string | null
      */
     public $project_icon;
+    /**
+     * @var string
+     */
+    public $all_project_icon;
 
     public function __construct(
         Project $project,
@@ -112,7 +116,8 @@ class ProjectDetailsPresenter
         array $projects_created_from_this_template,
         CSRFSynchronizerToken $csrf_token,
         bool $is_description_mandatory,
-        ?string $project_icon
+        ?string $project_icon,
+        string $all_project_icon
     ) {
         $this->group_id                            = $project->getID();
         $this->group_info                          = $group_info;
@@ -158,6 +163,7 @@ class ProjectDetailsPresenter
         $this->icon_label_name         = _('Icon');
         $this->is_project_icon_enabled = ProjectIconChecker::isProjectIconFeatureActive();
         $this->project_icon            = $project_icon;
+        $this->all_project_icon        = $all_project_icon;
     }
 
     private function getLocalizedType($project_type_id)
