@@ -174,7 +174,6 @@ class XMLExportVisitor implements ItemVisitor
         $node = $xml->addChild('version');
         $this->appendTextChild($node, 'filename', $version->getFileName());
         $this->appendTextChild($node, 'filetype', $version->getFileType());
-        $this->appendTextChild($node, 'filesize', $version->getFilesize());
 
         $date = $version->getDate();
         if ($date) {

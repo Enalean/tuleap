@@ -132,7 +132,7 @@ class VersionImporter
                 'number'    => $version_number,
                 'user_id'   => $user->getId(),
                 'filename'  => (string) $version->filename,
-                'filesize'  => (int) $version->filesize,
+                'filesize'  => filesize($file_path),
                 'filetype'  => (string) $version->filetype,
                 'path'      => $file_path,
                 'date'      => $date->getTimestamp(),
