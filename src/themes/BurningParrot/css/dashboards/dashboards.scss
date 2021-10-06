@@ -393,6 +393,10 @@ $two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2) + v
     }
 }
 
+#add-dashboard-button {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
 @import "includes/dashboard-widgets";
 @import "includes/dashboard-project";
 @import "includes/dashboard-user";
