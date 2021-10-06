@@ -24,17 +24,15 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -54,10 +52,9 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
         $this->field_values    = SourceTimeboxChangesetValuesBuilder::build();
 
-        $teams = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(101, 102),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $teams = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(101),
+            ProjectReferenceStub::withId(102),
         );
 
         $this->mirrored_program_increment_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(

@@ -27,15 +27,13 @@ use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
@@ -98,10 +96,8 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->collection->add($synchronized_fields);
 
-        $teams = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(785),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $teams = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(785)
         );
 
         $this->errors_collector = new ConfigurationErrorsCollector(true);

@@ -24,12 +24,28 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
-use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 
 final class RetrieveProjectReferenceStub implements RetrieveProjectReference
 {
+    private function __construct(private array $projects)
+    {
+    }
+
+    public static function withProjects(ProjectReference ...$projects): self
+    {
+        return new self($projects);
+    }
+
+    public static function withNoProjects(): self
+    {
+        return new self([]);
+    }
+
     public function buildFromId(int $id): ProjectReference
     {
-        return ProjectReferenceBuilder::buildWithValues($id, 'Project', 'project');
+        if (count($this->projects)) {
+            return array_shift($this->projects);
+        }
+        throw new \LogicException('No project configured');
     }
 }

@@ -27,13 +27,14 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
@@ -51,7 +52,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
      */
     private $iteration_checker;
     private ?TrackerReference $program_tracker;
-    private \Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier $program_identifier;
+    private ProgramIdentifier $program_identifier;
     private UserReference $user_identifier;
     private VerifyTrackerSemanticsStub $verify_tracker_semantics;
     /**
@@ -76,6 +77,22 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
             ->build();
     }
 
+    private function getErrorBuilder(): ConfigurationErrorPresenterBuilder
+    {
+        return new ConfigurationErrorPresenterBuilder(
+            new ConfigurationErrorsGatherer(
+                BuildProgramStub::stubValidProgram(),
+                $this->program_increment_checker,
+                $this->iteration_checker,
+                SearchTeamsOfProgramStub::buildTeams(162),
+                RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(162))
+            ),
+            RetrievePlannableTrackersStub::buildIds(1),
+            $this->verify_tracker_semantics,
+            $this->tracker_factory
+        );
+    }
+
     public function testItBuildsProgramIncrementErrorPresenter(): void
     {
         $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
@@ -83,7 +100,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $error_collector = new ConfigurationErrorsCollector(false);
         $error_collector->addWorkflowDependencyError(
             $this->program_tracker,
-            ProjectReferenceBuilder::buildGeneric()
+            ProjectReferenceStub::buildGeneric()
         );
         $this->getErrorBuilder()->buildProgramIncrementErrorPresenter(
             $this->program_tracker,
@@ -116,7 +133,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $error_collector = new ConfigurationErrorsCollector(true);
         $error_collector->addWorkflowDependencyError(
             $this->program_tracker,
-            ProjectReferenceBuilder::buildGeneric()
+            ProjectReferenceStub::buildGeneric()
         );
         $this->getErrorBuilder()->buildIterationErrorPresenter(
             $this->program_tracker,
@@ -170,21 +187,5 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $this->getErrorBuilder()->buildPlannableErrorPresenter($program_identifier, $error_collector);
         self::assertCount(0, $error_collector->getSemanticErrors());
-    }
-
-    private function getErrorBuilder(): ConfigurationErrorPresenterBuilder
-    {
-        return new ConfigurationErrorPresenterBuilder(
-            new ConfigurationErrorsGatherer(
-                BuildProgramStub::stubValidProgram(),
-                $this->program_increment_checker,
-                $this->iteration_checker,
-                SearchTeamsOfProgramStub::buildTeams(),
-                new RetrieveProjectReferenceStub()
-            ),
-            RetrievePlannableTrackersStub::buildIds(1),
-            $this->verify_tracker_semantics,
-            $this->tracker_factory
-        );
     }
 }

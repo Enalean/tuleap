@@ -29,10 +29,10 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
@@ -51,6 +51,7 @@ final class IterationCreatorCheckerTest extends TestCase
      */
     private $timebox_creator_checker;
     private UserReference $user_identifier;
+    private TeamProjectsCollection $teams;
 
     protected function setUp(): void
     {
@@ -58,7 +59,8 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->user_identifier            = UserReferenceStub::withDefaults();
         $this->program                    = ProgramIdentifierBuilder::build();
         $this->milestone_retriever        = RetrieveMirroredIterationTrackerStub::withValidTrackers(
-            TrackerReferenceStub::withDefaults()
+            TrackerReferenceStub::withId(77),
+            TrackerReferenceStub::withId(45),
         );
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
         $this->tracker                    = TrackerReferenceStub::withId(102);
@@ -67,6 +69,11 @@ final class IterationCreatorCheckerTest extends TestCase
 
         $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withValidTracker(
             $this->tracker
+        );
+
+        $this->teams = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(104),
+            ProjectReferenceStub::withId(146),
         );
     }
 
@@ -88,11 +95,7 @@ final class IterationCreatorCheckerTest extends TestCase
             $this->getChecker()->canCreateAnIteration(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -106,11 +109,7 @@ final class IterationCreatorCheckerTest extends TestCase
             $this->getChecker()->canCreateAnIteration(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                TeamProjectsCollectionBuilder::withEmptyTeams(),
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -125,11 +124,7 @@ final class IterationCreatorCheckerTest extends TestCase
             $this->getChecker()->canCreateAnIteration(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(104),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -146,11 +141,7 @@ final class IterationCreatorCheckerTest extends TestCase
             $this->getChecker()->canCreateAnIteration(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(104),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -165,11 +156,7 @@ final class IterationCreatorCheckerTest extends TestCase
             $this->getChecker()->canCreateAnIteration(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(104),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )
@@ -184,11 +171,7 @@ final class IterationCreatorCheckerTest extends TestCase
             $this->getChecker()->canCreateAnIteration(
                 $this->tracker,
                 $this->program,
-                TeamProjectsCollection::fromProgramIdentifier(
-                    SearchTeamsOfProgramStub::buildTeams(104),
-                    new RetrieveProjectReferenceStub(),
-                    $this->program
-                ),
+                $this->teams,
                 new ConfigurationErrorsCollector(true),
                 $this->user_identifier
             )

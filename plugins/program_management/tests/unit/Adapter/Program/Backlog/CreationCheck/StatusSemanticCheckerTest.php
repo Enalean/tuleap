@@ -28,16 +28,15 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -93,17 +92,21 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_increment_tracker = TrackerReferenceStub::withId(104);
 
         $user_identifier = UserIdentifierStub::buildGenericUser();
-        $teams           = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(101, 102),
-            new RetrieveProjectReferenceStub(),
-            ProgramIdentifierBuilder::build()
+        $teams           = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(101),
+            ProjectReferenceStub::withId(102),
         );
         $retriever       = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
             TrackerReferenceStub::fromTracker($this->tracker_team_01),
             TrackerReferenceStub::fromTracker($this->tracker_team_02),
         );
 
-        $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user_identifier, new ConfigurationErrorsCollector(false));
+        $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $retriever,
+            $teams,
+            $user_identifier,
+            new ConfigurationErrorsCollector(false)
+        );
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_program_tracker),
             ProgramIdentifierBuilder::build(),

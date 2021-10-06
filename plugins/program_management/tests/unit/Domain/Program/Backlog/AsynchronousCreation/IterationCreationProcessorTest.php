@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
@@ -65,7 +66,10 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveProgramOfIterationStub::withProgram(154),
             BuildProgramStub::stubValidProgram(),
             SearchTeamsOfProgramStub::buildTeams(122, 127),
-            new RetrieveProjectReferenceStub(),
+            RetrieveProjectReferenceStub::withProjects(
+                ProjectReferenceStub::withId(122),
+                ProjectReferenceStub::withId(127),
+            ),
             RetrieveMirroredIterationTrackerStub::withValidTrackers(
                 TrackerReferenceStub::withIdAndLabel(55, 'Sprints'),
                 TrackerReferenceStub::withIdAndLabel(42, 'Week'),

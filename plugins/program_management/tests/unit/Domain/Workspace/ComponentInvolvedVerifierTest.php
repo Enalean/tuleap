@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
@@ -66,6 +66,6 @@ final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildProjectData(): ProjectReference
     {
-        return ProjectReferenceBuilder::buildWithValues(12, 'Public name', 'Name');
+        return ProjectReferenceStub::withValues(12, 'Public name', 'Name');
     }
 }
