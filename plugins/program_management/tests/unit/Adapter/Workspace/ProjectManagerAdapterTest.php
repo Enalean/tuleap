@@ -38,6 +38,6 @@ final class ProjectManagerAdapterTest extends TestCase
             ->willReturn($project);
 
         $adapter = new ProjectManagerAdapter($project_manager, RetrieveUserStub::withGenericUser());
-        self::assertSame($project, $adapter->getProjectWithId(101));
+        self::assertSame((int) $project->getID(), $adapter->getProjectWithId(101)->getId());
     }
 }

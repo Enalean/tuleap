@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
@@ -174,7 +175,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $project = $this->mockProject(false);
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
         $this->expectException(NotFoundException::class);
-        $this->getController(RetrieveProjectStub::withValidProjects($project))
+        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -187,7 +188,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->getController(RetrieveProjectStub::withValidProjects($project))
+        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -200,7 +201,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->getController(RetrieveProjectStub::withValidProjects($project))
+        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -212,7 +213,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->getController(RetrieveProjectStub::withValidProjects($project))
+        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -233,7 +234,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->iteration_checker->method('canCreateAnIteration');
 
 
-        $this->getController(RetrieveProjectStub::withValidProjects($project))
+        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 

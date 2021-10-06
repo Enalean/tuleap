@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -62,7 +61,7 @@ final class TeamCreator implements CreateTeam
             $this->team_verifier,
             $this->permission_verifier,
             $user,
-            ProjectProxy::buildFromProject($project)
+            $project
         );
         $teams           = array_map(
             fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $user),

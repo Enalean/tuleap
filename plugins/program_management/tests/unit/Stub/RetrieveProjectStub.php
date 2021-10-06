@@ -22,25 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveProjectStub implements RetrieveProject
 {
     /**
-     * @var \Project[]
+     * @var ProjectIdentifier[]
      */
     private array $projects;
 
     /**
-     * @param \Project[] $projects
+     * @param ProjectIdentifier[] $projects
      */
     public function __construct(array $projects)
     {
         $this->projects = $projects;
     }
 
-    public static function withValidProjects(\Project ...$projects): self
+    public static function withValidProjects(ProjectIdentifier ...$projects): self
     {
         return new self($projects);
     }
@@ -50,17 +50,12 @@ final class RetrieveProjectStub implements RetrieveProject
         return new self([]);
     }
 
-    public function getProjectWithId(int $project_id): \Project
+    public function getProjectWithId(int $project_id): ProjectIdentifier
     {
         if (count($this->projects) > 0) {
             return array_shift($this->projects);
         }
 
         throw new \LogicException('No project configured');
-    }
-
-    public function getProjectsUserIsAdmin(UserIdentifier $user_identifier): array
-    {
-        return $this->projects;
     }
 }

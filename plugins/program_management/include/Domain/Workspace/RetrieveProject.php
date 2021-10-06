@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 interface RetrieveProject
 {
-    public function getProjectWithId(int $project_id): \Project;
+    public function getProjectWithId(int $project_id): ProjectIdentifier;
 }

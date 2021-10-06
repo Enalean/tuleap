@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -32,9 +33,9 @@ final class ProjectManagerAdapter implements RetrieveProject, SearchProjectsUser
     {
     }
 
-    public function getProjectWithId(int $project_id): \Project
+    public function getProjectWithId(int $project_id): ProjectIdentifier
     {
-        return $this->project_manager->getProject($project_id);
+        return ProjectProxy::buildFromProject($this->project_manager->getProject($project_id));
     }
 
     public function getProjectsUserIsAdmin(UserIdentifier $user_identifier): array
