@@ -41,13 +41,21 @@
         @include background.project-background-title-header-typography();
     }
 
+    .dashboard-project-header-trovecat {
+        @include background.project-background-title-header-typography();
+        font-weight: 500;
+    }
+
     .dashboard-project-header-trovecat-icon {
         @include background.project-background-title-header-typography();
     }
 
-    .dashboard-project-header-trovecat {
+    .dashboard-project-header-trovecat > .tlp-text-warning {
         @include background.project-background-title-header-typography();
-        font-weight: 500;
+
+        > .dashboard-project-header-trovecat-link {
+            color: inherit;
+        }
     }
 
     .main-project-tabs > .tlp-tabs {
