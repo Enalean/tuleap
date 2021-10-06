@@ -106,9 +106,11 @@
           <element name="filetype">
             <data type="string"/>
           </element>
-          <element name="filesize">
-            <data type="string"/>
-          </element>
+          <optional>
+            <element name="filesize">
+              <data type="string"/>
+            </element>
+          </optional>
           <optional>
             <element name="date">
               <ref name="docman_date_content"/>

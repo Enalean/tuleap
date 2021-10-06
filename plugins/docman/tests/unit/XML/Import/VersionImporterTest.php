@@ -95,7 +95,6 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <version>
                 <filename>Pan-Pan-Artwork1.png</filename>
                 <filetype>image/png</filetype>
-                <filesize>799789</filesize>
                 <content>documents/content-214.bin</content>
             </version>
             EOS
@@ -123,7 +122,6 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <version>
                 <filename>Pan-Pan-Artwork1.png</filename>
                 <filetype>image/png</filetype>
-                <filesize>799789</filesize>
                 <date format="ISO8601">invalid</date>
                 <content>documents/content-214.bin</content>
             </version>
@@ -189,7 +187,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'number'    => 1,
                     'user_id'   => 101,
                     'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => 799789,
+                    'filesize'  => filesize($file_path),
                     'filetype'  => 'image/png',
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
@@ -235,7 +233,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'number'    => 1,
                     'user_id'   => 101,
                     'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => 799789,
+                    'filesize'  => filesize($file_path),
                     'filetype'  => 'image/png',
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
@@ -268,7 +266,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'number'    => 1,
                     'user_id'   => 103,
                     'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => 799789,
+                    'filesize'  => filesize($file_path),
                     'filetype'  => 'image/png',
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
@@ -289,7 +287,6 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <version>
                 <filename>Pan-Pan-Artwork1.png</filename>
                 <filetype>image/png</filetype>
-                <filesize>799789</filesize>
                 <author format="ldap">103</author>
                 <content>documents/content-214.bin</content>
             </version>
@@ -325,7 +322,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'number'    => 1,
                     'user_id'   => 101,
                     'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => 799789,
+                    'filesize'  => filesize($file_path),
                     'filetype'  => 'image/png',
                     'path'      => $file_path,
                     'date'      => 1234567890,
@@ -341,7 +338,6 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <version>
                 <filename>Pan-Pan-Artwork1.png</filename>
                 <filetype>image/png</filetype>
-                <filesize>799789</filesize>
                 <date format="ISO8601">2009-02-14T00:31:30+01:00</date>
                 <content>documents/content-214.bin</content>
             </version>
@@ -378,7 +374,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'number'    => 1,
                     'user_id'   => 101,
                     'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => 799789,
+                    'filesize'  => filesize($file_path),
                     'filetype'  => 'image/png',
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
@@ -394,7 +390,6 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <version>
                 <filename>Pan-Pan-Artwork1.png</filename>
                 <filetype>image/png</filetype>
-                <filesize>799789</filesize>
                 <label>The label</label>
                 <changelog>The changelog</changelog>
                 <content>documents/content-214.bin</content>

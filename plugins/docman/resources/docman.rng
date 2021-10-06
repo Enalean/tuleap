@@ -106,9 +106,11 @@
           <element name="filetype">
             <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </element>
-          <element name="filesize">
-            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-          </element>
+          <optional>
+            <element name="filesize">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </element>
+          </optional>
           <optional>
             <element name="date">
               <ref name="docman_date_content"/>

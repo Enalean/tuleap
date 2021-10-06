@@ -55,7 +55,7 @@ docman_file_versions =
         element version {
             element filename { xsd:string },
             element filetype { xsd:string },
-            element filesize { xsd:string },
+            element filesize { xsd:string }?,
             element date { docman_date_content }?,
             element author { docman_user_content }?,
             element label { xsd:string }?,
