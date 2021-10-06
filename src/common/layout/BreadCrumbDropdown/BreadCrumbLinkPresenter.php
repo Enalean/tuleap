@@ -44,6 +44,8 @@ class BreadCrumbLinkPresenter
      */
     public $data_attributes;
 
+    public string $project_icon;
+
     public function __construct(BreadCrumbLink $link)
     {
         $this->label = $link->getLabel();
@@ -52,6 +54,7 @@ class BreadCrumbLinkPresenter
         $icon_name             = $link->getIconName();
         $this->has_icon        = ($icon_name !== '');
         $this->icon_name       = ($this->has_icon) ? $icon_name : "";
+        $this->project_icon    = $link->getProjectIcon();
         $this->data_attributes = [];
         foreach ($link->getDataAttributes() as $key => $value) {
             $this->data_attributes[] = [
