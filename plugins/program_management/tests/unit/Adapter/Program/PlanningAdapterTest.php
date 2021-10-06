@@ -81,7 +81,8 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_id = 101;
 
-        self::assertEquals($planning, $this->adapter->getRootPlanning($this->user_identifier, $project_id));
+        $team_planning = $this->adapter->getRootPlanning($this->user_identifier, $project_id);
+        self::assertEquals($planning->getId(), $team_planning->getId());
     }
 
     public function testItRetrievesTheRootMilestoneTracker(): void

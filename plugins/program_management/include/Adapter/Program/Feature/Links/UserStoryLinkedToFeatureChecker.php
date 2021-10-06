@@ -26,7 +26,6 @@ use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -48,7 +47,7 @@ final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNo
         $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {
             try {
-                $planning = Planning::buildPlanning($this->planning_adapter, $user_identifier, $user_story['project_id']);
+                $planning = $this->planning_adapter->getRootPlanning($user_identifier, $user_story['project_id']);
             } catch (TopPlanningNotFoundInProjectException $e) {
                 continue;
             }

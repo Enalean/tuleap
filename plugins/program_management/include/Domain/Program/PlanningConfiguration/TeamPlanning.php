@@ -20,18 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program;
+namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TeamPlanning;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-interface BuildPlanning
+/**
+ * @psalm-immutable
+ */
+interface TeamPlanning
 {
-    /**
-     * @throws TopPlanningNotFoundInProjectException
-     * @throws PlanningHasNoMilestoneTrackerException
-     */
-    public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): TeamPlanning;
+
+    public function getId(): int;
+
+    public function getPlanningTracker(): TrackerReference;
+
+    public function getName(): string;
+
+    public function getPlannableTrackerIds(): array;
 }

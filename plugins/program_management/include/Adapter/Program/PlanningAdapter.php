@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TeamPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneTrackerException;
@@ -44,7 +45,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoMilestoneTrackerException
      */
-    public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): \Planning
+    public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): TeamPlanning
     {
         $user          = $this->retrieve_user->getUserWithId($user_identifier);
         $root_planning = $this->planning_factory->getRootPlanning(
@@ -60,7 +61,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
             throw new PlanningHasNoMilestoneTrackerException($root_planning->getId());
         }
 
-        return $root_planning;
+        return TeamPlanningProxy::fromPlanning($root_planning);
     }
 
     public function retrieveRootPlanningMilestoneTracker(
@@ -70,7 +71,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
     ): ?TrackerReference {
         try {
             $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
-            return TrackerReferenceProxy::fromTracker($root_planning->getPlanningTracker());
+            return $root_planning->getPlanningTracker();
         } catch (TopPlanningNotFoundInProjectException $exception) {
             $errors_collector->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
         }

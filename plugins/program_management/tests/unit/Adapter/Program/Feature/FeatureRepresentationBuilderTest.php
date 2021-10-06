@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -61,10 +62,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
      */
     private $parent_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BuildPlanning
-     */
-    private $build_planning;
+    private BuildPlanning $build_planning;
 
 
     protected function setUp(): void
@@ -73,7 +71,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->retrieve_background  = $this->createMock(BackgroundColorRetriever::class);
         $this->parent_dao           = $this->createMock(ArtifactsLinkedToParentDao::class);
-        $this->build_planning       = $this->createMock(BuildPlanning::class);
+        $this->build_planning       = BuildPlanningStub::withValidRootPlanning();
         $this->user                 = UserTestBuilder::aUser()->build();
         $retrieve_user              = RetrieveUserStub::withUser($this->user);
         $this->user_identifier      = UserIdentifierStub::buildGenericUser();
@@ -147,12 +145,6 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             ]
         );
         $this->parent_dao->method('isLinkedToASprintInMirroredProgramIncrement')->willReturn(true);
-
-        $planning = new \Planning(1, "Root planning", 1, '', '', [50, 60], 20);
-        $planning->setPlanningTracker(
-            TrackerTestBuilder::aTracker()->withId(20)->withProject(new Project(['group_id' => 1, 'group_name' => 'My project']))->build()
-        );
-        $this->build_planning->method("getRootPlanning")->willReturn($planning);
 
         $expected = new FeatureRepresentation(
             1,
