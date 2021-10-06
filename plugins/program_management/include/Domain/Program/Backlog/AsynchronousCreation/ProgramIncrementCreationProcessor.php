@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
@@ -43,6 +42,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 
 final class ProgramIncrementCreationProcessor implements ProcessProgramIncrementCreation
@@ -128,12 +128,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
             $user
         );
 
-        $program_increment_changed = new ProgramIncrementChanged(
-            $creation->getProgramIncrement()->getId(),
-            $creation->getTracker()->getId(),
-            $user
-        );
-
+        $program_increment_changed = ProgramIncrementChanged::fromCreation($creation);
         $this->user_stories_planner->plan($program_increment_changed);
     }
 }

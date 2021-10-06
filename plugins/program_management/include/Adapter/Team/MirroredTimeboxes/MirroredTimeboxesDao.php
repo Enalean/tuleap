@@ -24,12 +24,13 @@ namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 
 final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox
 {
-    public function searchMirroredTimeboxes(int $timebox_id): array
+    public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array
     {
         $sql = "SELECT parent_art.id AS id
                 FROM tracker_artifact parent_art
@@ -43,9 +44,7 @@ final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirro
                 WHERE linked_art.id  = ?
                   AND IFNULL(artlink.nature, '') = ?";
 
-        $rows = $this->getDB()->first($sql, $timebox_id, TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
-
-        return array_map(static fn(int $mirrored_timebox_id) => new MirroredTimeboxProxy($mirrored_timebox_id), $rows);
+        return $this->getDB()->first($sql, $timebox->getId(), TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
     }
 
     public function getTimeboxFromMirroredTimeboxId(int $mirrored_timebox_id): ?int

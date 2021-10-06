@@ -26,6 +26,7 @@ use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
@@ -61,8 +62,9 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $artifact_factory               = \Tracker_ArtifactFactory::instance();
         $tracker_factory                = \TrackerFactory::instance();
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
-        $retrieve_user                  = new UserManagerAdapter($user_manager);
+        $user_retriever                 = new UserManagerAdapter($user_manager);
         $project_manager                = \ProjectManager::instance();
+        $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -71,9 +73,10 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $artifacts_linked_to_parent_dao,
             $artifact_factory,
             new MirroredTimeboxesDao(),
+            $visibility_verifier,
             new ContentDao(),
             $logger,
-            $retrieve_user,
+            $user_retriever,
             $artifacts_linked_to_parent_dao
         );
 
@@ -84,7 +87,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 $logger
             ),
             $tracker_factory,
-            $retrieve_user
+            $user_retriever
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
@@ -113,7 +116,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
 
 
         return new ProgramIncrementCreationProcessor(
-            new PlanningAdapter(\PlanningFactory::build(), $retrieve_user),
+            new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
             $mirror_creator,
             $logger,
             $user_stories_planner,
@@ -130,7 +133,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                     \EventManager::instance()
                 ),
                 $program_dao,
-                $retrieve_user
+                $user_retriever
             )
         );
     }

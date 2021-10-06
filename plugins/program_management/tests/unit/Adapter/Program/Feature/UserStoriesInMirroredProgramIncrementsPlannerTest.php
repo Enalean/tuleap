@@ -33,11 +33,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgra
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -54,7 +54,6 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
     private Stub|ContentDao $content_dao;
     private Stub|\Tracker_ArtifactFactory $tracker_artifact_factory;
     private Stub|ArtifactsLinkedToParentDao $artifacts_linked_dao;
-    private UserIdentifier $user;
     private ProgramIncrementChanged $program_increment_changed;
 
     protected function setUp(): void
@@ -63,8 +62,8 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         $this->tracker_artifact_factory = $this->createStub(Tracker_ArtifactFactory::class);
         $this->content_dao              = $this->createStub(ContentDao::class);
 
-        $this->user                      = UserIdentifierStub::buildGenericUser();
-        $this->program_increment_changed = new ProgramIncrementChanged(1, 10, $this->user);
+        $update                          = ProgramIncrementUpdateBuilder::build();
+        $this->program_increment_changed = ProgramIncrementChanged::fromUpdate($update);
     }
 
     private function getPlanner(): UserStoriesInMirroredProgramIncrementsPlanner
@@ -75,6 +74,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             $this->artifacts_linked_dao,
             $this->tracker_artifact_factory,
             SearchMirroredTimeboxesStub::withIds(self::MIRRORED_TIMEBOX_ID),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             $this->content_dao,
             new NullLogger(),
             RetrieveUserStub::withUser($pfuser),

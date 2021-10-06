@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 
 final class SearchMirroredTimeboxesStub implements SearchMirroredTimeboxes
@@ -47,8 +47,8 @@ final class SearchMirroredTimeboxesStub implements SearchMirroredTimeboxes
         return new self();
     }
 
-    public function searchMirroredTimeboxes(int $timebox_id): array
+    public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array
     {
-        return array_map(static fn(int $id) => new MirroredTimeboxProxy($id), $this->ids);
+        return $this->ids;
     }
 }

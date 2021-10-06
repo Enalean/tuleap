@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
@@ -47,7 +46,7 @@ final class MirroredTimeboxChangesetBuilder
             RetrieveTrackerOfArtifactStub::withTrackers(TrackerIdentifierStub::buildWithDefault()),
             GatherSynchronizedFieldsStub::withFieldsPreparations($fields),
             MapStatusByValueStub::withValues($mapped_status_bind_value_id),
-            new MirroredTimeboxProxy($mirrored_timebox_id),
+            MirroredProgramIncrementIdentifierBuilder::buildWithId($mirrored_timebox_id),
             $source_values,
             $artifact_link_value,
             $user

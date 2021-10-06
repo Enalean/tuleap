@@ -606,6 +606,7 @@ final class program_managementPlugin extends Plugin
                 $artifacts_linked_to_parent_dao,
                 $artifact_factory,
                 $mirrored_timeboxes_dao,
+                $visibility_verifier,
                 new ContentDao(),
                 $logger,
                 $user_retriever,

@@ -30,7 +30,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 
 final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUpdate
@@ -41,6 +43,7 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         private RetrieveFieldValuesGatherer $values_retriever,
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
         private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
+        private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveTrackerOfArtifact $tracker_retriever,
         private MapStatusByValue $status_mapper,
         private AddChangeset $changeset_adder
@@ -49,10 +52,12 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
 
     public function processUpdate(ProgramIncrementUpdate $update): void
     {
-        $program_increment_id = $update->getProgramIncrement()->getId();
-        $user_id              = $update->getUser()->getId();
         $this->logger->debug(
-            "Processing program increment update with program increment #$program_increment_id for user #$user_id"
+            sprintf(
+                'Processing program increment update with program increment #%d for user #%d',
+                $update->getProgramIncrement()->getId(),
+                $update->getUser()->getId()
+            )
         );
 
         try {
@@ -67,11 +72,19 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
             return;
         }
 
-        $mirrored_program_increments = $this->mirrored_timeboxes_searcher->searchMirroredTimeboxes(
-            $program_increment_id
+        $mirrored_program_increments = MirroredProgramIncrementIdentifier::buildCollectionFromProgramIncrement(
+            $this->mirrored_timeboxes_searcher,
+            $this->visibility_verifier,
+            $update->getProgramIncrement(),
+            $update->getUser()
         );
         if (count($mirrored_program_increments) === 0) {
-            $this->logger->error("Could not find any mirrors for program increment #$program_increment_id");
+            $this->logger->error(
+                sprintf(
+                    'Could not find any mirrors for program increment #%d',
+                    $update->getProgramIncrement()->getId()
+                )
+            );
             return;
         }
 
