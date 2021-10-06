@@ -571,8 +571,7 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
-        $logger = $this->getLogger();
-
+        $logger  = $this->getLogger();
         $handler = new ArtifactCreatedHandler(
             new ArtifactsExplicitTopBacklogDAO(),
             new ProgramIncrementsDAO(),
