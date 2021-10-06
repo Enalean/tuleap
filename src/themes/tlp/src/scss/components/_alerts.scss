@@ -49,6 +49,7 @@
 
     border-left: var(--tlp-alert-info-border);
     background: var(--tlp-alert-info-background);
+    box-shadow: var(--tlp-alert-info-shadow);
     color: var(--tlp-alert-info-color);
 
     &::before {
@@ -66,6 +67,7 @@
 
     border-left: var(--tlp-alert-success-border);
     background: var(--tlp-alert-success-background);
+    box-shadow: var(--tlp-alert-success-shadow);
     color: var(--tlp-alert-success-color);
 
     &::before {
@@ -83,6 +85,7 @@
 
     border-left: var(--tlp-alert-warning-border);
     background: var(--tlp-alert-warning-background);
+    box-shadow: var(--tlp-alert-warning-shadow);
     color: var(--tlp-alert-warning-color);
 
     &::before {
@@ -100,6 +103,7 @@
 
     border-left: var(--tlp-alert-danger-border);
     background: var(--tlp-alert-danger-background);
+    box-shadow: var(--tlp-alert-danger-shadow);
     color: var(--tlp-alert-danger-color);
 
     &::before {

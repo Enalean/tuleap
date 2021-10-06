@@ -79,7 +79,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     &.tlp-form-element-error {
         > .tlp-label {
-            color: var(--tlp-danger-color);
+            color: var(--tlp-danger-dark-color);
         }
 
         /* stylelint-disable selector-class-pattern, selector-max-compound-selectors */
@@ -95,14 +95,14 @@ $tlp-form-element-select-small-background-size: 6px;
         .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove:hover::before,
         .list-picker-selection {
             border-color: var(--tlp-danger-color);
-            color: var(--tlp-danger-color);
+            color: var(--tlp-danger-dark-color);
         }
 
         .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
         .list-picker-badge {
             border-color: var(--tlp-danger-color);
             background-color: var(--tlp-danger-color-transparent-90);
-            color: var(--tlp-danger-color);
+            color: var(--tlp-danger-dark-color);
         }
         /* stylelint-enable */
     }
@@ -115,7 +115,7 @@ $tlp-form-element-select-small-background-size: 6px;
     display: block;
     position: relative;
     margin: 0 0 8px;
-    color: var(--tlp-label-color);
+    color: var(--tlp-dimmed-color);
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1rem;
@@ -129,7 +129,7 @@ $tlp-form-element-select-small-background-size: 6px;
     > .fa-asterisk {
         position: absolute;
         margin: 0 0 0 3px;
-        color: var(--tlp-danger-color);
+        color: var(--tlp-danger-dark-color);
         font-size: 0.6em;
         vertical-align: text-top;
     }
@@ -491,7 +491,7 @@ $tlp-form-element-select-small-background-size: 6px;
         border: 3px solid map-get($colors, "primary");
         border-radius: 50%;
         background-color: map-get($colors, "secondary");
-        color: map-get($colors, "primary");
+        color: map-get($colors, "text");
         cursor: pointer;
     }
 }
@@ -606,6 +606,11 @@ $tlp-form-element-select-small-background-size: 6px;
                     margin: 10px 0 0 6px;
                     background: transparent;
                     font-family: var(--tlp-font-family);
+
+                    //stylelint-disable-next-line max-nesting-depth
+                    &::placeholder {
+                        color: $tlp-form-element-placeholder-color;
+                    }
                 }
             }
 
