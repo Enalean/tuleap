@@ -5,14 +5,16 @@
                 {{# has_parent }}
                     <small class="dashboard-project-title-parent">{{ parent_name }}</small>
                     <svg xmlns="http://www.w3.org/2000/svg" class="dashboard-project-title-parent-icon">
-                        <path d="M1,27 L1,28 L11,28 L11,30 L14,27 L11,24 L11,26 L3,26 L3,20 L1,20 L1,27 Z" transform="translate(-1 -20)"/>
+                        <path d="M1,27 L1,28 L11,28 L11,30 L14,27 L11,24 L11,26 L3,26 L3,20 L1,20 L1,27 Z"
+                              transform="translate(-1 -20)"/>
                     </svg>
                 {{/ has_parent }}
-                <span class="dashboard-project-title-name" data-test="dashboard-project-title-name">{{ name }}</span>
+                <span class="dashboard-project-title-name"
+                      data-test="dashboard-project-title-name">{{# is_project_icon_enabled }} {{ project_icon }}  {{/ is_project_icon_enabled }} {{ name }}</span>
             </h1>
             {{# access }}
                 <span
-                        class="tlp-badge-primary
+                    class="tlp-badge-primary
                         dashboard-project-header-access
                         {{# is_incl_restricted }}
                             tlp-tooltip tlp-tooltip-bottom

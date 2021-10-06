@@ -42,6 +42,7 @@ use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -103,6 +104,8 @@ class ProjectDashboardController
      */
     private $css_asset;
 
+    private Codendi_HTMLPurifier $purifier;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Project $project,
@@ -116,7 +119,8 @@ class ProjectDashboardController
         EventManager $event_manager,
         BaseLayout $layout,
         IncludeAssets $core_assets,
-        CssAsset $css_asset
+        CssAsset $css_asset,
+        Codendi_HTMLPurifier $purifier
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -131,6 +135,7 @@ class ProjectDashboardController
         $this->layout                   = $layout;
         $this->javascript_assets        = $core_assets;
         $this->css_asset                = $css_asset;
+        $this->purifier                 = $purifier;
     }
 
     public function display(HTTPRequest $request)
@@ -178,8 +183,7 @@ class ProjectDashboardController
 
         $this->assets_includer->includeAssets($project_dashboards_presenter);
 
-        $purifier = Codendi_HTMLPurifier::instance();
-        $title    = $purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
+        $title = $this->purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
 
         site_project_header(
             [
@@ -197,6 +201,8 @@ class ProjectDashboardController
         $event = new ProjectProviderEvent($this->project);
         $this->event_manager->processEvent($event);
 
+        $project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($this->project->getIconUnicodeCodepoint());
+
         $renderer->renderToPage(
             'project',
             new ProjectPagePresenter(
@@ -206,7 +212,8 @@ class ProjectDashboardController
                     $this->project,
                     ProjectManager::instance(),
                     $request->getCurrentUser(),
-                    $trove_cats
+                    $trove_cats,
+                    $project_icon
                 ),
                 $project_dashboards_presenter,
                 $this->canUpdateDashboards($user, $project),
