@@ -22,8 +22,8 @@ import { Paragraph, TextRun } from "docx";
 import * as html_transformer from "./transform-html-into-paragraphs";
 
 describe("transform-large-content-into-paragraph", () => {
-    it("transforms large plaintext content", () => {
-        const paragraph = transformLargeContentIntoParagraphs("My\ncontent", "plaintext");
+    it("transforms large plaintext content", async () => {
+        const paragraph = await transformLargeContentIntoParagraphs("My\ncontent", "plaintext");
 
         expect(paragraph).toStrictEqual([
             new Paragraph({
@@ -38,13 +38,13 @@ describe("transform-large-content-into-paragraph", () => {
         ]);
     });
 
-    it("transforms large HTML content", () => {
+    it("transforms large HTML content", async () => {
         const expected_value = new Paragraph("Some HTML");
-        jest.spyOn(html_transformer, "transformHTMLIntoParagraphs").mockReturnValue([
+        jest.spyOn(html_transformer, "transformHTMLIntoParagraphs").mockResolvedValue([
             expected_value,
         ]);
 
-        const paragraph = transformLargeContentIntoParagraphs("Some HTML", "html");
+        const paragraph = await transformLargeContentIntoParagraphs("Some HTML", "html");
 
         expect(paragraph).toStrictEqual([expected_value]);
     });

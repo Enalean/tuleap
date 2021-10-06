@@ -18,11 +18,14 @@
  */
 
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
-import { Paragraph, TextRun, UnderlineType } from "docx";
+import { ImageRun, Paragraph, TextRun, UnderlineType } from "docx";
+import * as image_loader from "./Image/image-loader";
 
 describe("transform-html-into-paragraph", () => {
-    it("transforms paragraphs that are the root of the document", () => {
-        const paragraphs = transformHTMLIntoParagraphs("<p>A</p><p><span>B</span><br>C</p><p></p>");
+    it("transforms paragraphs that are the root of the document", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
+            "<p>A</p><p><span>B</span><br>C</p><p></p>"
+        );
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({ children: [new TextRun("A"), new TextRun({ break: 1 })] }),
@@ -37,8 +40,8 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 
-    it("transforms phrasing content that are the root of the document", () => {
-        const paragraphs = transformHTMLIntoParagraphs("A<p>B</p>C");
+    it("transforms phrasing content that are the root of the document", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs("A<p>B</p>C");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({ children: [new TextRun("A"), new TextRun({ break: 1 })] }),
@@ -47,8 +50,8 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 
-    it("traverses div tags when transforming the content", () => {
-        const paragraphs = transformHTMLIntoParagraphs("<div><div>A<p>B</p></div></div>");
+    it("traverses div tags when transforming the content", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs("<div><div>A<p>B</p></div></div>");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({ children: [new TextRun("A"), new TextRun({ break: 1 })] }),
@@ -56,8 +59,8 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 
-    it("transforms inline markup style elements", () => {
-        const paragraphs = transformHTMLIntoParagraphs(
+    it("transforms inline markup style elements", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
             "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>"
         );
 
@@ -77,8 +80,8 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 
-    it("transforms inline nested markup elements", () => {
-        const paragraphs = transformHTMLIntoParagraphs(
+    it("transforms inline nested markup elements", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
             "<span><strong>A<em>B</em>C</strong></span>D"
         );
 
@@ -95,8 +98,8 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 
-    it("transforms unordered lists", () => {
-        const paragraphs = transformHTMLIntoParagraphs(
+    it("transforms unordered lists", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
             "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul></li><li>B</li></ul>"
         );
 
@@ -120,8 +123,8 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 
-    it("transforms ordered lists", () => {
-        const paragraphs = transformHTMLIntoParagraphs(
+    it("transforms ordered lists", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
             "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>"
         );
 
@@ -145,8 +148,8 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 
-    it("transforms mixed ordered and unordered lists", () => {
-        const paragraphs = transformHTMLIntoParagraphs(
+    it("transforms mixed ordered and unordered lists", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
             "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>"
         );
 
@@ -166,6 +169,31 @@ describe("transform-html-into-paragraph", () => {
             new Paragraph({
                 children: [new TextRun({ text: "B" })],
                 bullet: { level: 0 },
+            }),
+        ]);
+    });
+
+    it("transforms images", async () => {
+        const expected_image_run = new ImageRun({
+            data: "Success",
+            transformation: { width: 1, height: 1 },
+        });
+        jest.spyOn(image_loader, "loadImage").mockImplementation(
+            (image_url: string): Promise<ImageRun> => {
+                if (image_url === "/success") {
+                    return Promise.resolve(expected_image_run);
+                }
+                throw new Error("Something bad has happened");
+            }
+        );
+
+        const paragraphs = await transformHTMLIntoParagraphs(
+            "<img src='/success' /><img src='/fail'>"
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [expected_image_run, new TextRun({ break: 1 })],
             }),
         ]);
     });
