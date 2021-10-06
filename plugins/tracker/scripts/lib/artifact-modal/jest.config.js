@@ -27,4 +27,5 @@ module.exports = {
         "^.+\\.html$": "identity-obj-proxy",
         "^.+\\.png$": "identity-obj-proxy",
     },
+    testRunner: "jest-jasmine2",
 };

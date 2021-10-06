@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports = require("babel-jest").createTransformer(require("./babel.config.js"));
+module.exports = require("babel-jest").default.createTransformer(require("./babel.config.js"));

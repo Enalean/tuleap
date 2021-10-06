@@ -59,7 +59,7 @@ describe("BannerPresenter", () => {
 
         const emitSpy = jest.spyOn(wrapper.vm, "$emit");
 
-        wrapper.get("input").trigger("click");
+        wrapper.get("input").setChecked(false);
         wrapper.get("button").trigger("click");
         expect(emitSpy).toHaveBeenCalledWith("save-banner", {
             message: "some message",

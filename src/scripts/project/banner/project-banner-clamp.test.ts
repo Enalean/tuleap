@@ -115,7 +115,7 @@ describe("Project banner clamp", () => {
                 banner_message.parentElement.classList.add("new-class-on-the-project-banner");
             }
 
-            setImmediate(() => {
+            setTimeout(() => {
                 expect(banner_message.classList).toContain(
                     PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
                 );

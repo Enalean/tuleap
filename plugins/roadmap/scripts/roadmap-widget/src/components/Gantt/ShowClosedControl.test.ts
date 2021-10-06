@@ -36,10 +36,10 @@ describe("ShowClosedControl", () => {
             },
         });
 
-        await wrapper.find("[data-test=input]").trigger("click");
+        await wrapper.find("[data-test=input]").setChecked(false);
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("toggleClosedElements", false);
 
-        await wrapper.find("[data-test=input]").trigger("click");
+        await wrapper.find("[data-test=input]").setChecked(true);
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("toggleClosedElements", true);
     });
 });

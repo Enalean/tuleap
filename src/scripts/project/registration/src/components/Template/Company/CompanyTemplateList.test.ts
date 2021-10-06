@@ -25,35 +25,11 @@ import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-fo
 import TemplateCardContent from "../TemplateCard.vue";
 import CompanyTemplateList from "./CompanyTemplateList.vue";
 import type { RootState } from "../../../store/type";
-import type { TemplateData } from "../../../type";
 import type { ConfigurationState } from "../../../store/configuration";
 
 describe("CompanyTemplateList", () => {
     let local_vue = createLocalVue();
     let wrapper: Wrapper<CompanyTemplateList>;
-
-    describe("has no templates", () => {
-        beforeEach(async () => {
-            const company_templates: TemplateData[] = [];
-            const configuration_state: ConfigurationState = {
-                company_templates: company_templates,
-                company_name: "",
-            } as ConfigurationState;
-
-            local_vue = await createProjectRegistrationLocalVue();
-
-            wrapper = shallowMount(CompanyTemplateList, {
-                localVue: local_vue,
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            configuration: configuration_state,
-                        } as RootState,
-                    }),
-                },
-            });
-        });
-    });
 
     describe("has several project templates -", () => {
         beforeEach(async () => {

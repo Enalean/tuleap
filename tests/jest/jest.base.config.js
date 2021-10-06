@@ -31,8 +31,9 @@ const esModules = [
 ].join("|");
 
 module.exports = {
+    testEnvironment: "jsdom",
     transform: {
-        "^.+\\.vue$": "vue-jest",
+        "^.+\\.vue$": "@vue/vue2-jest",
         "^.+\\.ts$": "ts-jest",
         "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js"),
     },
