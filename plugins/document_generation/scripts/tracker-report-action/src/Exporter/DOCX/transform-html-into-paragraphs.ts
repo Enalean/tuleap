@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { IRunStylePropertiesOptions, ParagraphChild, ImageRun } from "docx";
+import type { IRunPropertiesOptions, ParagraphChild, ImageRun } from "docx";
 import {
     AlignmentType,
     convertInchesToTwip,
+    ExternalHyperlink,
     LevelFormat,
     Paragraph,
     TextRun,
@@ -85,7 +86,7 @@ function buildParagraphFromParagraphChildren(
 }
 
 interface TreeContentState {
-    style: IRunStylePropertiesOptions;
+    style: IRunPropertiesOptions;
     list_level: number;
 }
 
@@ -209,6 +210,9 @@ async function parseTreeContent(
             case "IMG":
                 content_children.push(...(await getImageRun(child)));
                 break;
+            case "A":
+                content_children.push(...(await getHyperLink(child, state)));
+                break;
             default:
                 content_children.push(...defaultNodeHandling(child, state));
         }
@@ -228,6 +232,27 @@ async function getImageRun(element: Element): Promise<ImageRun[]> {
     } catch (e) {
         return [];
     }
+}
+
+async function getHyperLink(
+    element: Element,
+    state: Readonly<TreeContentState>
+): Promise<TreeContentChild[]> {
+    if (!(element instanceof HTMLAnchorElement) || element.href === "") {
+        return parseTreeContent(element.childNodes, state);
+    }
+
+    const children = await parseTreeContent(element.childNodes, {
+        ...state,
+        style: {
+            ...state.style,
+            style: "Hyperlink",
+        },
+    });
+    if (children.length <= 0) {
+        return [];
+    }
+    return [new ExternalHyperlink({ children, link: element.href })];
 }
 
 function defaultNodeHandling(node: Node, state: Readonly<TreeContentState>): TextRun[] {
