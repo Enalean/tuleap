@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
@@ -35,6 +37,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Iterati
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -52,6 +55,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $project_manager      = \ProjectManager::instance();
         $event_manager        = \EventManager::instance();
         $user_retriever       = new UserManagerAdapter(\UserManager::instance());
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_factory,
@@ -68,6 +72,24 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                 )
             ),
             $form_element_factory
+        );
+
+        $artifact_creator = new ArtifactCreatorAdapter(
+            TrackerArtifactCreator::build(
+                \Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
+                \Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                $logger
+            ),
+            $tracker_factory,
+            $user_retriever
+        );
+
+        $mirrors_creator = new IterationsCreator(
+            $transaction_executor,
+            new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+            new StatusValueMapper($form_element_factory),
+            $synchronized_fields_gatherer,
+            $artifact_creator
         );
 
         return new IterationCreationProcessor(
@@ -87,7 +109,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             ),
             $program_DAO,
             new ProjectReferenceRetriever($project_manager),
-            new PlanningAdapter(\PlanningFactory::build(), $user_retriever)
+            $mirrors_creator
         );
     }
 }
