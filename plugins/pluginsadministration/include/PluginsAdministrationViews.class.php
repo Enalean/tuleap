@@ -169,27 +169,6 @@ class PluginsAdministrationViews extends Views
         $dependencies           = implode(', ', $plugin->getDependencies());
         $are_there_dependencies = ! empty($dependencies);
 
-        $properties = [];
-        if (ForgeConfig::get('sys_plugins_editable_configuration')) {
-            $descs = $plugin_info->getPropertyDescriptors();
-            $keys  = $descs->getKeys();
-            $iter  = $keys->iterator();
-            while ($iter->valid()) {
-                $key       = $iter->current();
-                $desc      = $descs->get($key);
-                $prop_name = $desc->getName();
-
-                $properties[] = [
-                    'name' => $prop_name,
-                    'is_bool' => is_bool($desc->getValue()),
-                    'value' => $desc->getValue()
-                ];
-
-                $iter->next();
-            }
-        }
-        $are_there_properties = ! empty($properties);
-
         $additional_options           = $plugin->getAdministrationOptions();
         $are_there_additional_options = ! empty($additional_options);
 
@@ -210,8 +189,6 @@ class PluginsAdministrationViews extends Views
             $dependencies,
             $is_there_readme,
             $readme,
-            $are_there_properties,
-            $properties,
             $are_there_additional_options,
             $additional_options,
             $csrf_token,

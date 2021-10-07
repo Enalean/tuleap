@@ -202,12 +202,6 @@ $sys_custompluginspath = '/customplugins';
 // Comma separated paths where Tuleap can find plugins
 $sys_extra_plugin_path = '';
 
-// Enable the edition of the plugins configuration files from the web UI
-// / ! \ Enabling this feature expose your Tuleap instance to security
-// / ! \ issues. This parameter only exist to support legacy instances,
-// / ! \ it is really not recommended to enable it.
-$sys_plugins_editable_configuration = 1;
-
 $sys_plugins_that_can_not_be_disabled_from_the_web_ui = '';
 
 // How much to add to the database unix_uid to get the actual unix uid

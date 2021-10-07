@@ -188,53 +188,6 @@ class PluginsAdministrationActions extends Actions
         }
     }
 
-    public function changePluginProperties()
-    {
-        if (! ForgeConfig::get('sys_plugins_editable_configuration')) {
-            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
-        }
-
-        $request = HTTPRequest::instance();
-        $plugin  = $this->_getPluginFromRequest();
-        if (! $plugin) {
-            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
-        }
-        $plugin_properties_url = '/plugins/pluginsadministration/?view=properties&plugin_id=' . urlencode($plugin['plugin']->getId());
-        if (! $request->isPost()) {
-            $GLOBALS['Response']->redirect($plugin_properties_url);
-        }
-        $this->checkSynchronizerToken($plugin_properties_url);
-        if ($request->exist('gen_prop')) {
-            $this->_changePluginGenericProperties($request->get('gen_prop'));
-        }
-        $user_properties = $request->get('properties');
-
-        if ($user_properties) {
-            $plug_info = $plugin['plugin']->getPluginInfo();
-            $descs     = $plug_info->getPropertyDescriptors();
-            $keys      = $descs->getKeys();
-            $iter      = $keys->iterator();
-            while ($iter->valid()) {
-                $key       = $iter->current();
-                $desc      = $descs->get($key);
-                $prop_name = $desc->getName();
-                if (isset($user_properties[$prop_name])) {
-                    $val = $user_properties[$prop_name];
-                    if (is_bool($desc->getValue())) {
-                        $val = $val ? true : false;
-                    }
-                    $desc->setValue($val);
-                }
-                $iter->next();
-            }
-            $plug_info->saveProperties();
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-pluginsadministration', 'Plugin properties have been successfully updated'));
-        }
-
-        $GLOBALS['Response']->redirect($plugin_properties_url);
-    }
-
-
     public function _getPluginFromRequest()
     {
         $return  = false;

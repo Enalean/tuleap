@@ -40,42 +40,4 @@ final class PluginInfoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('v1.0', $pd->getVersion());
         $this->assertEquals('A simple plugin, just for unit testing', $pd->getDescription());
     }
-
-    public function testPropertyDescriptor(): void
-    {
-        $name_d1 = 'd1';
-        $name_d2 = 'd2';
-        $p       = \Mockery::spy(\Plugin::class);
-        $pi      = new class ($p) extends PluginInfo
-        {
-            public function addPropertyDescriptor($desc): void
-            {
-                $this->_addPropertyDescriptor($desc);
-            }
-
-            public function removePropertyDescriptor($desc): void
-            {
-                $this->_removePropertyDescriptor($desc);
-            }
-        };
-        $d1      = \Mockery::spy(\PropertyDescriptor::class);
-        $d1->shouldReceive('getName')->andReturns($name_d1);
-        $d2 = \Mockery::spy(\PropertyDescriptor::class);
-        $d2->shouldReceive('getName')->andReturns($name_d2);
-        $d3 = \Mockery::spy(\PropertyDescriptor::class);
-        $d3->shouldReceive('getName')->andReturns($name_d1);
-        $pi->addPropertyDescriptor($d1);
-        $pi->addPropertyDescriptor($d2);
-        $pi->addPropertyDescriptor($d3);
-        $expected = new Map();
-        $expected->put($name_d2, $d2);
-        $expected->put($name_d1, $d3);
-        $descriptors = $pi->getpropertyDescriptors();
-        $this->assertTrue($expected->equals($descriptors));
-
-        $pi->removePropertyDescriptor($d3);
-        $descriptors = $pi->getpropertyDescriptors();
-        $this->assertFalse($expected->equals($descriptors));
-        $this->assertEquals(1, $descriptors->size());
-    }
 }

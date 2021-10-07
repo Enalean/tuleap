@@ -20,8 +20,6 @@ _setupLocalInc() {
               gsub("sys_disable_subdomains = 0","sys_disable_subdomains = 1");
               gsub("sys_create_project_in_one_step = 0",
                   "sys_create_project_in_one_step = 1");
-              gsub("sys_plugins_editable_configuration = 1",
-                  "sys_plugins_editable_configuration = 0");
               gsub("/home/users","");
               gsub("/home/groups","");
               print }' "${install_dir}/src/etc/${local_inc}.dist" \

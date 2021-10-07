@@ -36,8 +36,6 @@ class PluginPropertiesPresenter
     public $dependencies;
     public $is_there_readme;
     public $readme;
-    public $are_there_properties;
-    public $properties;
     public $are_there_additional_options;
     public $additional_options;
     public $properties_edit_web_ui_security;
@@ -62,8 +60,6 @@ class PluginPropertiesPresenter
         $dependencies,
         $is_there_readme,
         $readme,
-        $are_there_properties,
-        $properties,
         $are_there_additional_options,
         $additional_options,
         \CSRFSynchronizerToken $csrf_token,
@@ -80,8 +76,6 @@ class PluginPropertiesPresenter
         $this->dependencies                 = $dependencies;
         $this->is_there_readme              = $is_there_readme;
         $this->readme                       = $readme;
-        $this->are_there_properties         = $are_there_properties;
-        $this->properties                   = $properties;
         $this->are_there_additional_options = $are_there_additional_options;
         $this->additional_options           = $additional_options;
         $this->csrf_token                   = $csrf_token;
@@ -98,7 +92,7 @@ class PluginPropertiesPresenter
         $this->properties_pane_empty_dependencies = dgettext('tuleap-pluginsadministration', 'No dependencies');
         $this->properties_pane_readme_title       = dgettext('tuleap-pluginsadministration', 'Readme');
         $this->properties_edit_web_ui_security    = dgettext('tuleap-pluginsadministration', 'Editing plugin properties through the web UI present a security risk, it is strongly advised to disable it. Check the deployment guide for more information.');
-        $this->can_submit                         = ! empty($properties) || ! empty($additional_options) || $this->scope == Plugin::SCOPE_PROJECT;
+        $this->can_submit                         = ! empty($additional_options) || $this->scope == Plugin::SCOPE_PROJECT;
     }
 
     private function getScopeLabel(int $scope): string

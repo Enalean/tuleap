@@ -49,31 +49,6 @@
                 {{> csrf_token_input }}
             {{/ csrf_token }}
             <input type="hidden" name="plugin_id" value="{{ id }}">
-            <input type="hidden" name="action" value="change_plugin_properties">
-            {{# are_there_properties }}
-                <section class="tlp-pane-section">
-                    <p class="tlp-alert-warning">{{ properties_edit_web_ui_security }}</p>
-                    {{# properties }}
-                        <div class="tlp-form-element">
-                            {{# is_bool }}
-                                <label class="tlp-label tlp-checkbox">
-                                    <input type="hidden" name="properties[{{ name }}]" value="0">
-                                    <input type="checkbox" name="properties[{{ name }}]" value="1" {{# value }}checked{{/ value }}> {{ name }}
-                                </label>
-                            {{/ is_bool }}
-                            {{^ is_bool }}
-                                    <label class="tlp-label" for="properties-{{ name }}">{{ name }}</label>
-                                    <input type="text"
-                                        id="properties-{{ name }}"
-                                        class="tlp-input"
-                                        name="properties[{{ name }}]"
-                                        value="{{ value }}"
-                                    >
-                            {{/ is_bool }}
-                        </div>
-                    {{/ properties }}
-                </section>
-            {{/ are_there_properties }}
             {{# are_there_additional_options }}
                 <section class="tlp-pane-section">
                     {{{ additional_options }}}

@@ -19,62 +19,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * PluginInfo
- */
-class PluginInfo
+class PluginInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    public ?PluginDescriptor $pluginDescriptor = null;
 
-    public $plugin;
-    public $pluginDescriptor;
-    public $propertyDescriptors;
-
-    public function __construct(Plugin $plugin)
+    public function __construct(public Plugin $plugin)
     {
-        $this->plugin              = $plugin;
-        $this->propertyDescriptors = new Map();
     }
 
-    public function setPluginDescriptor($descriptor)
+    public function setPluginDescriptor(PluginDescriptor $descriptor): void
     {
         $this->pluginDescriptor = $descriptor;
     }
 
-    /** @return PluginDescriptor */
-    public function getPluginDescriptor()
+    public function getPluginDescriptor(): PluginDescriptor
     {
-        if (! is_a($this->pluginDescriptor, 'PluginDescriptor')) {
-            $this->setPluginDescriptor(new PluginDescriptor('', '', ''));
+        if (! $this->pluginDescriptor) {
+            $this->pluginDescriptor = new PluginDescriptor('', '', '');
         }
         return $this->pluginDescriptor;
     }
-    public function getPropertyDescriptors()
-    {
-        return $this->propertyDescriptors;
-    }
 
-    public function _addPropertyDescriptor($descriptor)
+    public function loadProperties(): void
     {
-        $name = $descriptor->getName();
-        $this->propertyDescriptors->put($name, $descriptor);
-    }
-    public function _removePropertyDescriptor($descriptor)
-    {
-        $name = $descriptor->getName();
-        return $this->propertyDescriptors->remove($name, $descriptor);
-    }
-
-    public function loadProperties()
-    {
-    }
-
-    public function saveProperties()
-    {
-    }
-
-    public function getPropertyDescriptorForName($name)
-    {
-        $n =  $name;
-        return $this->propertyDescriptors->get($n);
     }
 }

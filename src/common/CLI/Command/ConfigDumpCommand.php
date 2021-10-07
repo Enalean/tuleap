@@ -23,17 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\Command;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ConfigDumpCommand extends Command
 {
     public const NAME = 'config-dump';
 
-    public function __construct()
+    public function __construct(private EventDispatcherInterface $event_dispatcher)
     {
         parent::__construct(self::NAME);
     }
@@ -48,9 +48,9 @@ final class ConfigDumpCommand extends Command
     {
         $keys = $input->getArgument('keys');
         if (count($keys) === 0) {
-            $io = new SymfonyStyle($input, $output);
-            $io->getErrorStyle()->error('Requested variables should be given in argument (keys)');
-            return 1;
+            $this->event_dispatcher->dispatch(new ConfigDumpEvent());
+            $output->write(\json_encode(iterator_to_array(\ForgeConfig::getAll()), JSON_THROW_ON_ERROR));
+            return 0;
         }
 
         $json = [];
