@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
@@ -86,7 +87,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = UserIdentifierStub::buildGenericUser();
 
         $this->collection    = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
-            new NullLogger(),
+            MessageLog::buildFromLogger(new NullLogger()),
             $this->retrieve_tracker_from_field,
             $this->retrieve_field_permissions,
             RetrieveProjectFromTrackerStub::buildGeneric()

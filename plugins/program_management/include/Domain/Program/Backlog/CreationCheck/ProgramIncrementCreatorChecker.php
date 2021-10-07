@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
@@ -34,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 class ProgramIncrementCreatorChecker
@@ -43,7 +43,7 @@ class ProgramIncrementCreatorChecker
         private VerifyIsProgramIncrementTracker $verify_is_program_increment,
         private RetrieveMirroredProgramIncrementTracker $milestone_retriever,
         private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
-        private LoggerInterface $logger
+        private LogMessage $logger
     ) {
     }
 

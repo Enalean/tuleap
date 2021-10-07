@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementCreationEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementCreationProcessorStub;
@@ -60,7 +61,7 @@ final class ProgramIncrementCreationEventHandlerTest extends \Tuleap\Test\PHPUni
     private function getHandler(): ProgramIncrementCreationEventHandler
     {
         return new ProgramIncrementCreationEventHandler(
-            $this->logger,
+            MessageLog::buildFromLogger($this->logger),
             $this->program_increment_verifier,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             VerifyIsChangesetStub::withValidChangeset(),

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
@@ -61,7 +62,7 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->iterations_searcher,
             $this->visibility_verifier,
             $this->iteration_link_verifier,
-            new NullLogger(),
+            MessageLog::buildFromLogger(new NullLogger()),
             RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872),
             RetrieveIterationTrackerStub::withValidTracker(4)
         );

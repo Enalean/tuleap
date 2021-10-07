@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class ProgramIncrementCreationEventHandler
 {
     public function __construct(
-        private LoggerInterface $logger,
+        private LogMessage $logger,
         private VerifyIsProgramIncrement $program_increment_verifier,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private VerifyIsChangeset $changeset_verifier,

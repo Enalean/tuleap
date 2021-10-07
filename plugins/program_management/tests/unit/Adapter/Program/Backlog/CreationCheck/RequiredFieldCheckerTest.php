@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
@@ -90,7 +91,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project_retriever = RetrieveProjectFromTrackerStub::buildGeneric();
         $this->collection        = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
-            new NullLogger(),
+            MessageLog::buildFromLogger(new NullLogger()),
             $this->retrieve_tracker_from_field,
             $this->retrieve_field_permissions,
             $this->project_retriever

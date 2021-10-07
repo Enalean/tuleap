@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
@@ -67,7 +68,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                 SearchIterationsStub::withIterationIds(101, 102),
                 VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                 VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-                new NullLogger(),
+                MessageLog::buildFromLogger(new NullLogger()),
                 RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
                 RetrieveIterationTrackerStub::withValidTracker(100)
             ),

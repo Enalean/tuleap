@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
@@ -31,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIterationHas
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 /**
  * I detect when new Iterations have been linked to a Program Increment for the first time, and I create
@@ -43,7 +43,7 @@ final class IterationCreationDetector
         private SearchIterations $iterations_searcher,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
-        private LoggerInterface $logger,
+        private LogMessage $logger,
         private RetrieveLastChangeset $changeset_retriever,
         private RetrieveIterationTracker $tracker_retriever,
     ) {

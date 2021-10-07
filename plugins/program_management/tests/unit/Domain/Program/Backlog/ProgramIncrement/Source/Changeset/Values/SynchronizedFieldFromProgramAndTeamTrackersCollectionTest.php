@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -174,7 +175,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::withTracker($this->tracker);
         return new SynchronizedFieldFromProgramAndTeamTrackersCollection(
-            $this->logger,
+            MessageLog::buildFromLogger($this->logger),
             $retrieve_tracker_from_field,
             $retrieve_field_permissions,
             RetrieveProjectFromTrackerStub::buildGeneric()

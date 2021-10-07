@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\JSON\PendingProgramIncrementUpdateRepresentation;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
@@ -86,7 +87,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->iteration_creations = IterationCreation::buildCollectionFromJustLinkedIterations(
             RetrieveLastChangesetStub::withLastChangesetIds(5539, 5174),
             RetrieveIterationTrackerStub::withValidTracker(25),
-            $this->logger,
+            MessageLog::buildFromLogger($this->logger),
             $just_linked_iterations,
             $this->program_increment_update->getUser()
         );
