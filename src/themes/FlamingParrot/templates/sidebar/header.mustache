@@ -2,12 +2,17 @@
     <div class="project-sidebar-header-name">
         <div class="project-title-container">
             <a href="{{ project_link }}" id="sidebar-dashboard" class="project-sidebar-title">
-              {{# is_project_icon_enabled }} {{project_icon}}  {{/ is_project_icon_enabled }} {{ project_name }}
+                {{# is_project_icon_enabled }}
+                    <span aria-hidden="true">{{ project_icon }}</span>
+                {{/ is_project_icon_enabled }}
+                {{ project_name }}
             </a>
             <span class="project-title-spacer"></span>
             {{# has_administration_link }}
-                <a href="{{ administration_link }}" class="project-administration-link" data-test="project-administration-link">
-                    <i class="fas fa-cog project-administration-link-icon" title="{{# gettext }}Project administration{{/ gettext }}"></i>
+                <a href="{{ administration_link }}" class="project-administration-link"
+                   data-test="project-administration-link">
+                    <i class="fas fa-cog project-administration-link-icon"
+                       title="{{# gettext }}Project administration{{/ gettext }}"></i>
                 </a>
             {{/ has_administration_link }}
         </div>
@@ -87,7 +92,12 @@
                         <a href="{{ uri }}" class="project-sidebar-linked-projects-item-link">
                             <i class="project-sidebar-linked-projects-item-icon fas fa-archive" aria-hidden="true"></i>
                             <span
-                                class="project-sidebar-linked-projects-item-name"> {{# is_project_icon_enabled }} {{ project_icon }} {{/ is_project_icon_enabled }}{{ public_name }}</span>
+                                class="project-sidebar-linked-projects-item-name">
+                                {{# is_project_icon_enabled }}
+                                    <span aria-hidden="true">{{ project_icon }}</span>
+                                {{/ is_project_icon_enabled }}
+                                {{ public_name }}
+                            </span>
                         </a>
                     </li>
                 {{/ projects }}

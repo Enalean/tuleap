@@ -27,7 +27,11 @@
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
                 <a v-bind:href="project_url" class="breadcrumb-link">
-                    <span v-if="is_project_icon_enabled" data-test="project-icon">
+                    <span
+                        v-if="is_project_icon_enabled"
+                        data-test="project-icon"
+                        aria-hidden="true"
+                    >
                         {{ project_icon }}
                     </span>
                     {{ project_public_name }}

@@ -122,7 +122,10 @@
                                                    aria-hidden="true"></i>
                                                 <span
                                                     class="project-sidebar-linked-projects-item-name">
-                                                    {{# is_project_icon_enabled }} {{ project_icon }} {{/ is_project_icon_enabled }} {{ public_name }}
+                                                    {{# is_project_icon_enabled }}
+                                                        <span aria-hidden="true">{{ project_icon }}</span>
+                                                    {{/ is_project_icon_enabled }}
+                                                    {{ public_name }}
                                                 </span>
                                             </div>
                                         </li>
