@@ -40,6 +40,7 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterationTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class IterationsCreator implements CreateIterations
 {
@@ -48,7 +49,8 @@ final class IterationsCreator implements CreateIterations
         private RetrieveMirroredIterationTracker $milestone_retriever,
         private MapStatusByValue $status_mapper,
         private GatherSynchronizedFields $fields_gatherer,
-        private CreateArtifact $artifact_creator
+        private CreateArtifact $artifact_creator,
+        private LogMessage $logger
     ) {
     }
 
@@ -103,9 +105,10 @@ final class IterationsCreator implements CreateIterations
             $creation->getUser()
         );
         try {
-            $this->artifact_creator->create($changeset);
+            $mirrored_iteration = $this->artifact_creator->create($changeset);
         } catch (ArtifactCreationException $e) {
             throw new MirroredIterationCreationException($creation->getIteration(), $e);
         }
+        $this->logger->debug(sprintf('Created mirrored iteration #%d', $mirrored_iteration->getId()));
     }
 }

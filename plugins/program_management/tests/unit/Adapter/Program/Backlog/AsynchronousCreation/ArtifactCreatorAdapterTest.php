@@ -37,13 +37,14 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const NEW_MIRRORED_TIMEBOX_ID     = 201;
     private const SOURCE_PROGRAM_INCREMENT_ID = 101;
     private const MIRRORED_TIMEBOX_TRACKER_ID = 33;
     private const USER_ID                     = 198;
@@ -140,9 +141,14 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 false,
                 self::isInstanceOf(ChangesetWithFieldsValidationContext::class)
             )
-            ->willReturn(new Artifact(201, 27, 101, self::SUBMISSION_TIMESTAMP, false));
+            ->willReturn(
+                ArtifactTestBuilder::anArtifact(self::NEW_MIRRORED_TIMEBOX_ID)
+                    ->withSubmissionTimestamp(self::SUBMISSION_TIMESTAMP)
+                    ->build()
+            );
 
-        $this->getCreator()->create($this->changeset);
+        $new_artifact = $this->getCreator()->create($this->changeset);
+        self::assertSame(self::NEW_MIRRORED_TIMEBOX_ID, $new_artifact->getId());
     }
 
     public function testItThrowsIfItCantFindTracker(): void

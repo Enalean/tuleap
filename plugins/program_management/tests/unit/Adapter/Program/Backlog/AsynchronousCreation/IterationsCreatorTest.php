@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredIterationCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
@@ -53,7 +55,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             TrackerReferenceStub::withId(32),
             TrackerReferenceStub::withId(57),
         );
-        $this->artifact_creator    = CreateArtifactStub::withCount();
+        $this->artifact_creator    = CreateArtifactStub::withIds(26, 27);
 
         $this->field_values = SourceTimeboxChangesetValuesBuilder::build();
         $this->teams        = TeamProjectsCollectionBuilder::withProjects(
@@ -74,7 +76,8 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 new SynchronizedFieldsStubPreparation(211, 556, 596, 500, 614, 793),
                 new SynchronizedFieldsStubPreparation(436, 975, 992, 145, 424, 439),
             ),
-            $this->artifact_creator
+            $this->artifact_creator,
+            MessageLog::buildFromLogger(new NullLogger())
         );
     }
 

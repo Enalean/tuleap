@@ -49,7 +49,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->artifact_creator = CreateArtifactStub::withCount();
+        $this->artifact_creator = CreateArtifactStub::withIds(39, 40);
 
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
         $this->field_values    = SourceTimeboxChangesetValuesBuilder::build();

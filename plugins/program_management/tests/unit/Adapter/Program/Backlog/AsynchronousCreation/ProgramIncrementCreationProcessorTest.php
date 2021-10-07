@@ -79,7 +79,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
 
     protected function setUp(): void
     {
-        $this->artifact_creator     = CreateArtifactStub::withCount();
+        $this->artifact_creator     = CreateArtifactStub::withIds(44, 45);
         $this->logger               = new TestLogger();
         $this->user_stories_planner = PlanUserStoriesInMirroredProgramIncrementsStub::withCount();
 
