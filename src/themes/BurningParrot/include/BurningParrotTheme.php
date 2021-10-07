@@ -52,6 +52,8 @@ use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
+use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
@@ -160,7 +162,15 @@ class BurningParrotTheme extends BaseLayout
             );
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
-                $crumb = new BreadCrumb(new BreadCrumbLink($project->getPublicName(), $project->getUrl()));
+                $crumb_link = new BreadCrumbLink($project->getPublicName(), $project->getUrl());
+                if (ProjectIconChecker::isProjectIconFeatureActive()) {
+                    $crumb_link->setProjectIcon(
+                        EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
+                            $project->getIconUnicodeCodepoint()
+                        )
+                    );
+                }
+                $crumb = new BreadCrumb($crumb_link);
                 $crumb->setAdditionalClassname("breadcrumb-project");
                 $this->breadcrumbs->addFirst($crumb);
             }

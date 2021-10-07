@@ -8,7 +8,9 @@
                 <span class="breadcrumb-item {{ classname }}">
                     {{# link }}
                         <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
-                            {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                            {{# has_icon }}
+                                <i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}
+                            <span aria-hidden="true"> {{ project_icon }} </span>{{ label }}
                         </a>
                     {{/ link }}
                 </span>

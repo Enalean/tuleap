@@ -35,14 +35,19 @@ class BreadCrumbLink
      * @var array<string, string>
      */
     private $data_attributes = [];
+    /**
+     * @var string
+     */
+    private string $project_icon;
 
     public function __construct(
         $label,
         $url
     ) {
-        $this->label     = $label;
-        $this->url       = $url;
-        $this->icon_name = '';
+        $this->label        = $label;
+        $this->url          = $url;
+        $this->icon_name    = '';
+        $this->project_icon = '';
     }
 
     /**
@@ -88,5 +93,15 @@ class BreadCrumbLink
     public function getDataAttributes(): array
     {
         return $this->data_attributes;
+    }
+
+    public function setProjectIcon(string $project_icon): void
+    {
+        $this->project_icon = $project_icon;
+    }
+
+    public function getProjectIcon(): string
+    {
+        return $this->project_icon;
     }
 }
