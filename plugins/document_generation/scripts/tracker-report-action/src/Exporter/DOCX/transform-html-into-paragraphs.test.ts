@@ -18,7 +18,7 @@
  */
 
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
-import { ImageRun, Paragraph, TextRun, UnderlineType } from "docx";
+import { ExternalHyperlink, ImageRun, Paragraph, TextRun, UnderlineType } from "docx";
 import * as image_loader from "./Image/image-loader";
 
 describe("transform-html-into-paragraph", () => {
@@ -194,6 +194,25 @@ describe("transform-html-into-paragraph", () => {
         expect(paragraphs).toStrictEqual([
             new Paragraph({
                 children: [expected_image_run, new TextRun({ break: 1 })],
+            }),
+        ]);
+    });
+
+    it("transforms hyperlinks", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
+            "<a>A</a><a href='https://demo.example.com/'>B</a><a href='https://empty.example.com'></a>"
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [
+                    new TextRun({ text: "A" }),
+                    new ExternalHyperlink({
+                        children: [new TextRun({ text: "B", style: "Hyperlink" })],
+                        link: "https://demo.example.com/",
+                    }),
+                    new TextRun({ break: 1 }),
+                ],
             }),
         ]);
     });
