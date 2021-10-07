@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Sidebar;
 
 use Tuleap\Project\CheckProjectAccess;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectAccessSuspendedException;
 
 /**
@@ -35,7 +36,7 @@ final class LinkedProject
     public string $public_name;
     public string $uri;
 
-    private function __construct(string $public_name, string $uri)
+    private function __construct(string $public_name, string $uri, public string $project_icon)
     {
         $this->public_name = $public_name;
         $this->uri         = $uri;
@@ -48,6 +49,12 @@ final class LinkedProject
         } catch (ProjectAccessSuspendedException | \Project_AccessDeletedException | \Project_AccessPrivateException | \Project_AccessRestrictedException | \Project_AccessProjectNotFoundException $e) {
             return null;
         }
-        return new self($project->getPublicName(), $project->getUrl());
+        return new self(
+            $project->getPublicName(),
+            $project->getUrl(),
+            EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
+                $project->getIconUnicodeCodepoint()
+            )
+        );
     }
 }

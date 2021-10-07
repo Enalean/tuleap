@@ -30,7 +30,7 @@ final class LinkedProjectPresenter
     public string $public_name;
     public string $uri;
 
-    private function __construct(string $public_name, string $uri)
+    private function __construct(string $public_name, string $uri, public ?string $project_icon)
     {
         $this->public_name = $public_name;
         $this->uri         = $uri;
@@ -38,6 +38,6 @@ final class LinkedProjectPresenter
 
     public static function fromLinkedProject(LinkedProject $linked_project): self
     {
-        return new self($linked_project->public_name, $linked_project->uri);
+        return new self($linked_project->public_name, $linked_project->uri, $linked_project->project_icon);
     }
 }

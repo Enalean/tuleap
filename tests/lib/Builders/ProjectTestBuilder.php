@@ -33,6 +33,7 @@ final class ProjectTestBuilder
         'status'          => Project::STATUS_ACTIVE,
         'unix_group_name' => 'TestProject',
         'group_name'      => 'The Test Project',
+        'icon_codepoint' => '"\ud83d\ude2c"'
     ];
 
     public function __construct()

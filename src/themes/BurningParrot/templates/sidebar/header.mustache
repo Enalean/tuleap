@@ -64,7 +64,7 @@
                     <li class="project-sidebar-linked-projects-item">
                         <a href="{{ uri }}" class="project-sidebar-linked-projects-item-link">
                             <i class="project-sidebar-linked-projects-item-icon fas fa-archive" aria-hidden="true"></i>
-                            <span class="project-sidebar-linked-projects-item-name">{{ public_name }}</span>
+                            <span class="project-sidebar-linked-projects-item-name">   {{# is_project_icon_enabled }} {{ project_icon }} {{/ is_project_icon_enabled }} {{ public_name }}</span>
                         </a>
                     </li>
                 {{/ projects }}
