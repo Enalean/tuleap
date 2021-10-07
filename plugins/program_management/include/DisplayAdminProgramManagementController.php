@@ -28,22 +28,22 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\Team\TeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration\PotentialTimeboxTrackerConfigurationPresenterCollection;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
-use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Admin\TimeboxTrackerConfiguration\PotentialTimeboxTrackerConfigurationPresenterCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
@@ -82,7 +82,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         private RetrieveVisibleIterationTracker $iteration_tracker_retriever,
         private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder,
-        private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
+        private ProjectUGroupCanPrioritizeItemsPresentersBuilder $ugroups_can_prioritize_builder,
         private VerifyProjectPermission $permission_verifier,
         private RetrieveProgramIncrementLabels $program_increment_labels_retriever,
         private SearchTrackersOfProgram $trackers_searcher,

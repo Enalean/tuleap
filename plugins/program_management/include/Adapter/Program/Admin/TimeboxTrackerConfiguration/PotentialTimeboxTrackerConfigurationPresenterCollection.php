@@ -20,35 +20,38 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration;
 
+use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class PotentialPlannableTrackersConfigurationPresentersBuilder
+/**
+ * @psalm-immutable
+ */
+final class PotentialTimeboxTrackerConfigurationPresenterCollection
 {
-    private RetrievePlannableTrackers $plannable_trackers_retriever;
-
-    public function __construct(
-        RetrievePlannableTrackers $plannable_trackers_retriever
-    ) {
-        $this->plannable_trackers_retriever = $plannable_trackers_retriever;
-    }
+    /**
+     * @var ProgramSelectOptionConfigurationPresenter[]
+     */
+    public array $presenters;
 
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @param ProgramSelectOptionConfigurationPresenter[] $presenters
      */
-    public function buildPotentialPlannableTrackerPresenters(ProgramForAdministrationIdentifier $program, PotentialTrackerCollection $all_potential_trackers): array
+    private function __construct(array $presenters)
     {
-        $plannable_tracker_ids = $this->plannable_trackers_retriever->getPlannableTrackersOfProgram($program->id);
+        $this->presenters = $presenters;
+    }
 
+    public static function fromTimeboxTracker(
+        PotentialTrackerCollection $all_potential_trackers,
+        ?TrackerReference $timebox_tracker
+    ): self {
         $potential_tracker_presenters = [];
 
         foreach ($all_potential_trackers->trackers_reference as $potential_tracker) {
-            $selected = \in_array($potential_tracker->getId(), $plannable_tracker_ids);
-
+            $selected                       = $timebox_tracker && $potential_tracker->getId() === $timebox_tracker->getId();
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $potential_tracker->getId(),
                 $potential_tracker->getLabel(),
@@ -56,6 +59,6 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilder
             );
         }
 
-        return $potential_tracker_presenters;
+        return new self($potential_tracker_presenters);
     }
 }

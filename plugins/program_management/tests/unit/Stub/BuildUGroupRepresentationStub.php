@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildUGroupRepresentation;
 
-interface BuildProjectUGroupCanPrioritizeItemsPresenters
+final class BuildUGroupRepresentationStub implements BuildUGroupRepresentation
 {
-    /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
-     */
-    public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array;
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function getUGroupRepresentation(int $project_id, int $ugroup_id): string
+    {
+        return "101_5";
+    }
 }
