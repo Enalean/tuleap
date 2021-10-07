@@ -35,12 +35,21 @@ controller.$inject = [
     "$scope",
     "$element",
     "$q",
+    "$rootScope",
     "ExecutionService",
     "ExecutionRestService",
     "gettextCatalog",
 ];
 
-function controller($scope, $element, $q, ExecutionService, ExecutionRestService, gettextCatalog) {
+function controller(
+    $scope,
+    $element,
+    $q,
+    $rootScope,
+    ExecutionService,
+    ExecutionRestService,
+    gettextCatalog
+) {
     const self = this;
 
     Object.assign(self, {
@@ -83,6 +92,21 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
         $scope.$on("user-has-closed-the-file-creation-errors-modal", () => {
             this.file_creation_errors = [];
             $scope.$apply();
+        });
+
+        $rootScope.$on("execution-attachments-dropped", (event, { files }) => {
+            files.forEach((file) => {
+                if (!isFile(file)) {
+                    pushErrorInModal(
+                        buildFileInfo(file),
+                        gettextCatalog.getString("This item is not a file")
+                    );
+                    $scope.$apply();
+
+                    return;
+                }
+                attachFile(file);
+            });
         });
     }
 
@@ -210,5 +234,9 @@ function controller($scope, $element, $q, ExecutionService, ExecutionRestService
             filename: file.name,
             message: error_message,
         });
+    }
+
+    function isFile(file) {
+        return file.size % 4096 !== 0 || file.type !== "";
     }
 }

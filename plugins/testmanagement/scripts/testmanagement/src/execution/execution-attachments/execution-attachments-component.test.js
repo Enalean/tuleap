@@ -27,7 +27,14 @@ jest.mock("./execution-attachments-uploader");
 jest.mock("tlp");
 
 describe("execution-attachments-component", () => {
-    let controller, $scope, $q, $element, ExecutionService, ExecutionRestService, execution;
+    let controller,
+        $scope,
+        $q,
+        $element,
+        $root_scope,
+        ExecutionService,
+        ExecutionRestService,
+        execution;
 
     beforeEach(() => {
         angular.mock.module(execution_module);
@@ -41,6 +48,7 @@ describe("execution-attachments-component", () => {
             ) => {
                 $q = _$q_;
                 $scope = $rootScope.$new();
+                $root_scope = $rootScope;
                 ExecutionService = _ExecutionService_;
                 ExecutionRestService = _ExecutionRestService_;
 
@@ -58,6 +66,7 @@ describe("execution-attachments-component", () => {
                         $scope,
                         $element,
                         $q,
+                        $rootScope,
                         ExecutionService,
                         ExecutionRestService,
                     },
@@ -406,6 +415,89 @@ describe("execution-attachments-component", () => {
             $scope.$digest();
 
             expect(controller.file_creation_errors).toEqual([]);
+        });
+    });
+
+    describe("Dropped files", () => {
+        it("Uploads dropped files", () => {
+            const new_file = {
+                id: 1234,
+                upload_href: "/upload-me.here",
+                download_href: "/download-me.there",
+            };
+
+            const file_to_attach = {
+                name: "bug.png",
+                size: 12345678910,
+                type: "image/png",
+            };
+
+            jest.spyOn(ExecutionRestService, "createFileInTestExecution").mockReturnValue(
+                $q.when(new_file)
+            );
+            jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(attachments_uploader, "processUpload");
+
+            controller.$onInit();
+
+            $root_scope.$emit("execution-attachments-dropped", { files: [file_to_attach] });
+            $scope.$digest();
+
+            expect(ExecutionRestService.createFileInTestExecution).toHaveBeenCalledWith(execution, {
+                name: file_to_attach.name,
+                file_size: file_to_attach.size,
+                file_type: file_to_attach.type,
+            });
+
+            expect(ExecutionService.addToFilesAddedThroughAttachmentArea).toHaveBeenCalledWith(
+                execution,
+                {
+                    id: new_file.id,
+                    filename: file_to_attach.name,
+                    progress: 0,
+                    upload_error_message: "",
+                    upload_url: "/upload-me.here",
+                }
+            );
+
+            expect(attachments_uploader.processUpload).toHaveBeenCalledWith(
+                file_to_attach,
+                new_file.upload_href,
+                expect.any(Function),
+                expect.any(Function)
+            );
+        });
+
+        it("does not upload items that are not files", () => {
+            controller.$onInit();
+
+            jest.spyOn(ExecutionRestService, "createFileInTestExecution");
+            jest.spyOn(ExecutionService, "addToFilesAddedThroughAttachmentArea");
+            jest.spyOn(attachments_uploader, "processUpload");
+
+            $root_scope.$emit("execution-attachments-dropped", {
+                files: [
+                    {
+                        name: "Screenshots",
+                        size: 4096,
+                        type: "",
+                    },
+                ],
+            });
+            $scope.$digest();
+
+            expect(ExecutionRestService.createFileInTestExecution).not.toHaveBeenCalled();
+            expect(ExecutionService.addToFilesAddedThroughAttachmentArea).not.toHaveBeenCalled();
+            expect(attachments_uploader.processUpload).not.toHaveBeenCalled();
+
+            expect(controller.file_creation_errors).toEqual([
+                {
+                    filename: "Screenshots",
+                    message: "This item is not a file",
+                },
+            ]);
         });
     });
 });
