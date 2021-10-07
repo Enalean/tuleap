@@ -467,7 +467,7 @@ admin_generic_user	set_by_project	Configurable au niveau de chaque projet (chaqu
 admin_generic_user	email	Email
 admin_generic_user	password	Mot de passe
 
-admin_permission_delegation	page_title	Délegation de permission
+admin_permission_delegation	page_title	Délégation de permission
 admin_permission_delegation	page_description	Ici vous pouvez assigner des permissions à des groupes portants sur l'ensemble de la plateforme.
 admin_permission_delegation	group_action_add	Ajouter un groupe
 admin_permission_delegation	group_action_edit	Editer
