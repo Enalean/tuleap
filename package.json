@@ -84,6 +84,6 @@
     "build": "pnpm --filter='!@tuleap/dev-and-build-tools' --workspace-concurrency=-2 run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "stylelint --config .stylelintrc.js",
-    "test": "BABEL_ENV=test jest --config tests/jest/jest.projects.config.js"
+    "test": "BABEL_ENV=test pnpm --filter='!@tuleap/dev-and-build-tools' --no-bail --workspace-concurrency=2 test -- --verbose=false"
   }
 }

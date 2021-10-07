@@ -17,15 +17,15 @@ def runPHPUnitTests(String version, Boolean with_coverage = false) {
 def runJestTests(String name, String path, Boolean with_coverage = false) {
     def coverage_params=''
     if (with_coverage) {
-        coverage_params="--coverage --coverageReporters=text-summary --coverageReporters=cobertura --coverageDirectory='\$WORKSPACE/results/jest/coverage/'"
+        coverage_params="--coverage --coverageReporters=text-summary --coverageReporters=cobertura"
     }
     sh """
     mkdir -p 'results/jest/coverage/'
     export JEST_JUNIT_OUTPUT_DIR="\$WORKSPACE/results/jest/"
-    export JEST_JUNIT_OUTPUT_NAME="test-${name}-results.xml"
+    export JEST_JUNIT_UNIQUE_OUTPUT_NAME=true
     export JEST_SUITE_NAME="Jest ${name} test suite"
-    export NODE_OPTIONS="--max-old-space-size=6144"
-    timeout 1h pnpm --prefix "sources/" test -- '${path}' --ci --maxWorkers=30% --reporters=default --reporters=jest-junit ${coverage_params}
+    export COVERAGE_BASE_OUTPUT_DIR="\$WORKSPACE/results/jest/coverage/"
+    timeout 1h pnpm --prefix "sources/${path}" test -- --ci --maxWorkers=30% --reporters=default --reporters=jest-junit ${coverage_params}
     """
 }
 

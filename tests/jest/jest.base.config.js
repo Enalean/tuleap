@@ -30,6 +30,11 @@ const esModules = [
     "hybrids",
 ].join("|");
 
+let coverage_directory = undefined;
+if (process.env.COVERAGE_BASE_OUTPUT_DIR) {
+    coverage_directory = process.env.COVERAGE_BASE_OUTPUT_DIR + "/" + path.basename(process.cwd());
+}
+
 module.exports = {
     testEnvironment: "jsdom",
     transform: {
@@ -83,4 +88,5 @@ module.exports = {
     ],
     resetModules: true,
     restoreMocks: true,
+    coverageDirectory: coverage_directory,
 };

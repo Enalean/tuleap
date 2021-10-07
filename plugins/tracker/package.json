@@ -49,6 +49,6 @@
   "scripts": {
     "build": "rm -rf ../../src/www/assets/trackers && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "test": "jest --config=../../tests/jest/jest.projects.config.js \"$(pwd)\""
+    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js \"$(pwd)\""
   }
 }
