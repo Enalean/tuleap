@@ -18,7 +18,15 @@
  */
 
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
-import { ExternalHyperlink, HeadingLevel, ImageRun, Paragraph, TextRun, UnderlineType } from "docx";
+import {
+    BorderStyle,
+    ExternalHyperlink,
+    HeadingLevel,
+    ImageRun,
+    Paragraph,
+    TextRun,
+    UnderlineType,
+} from "docx";
 import * as image_loader from "./Image/image-loader";
 
 describe("transform-html-into-paragraph", () => {
@@ -242,6 +250,35 @@ describe("transform-html-into-paragraph", () => {
             }),
             new Paragraph({
                 children: [new TextRun({ text: "D" })],
+            }),
+        ]);
+    });
+
+    it("transforms horizontal rules", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs("A<hr>B", {
+            ordered_title_levels: [HeadingLevel.TITLE],
+        });
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "A" })],
+            }),
+            new Paragraph({
+                spacing: {
+                    before: 100,
+                    after: 100,
+                    line: 0.25,
+                },
+                border: {
+                    bottom: {
+                        style: BorderStyle.SINGLE,
+                        color: "000000",
+                        size: 1,
+                    },
+                },
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "B" })],
             }),
         ]);
     });

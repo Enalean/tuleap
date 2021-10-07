@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { IRunPropertiesOptions, ParagraphChild, ImageRun, HeadingLevel } from "docx";
+import type { HeadingLevel, ImageRun, IRunPropertiesOptions, ParagraphChild } from "docx";
 import {
     AlignmentType,
+    BorderStyle,
     convertInchesToTwip,
     ExternalHyperlink,
     LevelFormat,
@@ -240,6 +241,24 @@ async function parseTreeContent(
                         child.childNodes,
                         state
                     ))
+                );
+                break;
+            case "HR":
+                content_children.push(
+                    new Paragraph({
+                        spacing: {
+                            before: 100,
+                            after: 100,
+                            line: 0.25,
+                        },
+                        border: {
+                            bottom: {
+                                style: BorderStyle.SINGLE,
+                                color: "000000",
+                                size: 1,
+                            },
+                        },
+                    })
                 );
                 break;
             default:
