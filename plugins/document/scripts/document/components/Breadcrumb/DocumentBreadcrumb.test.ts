@@ -19,9 +19,9 @@
 
 import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
 import { createDocumentLocalVue } from "../../helpers/local-vue-for-test";
+import type { Wrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
 import type { Embedded, Folder, Item } from "../../type";
 
 describe("DocumentBreadcrumb", () => {
@@ -30,7 +30,9 @@ describe("DocumentBreadcrumb", () => {
         current_folder_ascendant_hierarchy: Array<Folder>,
         is_loading_ascendant_hierarchy: boolean,
         current_folder: null | Folder,
-        currently_previewed_item: null | Item
+        currently_previewed_item: null | Item,
+        project_icon = "",
+        is_project_icon_enabled = false
     ): Promise<Wrapper<DocumentBreadcrumb>> {
         return shallowMount(DocumentBreadcrumb, {
             mocks: {
@@ -38,6 +40,8 @@ describe("DocumentBreadcrumb", () => {
                     state: {
                         configuration: {
                             user_is_admin,
+                            project_icon,
+                            is_project_icon_enabled,
                         },
                         current_folder_ascendant_hierarchy,
                         is_loading_ascendant_hierarchy,
@@ -187,5 +191,27 @@ describe("DocumentBreadcrumb", () => {
         );
 
         expect(wrapper.find("[data-test=breadcrumb-current-document]").exists()).toBeTruthy();
+    });
+
+    describe("project icon's display", () => {
+        it.each([
+            ["display", true, true],
+            ["does not display", false, false],
+        ])(
+            `%s icon when the project icon feature flag is %s`,
+            async (display, is_project_icon_enabled, expected_result) => {
+                const wrapper = await createWrapper(
+                    false,
+                    [],
+                    false,
+                    null,
+                    null,
+                    "🏰",
+                    is_project_icon_enabled
+                );
+
+                expect(wrapper.find("[data-test=project-icon]").exists()).toBe(expected_result);
+            }
+        );
     });
 });

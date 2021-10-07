@@ -73,7 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const relative_dates_display = vue_mount_point.dataset.relativeDatesDisplay;
     const privacy = JSON.parse(vue_mount_point.dataset.privacy);
     const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
-
+    const project_icon = vue_mount_point.dataset.projectIcon;
+    const is_project_icon_enabled = Boolean(vue_mount_point.dataset.isProjectIconEnabled);
     moment.tz(user_timezone);
     moment.locale(user_locale);
 
@@ -102,6 +103,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         privacy,
         project_flags,
         relative_dates_display,
+        project_icon,
+        is_project_icon_enabled,
     };
 
     const AppComponent = Vue.extend(App);

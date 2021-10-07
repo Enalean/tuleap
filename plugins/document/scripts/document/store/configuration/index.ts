@@ -44,6 +44,8 @@ export interface ConfigurationState {
     readonly is_deletion_allowed: boolean;
     readonly user_locale: string;
     readonly relative_dates_display: string;
+    readonly project_icon: string;
+    readonly is_project_icon_enabled: boolean;
 }
 
 export function createConfigurationModule(
