@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -29,14 +33,28 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 final class ProgramIncrementChanged
 {
-    public int $program_increment_id;
-    public int $tracker_id;
-    public UserIdentifier $user;
+    private function __construct(
+        public ProgramIncrementIdentifier $program_increment,
+        public ProgramIncrementTrackerIdentifier $tracker,
+        public UserIdentifier $user
+    ) {
+    }
 
-    public function __construct(int $program_increment_id, int $tracker_id, UserIdentifier $user)
+    public static function fromCreation(ProgramIncrementCreation $creation): self
     {
-        $this->program_increment_id = $program_increment_id;
-        $this->tracker_id           = $tracker_id;
-        $this->user                 = $user;
+        return new self(
+            $creation->getProgramIncrement(),
+            $creation->getProgramIncrementTracker(),
+            $creation->getUser()
+        );
+    }
+
+    public static function fromUpdate(ProgramIncrementUpdate $update): self
+    {
+        return new self(
+            $update->getProgramIncrement(),
+            $update->getProgramIncrementTracker(),
+            $update->getUser()
+        );
     }
 }

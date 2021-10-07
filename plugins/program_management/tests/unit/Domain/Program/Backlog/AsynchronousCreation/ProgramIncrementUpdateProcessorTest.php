@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -90,6 +91,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             ),
             RetrieveChangesetSubmissionDateStub::withDate(self::SUBMISSION_DATE),
             $this->mirror_searcher,
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             RetrieveTrackerOfArtifactStub::withTrackers(
                 TrackerIdentifierStub::withId(72),
                 TrackerIdentifierStub::withId(53)

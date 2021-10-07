@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
@@ -66,9 +67,9 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
         $user_retriever           = new UserManagerAdapter(\UserManager::instance());
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
         $artifact_changeset_dao   = new \Tracker_Artifact_ChangesetDao();
-        $transaction_executor     = new DBTransactionExecutorWithConnection(
-            DBFactory::getMainTuleapDBConnection()
-        );
+        $visibility_verifier      = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
+
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -134,6 +135,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
             new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
             new ChangesetRetriever($artifact_factory),
             new MirroredTimeboxesDao(),
+            $visibility_verifier,
             new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory),
             new StatusValueMapper($form_element_factory),
             new ChangesetAdder(

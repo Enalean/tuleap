@@ -22,8 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\MirroredProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
@@ -39,7 +40,7 @@ final class MirroredTimeboxChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveTrackerOfArtifactStub $tracker_retriever;
     private GatherSynchronizedFieldsStub $fields_gatherer;
     private MapStatusByValueStub $status_mapper;
-    private MirroredTimeboxProxy $timebox;
+    private MirroredProgramIncrementIdentifier $mirrored_program_increment;
 
     protected function setUp(): void
     {
@@ -49,7 +50,9 @@ final class MirroredTimeboxChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_gatherer   = GatherSynchronizedFieldsStub::withDefaults();
         $this->status_mapper     = MapStatusByValueStub::withValues(2105);
 
-        $this->timebox = new MirroredTimeboxProxy(self::MIRRORED_TIMEBOX_ID);
+        $this->mirrored_program_increment = MirroredProgramIncrementIdentifierBuilder::buildWithId(
+            self::MIRRORED_TIMEBOX_ID
+        );
     }
 
     public function testItBuildsFromMirroredTimebox(): void
@@ -58,7 +61,7 @@ final class MirroredTimeboxChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_retriever,
             $this->fields_gatherer,
             $this->status_mapper,
-            $this->timebox,
+            $this->mirrored_program_increment,
             SourceTimeboxChangesetValuesBuilder::buildWithSubmissionDate(self::SUBMISSION_TIMESTAMP),
             ArtifactLinkValue::buildEmptyValue(),
             UserIdentifierStub::withId(self::USER_ID)

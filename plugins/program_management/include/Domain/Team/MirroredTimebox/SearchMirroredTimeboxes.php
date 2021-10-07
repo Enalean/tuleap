@@ -20,10 +20,12 @@
 
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+
 interface SearchMirroredTimeboxes
 {
     /**
-     * @return MirroredTimeboxIdentifier[]
+     * @return int[]
      */
-    public function searchMirroredTimeboxes(int $timebox_id): array;
+    public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array;
 }
