@@ -18,50 +18,51 @@
  */
 
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
-import { ExternalHyperlink, ImageRun, Paragraph, TextRun, UnderlineType } from "docx";
+import { ExternalHyperlink, HeadingLevel, ImageRun, Paragraph, TextRun, UnderlineType } from "docx";
 import * as image_loader from "./Image/image-loader";
 
 describe("transform-html-into-paragraph", () => {
     it("transforms paragraphs that are the root of the document", async () => {
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<p>A</p><p><span>B</span><br>C</p><p></p>"
+            "<p>A</p><p><span>B</span><br>C</p><p></p>",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
-            new Paragraph({ children: [new TextRun("A"), new TextRun({ break: 1 })] }),
+            new Paragraph({ children: [new TextRun("A")] }),
             new Paragraph({
-                children: [
-                    new TextRun("B"),
-                    new TextRun({ break: 1 }),
-                    new TextRun({ text: "C" }),
-                    new TextRun({ break: 1 }),
-                ],
+                children: [new TextRun("B"), new TextRun({ break: 1 }), new TextRun({ text: "C" })],
             }),
         ]);
     });
 
     it("transforms phrasing content that are the root of the document", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs("A<p>B</p>C");
+        const paragraphs = await transformHTMLIntoParagraphs("A<p>B</p>C", {
+            ordered_title_levels: [HeadingLevel.TITLE],
+        });
 
         expect(paragraphs).toStrictEqual([
-            new Paragraph({ children: [new TextRun("A"), new TextRun({ break: 1 })] }),
-            new Paragraph({ children: [new TextRun("B"), new TextRun({ break: 1 })] }),
-            new Paragraph({ children: [new TextRun("C"), new TextRun({ break: 1 })] }),
+            new Paragraph({ children: [new TextRun("A")] }),
+            new Paragraph({ children: [new TextRun("B")] }),
+            new Paragraph({ children: [new TextRun("C")] }),
         ]);
     });
 
     it("traverses div tags when transforming the content", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs("<div><div>A<p>B</p></div></div>");
+        const paragraphs = await transformHTMLIntoParagraphs("<div><div>A<p>B</p></div></div>", {
+            ordered_title_levels: [HeadingLevel.TITLE],
+        });
 
         expect(paragraphs).toStrictEqual([
-            new Paragraph({ children: [new TextRun("A"), new TextRun({ break: 1 })] }),
-            new Paragraph({ children: [new TextRun("B"), new TextRun({ break: 1 })] }),
+            new Paragraph({ children: [new TextRun("A")] }),
+            new Paragraph({ children: [new TextRun("B")] }),
         ]);
     });
 
     it("transforms inline markup style elements", async () => {
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>"
+            "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
@@ -74,7 +75,6 @@ describe("transform-html-into-paragraph", () => {
                     new TextRun({ text: "E", superScript: true }),
                     new TextRun({ text: "F", subScript: true }),
                     new TextRun({ text: "G", underline: { type: UnderlineType.SINGLE } }),
-                    new TextRun({ break: 1 }),
                 ],
             }),
         ]);
@@ -82,7 +82,8 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms inline nested markup elements", async () => {
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<span><strong>A<em>B</em>C</strong></span>D"
+            "<span><strong>A<em>B</em>C</strong></span>D",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
@@ -92,7 +93,6 @@ describe("transform-html-into-paragraph", () => {
                     new TextRun({ text: "B", bold: true, italics: true }),
                     new TextRun({ text: "C", bold: true }),
                     new TextRun({ text: "D" }),
-                    new TextRun({ break: 1 }),
                 ],
             }),
         ]);
@@ -100,7 +100,8 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms unordered lists", async () => {
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul></li><li>B</li></ul>"
+            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul></li><li>B</li></ul>",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
@@ -125,7 +126,8 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms ordered lists", async () => {
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>"
+            "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
@@ -150,7 +152,8 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms mixed ordered and unordered lists", async () => {
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>"
+            "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
@@ -188,19 +191,21 @@ describe("transform-html-into-paragraph", () => {
         );
 
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<img src='/success' /><img src='/fail'>"
+            "<img src='/success' /><img src='/fail'>",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
-                children: [expected_image_run, new TextRun({ break: 1 })],
+                children: [expected_image_run],
             }),
         ]);
     });
 
     it("transforms hyperlinks", async () => {
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<a>A</a><a href='https://demo.example.com/'>B</a><a href='https://empty.example.com'></a>"
+            "<a>A</a><a href='https://demo.example.com/'>B</a><a href='https://empty.example.com'></a>",
+            { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
@@ -211,8 +216,32 @@ describe("transform-html-into-paragraph", () => {
                         children: [new TextRun({ text: "B", style: "Hyperlink" })],
                         link: "https://demo.example.com/",
                     }),
-                    new TextRun({ break: 1 }),
                 ],
+            }),
+        ]);
+    });
+
+    it("transforms titles", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
+            "<h1>A</h1><h2>B</h2><h6>C</h6><p>D</p>",
+            { ordered_title_levels: [HeadingLevel.HEADING_5, HeadingLevel.HEADING_6] }
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "A" })],
+                heading: HeadingLevel.HEADING_5,
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "B" })],
+                heading: HeadingLevel.HEADING_6,
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "C" })],
+                heading: HeadingLevel.HEADING_6,
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "D" })],
             }),
         ]);
     });

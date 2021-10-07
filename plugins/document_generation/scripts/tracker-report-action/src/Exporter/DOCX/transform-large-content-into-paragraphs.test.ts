@@ -18,12 +18,14 @@
  */
 
 import { transformLargeContentIntoParagraphs } from "./transform-large-content-into-paragraphs";
-import { Paragraph, TextRun } from "docx";
+import { Paragraph, TextRun, HeadingLevel } from "docx";
 import * as html_transformer from "./transform-html-into-paragraphs";
 
 describe("transform-large-content-into-paragraph", () => {
     it("transforms large plaintext content", async () => {
-        const paragraph = await transformLargeContentIntoParagraphs("My\ncontent", "plaintext");
+        const paragraph = await transformLargeContentIntoParagraphs("My\ncontent", "plaintext", {
+            ordered_title_levels: [HeadingLevel.TITLE],
+        });
 
         expect(paragraph).toStrictEqual([
             new Paragraph({
@@ -44,7 +46,9 @@ describe("transform-large-content-into-paragraph", () => {
             expected_value,
         ]);
 
-        const paragraph = await transformLargeContentIntoParagraphs("Some HTML", "html");
+        const paragraph = await transformLargeContentIntoParagraphs("Some HTML", "html", {
+            ordered_title_levels: [HeadingLevel.TITLE],
+        });
 
         expect(paragraph).toStrictEqual([expected_value]);
     });
