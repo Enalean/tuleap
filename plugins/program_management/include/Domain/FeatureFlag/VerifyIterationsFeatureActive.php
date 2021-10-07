@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\FeatureFlag;
 
-use Tuleap\Config\FeatureFlagConfigKey;
 
 interface VerifyIterationsFeatureActive
 {
-    #[FeatureFlagConfigKey("Display iteration section in program administration")]
-    public const FEATURE_FLAG_KEY = 'program_management_display_iteration';
-
     public function isIterationsFeatureActive(): bool;
 }
