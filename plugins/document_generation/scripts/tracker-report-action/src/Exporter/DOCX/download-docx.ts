@@ -36,7 +36,6 @@ import {
     File,
     Footer,
     Header,
-    HeadingLevel,
     LevelFormat,
     Packer,
     PageBreak,
@@ -51,6 +50,7 @@ import {
     TabStopType,
     TextRun,
     WidthType,
+    HeadingLevel,
 } from "docx";
 import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
 import { getAnchorToArtifactContent } from "./sections-anchor";
@@ -686,7 +686,10 @@ async function buildFieldValuesDisplayZone(
                     }),
                     ...(await transformLargeContentIntoParagraphs(
                         field.field_value,
-                        field.content_format
+                        field.content_format,
+                        {
+                            ordered_title_levels: [HeadingLevel.HEADING_5, HeadingLevel.HEADING_6],
+                        }
                     ))
                 );
                 break;

@@ -18,14 +18,16 @@
  */
 
 import { Paragraph, TextRun } from "docx";
+import type { TransformationOptions } from "./transform-html-into-paragraphs";
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
 
 export function transformLargeContentIntoParagraphs(
     content: string,
-    format: "plaintext" | "html"
+    format: "plaintext" | "html",
+    html_transformation_options: TransformationOptions
 ): Promise<Paragraph[]> {
     if (format === "html") {
-        return transformHTMLIntoParagraphs(content);
+        return transformHTMLIntoParagraphs(content, html_transformation_options);
     }
     return Promise.resolve([
         new Paragraph({
