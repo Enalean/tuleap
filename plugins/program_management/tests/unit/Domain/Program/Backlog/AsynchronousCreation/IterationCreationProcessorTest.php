@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationsCreator;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
@@ -69,7 +70,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getProcessor(): IterationCreationProcessor
     {
         return new IterationCreationProcessor(
-            $this->logger,
+            MessageLog::buildFromLogger($this->logger),
             $this->fields_gatherer,
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withDefault()

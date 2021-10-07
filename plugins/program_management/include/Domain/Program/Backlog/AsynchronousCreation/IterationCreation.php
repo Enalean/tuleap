@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\PendingIterationCreation;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
@@ -31,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -55,7 +55,7 @@ final class IterationCreation implements TimeboxMirroringOrder
     public static function buildCollectionFromJustLinkedIterations(
         RetrieveLastChangeset $changeset_retriever,
         RetrieveIterationTracker $tracker_retriever,
-        LoggerInterface $logger,
+        LogMessage $logger,
         JustLinkedIterationCollection $iterations,
         UserIdentifier $user
     ): array {

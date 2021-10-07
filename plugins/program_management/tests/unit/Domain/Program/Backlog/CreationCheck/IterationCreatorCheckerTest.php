@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -84,7 +85,7 @@ final class IterationCreatorCheckerTest extends TestCase
             $this->iteration_tracker_verifier,
             $this->iteration_tracker_retriever,
             $this->timebox_creator_checker,
-            $this->logger
+            MessageLog::buildFromLogger($this->logger)
         );
     }
 

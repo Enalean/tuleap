@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementUpdateProcessor;
@@ -130,7 +131,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
             $form_element_factory
         );
         return new ProgramIncrementUpdateProcessor(
-            $logger,
+            MessageLog::buildFromLogger($logger),
             $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
             new ChangesetRetriever($artifact_factory),

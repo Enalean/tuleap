@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
@@ -104,7 +105,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter,
-            new NullLogger(),
+            MessageLog::buildFromLogger(new NullLogger()),
             $this->retrieve_tracker_from_field,
             $retrieve_field_permissions,
             RetrieveProjectFromTrackerStub::buildGeneric()

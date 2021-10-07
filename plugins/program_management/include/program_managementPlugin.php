@@ -103,6 +103,7 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ArtifactIdentifierProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
@@ -404,9 +405,10 @@ final class program_managementPlugin extends Plugin
             $form_element_factory
         );
 
+        $logger_message              = MessageLog::buildFromLogger($logger);
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $gatherer,
-            $logger,
+            $logger_message,
             $retrieve_tracker_from_field,
             new FieldPermissionsVerifier($user_manager_adapter, $form_element_factory),
             $retrieve_project_from_tracker
@@ -470,14 +472,14 @@ final class program_managementPlugin extends Plugin
                         $program_increments_dao,
                         $planning_adapter,
                         $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
-                        $logger
+                        $logger_message
                     ),
                     new IterationCreatorChecker(
                         $planning_adapter,
                         $iteration_dao,
                         $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
                         $checker,
-                        $logger
+                        $logger_message
                     ),
                     new ProgramDao(),
                     new ProjectReferenceRetriever($project_manager)
@@ -541,7 +543,7 @@ final class program_managementPlugin extends Plugin
         $iterations_DAO         = new IterationsDAO();
 
         $creation_handler = new ProgramIncrementCreationEventHandler(
-            $logger,
+            MessageLog::buildFromLogger($logger),
             $program_increments_DAO,
             $visibility_verifier,
             $changeset_verifier,
@@ -617,7 +619,7 @@ final class program_managementPlugin extends Plugin
                 $iterations_linked_dao,
                 $visibility_verifier,
                 $iterations_linked_dao,
-                $logger,
+                MessageLog::buildFromLogger($logger),
                 new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
                 new IterationsDAO()
             ),
@@ -1098,9 +1100,10 @@ final class program_managementPlugin extends Plugin
             $form_element_factory
         );
 
+        $logger_message              = MessageLog::buildFromLogger($logger);
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $gatherer,
-            $logger,
+            $logger_message,
             $retrieve_tracker_from_field,
             new FieldPermissionsVerifier($retrieve_user, $form_element_factory),
             $retrieve_project_from_tracker
@@ -1135,14 +1138,14 @@ final class program_managementPlugin extends Plugin
                     $program_increments_dao,
                     $planning_adapter,
                     $this->getVisibleProgramIncrementTrackerRetriever($retrieve_user),
-                    $logger
+                    $logger_message
                 ),
                 new IterationCreatorChecker(
                     $planning_adapter,
                     $iteration_dao,
                     $this->getVisibleIterationTrackerRetriever($retrieve_user),
                     $checker,
-                    $logger
+                    $logger_message
                 ),
                 new ProgramDao(),
                 new ProjectReferenceRetriever(ProjectManager::instance()),

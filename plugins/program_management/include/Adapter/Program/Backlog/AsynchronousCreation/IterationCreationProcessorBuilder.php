@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildIterationCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationProcessor;
@@ -93,7 +94,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         );
 
         return new IterationCreationProcessor(
-            $logger,
+            MessageLog::buildFromLogger($logger),
             $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
             new ChangesetRetriever($artifact_factory),

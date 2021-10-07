@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
@@ -44,13 +43,14 @@ use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class ProgramIncrementCreationProcessor implements ProcessProgramIncrementCreation
 {
     public function __construct(
         private RetrieveMirroredProgramIncrementTracker $root_milestone_retriever,
         private CreateProgramIncrements $program_increment_creator,
-        private LoggerInterface $logger,
+        private LogMessage $logger,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         private SearchTeamsOfProgram $teams_searcher,
         private RetrieveProjectReference $project_builder,

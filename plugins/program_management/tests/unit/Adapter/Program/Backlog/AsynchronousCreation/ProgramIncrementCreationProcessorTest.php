@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
@@ -87,7 +88,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
                 $this->artifact_creator,
                 $this->fields_gatherer
             ),
-            $this->logger,
+            MessageLog::buildFromLogger($this->logger),
             $this->user_stories_planner,
             SearchTeamsOfProgramStub::buildTeams(102, 149),
             RetrieveProjectReferenceStub::withProjects(

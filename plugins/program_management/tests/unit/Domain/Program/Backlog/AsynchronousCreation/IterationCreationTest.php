@@ -21,6 +21,7 @@
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -98,7 +99,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         [$first_creation, $second_creation] = IterationCreation::buildCollectionFromJustLinkedIterations(
             $this->changeset_retriever,
             $this->tracker_retriever,
-            $this->logger,
+            MessageLog::buildFromLogger($this->logger),
             $this->just_linked_iterations,
             $this->user
         );
@@ -125,7 +126,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             IterationCreation::buildCollectionFromJustLinkedIterations(
                 $this->changeset_retriever,
                 $this->tracker_retriever,
-                $this->logger,
+                MessageLog::buildFromLogger($this->logger),
                 $this->just_linked_iterations,
                 $this->user
             )

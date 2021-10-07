@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollection
@@ -40,7 +40,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
 
 
     public function __construct(
-        private LoggerInterface $logger,
+        private LogMessage $logger,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
         private VerifyFieldPermissions $retrieve_field_permission,
         private RetrieveProjectFromTracker $retrieve_project_from_tracker

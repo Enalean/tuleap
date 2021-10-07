@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementCreation;
@@ -117,7 +118,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         return new ProgramIncrementCreationProcessor(
             new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
             $mirror_creator,
-            $logger,
+            MessageLog::buildFromLogger($logger),
             $user_stories_planner,
             $program_dao,
             new ProjectReferenceRetriever($project_manager),
