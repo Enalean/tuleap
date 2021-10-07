@@ -18,17 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProgramManagement\Domain\XML;
+declare(strict_types=1);
 
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotLoadXMLConfigFileException;
+namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-interface ParseXMLConfig
+class CannotFindSourceTrackerUsingXmlReference extends \Exception implements XMLConfigExtractionException
 {
-    public function isThereAConfigToImport(string $extraction_path): bool;
-
-    /**
-     * @throws \XML_ParseException
-     * @throws CannotLoadXMLConfigFileException
-     */
-    public function parseConfig(string $extraction_path): \SimpleXMLElement;
+    public function __construct(string $source_tracker_ref)
+    {
+        parent::__construct(
+            sprintf("Source tracker not found in created trackers mapping using reference %s", $source_tracker_ref)
+        );
+    }
 }

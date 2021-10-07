@@ -18,16 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-namespace Tuleap\ProgramManagement\Domain\XML\Exceptions;
-
-class CannotFindXMLNodeAttributeException extends \Exception implements XMLConfigExtractionException
+interface XMLConfigExtractionException
 {
-    public function __construct(string $attribute_name, string $xml_node_name)
-    {
-        parent::__construct(
-            sprintf('Unable to find attribute %s in node %s', $attribute_name, $xml_node_name)
-        );
-    }
 }

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotLoadXMLConfigFileException;
-use Tuleap\ProgramManagement\Domain\XML\ParseXMLConfig;
+use Tuleap\ProgramManagement\Adapter\XML\ParseXMLConfig;
+use Tuleap\ProgramManagement\Adapter\XML\Exceptions\CannotLoadXMLConfigFileException;
 
 final class ParseXMLConfigStub implements ParseXMLConfig
 {

@@ -30,9 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
-use Tuleap\ProgramManagement\Domain\XML\ExtractXMLConfig;
-use Tuleap\ProgramManagement\Domain\XML\ParseXMLConfig;
-use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfig;
 
 final class ProgramManagementConfigXMLImporter
 {

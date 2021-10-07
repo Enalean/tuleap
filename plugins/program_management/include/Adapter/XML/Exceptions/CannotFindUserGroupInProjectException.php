@@ -20,12 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\XML\Exceptions;
+namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-class CannotLoadXMLConfigFileException extends \Exception implements XMLConfigExtractionException
+class CannotFindUserGroupInProjectException extends \Exception implements XMLConfigExtractionException
 {
-    public function __construct(string $xml_path)
+    public function __construct(string $ugroup_name)
     {
-        parent::__construct(sprintf('Cannot load XML from %s', $xml_path));
+        parent::__construct(
+            sprintf("User group %s not found in the project", $ugroup_name)
+        );
     }
 }

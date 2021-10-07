@@ -24,10 +24,10 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use SimpleXMLElement;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindPlannableTrackerInMappingException;
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindUserGroupInProjectException;
-use Tuleap\ProgramManagement\Domain\XML\ExtractXMLConfig;
+use Tuleap\ProgramManagement\Adapter\XML\Exceptions\CannotFindPlannableTrackerInMappingException;
+use Tuleap\ProgramManagement\Adapter\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
+use Tuleap\ProgramManagement\Adapter\XML\Exceptions\CannotFindUserGroupInProjectException;
+use Tuleap\ProgramManagement\Adapter\XML\ExtractXMLConfig;
 
 class ExtractXMLConfigStub implements ExtractXMLConfig
 {
