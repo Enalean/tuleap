@@ -66,7 +66,8 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->assertEquals($release_planning['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => null
+            'label' => null,
+            'icon' => ''
         ]);
         $this->assertArrayHasKey('id', $release_planning['milestone_tracker']);
         $this->assertArrayHasKey('uri', $release_planning['milestone_tracker']);

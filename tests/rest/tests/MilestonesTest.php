@@ -97,7 +97,8 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'icon' => ''
                             ]
                         ]
                     ]
@@ -123,7 +124,8 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'icon' => ''
                             ]
                         ]
                     ],
@@ -135,7 +137,8 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'icon' => ''
                             ]
                         ]
                     ],
@@ -159,7 +162,8 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'icon' => ''
                             ]
                         ]
                     ]

@@ -20,6 +20,7 @@
 namespace Tuleap\Project\REST;
 
 use Project;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 /**
  * @psalm-immutable
@@ -41,11 +42,17 @@ class ProjectReference
      */
     public $label = null;
 
+    /**
+     * The icon's project
+     */
+    public string $icon = '';
+
     public function __construct($project)
     {
         if ($project instanceof Project) {
             $this->id    = (int) $project->getId();
             $this->label = (string) $project->getPublicName();
+            $this->icon  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
         } else {
             $this->id = (int) $project;
         }

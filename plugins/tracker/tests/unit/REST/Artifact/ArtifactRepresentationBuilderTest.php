@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Changeset;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -412,14 +413,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private function buildTrackerMock()
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive(
-            [
-                'getID'                    => 1478,
-                'getPublicName' => 'Gliddery Argulus'
-            ]
-        );
-        $project->shouldReceive('getID')->andReturn(1478);
+        $project = ProjectTestBuilder::aProject()->withId(1478)->build();
 
         $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive(
