@@ -153,18 +153,17 @@
             </section>
         </section>
 
-        <section class="tlp-pane-section current-test-content"
-            ng-if="! execution.definition.steps.length && execution.is_automated === false"
-            ng-class="{'empty-state-pane': execution.definition.description.length === 0}"
-        >
-            <execution-detail-just-updated></execution-detail-just-updated>
-            <p class="empty-state-text"
-               ng-if="execution.definition.description.length === 0"
-               translate
-            >
-                This test has no description. Please edit it.
-            </p>
-            <div ng-bind-html="execution.definition.description"></div>
+        <section ng-if="! execution.definition.steps.length && execution.is_automated === false" class="current-test-content tlp-pane-section">
+            <section ng-class="{'empty-state-pane': execution.definition.description.length === 0}">
+                <execution-detail-just-updated></execution-detail-just-updated>
+                <p class="empty-state-text"
+                   ng-if="execution.definition.description.length === 0"
+                   translate
+                >
+                    This test has no description. Please edit it.
+                </p>
+                <div ng-bind-html="execution.definition.description"></div>
+            </section>
         </section>
 
         <execution-with-steps class="current-test-content"
@@ -175,10 +174,12 @@
         ></execution-with-steps>
 
         <section
-            class="tlp-pane-section current-test-footer-section current-test-footer-section-comment"
+            class="tlp-pane-section current-test-footer-section current-test-footer-section-comment current-test-footer-top"
             ng-class="{'current-test-footer-section-readonly-comment-container': ! displayTestCommentEditor }"
             ng-if="shouldCommentSectionBeDisplayed() && execution.is_automated === false && ! execution.userCanReloadTestBecauseDefinitionIsUpdated"
             data-test="comment-footer-section"
+            execution-attachments-drop-zone
+            execution-attachments-drop-zone-allow-dnd="displayTestCommentEditor && execution.upload_url !== null"
         >
             <div class="tlp-alert-warning current-test-message-warning"
                     ng-if="onlyStatusHasBeenChanged"
@@ -253,7 +254,7 @@
 
         <section
             ng-if="execution.userCanReloadTestBecauseDefinitionIsUpdated"
-            class="tlp-pane-section current-test-footer-section"
+            class="tlp-pane-section current-test-footer-section current-test-footer-bottom"
         >
             <div class="tlp-alert-warning current-test-message-warning">
                 <span translate>The test has been changed by someone else. You should reload the test before executing it.</span>
@@ -269,7 +270,9 @@
 
         <section
             ng-if="execution.is_automated === false && campaign.is_open && ! execution.userCanReloadTestBecauseDefinitionIsUpdated"
-            class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container"
+            class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container current-test-footer-bottom"
+            execution-attachments-drop-zone
+            execution-attachments-drop-zone-allow-dnd="displayTestCommentEditor && execution.upload_url !== null"
         >
             <div class="current-test-edit-comment-buttons" ng-if="! displayTestCommentWarningOveriding">
                 <button
@@ -340,29 +343,32 @@
                     <i class="fas fa-fw fa-question"></i>
                 </button>
             </div>
+            <execution-attachments-drop-zone-message></execution-attachments-drop-zone-message>
         </section>
 
-        <section ng-if="execution.is_automated === false && ! campaign.is_open" class="tlp-pane-section current-test-footer-section current-test-footer-section-closed-campaign">
+        <section ng-if="execution.is_automated === false && ! campaign.is_open" class="tlp-pane-section current-test-footer-section current-test-footer-bottom current-test-footer-section-closed-campaign">
             <span translate>The campaign is closed.</span>
             <span translate>You cannot execute the tests anymore.</span>
         </section>
-        <div ng-if="execution.is_automated === true" class="empty-state-page current-test-automated-message">
-            <robot-svg-displayer class="empty-state-icon "test-status="execution.status"></robot-svg-displayer>
+        <div ng-if="execution.is_automated === true" class="current-test-empty-pane">
+            <div class="empty-state-page current-test-automated-message">
+                <robot-svg-displayer class="empty-state-icon "test-status="execution.status"></robot-svg-displayer>
 
-            <h1 class="empty-state-title">{{ "This is an automated test" | translate }}</h1>
+                <h1 class="empty-state-title">{{ "This is an automated test" | translate }}</h1>
 
-            <span ng-if="execution.status === 'notrun'" class="empty-state-text">
-                {{ "Please come back later to see the result." | translate }}
-            </span>
-            <span ng-if="execution.status === 'passed'" class="empty-state-text">
-                {{ "Its status is passed." | translate }}
-            </span>
-            <span ng-if="execution.status === 'failed'" class="empty-state-text">
-                {{ "Its status is failed." | translate }}
-            </span>
-            <span ng-if="execution.status === 'blocked'" class="empty-state-text">
-                {{ "Its status is blocked." | translate }}
-            </span>
+                <span ng-if="execution.status === 'notrun'" class="empty-state-text">
+                    {{ "Please come back later to see the result." | translate }}
+                </span>
+                <span ng-if="execution.status === 'passed'" class="empty-state-text">
+                    {{ "Its status is passed." | translate }}
+                </span>
+                <span ng-if="execution.status === 'failed'" class="empty-state-text">
+                    {{ "Its status is failed." | translate }}
+                </span>
+                <span ng-if="execution.status === 'blocked'" class="empty-state-text">
+                    {{ "Its status is blocked." | translate }}
+                </span>
+            </div>
         </div>
     </div>
 </section>
