@@ -37,6 +37,7 @@ use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Adapter\Events\CanSubmitNewArtifactEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
@@ -525,8 +526,7 @@ final class program_managementPlugin extends Plugin
     {
         $handler          = $this->getCanSubmitNewArtifactHandler();
         $errors_collector = new ConfigurationErrorsCollector(false);
-        $user_identifier  = UserProxy::buildFromPFUser($can_submit_new_artifact->getUser());
-        $handler->handle($can_submit_new_artifact, $errors_collector, $user_identifier);
+        $handler->handle(CanSubmitNewArtifactEventProxy::buildFromEvent($can_submit_new_artifact), $errors_collector);
     }
 
     public function workerEvent(WorkerEvent $event): void
