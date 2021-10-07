@@ -26,6 +26,7 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
@@ -46,9 +47,30 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 43;
-    private const USER_ID              = 119;
-    private const SUBMISSION_DATE      = 1395687908;
+    private const PROGRAM_INCREMENT_ID                         = 43;
+    private const USER_ID                                      = 119;
+    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 99;
+    private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 34;
+    private const SUBMISSION_DATE                              = 1395687908;
+    private const TITLE_VALUE                                  = 'outstream';
+    private const DESCRIPTION_VALUE                            = 'slump recompense';
+    private const DESCRIPTION_FORMAT                           = 'commonmark';
+    private const FIRST_MAPPED_STATUS_BIND_VALUE_ID            = 2271;
+    private const SECOND_MAPPED_STATUS_BIND_VALUE_ID           = 6281;
+    private const START_DATE_VALUE                             = '2020-12-06';
+    private const END_DATE_VALUE                               = '2025-08-18';
+    private const FIRST_TITLE_FIELD_ID                         = 604;
+    private const FIRST_DESCRIPTION_FIELD_ID                   = 335;
+    private const FIRST_STATUS_FIELD_ID                        = 772;
+    private const FIRST_START_DATE_FIELD_ID                    = 876;
+    private const FIRST_END_DATE_FIELD_ID                      = 790;
+    private const FIRST_ARTIFACT_LINK_FIELD_ID                 = 608;
+    private const SECOND_TITLE_FIELD_ID                        = 810;
+    private const SECOND_DESCRIPTION_FIELD_ID                  = 887;
+    private const SECOND_STATUS_FIELD_ID                       = 506;
+    private const SECOND_START_DATE_FIELD_ID                   = 873;
+    private const SECOND_END_DATE_FIELD_ID                     = 524;
+    private const SECOND_ARTIFACT_LINK_FIELD_ID                = 866;
     private PlanUserStoriesInMirroredProgramIncrementsStub $user_stories_planner;
     private TestLogger $logger;
     private CreateArtifactStub $artifact_creator;
@@ -63,8 +85,22 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
 
         $this->fields_gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
             new SynchronizedFieldsStubPreparation(467, 822, 436, 762, 752, 711),
-            new SynchronizedFieldsStubPreparation(604, 335, 772, 876, 790, 608),
-            new SynchronizedFieldsStubPreparation(810, 887, 506, 873, 524, 866),
+            new SynchronizedFieldsStubPreparation(
+                self::FIRST_TITLE_FIELD_ID,
+                self::FIRST_DESCRIPTION_FIELD_ID,
+                self::FIRST_STATUS_FIELD_ID,
+                self::FIRST_START_DATE_FIELD_ID,
+                self::FIRST_END_DATE_FIELD_ID,
+                self::FIRST_ARTIFACT_LINK_FIELD_ID
+            ),
+            new SynchronizedFieldsStubPreparation(
+                self::SECOND_TITLE_FIELD_ID,
+                self::SECOND_DESCRIPTION_FIELD_ID,
+                self::SECOND_STATUS_FIELD_ID,
+                self::SECOND_START_DATE_FIELD_ID,
+                self::SECOND_END_DATE_FIELD_ID,
+                self::SECOND_ARTIFACT_LINK_FIELD_ID
+            ),
         );
 
         $this->creation = ProgramIncrementCreationBuilder::buildWithIds(
@@ -84,7 +120,10 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
             ),
             new ProgramIncrementsCreator(
                 new DBTransactionExecutorPassthrough(),
-                MapStatusByValueStub::withValues(2271),
+                MapStatusByValueStub::withSuccessiveBindValueIds(
+                    self::FIRST_MAPPED_STATUS_BIND_VALUE_ID,
+                    self::SECOND_MAPPED_STATUS_BIND_VALUE_ID
+                ),
                 $this->artifact_creator,
                 $this->fields_gatherer
             ),
@@ -97,7 +136,14 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
             ),
             $this->fields_gatherer,
             RetrieveFieldValuesGathererStub::withGatherer(
-                GatherFieldValuesStub::withDefault()
+                GatherFieldValuesStub::withValues(
+                    self::TITLE_VALUE,
+                    self::DESCRIPTION_VALUE,
+                    self::DESCRIPTION_FORMAT,
+                    self::START_DATE_VALUE,
+                    self::END_DATE_VALUE,
+                    ['improvisational']
+                )
             ),
             RetrieveChangesetSubmissionDateStub::withDate(self::SUBMISSION_DATE),
             RetrieveProgramOfProgramIncrementStub::withProgram(146),
@@ -109,8 +155,6 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
     {
         $this->getProcessor()->processCreation($this->creation);
 
-        self::assertSame(2, $this->artifact_creator->getCallCount());
-        self::assertSame(1, $this->user_stories_planner->getCallCount());
         self::assertTrue(
             $this->logger->hasDebug(
                 sprintf(
@@ -120,6 +164,47 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
                 )
             )
         );
+        self::assertSame(1, $this->user_stories_planner->getCallCount());
+        self::assertSame(2, $this->artifact_creator->getCallCount());
+        [$first_changeset, $second_changeset] = $this->artifact_creator->getArguments();
+        $first_values                         = $first_changeset->values;
+        self::assertSame(
+            self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID,
+            $first_changeset->mirrored_timebox_tracker->getId()
+        );
+        self::assertSame(self::FIRST_TITLE_FIELD_ID, $first_values->title_field->getId());
+        self::assertSame(self::FIRST_DESCRIPTION_FIELD_ID, $first_values->description_field->getId());
+        self::assertSame(self::FIRST_STATUS_FIELD_ID, $first_values->status_field->getId());
+        self::assertEquals([self::FIRST_MAPPED_STATUS_BIND_VALUE_ID], $first_values->mapped_status_value->getValues());
+        self::assertSame(self::FIRST_START_DATE_FIELD_ID, $first_values->start_date_field->getId());
+        self::assertSame(self::FIRST_END_DATE_FIELD_ID, $first_values->end_period_field->getId());
+        self::assertSame(self::FIRST_ARTIFACT_LINK_FIELD_ID, $first_values->artifact_link_field->getId());
+
+        $second_values = $second_changeset->values;
+        self::assertSame(
+            self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID,
+            $second_changeset->mirrored_timebox_tracker->getId()
+        );
+        self::assertSame(self::SECOND_TITLE_FIELD_ID, $second_values->title_field->getId());
+        self::assertSame(self::SECOND_DESCRIPTION_FIELD_ID, $second_values->description_field->getId());
+        self::assertSame(self::SECOND_STATUS_FIELD_ID, $second_values->status_field->getId());
+        self::assertEquals([self::SECOND_MAPPED_STATUS_BIND_VALUE_ID], $second_values->mapped_status_value->getValues());
+        self::assertSame(self::SECOND_START_DATE_FIELD_ID, $second_values->start_date_field->getId());
+        self::assertSame(self::SECOND_END_DATE_FIELD_ID, $second_values->end_period_field->getId());
+        self::assertSame(self::SECOND_ARTIFACT_LINK_FIELD_ID, $second_values->artifact_link_field->getId());
+
+        foreach ($this->artifact_creator->getArguments() as $changeset) {
+            $values = $changeset->values;
+            self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
+            self::assertSame(self::DESCRIPTION_VALUE, $values->description_value->value);
+            self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
+            self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
+            self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
+            self::assertSame(self::PROGRAM_INCREMENT_ID, $values->artifact_link_value->linked_artifact->getId());
+            self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value->type);
+            self::assertSame(self::USER_ID, $changeset->user->getId());
+            self::assertSame(self::SUBMISSION_DATE, $changeset->submission_date->getValue());
+        }
     }
 
     public function testItStopsExecutionIfThereIsAnIssueInTheSourceProgramIncrement(): void

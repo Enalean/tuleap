@@ -24,9 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueFormatter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredTimeboxChangesetBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
@@ -95,7 +97,6 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::MAPPED_STATUS_BIND_VALUE_ID,
             $fields,
             $source_values,
-            ArtifactLinkValue::buildEmptyValue(),
             UserIdentifierStub::withId(self::USER_ID)
         );
     }
@@ -105,6 +106,10 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ChangesetAdder(
             $this->artifact_factory,
             RetrieveUserStub::withUser($this->pfuser),
+            new ChangesetValuesFormatter(
+                new ArtifactLinkValueFormatter(),
+                new DescriptionValueFormatter()
+            ),
             $this->changeset_creator
         );
     }

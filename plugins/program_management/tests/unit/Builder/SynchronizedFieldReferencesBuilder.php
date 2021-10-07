@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class SynchronizedFieldReferencesBuilder
@@ -32,6 +33,16 @@ final class SynchronizedFieldReferencesBuilder
     {
         return SynchronizedFieldReferences::fromTrackerIdentifier(
             GatherSynchronizedFieldsStub::withDefaults(),
+            TrackerIdentifierStub::buildWithDefault(),
+            null
+        );
+    }
+
+    public static function buildWithPreparations(
+        SynchronizedFieldsStubPreparation ...$preparations
+    ): SynchronizedFieldReferences {
+        return SynchronizedFieldReferences::fromTrackerIdentifier(
+            GatherSynchronizedFieldsStub::withFieldsPreparations(...$preparations),
             TrackerIdentifierStub::buildWithDefault(),
             null
         );

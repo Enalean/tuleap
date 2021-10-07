@@ -66,8 +66,8 @@ final class MirroredTimeboxFirstChangeset
         $values = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
             $status_mapper,
             $source_values,
-            $artifact_link_value,
-            $fields
+            $fields,
+            $artifact_link_value
         );
         return new self($mirrored_timebox_tracker, $values, $user, $source_values->getSubmittedOn());
     }

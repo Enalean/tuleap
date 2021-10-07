@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateProgramIncrements;
@@ -57,7 +58,10 @@ final class ProgramIncrementsCreator implements CreateProgramIncrements
         TrackerCollection $mirrored_timeboxes,
         UserIdentifier $user_identifier
     ): void {
-        $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
+        $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
+            $values->getSourceTimebox(),
+            ArtifactLinkTypeProxy::fromMirrorTimeboxType()
+        );
         $this->transaction_executor->execute(
             function () use ($values, $artifact_link_value, $mirrored_timeboxes, $user_identifier) {
                 foreach ($mirrored_timeboxes->getTrackers() as $mirrored_timebox_tracker) {

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateIterations;
@@ -61,7 +62,10 @@ final class IterationsCreator implements CreateIterations
         TeamProjectsCollection $teams,
         IterationCreation $creation
     ): void {
-        $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
+        $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
+            $values->getSourceTimebox(),
+            ArtifactLinkTypeProxy::fromMirrorTimeboxType()
+        );
         $this->transaction_executor->execute(
             function () use ($values, $artifact_link_value, $teams, $creation) {
                 foreach ($teams->getTeamProjects() as $team) {

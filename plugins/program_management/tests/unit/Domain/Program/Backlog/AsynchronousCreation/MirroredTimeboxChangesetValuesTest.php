@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,85 +22,77 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const MAPPED_STATUS_BIND_VALUE_ID = 3001;
-    private const ARTIFACT_LINK_ID            = 1001;
-    private const TITLE_ID                    = 1002;
-    private const DESCRIPTION_ID              = 1003;
-    private const STATUS_ID                   = 1004;
-    private const START_DATE_ID               = 1005;
-    private const END_DATE_ID                 = 1006;
-    private const SOURCE_PROGRAM_INCREMENT_ID = 112;
-    private const TITLE_VALUE                 = 'Program Release';
-    private const DESCRIPTION_CONTENT         = '<p>Description</p>';
+    private const ARTIFACT_LINK_ID            = 530;
+    private const TITLE_ID                    = 130;
+    private const DESCRIPTION_ID              = 483;
+    private const STATUS_ID                   = 656;
+    private const START_DATE_ID               = 801;
+    private const END_DATE_ID                 = 234;
+    private const LINKED_ARTIFACT_ID          = 95;
+    private const TITLE_VALUE                 = 'Circassian';
+    private const DESCRIPTION_VALUE           = 'consideringly palpebral';
     private const DESCRIPTION_FORMAT          = 'html';
-    private const START_DATE_VALUE            = '2020-10-01';
-    private const END_DATE_VALUE              = '2020-10-10';
+    private const MAPPED_STATUS_BIND_VALUE_ID = 4192;
+    private const START_DATE_VALUE            = '2020-04-16';
+    private const END_DATE_VALUE              = '2024-08-14';
 
-    public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
+    public function testItBuildsFromSourceValuesAndFields(): void
     {
-        $status_mapper       = MapStatusByValueStub::withValues(self::MAPPED_STATUS_BIND_VALUE_ID);
-        $values              = SourceTimeboxChangesetValuesBuilder::buildWithValues(
+        $status_mapper       = MapStatusByValueStub::withSuccessiveBindValueIds(self::MAPPED_STATUS_BIND_VALUE_ID);
+        $source_values       = SourceTimeboxChangesetValuesBuilder::buildWithValues(
             self::TITLE_VALUE,
-            self::DESCRIPTION_CONTENT,
+            self::DESCRIPTION_VALUE,
             self::DESCRIPTION_FORMAT,
-            ['Planned'],
+            ['typifier'],
             self::START_DATE_VALUE,
             self::END_DATE_VALUE,
-            self::SOURCE_PROGRAM_INCREMENT_ID,
-            1952272867
+            self::LINKED_ARTIFACT_ID,
+            1604793787
         );
-        $artifact_link_value = ArtifactLinkValue::fromSourceTimeboxValues($values);
-        $target_fields       = SynchronizedFieldReferences::fromTrackerIdentifier(
-            GatherSynchronizedFieldsStub::withFieldsPreparations(
-                new SynchronizedFieldsStubPreparation(
-                    self::TITLE_ID,
-                    self::DESCRIPTION_ID,
-                    self::STATUS_ID,
-                    self::START_DATE_ID,
-                    self::END_DATE_ID,
-                    self::ARTIFACT_LINK_ID
-                )
-            ),
-            TrackerIdentifierStub::buildWithDefault(),
-            null
+        $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
+            $source_values->getSourceTimebox(),
+            ArtifactLinkTypeProxy::fromMirrorTimeboxType()
         );
-
-        $changeset_values = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
+        $target_fields       = SynchronizedFieldReferencesBuilder::buildWithPreparations(
+            new SynchronizedFieldsStubPreparation(
+                self::TITLE_ID,
+                self::DESCRIPTION_ID,
+                self::STATUS_ID,
+                self::START_DATE_ID,
+                self::END_DATE_ID,
+                self::ARTIFACT_LINK_ID
+            )
+        );
+        $values              = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
             $status_mapper,
-            $values,
-            $artifact_link_value,
-            $target_fields
+            $source_values,
+            $target_fields,
+            $artifact_link_value
         );
 
-        self::assertEquals(
-            [
-                self::ARTIFACT_LINK_ID => [
-                    'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
-                    'natures'    => [
-                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME
-                    ]
-                ],
-                self::TITLE_ID         => self::TITLE_VALUE,
-                self::DESCRIPTION_ID   => [
-                    'content' => self::DESCRIPTION_CONTENT,
-                    'format'  => self::DESCRIPTION_FORMAT
-                ],
-                self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
-                self::START_DATE_ID    => self::START_DATE_VALUE,
-                self::END_DATE_ID      => self::END_DATE_VALUE
-            ],
-            $changeset_values->toFieldsDataArray()
-        );
+        self::assertSame(self::ARTIFACT_LINK_ID, $values->artifact_link_field->getId());
+        self::assertSame(self::LINKED_ARTIFACT_ID, $values->artifact_link_value->linked_artifact->getId());
+        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value->type);
+        self::assertSame(self::TITLE_ID, $values->title_field->getId());
+        self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
+        self::assertSame(self::DESCRIPTION_ID, $values->description_field->getId());
+        self::assertSame(self::DESCRIPTION_VALUE, $values->description_value->value);
+        self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
+        self::assertSame(self::STATUS_ID, $values->status_field->getId());
+        self::assertEquals([self::MAPPED_STATUS_BIND_VALUE_ID], $values->mapped_status_value->getValues());
+        self::assertSame(self::START_DATE_ID, $values->start_date_field->getId());
+        self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
+        self::assertSame(self::END_DATE_ID, $values->end_period_field->getId());
+        self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
     }
 }

@@ -28,6 +28,9 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
@@ -87,7 +90,11 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 $logger
             ),
             $tracker_factory,
-            $user_retriever
+            $user_retriever,
+            new ChangesetValuesFormatter(
+                new ArtifactLinkValueFormatter(),
+                new DescriptionValueFormatter()
+            )
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(

@@ -63,8 +63,8 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         self::assertSame(self::TITLE_VALUE, $values->getTitleValue()->getValue());
-        self::assertContains(self::DESCRIPTION_VALUE, $values->getDescriptionValue()->getValue());
-        self::assertContains(self::DESCRIPTION_FORMAT, $values->getDescriptionValue()->getValue());
+        self::assertSame(self::DESCRIPTION_VALUE, $values->getDescriptionValue()->value);
+        self::assertSame(self::DESCRIPTION_FORMAT, $values->getDescriptionValue()->format);
         self::assertEquals(self::STATUS_VALUE, $values->getStatusValue()->getListValues()[0]->getLabel());
         self::assertSame(self::START_DATE_VALUE, $values->getStartDateValue()->getValue());
         self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());

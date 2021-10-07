@@ -41,11 +41,6 @@ final class GatherFieldValuesStub implements GatherFieldValues
     ) {
     }
 
-    public static function withDefault(): self
-    {
-        return self::withValues('tariff', 'enfasten', 'text', '2024-05-24', '2031-01-15', ['Planned']);
-    }
-
     public static function withError(): self
     {
         return new self(

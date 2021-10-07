@@ -40,12 +40,31 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID         = 63;
-    private const USER_ID                      = 122;
-    private const PROGRAM_INCREMENT_TRACKER_ID = 74;
-    private const FIRST_MIRRORED_ID            = 137;
-    private const SECOND_MIRRORED_ID           = 194;
-    private const SUBMISSION_DATE              = 1408642745;
+    private const PROGRAM_INCREMENT_ID               = 63;
+    private const USER_ID                            = 122;
+    private const PROGRAM_INCREMENT_TRACKER_ID       = 74;
+    private const FIRST_MIRRORED_ID                  = 137;
+    private const SECOND_MIRRORED_ID                 = 194;
+    private const SUBMISSION_DATE                    = 1408642745;
+    private const TITLE_VALUE                        = 'nocuously';
+    private const DESCRIPTION_VALUE                  = 'unbowsome';
+    private const DESCRIPTION_FORMAT                 = 'text';
+    private const FIRST_MAPPED_STATUS_BIND_VALUE_ID  = 8889;
+    private const SECOND_MAPPED_STATUS_BIND_VALUE_ID = 9771;
+    private const START_DATE_VALUE                   = '2015-09-20';
+    private const END_DATE_VALUE                     = '2016-06-08';
+    private const FIRST_TITLE_FIELD_ID               = 205;
+    private const FIRST_DESCRIPTION_FIELD_ID         = 430;
+    private const FIRST_STATUS_FIELD_ID              = 472;
+    private const FIRST_START_DATE_FIELD_ID          = 104;
+    private const FIRST_END_DATE_FIELD_ID            = 844;
+    private const FIRST_ARTIFACT_LINK_FIELD_ID       = 393;
+    private const SECOND_TITLE_FIELD_ID              = 751;
+    private const SECOND_DESCRIPTION_FIELD_ID        = 586;
+    private const SECOND_STATUS_FIELD_ID             = 537;
+    private const SECOND_START_DATE_FIELD_ID         = 629;
+    private const SECOND_END_DATE_FIELD_ID           = 104;
+    private const SECOND_ARTIFACT_LINK_FIELD_ID      = 762;
     private TestLogger $logger;
     private GatherSynchronizedFieldsStub $fields_gatherer;
     private SearchMirroredTimeboxesStub $mirror_searcher;
@@ -64,8 +83,22 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->logger          = new TestLogger();
         $this->fields_gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
             new SynchronizedFieldsStubPreparation(199, 885, 826, 351, 986, 536),
-            new SynchronizedFieldsStubPreparation(205, 430, 472, 104, 844, 393),
-            new SynchronizedFieldsStubPreparation(751, 586, 537, 629, 104, 762)
+            new SynchronizedFieldsStubPreparation(
+                self::FIRST_TITLE_FIELD_ID,
+                self::FIRST_DESCRIPTION_FIELD_ID,
+                self::FIRST_STATUS_FIELD_ID,
+                self::FIRST_START_DATE_FIELD_ID,
+                self::FIRST_END_DATE_FIELD_ID,
+                self::FIRST_ARTIFACT_LINK_FIELD_ID
+            ),
+            new SynchronizedFieldsStubPreparation(
+                self::SECOND_TITLE_FIELD_ID,
+                self::SECOND_DESCRIPTION_FIELD_ID,
+                self::SECOND_STATUS_FIELD_ID,
+                self::SECOND_START_DATE_FIELD_ID,
+                self::SECOND_END_DATE_FIELD_ID,
+                self::SECOND_ARTIFACT_LINK_FIELD_ID
+            ),
         );
 
         $this->mirror_searcher = SearchMirroredTimeboxesStub::withIds(
@@ -82,11 +115,11 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             $this->fields_gatherer,
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
-                    'nocuously',
-                    'unbowsome',
-                    'text',
-                    '2015-09-20',
-                    '2016-06-08',
+                    self::TITLE_VALUE,
+                    self::DESCRIPTION_VALUE,
+                    self::DESCRIPTION_FORMAT,
+                    self::START_DATE_VALUE,
+                    self::END_DATE_VALUE,
                     ['challote']
                 )
             ),
@@ -97,7 +130,10 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 TrackerIdentifierStub::withId(72),
                 TrackerIdentifierStub::withId(53)
             ),
-            MapStatusByValueStub::withValues(1607, 8889),
+            MapStatusByValueStub::withSuccessiveBindValueIds(
+                self::FIRST_MAPPED_STATUS_BIND_VALUE_ID,
+                self::SECOND_MAPPED_STATUS_BIND_VALUE_ID
+            ),
             $this->changeset_adder
         );
     }
@@ -116,12 +152,38 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             )
         );
         self::assertSame(2, $this->changeset_adder->getCallCount());
+        [$first_changeset, $second_changeset] = $this->changeset_adder->getArguments();
+        $first_values                         = $first_changeset->values;
+        self::assertSame(self::FIRST_MIRRORED_ID, $first_changeset->mirrored_timebox->getId());
+        self::assertSame(self::FIRST_TITLE_FIELD_ID, $first_values->title_field->getId());
+        self::assertSame(self::FIRST_DESCRIPTION_FIELD_ID, $first_values->description_field->getId());
+        self::assertSame(self::FIRST_STATUS_FIELD_ID, $first_values->status_field->getId());
+        self::assertEquals([self::FIRST_MAPPED_STATUS_BIND_VALUE_ID], $first_values->mapped_status_value->getValues());
+        self::assertSame(self::FIRST_START_DATE_FIELD_ID, $first_values->start_date_field->getId());
+        self::assertSame(self::FIRST_END_DATE_FIELD_ID, $first_values->end_period_field->getId());
+        self::assertSame(self::FIRST_ARTIFACT_LINK_FIELD_ID, $first_values->artifact_link_field->getId());
+
+        $second_values = $second_changeset->values;
+        self::assertSame(self::SECOND_MIRRORED_ID, $second_changeset->mirrored_timebox->getId());
+        self::assertSame(self::SECOND_TITLE_FIELD_ID, $second_values->title_field->getId());
+        self::assertSame(self::SECOND_DESCRIPTION_FIELD_ID, $second_values->description_field->getId());
+        self::assertSame(self::SECOND_STATUS_FIELD_ID, $second_values->status_field->getId());
+        self::assertEquals(
+            [self::SECOND_MAPPED_STATUS_BIND_VALUE_ID],
+            $second_values->mapped_status_value->getValues()
+        );
+        self::assertSame(self::SECOND_START_DATE_FIELD_ID, $second_values->start_date_field->getId());
+        self::assertSame(self::SECOND_END_DATE_FIELD_ID, $second_values->end_period_field->getId());
+        self::assertSame(self::SECOND_ARTIFACT_LINK_FIELD_ID, $second_values->artifact_link_field->getId());
+
         foreach ($this->changeset_adder->getArguments() as $changeset) {
-            self::assertContains(
-                $changeset->mirrored_timebox->getId(),
-                [self::FIRST_MIRRORED_ID, self::SECOND_MIRRORED_ID]
-            );
-            self::assertNotEmpty($changeset->values->toFieldsDataArray());
+            $values = $changeset->values;
+            self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
+            self::assertSame(self::DESCRIPTION_VALUE, $values->description_value->value);
+            self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
+            self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
+            self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
+            self::assertNull($values->artifact_link_value);
             self::assertSame(self::USER_ID, $changeset->user->getId());
             self::assertSame(self::SUBMISSION_DATE, $changeset->submission_date->getValue());
         }

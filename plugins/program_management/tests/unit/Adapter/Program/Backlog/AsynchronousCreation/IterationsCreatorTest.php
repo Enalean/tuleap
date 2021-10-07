@@ -69,7 +69,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         return new IterationsCreator(
             new DBTransactionExecutorPassthrough(),
             $this->milestone_retriever,
-            MapStatusByValueStub::withValues(2061),
+            MapStatusByValueStub::withSuccessiveBindValueIds(2061, 2130),
             GatherSynchronizedFieldsStub::withFieldsPreparations(
                 new SynchronizedFieldsStubPreparation(211, 556, 596, 500, 614, 793),
                 new SynchronizedFieldsStubPreparation(436, 975, 992, 145, 424, 439),

@@ -22,29 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
-use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 
 final class ArtifactLinkValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TIMEBOX_ID = 90;
+    private const ARTIFACT_ID = 51;
 
-    public function testItBuildsFromSourceTimeboxValues(): void
+    public function testItBuildsFromArtifactAndType(): void
     {
-        $values = SourceTimeboxChangesetValuesBuilder::buildWithSourceTimeboxId(self::TIMEBOX_ID);
-        $value  = ArtifactLinkValue::fromSourceTimeboxValues($values);
-        self::assertEquals([
-            'new_values' => (string) self::TIMEBOX_ID,
-            'natures'    => [(string) self::TIMEBOX_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]
-        ], $value->getValues());
-    }
-
-    public function testItBuildsEmptyValue(): void
-    {
-        $value = ArtifactLinkValue::buildEmptyValue();
-        self::assertEquals([
-            'new_values' => '',
-            'natures'    => []
-        ], $value->getValues());
+        $type  = ArtifactLinkTypeProxy::fromMirrorTimeboxType();
+        $value = ArtifactLinkValue::fromArtifactAndType(
+            ArtifactIdentifierStub::withId(self::ARTIFACT_ID),
+            $type
+        );
+        self::assertSame(self::ARTIFACT_ID, $value->linked_artifact->getId());
+        self::assertSame($type, $value->type);
     }
 }

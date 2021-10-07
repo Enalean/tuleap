@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
  */
 final class DescriptionValue
 {
-    private function __construct(private string $value, private string $format)
+    private function __construct(public string $value, public string $format)
     {
     }
 
@@ -44,16 +44,5 @@ final class DescriptionValue
     ): self {
         $text_value = $description_retriever->getDescriptionValue($description);
         return new self($text_value->getValue(), $text_value->getFormat());
-    }
-
-    /**
-     * @return array{content: string, format: string}
-     */
-    public function getValue(): array
-    {
-        return [
-            'content' => $this->value,
-            'format'  => $this->format
-        ];
     }
 }

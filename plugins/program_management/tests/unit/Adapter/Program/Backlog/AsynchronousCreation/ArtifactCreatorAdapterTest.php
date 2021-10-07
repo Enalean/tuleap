@@ -24,9 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueFormatter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredTimeboxFirstChangesetBuilder;
@@ -93,7 +95,6 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             self::MAPPED_STATUS_BIND_VALUE_ID,
             $fields,
             $source_values,
-            ArtifactLinkValue::fromSourceTimeboxValues($source_values),
             UserIdentifierStub::withId(self::USER_ID)
         );
     }
@@ -103,7 +104,11 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ArtifactCreatorAdapter(
             $this->creator,
             $this->tracker_factory,
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withGenericUser(),
+            new ChangesetValuesFormatter(
+                new ArtifactLinkValueFormatter(),
+                new DescriptionValueFormatter()
+            )
         );
     }
 

@@ -20,23 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ProgramManagement\Tests\Stub\DescriptionFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 
-final class DescriptionValueTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DescriptionValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const DESCRIPTION_VALUE  = 'unrosed adhamant';
+    private const DESCRIPTION_VALUE  = 'overhurriedly rattleskull';
     private const DESCRIPTION_FORMAT = 'text';
 
-    public function testItBuildsFromDescriptionReference(): void
+    private function getFormatter(): DescriptionValueFormatter
+    {
+        return new DescriptionValueFormatter();
+    }
+
+    public function testItFormatsValueToArrayExpectedByTrackerPluginAPI(): void
     {
         $description = DescriptionValue::fromDescriptionReference(
             RetrieveDescriptionValueStub::withValue(self::DESCRIPTION_VALUE, self::DESCRIPTION_FORMAT),
             DescriptionFieldReferenceStub::withDefaults()
         );
-        self::assertSame(self::DESCRIPTION_VALUE, $description->value);
-        self::assertSame(self::DESCRIPTION_FORMAT, $description->format);
+        self::assertEquals(
+            ['content' => self::DESCRIPTION_VALUE, 'format' => self::DESCRIPTION_FORMAT],
+            $this->getFormatter()->format($description)
+        );
     }
 }
