@@ -50,7 +50,10 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
 {
     private const PROGRAM_INCREMENT_ID = 83;
     private TestLogger $logger;
-    private Stub|QueueFactory $queue_factory;
+    /**
+     * @var Stub&QueueFactory
+     */
+    private $queue_factory;
     private ProcessProgramIncrementUpdateStub $update_processor;
     private ProcessIterationCreationStub $iteration_processor;
     private ProgramIncrementUpdate $program_increment_update;

@@ -33,8 +33,14 @@ use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SynchronizedFieldReferences $fields;
-    private Stub|\Tracker_Artifact_Changeset $changeset;
-    private Stub|\Tracker_FormElementFactory $form_element_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Artifact_Changeset
+     */
+    private $changeset;
+    /**
+     * @var Stub&\Tracker_FormElementFactory
+     */
+    private $form_element_factory;
     private \Tracker_FormElement_Field_String $title_field;
     private \Tracker_FormElement_Field_Text $description_field;
     private \Tracker_FormElement_Field_Selectbox $status_field;

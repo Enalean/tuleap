@@ -39,7 +39,10 @@ final class ProgramIncrementCreationDispatcherTest extends \Tuleap\Test\PHPUnit\
     private const USER_ID              = 120;
     private const CHANGESET_ID         = 4043;
     private TestLogger $logger;
-    private Stub|QueueFactory $queue_factory;
+    /**
+     * @var Stub&QueueFactory
+     */
+    private $queue_factory;
     private ProcessProgramIncrementCreationStub $processor;
     private ProgramIncrementCreation $creation;
 

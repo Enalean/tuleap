@@ -33,7 +33,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Stub|\TrackerFactory $tracker_factory;
+    /**
+     * @var Stub&\TrackerFactory
+     */
+    private $tracker_factory;
     private ProjectFromTrackerRetriever $retriever;
     private TrackerReference $tracker_reference;
 

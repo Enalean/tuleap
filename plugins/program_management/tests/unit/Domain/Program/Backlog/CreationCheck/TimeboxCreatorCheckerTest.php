@@ -51,9 +51,18 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GatherSynchronizedFields $fields_adapter;
-    private Stub|CheckSemantic $semantic_checker;
-    private Stub|CheckRequiredField $required_field_checker;
-    private Stub|CheckWorkflow $workflow_checker;
+    /**
+     * @var Stub&CheckSemantic
+     */
+    private $semantic_checker;
+    /**
+     * @var Stub&CheckRequiredField
+     */
+    private $required_field_checker;
+    /**
+     * @var Stub&CheckWorkflow
+     */
+    private $workflow_checker;
     private UserIdentifier $user;
     private TrackerReference $program_increment_tracker;
     private RetrieveTrackerFromFieldStub $retrieve_tracker_from_field;

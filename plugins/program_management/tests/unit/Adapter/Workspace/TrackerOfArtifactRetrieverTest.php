@@ -33,8 +33,14 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 550;
     private const TRACKER_ID  = 908;
-    private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private Stub|\TrackerFactory $tracker_factory;
+    /**
+     * @var Stub&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var Stub&\TrackerFactory
+     */
+    private $tracker_factory;
 
     protected function setUp(): void
     {

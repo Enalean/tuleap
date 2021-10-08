@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use PHPUnit\Framework\MockObject\Stub\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
@@ -41,12 +40,30 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 37;
-    private Stub|\TrackerFactory $tracker_factory;
-    private Stub|\Tracker_Semantic_TitleFactory $title_factory;
-    private Stub|\Tracker_Semantic_DescriptionFactory $description_factory;
-    private Stub|\Tracker_Semantic_StatusFactory $status_factory;
-    private Stub|SemanticTimeframeBuilder $timeframe_builder;
-    private Stub|\Tracker_FormElementFactory $form_element_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
+     */
+    private $tracker_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_TitleFactory
+     */
+    private $title_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_DescriptionFactory
+     */
+    private $description_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_StatusFactory
+     */
+    private $status_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&SemanticTimeframeBuilder
+     */
+    private $timeframe_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElementFactory
+     */
+    private $form_element_factory;
     private \Tracker $tracker;
     private ?ProgramIncrementTrackerIdentifier $tracker_identifier;
 
