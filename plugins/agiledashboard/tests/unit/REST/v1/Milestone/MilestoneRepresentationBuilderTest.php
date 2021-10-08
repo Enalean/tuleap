@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
@@ -103,7 +104,7 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $this->sub_milestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturnNull();
         $this->planning_factory->shouldReceive('getChildrenPlanning')->andReturnNull();
 
-        $project           = new \Project(['group_id' => 101, 'group_name' => 'Test Project']);
+        $project           = ProjectTestBuilder::aProject()->build();
         $milestone_tracker = $this->buildMilestoneTracker($project);
         $backlog_tracker   = $this->buildBacklogTracker($project);
         $planning          = $this->buildPlanning($milestone_tracker, $backlog_tracker);
@@ -135,7 +136,7 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $this->parent_tracker_retriever->shouldReceive('getCreatableParentTrackers')->andReturn([]);
         $this->milestone_factory->shouldReceive('userCanChangePrioritiesInMilestone')->andReturnTrue();
 
-        $project           = new \Project(['group_id' => 101, 'group_name' => 'Test Project']);
+        $project           = ProjectTestBuilder::aProject()->build();
         $milestone_tracker = $this->buildMilestoneTracker($project);
         $backlog_tracker   = $this->buildBacklogTracker($project);
         $planning          = $this->buildPlanning($milestone_tracker, $backlog_tracker);

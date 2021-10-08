@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
@@ -89,7 +90,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact = ArtifactTestBuilder::anArtifact(42)
             ->withTitle('There is a bug')
             ->inTracker($this->tracker)
-            ->inProject(new \Project(['group_id' => 101, 'group_name' => 'ACME Corp']))
+            ->inProject(ProjectTestBuilder::aProject()->withPublicName('ACME Corp')->build())
             ->build();
         $builder  = new TaskRepresentationBuilderForTracker(
             $artifact->getTracker(),

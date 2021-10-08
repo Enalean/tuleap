@@ -28,6 +28,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_ArtifactFactory;
 use Tracker_Semantic_Title;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\TrackerColor;
 
@@ -126,7 +127,7 @@ class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFetchArtifactsSubmittedByUserWithData(): void
     {
         $tracker_id = 122;
-        $project    = new \Project(['group_id' => 333, 'group_name' => '']);
+        $project    = ProjectTestBuilder::aProject()->build();
         $tracker    = new \Tracker($tracker_id, -1, '', '', '', false, '', '', '', '', '', '', '', TrackerColor::default(), '');
         $tracker->setProject($project);
         $tracker_factory = M::mock(\TrackerFactory::class);

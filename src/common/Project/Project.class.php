@@ -540,6 +540,9 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->getStatus() === self::STATUS_SUSPENDED;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getIconUnicodeCodepoint(): ?string
     {
         return $this->project_data_array['icon_codepoint'];

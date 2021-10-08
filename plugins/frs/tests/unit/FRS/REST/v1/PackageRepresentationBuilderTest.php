@@ -27,6 +27,7 @@ use FRSPackage;
 use Mockery as M;
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -61,7 +62,7 @@ final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $this->package_id          = 12;
         $this->project_id          = 350;
-        $this->a_project           = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getPublicName' => 'foo']);
+        $this->a_project           = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
         $this->an_frs_admin        = M::mock(\PFUser::class);
         $this->a_package           = new FRSPackage(['package_id' => $this->package_id]);
         $this->permissions_manager = M::mock(\IPermissionsManagerNG::class);

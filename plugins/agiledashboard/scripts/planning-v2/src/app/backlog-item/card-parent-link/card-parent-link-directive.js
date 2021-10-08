@@ -9,6 +9,7 @@ export default () => {
             parent_project_label: "@parentProjectLabel",
             parent_project_id: "@parentProjectId",
             parent_project_color_name: "@parentProjectColorName",
+            parent_project_icon: "@parentProjectIcon",
             project_id: "@projectId",
             filter_terms: "@filterTerms",
         },

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class KanbanTrackerRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,10 +37,7 @@ final class KanbanTrackerRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
         $tracker->shouldReceive('getId')->andReturn(789);
         $tracker->shouldReceive('getName')->andReturn('Bug');
         $tracker->shouldReceive('getItemName')->andReturn('bug');
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
-        $project->shouldReceive('getPublicName')->andReturn('Project name');
-        $tracker->shouldReceive('getProject')->andReturn($project);
+        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
 
         $kanban = \Mockery::mock(\AgileDashboard_Kanban::class);
         $kanban->shouldReceive('getTrackerId')->andReturn(789);

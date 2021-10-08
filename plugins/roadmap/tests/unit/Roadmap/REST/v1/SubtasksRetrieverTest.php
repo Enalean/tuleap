@@ -27,6 +27,7 @@ use Luracast\Restler\RestException;
 use Psr\Log\NullLogger;
 use Tracker;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -132,7 +133,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $artifact = ArtifactTestBuilder::anArtifact(42)
             ->withArtifactFactory($this->artifact_factory)
-            ->inProject(new \Project(['group_id' => 101, 'group_name' => 'ACME Corp']))
+            ->inProject(ProjectTestBuilder::aProject()->build())
             ->build();
 
         $this->artifact_factory

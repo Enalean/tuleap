@@ -49,13 +49,14 @@
     ></span>
 
     <card-parent-link ng-if="details.backlog_item.parent.label"
-        text="{{ details.backlog_item.parent.label }}"
-        url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
-        parent_project_label="{{ details.backlog_item.parent.tracker.project.label }}"
-        parent_project_id="{{ details.backlog_item.parent.tracker.project.id }}"
-        parent_project_color_name="{{ details.backlog_item.parent.tracker.project.background.identifier }}"
-        project_id="{{ details.backlog_item.project.id }}"
-        filter-terms="{{ details.backlog_filter.terms }}"
+                      text="{{ details.backlog_item.parent.label }}"
+                      url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
+                      parent_project_label="{{ details.backlog_item.parent.tracker.project.label }}"
+                      parent_project_id="{{ details.backlog_item.parent.tracker.project.id }}"
+                      parent_project_color_name="{{ details.backlog_item.parent.tracker.project.background.identifier }}"
+                      parent_project_icon="{{details.backlog_item.parent.tracker.project.icon}}"
+                      project_id="{{ details.backlog_item.project.id }}"
+                      filter-terms="{{ details.backlog_filter.terms }}"
     ></card-parent-link>
 
     <div ng-if="details.user_has_accessibility_mode" class="card-accessibility {{ details.backlog_item.background_color_name }}"></div>

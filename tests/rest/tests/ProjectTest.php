@@ -796,7 +796,8 @@ class ProjectTest extends ProjectBase
         self::assertEquals($release_milestone['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => 'Private member'
+            'label' => 'Private member',
+            'icon' => ''
         ]);
         self::assertArrayHasKey('id', $release_milestone['artifact']);
         self::assertArrayHasKey('uri', $release_milestone['artifact']);
@@ -855,7 +856,8 @@ class ProjectTest extends ProjectBase
         self::assertEquals($epics_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => 'Private member'
+            'label' => 'Private member',
+            'icon' => ''
         ]);
 
         $kanban_tracker = $trackers[1];
@@ -864,7 +866,8 @@ class ProjectTest extends ProjectBase
         self::assertEquals($kanban_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => 'Private member'
+            'label' => 'Private member',
+            'icon' => ''
         ]);
 
         $releases_tracker = $trackers[2];
@@ -873,7 +876,8 @@ class ProjectTest extends ProjectBase
         self::assertEquals($releases_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => 'Private member'
+            'label' => 'Private member',
+            'icon' => ''
         ]);
 
         $sprints_tracker = $trackers[3];
@@ -882,7 +886,8 @@ class ProjectTest extends ProjectBase
         self::assertEquals($sprints_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => 'Private member'
+            'label' => 'Private member',
+            'icon' => ''
         ]);
 
         $tasks_tracker = $trackers[4];
@@ -891,7 +896,8 @@ class ProjectTest extends ProjectBase
         self::assertEquals($tasks_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => 'Private member'
+            'label' => 'Private member',
+            'icon' => ''
         ]);
 
         $userstories_tracker = $trackers[5];
@@ -900,7 +906,8 @@ class ProjectTest extends ProjectBase
         self::assertEquals($userstories_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
-            'label' => 'Private member'
+            'label' => 'Private member',
+            'icon' => ''
         ]);
 
         self::assertEquals(200, $response->getStatusCode());
