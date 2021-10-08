@@ -3,11 +3,11 @@ lockfileVersion: 5.3
 specifiers:
   '@types/react': ^17.0.6
   react: ^17.0.2
-  swagger-ui: ^3.49.0
+  swagger-ui: ^3.52.3
 
 dependencies:
   react: 17.0.2
-  swagger-ui: 3.51.2
+  swagger-ui: 3.52.3
 
 devDependencies:
   '@types/react': 17.0.6
@@ -22,10 +22,11 @@ packages:
       regenerator-runtime: 0.13.7
     dev: false
 
-  /@babel/runtime/7.14.0:
-    resolution: {integrity: sha512-JELkvo/DlpNdJ7dlyw/eY7E0suy5i5GQH+Vlxaq1nsNJ+H7f4Vtv3jMeCEgRhZZQFXTjldYfQgv2qmM6M1v5wA==}
+  /@babel/runtime/7.15.4:
+    resolution: {integrity: sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==}
+    engines: {node: '>=6.9.0'}
     dependencies:
-      regenerator-runtime: 0.13.7
+      regenerator-runtime: 0.13.9
     dev: false
 
   /@braintree/sanitize-url/5.0.2:
@@ -43,10 +44,10 @@ packages:
       stream: 0.0.2
     dev: false
 
-  /@types/hast/2.3.1:
-    resolution: {integrity: sha512-viwwrB+6xGzw+G1eWpF9geV3fnsDgXqHG+cqgiHrvQfDUW5hzhCyV7Sy3UJxhfRFBsgky2SSW33qi/YrIkjX5Q==}
+  /@types/hast/2.3.4:
+    resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
     dependencies:
-      '@types/unist': 2.0.3
+      '@types/unist': 2.0.6
     dev: false
 
   /@types/prop-types/15.7.3:
@@ -65,14 +66,18 @@ packages:
     resolution: {integrity: sha512-EaCxbanVeyxDRTQBkdLb3Bvl/HK7PBK6UJjsSixB0iHKoWxE5uu2Q/DgtpOhPIojN0Zl1whvOd7PoHs2P0s5eA==}
     dev: true
 
-  /@types/unist/2.0.3:
-    resolution: {integrity: sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==}
+  /@types/unist/2.0.6:
+    resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
 
   /argparse/1.0.10:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
     dependencies:
       sprintf-js: 1.0.3
+    dev: false
+
+  /argparse/2.0.1:
+    resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: false
 
   /asap/2.0.6:
@@ -242,12 +247,6 @@ packages:
       es6-symbol: 3.1.3
     dev: false
 
-  /esprima/4.0.1:
-    resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
-    engines: {node: '>=4'}
-    hasBin: true
-    dev: false
-
   /event-emitter/0.3.5:
     resolution: {integrity: sha1-34xp7vFkeSPHFXuc6DhAYQsCzDk=}
     dependencies:
@@ -261,8 +260,8 @@ packages:
       type: 2.5.0
     dev: false
 
-  /fast-json-patch/3.0.0-1:
-    resolution: {integrity: sha512-6pdFb07cknxvPzCeLsFHStEy+MysPJPgZQ9LbQ/2O67unQF93SNqfdSqnPPl71YMHX+AD8gbl7iuoGFzHEdDuw==}
+  /fast-json-patch/3.1.0:
+    resolution: {integrity: sha512-IhpytlsVTRndz0hU5t0/MGzS/etxLlfrpG5V5M9mVbuj9TrJLWaMfsox9REM5rkuGX0T+5qjpe8XA1o0gZ42nA==}
     dev: false
 
   /fault/1.0.4:
@@ -283,18 +282,8 @@ packages:
       ua-parser-js: 0.7.28
     dev: false
 
-  /fetch-blob/2.1.2:
-    resolution: {integrity: sha512-YKqtUDwqLyfyMnmbw8XD6Q8j9i/HggKtPEI+pZ1+8bvheBu78biSmNaXWusx1TauGqtUUGx/cBb1mKdq2rLYow==}
-    engines: {node: ^10.17.0 || >=12.3.0}
-    peerDependencies:
-      domexception: '*'
-    peerDependenciesMeta:
-      domexception:
-        optional: true
-    dev: false
-
-  /form-data-encoder/1.4.0:
-    resolution: {integrity: sha512-H54s9sqy0YkwaTtiPjce9GmmpVCuM9gu09lx4hkEBna2zmEBwVUz8XCpoIC2lhTuM9grpNgUc4AiBXScDffMOQ==}
+  /form-data-encoder/1.6.0:
+    resolution: {integrity: sha512-P97AVaOB8hZaniiKK3f46zxQcchQXI8EgBnX+2+719gLv5ZbDSf3J1XtIuAQ8xbGLU4vZYhy7xwhFtK8U5u9Nw==}
     dev: false
 
   /format/0.2.2:
@@ -302,15 +291,12 @@ packages:
     engines: {node: '>=0.4.x'}
     dev: false
 
-  /formdata-node/3.6.3:
-    resolution: {integrity: sha512-1kuwXsWIgTV9k5hL6i2cW5KOuQqmbkOMqYMw2XB+WRKBVq/RFMJvu/8qc3fjPFcBImBIGkSwIJim1JbAZVOFuQ==}
-    engines: {node: '>= 12.4'}
+  /formdata-node/4.3.0:
+    resolution: {integrity: sha512-TwqhWUZd2jB5l0kUhhcy1XYNsXq46NH6k60zmiu7xsxMztul+cCMuPSAQrSDV62zznhBKJdA9O+zeWj5i5Pbfg==}
+    engines: {node: '>= 12.20'}
     dependencies:
-      fetch-blob: 2.1.2
-      form-data-encoder: 1.4.0
       node-domexception: 1.0.0
-    transitivePeerDependencies:
-      - domexception
+      web-streams-polyfill: 4.0.0-beta.1
     dev: false
 
   /function-bind/1.1.1:
@@ -344,15 +330,15 @@ packages:
   /hastscript/6.0.0:
     resolution: {integrity: sha512-nDM6bvd7lIqDUiYEiu5Sl/+6ReP0BMk/2f4U/Rooccxkj0P5nm+acM5PrGJ/t5I8qPGiqZSE6hVAwZEdZIvP4w==}
     dependencies:
-      '@types/hast': 2.3.1
+      '@types/hast': 2.3.4
       comma-separated-tokens: 1.0.8
       hast-util-parse-selector: 2.2.5
       property-information: 5.6.0
       space-separated-tokens: 1.1.5
     dev: false
 
-  /highlight.js/10.7.2:
-    resolution: {integrity: sha512-oFLl873u4usRM9K63j4ME9u3etNF0PLiJhSQ8rdfuL51Wn3zkD6drf9ZW0dOzjnZI22YYG24z30JcmfCZjMgYg==}
+  /highlight.js/10.7.3:
+    resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
     dev: false
 
   /hoist-non-react-statics/3.3.2:
@@ -445,12 +431,11 @@ packages:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
     dev: false
 
-  /js-yaml/3.14.1:
-    resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
+  /js-yaml/4.1.0:
+    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
     dependencies:
-      argparse: 1.0.10
-      esprima: 4.0.1
+      argparse: 2.0.1
     dev: false
 
   /lodash-es/4.17.21:
@@ -476,7 +461,7 @@ packages:
     resolution: {integrity: sha512-8Ktj+prEb1RoCPkEOrPMYUN/nCggB7qAWe3a7OpMjWQkh3l2RD5wKRQ+o8Q8YuI9RG/xs95waaI/E6ym/7NsTw==}
     dependencies:
       fault: 1.0.4
-      highlight.js: 10.7.2
+      highlight.js: 10.7.3
     dev: false
 
   /lru-queue/0.1.0:
@@ -551,8 +536,8 @@ packages:
     resolution: {integrity: sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=}
     dev: false
 
-  /prismjs/1.24.1:
-    resolution: {integrity: sha512-mNPsedLuk90RVJioIky8ANZEwYm5w9LcvCXrxHlwf4fNVSn8jEipMybMkWUyyF0JhnC+C4VcOVSBuHRKs1L5Ow==}
+  /prismjs/1.25.0:
+    resolution: {integrity: sha512-WCjJHl1KEWbnkQom1+SzftbtXMKQoezOCYs5rECqMN+jP+apI7ftoflyqigqzopSO3hMhTEb0mFClA8lkolgEg==}
     dev: false
 
   /promise/7.3.1:
@@ -707,17 +692,17 @@ packages:
       redux: 3.7.2
     dev: false
 
-  /react-syntax-highlighter/15.4.3_react@15.7.0:
-    resolution: {integrity: sha512-TnhGgZKXr5o8a63uYdRTzeb8ijJOgRGe0qjrE0eK/gajtdyqnSO6LqB3vW16hHB0cFierYSoy/AOJw8z1Dui8g==}
+  /react-syntax-highlighter/15.4.4_react@15.7.0:
+    resolution: {integrity: sha512-PsOFHNTzkb3OroXdoR897eKN5EZ6grht1iM+f1lJSq7/L0YVnkJaNVwC3wEUYPOAmeyl5xyer1DjL6MrumO6Zw==}
     peerDependencies:
       react: '>= 0.14.0'
     dependencies:
-      '@babel/runtime': 7.14.0
-      highlight.js: 10.7.2
+      '@babel/runtime': 7.15.4
+      highlight.js: 10.7.3
       lowlight: 1.20.0
-      prismjs: 1.24.1
+      prismjs: 1.25.0
       react: 15.7.0
-      refractor: 3.4.0
+      refractor: 3.5.0
     dev: false
 
   /react/15.7.0:
@@ -754,12 +739,12 @@ packages:
       symbol-observable: 1.2.0
     dev: false
 
-  /refractor/3.4.0:
-    resolution: {integrity: sha512-dBeD02lC5eytm9Gld2Mx0cMcnR+zhSnsTfPpWqFaMgUMJfC9A6bcN3Br/NaXrnBJcuxnLFR90k1jrkaSyV8umg==}
+  /refractor/3.5.0:
+    resolution: {integrity: sha512-QwPJd3ferTZ4cSPPjdP5bsYHMytwWYnAN5EEnLtGvkqp/FCCnGsBgxrm9EuIDnjUC3Uc/kETtvVi7fSIVC74Dg==}
     dependencies:
       hastscript: 6.0.0
       parse-entities: 2.0.0
-      prismjs: 1.24.1
+      prismjs: 1.25.0
     dev: false
 
   /regenerator-runtime/0.11.1:
@@ -768,6 +753,10 @@ packages:
 
   /regenerator-runtime/0.13.7:
     resolution: {integrity: sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==}
+    dev: false
+
+  /regenerator-runtime/0.13.9:
+    resolution: {integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==}
     dev: false
 
   /remarkable/2.0.1:
@@ -841,8 +830,8 @@ packages:
       emitter-component: 1.1.1
     dev: false
 
-  /swagger-client/3.14.1:
-    resolution: {integrity: sha512-zYTzVwkUEQidYfUty+EPVZOKxcdpB5m5kvemac+kyFtKyx7xr8s6f470lrfFjGyOjXPoUYkauXZde7L9LKXsWA==}
+  /swagger-client/3.16.1:
+    resolution: {integrity: sha512-BcNRQzXHRGuXfhN0f80ptlr+bSaPvXwo8+gWbpmTnbKdAjcWOKAWwUx7rgGHjTKZh0qROr/GX9xOZIY8LrBuTg==}
     dependencies:
       '@babel/runtime-corejs3': 7.14.9
       btoa: 1.2.1
@@ -850,21 +839,19 @@ packages:
       cookie: 0.4.1
       cross-fetch: 3.1.4
       deep-extend: 0.6.0
-      fast-json-patch: 3.0.0-1
-      form-data-encoder: 1.4.0
-      formdata-node: 3.6.3
-      js-yaml: 3.14.1
+      fast-json-patch: 3.1.0
+      form-data-encoder: 1.6.0
+      formdata-node: 4.3.0
+      js-yaml: 4.1.0
       lodash: 4.17.21
       qs: 6.10.1
       querystring-browser: 1.0.4
       traverse: 0.6.6
       url: 0.11.0
-    transitivePeerDependencies:
-      - domexception
     dev: false
 
-  /swagger-ui/3.51.2:
-    resolution: {integrity: sha512-mf1ymb+SW5r7IwIqzk+oyWwvWWipVqSPXtM5NnHF1N+JSDSzRcDDcpj0LKNtQMrj36mdEv62nO6RxJfZQpWLag==}
+  /swagger-ui/3.52.3:
+    resolution: {integrity: sha512-5U1Da4bsrYjRn3BukRn3Qo2wGS4jhmlUbg07tZWkIkxNyMBgtEW5yPIoRdkrpS1AqHanCpFGgZVsY1GC3MAxUg==}
     dependencies:
       '@babel/runtime-corejs3': 7.14.9
       '@braintree/sanitize-url': 5.0.2
@@ -878,7 +865,7 @@ packages:
       ieee754: 1.2.1
       immutable: 3.8.2
       js-file-download: 0.4.12
-      js-yaml: 3.14.1
+      js-yaml: 4.1.0
       lodash: 4.17.21
       memoizee: 0.4.15
       prop-types: 15.7.2
@@ -892,19 +879,17 @@ packages:
       react-inspector: 2.3.1_react@15.7.0
       react-motion: 0.5.2_react@15.7.0
       react-redux: 4.4.10_react@15.7.0+redux@3.7.2
-      react-syntax-highlighter: 15.4.3_react@15.7.0
+      react-syntax-highlighter: 15.4.4_react@15.7.0
       redux: 3.7.2
       redux-immutable: 3.1.0
       remarkable: 2.0.1
       reselect: 4.0.0
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.14.1
-      url-parse: 1.5.1
+      swagger-client: 3.16.1
+      url-parse: 1.5.3
       xml-but-prettier: 1.0.1
       zenscroll: 4.0.2
-    transitivePeerDependencies:
-      - domexception
     dev: false
 
   /symbol-observable/1.2.0:
@@ -948,8 +933,8 @@ packages:
     resolution: {integrity: sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==}
     dev: false
 
-  /url-parse/1.5.1:
-    resolution: {integrity: sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==}
+  /url-parse/1.5.3:
+    resolution: {integrity: sha512-IIORyIQD9rvj0A4CLWsHkBBJuNqWpFQe224b6j9t/ABmquIS0qDU2pY6kl6AuOrL5OkCXHMCFNe1jBcuAggjvQ==}
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
@@ -960,6 +945,11 @@ packages:
     dependencies:
       punycode: 1.3.2
       querystring: 0.2.0
+    dev: false
+
+  /web-streams-polyfill/4.0.0-beta.1:
+    resolution: {integrity: sha512-3ux37gEX670UUphBF9AMCq8XM6iQ8Ac6A+DSRRjDoRBm1ufCkaCDdNVbaqq60PsEkdNlLKrGtv/YBP4EJXqNtQ==}
+    engines: {node: '>= 12'}
     dev: false
 
   /whatwg-fetch/3.6.2:
