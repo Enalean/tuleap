@@ -20,23 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
 
-use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 
-final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * @psalm-immutable
+ */
+final class TeamsPresenterBuilder
 {
-    public function testBuildPresenterWithAllTeam(): void
+    /**
+     * @return TeamPresenter[]
+     */
+    public static function buildTeamsPresenter(TeamProjectsCollection $team_collection): array
     {
-        $collection = TeamProjectsCollectionBuilder::withProjects(
-            ProjectReferenceStub::withId(150),
-            ProjectReferenceStub::withId(666),
-        );
+        $teams_presenter = [];
 
-        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection);
-        self::assertCount(2, $teams_presenter);
-        self::assertSame(150, $teams_presenter[0]->id);
-        self::assertSame(666, $teams_presenter[1]->id);
+        foreach ($team_collection->getTeamProjects() as $team) {
+            $teams_presenter[] = new TeamPresenter($team);
+        }
+
+        return $teams_presenter;
     }
 }

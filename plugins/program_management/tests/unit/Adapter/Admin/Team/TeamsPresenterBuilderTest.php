@@ -20,27 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
 
-/**
- * @psalm-immutable
- */
-final class ProgramSelectOptionConfigurationPresenter
+use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+
+final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var int|string
-     */
-    public $id;
-    public string $label;
-    public bool $is_selected;
-
-    /**
-     * @param int|string $id
-     */
-    public function __construct($id, string $label, bool $is_selected)
+    public function testBuildPresenterWithAllTeam(): void
     {
-        $this->id          = $id;
-        $this->label       = $label;
-        $this->is_selected = $is_selected;
+        $collection = TeamProjectsCollectionBuilder::withProjects(
+            ProjectReferenceStub::withId(150),
+            ProjectReferenceStub::withId(666),
+        );
+
+        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection);
+        self::assertCount(2, $teams_presenter);
+        self::assertSame(150, $teams_presenter[0]->id);
+        self::assertSame(666, $teams_presenter[1]->id);
     }
 }

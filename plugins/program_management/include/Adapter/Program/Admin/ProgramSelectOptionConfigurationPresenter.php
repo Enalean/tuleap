@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
-
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
 /**
  * @psalm-immutable
  */
-final class TeamPresenter
+final class ProgramSelectOptionConfigurationPresenter
 {
-    public int $id;
-    public string $public_name;
-    public string $url;
+    /**
+     * @var int|string
+     */
+    public $id;
+    public string $label;
+    public bool $is_selected;
 
-    public function __construct(ProjectReference $team)
+    /**
+     * @param int|string $id
+     */
+    public function __construct($id, string $label, bool $is_selected)
     {
-        $this->id          = $team->getId();
-        $this->public_name = $team->getProjectLabel();
-        $this->url         = $team->getUrl();
+        $this->id          = $id;
+        $this->label       = $label;
+        $this->is_selected = $is_selected;
     }
 }

@@ -21,15 +21,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems;
 
+use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildUGroupRepresentation;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
 use Tuleap\ProgramManagement\Domain\Workspace\UserGroup;
 
-final class ProjectUGroupCanPrioritizeItemsPresentersBuilder implements BuildProjectUGroupCanPrioritizeItemsPresenters
+final class ProjectUGroupCanPrioritizeItemsPresentersBuilder
 {
     private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_items_retriever;
     private RetrieveUGroups $retrieve_u_groups;

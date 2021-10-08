@@ -23,20 +23,23 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use Project;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildUGroupRepresentationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
@@ -121,7 +124,12 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
     private function getController(RetrieveProject $retrieve_project): DisplayAdminProgramManagementController
     {
-        $program_tracker = TrackerReferenceStub::withDefaults();
+        $program_tracker                 = TrackerReferenceStub::withDefaults();
+        $pproject_ugroups_can_prioritize = new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
+            RetrieveUGroupsStub::buildWithUGroups(),
+            RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(3, 195),
+            BuildUGroupRepresentationStub::build()
+        );
 
         return new DisplayAdminProgramManagementController(
             SearchProjectsUserIsAdminStub::buildWithoutProject(),
@@ -134,7 +142,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_tracker),
             RetrieveVisibleIterationTrackerStub::withValidTracker($program_tracker),
             $this->plannable_tracker_builder,
-            BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
+            $pproject_ugroups_can_prioritize,
             $this->permission_verifier,
             RetrieveProgramIncrementLabelsStub::buildLabels(null, null),
             SearchTrackersOfProgramStub::withTrackers(
