@@ -31,8 +31,14 @@ final class LastChangesetRetrieverTest extends TestCase
 {
     private const ITERATION_ID      = 52;
     private const LAST_CHANGESET_ID = 3862;
-    private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private Stub|\Tracker_Artifact_ChangesetFactory $changeset_factory;
+    /**
+     * @var Stub&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var Stub&\Tracker_Artifact_ChangesetFactory
+     */
+    private $changeset_factory;
     private IterationIdentifier $iteration;
 
     protected function setUp(): void

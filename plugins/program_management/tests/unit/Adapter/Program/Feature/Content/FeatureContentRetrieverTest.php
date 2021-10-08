@@ -57,9 +57,18 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const USER_STORY_TRACKER_ID     = 34;
     private const BUG_TITLE_FIELD_ID        = 112;
     private const USER_STORY_TITLE_FIELD_ID = 798;
-    private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private Stub|\Tracker_FormElementFactory $form_element_factory;
-    private Stub|BackgroundColorRetriever $background_color_retriever;
+    /**
+     * @var Stub&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var Stub&\Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+    /**
+     * @var Stub&BackgroundColorRetriever
+     */
+    private $background_color_retriever;
     private UserIdentifier $user;
 
     protected function setUp(): void

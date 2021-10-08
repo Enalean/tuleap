@@ -34,7 +34,10 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
     private const USER_ID      = 186;
     private const CHANGESET_ID = 7806;
     private TestLogger $logger;
-    private Stub|\UserManager $user_manager;
+    /**
+     * @var Stub&\UserManager
+     */
+    private $user_manager;
 
     protected function setUp(): void
     {

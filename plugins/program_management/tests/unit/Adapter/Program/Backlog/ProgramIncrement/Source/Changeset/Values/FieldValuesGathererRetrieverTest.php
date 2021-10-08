@@ -32,8 +32,14 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private Stub|\Tracker_FormElementFactory $factory;
+    /**
+     * @var Stub&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var Stub&Tracker_FormElementFactory
+     */
+    private $factory;
     private ProgramIncrementUpdate $update;
 
     protected function setUp(): void

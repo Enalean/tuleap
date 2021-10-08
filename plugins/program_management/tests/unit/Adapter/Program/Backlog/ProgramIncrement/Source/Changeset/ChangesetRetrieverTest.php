@@ -35,7 +35,10 @@ final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SUBMISSION_TIMESTAMP = 1631191239;
     private const ARTIFACT_ID          = 470;
     private const CHANGESET_ID         = 5180;
-    private Stub|\Tracker_ArtifactFactory $artifact_factory;
+    /**
+     * @var Stub&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
     private ArtifactIdentifierStub $artifact_identifier;
     private DomainChangeset $changeset_identifier;
 

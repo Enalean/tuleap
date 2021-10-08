@@ -39,7 +39,10 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
 {
     private const TIMEBOX_ID = 247;
     private RetrieveTimeboxFromMirroredTimeboxStub $timebox_retriever;
-    private Stub|\Tracker_ArtifactFactory $artifact_factory;
+    /**
+     * @var Stub&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
     private UserIdentifier $user_identifier;
     private \Project $project;
 

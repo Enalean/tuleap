@@ -96,7 +96,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private $iteration_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
     private $project_manager;
 

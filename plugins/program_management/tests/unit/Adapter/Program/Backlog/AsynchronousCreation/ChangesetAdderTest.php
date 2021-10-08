@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
@@ -59,8 +58,14 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const END_PERIOD_ID               = 3513;
     private const END_PERIOD_VALUE            = '2022-05-21';
     private const ARTIFACT_LINK_ID            = 7248;
-    private Stub|\Tracker_ArtifactFactory $artifact_factory;
-    private MockObject|\Tracker_Artifact_Changeset_NewChangesetCreator $changeset_creator;
+    /**
+     * @var Stub&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var Stub&\Tracker_Artifact_Changeset_NewChangesetCreator
+     */
+    private $changeset_creator;
     private \PFUser $pfuser;
     private Artifact $artifact;
     private MirroredTimeboxChangeset $changeset;

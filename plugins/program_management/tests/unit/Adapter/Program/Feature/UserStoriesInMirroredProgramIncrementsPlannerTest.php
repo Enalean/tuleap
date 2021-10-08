@@ -51,9 +51,18 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
     private const FEATURE_ID             = 101;
     private const TEAM_ID                = 172;
     private const ARTIFACT_LINK_FIELD_ID = 1;
-    private Stub|ContentDao $content_dao;
-    private Stub|\Tracker_ArtifactFactory $tracker_artifact_factory;
-    private Stub|ArtifactsLinkedToParentDao $artifacts_linked_dao;
+    /**
+     * @var Stub&ContentDao
+     */
+    private $content_dao;
+    /**
+     * @var Stub&Tracker_ArtifactFactory
+     */
+    private $tracker_artifact_factory;
+    /**
+     * @var Stub&ArtifactsLinkedToParentDao
+     */
+    private $artifacts_linked_dao;
     private ProgramIncrementChanged $program_increment_changed;
 
     protected function setUp(): void
