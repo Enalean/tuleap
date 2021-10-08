@@ -53,11 +53,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Constructor
      *
-     * @param int      $id           The changeset Id
-     * @param Artifact $artifact     The artifact
-     * @param int      $submitted_by The id of the owner of this changeset
-     * @param int      $submitted_on The timestamp
-     * @param string   $email        The email of the submitter if anonymous mode
+     * @param int|string      $id           The changeset Id
+     * @param Artifact        $artifact     The artifact
+     * @param int|string      $submitted_by The id of the owner of this changeset
+     * @param string|int      $submitted_on The timestamp
+     * @param string|null     $email        The email of the submitter if anonymous mode
      */
     public function __construct($id, $artifact, $submitted_by, $submitted_on, $email)
     {

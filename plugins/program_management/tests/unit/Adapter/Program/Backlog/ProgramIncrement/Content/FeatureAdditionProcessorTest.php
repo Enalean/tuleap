@@ -116,6 +116,10 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
+        if (! $feature) {
+            throw new \LogicException("Feature is not built");
+        }
+
         return FeatureAddition::fromFeature(
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $feature,

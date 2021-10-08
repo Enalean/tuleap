@@ -200,8 +200,8 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
             self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
             self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
             self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
-            self::assertSame(self::PROGRAM_INCREMENT_ID, $values->artifact_link_value->linked_artifact->getId());
-            self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value->type);
+            self::assertSame(self::PROGRAM_INCREMENT_ID, $values->artifact_link_value?->linked_artifact?->getId());
+            self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value?->type);
             self::assertSame(self::USER_ID, $changeset->user->getId());
             self::assertSame(self::SUBMISSION_DATE, $changeset->submission_date->getValue());
         }

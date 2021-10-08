@@ -22,6 +22,7 @@
         <directory name="plugins/gitlab/tests/unit/" />
         <directory name="plugins/jira_import/tests/unit/" />
         <directory name="plugins/document_generation/tests/unit/" />
+        <directory name="plugins/program_management/tests/unit/Adapter/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>

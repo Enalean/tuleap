@@ -37,7 +37,7 @@ final class ArtifactCreatedProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact  = ArtifactTestBuilder::anArtifact(246)->inTracker($tracker)->build();
         $changeset = ChangesetTestBuilder::aChangeset('1090')
             ->ofArtifact($artifact)
-            ->submittedBy($user->getId())
+            ->submittedBy((int) $user->getId())
             ->build();
 
         $event = new ArtifactCreated($artifact, $changeset, $user);

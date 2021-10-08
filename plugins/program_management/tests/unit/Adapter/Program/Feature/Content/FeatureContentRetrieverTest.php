@@ -198,7 +198,7 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_String(
             $id,
             $tracker_id,
-            null,
+            1,
             'irrelevant',
             $label,
             'Irrelevant',

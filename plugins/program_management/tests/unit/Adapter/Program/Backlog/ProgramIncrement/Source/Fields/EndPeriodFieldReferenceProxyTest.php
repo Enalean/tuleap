@@ -47,7 +47,7 @@ final class EndPeriodFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCa
         return new \Tracker_FormElement_Field_Date(
             self::FIELD_ID,
             30,
-            null,
+            1,
             'irrelevant',
             self::FIELD_LABEL,
             'Irrelevant',
@@ -64,7 +64,7 @@ final class EndPeriodFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCa
         return new \Tracker_FormElement_Field_Integer(
             self::FIELD_ID,
             30,
-            null,
+            1,
             'irrelevant',
             self::FIELD_LABEL,
             'Irrelevant',

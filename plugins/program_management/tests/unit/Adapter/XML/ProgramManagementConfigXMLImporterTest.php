@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\XML;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CreatePlanStub;
 use Tuleap\ProgramManagement\Tests\Stub\ExtractXMLConfigStub;
@@ -35,7 +35,7 @@ final class ProgramManagementConfigXMLImporterTest extends TestCase
 {
     private CreatePlanStub $plan_creator;
     private TestLogger $logger;
-    private UserIdentifier $current_user;
+    private UserReference $current_user;
 
     protected function setUp(): void
     {
@@ -64,7 +64,9 @@ final class ProgramManagementConfigXMLImporterTest extends TestCase
 
         $this->processImport(true, false, false);
 
-        self::assertTrue($this->logger->hasErrorThatContains('PlanChange creation has failed for some reasons ¯\_(ツ)_/¯'));
+        self::assertTrue(
+            $this->logger->hasErrorThatContains('PlanChange creation has failed for some reasons ¯\_(ツ)_/¯')
+        );
     }
 
     public function testItImportsTheConfiguration(): void
@@ -81,9 +83,9 @@ final class ProgramManagementConfigXMLImporterTest extends TestCase
         self::assertEquals(101, $last_plan_creation_args->project_id);
         self::assertEquals([12, 13], $last_plan_creation_args->tracker_ids_that_can_be_planned);
         self::assertEquals(['101_3'], $last_plan_creation_args->can_possibly_prioritize_ugroups);
-        self::assertEquals(14, $last_plan_creation_args->iteration->tracker_id);
-        self::assertEquals("Rations de survie", $last_plan_creation_args->iteration->label);
-        self::assertEquals("ration", $last_plan_creation_args->iteration->sub_label);
+        self::assertEquals(14, $last_plan_creation_args->iteration?->tracker_id);
+        self::assertEquals("Rations de survie", $last_plan_creation_args->iteration?->label);
+        self::assertEquals("ration", $last_plan_creation_args->iteration?->sub_label);
 
         self::assertTrue($this->logger->hasInfoThatContains('Configuration imported successfully'));
     }

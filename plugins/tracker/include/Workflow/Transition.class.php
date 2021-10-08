@@ -68,8 +68,8 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Constructor
      *
-     * @param int|null $transition_id Id of the transition
-     * @param int $workflow_id Id of the workflow
+     * @param int|null|string $transition_id Id of the transition
+     * @param int|string $workflow_id Id of the workflow
      * @param Tracker_FormElement_Field_List_Value|null $from          Source value
      * @param Tracker_FormElement_Field_List_Value|null $to            Destination value
      */

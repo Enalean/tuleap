@@ -183,11 +183,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         int $compared_to_id,
         string $direction = "before"
     ): FeaturesToReorder {
-        $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation();
-
-        $feature_to_order->ids         = [$id];
-        $feature_to_order->compared_to = $compared_to_id;
-        $feature_to_order->direction   = $direction;
+        $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([$id], $direction, $compared_to_id);
 
         return FeaturesToReorderProxy::buildFromRESTRepresentation($feature_to_order);
     }
