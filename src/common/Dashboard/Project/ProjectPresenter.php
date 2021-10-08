@@ -23,7 +23,6 @@ namespace Tuleap\Dashboard\Project;
 use PFUser;
 use Project;
 use ProjectManager;
-use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectAccessPresenter;
 
 class ProjectPresenter
@@ -42,7 +41,6 @@ class ProjectPresenter
      */
     public $trove_url;
     public ?string $project_icon;
-    public bool $is_project_icon_enabled;
 
     public function __construct(
         Project $project,
@@ -68,12 +66,11 @@ class ProjectPresenter
             $this->parent_name = $parent_project->getPublicName();
         }
 
-        $nb_members                    = count($project->getMembers());
-        $this->nb_members              = sprintf(
+        $nb_members         = count($project->getMembers());
+        $this->nb_members   = sprintf(
             ngettext('%d member', '%d members', $nb_members),
             $nb_members
         );
-        $this->project_icon            = $project_icon;
-        $this->is_project_icon_enabled = ProjectIconChecker::isProjectIconFeatureActive();
+        $this->project_icon = $project_icon;
     }
 }

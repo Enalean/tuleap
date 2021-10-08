@@ -27,11 +27,7 @@
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
                 <a v-bind:href="project_url" class="breadcrumb-link">
-                    <span
-                        v-if="is_project_icon_enabled"
-                        data-test="project-icon"
-                        aria-hidden="true"
-                    >
+                    <span aria-hidden="true" data-test="project-icon">
                         {{ project_icon }}
                     </span>
                     {{ project_public_name }}
@@ -149,9 +145,6 @@ export default class DocumentBreadcrumb extends Vue {
 
     @configuration.State
     readonly project_icon!: string;
-
-    @configuration.State
-    readonly is_project_icon_enabled!: boolean;
 
     private max_nb_to_display = 5;
 

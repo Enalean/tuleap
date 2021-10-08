@@ -28,7 +28,6 @@ use CSRFSynchronizerToken;
 use Project;
 use TemplateSingleton;
 use Tuleap\Project\Admin\ProjectGlobalVisibilityPresenter;
-use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 
 class ProjectDetailsPresenter
@@ -90,10 +89,6 @@ class ProjectDetailsPresenter
      * @var string
      */
     public $icon_label_name;
-    /**
-     * @var bool
-     */
-    public $is_project_icon_enabled;
     /**
      * @var string | null
      */
@@ -160,10 +155,9 @@ class ProjectDetailsPresenter
             ];
         }
 
-        $this->icon_label_name         = _('Icon');
-        $this->is_project_icon_enabled = ProjectIconChecker::isProjectIconFeatureActive();
-        $this->project_icon            = $project_icon;
-        $this->all_project_icon        = $all_project_icon;
+        $this->icon_label_name  = _('Icon');
+        $this->project_icon     = $project_icon;
+        $this->all_project_icon = $all_project_icon;
     }
 
     private function getLocalizedType($project_type_id)
