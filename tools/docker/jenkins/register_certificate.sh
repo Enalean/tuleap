@@ -27,7 +27,7 @@ while [ ! -f /opt/reverse-proxy-cert/certs/localhost.cert.pem ]; do
     sleep 1
 done
 
-keytool -keystore $JAVA_HOME/jre/lib/security/cacerts -import -trustcacerts -storepass changeit -noprompt -alias tuleap-web-dev -file /opt/reverse-proxy-cert/certs/localhost.cert.pem
+keytool -keystore $JAVA_HOME/lib/security/cacerts -import -trustcacerts -storepass changeit -noprompt -alias tuleap-web-dev -file /opt/reverse-proxy-cert/certs/localhost.cert.pem
 
 cp -af /opt/reverse-proxy-cert/certs/localhost.cert.pem /usr/local/share/ca-certificates/tuleap.crt
 update-ca-certificates
