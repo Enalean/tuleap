@@ -37,13 +37,25 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 {
     private BuildProgram $build_program;
     /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     * @var \PFUser&\PHPUnit\Framework\MockObject\Stub
      */
     private $user;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
+     */
+    private mixed $plan_store;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsExplicitTopBacklogDAO
+     */
+    private mixed $artifacts_explicit_top_backlog_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PlannedFeatureDAO
+     */
+    private mixed $planned_feature_dao;
 
 
     protected function setUp(): void

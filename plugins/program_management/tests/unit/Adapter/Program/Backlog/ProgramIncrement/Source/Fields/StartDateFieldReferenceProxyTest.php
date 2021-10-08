@@ -39,7 +39,7 @@ final class StartDateFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCa
         return new \Tracker_FormElement_Field_Date(
             self::FIELD_ID,
             10,
-            null,
+            1,
             'irrelevant',
             self::FIELD_LABEL,
             'Irrelevant',

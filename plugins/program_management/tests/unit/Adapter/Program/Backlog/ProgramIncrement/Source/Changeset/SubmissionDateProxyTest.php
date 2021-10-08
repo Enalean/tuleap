@@ -31,7 +31,7 @@ final class SubmissionDateProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromChangeset(): void
     {
         $artifact  = ArtifactTestBuilder::anArtifact(709)->build();
-        $changeset = new \Tracker_Artifact_Changeset(4042, $artifact, 120, (string) self::SUBMISSION_TIMESTAMP, null);
+        $changeset = new \Tracker_Artifact_Changeset(4042, $artifact, 120, self::SUBMISSION_TIMESTAMP, "mail@example.com");
 
         $date = SubmissionDateProxy::fromChangeset($changeset);
         self::assertSame(self::SUBMISSION_TIMESTAMP, $date->getValue());
