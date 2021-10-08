@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
@@ -64,7 +63,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact_factory;
     /**
-     * @var MockObject&\Tracker_Artifact_Changeset_NewChangesetCreator
+     * @var Stub&\Tracker_Artifact_Changeset_NewChangesetCreator
      */
     private $changeset_creator;
     private \PFUser $pfuser;
@@ -74,7 +73,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
-        $this->changeset_creator = $this->createMock(\Tracker_Artifact_Changeset_NewChangesetCreator::class);
+        $this->changeset_creator = $this->createStub(\Tracker_Artifact_Changeset_NewChangesetCreator::class);
 
         $this->pfuser   = UserTestBuilder::buildWithId(self::USER_ID);
         $this->artifact = ArtifactTestBuilder::anArtifact(self::TIMEBOX_ID)->build();

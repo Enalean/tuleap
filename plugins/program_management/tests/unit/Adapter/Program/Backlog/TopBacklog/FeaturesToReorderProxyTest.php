@@ -30,27 +30,36 @@ final class FeaturesToReorderProxyTest extends TestCase
 {
     public function testItBuildFeatureToReorder(): void
     {
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "before", 900);
+        $element_to_order              =  new FeatureElementToOrderInvolvedInChangeRepresentation();
+        $element_to_order->ids         = [964];
+        $element_to_order->direction   = "before";
+        $element_to_order->compared_to = 900;
 
         $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
-        self::assertSame($element_to_order->ids, $feature_to_order?->getIds());
-        self::assertSame($element_to_order->direction, $feature_to_order?->getDirection());
-        self::assertSame($element_to_order->compared_to, $feature_to_order?->getComparedTo());
+        self::assertSame($element_to_order->ids, $feature_to_order->getIds());
+        self::assertSame($element_to_order->direction, $feature_to_order->getDirection());
+        self::assertSame($element_to_order->compared_to, $feature_to_order->getComparedTo());
     }
 
     public function testItReturnsTrueWhenOrderIsBefore(): void
     {
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "before", 900);
+        $element_to_order              =  new FeatureElementToOrderInvolvedInChangeRepresentation();
+        $element_to_order->ids         = [964];
+        $element_to_order->direction   = "before";
+        $element_to_order->compared_to = 900;
 
         $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
-        self::assertTrue($feature_to_order?->isBefore());
+        self::assertTrue($feature_to_order->isBefore());
     }
 
     public function testItReturnsFalseWhenOrderIsAfter(): void
     {
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "after", 900);
+        $element_to_order              =  new FeatureElementToOrderInvolvedInChangeRepresentation();
+        $element_to_order->ids         = [964];
+        $element_to_order->direction   = "after";
+        $element_to_order->compared_to = 900;
 
         $feature_to_order = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
-        self::assertFalse($feature_to_order?->isBefore());
+        self::assertFalse($feature_to_order->isBefore());
     }
 }

@@ -29,7 +29,7 @@ final class ChangesetProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromChangeset(): void
     {
         $artifact  = ArtifactTestBuilder::anArtifact(458)->build();
-        $changeset = new \Tracker_Artifact_Changeset(5379, $artifact, 101, 1234567890, "mail@example.com");
+        $changeset = new \Tracker_Artifact_Changeset('5379', $artifact, 101, 1234567890, null);
 
         $changeset_identifier = ChangesetProxy::fromChangeset($changeset);
         self::assertSame(5379, $changeset_identifier->getId());

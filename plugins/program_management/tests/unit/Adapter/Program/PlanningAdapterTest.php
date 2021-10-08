@@ -102,7 +102,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $wrapper_project,
                 UserIdentifierStub::buildGenericUser(),
                 $this->error_collector
-            )?->getId()
+            )->getId()
         );
     }
 
@@ -198,7 +198,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $wrapper_project,
                 UserIdentifierStub::buildGenericUser(),
                 $this->error_collector
-            )?->getId()
+            )->getId()
         );
     }
 }

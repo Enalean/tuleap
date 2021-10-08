@@ -39,7 +39,7 @@ final class StatusFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_Selectbox(
             self::FIELD_ID,
             35,
-            1,
+            null,
             'irrelevant',
             self::FIELD_LABEL,
             'Irrelevant',

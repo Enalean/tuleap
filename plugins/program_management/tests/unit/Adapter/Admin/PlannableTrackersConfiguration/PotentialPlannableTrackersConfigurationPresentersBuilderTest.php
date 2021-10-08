@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration;
 
-use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;

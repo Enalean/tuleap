@@ -195,7 +195,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         return new Tracker_FormElement_Field_ArtifactLink(
             self::ARTIFACT_LINK_FIELD_ID,
             70,
-            1,
+            null,
             'field_artlink',
             'Field ArtLink',
             '',

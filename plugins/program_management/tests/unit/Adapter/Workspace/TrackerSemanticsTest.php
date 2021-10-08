@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TrackerSemanticsTest extends TestCase
@@ -33,7 +32,7 @@ final class TrackerSemanticsTest extends TestCase
      */
     private $tracker;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&TrackerSemantics
      */
     private $tracker_factory;
     private TrackerSemantics $factory;

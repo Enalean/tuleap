@@ -245,7 +245,10 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->expects(self::never())->method('removeArtifactsFromExplicitTopBacklog');
 
-        $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], "before", 900);
+        $element_to_order              =  new FeatureElementToOrderInvolvedInChangeRepresentation();
+        $element_to_order->ids         = [964];
+        $element_to_order->direction   = "before";
+        $element_to_order->compared_to = 900;
 
         $feature_reorder = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
 
@@ -262,7 +265,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&Artifact
+     * @return \PHPUnit\Framework\MockObject\MockObject&\Artifact
      */
     private function mockAnArtifact(int $id, string $title, \Tracker $tracker)
     {

@@ -31,7 +31,7 @@ final class TextFieldValueProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromChangesetValue(): void
     {
         $artifact  = ArtifactTestBuilder::anArtifact(82)->build();
-        $changeset = new \Tracker_Artifact_Changeset(6095, $artifact, 110, 1234567890, "mail@example.com");
+        $changeset = new \Tracker_Artifact_Changeset(6095, $artifact, 110, 1234567890, null);
 
         $multiline_text = <<<EOT
         osmosis connatural
@@ -60,7 +60,7 @@ final class TextFieldValueProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $field   = new \Tracker_FormElement_Field_Text(
             168,
             84,
-            1,
+            null,
             'irrelevant',
             'Irrelevant',
             'Irrelevant',

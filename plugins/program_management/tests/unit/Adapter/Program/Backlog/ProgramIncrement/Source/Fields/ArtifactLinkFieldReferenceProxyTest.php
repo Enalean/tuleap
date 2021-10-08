@@ -39,7 +39,7 @@ final class ArtifactLinkFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\Tes
         return new \Tracker_FormElement_Field_ArtifactLink(
             self::FIELD_ID,
             76,
-            1,
+            null,
             'irrelevant',
             self::FIELD_LABEL,
             'Irrelevant',

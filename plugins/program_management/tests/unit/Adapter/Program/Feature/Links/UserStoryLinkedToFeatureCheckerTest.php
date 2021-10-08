@@ -175,18 +175,13 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
 
     private function buildFeature(int $feature_id): FeatureIdentifier
     {
-        $feature_identifier = FeatureIdentifier::fromId(
+        return FeatureIdentifier::fromId(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             $feature_id,
             $this->user_identifier,
             ProgramIdentifierBuilder::buildWithId(110),
             null
         );
-        if (! $feature_identifier) {
-            throw new \LogicException("Feature identifier is not built");
-        }
-
-        return $feature_identifier;
     }
 
     private function getChecker(): UserStoryLinkedToFeatureChecker

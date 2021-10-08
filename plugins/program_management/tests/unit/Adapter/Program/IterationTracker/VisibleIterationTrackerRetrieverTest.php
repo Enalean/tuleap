@@ -35,7 +35,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 {
     private const ITERATION_TRACKER_ID = 75;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&TrackerFactory
      */
     private $tracker_factory;
     private UserIdentifier $user_identifier;
@@ -45,7 +45,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     protected function setUp(): void
     {
-        $this->tracker_factory      = $this->createMock(TrackerFactory::class);
+        $this->tracker_factory      = $this->createStub(TrackerFactory::class);
         $this->user_identifier      = UserIdentifierStub::buildGenericUser();
         $this->program              = ProgramIdentifierBuilder::build();
         $this->tracker_id_retriever = RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID);
@@ -96,7 +96,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         self::assertSame(
             self::ITERATION_TRACKER_ID,
-            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)?->getId()
+            $this->getRetriever()->retrieveVisibleIterationTracker($this->program, $this->user_identifier)->getId()
         );
     }
 }

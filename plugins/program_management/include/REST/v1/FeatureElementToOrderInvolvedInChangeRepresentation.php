@@ -43,11 +43,4 @@ final class FeatureElementToOrderInvolvedInChangeRepresentation
      * @var int {@required true}
      */
     public $compared_to;
-
-    public function __construct(array $ids, string $direction, int $compared_to)
-    {
-        $this->ids         = $ids;
-        $this->direction   = $direction;
-        $this->compared_to = $compared_to;
-    }
 }

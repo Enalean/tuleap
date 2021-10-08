@@ -65,7 +65,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $form_element_factory;
     private \Tracker $tracker;
-    private ProgramIncrementTrackerIdentifier $tracker_identifier;
+    private ?ProgramIncrementTrackerIdentifier $tracker_identifier;
 
     protected function setUp(): void
     {
@@ -293,7 +293,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_String(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
-            1,
+            null,
             'irrelevant',
             $label,
             'Irrelevant',
@@ -310,7 +310,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_Text(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
-            1,
+            null,
             'irrelevant',
             $label,
             'Irrelevant',
@@ -327,7 +327,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_Selectbox(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
-            1,
+            null,
             'irrelevant',
             $label,
             'Irrelevant',
@@ -344,7 +344,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_Date(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
-            1,
+            null,
             'irrelevant',
             $label,
             'Irrelevant',
@@ -361,7 +361,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_Integer(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
-            1,
+            null,
             'irrelevant',
             $label,
             'Irrelevant',
@@ -378,7 +378,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_ArtifactLink(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
-            1,
+            null,
             'irrelevant',
             $label,
             'Irrelevant',

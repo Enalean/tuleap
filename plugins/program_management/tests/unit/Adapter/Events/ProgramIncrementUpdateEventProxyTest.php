@@ -84,10 +84,6 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
             $this->worker_event
         );
 
-        if (! $event) {
-            throw new \LogicException("Event is not properly created");
-        }
-
         self::assertSame(self::PROGRAM_INCREMENT_ID, $event->getProgramIncrement()->getId());
         self::assertSame(self::USER_ID, $event->getUser()->getId());
         self::assertSame(self::PROGRAM_INCREMENT_CHANGESET_ID, $event->getChangeset()->getId());
@@ -235,7 +231,7 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
             $this->changeset_verifier,
             $this->worker_event
         );
-        self::assertEmpty($event?->getIterations());
+        self::assertEmpty($event->getIterations());
         self::assertTrue(
             $this->logger->hasDebug(
                 sprintf('Iteration #%d is no longer valid, skipping creation', self::FIRST_ITERATION_ID)

@@ -160,11 +160,6 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifierBuilder::build();
         $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user_identifier, $program, null);
-
-        if (! $feature) {
-            throw new \LogicException("Feature is not built");
-        }
-
         return FeatureRemoval::fromFeature(
             VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
             $feature,
