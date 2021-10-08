@@ -20,6 +20,11 @@ exports[`Breadcrumb When user is not program admin, Then breadcrumb does not con
         class="breadcrumb-link"
         href="/projects/short-name"
       >
+        <span
+          aria-hidden="true"
+        >
+          
+        </span>
         
                 Public name
             

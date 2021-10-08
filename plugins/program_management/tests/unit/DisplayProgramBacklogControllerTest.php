@@ -195,6 +195,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $project->method('isPublic')->willReturn(true);
         $project->method('getPublicName')->willReturn('test_project');
         $project->method('getUnixNameLowerCase')->willReturn('test_project');
+        $project->method('getIconUnicodeCodepoint')->willReturn('');
         $project->expects(self::once())
             ->method('usesService')
             ->with(\program_managementPlugin::SERVICE_SHORTNAME)

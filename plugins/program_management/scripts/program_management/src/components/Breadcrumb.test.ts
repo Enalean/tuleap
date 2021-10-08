@@ -33,6 +33,7 @@ describe("Breadcrumb", () => {
                 project_privacy: {},
                 project_flags: [],
                 is_program_admin: false,
+                project_icon: "",
             },
             localVue: await createProgramManagementLocalVue(),
         };
@@ -49,6 +50,7 @@ describe("Breadcrumb", () => {
                 project_privacy: {},
                 project_flags: [],
                 is_program_admin: true,
+                project_icon: "",
             },
             localVue: await createProgramManagementLocalVue(),
         };

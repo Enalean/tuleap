@@ -22,6 +22,7 @@
         <breadcrumb
             v-bind:project_public_name="public_name"
             v-bind:project_short_name="short_name"
+            v-bind:project_icon="project_icon"
             v-bind:project_privacy="privacy"
             v-bind:project_flags="flags"
             v-bind:is_program_admin="is_program_admin"
@@ -111,6 +112,9 @@ export default class App extends Vue {
 
     @configuration.State
     readonly short_name!: string;
+
+    @configuration.State
+    readonly project_icon!: string;
 
     @configuration.State
     readonly privacy!: ProjectPrivacy;

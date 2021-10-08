@@ -41,6 +41,7 @@ export interface Project {
     id: number;
     uri: string;
     label: string;
+    icon: string;
 }
 
 export interface TrackerMinimalRepresentation {

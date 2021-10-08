@@ -24,6 +24,7 @@ import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy
 export interface ConfigurationState {
     readonly public_name: string;
     readonly short_name: string;
+    readonly project_icon: string;
     readonly privacy: ProjectPrivacy;
     readonly flags: Array<ProjectFlag>;
     readonly program_id: number;

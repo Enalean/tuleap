@@ -26,6 +26,7 @@
                     class="element-card-xref"
                     v-bind:class="`element-card-xref-${user_story.tracker.color_name}`"
                 >
+                    <span aria-hidden="true">{{ user_story.project.icon }}</span>
                     {{ user_story.project.label }}
                     <i class="fas fa-fw fa-long-arrow-alt-right"></i>
                     {{ user_story.xref }}
