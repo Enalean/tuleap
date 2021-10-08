@@ -28,7 +28,8 @@ import {
     TextRun,
     UnderlineType,
 } from "docx";
-import { loadImage } from "./Image/image-loader";
+import { loadImage } from "../Image/image-loader";
+import { transformTextWithNewlines } from "./transform-text-with-newlines";
 
 const HTML_ORDERED_LIST_NUMBERING_REFERENCE = "html-ordered-list";
 
@@ -49,6 +50,7 @@ export async function transformHTMLIntoParagraphs(
             style: {},
             list_level: 0,
             paragraph_builder: defaultParagraphBuilder,
+            text_run_builder: defaultTextRunBuilder,
         }),
         defaultParagraphBuilder
     );
@@ -60,6 +62,12 @@ type ParagraphBuilder = (children: ParagraphChild[]) => Paragraph;
 
 function defaultParagraphBuilder(children: ParagraphChild[]): Paragraph {
     return new Paragraph({ children });
+}
+
+type TextRunBuilder = (content: string, style: IRunPropertiesOptions) => TextRun[];
+
+function defaultTextRunBuilder(content: string, style: IRunPropertiesOptions): TextRun[] {
+    return [new TextRun({ text: content, ...style })];
 }
 
 function buildParagraphsFromTreeContent(
@@ -103,6 +111,7 @@ interface TreeContentState {
     style: IRunPropertiesOptions;
     list_level: number;
     paragraph_builder: ParagraphBuilder;
+    text_run_builder: TextRunBuilder;
 }
 
 async function parseTreeContent(
@@ -281,6 +290,25 @@ async function parseTreeContent(
                     }))
                 );
                 break;
+            case "CODE":
+                content_children.push(
+                    ...defaultNodeHandling(child, {
+                        ...state,
+                        style: { ...state.style, font: "Courier New" },
+                    })
+                );
+                break;
+            case "PRE":
+                content_children.push(
+                    ...buildParagraphsFromTreeContent(
+                        await parseTreeContent(options, child.childNodes, {
+                            ...state,
+                            text_run_builder: transformTextWithNewlines,
+                        }),
+                        state.paragraph_builder
+                    )
+                );
+                break;
             default:
                 content_children.push(...defaultNodeHandling(child, state));
         }
@@ -349,7 +377,7 @@ function defaultNodeHandling(node: Node, state: Readonly<TreeContentState>): Tex
     if (node.textContent === null || node.textContent === "") {
         return [];
     }
-    return [new TextRun({ text: node.textContent, ...state.style })];
+    return state.text_run_builder(node.textContent, state.style);
 }
 
 // This is based on the default implementation of the bullets to have a consistent rendering between unordered and

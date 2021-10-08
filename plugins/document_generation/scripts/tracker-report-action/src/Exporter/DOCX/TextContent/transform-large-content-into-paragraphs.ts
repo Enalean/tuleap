@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Paragraph, TextRun } from "docx";
+import { Paragraph } from "docx";
 import type { TransformationOptions } from "./transform-html-into-paragraphs";
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
+import { transformTextWithNewlines } from "./transform-text-with-newlines";
 
 export function transformLargeContentIntoParagraphs(
     content: string,
@@ -31,10 +32,7 @@ export function transformLargeContentIntoParagraphs(
     }
     return Promise.resolve([
         new Paragraph({
-            children: content.split("\n").map((text: string, index: number) => {
-                const is_first_line = index === 0;
-                return new TextRun({ text, break: is_first_line ? 0 : 1 });
-            }),
+            children: transformTextWithNewlines(content, {}),
         }),
     ]);
 }

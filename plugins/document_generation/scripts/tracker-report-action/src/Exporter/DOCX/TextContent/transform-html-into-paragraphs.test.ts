@@ -28,7 +28,7 @@ import {
     TextRun,
     UnderlineType,
 } from "docx";
-import * as image_loader from "./Image/image-loader";
+import * as image_loader from "../Image/image-loader";
 
 describe("transform-html-into-paragraph", () => {
     it("transforms paragraphs that are the root of the document", async () => {
@@ -295,6 +295,27 @@ describe("transform-html-into-paragraph", () => {
                 indent: {
                     left: convertInchesToTwip(0.25),
                 },
+            }),
+        ]);
+    });
+
+    it("transforms code snippets", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
+            "<code>Inline</code><pre><code>Code\n  L2</code></pre>",
+            {
+                ordered_title_levels: [HeadingLevel.TITLE],
+            }
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "Inline", font: "Courier New" })],
+            }),
+            new Paragraph({
+                children: [
+                    new TextRun({ text: "Code", font: "Courier New" }),
+                    new TextRun({ text: "  L2", break: 1, font: "Courier New" }),
+                ],
             }),
         ]);
     });
