@@ -12,6 +12,7 @@ function SharedPropertiesService() {
         trackers_using_list_picker: [],
         csrf_token_campaign_status: undefined,
         has_current_project_parents: false,
+        file_upload_max_size: 0,
     };
 
     return {
@@ -45,6 +46,8 @@ function SharedPropertiesService() {
         setCSRFTokenCampaignStatus,
         setHasCurrentProjectParents,
         hasCurrentProjectParents,
+        setFileUploadMaxSize,
+        getFileUploadMaxSize,
     };
 
     function getProjectId() {
@@ -165,5 +168,13 @@ function SharedPropertiesService() {
 
     function hasCurrentProjectParents() {
         return property.has_current_project_parents;
+    }
+
+    function setFileUploadMaxSize(file_upload_max_size) {
+        property.file_upload_max_size = file_upload_max_size;
+    }
+
+    function getFileUploadMaxSize() {
+        return property.file_upload_max_size;
     }
 }

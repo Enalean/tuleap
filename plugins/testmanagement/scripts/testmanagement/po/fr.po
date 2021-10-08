@@ -137,6 +137,11 @@ msgstr "Graphe de dépendances de &#34;{{ graph.title }}&#34;"
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 
+msgid "Drop files here to attach them to your comment (max size is %ss)."
+msgstr ""
+"Glissez-déposez des fichiers ici pour les joindre à votre commentaire "
+"(taille maximum %ss)."
+
 msgid "Edit campaign"
 msgstr "Éditer la campagne"
 
@@ -307,10 +312,8 @@ msgstr "Enregistrer les changements"
 msgid "Save comment"
 msgstr "Sauvegarder le commentaire"
 
-msgid "Select files to attach or drop them in the text area..."
-msgstr ""
-"Sélectionnez des fichier à joindre ou glissez-déposez les dans la zone de "
-"texte..."
+msgid "Select files to attach or drop them here..."
+msgstr "Sélectionnez des fichier à joindre ou glissez-déposez les ici..."
 
 msgid "Select first test tab from test list"
 msgstr "Sélectionne le premier onglet de test de la liste"

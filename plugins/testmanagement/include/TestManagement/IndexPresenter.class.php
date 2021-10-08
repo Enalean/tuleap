@@ -122,6 +122,11 @@ class IndexPresenter
     public string $has_current_project_parents;
 
     /**
+     * @psalm-readonly
+     */
+    public int $file_upload_max_size;
+
+    /**
      * @param int|false                         $campaign_tracker_id
      * @param int|false                         $test_definition_tracker_id
      * @param int|false                         $test_execution_tracker_id
@@ -185,6 +190,8 @@ class IndexPresenter
 
         $this->csrf_token_campaign_status  = $csrf_token->getToken();
         $this->has_current_project_parents = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
+
+        $this->file_upload_max_size = (int) \ForgeConfig::get('sys_max_size_upload');
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

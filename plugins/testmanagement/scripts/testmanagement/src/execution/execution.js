@@ -25,6 +25,8 @@ import Step from "./execution-with-steps/step/step-component.js";
 import RobotSvgDisplayer from "./svg/robot-svg-displayer-component.js";
 import ExecutionAttachments from "./execution-attachments/execution-attachments-component.js";
 import ExecutionAttachmentsCreationErrorModal from "./execution-attachments/execution-attachments-creation-error-modal.js";
+import ExecutionAttachmentsDropZone from "./execution-attachments/execution-attachments-drop-zone.js";
+import ExecutionAttachmentsDropZoneMessage from "./execution-attachments/execution-attachments-drop-zone-message.js";
 
 export default angular
     .module("execution", [
@@ -44,10 +46,12 @@ export default angular
     .controller("ExecutionDetailCtrl", ExecutionDetailCtrl)
     .component("executionAttachments", ExecutionAttachments)
     .component("executionAttachmentsCreationErrorModal", ExecutionAttachmentsCreationErrorModal)
+    .component("executionAttachmentsDropZoneMessage", ExecutionAttachmentsDropZoneMessage)
     .component("executionDetailJustUpdated", ExecutionDetailJustUpdated)
     .component("executionListHeader", ExecutionListHeader)
     .component("executionWithSteps", ExecutionWithSteps)
     .component("step", Step)
     .component("robotSvgDisplayer", RobotSvgDisplayer)
+    .directive("executionAttachmentsDropZone", ExecutionAttachmentsDropZone)
     .filter("ExecutionListFilter", ExecutionListFilter)
     .filter("AutomatedTestsFilter", AutomatedTestsFilter).name;

@@ -1,4 +1,5 @@
 @use "steps";
+@use "attachments_dnd";
 
 $attachments-gap: var(--tlp-small-spacing) / 2;
 $attachment-height: var(--tlp-large-spacing);
@@ -10,6 +11,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     flex-direction: column;
     margin: 0;
     overflow: hidden;
+    border: 0;
 
     &.passed > .tlp-pane-container {
         > .current-test-header-container {
@@ -138,6 +140,14 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             margin: 0 var(--tlp-small-spacing);
         }
     }
+}
+
+.current-test-header-container {
+    border-top: 1px solid var(--tlp-neutral-normal-color);
+    border-right: 1px solid var(--tlp-neutral-normal-color);
+    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-top-left-radius: var(--tlp-large-radius);
+    border-top-right-radius: var(--tlp-large-radius);
 }
 
 .linked-issue-alert {
@@ -282,7 +292,9 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 .current-test-content {
     flex: 1 1 50%;
     overflow-y: auto;
+    border-right: 1px solid var(--tlp-neutral-normal-color);
     border-bottom: 0;
+    border-left: 1px solid var(--tlp-neutral-normal-color);
 
     p,
     ul,
@@ -293,9 +305,23 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 }
 
 .current-test-footer-section {
-    border-top: 1px solid var(--tlp-neutral-light-color);
-    border-bottom: 0;
     background: var(--tlp-fade-background-color);
+
+    &.current-test-footer-top {
+        border-top: 1px solid var(--tlp-neutral-light-color);
+        border-right: 1px solid var(--tlp-neutral-normal-color);
+        border-bottom: 0;
+        border-left: 1px solid var(--tlp-neutral-normal-color);
+    }
+
+    &.current-test-footer-bottom {
+        border-top: 1px solid var(--tlp-neutral-light-color);
+        border-right: 1px solid var(--tlp-neutral-normal-color);
+        border-bottom: 1px solid var(--tlp-neutral-normal-color);
+        border-left: 1px solid var(--tlp-neutral-normal-color);
+        border-bottom-right-radius: var(--tlp-large-radius);
+        border-bottom-left-radius: var(--tlp-large-radius);
+    }
 }
 
 .current-test-footer-section-comment {
@@ -689,4 +715,14 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             color: var(--tlp-danger-color);
         }
     }
+}
+
+.current-test-empty-pane {
+    flex: 1;
+    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-right: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom-right-radius: var(--tlp-large-radius);
+    border-bottom-left-radius: var(--tlp-large-radius);
 }

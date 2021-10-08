@@ -65,6 +65,12 @@ function TestManagementCtrl(
         amMoment.changeLocale(language);
         gettextCatalog.setCurrentLanguage(language);
 
+        const file_upload_max_size = Number.parseInt(
+            testmanagement_init_data.fileUploadMaxSize,
+            10
+        );
+        SharedPropertiesService.setFileUploadMaxSize(file_upload_max_size);
+
         moveBreadCrumbs(project_public_name, project_url, ttm_admin_url, ttm_admin_label);
         replaceSkipToMainContentLink();
     };

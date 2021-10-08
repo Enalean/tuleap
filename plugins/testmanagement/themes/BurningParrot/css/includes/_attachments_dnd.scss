@@ -1,0 +1,60 @@
+/**
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.tlp-pane-section.current-test-footer-section-comment {
+    &.drop-zone-highlighted {
+        border-top: 1px solid var(--tlp-main-color-transparent-15);
+        border-right: 1px solid var(--tlp-main-color-transparent-15);
+        border-left: 1px solid var(--tlp-main-color-transparent-15);
+        background: var(--tlp-main-color-transparent-90);
+        box-shadow: inset 2px 0 0 0 var(--tlp-main-color-transparent-15), inset -2px 0 0 0 var(--tlp-main-color-transparent-15), inset 0 2px 0 0 var(--tlp-main-color-transparent-15);
+    }
+}
+
+.tlp-pane-section.current-test-footer-section-buttons-container {
+    position: relative;
+
+    &.drop-zone-highlighted {
+        border-top: 1px solid var(--tlp-main-color-transparent-15);
+        border-right: 1px solid var(--tlp-main-color-transparent-15);
+        border-bottom: 1px solid var(--tlp-main-color-transparent-15);
+        border-left: 1px solid var(--tlp-main-color-transparent-15);
+        box-shadow: inset 0 -2px 0 0 var(--tlp-main-color-transparent-15), inset 2px 0 0 0 var(--tlp-main-color-transparent-15), inset -2px 0 0 0 var(--tlp-main-color-transparent-15);
+    }
+}
+
+.drop-zone-message {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--tlp-main-color);
+    color: var(--tlp-white-color);
+}
+
+.drop-zone-message-icon {
+    display: inline-block;
+    margin: 0 0 var(--tlp-small-spacing);
+    font-size: 24px;
+}
