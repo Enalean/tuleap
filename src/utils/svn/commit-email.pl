@@ -303,8 +303,6 @@ if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
 
     # Load LDAP config
     require $utils_path."/ldap.pl";
-    my $ldapIncFile = $sys_custompluginsroot.'/ldap/etc/ldap.inc';
-    &load_local_config($ldapIncFile);
 
     &ldap_connect;
 
@@ -322,7 +320,7 @@ if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
 	}
     }
 }
- 
+
 # if no uid found yet, fallback to tuleap auth
 if (!$codexuid) {
     local ($login, $gecos);
@@ -366,7 +364,7 @@ if ($debug) {
 
 
 # Figure out what directories have changed using svnlook.
-my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos, 
+my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos,
                                      '-r', $rev);
 
 my @unchanged_dirschanged = @dirschanged;
@@ -645,28 +643,28 @@ foreach my $project (@project_settings_list) {
     # Subject: Re: svn commit: rev 2599 - trunk/tools/cgi
     # To: dev@subversion.tigris.org
     # Date: Fri, 19 Jul 2002 23:42:32 -0700
-    # 
+    #
     # Well... that isn't strictly true. The contents of the files
     # might not be UTF-8, so the "diff" portion will be hosed.
-    # 
+    #
     # If you want a truly "proper" commit message, then you'd use
     # multipart MIME messages, with each file going into its own part,
     # and labeled with an appropriate MIME type and charset. Of
     # course, we haven't defined a charset property yet, but no biggy.
-    # 
+    #
     # Going with multipart will surely throw out the notion of "cut
     # out the patch from the email and apply." But then again: the
     # commit emailer could see that all portions are in the same
-    # charset and skip the multipart thang. 
-    # 
+    # charset and skip the multipart thang.
+    #
     # etc etc
-    # 
+    #
     # Basically: adding/tweaking the content-type is nice, but don't
     # think that is the proper solution.
 
     push(@head, "Content-Type: text/plain; charset=UTF-8\n");
     push(@head, "Content-Transfer-Encoding: 8bit\n");
-    
+
     my @emails_to_notify = split(',', $userlist);
 
     foreach my $email_address (@emails_to_notify) {
@@ -832,7 +830,7 @@ sub read_from_process
 # Codendi - extract all items that needs to be cross-referenced
 # in the log message
 sub extract_xrefs {
-    
+
     my (@log) = @_;
     # Use Codendi HTTP API
     my $ua = LWP::UserAgent->new;
@@ -846,7 +844,7 @@ sub extract_xrefs {
 
     my $req = POST "$server_url/api/reference/extractCross.php",
       [ group_id => "$group_id", text => "$text", rev_id=>"$rev", login=>"$author", type=>"$type" ];
-  
+
 
     my $response = $ua->request($req);
     if ($response->is_success) {
@@ -882,7 +880,7 @@ sub format_xref {
       push (@text, "References:");
       $initialized=1;
     }
-      
+
     push (@text, "");
     push (@text, "$desc:");
     foreach $match (sort(keys %{$references{"$desc"}})) {
