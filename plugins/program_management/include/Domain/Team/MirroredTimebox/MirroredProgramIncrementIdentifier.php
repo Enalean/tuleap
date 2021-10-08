@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -37,6 +38,23 @@ final class MirroredProgramIncrementIdentifier implements MirroredTimeboxIdentif
 {
     private function __construct(private int $id)
     {
+    }
+
+    public static function fromProgramIncrementAndTeam(
+        RetrieveMirroredProgramIncrementFromTeam $retriever,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        ProgramIncrementIdentifier $program_increment,
+        ProjectReference $team,
+        UserIdentifier $user
+    ): ?self {
+        $program_increment_id = $retriever->getMirrorId($program_increment, $team);
+        if (! $program_increment_id) {
+            return null;
+        }
+        if (! $visibility_verifier->isVisible($program_increment_id, $user)) {
+            return null;
+        }
+        return new self($program_increment_id);
     }
 
     /**

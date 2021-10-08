@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateI
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredIterationCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
@@ -38,8 +39,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterationTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class IterationsCreator implements CreateIterations
@@ -50,14 +54,17 @@ final class IterationsCreator implements CreateIterations
         private MapStatusByValue $status_mapper,
         private GatherSynchronizedFields $fields_gatherer,
         private CreateArtifact $artifact_creator,
+        private RetrieveMirroredProgramIncrementFromTeam $mirrored_program_increment_retriever,
+        private VerifyIsVisibleArtifact $visibility_verifier,
         private LogMessage $logger
     ) {
     }
 
     /**
-     * @throws TeamHasNoMirroredIterationTrackerException
      * @throws FieldSynchronizationException
      * @throws MirroredIterationCreationException
+     * @throws MirroredProgramIncrementNotFoundException
+     * @throws TeamHasNoMirroredIterationTrackerException
      */
     public function createIterations(
         SourceTimeboxChangesetValues $values,
@@ -78,9 +85,10 @@ final class IterationsCreator implements CreateIterations
     }
 
     /**
-     * @throws TeamHasNoMirroredIterationTrackerException
      * @throws FieldSynchronizationException
      * @throws MirroredIterationCreationException
+     * @throws MirroredProgramIncrementNotFoundException
+     * @throws TeamHasNoMirroredIterationTrackerException
      */
     private function createOneIteration(
         ProjectReference $team,
@@ -109,6 +117,17 @@ final class IterationsCreator implements CreateIterations
         } catch (ArtifactCreationException $e) {
             throw new MirroredIterationCreationException($creation->getIteration(), $e);
         }
+        $mirrored_program_increment = MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
+            $this->mirrored_program_increment_retriever,
+            $this->visibility_verifier,
+            $creation->getProgramIncrement(),
+            $team,
+            $creation->getUser()
+        );
+        if (! $mirrored_program_increment) {
+            throw new MirroredProgramIncrementNotFoundException($creation->getProgramIncrement(), $team);
+        }
         $this->logger->debug(sprintf('Created mirrored iteration #%d', $mirrored_iteration->getId()));
+        $this->logger->debug(sprintf('Parent mirrored program increment #%d', $mirrored_program_increment->getId()));
     }
 }

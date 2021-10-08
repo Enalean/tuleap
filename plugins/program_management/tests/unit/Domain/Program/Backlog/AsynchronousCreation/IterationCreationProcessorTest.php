@@ -36,11 +36,13 @@ use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -137,6 +139,8 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
                 $this->fields_gatherer,
                 $this->artifact_creator,
+                RetrieveMirroredProgramIncrementFromTeamStub::withIds(17, 40),
+                VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                 $logger
             )
         );
