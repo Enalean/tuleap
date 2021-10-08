@@ -20,6 +20,7 @@
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
 import {
     BorderStyle,
+    convertInchesToTwip,
     ExternalHyperlink,
     HeadingLevel,
     ImageRun,
@@ -279,6 +280,21 @@ describe("transform-html-into-paragraph", () => {
             }),
             new Paragraph({
                 children: [new TextRun({ text: "B" })],
+            }),
+        ]);
+    });
+
+    it("transforms blockquotes", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs("<blockquote><p>A</p></blockquote>", {
+            ordered_title_levels: [HeadingLevel.TITLE],
+        });
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "A", italics: true })],
+                indent: {
+                    left: convertInchesToTwip(0.25),
+                },
             }),
         ]);
     });

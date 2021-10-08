@@ -45,7 +45,11 @@ export async function transformHTMLIntoParagraphs(
     const doc = new DOMParser().parseFromString(content, "text/html");
 
     return buildParagraphsFromTreeContent(
-        await parseTreeContent(options, doc.body.childNodes, { style: {}, list_level: 0 }),
+        await parseTreeContent(options, doc.body.childNodes, {
+            style: {},
+            list_level: 0,
+            paragraph_builder: defaultParagraphBuilder,
+        }),
         defaultParagraphBuilder
     );
 }
@@ -98,6 +102,7 @@ function buildParagraphFromParagraphChildren(
 interface TreeContentState {
     style: IRunPropertiesOptions;
     list_level: number;
+    paragraph_builder: ParagraphBuilder;
 }
 
 async function parseTreeContent(
@@ -122,7 +127,7 @@ async function parseTreeContent(
                 content_children.push(
                     ...buildParagraphsFromTreeContent(
                         await parseTreeContent(options, child.childNodes, state),
-                        defaultParagraphBuilder
+                        state.paragraph_builder
                     )
                 );
                 break;
@@ -259,6 +264,21 @@ async function parseTreeContent(
                             },
                         },
                     })
+                );
+                break;
+            case "BLOCKQUOTE":
+                content_children.push(
+                    ...(await parseTreeContent(options, child.childNodes, {
+                        ...state,
+                        style: { ...state.style, italics: true },
+                        paragraph_builder: (children: ParagraphChild[]): Paragraph =>
+                            new Paragraph({
+                                children,
+                                indent: {
+                                    left: convertInchesToTwip(0.25),
+                                },
+                            }),
+                    }))
                 );
                 break;
             default:
