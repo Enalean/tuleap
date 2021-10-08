@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
@@ -36,6 +37,7 @@ final class ChangesetAdder implements AddChangeset
     public function __construct(
         private \Tracker_ArtifactFactory $artifact_factory,
         private RetrieveUser $user_retriever,
+        private ChangesetValuesFormatter $formatter,
         private \Tracker_Artifact_Changeset_NewChangesetCreator $new_changeset_creator
     ) {
     }
@@ -47,12 +49,12 @@ final class ChangesetAdder implements AddChangeset
         if (! $full_artifact) {
             throw new ArtifactNotFoundException($artifact_id);
         }
-        $full_user = $this->user_retriever->getUserWithId($changeset->user);
-
+        $full_user        = $this->user_retriever->getUserWithId($changeset->user);
+        $formatted_values = $this->formatter->format($changeset->values);
         try {
             $this->new_changeset_creator->create(
                 $full_artifact,
-                $changeset->values->toFieldsDataArray(),
+                $formatted_values,
                 '',
                 $full_user,
                 $changeset->submission_date->getValue(),

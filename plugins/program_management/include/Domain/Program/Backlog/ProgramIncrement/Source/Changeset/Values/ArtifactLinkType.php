@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,23 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-
 /**
- * I hold a value of the Artifact link field.
- * This value is composed of an Artifact identifier and a link type.
+ * I hold a string representing the type (or nature) of a link to an Artifact.
+ * For example: "_mirrored_milestone" represents the type of link between a Program Increment and
+ * a Mirrored Program Increment.
  * @psalm-immutable
  */
-final class ArtifactLinkValue
+interface ArtifactLinkType
 {
-    private function __construct(
-        public ArtifactIdentifier $linked_artifact,
-        public ArtifactLinkType $type
-    ) {
-    }
-
-    public static function fromArtifactAndType(ArtifactIdentifier $artifact, ArtifactLinkType $type): self
-    {
-        return new self($artifact, $type);
-    }
+    public function __toString(): string;
 }

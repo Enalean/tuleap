@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
@@ -39,16 +38,14 @@ final class MirroredTimeboxChangesetBuilder
         int $mapped_status_bind_value_id,
         SynchronizedFieldsStubPreparation $fields,
         SourceTimeboxChangesetValues $source_values,
-        ArtifactLinkValue $artifact_link_value,
         UserIdentifier $user
     ): MirroredTimeboxChangeset {
         return MirroredTimeboxChangeset::fromMirroredTimebox(
             RetrieveTrackerOfArtifactStub::withTrackers(TrackerIdentifierStub::buildWithDefault()),
             GatherSynchronizedFieldsStub::withFieldsPreparations($fields),
-            MapStatusByValueStub::withValues($mapped_status_bind_value_id),
+            MapStatusByValueStub::withSuccessiveBindValueIds($mapped_status_bind_value_id),
             MirroredProgramIncrementIdentifierBuilder::buildWithId($mirrored_timebox_id),
             $source_values,
-            $artifact_link_value,
             $user
         );
     }

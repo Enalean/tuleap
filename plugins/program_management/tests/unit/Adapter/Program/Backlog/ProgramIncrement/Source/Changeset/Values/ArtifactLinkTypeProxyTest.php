@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
-/**
- * I hold a value of the Artifact link field.
- * This value is composed of an Artifact identifier and a link type.
- * @psalm-immutable
- */
-final class ArtifactLinkValue
+final class ArtifactLinkTypeProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private function __construct(
-        public ArtifactIdentifier $linked_artifact,
-        public ArtifactLinkType $type
-    ) {
-    }
-
-    public static function fromArtifactAndType(ArtifactIdentifier $artifact, ArtifactLinkType $type): self
+    public function testItBuildsMirrorTimeboxType(): void
     {
-        return new self($artifact, $type);
+        $type = ArtifactLinkTypeProxy::fromMirrorTimeboxType();
+        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $type);
     }
 }

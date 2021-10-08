@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Tests\Stub\BindValueIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
@@ -40,7 +41,10 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $target_status_field = StatusFieldReferenceStub::withId(709);
         $mapped_status       = MappedStatusValue::fromStatusValueAndListField(
-            MapStatusByValueStub::withValues(self::FIRST_BIND_VALUE_ID, self::SECOND_BIND_VALUE_ID),
+            MapStatusByValueStub::withMultipleValuesOnce([
+                BindValueIdentifierStub::withId(self::FIRST_BIND_VALUE_ID),
+                BindValueIdentifierStub::withId(self::SECOND_BIND_VALUE_ID)
+            ]),
             $status_value,
             $target_status_field
         );

@@ -28,12 +28,11 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\VerifyFieldPermissions;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectFromTrackerStub;
@@ -74,19 +73,15 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ProjectReferenceStub::withId(148),
         );
 
-        $synchronized_fields = SynchronizedFieldReferences::fromTrackerIdentifier(
-            GatherSynchronizedFieldsStub::withFieldsPreparations(
-                new SynchronizedFieldsStubPreparation(
-                    self::TITLE_FIELD_ID,
-                    self::DESCRIPTION_FIELD_ID,
-                    self::STATUS_FIELD_ID,
-                    self::START_DATE_FIELD_ID,
-                    self::END_PERIOD_FIELD_ID,
-                    self::ARTIFACT_LINK_FIELD_ID
-                )
-            ),
-            $tracker,
-            null
+        $synchronized_fields = SynchronizedFieldReferencesBuilder::buildWithPreparations(
+            new SynchronizedFieldsStubPreparation(
+                self::TITLE_FIELD_ID,
+                self::DESCRIPTION_FIELD_ID,
+                self::STATUS_FIELD_ID,
+                self::START_DATE_FIELD_ID,
+                self::END_PERIOD_FIELD_ID,
+                self::ARTIFACT_LINK_FIELD_ID
+            )
         );
 
         $this->project_retriever = RetrieveProjectFromTrackerStub::buildGeneric();

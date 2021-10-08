@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
@@ -41,20 +42,24 @@ final class MirroredTimeboxFirstChangesetTest extends \Tuleap\Test\PHPUnit\TestC
     protected function setUp(): void
     {
         $this->fields_gatherer = GatherSynchronizedFieldsStub::withDefaults();
-        $this->status_mapper   = MapStatusByValueStub::withValues(1592);
+        $this->status_mapper   = MapStatusByValueStub::withSuccessiveBindValueIds(1592);
 
         $this->mirrored_timebox_tracker = TrackerReferenceStub::withId(self::MIRRORED_TIMEBOX_TRACKER_ID);
     }
 
     public function testItBuildsFromMirroredTimeboxTracker(): void
     {
-        $source_values = SourceTimeboxChangesetValuesBuilder::buildWithSubmissionDate(self::SUBMISSION_TIMESTAMP);
-        $changeset     = MirroredTimeboxFirstChangeset::fromMirroredTimeboxTracker(
+        $source_values       = SourceTimeboxChangesetValuesBuilder::buildWithSubmissionDate(self::SUBMISSION_TIMESTAMP);
+        $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
+            $source_values->getSourceTimebox(),
+            ArtifactLinkTypeProxy::fromMirrorTimeboxType()
+        );
+        $changeset           = MirroredTimeboxFirstChangeset::fromMirroredTimeboxTracker(
             $this->fields_gatherer,
             $this->status_mapper,
             $this->mirrored_timebox_tracker,
             $source_values,
-            ArtifactLinkValue::fromSourceTimeboxValues($source_values),
+            $artifact_link_value,
             UserIdentifierStub::withId(self::USER_ID)
         );
 

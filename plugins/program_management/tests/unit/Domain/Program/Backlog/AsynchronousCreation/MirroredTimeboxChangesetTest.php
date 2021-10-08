@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
@@ -48,7 +47,7 @@ final class MirroredTimeboxChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             TrackerIdentifierStub::buildWithDefault()
         );
         $this->fields_gatherer   = GatherSynchronizedFieldsStub::withDefaults();
-        $this->status_mapper     = MapStatusByValueStub::withValues(2105);
+        $this->status_mapper     = MapStatusByValueStub::withSuccessiveBindValueIds(2105);
 
         $this->mirrored_program_increment = MirroredProgramIncrementIdentifierBuilder::buildWithId(
             self::MIRRORED_TIMEBOX_ID
@@ -63,7 +62,6 @@ final class MirroredTimeboxChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->status_mapper,
             $this->mirrored_program_increment,
             SourceTimeboxChangesetValuesBuilder::buildWithSubmissionDate(self::SUBMISSION_TIMESTAMP),
-            ArtifactLinkValue::buildEmptyValue(),
             UserIdentifierStub::withId(self::USER_ID)
         );
 

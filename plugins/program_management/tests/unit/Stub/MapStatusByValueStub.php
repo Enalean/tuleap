@@ -30,26 +30,35 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 final class MapStatusByValueStub implements MapStatusByValue
 {
     /**
-     * @var BindValueIdentifier[]
+     * @var array<BindValueIdentifier[]> $return_values
      */
-    private array $values;
-
-    private function __construct(BindValueIdentifier ...$values)
+    private function __construct(private array $return_values)
     {
-        $this->values = $values;
     }
 
-    public static function withValues(int ...$bind_value_ids): self
+    public static function withSuccessiveBindValueIds(int ...$bind_value_ids): self
     {
-        $identifiers = array_map(
-            static fn(int $bind_value_id): BindValueIdentifier => BindValueIdentifierStub::withId($bind_value_id),
-            $bind_value_ids
+        return new self(
+            array_map(
+                static fn(int $bind_value_id) => [BindValueIdentifierStub::withId($bind_value_id)],
+                $bind_value_ids
+            )
         );
-        return new self(...$identifiers);
+    }
+
+    /**
+     * @param BindValueIdentifier[] $bind_value_identifiers
+     */
+    public static function withMultipleValuesOnce(array $bind_value_identifiers): self
+    {
+        return new self([$bind_value_identifiers]);
     }
 
     public function mapStatusValueByDuckTyping(StatusValue $source_value, StatusFieldReference $target_field): array
     {
-        return $this->values;
+        if (count($this->return_values) > 0) {
+            return array_shift($this->return_values);
+        }
+        throw new \LogicException('No bind value identifiers configured');
     }
 }

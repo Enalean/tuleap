@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
@@ -57,7 +56,6 @@ final class MirroredTimeboxChangeset
         MapStatusByValue $status_mapper,
         MirroredTimeboxIdentifier $timebox,
         SourceTimeboxChangesetValues $source_values,
-        ArtifactLinkValue $artifact_link_value,
         UserIdentifier $user
     ): self {
         $mirror_tracker = $tracker_retriever->getTrackerOfArtifact($timebox->getId());
@@ -69,8 +67,8 @@ final class MirroredTimeboxChangeset
         $values         = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
             $status_mapper,
             $source_values,
-            $artifact_link_value,
-            $fields
+            $fields,
+            null
         );
         return new self($timebox, $values, $user, $source_values->getSubmittedOn());
     }

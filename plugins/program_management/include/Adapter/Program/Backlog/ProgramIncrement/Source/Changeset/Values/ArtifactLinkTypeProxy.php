@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
 /**
- * I hold a value of the Artifact link field.
- * This value is composed of an Artifact identifier and a link type.
  * @psalm-immutable
  */
-final class ArtifactLinkValue
+final class ArtifactLinkTypeProxy implements ArtifactLinkType
 {
-    private function __construct(
-        public ArtifactIdentifier $linked_artifact,
-        public ArtifactLinkType $type
-    ) {
+    private function __construct(private string $identifier)
+    {
     }
 
-    public static function fromArtifactAndType(ArtifactIdentifier $artifact, ArtifactLinkType $type): self
+    public static function fromMirrorTimeboxType(): self
     {
-        return new self($artifact, $type);
+        return new self(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
+    }
+
+    public function __toString(): string
+    {
+        return $this->identifier;
     }
 }

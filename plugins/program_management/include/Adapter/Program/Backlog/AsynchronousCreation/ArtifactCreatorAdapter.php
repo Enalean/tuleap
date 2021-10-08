@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
@@ -36,7 +37,8 @@ final class ArtifactCreatorAdapter implements CreateArtifact
     public function __construct(
         private TrackerArtifactCreator $artifact_creator,
         private \TrackerFactory $tracker_factory,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
+        private ChangesetValuesFormatter $formatter
     ) {
     }
 
@@ -48,10 +50,11 @@ final class ArtifactCreatorAdapter implements CreateArtifact
             throw new TrackerNotFoundException($tracker_id);
         }
 
-        $pfuser   = $this->retrieve_user->getUserWithId($first_changeset->user);
-        $artifact = $this->artifact_creator->create(
+        $pfuser           = $this->retrieve_user->getUserWithId($first_changeset->user);
+        $formatted_values = $this->formatter->format($first_changeset->values);
+        $artifact         = $this->artifact_creator->create(
             $full_tracker,
-            $first_changeset->values->toFieldsDataArray(),
+            $formatted_values,
             $pfuser,
             $first_changeset->submission_date->getValue(),
             false,

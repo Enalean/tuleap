@@ -74,7 +74,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new ProgramIncrementsCreator(
             new DBTransactionExecutorPassthrough(),
-            MapStatusByValueStub::withValues(5000),
+            MapStatusByValueStub::withSuccessiveBindValueIds(5000, 3698),
             $this->artifact_creator,
             GatherSynchronizedFieldsStub::withFieldsPreparations(
                 new SynchronizedFieldsStubPreparation(492, 244, 413, 959, 431, 921),

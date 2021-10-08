@@ -46,18 +46,18 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 final class MirroredTimeboxChangesetValues
 {
     private function __construct(
-        private ArtifactLinkFieldReference $artifact_link_field,
-        private ArtifactLinkValue $artifact_link_value,
-        private TitleFieldReference $title_field,
-        private TitleValue $title_value,
-        private DescriptionFieldReference $description_field,
-        private DescriptionValue $description_value,
-        private StatusFieldReference $status_field,
-        private MappedStatusValue $mapped_status_value,
-        private StartDateFieldReference $start_date_field,
-        private StartDateValue $start_date_value,
-        private EndPeriodFieldReference $end_period_field,
-        private EndPeriodValue $end_period_value,
+        public ArtifactLinkFieldReference $artifact_link_field,
+        public ?ArtifactLinkValue $artifact_link_value,
+        public TitleFieldReference $title_field,
+        public TitleValue $title_value,
+        public DescriptionFieldReference $description_field,
+        public DescriptionValue $description_value,
+        public StatusFieldReference $status_field,
+        public MappedStatusValue $mapped_status_value,
+        public StartDateFieldReference $start_date_field,
+        public StartDateValue $start_date_value,
+        public EndPeriodFieldReference $end_period_field,
+        public EndPeriodValue $end_period_value,
     ) {
     }
 
@@ -67,8 +67,8 @@ final class MirroredTimeboxChangesetValues
     public static function fromSourceChangesetValuesAndSynchronizedFields(
         MapStatusByValue $status_mapper,
         SourceTimeboxChangesetValues $field_values,
-        ArtifactLinkValue $artifact_link_value,
-        SynchronizedFieldReferences $target_fields
+        SynchronizedFieldReferences $target_fields,
+        ?ArtifactLinkValue $artifact_link_value
     ): self {
         $mapped_status = MappedStatusValue::fromStatusValueAndListField(
             $status_mapper,
@@ -89,20 +89,5 @@ final class MirroredTimeboxChangesetValues
             $target_fields->end_period,
             $field_values->getEndPeriodValue()
         );
-    }
-
-    /**
-     * @return array<int,string|array>
-     */
-    public function toFieldsDataArray(): array
-    {
-        return [
-            $this->artifact_link_field->getId() => $this->artifact_link_value->getValues(),
-            $this->title_field->getId()         => $this->title_value->getValue(),
-            $this->description_field->getId()   => $this->description_value->getValue(),
-            $this->status_field->getId()        => $this->mapped_status_value->getValues(),
-            $this->start_date_field->getId()    => $this->start_date_value->getValue(),
-            $this->end_period_field->getId()    => $this->end_period_value->getValue(),
-        ];
     }
 }
