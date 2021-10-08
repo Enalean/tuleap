@@ -121,7 +121,6 @@ use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
-use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
@@ -293,7 +292,7 @@ final class program_managementPlugin extends Plugin
 
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void
     {
-        $event->addConfigClass(VerifyIterationsFeatureActive::class);
+        $event->addConfigClass(ForgeConfigAdapter::class);
     }
 
     public function serviceUrlCollector(ServiceUrlCollector $collector): void

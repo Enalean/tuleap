@@ -22,10 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\FeatureFlag;
 
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 
 final class ForgeConfigAdapter implements VerifyIterationsFeatureActive
 {
+    #[FeatureFlagConfigKey("Display iteration section in program administration")]
+    public const FEATURE_FLAG_KEY = 'program_management_display_iteration';
+
     public function isIterationsFeatureActive(): bool
     {
         return (\ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY) === '1');
