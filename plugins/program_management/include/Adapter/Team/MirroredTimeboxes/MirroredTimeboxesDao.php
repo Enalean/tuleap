@@ -23,12 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 
-final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox
+final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox, RetrieveMirroredProgramIncrementFromTeam
 {
     public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array
     {
@@ -67,5 +70,33 @@ final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirro
         }
 
         return $timebox_id;
+    }
+
+    public function getMirrorId(ProgramIncrementIdentifier $program_increment, ProjectReference $team): ?int
+    {
+        $sql = <<< SQL
+        SELECT parent_art.id AS id
+        FROM tracker_artifact AS parent_art
+                 INNER JOIN tracker                                 AS parent_tracker ON (parent_tracker.id = parent_art.tracker_id AND parent_tracker.deletion_date IS NULL)
+                 INNER JOIN tracker_field                           AS f              ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                 INNER JOIN tracker_changeset_value                 AS cv             ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                 INNER JOIN tracker_changeset_value_artifactlink    AS artlink        ON (artlink.changeset_value_id = cv.id)
+                 INNER JOIN tracker_artifact                        AS linked_art     ON (linked_art.id = artlink.artifact_id)
+                 INNER JOIN tracker                                 AS linked_tracker ON (linked_art.tracker_id = linked_tracker.id AND linked_tracker.deletion_date IS NULL)
+                 INNER JOIN plugin_program_management_team_projects AS team           ON (team.team_project_id = parent_tracker.group_id AND team.program_project_id = linked_tracker.group_id)
+                 INNER JOIN plugin_program_management_program       AS program        ON (program.program_increment_tracker_id = linked_tracker.id AND team.program_project_id = program.program_project_id)
+        WHERE linked_art.id = ? AND team.team_project_id = ? AND IFNULL(artlink.nature, '') = ?
+        SQL;
+
+        $mirrored_program_increment_id = $this->getDB()->cell(
+            $sql,
+            $program_increment->getId(),
+            $team->getId(),
+            TimeboxArtifactLinkType::ART_LINK_SHORT_NAME
+        );
+        if (! $mirrored_program_increment_id) {
+            return null;
+        }
+        return $mirrored_program_increment_id;
     }
 }

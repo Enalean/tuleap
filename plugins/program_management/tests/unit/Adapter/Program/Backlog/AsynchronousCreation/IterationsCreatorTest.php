@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredIterationCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
@@ -37,14 +38,17 @@ use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RetrieveMirroredIterationTrackerStub $milestone_retriever;
     private CreateArtifactStub $artifact_creator;
+    private RetrieveMirroredProgramIncrementFromTeamStub $mirrored_program_increment_retriever;
     private SourceTimeboxChangesetValues $field_values;
     private TeamProjectsCollection $teams;
     private IterationCreation $creation;
@@ -57,13 +61,15 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->artifact_creator    = CreateArtifactStub::withIds(26, 27);
 
+        $this->mirrored_program_increment_retriever = RetrieveMirroredProgramIncrementFromTeamStub::withIds(60, 61);
+
         $this->field_values = SourceTimeboxChangesetValuesBuilder::build();
         $this->teams        = TeamProjectsCollectionBuilder::withProjects(
             ProjectReferenceStub::withId(168),
             ProjectReferenceStub::withId(160),
         );
 
-        $this->creation = IterationCreationBuilder::buildWithIds(25, 9, 26, 149, 9017);
+        $this->creation = IterationCreationBuilder::buildWithIds(25, 9, 59, 149, 9017);
     }
 
     private function getCreator(): IterationsCreator
@@ -77,6 +83,8 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 new SynchronizedFieldsStubPreparation(436, 975, 992, 145, 424, 439),
             ),
             $this->artifact_creator,
+            $this->mirrored_program_increment_retriever,
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             MessageLog::buildFromLogger(new NullLogger())
         );
     }
@@ -103,6 +111,14 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_creator = CreateArtifactStub::withError();
 
         $this->expectException(MirroredIterationCreationException::class);
+        $this->getCreator()->createIterations($this->field_values, $this->teams, $this->creation);
+    }
+
+    public function testItThrowsWhenItCannotFindMirroredProgramIncrementInTheSameTeam(): void
+    {
+        $this->mirrored_program_increment_retriever = RetrieveMirroredProgramIncrementFromTeamStub::withNoMirror();
+
+        $this->expectException(MirroredProgramIncrementNotFoundException::class);
         $this->getCreator()->createIterations($this->field_values, $this->teams, $this->creation);
     }
 }
