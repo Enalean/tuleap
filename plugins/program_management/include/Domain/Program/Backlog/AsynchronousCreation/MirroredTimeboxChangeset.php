@@ -58,7 +58,7 @@ final class MirroredTimeboxChangeset
         SourceTimeboxChangesetValues $source_values,
         UserIdentifier $user
     ): self {
-        $mirror_tracker = $tracker_retriever->getTrackerOfArtifact($timebox->getId());
+        $mirror_tracker = $tracker_retriever->getTrackerOfArtifact($timebox);
         $fields         = SynchronizedFieldReferences::fromTrackerIdentifier(
             $fields_gatherer,
             $mirror_tracker,

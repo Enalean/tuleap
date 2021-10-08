@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterationTracker;
@@ -45,6 +46,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgram
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 
 final class IterationsCreator implements CreateIterations
 {
@@ -56,6 +58,7 @@ final class IterationsCreator implements CreateIterations
         private CreateArtifact $artifact_creator,
         private RetrieveMirroredProgramIncrementFromTeam $mirrored_program_increment_retriever,
         private VerifyIsVisibleArtifact $visibility_verifier,
+        private RetrieveTrackerOfArtifact $tracker_retriever,
         private LogMessage $logger
     ) {
     }
@@ -127,7 +130,24 @@ final class IterationsCreator implements CreateIterations
         if (! $mirrored_program_increment) {
             throw new MirroredProgramIncrementNotFoundException($creation->getProgramIncrement(), $team);
         }
-        $this->logger->debug(sprintf('Created mirrored iteration #%d', $mirrored_iteration->getId()));
-        $this->logger->debug(sprintf('Parent mirrored program increment #%d', $mirrored_program_increment->getId()));
+        $artifact_link_value         = ArtifactLinkValue::fromArtifactAndType(
+            $mirrored_iteration,
+            ArtifactLinkTypeProxy::fromIsChildType()
+        );
+        $program_increment_changeset = ArtifactLinkChangeset::fromMirroredProgramIncrement(
+            $this->tracker_retriever,
+            $this->fields_gatherer,
+            $mirrored_program_increment,
+            $creation->getUser(),
+            $artifact_link_value
+        );
+        $this->logger->debug(
+            sprintf(
+                'Creating link of type %s from mirrored PI #%d to iteration #%d',
+                (string) $program_increment_changeset->artifact_link_value->type,
+                $program_increment_changeset->mirrored_program_increment->getId(),
+                $program_increment_changeset->artifact_link_value->linked_artifact->getId()
+            )
+        );
     }
 }

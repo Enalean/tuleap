@@ -47,7 +47,7 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
     public static function withDefaults(): self
     {
         return self::withFieldsPreparations(
-            new SynchronizedFieldsStubPreparation(370, 921, 381, 163, 631, 102),
+            SynchronizedFieldsStubPreparation::withAllFields(370, 921, 381, 163, 631, 102),
         );
     }
 
@@ -60,12 +60,24 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         $end_periods    = [];
         $artifact_links = [];
         foreach ($preparations as $preparation) {
-            $titles[]         = $preparation->title;
-            $descriptions[]   = $preparation->description;
-            $statuses[]       = $preparation->status;
-            $start_dates[]    = $preparation->start_date;
-            $end_periods[]    = $preparation->end_period;
-            $artifact_links[] = $preparation->artifact_link;
+            if ($preparation->title) {
+                $titles[] = $preparation->title;
+            }
+            if ($preparation->description) {
+                $descriptions[] = $preparation->description;
+            }
+            if ($preparation->status) {
+                $statuses[] = $preparation->status;
+            }
+            if ($preparation->start_date) {
+                $start_dates[] = $preparation->start_date;
+            }
+            if ($preparation->end_period) {
+                $end_periods[] = $preparation->end_period;
+            }
+            if ($preparation->artifact_link) {
+                $artifact_links[] = $preparation->artifact_link;
+            }
         }
         return new self(
             RetrieveTitleFieldStub::withFields(...$titles),

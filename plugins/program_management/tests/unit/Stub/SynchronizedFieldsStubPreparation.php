@@ -24,26 +24,43 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 final class SynchronizedFieldsStubPreparation
 {
-    public TitleFieldReferenceStub $title;
-    public DescriptionFieldReferenceStub $description;
-    public StatusFieldReferenceStub $status;
-    public StartDateFieldReferenceStub $start_date;
-    public EndPeriodFieldReferenceStub $end_period;
-    public ArtifactLinkFieldReferenceStub $artifact_link;
+    private function __construct(
+        public ?TitleFieldReferenceStub $title,
+        public ?DescriptionFieldReferenceStub $description,
+        public ?StatusFieldReferenceStub $status,
+        public ?StartDateFieldReferenceStub $start_date,
+        public ?EndPeriodFieldReferenceStub $end_period,
+        public ?ArtifactLinkFieldReferenceStub $artifact_link
+    ) {
+    }
 
-    public function __construct(
+    public static function withAllFields(
         int $title_field_id,
         int $description_field_id,
         int $status_field_id,
         int $start_date_field_id,
         int $end_period_field_id,
         int $artifact_link_field_id
-    ) {
-        $this->title         = TitleFieldReferenceStub::withId($title_field_id);
-        $this->description   = DescriptionFieldReferenceStub::withId($description_field_id);
-        $this->status        = StatusFieldReferenceStub::withId($status_field_id);
-        $this->start_date    = StartDateFieldReferenceStub::withId($start_date_field_id);
-        $this->end_period    = EndPeriodFieldReferenceStub::withId($end_period_field_id);
-        $this->artifact_link = ArtifactLinkFieldReferenceStub::withId($artifact_link_field_id);
+    ): self {
+        return new self(
+            TitleFieldReferenceStub::withId($title_field_id),
+            DescriptionFieldReferenceStub::withId($description_field_id),
+            StatusFieldReferenceStub::withId($status_field_id),
+            StartDateFieldReferenceStub::withId($start_date_field_id),
+            EndPeriodFieldReferenceStub::withId($end_period_field_id),
+            ArtifactLinkFieldReferenceStub::withId($artifact_link_field_id)
+        );
+    }
+
+    public static function withOnlyArtifactLinkField(int $artifact_link_field_id): self
+    {
+        return new self(
+            null,
+            null,
+            null,
+            null,
+            null,
+            ArtifactLinkFieldReferenceStub::withId($artifact_link_field_id)
+        );
     }
 }

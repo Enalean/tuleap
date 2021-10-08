@@ -77,8 +77,8 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             MapStatusByValueStub::withSuccessiveBindValueIds(5000, 3698),
             $this->artifact_creator,
             GatherSynchronizedFieldsStub::withFieldsPreparations(
-                new SynchronizedFieldsStubPreparation(492, 244, 413, 959, 431, 921),
-                new SynchronizedFieldsStubPreparation(752, 242, 890, 705, 660, 182),
+                SynchronizedFieldsStubPreparation::withAllFields(492, 244, 413, 959, 431, 921),
+                SynchronizedFieldsStubPreparation::withAllFields(752, 242, 890, 705, 660, 182),
             )
         );
     }

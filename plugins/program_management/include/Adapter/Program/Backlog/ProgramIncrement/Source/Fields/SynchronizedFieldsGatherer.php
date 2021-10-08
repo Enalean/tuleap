@@ -127,7 +127,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             $full_tracker->getName(),
             $full_tracker->getProject()->getPublicName(),
         );
-        throw new NoArtifactLinkFieldException($tracker_identifier->getId());
+        throw new NoArtifactLinkFieldException($tracker_identifier);
     }
 
     private function getFullTracker(TrackerIdentifier $tracker_identifier): \Tracker

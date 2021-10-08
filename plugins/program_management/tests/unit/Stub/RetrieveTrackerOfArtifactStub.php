@@ -22,27 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveTrackerOfArtifactStub implements RetrieveTrackerOfArtifact
 {
     /**
-     * @var TrackerIdentifier[]
+     * @param TrackerIdentifier[]
      */
-    private array $trackers;
-
-    private function __construct(TrackerIdentifier ...$trackers)
+    private function __construct(private array $trackers)
     {
-        $this->trackers = $trackers;
     }
 
-    public static function withTrackers(TrackerIdentifier ...$trackers): self
+    public static function withIds(int $tracker_id, int ...$other_tracker_ids): self
     {
-        return new self(...$trackers);
+        $identifiers = array_map(
+            static fn(int $id) => TrackerIdentifierStub::withId($id),
+            [$tracker_id, ...$other_tracker_ids]
+        );
+        return new self($identifiers);
     }
 
-    public function getTrackerOfArtifact(int $artifact_id): TrackerIdentifier
+    public function getTrackerOfArtifact(ArtifactIdentifier $artifact): TrackerIdentifier
     {
         if (count($this->trackers) > 0) {
             return array_shift($this->trackers);

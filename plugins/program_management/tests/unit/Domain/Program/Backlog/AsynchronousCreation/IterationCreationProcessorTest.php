@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -83,8 +84,8 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger           = new TestLogger();
         $this->artifact_creator = CreateArtifactStub::withIds(21, 22);
         $this->fields_gatherer  = GatherSynchronizedFieldsStub::withFieldsPreparations(
-            new SynchronizedFieldsStubPreparation(444, 819, 242, 757, 123, 226),
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(444, 819, 242, 757, 123, 226),
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::FIRST_TITLE_FIELD_ID,
                 self::FIRST_DESCRIPTION_FIELD_ID,
                 self::FIRST_STATUS_FIELD_ID,
@@ -92,7 +93,8 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::FIRST_END_DATE_FIELD_ID,
                 self::FIRST_ARTIFACT_LINK_FIELD_ID
             ),
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withOnlyArtifactLinkField(120),
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::SECOND_TITLE_FIELD_ID,
                 self::SECOND_DESCRIPTION_FIELD_ID,
                 self::SECOND_STATUS_FIELD_ID,
@@ -100,6 +102,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::SECOND_END_DATE_FIELD_ID,
                 self::SECOND_ARTIFACT_LINK_FIELD_ID
             ),
+            SynchronizedFieldsStubPreparation::withOnlyArtifactLinkField(768),
         );
     }
 
@@ -141,6 +144,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->artifact_creator,
                 RetrieveMirroredProgramIncrementFromTeamStub::withIds(17, 40),
                 VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+                RetrieveTrackerOfArtifactStub::withIds(84, 97),
                 $logger
             )
         );

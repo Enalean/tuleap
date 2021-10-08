@@ -29,7 +29,6 @@ use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 
 final class MirroredTimeboxChangesetBuilder
 {
@@ -41,7 +40,7 @@ final class MirroredTimeboxChangesetBuilder
         UserIdentifier $user
     ): MirroredTimeboxChangeset {
         return MirroredTimeboxChangeset::fromMirroredTimebox(
-            RetrieveTrackerOfArtifactStub::withTrackers(TrackerIdentifierStub::buildWithDefault()),
+            RetrieveTrackerOfArtifactStub::withIds(1),
             GatherSynchronizedFieldsStub::withFieldsPreparations($fields),
             MapStatusByValueStub::withSuccessiveBindValueIds($mapped_status_bind_value_id),
             MirroredProgramIncrementIdentifierBuilder::buildWithId($mirrored_timebox_id),

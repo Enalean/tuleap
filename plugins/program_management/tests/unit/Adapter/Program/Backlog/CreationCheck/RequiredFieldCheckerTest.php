@@ -74,7 +74,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $synchronized_fields = SynchronizedFieldReferencesBuilder::buildWithPreparations(
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::TITLE_FIELD_ID,
                 self::DESCRIPTION_FIELD_ID,
                 self::STATUS_FIELD_ID,

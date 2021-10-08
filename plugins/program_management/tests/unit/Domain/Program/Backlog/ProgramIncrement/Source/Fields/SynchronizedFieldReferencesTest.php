@@ -41,7 +41,7 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
     protected function setUp(): void
     {
         $this->gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::TITLE_ID,
                 self::DESCRIPTION_ID,
                 self::STATUS_ID,

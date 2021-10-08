@@ -35,7 +35,6 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -82,8 +81,8 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->logger          = new TestLogger();
         $this->fields_gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
-            new SynchronizedFieldsStubPreparation(199, 885, 826, 351, 986, 536),
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(199, 885, 826, 351, 986, 536),
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::FIRST_TITLE_FIELD_ID,
                 self::FIRST_DESCRIPTION_FIELD_ID,
                 self::FIRST_STATUS_FIELD_ID,
@@ -91,7 +90,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
                 self::FIRST_END_DATE_FIELD_ID,
                 self::FIRST_ARTIFACT_LINK_FIELD_ID
             ),
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::SECOND_TITLE_FIELD_ID,
                 self::SECOND_DESCRIPTION_FIELD_ID,
                 self::SECOND_STATUS_FIELD_ID,
@@ -126,10 +125,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
             RetrieveChangesetSubmissionDateStub::withDate(self::SUBMISSION_DATE),
             $this->mirror_searcher,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            RetrieveTrackerOfArtifactStub::withTrackers(
-                TrackerIdentifierStub::withId(72),
-                TrackerIdentifierStub::withId(53)
-            ),
+            RetrieveTrackerOfArtifactStub::withIds(72, 53),
             MapStatusByValueStub::withSuccessiveBindValueIds(
                 self::FIRST_MAPPED_STATUS_BIND_VALUE_ID,
                 self::SECOND_MAPPED_STATUS_BIND_VALUE_ID

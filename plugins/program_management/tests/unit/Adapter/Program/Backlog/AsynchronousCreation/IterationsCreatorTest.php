@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -79,12 +80,15 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->milestone_retriever,
             MapStatusByValueStub::withSuccessiveBindValueIds(2061, 2130),
             GatherSynchronizedFieldsStub::withFieldsPreparations(
-                new SynchronizedFieldsStubPreparation(211, 556, 596, 500, 614, 793),
-                new SynchronizedFieldsStubPreparation(436, 975, 992, 145, 424, 439),
+                SynchronizedFieldsStubPreparation::withAllFields(211, 556, 596, 500, 614, 793),
+                SynchronizedFieldsStubPreparation::withOnlyArtifactLinkField(476),
+                SynchronizedFieldsStubPreparation::withAllFields(436, 975, 992, 145, 424, 439),
+                SynchronizedFieldsStubPreparation::withOnlyArtifactLinkField(385),
             ),
             $this->artifact_creator,
             $this->mirrored_program_increment_retriever,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            RetrieveTrackerOfArtifactStub::withIds(95, 64),
             MessageLog::buildFromLogger(new NullLogger())
         );
     }

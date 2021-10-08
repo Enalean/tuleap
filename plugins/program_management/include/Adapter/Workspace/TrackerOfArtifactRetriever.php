@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
@@ -35,11 +36,11 @@ final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact
     ) {
     }
 
-    public function getTrackerOfArtifact(int $artifact_id): TrackerIdentifier
+    public function getTrackerOfArtifact(ArtifactIdentifier $artifact): TrackerIdentifier
     {
-        $full_artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        $full_artifact = $this->artifact_factory->getArtifactById($artifact->getId());
         if (! $full_artifact) {
-            throw new ArtifactNotFoundException($artifact_id);
+            throw new ArtifactNotFoundException($artifact);
         }
         $tracker_id = $full_artifact->getTrackerId();
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);

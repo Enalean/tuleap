@@ -40,7 +40,7 @@ final class ChangesetRetriever implements RetrieveChangesetSubmissionDate
     {
         $full_artifact = $this->artifact_factory->getArtifactById($artifact->getId());
         if (! $full_artifact) {
-            throw new ArtifactNotFoundException($artifact->getId());
+            throw new ArtifactNotFoundException($artifact);
         }
         $changeset = $full_artifact->getChangeset($changeset_identifier->getId());
         if (! $changeset) {

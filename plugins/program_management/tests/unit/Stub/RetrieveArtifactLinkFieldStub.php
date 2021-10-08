@@ -24,28 +24,36 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveArtifactLinkField;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 
 final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
 {
     /**
-     * @var ArtifactLinkFieldReference[]
+     * @param ArtifactLinkFieldReference[] $artifact_links
      */
-    private array $artifact_links;
-
-    private function __construct(ArtifactLinkFieldReference ...$artifact_links)
+    private function __construct(private bool $should_throw, private array $artifact_links)
     {
-        $this->artifact_links = $artifact_links;
     }
 
-    public static function withFields(ArtifactLinkFieldReference ...$artifact_links): self
+    public static function withFields(
+        ArtifactLinkFieldReference $field,
+        ArtifactLinkFieldReference ...$other_fields
+    ): self {
+        return new self(false, [$field, ...$other_fields]);
+    }
+
+    public static function withError(): self
     {
-        return new self(...$artifact_links);
+        return new self(true, []);
     }
 
     public function getArtifactLinkField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): ArtifactLinkFieldReference
     {
+        if ($this->should_throw) {
+            throw new NoArtifactLinkFieldException($tracker_identifier);
+        }
         if (count($this->artifact_links) > 0) {
             return array_shift($this->artifact_links);
         }

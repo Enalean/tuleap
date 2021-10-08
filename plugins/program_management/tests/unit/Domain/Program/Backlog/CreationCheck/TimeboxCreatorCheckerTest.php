@@ -79,9 +79,9 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->required_field_checker      = $this->createStub(CheckRequiredField::class);
         $this->workflow_checker            = $this->createStub(CheckWorkflow::class);
         $this->fields_adapter              = GatherSynchronizedFieldsStub::withFieldsPreparations(
-            new SynchronizedFieldsStubPreparation(770, 362, 544, 436, 341, 245),
-            new SynchronizedFieldsStubPreparation(610, 360, 227, 871, 623, 440),
-            new SynchronizedFieldsStubPreparation(914, 977, 235, 435, 148, 475),
+            SynchronizedFieldsStubPreparation::withAllFields(770, 362, 544, 436, 341, 245),
+            SynchronizedFieldsStubPreparation::withAllFields(610, 360, 227, 871, 623, 440),
+            SynchronizedFieldsStubPreparation::withAllFields(914, 977, 235, 435, 148, 475),
         );
         $this->user_can_submit             = VerifyUserCanSubmitStub::userCanSubmit();
 
