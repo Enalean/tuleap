@@ -28,7 +28,6 @@ use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
-use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
 /**
@@ -55,7 +54,6 @@ final class ProjectContextPresenter
     public string $administration_link;
     public ?LinkedProjectsCollectionPresenter $linked_projects;
     public ?string $project_icon;
-    public bool $is_project_icon_enabled;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -83,7 +81,6 @@ final class ProjectContextPresenter
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->linked_projects            = $linked_projects_presenter;
         $this->project_icon               = $project_icon;
-        $this->is_project_icon_enabled    = ProjectIconChecker::isProjectIconFeatureActive();
     }
 
     public static function build(

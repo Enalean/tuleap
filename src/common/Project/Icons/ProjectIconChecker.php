@@ -23,26 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Icons;
 
-use ForgeConfig;
-use Tuleap\Config\FeatureFlagConfigKey;
 
 final class ProjectIconChecker
 {
-
-    #[FeatureFlagConfigKey("Display the project icon")]
-    public const FEATURE_FLAG_KEY = 'project_icon_display';
-
-    public static function isProjectIconFeatureActive(): bool
-    {
-        return (ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY) === '1');
-    }
 
     /**
      * @throws InvalidProjectIconException
      */
     public static function isIconValid(string $icon): void
     {
-        if ($icon === '' || ! self::isProjectIconFeatureActive()) {
+        if ($icon === '') {
             return;
         }
 

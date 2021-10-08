@@ -28,7 +28,6 @@ use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Document\Config\HistoryEnforcementSettings;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
-use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
 class DocumentTreePresenter
@@ -120,7 +119,6 @@ class DocumentTreePresenter
     public $project_flags;
 
     public string $project_icon;
-    public bool $is_project_icon_enabled;
 
     public function __construct(
         \Project $project,
@@ -155,9 +153,8 @@ class DocumentTreePresenter
         $this->is_changelog_proposed_after_dnd    = $history_settings->isChangelogProposedAfterDragAndDrop();
         $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
 
-        $this->privacy                 = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
-        $this->project_flags           = json_encode($project_flags, JSON_THROW_ON_ERROR);
-        $this->project_icon            = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
-        $this->is_project_icon_enabled = ProjectIconChecker::isProjectIconFeatureActive();
+        $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
+        $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->project_icon  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
     }
 }

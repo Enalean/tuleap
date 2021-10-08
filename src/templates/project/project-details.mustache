@@ -31,11 +31,9 @@
                                 {{/ built_from_xml_template }}
                             </div>
                         </div>
-                        {{# is_project_icon_enabled }}
                         <div class="project-admin-project-name-container">
-                        {{/ is_project_icon_enabled }}
                         <div
-                            class="tlp-form-element {{# is_project_icon_enabled }}form-group-name-element{{/ is_project_icon_enabled }}">
+                            class="tlp-form-element form-group-name-element">
                             <label for="form_group_name" class="tlp-label">
                                 {{ project_name_label }} <i class="fa fa-asterisk"></i>
                             </label>
@@ -51,10 +49,9 @@
                             />
                             <p class="tlp-text-info">{{ project_name_info }}</p>
                         </div>
-                        {{# is_project_icon_enabled }}
                             <div class="tlp-form-element">
                                 <label class="tlp-label" for="form-group-name-icon">{{ icon_label_name }}</label>
-                                <div id="form-group-name-icon-input-container" class="tlp-form-element tlp-form-element-append"  {{# is_project_icon_enabled }} data-all-project-icons="{{all_project_icon}}" {{/ is_project_icon_enabled }}>
+                                <div id="form-group-name-icon-input-container" class="tlp-form-element tlp-form-element-append" data-all-project-icons="{{all_project_icon}}">
                                     <input type="text" readonly maxlength="1" class="tlp-input form-group-name-icon-input" id="form-group-name-icon" name="form-group-name-icon"
                                            value="{{ project_icon }}"/>
                                     <button id="form-group-name-icon-button" type="button"
@@ -64,7 +61,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{/ is_project_icon_enabled }}
                         <div class="tlp-form-element">
                             <label for="form_shortdesc" class="tlp-label">
                                 {{ short_description_label }}

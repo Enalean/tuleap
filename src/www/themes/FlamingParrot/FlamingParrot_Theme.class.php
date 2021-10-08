@@ -48,7 +48,6 @@ use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
-use Tuleap\Project\Icons\ProjectIconChecker;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
@@ -404,13 +403,11 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $project_link        = $this->getProjectLink($project);
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
             $crumb_link          = new BreadCrumbLink($project->getPublicName(), $project->getUrl());
-            if (ProjectIconChecker::isProjectIconFeatureActive()) {
                 $crumb_link->setProjectIcon(
                     EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
                         $project->getIconUnicodeCodepoint()
                     )
                 );
-            }
             $crumb = new BreadCrumb($crumb_link);
             $crumb->setAdditionalClassname("breadcrumb-project");
             $this->breadcrumbs->addFirst($crumb);

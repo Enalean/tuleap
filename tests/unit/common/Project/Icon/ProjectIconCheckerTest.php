@@ -32,24 +32,6 @@ class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testTheProjectIconFeatureIsDisabledIfForgeConfigIsNotSet(): void
-    {
-        ForgeConfig::set('some_config', '1');
-        self::assertFalse(ProjectIconChecker::isProjectIconFeatureActive());
-    }
-
-    public function testTheProjectIconFeatureIsDisabledIfForgeConfigIsSetTo0(): void
-    {
-        ForgeConfig::set('feature_flag_project_icon_display', '0');
-        self::assertFalse(ProjectIconChecker::isProjectIconFeatureActive());
-    }
-
-    public function testTheProjectIconFeatureIsEnabledIfForgeConfigIsSetTo1(): void
-    {
-        ForgeConfig::set('feature_flag_project_icon_display', '1');
-        self::assertTrue(ProjectIconChecker::isProjectIconFeatureActive());
-    }
-
     public function testItThrowsExceptionIfTheGivenIconIsAForbiddenIcon(): void
     {
         ForgeConfig::set('feature_flag_project_icon_display', '1');
