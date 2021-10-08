@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
@@ -42,7 +44,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
     ) {
     }
 
-    public function create(MirroredTimeboxFirstChangeset $first_changeset): void
+    public function create(MirroredTimeboxFirstChangeset $first_changeset): MirroredTimeboxIdentifier
     {
         $tracker_id   = $first_changeset->mirrored_timebox_tracker->getId();
         $full_tracker = $this->tracker_factory->getTrackerById($tracker_id);
@@ -64,5 +66,6 @@ final class ArtifactCreatorAdapter implements CreateArtifact
         if (! $artifact) {
             throw new ArtifactCreationException();
         }
+        return MirroredTimeboxIdentifierProxy::fromArtifact($artifact);
     }
 }

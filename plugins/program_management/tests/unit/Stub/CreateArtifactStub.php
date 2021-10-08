@@ -25,24 +25,35 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
 
 final class CreateArtifactStub implements CreateArtifact
 {
+    private int $call_count = 0;
+
     /**
-     * @var MirroredTimeboxFirstChangeset[] $arguments
+     * @param MirroredTimeboxIdentifier[]     $return_values
+     * @param MirroredTimeboxFirstChangeset[] $arguments
      */
-    private function __construct(private int $call_count, private bool $should_throw, private array $arguments = [])
-    {
+    private function __construct(
+        private bool $should_throw,
+        private array $return_values,
+        private array $arguments = []
+    ) {
     }
 
-    public static function withCount(): self
+    public static function withIds(int ...$mirrored_timebox_ids): self
     {
-        return new self(0, false);
+        $return_values = array_map(
+            static fn(int $id) => MirroredTimeboxIdentifierStub::withId($id),
+            $mirrored_timebox_ids
+        );
+        return new self(false, $return_values);
     }
 
     public static function withError(): self
     {
-        return new self(0, true);
+        return new self(true, []);
     }
 
     public function getCallCount(): int
@@ -58,12 +69,16 @@ final class CreateArtifactStub implements CreateArtifact
         return $this->arguments;
     }
 
-    public function create(MirroredTimeboxFirstChangeset $first_changeset): void
+    public function create(MirroredTimeboxFirstChangeset $first_changeset): MirroredTimeboxIdentifier
     {
         $this->call_count++;
         $this->arguments[] = $first_changeset;
         if ($this->should_throw) {
             throw new ArtifactCreationException();
         }
+        if (count($this->return_values) > 0) {
+            return array_shift($this->return_values);
+        }
+        throw new \LogicException('No artifact id configured');
     }
 }

@@ -79,7 +79,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creation = IterationCreationBuilder::buildWithIds(self::ITERATION_ID, 2, 53, self::USER_ID, 8612);
 
         $this->logger           = new TestLogger();
-        $this->artifact_creator = CreateArtifactStub::withCount();
+        $this->artifact_creator = CreateArtifactStub::withIds(21, 22);
         $this->fields_gatherer  = GatherSynchronizedFieldsStub::withFieldsPreparations(
             new SynchronizedFieldsStubPreparation(444, 819, 242, 757, 123, 226),
             new SynchronizedFieldsStubPreparation(
@@ -103,8 +103,9 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function getProcessor(): IterationCreationProcessor
     {
+        $logger = MessageLog::buildFromLogger($this->logger);
         return new IterationCreationProcessor(
-            MessageLog::buildFromLogger($this->logger),
+            $logger,
             $this->fields_gatherer,
             RetrieveFieldValuesGathererStub::withGatherer(
                 GatherFieldValuesStub::withValues(
@@ -135,7 +136,8 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                     self::SECOND_MAPPED_STATUS_BIND_VALUE_ID
                 ),
                 $this->fields_gatherer,
-                $this->artifact_creator
+                $this->artifact_creator,
+                $logger
             )
         );
     }

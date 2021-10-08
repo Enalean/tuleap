@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
+use Tuleap\Tracker\Artifact\Artifact;
 
-interface CreateArtifact
+/**
+ * @psalm-immutable
+ */
+final class MirroredTimeboxIdentifierProxy implements MirroredTimeboxIdentifier
 {
-    /**
-     * @throws ArtifactCreationException
-     */
-    public function create(MirroredTimeboxFirstChangeset $first_changeset): MirroredTimeboxIdentifier;
+    private function __construct(private int $id)
+    {
+    }
+
+    public static function fromArtifact(Artifact $artifact): self
+    {
+        return new self($artifact->getId());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

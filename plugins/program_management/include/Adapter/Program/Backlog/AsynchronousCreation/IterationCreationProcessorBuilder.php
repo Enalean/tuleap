@@ -60,6 +60,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $event_manager        = \EventManager::instance();
         $user_retriever       = new UserManagerAdapter(\UserManager::instance());
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $message_logger       = MessageLog::buildFromLogger($logger);
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_factory,
@@ -97,11 +98,12 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
             new StatusValueMapper($form_element_factory),
             $synchronized_fields_gatherer,
-            $artifact_creator
+            $artifact_creator,
+            $message_logger
         );
 
         return new IterationCreationProcessor(
-            MessageLog::buildFromLogger($logger),
+            $message_logger,
             $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
             new ChangesetRetriever($artifact_factory),

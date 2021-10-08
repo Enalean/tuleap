@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-interface CreateArtifact
+final class MirroredTimeboxIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @throws ArtifactCreationException
-     */
-    public function create(MirroredTimeboxFirstChangeset $first_changeset): MirroredTimeboxIdentifier;
+    private const ARTIFACT_ID = 54;
+
+    public function testItBuildsFromArtifact(): void
+    {
+        $artifact         = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
+        $mirrored_timebox = MirroredTimeboxIdentifierProxy::fromArtifact($artifact);
+        self::assertSame(self::ARTIFACT_ID, $mirrored_timebox->getId());
+    }
 }
