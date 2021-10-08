@@ -18,10 +18,10 @@
  *
  */
 
-import { html } from "lit-html";
+import { html } from "lit/html.js";
 import { convertBadColorHexToRGB } from "../color-helper";
 import { retrievePredefinedTemplate } from "./predefined-item-template-retriever-helper";
-import { styleMap } from "lit-html/directives/style-map";
+import { styleMap } from "lit/directives/style-map.js";
 
 describe("predefined-item-template-retriever", () => {
     it("should return the avatar template if data-avatar-url is set", () => {
@@ -45,6 +45,7 @@ describe("predefined-item-template-retriever", () => {
         const label = "TS050 Hybrid";
         option_with_colored_badge.appendChild(document.createTextNode(label));
         const color = "fiesta-red";
+        const color2 = "fiesta-red";
         option_with_colored_badge.setAttribute("data-color-value", color);
 
         // The source of truth is the production code, Prettier should not interfere with the spacing here
@@ -52,7 +53,7 @@ describe("predefined-item-template-retriever", () => {
         expect(retrievePredefinedTemplate(option_with_colored_badge)).toEqual(
             html`
             <span class="list-picker-option-colored-label-container">
-                <span class="list-picker-circular-color-${color}"></span>
+                <span class="list-picker-circular-color-${color2}"></span>
                 ${label}
             </span>
         `
@@ -80,7 +81,7 @@ describe("predefined-item-template-retriever", () => {
 
         // The source of truth is the production code, Prettier should not interfere with the spacing here
         //prettier-ignore
-        expect(retrievePredefinedTemplate(option_with_colored_badge).getTemplateElement()).toEqual(
+        expect(retrievePredefinedTemplate(option_with_colored_badge)).toEqual(
             html`
             <span class="list-picker-option-colored-label-container">
                 <span
@@ -89,7 +90,6 @@ describe("predefined-item-template-retriever", () => {
                 ></span>
                 ${label}
             </span>
-        `.getTemplateElement()
-        );
+        `);
     });
 });

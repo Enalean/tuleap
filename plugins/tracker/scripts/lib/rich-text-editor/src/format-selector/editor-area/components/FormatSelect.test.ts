@@ -24,7 +24,8 @@ import {
     TEXT_FORMAT_TEXT,
 } from "../../../../../../constants/fields-constants";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit-html";
+import { render } from "lit/html.js";
+import { stripLitExpressionComments } from "../../../test-helper";
 
 const emptyFunction = (): void => {
     //Do nothing
@@ -60,27 +61,18 @@ describe(`FormatSelect`, () => {
         const template = createSelect(presenter, gettext_provider);
         render(template, mount_point);
 
-        expect(mount_point.innerHTML).toMatchInlineSnapshot(`
-            <!---->
-            <select class="input-small" data-test="format-select" id="whimper" name="depletive">
-              <!---->
-              <option value="commonmark" selected="">
-                <!---->Markdown
-                <!---->
-              </option>
-              <!---->
-              <option value="html">
-                <!---->HTML
-                <!---->
-              </option>
-              <!---->
-              <option value="text">
-                <!---->Text
-                <!---->
-              </option>
-              <!---->
-            </select>
-            <!---->
+        expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
+            "
+                    <select class=\\"input-small\\" data-test=\\"format-select\\" id=\\"whimper\\" name=\\"depletive\\">
+                        
+                <option value=\\"commonmark\\" selected=\\"\\">Markdown</option>
+
+                <option value=\\"html\\">HTML</option>
+
+                <option value=\\"text\\">Text</option>
+
+                    </select>
+                "
         `);
     });
 

@@ -9,7 +9,7 @@ specifiers:
   '@types/marked': ^3.0.1
   '@types/turndown': ^5.0.0
   dompurify: ^2.2.9
-  lit-html: ^1.4.1
+  lit: ^2.0.2
   marked: ^3.0.4
   turndown: ^7.0.0
 
@@ -17,7 +17,7 @@ dependencies:
   '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
   '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   dompurify: 2.3.1
-  lit-html: 1.4.1
+  lit: 2.0.2
   marked: 3.0.4
   turndown: 7.1.1
 
@@ -29,6 +29,10 @@ devDependencies:
   '@types/turndown': 5.0.1
 
 packages:
+
+  /@lit/reactive-element/1.0.1:
+    resolution: {integrity: sha512-nSD5AA2AZkKuXuvGs8IK7K5ZczLAogfDd26zT9l6S7WzvqALdVWcW5vMUiTnZyj5SPcNwNNANj0koeV1ieqTFQ==}
+    dev: false
 
   /@types/bootstrap/3.4.0:
     resolution: {integrity: sha512-LS05hVAAsX86qbHg7W+ydwBlNHrVCoFw6wEP3/uW4eYmRXl08bWmPeN/+onM+8qZTFfDgUlG/OItJI8SW972oQ==}
@@ -64,6 +68,10 @@ packages:
     resolution: {integrity: sha512-TmhE+/eI8PP7EwT9EbK8i74F1ryNn0LToCyEaLpN+X+A3LS1j4CpsCk9Jwq6Y2Uu7w9wdrKl6bujdj5LSsDKKA==}
     dev: true
 
+  /@types/trusted-types/2.0.2:
+    resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
+    dev: false
+
   /@types/turndown/5.0.1:
     resolution: {integrity: sha512-N8Ad4e3oJxh9n9BiZx9cbe/0M3kqDpOTm2wzj13wdDUxDPjfjloWIJaquZzWE1cYTAHpjOH3rcTnXQdpEfS/SQ==}
     dev: true
@@ -76,8 +84,25 @@ packages:
     resolution: {integrity: sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==}
     dev: false
 
-  /lit-html/1.4.1:
-    resolution: {integrity: sha512-B9btcSgPYb1q4oSOb/PrOT6Z/H+r6xuNzfH4lFli/AWhYwdtrgQkQWBbIc6mdnf6E2IL3gDXdkkqNktpU0OZQA==}
+  /lit-element/3.0.1:
+    resolution: {integrity: sha512-vs9uybH9ORyK49CFjoNGN85HM9h5bmisU4TQ63phe/+GYlwvY/3SIFYKdjV6xNvzz8v2MnVC+9+QOkPqh+Q3Ew==}
+    dependencies:
+      '@lit/reactive-element': 1.0.1
+      lit-html: 2.0.1
+    dev: false
+
+  /lit-html/2.0.1:
+    resolution: {integrity: sha512-KF5znvFdXbxTYM/GjpdOOnMsjgRcFGusTnB54ixnCTya5zUR0XqrDRj29ybuLS+jLXv1jji6Y8+g4W7WP8uL4w==}
+    dependencies:
+      '@types/trusted-types': 2.0.2
+    dev: false
+
+  /lit/2.0.2:
+    resolution: {integrity: sha512-hKA/1YaSB+P+DvKWuR2q1Xzy/iayhNrJ3aveD0OQ9CKn6wUjsdnF/7LavDOJsKP/K5jzW/kXsuduPgRvTFrFJw==}
+    dependencies:
+      '@lit/reactive-element': 1.0.1
+      lit-element: 3.0.1
+      lit-html: 2.0.1
     dev: false
 
   /marked/3.0.4:

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,16 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "../../../../../../constants/fields-constants";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
-
-export interface FormatHiddenInputPresenter {
-    readonly name: string;
-    readonly value: TextFieldFormat;
+/**
+ * See https://github.com/lit/lit/blob/lit%402.0.2/packages/lit-html/src/test/test-utils/strip-markers.ts
+ */
+export function stripLitExpressionComments(html: string): string {
+    return html.replace(/<!--\?lit\$[0-9]+\$-->|<!--\??-->/g, "");
 }
-
-export const createFormatHiddenInput = (presenter: FormatHiddenInputPresenter): TemplateResult =>
-    html`
-        <input type="hidden" name="${presenter.name}" value="${presenter.value}" />
-    `;

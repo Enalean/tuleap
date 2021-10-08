@@ -10,7 +10,7 @@
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/gettext": "file:../gettext",
-    "lit-html": "^1.4.1"
+    "lit": "^2.0.2"
   },
   "scripts": {
     "build": "vite build",

@@ -87,7 +87,7 @@ exports[`DropDownContentRenderer without search input renders simple list items 
   <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-bad_colored" class="list-picker-dropdown-option-value">
 
     <span class="list-picker-option-colored-label-container">
-                <span class="list-picker-circular-legacy-color" style="background: rgba(255, 255, 255, 0.6); color: rgb(255, 255, 255);"></span>
+                <span class="list-picker-circular-legacy-color" style="background:rgba(255, 255, 255, .6);border:3px solid rgba(255, 255, 255);color:#ffffff;"></span>
     Bad Colored
     </span>
 

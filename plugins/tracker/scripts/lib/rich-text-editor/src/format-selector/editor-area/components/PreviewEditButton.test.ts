@@ -19,7 +19,8 @@
 
 import { createPreviewEditButton } from "./PreviewEditButton";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit-html";
+import { render } from "lit/html.js";
+import { stripLitExpressionComments } from "../../../test-helper";
 
 const emptyFunction = (): void => {
     //Do nothing
@@ -62,7 +63,7 @@ describe(`PreviewEditButton`, () => {
             await presenter.promise_of_preview;
 
             const button = getButton();
-            expect(button.outerHTML).toMatchSnapshot();
+            expect(stripLitExpressionComments(button.outerHTML)).toMatchSnapshot();
 
             const icon = button.querySelector("[data-test=button-icon]");
             if (!(icon instanceof HTMLElement)) {
@@ -85,7 +86,7 @@ describe(`PreviewEditButton`, () => {
         render(template, mount_point);
         return presenter.promise_of_preview.catch(identity).then(() => {
             const button = getButton();
-            expect(button.outerHTML).toMatchInlineSnapshot(`
+            expect(stripLitExpressionComments(button.outerHTML)).toMatchInlineSnapshot(`
                 <button type="button" class="btn btn-small rte-button">
                   <i aria-hidden="true" data-test="button-icon" class="fas fa-fw fa-eye"></i>
                   Preview
@@ -103,7 +104,7 @@ describe(`PreviewEditButton`, () => {
         const template = createPreviewEditButton(presenter, gettext_provider);
         render(template, mount_point);
         const button = getButton();
-        expect(button.outerHTML).toMatchInlineSnapshot(`
+        expect(stripLitExpressionComments(button.outerHTML)).toMatchInlineSnapshot(`
                 <button type="button" class="btn btn-small rte-button" disabled="">
                   <i class="fas fa-fw fa-spin fa-circle-notch" aria-hidden="true"></i>
                   Preview

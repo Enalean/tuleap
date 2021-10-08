@@ -19,7 +19,8 @@
 
 import { TEXT_FORMAT_HTML } from "../../../../../../constants/fields-constants";
 import { createFormatHiddenInput } from "./FormatHiddenInput";
-import { render } from "lit-html";
+import { render } from "lit/html.js";
+import { stripLitExpressionComments } from "../../../test-helper";
 
 describe(`FormatHiddenInput`, () => {
     let mount_point: HTMLDivElement;
@@ -32,10 +33,10 @@ describe(`FormatHiddenInput`, () => {
         const template = createFormatHiddenInput({ name: "basalt", value: TEXT_FORMAT_HTML });
         render(template, mount_point);
 
-        expect(mount_point.innerHTML).toMatchInlineSnapshot(`
-            <!---->
-            <input type="hidden" name="basalt" value="html">
-            <!---->
+        expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
+            "
+                    <input type=\\"hidden\\" name=\\"basalt\\" value=\\"html\\">
+                "
         `);
     });
 });

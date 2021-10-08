@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { html as HTMLTemplateStringProcessor, TemplateResult } from "lit-html";
+import type { html as HTMLTemplateStringProcessor, TemplateResult } from "lit/html.js";
 
 export interface ListPicker {
     destroy: () => void;

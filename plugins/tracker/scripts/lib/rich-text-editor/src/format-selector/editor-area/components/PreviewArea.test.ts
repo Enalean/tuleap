@@ -19,7 +19,8 @@
 
 import { createPreviewArea } from "./PreviewArea";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit-html";
+import { render } from "lit/html.js";
+import { stripLitExpressionComments } from "../../../test-helper";
 
 jest.mock("dompurify", () => {
     const realDomPurify = jest.requireActual("dompurify");
@@ -81,18 +82,18 @@ describe(`PreviewArea`, () => {
         const template = createPreviewArea(promise, gettext_provider);
         render(template, mount_point);
         return promise.catch(identity).then(() => {
-            expect(mount_point.innerHTML).toMatchInlineSnapshot(`
-                <!---->
-                <div>
+            expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
+                "
+                        <div>
+                            
+                    <div class=\\"alert alert-error\\">
+                        There was an error in the Markdown preview:
+                        <br>
+                        Network Error
+                    </div>
 
-                  <div class="alert alert-error">
-                    There was an error in the Markdown preview:
-                    <br>
-                    Network Error
-                  </div>
-
-                </div>
-                <!---->
+                        </div>
+                    "
             `);
         });
     });

@@ -25,7 +25,7 @@ const esModules = [
     "d3-shape",
     "d3-force",
     "d3",
-    "lit-html",
+    "lit",
     "internmap",
     "hybrids",
 ].join("|");
@@ -72,9 +72,9 @@ module.exports = {
         "!**/jest.config.js",
         "!**/*.d.ts",
     ],
-    // Transpile lit-html because of esmodules in nodejs
-    // lit-html is not used globally but by some of the internal Tuleap libs
-    // To avoid wasting more developers time than needed we consider it's present everywhere
+    // Transpile ESModules because they are not supported by NodeJS (yet)
+    // They are only used in some part of Tuleap but to avoid wasting more
+    // developers time than needed we consider they are present everywhere
     transformIgnorePatterns: [
         `/(?!${esModules})/`,
         "/angular-locker/",

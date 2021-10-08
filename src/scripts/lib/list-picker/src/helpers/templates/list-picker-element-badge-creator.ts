@@ -20,11 +20,11 @@
 
 import type { ListPickerItem } from "../../type";
 import { convertBadColorHexToRGB, isColorBad } from "../color-helper";
-import type { TemplateResult } from "lit-html";
-import { html } from "lit-html";
+import type { TemplateResult } from "lit/html.js";
+import { html } from "lit/html.js";
 import { ListItemMapBuilder } from "../../items/ListItemMapBuilder";
-import { classMap } from "lit-html/directives/class-map";
-import { styleMap } from "lit-html/directives/style-map";
+import { classMap } from "lit/directives/class-map.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 export function createItemBadgeTemplate(
     event_listener: (event: Event) => void,
@@ -41,8 +41,8 @@ export function createItemBadgeTemplate(
     const badge_classes = {
         "list-picker-badge": true,
         "list-picker-badge-custom":
-            list_item.template.getHTML() !==
-            ListItemMapBuilder.buildDefaultTemplateForItem(list_item.label).getHTML(),
+            list_item.template.strings.toString() !==
+            ListItemMapBuilder.buildDefaultTemplateForItem(list_item.label).strings.toString(),
     };
 
     const badge_template = html`

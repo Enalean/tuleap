@@ -68,7 +68,7 @@ describe("DropDownContentRenderer", () => {
             await items_map_manager.refreshItemsMap();
             renderer.renderListPickerDropdownContent();
 
-            expect(dropdown.innerHTML).toMatchSnapshot();
+            expect(stripExpressionComments(dropdown.innerHTML)).toMatchSnapshot();
         });
 
         it("renders simple list items", async () => {
@@ -77,7 +77,7 @@ describe("DropDownContentRenderer", () => {
             await items_map_manager.refreshItemsMap();
             renderer.renderListPickerDropdownContent();
 
-            expect(dropdown.innerHTML).toMatchSnapshot();
+            expect(stripExpressionComments(dropdown.innerHTML)).toMatchSnapshot();
         });
 
         it("when the source option is disabled, then the list item should be disabled", async () => {
@@ -200,7 +200,7 @@ describe("DropDownContentRenderer", () => {
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
-            expect(list_item_1.innerHTML.trim()).toEqual("Item 1");
+            expect(stripExpressionComments(list_item_1.innerHTML).trim()).toEqual("Item 1");
 
             select.innerHTML = "";
             select.appendChild(option_2);
@@ -211,7 +211,7 @@ describe("DropDownContentRenderer", () => {
             if (!list_item_2) {
                 throw new Error("List item not found in the list");
             }
-            expect(list_item_2.innerHTML.trim()).toEqual("Item 2");
+            expect(stripExpressionComments(list_item_2.innerHTML).trim()).toEqual("Item 2");
         });
 
         it("should render an empty state when the source <select> has no options", async () => {
@@ -228,7 +228,7 @@ describe("DropDownContentRenderer", () => {
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
-            expect(list_item_1.innerHTML.trim()).toEqual("Item 1");
+            expect(stripExpressionComments(list_item_1.innerHTML).trim()).toEqual("Item 1");
 
             select.innerHTML = "";
             await items_map_manager.refreshItemsMap();
@@ -242,3 +242,10 @@ describe("DropDownContentRenderer", () => {
         });
     });
 });
+
+/**
+ * See https://github.com/lit/lit/blob/lit%402.0.2/packages/lit-html/src/test/test-utils/strip-markers.ts
+ */
+function stripExpressionComments(html: string): string {
+    return html.replace(/<!--\?lit\$[0-9]+\$-->|<!--\??-->/g, "");
+}
