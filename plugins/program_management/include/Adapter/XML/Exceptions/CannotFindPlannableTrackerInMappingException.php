@@ -18,8 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProgramManagement\Domain\XML\Exceptions;
+declare(strict_types=1);
 
-interface XMLConfigExtractionException
+namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
+
+class CannotFindPlannableTrackerInMappingException extends \Exception implements XMLConfigExtractionException
 {
+    public function __construct(string $tracker_ref)
+    {
+        parent::__construct(
+            sprintf("Plannable tracker not found in created trackers mapping using reference %s", $tracker_ref)
+        );
+    }
 }

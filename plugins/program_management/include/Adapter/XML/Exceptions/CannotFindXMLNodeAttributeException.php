@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\XML\Exceptions;
+namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-class CannotFindSourceTrackerUsingXmlReference extends \Exception implements XMLConfigExtractionException
+class CannotFindXMLNodeAttributeException extends \Exception implements XMLConfigExtractionException
 {
-    public function __construct(string $source_tracker_ref)
+    public function __construct(string $attribute_name, string $xml_node_name)
     {
         parent::__construct(
-            sprintf("Source tracker not found in created trackers mapping using reference %s", $source_tracker_ref)
+            sprintf('Unable to find attribute %s in node %s', $attribute_name, $xml_node_name)
         );
     }
 }

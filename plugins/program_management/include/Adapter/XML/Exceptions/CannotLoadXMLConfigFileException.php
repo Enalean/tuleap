@@ -20,14 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\XML\Exceptions;
+namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-class CannotFindPlannableTrackerInMappingException extends \Exception implements XMLConfigExtractionException
+class CannotLoadXMLConfigFileException extends \Exception implements XMLConfigExtractionException
 {
-    public function __construct(string $tracker_ref)
+    public function __construct(string $xml_path)
     {
-        parent::__construct(
-            sprintf("Plannable tracker not found in created trackers mapping using reference %s", $tracker_ref)
-        );
+        parent::__construct(sprintf('Cannot load XML from %s', $xml_path));
     }
 }
