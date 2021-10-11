@@ -200,13 +200,13 @@ describe("transform-html-into-paragraph", () => {
         );
 
         const paragraphs = await transformHTMLIntoParagraphs(
-            "<img src='/success' /><img src='/fail'>",
+            "<img src='/success' /><img src='/fail'><img src='/fail2' alt='My image'>",
             { ordered_title_levels: [HeadingLevel.TITLE] }
         );
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
-                children: [expected_image_run],
+                children: [expected_image_run, new TextRun("My image")],
             }),
         ]);
     });

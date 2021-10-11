@@ -237,7 +237,7 @@ async function parseTreeContent(
                 }
                 break;
             case "IMG":
-                content_children.push(...(await getImageRun(child)));
+                content_children.push(...(await getImageRun(child, state)));
                 break;
             case "A":
                 content_children.push(...(await getHyperLink(options, child, state)));
@@ -317,7 +317,10 @@ async function parseTreeContent(
     return content_children;
 }
 
-async function getImageRun(element: Element): Promise<ImageRun[]> {
+async function getImageRun(
+    element: Element,
+    state: TreeContentState
+): Promise<ImageRun[] | TextRun[]> {
     const source_image = element.getAttribute("src");
     if (source_image === null) {
         return [];
@@ -326,6 +329,10 @@ async function getImageRun(element: Element): Promise<ImageRun[]> {
     try {
         return [await loadImage(source_image)];
     } catch (e) {
+        const alt_image = element.getAttribute("alt") ?? "";
+        if (alt_image !== "") {
+            return state.text_run_builder(alt_image, state.style);
+        }
         return [];
     }
 }
