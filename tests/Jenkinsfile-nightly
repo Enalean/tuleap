@@ -60,8 +60,8 @@ pipeline {
             steps { script { actions.runJestTests('Tuleap', '.', true) } }
             post {
                 always {
-                    junit 'results/jest/test-*-results.xml'
-                    publishCoverage adapters: [istanbulCoberturaAdapter('results/jest/coverage/cobertura-coverage.xml')], tag: 'Javascript'
+                    junit 'results/jest/junit-*.xml'
+                    publishCoverage adapters: [istanbulCoberturaAdapter(path: 'results/jest/coverage/*/cobertura-coverage.xml', mergeToOneReport: true)], tag: 'Javascript'
                 }
             }
         }
