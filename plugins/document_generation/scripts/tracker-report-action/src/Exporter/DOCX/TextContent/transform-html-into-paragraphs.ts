@@ -25,13 +25,18 @@ import {
     ExternalHyperlink,
     LevelFormat,
     Paragraph,
+    Table,
+    TableCell,
+    TableRow,
     TextRun,
     UnderlineType,
+    WidthType,
 } from "docx";
 import { loadImage } from "../Image/image-loader";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
 
 const HTML_ORDERED_LIST_NUMBERING_REFERENCE = "html-ordered-list";
+const PAGE_WIDTH_DXA = 9638;
 
 type ReadonlyArrayWithAtLeastOneElement<T> = { 0: T } & ReadonlyArray<T>;
 
@@ -309,6 +314,17 @@ async function parseTreeContent(
                     )
                 );
                 break;
+            case "TABLE":
+                content_children.push(
+                    new Table({
+                        rows: await getTableRows(child.getElementsByTagName("tr"), options, state),
+                        width: {
+                            size: PAGE_WIDTH_DXA,
+                            type: WidthType.DXA,
+                        },
+                    })
+                );
+                break;
             default:
                 content_children.push(...defaultNodeHandling(child, state));
         }
@@ -378,6 +394,27 @@ async function getTitle(
             });
         }
     );
+}
+
+async function getTableRows(
+    html_rows: HTMLCollectionOf<HTMLTableRowElement>,
+    options: TransformationOptions,
+    state: Readonly<TreeContentState>
+): Promise<TableRow[]> {
+    const rows: TableRow[] = [];
+    for (const html_row of html_rows) {
+        const cells = [...html_row.children].map(async (cell): Promise<TableCell> => {
+            return new TableCell({
+                children: buildParagraphsFromTreeContent(
+                    await parseTreeContent(options, cell.childNodes, state),
+                    state.paragraph_builder
+                ),
+            });
+        });
+        rows.push(new TableRow({ children: await Promise.all(cells) }));
+    }
+
+    return rows;
 }
 
 function defaultNodeHandling(node: Node, state: Readonly<TreeContentState>): TextRun[] {
