@@ -22,17 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -108,17 +107,8 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user              = UserIdentifierStub::buildGenericUser();
         $program           = ProgramIdentifierBuilder::buildWithId(110);
         $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(37, $user);
-        $feature           = FeatureIdentifier::fromId(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            76,
-            $user,
-            $program,
-            null
-        );
 
-        if (! $feature) {
-            throw new \LogicException("Feature is not built");
-        }
+        $feature = FeatureIdentifierBuilder::build(76, 110);
 
         return FeatureAddition::fromFeature(
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),

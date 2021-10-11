@@ -81,8 +81,8 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
         );
 
         self::assertSame(self::ARTIFACT_LINK_ID, $values->artifact_link_field->getId());
-        self::assertSame(self::LINKED_ARTIFACT_ID, $values->artifact_link_value->linked_artifact->getId());
-        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value->type);
+        self::assertSame(self::LINKED_ARTIFACT_ID, $values->artifact_link_value?->linked_artifact->getId());
+        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value?->type);
         self::assertSame(self::TITLE_ID, $values->title_field->getId());
         self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
         self::assertSame(self::DESCRIPTION_ID, $values->description_field->getId());

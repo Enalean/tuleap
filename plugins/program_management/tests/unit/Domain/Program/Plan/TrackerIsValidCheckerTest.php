@@ -56,6 +56,6 @@ final class TrackerIsValidCheckerTest extends TestCase
             1,
             $project_id
         );
-        $this->addToAssertionCount(1);
+        $this->expectNotToPerformAssertions();
     }
 }

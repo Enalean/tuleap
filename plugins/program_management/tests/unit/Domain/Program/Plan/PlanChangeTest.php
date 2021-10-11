@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -30,7 +30,7 @@ final class PlanChangeTest extends TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 16;
 
-    private UserIdentifier $user_identifier;
+    private UserReference $user_identifier;
 
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ final class PlanChangeTest extends TestCase
             $this->user_identifier,
             101,
             $tracker_ids_that_can_be_planned,
-            [],
+            ["1_101"],
             null
         );
     }
@@ -65,7 +65,7 @@ final class PlanChangeTest extends TestCase
             $this->user_identifier,
             101,
             $tracker_ids_that_can_be_planned,
-            [],
+            ["1_101"],
             $iteration_representation
         );
     }

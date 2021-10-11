@@ -44,8 +44,8 @@ final class TrackerErrorPresenterTest extends TestCase
 
     protected function setUp(): void
     {
-        $program_increment_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
-        $iteration_checker         = $this->createStub(IterationCreatorChecker::class);
+        $program_increment_checker = $this->createMock(ProgramIncrementCreatorChecker::class);
+        $iteration_checker         = $this->createMock(IterationCreatorChecker::class);
         $build_program             = BuildProgramStub::stubValidProgram();
         $teams_searcher            = SearchTeamsOfProgramStub::buildTeams(101);
         $this->tracker             = TrackerReferenceStub::withDefaults();
@@ -79,9 +79,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->semantic_errors);
+        self::assertNotEmpty($presenter?->semantic_errors);
     }
 
     public function testItHasRequiredErrors(): void
@@ -101,9 +101,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->required_field_errors);
+        self::assertNotEmpty($presenter?->required_field_errors);
     }
 
     public function testItHasWorkflowErrorsForTransition(): void
@@ -122,9 +122,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->transition_rule_error);
+        self::assertNotEmpty($presenter?->transition_rule_error);
     }
 
     public function testItHasWorkflowErrorsForGlobalRules(): void
@@ -142,9 +142,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->transition_rule_date_error);
+        self::assertNotEmpty($presenter?->transition_rule_date_error);
     }
 
     public function testItHasWorkflowErrorsForFieldDependency(): void
@@ -162,9 +162,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->field_dependency_error);
+        self::assertNotEmpty($presenter?->field_dependency_error);
     }
 
     public function testItHasPermissionErrorsWhenNotSubmittable(): void
@@ -184,9 +184,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->non_submittable_field_errors);
+        self::assertNotEmpty($presenter?->non_submittable_field_errors);
     }
 
     public function testItHasPermissionErrorsWhenNotEditable(): void
@@ -206,9 +206,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->non_updatable_field_errors);
+        self::assertNotEmpty($presenter?->non_updatable_field_errors);
     }
 
     public function testItHasErrorWhenUserCanNotSubmitInTeam(): void
@@ -223,9 +223,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->team_tracker_id_errors);
+        self::assertNotEmpty($presenter?->team_tracker_id_errors);
     }
 
     public function testItHasErrorSemanticStatusErrorWhenStatusMissingInTeam(): void
@@ -242,9 +242,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->status_missing_in_teams);
+        self::assertNotEmpty($presenter?->status_missing_in_teams);
     }
 
     public function testItHasErrorSemanticStatusErrorWhenStatusFieldNotFound(): void
@@ -259,9 +259,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->semantic_status_no_field);
+        self::assertNotEmpty($presenter?->semantic_status_no_field);
     }
 
     public function testItHasErrorSemanticStatusErrorWhenStatusMissingValues(): void
@@ -276,9 +276,9 @@ final class TrackerErrorPresenterTest extends TestCase
             $errors_collector
         );
 
-        self::assertTrue($presenter->has_presenter_errors);
+        self::assertTrue($presenter?->has_presenter_errors);
         self::assertNotNull($presenter);
-        self::assertNotEmpty($presenter->semantic_status_missing_values);
+        self::assertNotEmpty($presenter?->semantic_status_missing_values);
     }
 
     public function testItDoesNotHaveAnyError(): void

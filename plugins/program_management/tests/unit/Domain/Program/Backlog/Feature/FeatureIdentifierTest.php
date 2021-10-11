@@ -62,7 +62,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        self::assertSame(87, $feature->id);
+        self::assertSame(87, $feature?->id);
     }
 
     public function testItBuildsAValidFeatureWithPermissionBypass(): void
@@ -74,6 +74,6 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->program,
             new WorkflowUserPermissionBypass()
         );
-        self::assertSame(5, $feature->id);
+        self::assertSame(5, $feature?->id);
     }
 }

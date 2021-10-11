@@ -74,12 +74,12 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_verifier,
             $this->artifact_created
         );
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getProgramIncrement()->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getTimebox()->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getProgramIncrementTracker()->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getTracker()->getId());
-        self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
-        self::assertSame(self::USER_ID, $creation->getUser()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation?->getProgramIncrement()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation?->getTimebox()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation?->getProgramIncrementTracker()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation?->getTracker()->getId());
+        self::assertSame(self::CHANGESET_ID, $creation?->getChangeset()->getId());
+        self::assertSame(self::USER_ID, $creation?->getUser()->getId());
     }
 
     public function testItReturnsNullWhenArtifactIsNotAProgramIncrement(): void
@@ -101,12 +101,12 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_retriever,
             $this->creation_event
         );
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getProgramIncrement()->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation->getTimebox()->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getProgramIncrementTracker()->getId());
-        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation->getTracker()->getId());
-        self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
-        self::assertSame(self::USER_ID, $creation->getUser()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation?->getProgramIncrement()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $creation?->getTimebox()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation?->getProgramIncrementTracker()->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $creation?->getTracker()->getId());
+        self::assertSame(self::CHANGESET_ID, $creation?->getChangeset()->getId());
+        self::assertSame(self::USER_ID, $creation?->getUser()->getId());
     }
 
     public function testItReturnsNullWhenArtifactFromEventIsNotAProgramIncrement(): void

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
@@ -52,7 +53,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GatherSynchronizedFields $fields_adapter;
     /**
-     * @var Stub&CheckSemantic
+     * @var MockObject&CheckSemantic
      */
     private $semantic_checker;
     /**
@@ -75,7 +76,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_increment_tracker = TrackerReferenceStub::withDefaults();
 
         $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::withTracker($this->program_increment_tracker);
-        $this->semantic_checker            = $this->createStub(CheckSemantic::class);
+        $this->semantic_checker            = $this->createMock(CheckSemantic::class);
         $this->required_field_checker      = $this->createStub(CheckRequiredField::class);
         $this->workflow_checker            = $this->createStub(CheckWorkflow::class);
         $this->fields_adapter              = GatherSynchronizedFieldsStub::withFieldsPreparations(

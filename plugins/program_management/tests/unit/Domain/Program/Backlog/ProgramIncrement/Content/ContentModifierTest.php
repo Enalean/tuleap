@@ -185,7 +185,12 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     ): FeaturesToReorder {
         $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([$id], $direction, $compared_to_id);
 
-        return FeaturesToReorderProxy::buildFromRESTRepresentation($feature_to_order);
+        $reorder_proxy = FeaturesToReorderProxy::buildFromRESTRepresentation($feature_to_order);
+        if (! $reorder_proxy) {
+            throw new \LogicException("Reorder proxy is not defined");
+        }
+
+        return $reorder_proxy;
     }
 
     private function buildFeatureRemoverStub(): RemoveFeature

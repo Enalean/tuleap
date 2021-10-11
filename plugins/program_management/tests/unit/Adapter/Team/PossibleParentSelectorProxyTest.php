@@ -24,14 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use PFUser;
-use Planning;
 use Tracker;
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveRootPlanningStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -70,39 +68,9 @@ final class PossibleParentSelectorProxyTest extends TestCase
             ->withProject($team_project)
             ->build();
 
-        $this->retrieve_root_planning = new class ((int) $team_project->getID(), $this->user_story_tracker->getId()) implements RetrieveRootPlanning
-        {
-            public function __construct(private int $team_project_id, private int $backlog_tracker_id)
-            {
-            }
+        $this->retrieve_root_planning = RetrieveRootPlanningStub::withProjectAndBacklogTracker((int) $team_project->getID(), $this->user_story_tracker->getId());
 
-            public function getRootPlanning(PFUser $user, int $group_id): Planning|false
-            {
-                if ($group_id !== $this->team_project_id) {
-                    return false;
-                }
-                return new Planning(
-                    34,
-                    'Release plan',
-                    $this->team_project_id,
-                    'Backlog',
-                    'Releases',
-                    [$this->backlog_tracker_id],
-                    1
-                );
-            }
-        };
-
-        $this->feature_53 = FeatureIdentifier::fromId(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            53,
-            UserProxy::buildFromPFUser($this->user),
-            ProgramIdentifierBuilder::build(),
-            null,
-        );
-        if (! $this->feature_53) {
-            throw new \LogicException("Feature 53 is not defined");
-        }
+        $this->feature_53           = FeatureIdentifierBuilder::build(53, 110);
         $this->feature_53_reference = new FeatureReference($this->feature_53, 'A fine feature');
 
         $this->retrieve_artifact = RetrieveArtifactStub::withArtifacts(

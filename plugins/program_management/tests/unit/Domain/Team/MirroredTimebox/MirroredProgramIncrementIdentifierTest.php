@@ -64,7 +64,7 @@ final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\
             $this->team_project,
             $this->user
         );
-        self::assertSame(self::FIRST_MIRROR_ID, $mirror->getId());
+        self::assertSame(self::FIRST_MIRROR_ID, $mirror?->getId());
     }
 
     public function testItReturnsNullWhenNoMirrorFound(): void

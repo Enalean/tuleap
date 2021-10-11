@@ -48,6 +48,7 @@ final class ContentChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $change           = ContentChange::fromFeatureAdditionAndReorder(null, $feature_to_order);
 
         self::assertNull($change->potential_feature_id_to_add);
+        self::assertNotNull($change->elements_to_order);
         self::assertContainsEquals(456, $change->elements_to_order->getIds());
         self::assertSame(123, $change->elements_to_order->getComparedTo());
         self::assertSame('after', $change->elements_to_order->getDirection());

@@ -26,31 +26,28 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 
 final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramIncrementIdentifier $program_increment;
-    private ?FeatureIdentifier $feature;
+    private FeatureIdentifier $feature;
     private UserCanPrioritize $user_can_prioritize;
 
     protected function setUp(): void
     {
-        $user                      = UserIdentifierStub::buildGenericUser();
-        $this->program_increment   = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(89, $user);
-        $program                   = ProgramIdentifierBuilder::buildWithId(110);
-        $this->feature             = FeatureIdentifier::fromId(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            127,
-            $user,
-            $program,
-            null
-        );
+        $user                    = UserIdentifierStub::buildGenericUser();
+        $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(89, $user);
+        $program                 = ProgramIdentifierBuilder::buildWithId(110);
+        $feature                 = FeatureIdentifierBuilder::build(127, 110);
+
+        $this->feature = $feature;
+
         $this->user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             $user,

@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -46,12 +45,10 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&TeamStore
      */
     private $team_store;
-    private \Project $program_project;
-    private UserIdentifier $user_identifier;
+    private UserReference $user_identifier;
 
     protected function setUp(): void
     {
-        $this->program_project     = ProjectTestBuilder::aProject()->withId(self::PROGRAM_ID)->build();
         $this->project_retriever   = RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::buildWithId(self::PROGRAM_ID));
         $this->team_verifier       = VerifyIsTeamStub::withNotValidTeam();
         $this->permission_verifier = VerifyProjectPermissionStub::withAdministrator();
