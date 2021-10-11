@@ -60,7 +60,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                 $tracker_reference = $this->retrieve_tracker_from_field->fromFieldId($synchronized_field->getId());
                 $project_reference = $this->retrieve_project_from_tracker->fromTrackerReference($tracker_reference);
                 $errors_collector->addSubmitFieldPermissionError(
-                    $tracker_reference->getId(),
+                    $synchronized_field->getId(),
                     $synchronized_field->getLabel(),
                     $tracker_reference,
                     $project_reference
