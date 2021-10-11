@@ -55,7 +55,6 @@ class ProjectCreationModerationDisplayController implements DispatchableWithRequ
             ForgeConfig::get(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, -1),
             ForgeConfig::areRestrictedUsersAllowed(),
             ForgeConfig::get(\ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS, false),
-            $this->isSysProjectApprovalStillInLocalInc()
         );
 
         $admin_page = new AdminPageRenderer();
@@ -65,30 +64,5 @@ class ProjectCreationModerationDisplayController implements DispatchableWithRequ
             'moderation',
             $presenter
         );
-    }
-
-    private function isSysProjectApprovalStillInLocalInc()
-    {
-        include($this->getLocalIncPath());
-        $variables_in_localinc = get_defined_vars();
-
-        return isset($variables_in_localinc['sys_project_approval']);
-    }
-
-    private function getLocalIncPath()
-    {
-        $default_path = '/etc/tuleap/conf/local.inc';
-        $old_path     = '/etc/codendi/conf/local.inc';
-        $local_inc    = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
-
-        if (! $local_inc) {
-            if (is_file($default_path)) {
-                $local_inc = $default_path;
-            } else {
-                $local_inc = $old_path;
-            }
-        }
-
-        return $local_inc;
     }
 }
