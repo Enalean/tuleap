@@ -39,6 +39,11 @@ final class ArtifactLinkTypeProxy implements ArtifactLinkType
         return new self(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
     }
 
+    public static function fromIsChildType(): self
+    {
+        return new self(\Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+    }
+
     public function __toString(): string
     {
         return $this->identifier;

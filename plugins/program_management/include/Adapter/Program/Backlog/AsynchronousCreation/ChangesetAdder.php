@@ -47,7 +47,7 @@ final class ChangesetAdder implements AddChangeset
         $artifact_id   = $changeset->mirrored_timebox->getId();
         $full_artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if (! $full_artifact) {
-            throw new ArtifactNotFoundException($artifact_id);
+            throw new ArtifactNotFoundException($changeset->mirrored_timebox);
         }
         $full_user        = $this->user_retriever->getUserWithId($changeset->user);
         $formatted_values = $this->formatter->format($changeset->values);

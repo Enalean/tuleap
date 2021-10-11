@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -41,11 +42,14 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Stub&\TrackerFactory
      */
     private $tracker_factory;
+    private ArtifactIdentifierStub $artifact;
 
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
         $this->tracker_factory  = $this->createStub(\TrackerFactory::class);
+
+        $this->artifact = ArtifactIdentifierStub::withId(self::ARTIFACT_ID);
     }
 
     private function getRetriever(): TrackerOfArtifactRetriever
@@ -70,7 +74,7 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
         $this->tracker_factory->method('getTrackerById')->willReturn($full_tracker);
 
-        $tracker = $this->getRetriever()->getTrackerOfArtifact(self::ARTIFACT_ID);
+        $tracker = $this->getRetriever()->getTrackerOfArtifact($this->artifact);
         self::assertSame(self::TRACKER_ID, $tracker->getId());
     }
 
@@ -83,7 +87,7 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
         $this->expectException(TrackerNotFoundException::class);
-        $this->getRetriever()->getTrackerOfArtifact(self::ARTIFACT_ID);
+        $this->getRetriever()->getTrackerOfArtifact($this->artifact);
     }
 
     public function testItThrowsWhenArtifactCantBeFound(): void
@@ -91,6 +95,6 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
         $this->expectException(ArtifactNotFoundException::class);
-        $this->getRetriever()->getTrackerOfArtifact(self::ARTIFACT_ID);
+        $this->getRetriever()->getTrackerOfArtifact($this->artifact);
     }
 }

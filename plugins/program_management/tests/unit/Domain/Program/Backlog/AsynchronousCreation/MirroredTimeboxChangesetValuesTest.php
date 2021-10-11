@@ -64,7 +64,7 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
             ArtifactLinkTypeProxy::fromMirrorTimeboxType()
         );
         $target_fields       = SynchronizedFieldReferencesBuilder::buildWithPreparations(
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::TITLE_ID,
                 self::DESCRIPTION_ID,
                 self::STATUS_ID,

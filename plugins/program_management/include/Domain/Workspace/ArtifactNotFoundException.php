@@ -26,8 +26,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Mirrore
 
 final class ArtifactNotFoundException extends \RuntimeException implements MirroredTimeboxReplicationException
 {
-    public function __construct(int $artifact_id)
+    public function __construct(ArtifactIdentifier $artifact)
     {
-        parent::__construct("Could not find artifact with id #$artifact_id in database");
+        parent::__construct(sprintf('Could not find artifact with id #%d in database', $artifact->getId()));
     }
 }

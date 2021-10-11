@@ -31,4 +31,10 @@ final class ArtifactLinkTypeProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $type = ArtifactLinkTypeProxy::fromMirrorTimeboxType();
         self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $type);
     }
+
+    public function testItBuildsIsChildType(): void
+    {
+        $type = ArtifactLinkTypeProxy::fromIsChildType();
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD, (string) $type);
+    }
 }

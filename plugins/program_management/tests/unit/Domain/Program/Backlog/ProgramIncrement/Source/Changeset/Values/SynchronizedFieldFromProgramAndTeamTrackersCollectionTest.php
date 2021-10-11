@@ -56,7 +56,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
 
         $this->synchronized_fields = new SynchronizedFieldFromProgramAndTeamTrackers(
             SynchronizedFieldReferencesBuilder::buildWithPreparations(
-                new SynchronizedFieldsStubPreparation(
+                SynchronizedFieldsStubPreparation::withAllFields(
                     self::TITLE_ID,
                     self::DESCRIPTION_ID,
                     self::STATUS_ID,

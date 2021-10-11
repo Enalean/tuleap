@@ -56,7 +56,7 @@ final class MirroredTimeboxChangesetValuesBuilder
             1354021686
         );
         $target_fields = SynchronizedFieldReferencesBuilder::buildWithPreparations(
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(
                 $title_field_id,
                 $description_field_id,
                 $status_field_id,

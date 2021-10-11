@@ -84,8 +84,8 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
         $this->user_stories_planner = PlanUserStoriesInMirroredProgramIncrementsStub::withCount();
 
         $this->fields_gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(
-            new SynchronizedFieldsStubPreparation(467, 822, 436, 762, 752, 711),
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(467, 822, 436, 762, 752, 711),
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::FIRST_TITLE_FIELD_ID,
                 self::FIRST_DESCRIPTION_FIELD_ID,
                 self::FIRST_STATUS_FIELD_ID,
@@ -93,7 +93,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
                 self::FIRST_END_DATE_FIELD_ID,
                 self::FIRST_ARTIFACT_LINK_FIELD_ID
             ),
-            new SynchronizedFieldsStubPreparation(
+            SynchronizedFieldsStubPreparation::withAllFields(
                 self::SECOND_TITLE_FIELD_ID,
                 self::SECOND_DESCRIPTION_FIELD_ID,
                 self::SECOND_STATUS_FIELD_ID,

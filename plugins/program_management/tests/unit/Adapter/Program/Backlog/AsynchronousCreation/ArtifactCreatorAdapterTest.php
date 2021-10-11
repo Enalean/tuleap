@@ -77,7 +77,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator         = $this->createMock(TrackerArtifactCreator::class);
         $this->tracker_factory = $this->createStub(\TrackerFactory::class);
 
-        $fields = new SynchronizedFieldsStubPreparation(
+        $fields = SynchronizedFieldsStubPreparation::withAllFields(
             self::TITLE_ID,
             self::DESCRIPTION_ID,
             self::STATUS_ID,

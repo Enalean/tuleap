@@ -78,7 +78,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pfuser   = UserTestBuilder::buildWithId(self::USER_ID);
         $this->artifact = ArtifactTestBuilder::anArtifact(self::TIMEBOX_ID)->build();
 
-        $fields = new SynchronizedFieldsStubPreparation(
+        $fields = SynchronizedFieldsStubPreparation::withAllFields(
             self::TITLE_ID,
             self::DESCRIPTION_ID,
             self::STATUS_ID,

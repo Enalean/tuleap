@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 interface RetrieveTrackerOfArtifact
 {
-    public function getTrackerOfArtifact(int $artifact_id): TrackerIdentifier;
+    public function getTrackerOfArtifact(ArtifactIdentifier $artifact): TrackerIdentifier;
 }

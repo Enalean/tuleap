@@ -22,19 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+
 final class NoArtifactLinkFieldException extends \Exception implements FieldSynchronizationException
 {
     private string $i18n_message;
 
-    public function __construct(int $tracker_id)
+    public function __construct(TrackerIdentifier $tracker)
     {
-        parent::__construct("Tracker with id $tracker_id has no artifact link field");
+        parent::__construct(sprintf('Tracker with id #%d has no artifact link field', $tracker->getId()));
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                "Tracker with id #%d has no artifact link field"
+                'Tracker with id #%d has no artifact link field'
             ),
-            $tracker_id
+            $tracker->getId()
         );
     }
 
