@@ -19,23 +19,23 @@
                 <button
                     ng-if="$ctrl.isInCommentMode && !file.is_deleted && $ctrl.can_user_attach_files"
                     type="button"
-                    class="tlp-button-danger tlp-button-outline current-test-comment-attachment-delete-button"
+                    class="tlp-button-danger tlp-button-outline current-test-comment-attachment-button"
                     title="{{ 'Remove file' | translate }}"
                     aria-label="{{ 'Remove file' | translate }}"
                     ng-click="$ctrl.addFileToRemovedFiles($event, file)"
                     data-test="remove-attachment-file-button"
                 >
-                    <i class="far fa-fw fa-trash-alt tlp-button-icon current-test-comment-attachment-delete-button-icon" aria-hidden="true"></i>
+                    <i class="far fa-fw fa-trash-alt tlp-button-icon current-test-comment-attachment-button-icon" aria-hidden="true"></i>
                 </button>
                 <button
                     ng-if="$ctrl.isInCommentMode && file.is_deleted"
                     type="button"
-                    class="tlp-button-outline current-test-comment-attachment-delete-button"
+                    class="tlp-button-secondary tlp-button-outline current-test-comment-attachment-button"
                     title="{{ 'Undo remove file' | translate }}"
                     aria-label="{{ 'Undo remove file' | translate }}"
                     ng-click="$ctrl.cancelFileRemoval($event, file)"
                 >
-                    <i class="fas fa-fw fa-times tlp-button-icon" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-undo tlp-button-icon current-test-comment-attachment-button-icon" aria-hidden="true"></i>
                 </button>
             </div>
         </a>
@@ -64,21 +64,24 @@
                 <button
                     ng-if="$ctrl.isInCommentMode && !file.is_deleted && file.progress >= 100 && file.upload_error_message.length === 0"
                     type="button"
-                    class="tlp-button-danger tlp-button-outline current-test-comment-attachment-delete-button"
+                    class="tlp-button-danger tlp-button-outline current-test-comment-attachment-button"
                     title="{{ 'Remove file' | translate }}"
                     aria-label="{{ 'Remove file' | translate }}"
                     ng-click="$ctrl.removeFileUploadedThroughAttachmentArea(file)"
                 >
-                    <i class="far fa-fw fa-trash-alt tlp-button-icon current-test-comment-attachment-delete-button-icon" aria-hidden="true"></i>
+                    <i class="far fa-fw fa-trash-alt tlp-button-icon current-test-comment-attachment-button-icon" aria-hidden="true"></i>
                 </button>
                 <div ng-if="file.upload_error_message.length > 0">
-                    <i
-                        class="fas fa-fw fa-exclamation-triangle current-test-comment-attachment-upload-error-icon"
-                        aria-hidden="true"
-                        id="popover-upload-error-attachment-{{ file.id }}-trigger"
+                    <button id="popover-upload-error-attachment-{{ file.id }}-trigger"
+                        class="tlp-button-warning tlp-button-outline current-test-comment-attachment-button"
                         data-placement="top"
                         title="{{ 'Click to see the error message' | translate }}"
-                    ></i>
+                    >
+                        <i
+                            class="fas fa-fw fa-exclamation-triangle tlp-button-icon current-test-comment-attachment-button-icon"
+                            aria-hidden="true"
+                        ></i>
+                    </button>
                     <section id="popover-upload-error-attachment-{{ file.id }}-content" class="tlp-popover tlp-popover-warning">
                         <div class="tlp-popover-arrow"></div>
                         <div class="tlp-popover-header">
