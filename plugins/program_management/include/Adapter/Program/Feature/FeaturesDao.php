@@ -24,10 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureCount;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchOpenFeatures;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-final class FeaturesDao extends DataAccessObject implements FeaturesStore
+final class FeaturesDao extends DataAccessObject implements RetrieveOpenFeatureCount, SearchPlannableFeatures, SearchOpenFeatures
 {
     public function searchPlannableFeatures(ProgramIdentifier $program): array
     {
@@ -93,7 +95,7 @@ final class FeaturesDao extends DataAccessObject implements FeaturesStore
      *
      * @see https://dev.mysql.com/worklog/task/?id=12615
      */
-    public function searchOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
+    public function retrieveOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
     {
         if (count($program_identifiers) === 0) {
             return 0;

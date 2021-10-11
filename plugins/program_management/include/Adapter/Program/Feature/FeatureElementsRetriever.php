@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -30,18 +30,11 @@ use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 final class FeatureElementsRetriever
 {
-    private FeaturesStore $features_store;
-    private BuildProgram $build_program;
-    private FeatureRepresentationBuilder $feature_representation_builder;
-
     public function __construct(
-        BuildProgram $build_program,
-        FeaturesStore $features_store,
-        FeatureRepresentationBuilder $feature_representation_builder
+        private BuildProgram $build_program,
+        private SearchPlannableFeatures $search_plannable_features,
+        private FeatureRepresentationBuilder $feature_representation_builder
     ) {
-        $this->features_store                 = $features_store;
-        $this->build_program                  = $build_program;
-        $this->feature_representation_builder = $feature_representation_builder;
     }
 
     /**
@@ -54,7 +47,7 @@ final class FeatureElementsRetriever
     {
         $program = ProgramIdentifier::fromId($this->build_program, $program_id, $user, null);
 
-        $to_be_planned_artifacts = $this->features_store->searchPlannableFeatures($program);
+        $to_be_planned_artifacts = $this->search_plannable_features->searchPlannableFeatures($program);
 
         $elements = [];
         foreach ($to_be_planned_artifacts as $artifact) {

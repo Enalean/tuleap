@@ -1263,6 +1263,7 @@ final class program_managementPlugin extends Plugin
 
         $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
 
+        $features_dao = new FeaturesDao();
         (new PossibleParentHandler(
             new VerifyIsVisibleFeatureAdapter(
                 Tracker_ArtifactFactory::instance(),
@@ -1275,7 +1276,8 @@ final class program_managementPlugin extends Plugin
                 $user_manager_adapter
             ),
             new TeamDao(),
-            new FeaturesDao(),
+            $features_dao,
+            $features_dao,
         ))->handle(
             PossibleParentSelectorProxy::fromEvent(
                 $possible_parent_selector,
