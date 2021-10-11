@@ -4,6 +4,7 @@ function SharedPropertiesService() {
     var property = {
         project_id: null,
         release: null,
+        release_note_html: null,
         platform_license_info: null,
         custom_license_agreement: null,
     };
@@ -13,6 +14,8 @@ function SharedPropertiesService() {
         setProjectId: setProjectId,
         getRelease: getRelease,
         setRelease: setRelease,
+        getReleaseNoteHtml,
+        setReleaseNoteHtml,
         getPlatformLicenseInfo: getPlatformLicenseInfo,
         setPlatformLicenseInfo: setPlatformLicenseInfo,
         setCustomLicenseAgreement: setCustomLicenseAgreement,
@@ -34,6 +37,14 @@ function SharedPropertiesService() {
 
     function setRelease(release) {
         property.release = release;
+    }
+
+    function getReleaseNoteHtml() {
+        return property.release_note_html;
+    }
+
+    function setReleaseNoteHtml(release_note_html) {
+        property.release_note_html = release_note_html;
     }
 
     function setPlatformLicenseInfo(platform_license_info) {

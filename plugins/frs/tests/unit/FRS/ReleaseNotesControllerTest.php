@@ -40,6 +40,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Request\NotFoundException;
 
 final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -65,8 +66,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $renderer;
     /** @var IncludeAssets */
     private $script_assets;
-    /** @var IncludeAssets */
-    private $theme_assets;
+
 
     protected function setUp(): void
     {
@@ -78,7 +78,22 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permission_manager             = M::mock(FRSPermissionManager::class);
         $this->renderer                       = M::mock(TemplateRenderer::class);
         $this->script_assets                  = M::mock(IncludeAssets::class);
-        $this->theme_assets                   = M::mock(IncludeAssets::class);
+        $content_interpreter                  = new class implements ContentInterpretor {
+            public function getInterpretedContent(string $content): string
+            {
+                return $content;
+            }
+
+            public function getInterpretedContentWithReferences(string $content, int $project_id): string
+            {
+                return $this->getInterpretedContent($content);
+            }
+
+            public function getContentStrippedOfTags(string $content): string
+            {
+                return $this->getInterpretedContent($content);
+            }
+        };
 
         $this->release_notes_controller = new ReleaseNotesController(
             $this->release_factory,
@@ -87,9 +102,9 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->link_retriever,
             $this->uploaded_links_retriever,
             $this->permission_manager,
+            $content_interpreter,
             $this->renderer,
-            $this->script_assets,
-            $this->theme_assets
+            $this->script_assets
         );
     }
 
@@ -122,6 +137,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $package = M::spy(\FRSPackage::class);
         $release = M::spy(\FRSRelease::class);
         $release->shouldReceive('getProject')->andReturn($project);
+        $release->shouldReceive('getNotes')->andReturn('Release notes');
         $release->shouldReceive('getPackage')->andReturn($package);
         $release->shouldReceive('getStatusID')
             ->once()

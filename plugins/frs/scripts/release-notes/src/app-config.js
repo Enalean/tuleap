@@ -1,10 +1,7 @@
 export default FrsConfig;
 
-FrsConfig.$inject = ["$showdownProvider", "$urlRouterProvider"];
+FrsConfig.$inject = ["$urlRouterProvider"];
 
-function FrsConfig($showdownProvider, $urlRouterProvider) {
-    $showdownProvider.setOption("sanitize", true);
-    $showdownProvider.setOption("simplifiedAutoLink", true);
-
+function FrsConfig($urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
 }

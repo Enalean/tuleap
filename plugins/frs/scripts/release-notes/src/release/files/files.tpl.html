@@ -87,7 +87,7 @@
                 {{ 'Release Note' | translate }}
             </h2>
         </div>
-        <section class="tlp-pane-section" markdown-to-html="$ctrl.release.release_note" data-test="release-note"></section>
+        <section class="tlp-pane-section" ng-bind-html="$ctrl.release_note_html" data-test="release-note"></section>
     </div>
 </section>
 

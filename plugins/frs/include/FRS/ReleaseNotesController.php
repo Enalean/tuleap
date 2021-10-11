@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS;
 
+use Codendi_HTMLPurifier;
 use FRSReleaseFactory;
 use HTTPRequest;
 use PermissionsManager;
@@ -39,6 +40,8 @@ use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -71,6 +74,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         Retriever $link_retriever,
         UploadedLinksRetriever $uploaded_links_retriever,
         FRSPermissionManager $permission_manager,
+        private ContentInterpretor $interpreter,
         TemplateRenderer $renderer,
         IncludeAssets $assets
     ) {
@@ -97,6 +101,9 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
             new Retriever(new Dao()),
             new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance()),
             FRSPermissionManager::build(),
+            CommonMarkInterpreter::build(
+                Codendi_HTMLPurifier::instance()
+            ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates'),
             new IncludeAssets(
                 __DIR__ . '/../../../../src/www/assets/frs',
@@ -128,7 +135,8 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         $presenter         = new ReleasePresenter(
             $representation,
             $user->getShortLocale(),
-            $license_agreement
+            $license_agreement,
+            $this->interpreter
         );
 
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('tuleap-frs.js'));
