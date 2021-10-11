@@ -62,7 +62,7 @@ import { transformLargeContentIntoParagraphs } from "./TextContent/transform-lar
 import { HTML_ORDERED_LIST_NUMBERING } from "./TextContent/transform-html-into-paragraphs";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
-const HEADER_STYLE_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
+const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
 const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
 const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
 const TABLE_LABEL_SHADING = {
@@ -160,7 +160,10 @@ export async function downloadDocx(
         new TableOfContentsPrefilled(document.artifacts, {
             hyperlink: true,
             stylesWithLevels: [
-                new StyleLevel("ArtifactTitle", Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1))),
+                new StyleLevel(
+                    HEADER_STYLE_ARTIFACT_TITLE,
+                    Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1))
+                ),
             ],
         }),
     ];
@@ -210,6 +213,9 @@ export async function downloadDocx(
     report_criteria_data.push(report_criteria_content);
 
     const file = new File({
+        features: {
+            updateFields: true,
+        },
         creator: global_export_properties.user_display_name,
         styles: {
             paragraphStyles: [
@@ -245,6 +251,13 @@ export async function downloadDocx(
                             after: convertInchesToTwip(0.75),
                         },
                     },
+                },
+                {
+                    id: HEADER_STYLE_ARTIFACT_TITLE,
+                    name: HEADER_STYLE_ARTIFACT_TITLE,
+                    basedOn: HEADER_LEVEL_ARTIFACT_TITLE,
+                    next: HEADER_LEVEL_ARTIFACT_TITLE,
+                    quickFormat: true,
                 },
                 {
                     id: "table_header_label",
