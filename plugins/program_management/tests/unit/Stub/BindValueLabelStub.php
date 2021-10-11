@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 
+/**
+ * @psalm-immutable
+ */
 final class BindValueLabelStub implements BindValueLabel
 {
     private string $label;

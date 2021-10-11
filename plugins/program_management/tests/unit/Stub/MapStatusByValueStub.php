@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 final class MapStatusByValueStub implements MapStatusByValue
 {
     /**
-     * @var array<BindValueIdentifier[]> $return_values
+     * @param array<BindValueIdentifier[]> $return_values
      */
     private function __construct(private array $return_values)
     {

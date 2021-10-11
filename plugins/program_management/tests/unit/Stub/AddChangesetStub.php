@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChan
 final class AddChangesetStub implements AddChangeset
 {
     /**
-     * @var MirroredTimeboxChangeset[] $arguments
+     * @param MirroredTimeboxChangeset[] $arguments
      */
     private function __construct(private int $call_count, private bool $should_throw, private array $arguments = [])
     {

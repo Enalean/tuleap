@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class ArtifactIdentifierStub implements ArtifactIdentifier
 {
     private function __construct(private int $id)

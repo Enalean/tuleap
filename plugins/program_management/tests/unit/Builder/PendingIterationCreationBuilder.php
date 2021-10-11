@@ -32,7 +32,7 @@ final class PendingIterationCreationBuilder
 {
     public static function buildWithIds(int $iteration_id, int $changeset_id): PendingIterationCreation
     {
-        return PendingIterationCreation::fromIds(
+        $pending_iteration_creation = PendingIterationCreation::fromIds(
             VerifyIsIterationStub::withValidIteration(),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             VerifyIsChangesetStub::withValidChangeset(),
@@ -40,5 +40,11 @@ final class PendingIterationCreationBuilder
             $changeset_id,
             UserIdentifierStub::buildGenericUser()
         );
+
+        if (! $pending_iteration_creation) {
+            throw new \LogicException("Pending iteration have not been created");
+        }
+
+        return $pending_iteration_creation;
     }
 }

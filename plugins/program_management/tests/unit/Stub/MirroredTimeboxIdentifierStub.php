@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class MirroredTimeboxIdentifierStub implements MirroredTimeboxIdentifier
 {
     private function __construct(private int $id)

@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
 
+/**
+ * @psalm-immutable
+ */
 final class EndPeriodFieldReferenceStub implements EndPeriodFieldReference
 {
     private function __construct(private int $id, private string $label)

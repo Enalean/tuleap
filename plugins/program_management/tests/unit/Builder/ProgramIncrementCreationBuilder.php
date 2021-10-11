@@ -39,10 +39,16 @@ final class ProgramIncrementCreationBuilder
         int $tracker_id,
         int $changeset_id
     ): ProgramIncrementCreation {
-        $event = ArtifactCreatedEventStub::withIds($program_increment_id, $tracker_id, $user_id, $changeset_id);
-        return ProgramIncrementCreation::fromArtifactCreatedEvent(
+        $event                      = ArtifactCreatedEventStub::withIds($program_increment_id, $tracker_id, $user_id, $changeset_id);
+        $program_increment_creation = ProgramIncrementCreation::fromArtifactCreatedEvent(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             $event
         );
+
+        if (! $program_increment_creation) {
+            throw new \LogicException("Program increment creation have not been created");
+        }
+
+        return $program_increment_creation;
     }
 }

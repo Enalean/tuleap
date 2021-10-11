@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class ChangesetIdentifierStub implements ChangesetIdentifier
 {
     private function __construct(private int $id)

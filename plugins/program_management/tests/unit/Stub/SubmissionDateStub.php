@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
 
+/**
+ * @psalm-immutable
+ */
 final class SubmissionDateStub implements SubmissionDate
 {
     private function __construct(private int $submission_date)

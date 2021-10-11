@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 
+/**
+ * @psalm-immutable
+ */
 final class ArtifactLinkFieldReferenceStub implements ArtifactLinkFieldReference
 {
     private function __construct(private int $id, private string $label)

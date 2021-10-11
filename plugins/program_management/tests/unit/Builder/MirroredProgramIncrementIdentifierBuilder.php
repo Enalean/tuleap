@@ -32,12 +32,18 @@ final class MirroredProgramIncrementIdentifierBuilder
 {
     public static function buildWithId(int $id): MirroredProgramIncrementIdentifier
     {
-        return MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
+        $mirrored_id = MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
             RetrieveMirroredProgramIncrementFromTeamStub::withIds($id),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             ProgramIncrementIdentifierBuilder::buildWithId(48),
             ProjectReferenceStub::buildGeneric(),
             UserIdentifierStub::buildGenericUser()
         );
+
+        if (! $mirrored_id) {
+            throw new \LogicException("Mirrored Program Increment identifier have not been created");
+        }
+
+        return $mirrored_id;
     }
 }
