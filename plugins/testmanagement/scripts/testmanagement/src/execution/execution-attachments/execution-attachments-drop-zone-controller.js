@@ -40,7 +40,7 @@ function DropZoneController($element, $rootScope) {
 
         self.drop_zone.addEventListener("dragover", onDragOver);
         self.drop_zone.addEventListener("dragleave", onDragLeave);
-        self.drop_zone.addEventListener("drop", onDrop);
+        self.drop_zone.addEventListener("drop", onDrop, true);
 
         $rootScope.$on("drop-zone-active", startDropZoneHighlight);
         $rootScope.$on("drop-zone-inactive", stopDropZoneHighlight);
@@ -92,8 +92,19 @@ function DropZoneController($element, $rootScope) {
         stopDropZoneHighlight();
         $rootScope.$emit("drop-zone-inactive");
 
+        const files = Array.from(event.dataTransfer.files);
+        if (event.target.closest(".current-test-comment")) {
+            $rootScope.$emit("execution-attachments-dropped", {
+                files: files.filter((file) => !file.type.includes("image/")),
+            });
+
+            return;
+        }
+
         event.preventDefault();
         event.stopPropagation();
+
+        $rootScope.$emit("execution-attachments-dropped", { files });
     }
 
     function startDropZoneHighlight() {

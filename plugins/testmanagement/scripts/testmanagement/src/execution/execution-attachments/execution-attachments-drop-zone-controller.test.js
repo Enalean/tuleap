@@ -43,7 +43,11 @@ describe("execution-attachments-drop-zone", () => {
         angular.mock.inject((_$controller_, $rootScope) => {
             $root_scope = $rootScope;
             $controller = _$controller_;
-            $element = angular.element("<div></div>");
+            $element = angular.element(`
+                <div>
+                    <div class="current-test-comment"></div>
+                </div>
+            `);
         });
     });
 
@@ -64,7 +68,11 @@ describe("execution-attachments-drop-zone", () => {
                 "dragleave",
                 expect.any(Function)
             );
-            expect($element[0].addEventListener).toHaveBeenCalledWith("drop", expect.any(Function));
+            expect($element[0].addEventListener).toHaveBeenCalledWith(
+                "drop",
+                expect.any(Function),
+                true
+            );
 
             expect($root_scope.$on).toHaveBeenCalledWith("drop-zone-active", expect.any(Function));
             expect($root_scope.$on).toHaveBeenCalledWith(
@@ -115,7 +123,7 @@ describe("execution-attachments-drop-zone", () => {
             jest.spyOn(dragleave, "preventDefault");
             jest.spyOn(dragleave, "stopPropagation");
 
-            drop = new Event("drop");
+            drop = new Event("drop", {});
             jest.spyOn(drop, "preventDefault");
             jest.spyOn(drop, "stopPropagation");
 
@@ -192,7 +200,10 @@ describe("execution-attachments-drop-zone", () => {
         });
 
         describe("drop", () => {
-            it("removes the highlight", () => {
+            it("removes the highlight and broadcasts the dropped files", () => {
+                const files = [{ name: "bug_1.png" }, { name: "bug_2.png" }];
+                drop.dataTransfer = { files };
+
                 drop_zone_element.dispatchEvent(dragover);
                 drop_zone_element.dispatchEvent(drop);
 
@@ -203,6 +214,30 @@ describe("execution-attachments-drop-zone", () => {
                 expect(drop_zone_element.classList.contains("drop-zone-highlighted")).toBe(false);
 
                 expect($root_scope.$emit).toHaveBeenCalledWith("drop-zone-inactive");
+                expect($root_scope.$emit).toHaveBeenCalledWith("execution-attachments-dropped", {
+                    files,
+                });
+            });
+
+            it("Given some files have been dropped in the comment box, Then it uploads only the non-image files and let the event propagate", () => {
+                const comment_box = $element[0].querySelector(".current-test-comment");
+                const files = [
+                    { name: "bug_1.png", type: "image/png" },
+                    { name: "AC.jpeg", type: "image/jpeg" },
+                    { name: "error.txt", type: "text/plain" },
+                ];
+
+                drop.dataTransfer = { files };
+
+                comment_box.dispatchEvent(drop);
+
+                expect(drop.preventDefault).not.toHaveBeenCalled();
+                expect(drop.stopPropagation).not.toHaveBeenCalled();
+
+                expect($root_scope.$emit).toHaveBeenCalledWith("drop-zone-inactive");
+                expect($root_scope.$emit).toHaveBeenCalledWith("execution-attachments-dropped", {
+                    files: [{ name: "error.txt", type: "text/plain" }],
+                });
             });
         });
 
