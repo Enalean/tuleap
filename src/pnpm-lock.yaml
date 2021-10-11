@@ -29,7 +29,7 @@ specifiers:
   '@types/prismjs': ^1.16.3
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^1.2.2
-  ckeditor4: ^4.14.1
+  ckeditor4: ^4.16.2
   d3-array: ^3.0.1
   d3-axis: ^3.0.0
   d3-interpolate: ^3.0.1
@@ -76,7 +76,7 @@ dependencies:
   '@tuleap/tlp-popovers': link:scripts/lib/tlp-popovers
   '@tuleap/tooltip': link:scripts/lib/tooltip
   '@tuleap/vue-breadcrumb-privacy': link:scripts/lib/vue-breadcrumb-privacy
-  ckeditor4: 4.14.1
+  ckeditor4: 4.16.2
   d3-array: 3.0.1
   d3-axis: 3.0.0
   d3-interpolate: 3.0.1
@@ -1090,8 +1090,8 @@ packages:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: false
 
-  /ckeditor4/4.14.1:
-    resolution: {integrity: sha512-0TgtXFDsEe1GROggaEyJ8zKKvCxk/ULqVk0Uze+XEKSimTnz4NVOsCKOZDAakvtW57I8hkusFjmzzz1QSFP3Gw==}
+  /ckeditor4/4.16.2:
+    resolution: {integrity: sha512-5x2FmI+yGpQIKISh24Wp4HwjQxN6C4Lw59yh68HbFwcnMu8DvSiZLJfeINGvRG1oQ1L9GzJ5Pqd0PL0KDH08Jw==}
     dev: false
 
   /class-utils/0.3.6:
@@ -1933,6 +1933,11 @@ packages:
     resolution: {integrity: sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ==}
     dev: false
 
+  /graceful-fs/4.2.8:
+    resolution: {integrity: sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==}
+    dev: false
+    optional: true
+
   /graphlib/2.1.8:
     resolution: {integrity: sha512-jcLLfkpoVGmH7/InMC/1hIvOPSUh38oJtGhvrOFGzioE1DZ+0YW16RgmOJhHiuWTvGiJQ9Z1Ik43JvkRPRvE+A==}
     dependencies:
@@ -2317,7 +2322,7 @@ packages:
     dependencies:
       universalify: 0.1.2
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.8
     dev: false
 
   /khroma/1.4.1:
