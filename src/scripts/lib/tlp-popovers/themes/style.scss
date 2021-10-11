@@ -73,7 +73,10 @@ $tlp-popover-click-transition: 75ms ease-out;
     z-index: 1;
     padding: var(--tlp-medium-spacing);
     background: var(--tlp-white-color);
+    color: var(--tlp-dark-color);
+    font-size: 0.875rem;
     font-weight: normal;
+    line-height: 1.25rem;
     text-align: left;
 
     &:nth-child(2):last-child {

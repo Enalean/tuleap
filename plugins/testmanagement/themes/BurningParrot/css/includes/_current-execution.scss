@@ -455,19 +455,23 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     align-items: center;
     gap: calc(var(--tlp-small-spacing) / 2);
     height: $attachment-height;
-    padding: var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + var(--tlp-small-spacing) / 2);
+    padding: var(--tlp-small-spacing) calc((#{$attachment-height} - (var(--tlp-medium-spacing) + var(--tlp-small-spacing) / 2)) / 2) var(--tlp-small-spacing) var(--tlp-small-spacing);
     border-radius: calc(var(--tlp-large-spacing) / 2);
     background: var(--tlp-background-color-darker-05);
     color: var(--tlp-dark-color);
     font-size: 0.75rem;
     line-height: 1rem;
 
-    &:hover {
+    &:is(a):hover {
         background: var(--tlp-background-color-darker-10);
         text-decoration: none;
 
         > .current-test-comment-attachment-label {
             text-decoration: underline;
+
+            &.current-test-comment-attachment-label-deleted {
+                text-decoration: underline line-through;
+            }
         }
     }
 
@@ -485,35 +489,31 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
         display: flex;
         flex: 1;
         justify-content: flex-end;
-
-        > .current-test-comment-attachment-delete-button {
-            height: max-content;
-            padding: 0;
-            border: 0;
-            border-radius: 0;
-            background: inherit;
-            box-shadow: none;
-
-            &:hover {
-                transition: none;
-                background: inherit;
-                cursor: pointer;
-            }
-
-            > .current-test-comment-attachment-delete-button-icon {
-                margin: 0;
-            }
-        }
     }
 
     &.current-test-comment-attachment-upload-error {
         background: var(--tlp-alert-warning-background);
         color: var(--tlp-alert-warning-color);
     }
-}
 
-.current-test-comment-attachment-upload-error-icon {
-    cursor: pointer;
+    .current-test-comment-attachment-button {
+        width: calc(var(--tlp-medium-spacing) + var(--tlp-small-spacing) / 2);
+        height: calc(var(--tlp-medium-spacing) + var(--tlp-small-spacing) / 2);
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: inherit;
+        box-shadow: none;
+
+        &:hover {
+            background: var(--tlp-background-color-darker-20);
+            cursor: pointer;
+        }
+
+        > .current-test-comment-attachment-button-icon {
+            margin: 0;
+        }
+    }
 }
 
 .current-test-comment-displayer {
@@ -700,19 +700,18 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
         flex-direction: column;
         justify-content: center;
         margin: 0;
-        border-bottom: 1px solid var(--tlp-danger-color-transparent-90);
-        background: var(--tlp-danger-color-transparent-90);
+        border-bottom: 1px solid var(--tlp-neutral-light-color);
 
-        > .attachment-upload-error-file-name {
-            overflow: hidden;
-            line-height: 20px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        &:last-child {
+            border-bottom: 0;
         }
 
-        > .attachment-upload-error-message {
-            margin: var(--tlp-small-spacing) 0 0;
-            color: var(--tlp-danger-color);
+        > .attachment-upload-error-file-name {
+            margin: 0 0 var(--tlp-small-spacing);
+            overflow: hidden;
+            font-weight: 600;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 }
