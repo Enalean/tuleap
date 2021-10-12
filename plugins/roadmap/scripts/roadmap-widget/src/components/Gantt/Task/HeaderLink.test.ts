@@ -22,22 +22,20 @@ import type { Project, Task } from "../../../type";
 import HeaderLink from "./HeaderLink.vue";
 
 describe("HeaderLink", () => {
-    it("should display the project label if needed", async () => {
+    it("should display the project label and icon if needed", async () => {
         const wrapper = shallowMount(HeaderLink, {
             propsData: {
                 task: {
                     xref: "art #123",
                     title: "Tomate salade oignon",
-                    project: { label: "ACME Corp" } as Project,
+                    project: { label: "ACME Corp", icon: "🐺" } as Project,
                 } as Task,
                 should_display_project: false,
             },
         });
 
-        const pattern = /ACME Corp\s+art #123/;
-        expect(wrapper.text()).not.toMatch(pattern);
+        expect(wrapper.find("[data-test=project-icon-and-label]").exists()).toBe(false);
         await wrapper.setProps({ should_display_project: true });
-
-        expect(wrapper.text()).toMatch(pattern);
+        expect(wrapper.find("[data-test=project-icon-and-label]").exists()).toBe(true);
     });
 });

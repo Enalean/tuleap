@@ -27,6 +27,7 @@ export const SUBTASKS_ARE_EMPTY: SubtaskLoadingStatus = "empty";
 export interface Project {
     readonly id: number;
     readonly label: string;
+    readonly icon: string;
 }
 
 export interface Task {

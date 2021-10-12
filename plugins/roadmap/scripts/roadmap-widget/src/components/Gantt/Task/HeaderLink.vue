@@ -21,7 +21,12 @@
 <template>
     <a v-bind:href="task.html_url" class="roadmap-gantt-task-header-link" v-bind:class="link_class">
         <span class="roadmap-gantt-task-header-xref">
-            <span v-if="should_display_project" class="roadmap-gantt-task-header-xref-project">
+            <span
+                v-if="should_display_project"
+                class="roadmap-gantt-task-header-xref-project"
+                data-test="project-icon-and-label"
+            >
+                <span aria-hidden="true">{{ task.project.icon }}</span>
                 {{ task.project.label }}
             </span>
             <i
