@@ -55,6 +55,6 @@ final class ArtifactLinkValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertArrayHasKey('natures', $formatted_value);
         self::assertSame((string) self::TIMEBOX_ID, $formatted_value['new_values']);
         self::assertArrayHasKey((string) self::TIMEBOX_ID, $formatted_value['natures']);
-        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, $formatted_value['natures'][(string) self::TIMEBOX_ID]);
+        self::assertSame([(string) self::TIMEBOX_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME], $formatted_value['natures']);
     }
 }

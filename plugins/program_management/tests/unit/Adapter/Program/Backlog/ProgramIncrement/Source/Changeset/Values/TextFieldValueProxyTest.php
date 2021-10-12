@@ -60,7 +60,7 @@ final class TextFieldValueProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $field   = new \Tracker_FormElement_Field_Text(
             168,
             84,
-            null,
+            1,
             'irrelevant',
             'Irrelevant',
             'Irrelevant',

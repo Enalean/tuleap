@@ -39,7 +39,7 @@ final class TitleFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         return new \Tracker_FormElement_Field_String(
             self::FIELD_ID,
             35,
-            null,
+            1,
             'irrelevant',
             self::FIELD_LABEL,
             'Irrelevant',

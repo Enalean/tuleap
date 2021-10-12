@@ -46,11 +46,15 @@ final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
 
-        $this->artifact_identifier  = ArtifactIdentifierStub::withId(self::ARTIFACT_ID);
-        $this->changeset_identifier = DomainChangeset::fromId(
+        $this->artifact_identifier = ArtifactIdentifierStub::withId(self::ARTIFACT_ID);
+        $changeset_identifier      = DomainChangeset::fromId(
             VerifyIsChangesetStub::withValidChangeset(),
             self::CHANGESET_ID
         );
+        if (! $changeset_identifier) {
+            throw new \LogicException("Changeset identifier is not built");
+        }
+        $this->changeset_identifier = $changeset_identifier;
     }
 
     private function getRetriever(): ChangesetRetriever

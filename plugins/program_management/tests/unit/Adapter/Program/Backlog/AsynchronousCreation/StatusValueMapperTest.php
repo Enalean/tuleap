@@ -45,14 +45,9 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
     }
 
-    /**
-     * @psalm-pure
-     */
     private function getMapper(): StatusValueMapper
     {
-        return new StatusValueMapper(
-            $this->form_element_factory
-        );
+        return new StatusValueMapper($this->form_element_factory);
     }
 
     public function dataProviderMatchingValue(): array

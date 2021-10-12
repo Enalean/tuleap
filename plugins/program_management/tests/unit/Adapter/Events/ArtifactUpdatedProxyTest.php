@@ -38,7 +38,7 @@ final class ArtifactUpdatedProxyTest extends TestCase
         $artifact  = ArtifactTestBuilder::anArtifact(228)->inTracker($tracker)->build();
         $changeset = ChangesetTestBuilder::aChangeset('884')
             ->ofArtifact($artifact)
-            ->submittedBy($user->getId())
+            ->submittedBy((int) $user->getId())
             ->build();
 
         $event = new ArtifactUpdated(

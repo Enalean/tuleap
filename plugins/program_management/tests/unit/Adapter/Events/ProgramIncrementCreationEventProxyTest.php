@@ -62,9 +62,9 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
             $this->user_manager,
             $worker_event
         );
-        self::assertSame(self::ARTIFACT_ID, $event->getArtifactId());
-        self::assertSame(self::USER_ID, $event->getUser()->getId());
-        self::assertSame(self::CHANGESET_ID, $event->getChangesetId());
+        self::assertSame(self::ARTIFACT_ID, $event?->getArtifactId());
+        self::assertSame(self::USER_ID, $event?->getUser()->getId());
+        self::assertSame(self::CHANGESET_ID, $event?->getChangesetId());
     }
 
     public function testItReturnsNullWhenUnrelatedTopic(): void
