@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
  */
 final class ProjectReferenceStub implements ProjectReference
 {
-    private function __construct(private int $id, private string $label, private string $short_name, private ?string $project_icon)
+    private function __construct(private int $id, private string $label, private string $short_name, private string $project_icon)
     {
     }
 
