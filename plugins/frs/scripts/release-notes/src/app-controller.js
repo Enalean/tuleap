@@ -17,6 +17,8 @@ function AppController($element, gettextCatalog, SharedPropertiesService) {
         SharedPropertiesService.setProjectId(release.project.id);
         SharedPropertiesService.setRelease(release);
 
+        SharedPropertiesService.setReleaseNoteHtml(frs_init_data.releaseNoteHtml);
+
         const platform_license_info = fromJson(frs_init_data.platformLicenseInfo);
         SharedPropertiesService.setPlatformLicenseInfo(platform_license_info);
 

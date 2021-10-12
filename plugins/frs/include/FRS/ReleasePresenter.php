@@ -23,6 +23,7 @@ namespace Tuleap\FRS;
 use ForgeConfig;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
+use Tuleap\Markdown\ContentInterpretor;
 
 class ReleasePresenter
 {
@@ -31,6 +32,10 @@ class ReleasePresenter
      * @var \Tuleap\FRS\REST\v1\ReleaseRepresentation
      */
     public $release_representation;
+    /**
+     * @psalm-readonly
+     */
+    public string $release_note_html;
 
     /** @var string */
     public $language;
@@ -41,9 +46,14 @@ class ReleasePresenter
     /** @var string */
     public $custom_license_agreement;
 
-    public function __construct(ReleaseRepresentation $release_representation, string $language, LicenseAgreementInterface $agreement)
-    {
+    public function __construct(
+        ReleaseRepresentation $release_representation,
+        string $language,
+        LicenseAgreementInterface $agreement,
+        ContentInterpretor $interpreter
+    ) {
         $this->release_representation = json_encode($release_representation);
+        $this->release_note_html      = $interpreter->getInterpretedContentWithReferences($release_representation->release_note, $release_representation->project->id);
         $this->language               = $language;
 
         $platform_license_info = [

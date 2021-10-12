@@ -24,7 +24,6 @@ import angular_tlp_module from "@tuleap/angular-tlp";
 
 import "angular-gettext";
 import "angular-filter";
-import "ng-showdown";
 import translations from "../po/fr.po";
 
 import AppController from "./app-controller.js";
@@ -47,14 +46,7 @@ import LinkedArtifactsConfig from "./release/linked-artifacts/linked-artifacts-c
 import LinkedArtifactsDirective from "./release/linked-artifacts/linked-artifacts-directive.js";
 
 export default angular
-    .module("tuleap.frs", [
-        "angular.filter",
-        "gettext",
-        "ng-showdown",
-        angular_tlp_module,
-        ng_sanitize,
-        ui_router,
-    ])
+    .module("tuleap.frs", ["angular.filter", "gettext", angular_tlp_module, ng_sanitize, ui_router])
     .controller("AppController", AppController)
     .controller("LicenseModalController", LicenseModalController)
     .controller("CustomLicenseModalController", CustomLicenseModalController)
