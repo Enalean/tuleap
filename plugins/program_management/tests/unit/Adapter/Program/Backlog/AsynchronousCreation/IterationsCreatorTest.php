@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\NullLogger;
-use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangesetException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredIterationCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredProgramIncrementNotFoundException;
@@ -33,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterat
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\AddArtifactLinkChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
@@ -50,6 +50,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveMirroredIterationTrackerStub $milestone_retriever;
     private CreateArtifactStub $artifact_creator;
     private RetrieveMirroredProgramIncrementFromTeamStub $mirrored_program_increment_retriever;
+    private AddArtifactLinkChangesetStub $link_adder;
     private SourceTimeboxChangesetValues $field_values;
     private TeamProjectsCollection $teams;
     private IterationCreation $creation;
@@ -61,6 +62,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             TrackerReferenceStub::withId(57),
         );
         $this->artifact_creator    = CreateArtifactStub::withIds(26, 27);
+        $this->link_adder          = AddArtifactLinkChangesetStub::withCount();
 
         $this->mirrored_program_increment_retriever = RetrieveMirroredProgramIncrementFromTeamStub::withIds(60, 61);
 
@@ -89,7 +91,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mirrored_program_increment_retriever,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             RetrieveTrackerOfArtifactStub::withIds(95, 64),
-            MessageLog::buildFromLogger(new NullLogger())
+            $this->link_adder
         );
     }
 
@@ -98,6 +100,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getCreator()->createIterations($this->field_values, $this->teams, $this->creation);
 
         self::assertSame(2, $this->artifact_creator->getCallCount());
+        self::assertSame(2, $this->link_adder->getCallCount());
     }
 
     public function testItThrowsWhenTeamHasNoMirroredIterationTracker(): void
@@ -123,6 +126,14 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mirrored_program_increment_retriever = RetrieveMirroredProgramIncrementFromTeamStub::withNoMirror();
 
         $this->expectException(MirroredProgramIncrementNotFoundException::class);
+        $this->getCreator()->createIterations($this->field_values, $this->teams, $this->creation);
+    }
+
+    public function testItThrowsWhenThereIsAnErrorWhileLinkingMirroredProgramIncrementToMirroredIteration(): void
+    {
+        $this->link_adder = AddArtifactLinkChangesetStub::withError();
+
+        $this->expectException(AddArtifactLinkChangesetException::class);
         $this->getCreator()->createIterations($this->field_values, $this->teams, $this->creation);
     }
 }

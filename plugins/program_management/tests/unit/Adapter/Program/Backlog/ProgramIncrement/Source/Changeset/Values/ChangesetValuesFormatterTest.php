@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactLinkFieldReferenceStub;
 
 final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -95,6 +96,26 @@ final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::END_DATE_ID      => self::END_DATE_VALUE
             ],
             $this->getFormatter()->format($this->values)
+        );
+    }
+
+    public function testItFormatsArtifactLinkChangesetValueToArrayExpectedByTrackerPluginAPI(): void
+    {
+        $artifact_link_field = ArtifactLinkFieldReferenceStub::withId(self::ARTIFACT_LINK_ID);
+        $value               = ArtifactLinkValue::fromArtifactAndType(
+            ArtifactIdentifierStub::withId(self::SOURCE_PROGRAM_INCREMENT_ID),
+            ArtifactLinkTypeProxy::fromIsChildType()
+        );
+        self::assertEquals(
+            [
+                self::ARTIFACT_LINK_ID => [
+                    'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
+                    'natures'    => [
+                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                    ]
+                ]
+            ],
+            $this->getFormatter()->formatArtifactLink($artifact_link_field, $value)
         );
     }
 }

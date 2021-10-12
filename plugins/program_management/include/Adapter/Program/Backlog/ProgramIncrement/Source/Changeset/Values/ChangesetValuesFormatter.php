@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 
 /**
  * I format changeset values to the array format expected by Tracker plugin API
@@ -51,6 +53,16 @@ final class ChangesetValuesFormatter
             $values->status_field->getId()        => $values->mapped_status_value->getValues(),
             $values->start_date_field->getId()    => $values->start_date_value->getValue(),
             $values->end_period_field->getId()    => $values->end_period_value->getValue()
+        ];
+    }
+
+    /**
+     * @return array<int,array>
+     */
+    public function formatArtifactLink(ArtifactLinkFieldReference $artifact_link_field, ArtifactLinkValue $value): array
+    {
+        return [
+            $artifact_link_field->getId() => $this->artifact_link_formatter->format($value)
         ];
     }
 }
