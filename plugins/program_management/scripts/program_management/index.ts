@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
     const has_plan_permissions = Boolean(vue_mount_point.dataset.hasPlanPermissions);
     const is_configured = Boolean(vue_mount_point.dataset.isConfigured);
-    if (!vue_mount_point.dataset.projectIcon) {
+    if (vue_mount_point.dataset.projectIcon === undefined) {
         throw new Error("Missing the project_icon dataset");
     }
     const project_icon = vue_mount_point.dataset.projectIcon;
