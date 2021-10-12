@@ -29,7 +29,7 @@ final class ProgramManagementProjectAdapterTest extends \Tuleap\Test\PHPUnit\Tes
 {
     public function testItBuildsProjectData(): void
     {
-        $project         = new Project(['group_id' => 101, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1']);
+        $project         = new Project(['group_id' => 101, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1', 'icon_codepoint' => ""]);
         $project_manager = $this->createMock(\ProjectManager::class);
         $project_manager->expects(self::once())->method('getProject')->with(101)->willReturn($project);
 

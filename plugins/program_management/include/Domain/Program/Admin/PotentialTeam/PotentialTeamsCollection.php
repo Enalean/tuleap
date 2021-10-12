@@ -62,7 +62,8 @@ final class PotentialTeamsCollection
             ) {
                 $potential_teams[] = PotentialTeam::fromId(
                     $project_user_is_admin->getId(),
-                    $project_user_is_admin->getProjectLabel()
+                    $project_user_is_admin->getProjectLabel(),
+                    $project_user_is_admin->getProjectIcon()
                 );
             }
         }

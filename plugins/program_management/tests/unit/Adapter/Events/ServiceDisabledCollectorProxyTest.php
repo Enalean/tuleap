@@ -35,7 +35,7 @@ final class ServiceDisabledCollectorProxyTest extends TestCase
     protected function setUp(): void
     {
         $this->event = new ServiceDisabledCollector(
-            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
+            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
             \program_managementPlugin::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );

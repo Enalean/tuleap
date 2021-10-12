@@ -252,6 +252,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $project->method('getID')->willReturn(102);
         $project->method('getPublicName')->willReturn("A project");
         $project->method('getUrl')->willReturn("/a-project/");
+        $project->method('getIconUnicodeCodepoint')->willReturn("");
         $project->expects(self::once())
             ->method('usesService')
             ->with(\program_managementPlugin::SERVICE_SHORTNAME)

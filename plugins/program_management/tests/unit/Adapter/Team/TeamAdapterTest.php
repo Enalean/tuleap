@@ -67,7 +67,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_identifier      = UserIdentifierStub::buildGenericUser();
         $this->program              = ProgramForAdministrationIdentifierBuilder::build();
 
-        $this->team_project = new \Project(['group_id' => self::TEAM_ID, 'status' => 'A', 'access' => 'public', 'unix_group_name' => 'a_project', 'group_name' => 'A project']);
+        $this->team_project = new \Project(['group_id' => self::TEAM_ID, 'status' => 'A', 'access' => 'public', 'unix_group_name' => 'a_project', 'group_name' => 'A project', 'icon_codepoint' => '']);
         $this->project_manager->expects(self::once())
             ->method('getProject')
             ->with(self::TEAM_ID)

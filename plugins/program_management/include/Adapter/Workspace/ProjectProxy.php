@@ -24,19 +24,31 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 /**
  * @psalm-immutable
  */
 final class ProjectProxy implements ProjectReference
 {
-    private function __construct(private int $project_id, private string $project_label, private string $project_url)
-    {
+    private function __construct(
+        private int $project_id,
+        private string $project_label,
+        private string $project_url,
+        private string $project_icon
+    ) {
     }
 
     public static function buildFromProject(\Project $project): self
     {
-        return new self((int) $project->getID(), $project->getPublicName(), $project->getUrl());
+        return new self(
+            (int) $project->getID(),
+            $project->getPublicName(),
+            $project->getUrl(),
+            EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
+                $project->getIconUnicodeCodepoint()
+            )
+        );
     }
 
     public function getId(): int
@@ -52,5 +64,10 @@ final class ProjectProxy implements ProjectReference
     public function getUrl(): string
     {
         return $this->project_url;
+    }
+
+    public function getProjectIcon(): string
+    {
+        return $this->project_icon;
     }
 }

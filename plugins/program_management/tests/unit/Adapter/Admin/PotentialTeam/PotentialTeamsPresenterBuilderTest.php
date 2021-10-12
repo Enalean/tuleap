@@ -29,8 +29,8 @@ final class PotentialTeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
 {
     public function testBuildPotentialTeamsPresenter(): void
     {
-        $team_1 = PotentialTeam::fromId(101, 'team_1');
-        $team_2 = PotentialTeam::fromId(102, 'team_2');
+        $team_1 = PotentialTeam::fromId(101, 'team_1', '');
+        $team_2 = PotentialTeam::fromId(102, 'team_2', '');
 
         $teams_presenter = PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter([$team_1, $team_2]);
 

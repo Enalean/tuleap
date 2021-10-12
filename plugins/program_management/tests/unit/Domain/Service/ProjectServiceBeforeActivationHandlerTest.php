@@ -37,7 +37,7 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
         $handler = new ProjectServiceBeforeActivationHandler($checker, VerifyScrumBlocksServiceActivationStub::withScrum());
 
         $event = new ProjectServiceBeforeActivation(
-            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
+            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
             \program_managementPlugin::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );
@@ -53,7 +53,7 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
         $handler = new ProjectServiceBeforeActivationHandler($checker, VerifyScrumBlocksServiceActivationStub::withoutScrum());
 
         $event = new ProjectServiceBeforeActivation(
-            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
+            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
             \program_managementPlugin::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );
@@ -69,7 +69,7 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
         $handler = new ProjectServiceBeforeActivationHandler($checker, VerifyScrumBlocksServiceActivationStub::withScrum());
 
         $event = new ProjectServiceBeforeActivation(
-            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
+            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
             \program_managementPlugin::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );
@@ -85,7 +85,7 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
         $handler = new ProjectServiceBeforeActivationHandler($checker, VerifyScrumBlocksServiceActivationStub::withScrum());
 
         $event = new ProjectServiceBeforeActivation(
-            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
+            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
             \program_managementPlugin::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );

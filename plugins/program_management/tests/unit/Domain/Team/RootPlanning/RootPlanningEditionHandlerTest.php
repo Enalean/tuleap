@@ -35,7 +35,7 @@ final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->event         = new RootPlanningEditionEvent(
-            new \Project(['group_id' => '110', 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
+            new \Project(['group_id' => '110', 'group_name' => 'A project', 'unix_group_name' => 'a_project', "icon_codepoint" => ""]),
             new \Planning(50, 'Release Planning', 110, '', '')
         );
         $this->team_verifier = VerifyIsTeamStub::withValidTeam();

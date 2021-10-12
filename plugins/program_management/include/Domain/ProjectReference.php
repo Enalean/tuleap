@@ -33,4 +33,6 @@ interface ProjectReference extends ProjectIdentifier
     public function getProjectLabel(): string;
 
     public function getUrl(): string;
+
+    public function getProjectIcon(): string;
 }
