@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureCount;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchOpenFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -36,7 +37,8 @@ final class PossibleParentHandler
         private VerifyIsVisibleFeature $visible_verifier,
         private BuildProgram $program_builder,
         private SearchProgramsOfTeam $programs_searcher,
-        private FeaturesStore $features_store,
+        private SearchOpenFeatures $search_open_features,
+        private RetrieveOpenFeatureCount $retrieve_open_feature_count,
     ) {
     }
 
@@ -62,7 +64,7 @@ final class PossibleParentHandler
         }
 
         $features = [];
-        foreach ($this->features_store->searchOpenFeatures($possible_parent_selector->getOffset(), $possible_parent_selector->getLimit(), ...$programs) as $feature) {
+        foreach ($this->search_open_features->searchOpenFeatures($possible_parent_selector->getOffset(), $possible_parent_selector->getLimit(), ...$programs) as $feature) {
             $feature_identifier = FeatureIdentifier::fromId(
                 $this->visible_verifier,
                 $feature['artifact_id'],
@@ -80,6 +82,6 @@ final class PossibleParentHandler
         }
 
         $possible_parent_selector->disableCreate();
-        $possible_parent_selector->setPossibleParents($this->features_store->searchOpenFeaturesCount(...$programs), ...$features);
+        $possible_parent_selector->setPossibleParents($this->retrieve_open_feature_count->retrieveOpenFeaturesCount(...$programs), ...$features);
     }
 }

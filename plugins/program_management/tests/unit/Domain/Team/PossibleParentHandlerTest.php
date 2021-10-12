@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureCount;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchOpenFeatures;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
@@ -42,26 +43,21 @@ final class PossibleParentHandlerTest extends TestCase
     private const PROGRAM_ID_1 = 899;
     private const PROGRAM_ID_2 = 741;
 
-    private FeaturesStore $feature_store;
     private PossibleParentSelectorEvent $possible_parent_selector;
+    private SearchOpenFeatures $search_open_features;
+    private RetrieveOpenFeatureCount $retrieve_open_feature_count;
 
     protected function setUp(): void
     {
-        $this->feature_store = new class implements FeaturesStore
+        $this->search_open_features = new class implements SearchOpenFeatures
         {
-            public int $offset     = 0;
-            public int $limit      = 0;
-            public int $found_rows = 0;
+            public int $offset = 0;
+            public int $limit  = 0;
             /**
              * @var ProgramIdentifier[]
              */
             public array $program_identifiers = [];
             public array $open_features       = [];
-
-            public function searchPlannableFeatures(ProgramIdentifier $program): array
-            {
-                return [];
-            }
 
             public function searchOpenFeatures(int $offset, int $limit, ProgramIdentifier ...$program_identifiers): array
             {
@@ -71,11 +67,6 @@ final class PossibleParentHandlerTest extends TestCase
                 return $this->open_features;
             }
 
-            public function searchOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
-            {
-                return $this->found_rows;
-            }
-
             public function add(int $program_id, int $artifact_id): void
             {
                 $this->open_features[] = [
@@ -83,6 +74,16 @@ final class PossibleParentHandlerTest extends TestCase
                     'program_id'  => $program_id,
                     'title'       => 'A fine feature',
                 ];
+            }
+        };
+
+        $this->retrieve_open_feature_count = new class implements RetrieveOpenFeatureCount
+        {
+            public int $found_rows = 0;
+
+            public function retrieveOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
+            {
+                return $this->found_rows;
             }
         };
 
@@ -139,10 +140,11 @@ final class PossibleParentHandlerTest extends TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
-            $this->feature_store,
+            $this->search_open_features,
+            $this->retrieve_open_feature_count
         );
 
-        $this->feature_store->add(self::PROGRAM_ID_1, self::FEATURE_ID);
+        $this->search_open_features->add(self::PROGRAM_ID_1, self::FEATURE_ID);
 
         $possible_parent->handle($this->possible_parent_selector);
 
@@ -156,17 +158,18 @@ final class PossibleParentHandlerTest extends TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
-            $this->feature_store,
+            $this->search_open_features,
+            $this->retrieve_open_feature_count
         );
 
-        $this->possible_parent_selector->offset = 100;
-        $this->possible_parent_selector->limit  = 50;
-        $this->feature_store->found_rows        = 200;
+        $this->possible_parent_selector->offset        = 100;
+        $this->possible_parent_selector->limit         = 50;
+        $this->retrieve_open_feature_count->found_rows = 200;
 
         $possible_parent->handle($this->possible_parent_selector);
 
-        assertEquals(100, $this->feature_store->offset);
-        assertEquals(50, $this->feature_store->limit);
+        assertEquals(100, $this->search_open_features->offset);
+        assertEquals(50, $this->search_open_features->limit);
         assertEquals(200, $this->possible_parent_selector->total_size);
     }
 
@@ -176,7 +179,8 @@ final class PossibleParentHandlerTest extends TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
-            $this->feature_store,
+            $this->search_open_features,
+            $this->retrieve_open_feature_count
         );
 
         $possible_parent->handle($this->possible_parent_selector);
@@ -190,7 +194,8 @@ final class PossibleParentHandlerTest extends TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(),
-            $this->feature_store,
+            $this->search_open_features,
+            $this->retrieve_open_feature_count
         );
 
         $possible_parent->handle($this->possible_parent_selector);
@@ -204,7 +209,8 @@ final class PossibleParentHandlerTest extends TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
-            $this->feature_store,
+            $this->search_open_features,
+            $this->retrieve_open_feature_count
         );
 
         $this->possible_parent_selector->tracker_is_in_root_planning = false;
@@ -220,7 +226,8 @@ final class PossibleParentHandlerTest extends TestCase
             VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
-            $this->feature_store,
+            $this->search_open_features,
+            $this->retrieve_open_feature_count
         );
 
         $possible_parent->handle($this->possible_parent_selector);
@@ -234,11 +241,12 @@ final class PossibleParentHandlerTest extends TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1, self::PROGRAM_ID_2),
-            $this->feature_store,
+            $this->search_open_features,
+            $this->retrieve_open_feature_count
         );
 
         $possible_parent->handle($this->possible_parent_selector);
 
-        assertEquals([self::PROGRAM_ID_1, self::PROGRAM_ID_2], array_map(static fn (ProgramIdentifier $prgm_id) => $prgm_id->getId(), $this->feature_store->program_identifiers));
+        assertEquals([self::PROGRAM_ID_1, self::PROGRAM_ID_2], array_map(static fn (ProgramIdentifier $prgm_id) => $prgm_id->getId(), $this->search_open_features->program_identifiers));
     }
 }

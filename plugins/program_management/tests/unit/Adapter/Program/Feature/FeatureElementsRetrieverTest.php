@@ -26,7 +26,7 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
@@ -45,7 +45,7 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FeatureElementsRetriever $retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&FeaturesStore
+     * @var \PHPUnit\Framework\MockObject\MockObject&SearchPlannableFeatures
      */
     private $features_dao;
     /**
@@ -68,7 +68,7 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->features_dao         = $this->createMock(FeaturesStore::class);
+        $this->features_dao         = $this->createMock(SearchPlannableFeatures::class);
         $build_program              = BuildProgramStub::stubValidProgram();
         $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
