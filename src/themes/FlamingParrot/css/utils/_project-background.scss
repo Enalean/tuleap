@@ -44,10 +44,6 @@
         }
     }
 
-    .breadcrumb-container {
-        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
-    }
-
     .breadcrumb,
     .breadcrumb-link {
         @include background.project-background-title-header-typography();
@@ -153,6 +149,10 @@
 
     #feedback {
         padding: var(--tlp-medium-spacing) 0;
+
+        &:empty {
+            padding: 0;
+        }
 
         // stylelint-disable selector-class-pattern
         > .feedback_error,
