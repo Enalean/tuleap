@@ -40,6 +40,7 @@ describe("User stories retriever", () => {
                         id: 101,
                         label: "My Team Project",
                         uri: "project/team",
+                        icon: "",
                     },
                     background_color: "fiesta-red",
                     tracker: {
@@ -56,6 +57,7 @@ describe("User stories retriever", () => {
                         id: 101,
                         label: "My Team Project",
                         uri: "project/team",
+                        icon: "",
                     },
                     background_color: "fiesta-red",
                     tracker: {

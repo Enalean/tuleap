@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
-use Tuleap\Project\Flags\ProjectFlagPresenter;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
 /**
@@ -47,10 +47,8 @@ final class ProgramBacklogPresenter
     public bool $is_program_admin;
     public bool $is_configured;
     public bool $has_plan_permissions;
+    public string $project_icon;
 
-    /**
-     * @param ProjectFlagPresenter[] $project_flags
-     */
     public function __construct(
         \Project $project,
         array $project_flags,
@@ -83,5 +81,6 @@ final class ProgramBacklogPresenter
 
         $this->is_program_admin = $is_program_admin;
         $this->is_configured    = $backlog_configuration->is_configured;
+        $this->project_icon     = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
     }
 }

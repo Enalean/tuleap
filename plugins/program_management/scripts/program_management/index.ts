@@ -20,8 +20,8 @@
 import Vue from "vue";
 import App from "./src/components/App.vue";
 import {
-    initVueGettext,
     getPOFileFromLocale,
+    initVueGettext,
 } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store";
 import type { ConfigurationState } from "./src/store/configuration";
@@ -91,10 +91,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
     const has_plan_permissions = Boolean(vue_mount_point.dataset.hasPlanPermissions);
     const is_configured = Boolean(vue_mount_point.dataset.isConfigured);
+    if (!vue_mount_point.dataset.projectIcon) {
+        throw new Error("Missing the project_icon dataset");
+    }
+    const project_icon = vue_mount_point.dataset.projectIcon;
 
     const configuration_state: ConfigurationState = {
         public_name: project_name,
         short_name: project_short_name,
+        project_icon,
         privacy: project_privacy,
         flags: project_flags,
         program_id,

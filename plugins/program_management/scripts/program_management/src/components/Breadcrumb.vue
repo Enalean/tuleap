@@ -27,6 +27,7 @@
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
                 <a v-bind:href="projectUrl()" class="breadcrumb-link">
+                    <span aria-hidden="true">{{ project_icon }}</span>
                     {{ project_public_name }}
                 </a>
             </div>
@@ -72,6 +73,9 @@ export default class Breadcrumb extends Vue {
 
     @Prop({ required: true })
     readonly project_short_name!: string;
+
+    @Prop({ required: true })
+    readonly project_icon!: string;
 
     @Prop({ required: true })
     readonly project_privacy!: ProjectPrivacy;
