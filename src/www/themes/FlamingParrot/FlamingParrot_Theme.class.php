@@ -257,6 +257,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         );
 
         $platform_banner = $this->getPlatformBannerWithScript($current_user, 'platform/platform-banner-fp.js');
+        if ($platform_banner !== null && $platform_banner->isVisible()) {
+            $body_class[] = 'has-visible-platform-banner';
+        }
+
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,
             $this->getNotificationPlaceholder(),
