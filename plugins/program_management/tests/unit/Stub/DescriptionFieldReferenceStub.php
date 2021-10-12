@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 
+/**
+ * @psalm-immutable
+ */
 final class DescriptionFieldReferenceStub implements DescriptionFieldReference
 {
     private function __construct(private int $id, private string $label)

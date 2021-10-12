@@ -34,7 +34,7 @@ final class RetrieveUserStub implements RetrieveUser
     }
 
     /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     * @param \PFUser&\PHPUnit\Framework\MockObject\MockObject $user
      */
     public static function buildMockedRegularUser($user): self
     {
@@ -52,7 +52,7 @@ final class RetrieveUserStub implements RetrieveUser
     }
 
     /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     * @param \PFUser&\PHPUnit\Framework\MockObject\MockObject $user
      */
     public static function buildMockedMemberOfUGroupUser($user): self
     {
@@ -64,7 +64,7 @@ final class RetrieveUserStub implements RetrieveUser
     }
 
     /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     * @param \PFUser&\PHPUnit\Framework\MockObject\MockObject $user
      */
     public static function buildMockedAdminUser($user): self
     {
@@ -75,7 +75,7 @@ final class RetrieveUserStub implements RetrieveUser
     }
 
     /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     * @param \PFUser&\PHPUnit\Framework\MockObject\MockObject $user
      */
     public static function buildMockedSuperUser($user): self
     {
@@ -86,7 +86,7 @@ final class RetrieveUserStub implements RetrieveUser
     }
 
     /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     * @param \PFUser&\PHPUnit\Framework\MockObject\MockObject $user
      */
     public static function buildUserWhoCanAccessProjectAndIsProjectAdmin($user): self
     {

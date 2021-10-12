@@ -30,9 +30,15 @@ final class ProgramIncrementTrackerIdentifierBuilder
 {
     public static function buildWithId(int $id): ProgramIncrementTrackerIdentifier
     {
-        return ProgramIncrementTrackerIdentifier::fromId(
+        $program_increment_tracker_identifier = ProgramIncrementTrackerIdentifier::fromId(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             TrackerIdentifierStub::withId($id)
         );
+
+        if (! $program_increment_tracker_identifier) {
+            throw new \LogicException("Program incrmeent tracker identifier have not been created");
+        }
+
+        return $program_increment_tracker_identifier;
     }
 }

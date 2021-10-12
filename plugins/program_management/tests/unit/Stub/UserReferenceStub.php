@@ -25,6 +25,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
+/**
+ * @psalm-immutable
+ */
 final class UserReferenceStub implements UserReference
 {
     private function __construct(private int $id, private string $name)

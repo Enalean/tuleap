@@ -25,6 +25,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
+/**
+ * @psalm-immutable
+ */
 final class ProjectReferenceStub implements ProjectReference
 {
     private function __construct(private int $id, private string $label, private string $short_name)

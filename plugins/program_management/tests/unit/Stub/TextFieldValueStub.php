@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 
+/**
+ * @psalm-immutable
+ */
 final class TextFieldValueStub implements TextFieldValue
 {
     private function __construct(private string $value, private string $format)

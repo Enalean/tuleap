@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 
+/**
+ * @psalm-immutable
+ */
 final class StatusFieldReferenceStub implements StatusFieldReference
 {
     private function __construct(private int $id, private string $label)

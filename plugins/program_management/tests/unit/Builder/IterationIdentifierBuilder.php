@@ -31,11 +31,17 @@ final class IterationIdentifierBuilder
 {
     public static function buildWithId(int $iteration_id): IterationIdentifier
     {
-        return IterationIdentifier::fromId(
+        $iteration = IterationIdentifier::fromId(
             VerifyIsIterationStub::withValidIteration(),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             $iteration_id,
             UserIdentifierStub::buildGenericUser()
         );
+
+        if (! $iteration) {
+            throw new \LogicException("Iteration is not defined");
+        }
+
+        return $iteration;
     }
 }

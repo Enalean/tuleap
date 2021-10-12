@@ -25,6 +25,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class ProjectIdentifierStub implements ProjectIdentifier
 {
     private int $project_id;

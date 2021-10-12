@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+/**
+ * @psalm-immutable
+ */
 final class TrackerIdentifierStub implements \Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier
 {
     private function __construct(private int $id)

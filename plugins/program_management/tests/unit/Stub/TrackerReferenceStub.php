@@ -25,9 +25,12 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
+/**
+ * @psalm-immutable
+ */
 final class TrackerReferenceStub implements TrackerReference
 {
-    private function __construct(private int $id, private string $name, private int $project_id, private $project_name)
+    private function __construct(private int $id, private string $name, private int $project_id, private string $project_name)
     {
     }
 

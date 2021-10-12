@@ -29,7 +29,7 @@ final class ContentStoreStub implements \Tuleap\ProgramManagement\Domain\Program
     }
 
     /**
-     * @param array<array{tracker_name:string, artifact_id:int, artifact_title:string, field_title_id:int}
+     * @param array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[] $rows
      */
     public static function withRows(array $rows): self
     {

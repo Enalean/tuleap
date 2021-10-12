@@ -29,12 +29,15 @@ use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 final class RetrieveTrackerOfArtifactStub implements RetrieveTrackerOfArtifact
 {
     /**
-     * @param TrackerIdentifier[]
+     * @param TrackerIdentifier[] $trackers
      */
     private function __construct(private array $trackers)
     {
     }
 
+    /**
+     * @no-named-arguments
+     */
     public static function withIds(int $tracker_id, int ...$other_tracker_ids): self
     {
         $identifiers = array_map(

@@ -29,6 +29,9 @@ use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
 {
     private function __construct(
@@ -45,11 +48,16 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
         int $user_id,
         int $changeset_id
     ): self {
+        $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id);
+        if (! $changeset) {
+            throw new \LogicException("Changeset is not valid");
+        }
+
         return new self(
             ArtifactIdentifierStub::withId($artifact_id),
             TrackerIdentifierStub::withId($tracker_id),
             UserIdentifierStub::withId($user_id),
-            DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id)
+            $changeset
         );
     }
 

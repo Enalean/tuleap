@@ -23,6 +23,8 @@
         <directory name="plugins/jira_import/tests/unit/" />
         <directory name="plugins/document_generation/tests/unit/" />
         <directory name="plugins/program_management/tests/unit/Adapter/" />
+        <directory name="plugins/program_management/tests/unit/Builder/" />
+        <directory name="plugins/program_management/tests/unit/Stub/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>

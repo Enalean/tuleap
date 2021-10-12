@@ -37,6 +37,9 @@ final class RetrieveMirroredProgramIncrementFromTeamStub implements RetrieveMirr
     ) {
     }
 
+    /**
+     * @no-named-arguments
+     */
     public static function withIds(int $id, int ...$other_ids): self
     {
         return new self(false, [$id, ...$other_ids]);

@@ -37,6 +37,9 @@ final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
     {
     }
 
+    /**
+     * @no-named-arguments
+     */
     public static function withFields(
         ArtifactLinkFieldReference $field,
         ArtifactLinkFieldReference ...$other_fields

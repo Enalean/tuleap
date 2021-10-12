@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 
+/**
+ * @psalm-immutable
+ */
 final class StartDateFieldReferenceStub implements StartDateFieldReference
 {
     private function __construct(private int $id, private string $label)

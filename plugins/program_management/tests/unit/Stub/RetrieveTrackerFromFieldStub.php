@@ -32,9 +32,6 @@ final class RetrieveTrackerFromFieldStub implements RetrieveTrackerFromField
     {
     }
 
-    /**
-     * @psalm-pure
-     */
     public static function withTracker(TrackerReference $tracker): self
     {
         return new self($tracker);

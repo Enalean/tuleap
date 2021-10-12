@@ -25,6 +25,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class ProgramIncrementCreationEventStub implements ProgramIncrementCreationEvent
 {
     private function __construct(private int $artifact_id, private UserIdentifier $user, private int $changeset_id)

@@ -29,6 +29,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 
+/**
+ * @psalm-immutable
+ */
 final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEvent
 {
     /**

@@ -24,6 +24,9 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class BindValueIdentifierStub implements BindValueIdentifier
 {
     private int $id;
