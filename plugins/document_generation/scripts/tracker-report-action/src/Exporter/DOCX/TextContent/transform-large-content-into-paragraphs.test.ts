@@ -24,7 +24,10 @@ import * as html_transformer from "./transform-html-into-paragraphs";
 describe("transform-large-content-into-paragraph", () => {
     it("transforms large plaintext content", async () => {
         const paragraph = await transformLargeContentIntoParagraphs("My\ncontent", "plaintext", {
-            ordered_title_levels: [HeadingLevel.TITLE],
+            ordered_title_levels: [HeadingLevel.HEADING_5],
+            unordered_list_reference: "some-list",
+            ordered_list_reference: "some-list",
+            monospace_font: "monospace",
         });
 
         expect(paragraph).toStrictEqual([
@@ -47,7 +50,10 @@ describe("transform-large-content-into-paragraph", () => {
         ]);
 
         const paragraph = await transformLargeContentIntoParagraphs("Some HTML", "html", {
-            ordered_title_levels: [HeadingLevel.TITLE],
+            ordered_title_levels: [HeadingLevel.HEADING_5],
+            unordered_list_reference: "some-list",
+            ordered_list_reference: "some-list",
+            monospace_font: "monospace",
         });
 
         expect(paragraph).toStrictEqual([expected_value]);

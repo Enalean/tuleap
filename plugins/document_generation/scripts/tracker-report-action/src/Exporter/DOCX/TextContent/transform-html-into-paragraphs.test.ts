@@ -38,10 +38,7 @@ import * as style_extractor from "./extract-style-html-element";
 
 describe("transform-html-into-paragraph", () => {
     it("transforms paragraphs that are the root of the document", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<p>A</p><p><span>B</span><br>C</p><p></p>",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
-        );
+        const paragraphs = await transformHTML("<p>A</p><p><span>B</span><br>C</p><p></p>");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({ children: [new TextRun("A")] }),
@@ -52,9 +49,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms phrasing content that are the root of the document", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs("A<p>B</p>C", {
-            ordered_title_levels: [HeadingLevel.TITLE],
-        });
+        const paragraphs = await transformHTML("A<p>B</p>C");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({ children: [new TextRun("A")] }),
@@ -64,9 +59,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("traverses div tags when transforming the content", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs("<div><div>A<p>B</p></div></div>", {
-            ordered_title_levels: [HeadingLevel.TITLE],
-        });
+        const paragraphs = await transformHTML("<div><div>A<p>B</p></div></div>");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({ children: [new TextRun("A")] }),
@@ -75,9 +68,8 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms inline markup style elements", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
+        const paragraphs = await transformHTML(
+            "<em>A</em><i>B</i><strong>C</strong><b>D</b><sup>E</sup><sub>F</sub><u>G</u>"
         );
 
         expect(paragraphs).toStrictEqual([
@@ -96,10 +88,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms inline nested markup elements", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<span><strong>A<em>B</em>C</strong></span>D",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
-        );
+        const paragraphs = await transformHTML("<span><strong>A<em>B</em>C</strong></span>D");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
@@ -114,35 +103,33 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms unordered lists", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul></li><li>B</li></ul>",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
+        const paragraphs = await transformHTML(
+            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul></li><li>B</li></ul>"
         );
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
                 children: [new TextRun({ text: "A" })],
-                bullet: { level: 0 },
+                numbering: { level: 0, reference: "html-unordered-list" },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.1" })],
-                bullet: { level: 1 },
+                numbering: { level: 1, reference: "html-unordered-list" },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.2", bold: true })],
-                bullet: { level: 1 },
+                numbering: { level: 1, reference: "html-unordered-list" },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "B" })],
-                bullet: { level: 0 },
+                numbering: { level: 0, reference: "html-unordered-list" },
             }),
         ]);
     });
 
     it("transforms ordered lists", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
+        const paragraphs = await transformHTML(
+            "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>"
         );
 
         expect(paragraphs).toStrictEqual([
@@ -166,15 +153,14 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms mixed ordered and unordered lists", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
+        const paragraphs = await transformHTML(
+            "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>"
         );
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
                 children: [new TextRun({ text: "A" })],
-                bullet: { level: 0 },
+                numbering: { level: 0, reference: "html-unordered-list" },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.1" })],
@@ -186,7 +172,7 @@ describe("transform-html-into-paragraph", () => {
             }),
             new Paragraph({
                 children: [new TextRun({ text: "B" })],
-                bullet: { level: 0 },
+                numbering: { level: 0, reference: "html-unordered-list" },
             }),
         ]);
     });
@@ -205,9 +191,8 @@ describe("transform-html-into-paragraph", () => {
             }
         );
 
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<img src='/success' /><img src='/fail'><img src='/fail2' alt='My image'>",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
+        const paragraphs = await transformHTML(
+            "<img src='/success' /><img src='/fail'><img src='/fail2' alt='My image'>"
         );
 
         expect(paragraphs).toStrictEqual([
@@ -218,9 +203,8 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms hyperlinks", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<a>A</a><a href='https://demo.example.com/'>B</a><a href='https://empty.example.com'></a>",
-            { ordered_title_levels: [HeadingLevel.TITLE] }
+        const paragraphs = await transformHTML(
+            "<a>A</a><a href='https://demo.example.com/'>B</a><a href='https://empty.example.com'></a>"
         );
 
         expect(paragraphs).toStrictEqual([
@@ -237,10 +221,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms titles", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<h1>A</h1><h2>B</h2><h6>C</h6><p>D</p>",
-            { ordered_title_levels: [HeadingLevel.HEADING_5, HeadingLevel.HEADING_6] }
-        );
+        const paragraphs = await transformHTML("<h1>A</h1><h2>B</h2><h6>C</h6><p>D</p>");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
@@ -262,9 +243,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms horizontal rules", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs("A<hr>B", {
-            ordered_title_levels: [HeadingLevel.TITLE],
-        });
+        const paragraphs = await transformHTML("A<hr>B");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
@@ -291,9 +270,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms blockquotes", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs("<blockquote><p>A</p></blockquote>", {
-            ordered_title_levels: [HeadingLevel.TITLE],
-        });
+        const paragraphs = await transformHTML("<blockquote><p>A</p></blockquote>");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
@@ -306,11 +283,8 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms code snippets", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<code>Inline</code><pre><code>Code\n  L2</code></pre>",
-            {
-                ordered_title_levels: [HeadingLevel.TITLE],
-            }
+        const paragraphs = await transformHTML(
+            "<code>Inline</code><pre><code>Code\n  L2</code></pre>"
         );
 
         expect(paragraphs).toStrictEqual([
@@ -327,11 +301,8 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms tables", async () => {
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<table><thead><tr><th>0.0</th></tr></thead><tbody><tr><td>1.0</td></tr></tbody></table>",
-            {
-                ordered_title_levels: [HeadingLevel.TITLE],
-            }
+        const paragraphs = await transformHTML(
+            "<table><thead><tr><th>0.0</th></tr></thead><tbody><tr><td>1.0</td></tr></tbody></table>"
         );
 
         expect(paragraphs).toStrictEqual([
@@ -373,12 +344,7 @@ describe("transform-html-into-paragraph", () => {
             }
         );
 
-        const paragraphs = await transformHTMLIntoParagraphs(
-            "<p style='color: red;'>A</p><p>B</p>",
-            {
-                ordered_title_levels: [HeadingLevel.TITLE],
-            }
-        );
+        const paragraphs = await transformHTML("<p style='color: red;'>A</p><p>B</p>");
 
         expect(paragraphs).toStrictEqual([
             new Paragraph({
@@ -390,3 +356,12 @@ describe("transform-html-into-paragraph", () => {
         ]);
     });
 });
+
+function transformHTML(content: string): Promise<Paragraph[]> {
+    return transformHTMLIntoParagraphs(content, {
+        ordered_title_levels: [HeadingLevel.HEADING_5, HeadingLevel.HEADING_6],
+        ordered_list_reference: "html-ordered-list",
+        unordered_list_reference: "html-unordered-list",
+        monospace_font: "Courier New",
+    });
+}

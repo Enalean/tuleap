@@ -19,11 +19,9 @@
 
 import type { HeadingLevel, ImageRun, IRunPropertiesOptions, ParagraphChild } from "docx";
 import {
-    AlignmentType,
     BorderStyle,
     convertInchesToTwip,
     ExternalHyperlink,
-    LevelFormat,
     Paragraph,
     Table,
     TableCell,
@@ -35,14 +33,17 @@ import {
 import { loadImage } from "../Image/image-loader";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
 import { extractInlineStyles } from "./extract-style-html-element";
+import type { IRunStylePropertiesOptions } from "docx/src/file/paragraph/run/properties";
 
-const HTML_ORDERED_LIST_NUMBERING_REFERENCE = "html-ordered-list";
 const PAGE_WIDTH_DXA = 9638;
 
 type ReadonlyArrayWithAtLeastOneElement<T> = { 0: T } & ReadonlyArray<T>;
 
 export interface TransformationOptions {
     ordered_title_levels: ReadonlyArrayWithAtLeastOneElement<HeadingLevel>;
+    ordered_list_reference: string;
+    unordered_list_reference: string;
+    monospace_font: Exclude<IRunStylePropertiesOptions["font"], undefined>;
 }
 
 export async function transformHTMLIntoParagraphs(
@@ -213,19 +214,6 @@ async function parseTreeContent(
                 );
                 break;
             case "UL":
-                for (const list_item of child.childNodes) {
-                    content_children.push(
-                        ...buildParagraphsFromTreeContent(
-                            await parseTreeContent(options, list_item.childNodes, {
-                                ...state,
-                                list_level: state.list_level + 1,
-                            }),
-                            (children: ParagraphChild[]): Paragraph =>
-                                new Paragraph({ children, bullet: { level: state.list_level } })
-                        )
-                    );
-                }
-                break;
             case "OL":
                 for (const list_item of child.childNodes) {
                     content_children.push(
@@ -239,7 +227,10 @@ async function parseTreeContent(
                                     children,
                                     numbering: {
                                         level: state.list_level,
-                                        reference: HTML_ORDERED_LIST_NUMBERING_REFERENCE,
+                                        reference:
+                                            child.nodeName === "UL"
+                                                ? options.unordered_list_reference
+                                                : options.ordered_list_reference,
                                     },
                                 })
                         )
@@ -304,7 +295,7 @@ async function parseTreeContent(
                 content_children.push(
                     ...defaultNodeHandling(child, {
                         ...state,
-                        style: { ...state.style, font: "Courier New" },
+                        style: { ...state.style, font: options.monospace_font },
                     })
                 );
                 break;
@@ -428,112 +419,3 @@ function defaultNodeHandling(node: Node, state: Readonly<TreeContentState>): Tex
     }
     return state.text_run_builder(node.textContent, state.style);
 }
-
-// This is based on the default implementation of the bullets to have a consistent rendering between unordered and
-// ordered lists
-// See https://github.com/dolanmiu/docx/blob/7.1.1/src/file/numbering/numbering.ts#L58-L158
-export const HTML_ORDERED_LIST_NUMBERING = {
-    levels: [
-        {
-            level: 0,
-            format: LevelFormat.DECIMAL,
-            text: "%1.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 1,
-            format: LevelFormat.DECIMAL,
-            text: "%2.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: convertInchesToTwip(1), hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 2,
-            format: LevelFormat.DECIMAL,
-            text: "%3.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: 2160, hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 3,
-            format: LevelFormat.DECIMAL,
-            text: "%4.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: 2880, hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 4,
-            format: LevelFormat.DECIMAL,
-            text: "%5.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: 3600, hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 5,
-            format: LevelFormat.DECIMAL,
-            text: "%6.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: 4320, hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 6,
-            format: LevelFormat.DECIMAL,
-            text: "%7.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: 5040, hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 7,
-            format: LevelFormat.DECIMAL,
-            text: "%8.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: 5760, hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-        {
-            level: 8,
-            format: LevelFormat.DECIMAL,
-            text: "%9.",
-            alignment: AlignmentType.LEFT,
-            style: {
-                paragraph: {
-                    indent: { left: 6480, hanging: convertInchesToTwip(0.25) },
-                },
-            },
-        },
-    ],
-
-    reference: HTML_ORDERED_LIST_NUMBERING_REFERENCE,
-};
