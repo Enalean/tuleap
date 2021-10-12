@@ -40,6 +40,7 @@ use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
@@ -92,15 +93,6 @@ final class PossibleParentSelectorProxyTest extends TestCase
             }
         };
 
-        $this->retrieve_artifact = new class implements RetrieveArtifact
-        {
-            public function getArtifactById($id): ?Artifact
-            {
-                return ArtifactTestBuilder::anArtifact($id)
-                    ->build();
-            }
-        };
-
         $this->feature_53 = FeatureIdentifier::fromId(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             53,
@@ -112,6 +104,10 @@ final class PossibleParentSelectorProxyTest extends TestCase
             throw new \LogicException("Feature 53 is not defined");
         }
         $this->feature_53_reference = new FeatureReference($this->feature_53, 'A fine feature');
+
+        $this->retrieve_artifact = RetrieveArtifactStub::withArtifacts(
+            ArtifactTestBuilder::anArtifact($this->feature_53_reference->id)->build()
+        );
     }
 
     public function testUserStoryTrackerIsPartOfScrumTopBacklog(): void
@@ -159,18 +155,10 @@ final class PossibleParentSelectorProxyTest extends TestCase
     {
         $event = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
 
-        $retrieve_artifact = new class implements RetrieveArtifact
-        {
-            public function getArtifactById($id): ?Artifact
-            {
-                return null;
-            }
-        };
-
         $event_proxy = PossibleParentSelectorProxy::fromEvent(
             $event,
             $this->retrieve_root_planning,
-            $retrieve_artifact,
+            RetrieveArtifactStub::withNoArtifact(),
         );
 
         $this->expectException(\RuntimeException::class);

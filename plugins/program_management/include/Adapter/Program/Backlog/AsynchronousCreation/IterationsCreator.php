@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangeset;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangesetException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateIterations;
@@ -45,7 +47,6 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterati
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
 
 final class IterationsCreator implements CreateIterations
@@ -59,11 +60,12 @@ final class IterationsCreator implements CreateIterations
         private RetrieveMirroredProgramIncrementFromTeam $mirrored_program_increment_retriever,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveTrackerOfArtifact $tracker_retriever,
-        private LogMessage $logger
+        private AddArtifactLinkChangeset $link_adder
     ) {
     }
 
     /**
+     * @throws AddArtifactLinkChangesetException
      * @throws FieldSynchronizationException
      * @throws MirroredIterationCreationException
      * @throws MirroredProgramIncrementNotFoundException
@@ -88,6 +90,7 @@ final class IterationsCreator implements CreateIterations
     }
 
     /**
+     * @throws AddArtifactLinkChangesetException
      * @throws FieldSynchronizationException
      * @throws MirroredIterationCreationException
      * @throws MirroredProgramIncrementNotFoundException
@@ -130,24 +133,17 @@ final class IterationsCreator implements CreateIterations
         if (! $mirrored_program_increment) {
             throw new MirroredProgramIncrementNotFoundException($creation->getProgramIncrement(), $team);
         }
-        $artifact_link_value         = ArtifactLinkValue::fromArtifactAndType(
+        $program_increment_link_value = ArtifactLinkValue::fromArtifactAndType(
             $mirrored_iteration,
             ArtifactLinkTypeProxy::fromIsChildType()
         );
-        $program_increment_changeset = ArtifactLinkChangeset::fromMirroredProgramIncrement(
+        $program_increment_changeset  = ArtifactLinkChangeset::fromMirroredProgramIncrement(
             $this->tracker_retriever,
             $this->fields_gatherer,
             $mirrored_program_increment,
             $creation->getUser(),
-            $artifact_link_value
+            $program_increment_link_value
         );
-        $this->logger->debug(
-            sprintf(
-                'Creating link of type %s from mirrored PI #%d to iteration #%d',
-                (string) $program_increment_changeset->artifact_link_value->type,
-                $program_increment_changeset->mirrored_program_increment->getId(),
-                $program_increment_changeset->artifact_link_value->linked_artifact->getId()
-            )
-        );
+        $this->link_adder->addArtifactLinkChangeset($program_increment_changeset);
     }
 }
