@@ -128,6 +128,6 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_verifier,
             $this->{$property_to_call}
         );
-        self::assertSame(self::PROGRAM_INCREMENT_ID, $program_increment->getId());
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $program_increment?->getId());
     }
 }

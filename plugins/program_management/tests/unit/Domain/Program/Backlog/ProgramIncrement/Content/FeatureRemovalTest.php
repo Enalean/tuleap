@@ -25,29 +25,25 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Conte
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 
 final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FEATURE_ID = 741;
-    private ?FeatureIdentifier $feature;
+    private FeatureIdentifier $feature;
     private UserCanPrioritize $user_can_prioritize;
 
     protected function setUp(): void
     {
-        $user_identifier           = UserIdentifierStub::buildGenericUser();
-        $program                   = ProgramIdentifierBuilder::buildWithId(110);
-        $this->feature             = FeatureIdentifier::fromId(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            self::FEATURE_ID,
-            $user_identifier,
-            $program,
-            null
-        );
+        $user_identifier = UserIdentifierStub::buildGenericUser();
+        $program         = ProgramIdentifierBuilder::buildWithId(110);
+        $feature         = FeatureIdentifierBuilder::build(self::FEATURE_ID, 110);
+
+        $this->feature             = $feature;
         $this->user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             $user_identifier,

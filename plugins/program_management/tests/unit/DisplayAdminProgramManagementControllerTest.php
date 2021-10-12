@@ -69,7 +69,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private $template_renderer;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&ProgramManagementBreadCrumbsBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProgramManagementBreadCrumbsBuilder
      */
     private $breadcrumbs_builder;
     /**
@@ -107,7 +107,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->user                      = UserTestBuilder::buildWithDefaults();
         $this->request                   = HTTPRequestBuilder::get()->withUser($this->user)->build();
         $this->template_renderer         = $this->createMock(\TemplateRenderer::class);
-        $this->breadcrumbs_builder       = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
+        $this->breadcrumbs_builder       = $this->createMock(ProgramManagementBreadCrumbsBuilder::class);
         $this->team_searcher             = SearchTeamsOfProgramStub::buildTeams(150);
         $this->project_retriever         = RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(150));
         $this->plannable_tracker_builder = new PotentialPlannableTrackersConfigurationPresentersBuilder(

@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
@@ -40,15 +40,15 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class ConfigurationErrorsGathererTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&ProgramIncrementCreatorChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProgramIncrementCreatorChecker
      */
     private $program_increment_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&IterationCreatorChecker
      */
     private $iteration_checker;
     private TrackerReference $tracker;
-    private UserIdentifier $user_identifier;
+    private UserReference $user_identifier;
     private ConfigurationErrorsGatherer $gatherer;
     private BuildProgram $build_program;
     private SearchTeamsOfProgram $teams_searcher;
@@ -56,8 +56,8 @@ final class ConfigurationErrorsGathererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->program_increment_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
-        $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
+        $this->program_increment_checker = $this->createMock(ProgramIncrementCreatorChecker::class);
+        $this->iteration_checker         = $this->createMock(IterationCreatorChecker::class);
         $this->build_program             = BuildProgramStub::stubValidProgram();
         $this->teams_searcher            = SearchTeamsOfProgramStub::buildTeams(101);
         $this->project_builder           = RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(101));

@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureCount;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-final class DomainUserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RetrieveOpenFeatureCountStub implements RetrieveOpenFeatureCount
 {
-    public function testItBuildsFromId(): void
+    private function __construct(private int $open_feature_count)
     {
-        $user = DomainUser::fromId(VerifyIsUserStub::withValidUser(), 118);
-        self::assertSame(118, $user?->getId());
+    }
+    public static function withValue(int $open_feature_count): self
+    {
+        return new self($open_feature_count);
     }
 
-    public function testItReturnsNullWhenIdIsNotAUser(): void
+    public function retrieveOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
     {
-        self::assertNull(DomainUser::fromId(VerifyIsUserStub::withNotValidUser(), -1));
+        return $this->open_feature_count;
     }
 }

@@ -95,9 +95,11 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user
         );
 
-        $trackers = $collection->getSourceTrackers();
+        $trackers = $collection?->getSourceTrackers();
+        self::assertNotNull($trackers);
         self::assertContainsEquals($this->timebox_tracker, $trackers);
-        $ids = $collection->getSourceTrackerIds();
+        $ids = $collection?->getSourceTrackerIds();
+        self::assertNotNull($ids);
         self::assertContains(self::TIMEBOX_TRACKER_ID, $ids);
         self::assertContains(self::BLUE_TEAM_TRACKER_ID, $ids);
         self::assertContains(self::RED_TEAM_TRACKER_ID, $ids);

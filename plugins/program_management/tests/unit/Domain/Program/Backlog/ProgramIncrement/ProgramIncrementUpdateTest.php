@@ -65,6 +65,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_verifier,
             $this->artifact_updated
         );
+        self::assertNotNull($update);
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getProgramIncrement()->getId());
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getTimebox()->getId());
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getProgramIncrementTracker()->getId());
@@ -89,6 +90,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_retriever,
             $this->update_event
         );
+        self::assertNotNull($update);
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getProgramIncrement()->getId());
         self::assertSame(self::PROGRAM_INCREMENT_ID, $update->getTimebox()->getId());
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getProgramIncrementTracker()->getId());

@@ -54,8 +54,8 @@ final class PendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             self::CHANGESET_ID,
             $this->user_identifier
         );
-        self::assertSame(self::ITERATION_ID, $creation->getIteration()->getId());
-        self::assertSame(self::CHANGESET_ID, $creation->getChangeset()->getId());
+        self::assertSame(self::ITERATION_ID, $creation?->getIteration()->getId());
+        self::assertSame(self::CHANGESET_ID, $creation?->getChangeset()->getId());
     }
 
     public function testItReturnsNullWhenGivenIdIsNotAnIteration(): void

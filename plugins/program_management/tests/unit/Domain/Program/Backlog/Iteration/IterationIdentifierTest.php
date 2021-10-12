@@ -54,7 +54,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             32,
             $this->user
         );
-        self::assertSame(32, $iteration->getId());
+        self::assertSame(32, $iteration?->getId());
     }
 
     public function testItReturnsNullWhenIdIsNotAnIteration(): void

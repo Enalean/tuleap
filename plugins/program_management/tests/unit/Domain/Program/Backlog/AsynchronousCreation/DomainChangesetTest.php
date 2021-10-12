@@ -38,7 +38,7 @@ final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromId(): void
     {
         $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), self::CHANGESET_ID);
-        self::assertSame(self::CHANGESET_ID, $changeset->getId());
+        self::assertSame(self::CHANGESET_ID, $changeset?->getId());
     }
 
     public function testItReturnsNullWhenIdIsNotAChangeset(): void
@@ -52,7 +52,7 @@ final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveLastChangesetStub::withLastChangesetIds(self::CHANGESET_ID),
             $this->iteration
         );
-        self::assertSame(self::CHANGESET_ID, $changeset->getId());
+        self::assertSame(self::CHANGESET_ID, $changeset?->getId());
     }
 
     public function testItReturnsNullWhenThereIsNoLastChangeset(): void
