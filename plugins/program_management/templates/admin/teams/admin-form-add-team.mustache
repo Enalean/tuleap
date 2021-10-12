@@ -9,7 +9,7 @@
             <select class="tlp-select" id="program-management-choose-teams" name="list-value">
                 <option value=""></option>
                 {{# potential_teams }}
-                    <option value="{{ id }}">{{ public_name }}</option>
+                    <option value="{{ id }}"><span aria-hidden="true">{{project_icon}}</span> {{ public_name }}</option>
                 {{/ potential_teams }}
             </select>
             <button type="button" class="tlp-append tlp-button tlp-button-primary" id="program-management-add-team-button" data-test="program-management-add-team-button">

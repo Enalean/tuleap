@@ -32,11 +32,13 @@ final class TeamPresenter
     public int $id;
     public string $public_name;
     public string $url;
+    public string $project_icon;
 
     public function __construct(ProjectReference $team)
     {
-        $this->id          = $team->getId();
-        $this->public_name = $team->getProjectLabel();
-        $this->url         = $team->getUrl();
+        $this->id           = $team->getId();
+        $this->public_name  = $team->getProjectLabel();
+        $this->url          = $team->getUrl();
+        $this->project_icon = $team->getProjectIcon();
     }
 }

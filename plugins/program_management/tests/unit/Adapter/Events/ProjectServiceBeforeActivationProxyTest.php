@@ -35,7 +35,7 @@ final class ProjectServiceBeforeActivationProxyTest extends TestCase
     protected function setUp(): void
     {
         $this->event = new ProjectServiceBeforeActivation(
-            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']),
+            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
             \program_managementPlugin::SERVICE_SHORTNAME,
             UserTestBuilder::buildWithDefaults()
         );

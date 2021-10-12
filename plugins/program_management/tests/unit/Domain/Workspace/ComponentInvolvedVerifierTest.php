@@ -66,6 +66,6 @@ final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildProjectData(): ProjectReference
     {
-        return ProjectReferenceStub::withValues(12, 'Public name', 'Name');
+        return ProjectReferenceStub::withValues(12, 'Public name', 'Name', '');
     }
 }

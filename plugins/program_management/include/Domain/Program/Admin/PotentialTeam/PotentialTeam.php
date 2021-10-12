@@ -27,17 +27,12 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
  */
 final class PotentialTeam
 {
-    public int $id;
-    public string $public_name;
-
-    private function __construct(int $id, string $public_name)
+    private function __construct(public int $id, public string $public_name, public string $project_icon)
     {
-        $this->id          = $id;
-        $this->public_name = $public_name;
     }
 
-    public static function fromId(int $id, string $public_name): self
+    public static function fromId(int $id, string $public_name, string $project_icon): self
     {
-        return new self($id, $public_name);
+        return new self($id, $public_name, $project_icon);
     }
 }

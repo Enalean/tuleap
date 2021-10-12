@@ -26,8 +26,9 @@ final class PotentialTeamTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAPotentialTeamFromId(): void
     {
-        $team = PotentialTeam::fromId(102, 'team');
+        $team = PotentialTeam::fromId(102, 'team', '"\u26f0\ufe0f"');
         self::assertSame(102, $team->id);
         self::assertSame('team', $team->public_name);
+        self::assertSame('"\u26f0\ufe0f"', $team->project_icon);
     }
 }

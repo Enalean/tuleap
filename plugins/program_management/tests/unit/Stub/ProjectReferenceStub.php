@@ -27,23 +27,23 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 final class ProjectReferenceStub implements ProjectReference
 {
-    private function __construct(private int $id, private string $label, private string $short_name)
+    private function __construct(private int $id, private string $label, private string $short_name, private ?string $project_icon)
     {
     }
 
     public static function buildGeneric(): self
     {
-        return new self(101, 'My project', 'my_project');
+        return new self(101, 'My project', 'my_project', '');
     }
 
     public static function withId(int $project_id): self
     {
-        return new self($project_id, 'My project', 'my_project');
+        return new self($project_id, 'My project', 'my_project', '');
     }
 
-    public static function withValues(int $project_id, string $label, string $short_name): self
+    public static function withValues(int $project_id, string $label, string $short_name, string $project_icon): self
     {
-        return new self($project_id, $label, $short_name);
+        return new self($project_id, $label, $short_name, $project_icon);
     }
 
     public function getId(): int
@@ -59,5 +59,10 @@ final class ProjectReferenceStub implements ProjectReference
     public function getUrl(): string
     {
         return '/projects/' . urlencode($this->short_name);
+    }
+
+    public function getProjectIcon(): string
+    {
+        return $this->project_icon;
     }
 }

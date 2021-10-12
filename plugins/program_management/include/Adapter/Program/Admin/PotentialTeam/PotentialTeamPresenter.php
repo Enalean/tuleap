@@ -32,10 +32,12 @@ final class PotentialTeamPresenter
 {
     public int $id;
     public string $public_name;
+    public string $project_icon;
 
     public function __construct(PotentialTeam $team)
     {
-        $this->id          = $team->id;
-        $this->public_name = $team->public_name;
+        $this->id           = $team->id;
+        $this->public_name  = $team->public_name;
+        $this->project_icon = $team->project_icon;
     }
 }

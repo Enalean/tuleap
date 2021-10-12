@@ -49,7 +49,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
     protected function setUp(): void
     {
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
-        $this->project         = new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project']);
+        $this->project         = new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']);
 
         $this->timebox_retriever = RetrieveTimeboxFromMirroredTimeboxStub::withTimebox(self::TIMEBOX_ID);
         $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
