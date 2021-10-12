@@ -25,8 +25,12 @@ import {
     HeadingLevel,
     ImageRun,
     Paragraph,
+    Table,
+    TableCell,
+    TableRow,
     TextRun,
     UnderlineType,
+    WidthType,
 } from "docx";
 import * as image_loader from "../Image/image-loader";
 
@@ -315,6 +319,36 @@ describe("transform-html-into-paragraph", () => {
                 children: [
                     new TextRun({ text: "Code", font: "Courier New" }),
                     new TextRun({ text: "  L2", break: 1, font: "Courier New" }),
+                ],
+            }),
+        ]);
+    });
+
+    it("transforms tables", async () => {
+        const paragraphs = await transformHTMLIntoParagraphs(
+            "<table><thead><tr><th>0.0</th></tr></thead><tbody><tr><td>1.0</td></tr></tbody></table>",
+            {
+                ordered_title_levels: [HeadingLevel.TITLE],
+            }
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [
+                    new Table({
+                        rows: [
+                            new TableRow({
+                                children: [new TableCell({ children: [new Paragraph("0.0")] })],
+                            }),
+                            new TableRow({
+                                children: [new TableCell({ children: [new Paragraph("1.0")] })],
+                            }),
+                        ],
+                        width: {
+                            size: 9638,
+                            type: WidthType.DXA,
+                        },
+                    }),
                 ],
             }),
         ]);
