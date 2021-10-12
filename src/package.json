@@ -30,7 +30,7 @@
     "dompurify": "^2.2.9",
     "dragula": "^3.7.2",
     "marked": "^3.0.4",
-    "mermaid": "^8.10.2",
+    "mermaid": "^8.13.2",
     "moment": "^2.29.1",
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
