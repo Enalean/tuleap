@@ -18,6 +18,7 @@
  */
 
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
+import type { IRunPropertiesOptions } from "docx";
 import {
     BorderStyle,
     convertInchesToTwip,
@@ -33,6 +34,7 @@ import {
     WidthType,
 } from "docx";
 import * as image_loader from "../Image/image-loader";
+import * as style_extractor from "./extract-style-html-element";
 
 describe("transform-html-into-paragraph", () => {
     it("transforms paragraphs that are the root of the document", async () => {
@@ -350,6 +352,40 @@ describe("transform-html-into-paragraph", () => {
                         },
                     }),
                 ],
+            }),
+        ]);
+    });
+
+    it("manages inlined styles", async () => {
+        jest.spyOn(style_extractor, "extractInlineStyles").mockImplementation(
+            (
+                node: HTMLElement,
+                source_style: Readonly<IRunPropertiesOptions>
+            ): IRunPropertiesOptions => {
+                if (node.textContent === "A") {
+                    return {
+                        ...source_style,
+                        color: "ff0000",
+                    };
+                }
+
+                return source_style;
+            }
+        );
+
+        const paragraphs = await transformHTMLIntoParagraphs(
+            "<p style='color: red;'>A</p><p>B</p>",
+            {
+                ordered_title_levels: [HeadingLevel.TITLE],
+            }
+        );
+
+        expect(paragraphs).toStrictEqual([
+            new Paragraph({
+                children: [new TextRun({ text: "A", color: "ff0000" })],
+            }),
+            new Paragraph({
+                children: [new TextRun({ text: "B" })],
             }),
         ]);
     });

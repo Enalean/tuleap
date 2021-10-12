@@ -34,6 +34,7 @@ import {
 } from "docx";
 import { loadImage } from "../Image/image-loader";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
+import { extractInlineStyles } from "./extract-style-html-element";
 
 const HTML_ORDERED_LIST_NUMBERING_REFERENCE = "html-ordered-list";
 const PAGE_WIDTH_DXA = 9638;
@@ -122,15 +123,19 @@ interface TreeContentState {
 async function parseTreeContent(
     options: TransformationOptions,
     tree: NodeListOf<ChildNode>,
-    state: Readonly<TreeContentState>
+    source_state: Readonly<TreeContentState>
 ): Promise<TreeContentChild[]> {
     const content_children: TreeContentChild[] = [];
 
     for (const child of tree) {
-        if (!(child instanceof Element)) {
-            content_children.push(...defaultNodeHandling(child, state));
+        if (!(child instanceof HTMLElement)) {
+            content_children.push(...defaultNodeHandling(child, source_state));
             continue;
         }
+        const state = {
+            ...source_state,
+            style: extractInlineStyles(child, source_state.style),
+        };
         switch (child.nodeName) {
             case "DIV":
                 content_children.push(
