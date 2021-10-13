@@ -61,8 +61,8 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const DESCRIPTION_FORMAT                                       = 'commonmark';
     private const FIRST_MAPPED_STATUS_BIND_VALUE_ID                        = 5621;
     private const SECOND_MAPPED_STATUS_BIND_VALUE_ID                       = 9829;
-    private const START_DATE_VALUE                                         = '2020-12-06';
-    private const END_DATE_VALUE                                           = '2025-08-18';
+    private const START_DATE_VALUE                                         = 1607258528;
+    private const END_DATE_VALUE                                           = 1755478239;
     private const FIRST_TITLE_FIELD_ID                                     = 958;
     private const FIRST_DESCRIPTION_FIELD_ID                               = 686;
     private const FIRST_STATUS_FIELD_ID                                    = 947;

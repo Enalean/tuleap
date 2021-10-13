@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueFormatter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
@@ -57,9 +58,9 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const STATUS_ID                   = 439;
     private const MAPPED_STATUS_BIND_VALUE_ID = 1080;
     private const START_DATE_ID               = 980;
-    private const START_DATE_VALUE            = '2020-11-02';
-    private const END_PERIOD_ID               = 483;
-    private const END_PERIOD_VALUE            = '2020-11-06';
+    private const START_DATE_VALUE            = 1604288823; // 2020-11-02T04:47:03+01:00
+    private const END_DATE_ID                 = 483;
+    private const END_DATE_VALUE              = 1604665266; // 2020-11-06T13:21:06+01:00
     private const ARTIFACT_LINK_ID            = 842;
 
     /**
@@ -82,7 +83,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             self::DESCRIPTION_ID,
             self::STATUS_ID,
             self::START_DATE_ID,
-            self::END_PERIOD_ID,
+            self::END_DATE_ID,
             self::ARTIFACT_LINK_ID
         );
 
@@ -92,7 +93,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             self::DESCRIPTION_FORMAT,
             ['reverentness'],
             self::START_DATE_VALUE,
-            self::END_PERIOD_VALUE,
+            self::END_DATE_VALUE,
             self::SOURCE_PROGRAM_INCREMENT_ID,
             self::SUBMISSION_TIMESTAMP
         );
@@ -114,7 +115,8 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveUserStub::withGenericUser(),
             new ChangesetValuesFormatter(
                 new ArtifactLinkValueFormatter(),
-                new DescriptionValueFormatter()
+                new DescriptionValueFormatter(),
+                new DateValueFormatter()
             )
         );
     }
@@ -138,8 +140,8 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         'format'  => self::DESCRIPTION_FORMAT
                     ],
                     self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
-                    self::START_DATE_ID    => self::START_DATE_VALUE,
-                    self::END_PERIOD_ID    => self::END_PERIOD_VALUE
+                    self::START_DATE_ID    => '2020-11-02',
+                    self::END_DATE_ID      => '2020-11-06'
                 ],
                 self::isInstanceOf(\PFUser::class),
                 self::SUBMISSION_TIMESTAMP,

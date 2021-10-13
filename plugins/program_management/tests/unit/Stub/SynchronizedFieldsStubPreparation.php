@@ -29,7 +29,8 @@ final class SynchronizedFieldsStubPreparation
         public ?DescriptionFieldReferenceStub $description,
         public ?StatusFieldReferenceStub $status,
         public ?StartDateFieldReferenceStub $start_date,
-        public ?EndPeriodFieldReferenceStub $end_period,
+        public ?EndDateFieldReferenceStub $end_date,
+        public ?DurationFieldReferenceStub $duration,
         public ?ArtifactLinkFieldReferenceStub $artifact_link
     ) {
     }
@@ -39,7 +40,7 @@ final class SynchronizedFieldsStubPreparation
         int $description_field_id,
         int $status_field_id,
         int $start_date_field_id,
-        int $end_period_field_id,
+        int $end_date_field_id,
         int $artifact_link_field_id
     ): self {
         return new self(
@@ -47,7 +48,27 @@ final class SynchronizedFieldsStubPreparation
             DescriptionFieldReferenceStub::withId($description_field_id),
             StatusFieldReferenceStub::withId($status_field_id),
             StartDateFieldReferenceStub::withId($start_date_field_id),
-            EndPeriodFieldReferenceStub::withId($end_period_field_id),
+            EndDateFieldReferenceStub::withId($end_date_field_id),
+            null,
+            ArtifactLinkFieldReferenceStub::withId($artifact_link_field_id)
+        );
+    }
+
+    public static function withDuration(
+        int $title_field_id,
+        int $description_field_id,
+        int $status_field_id,
+        int $start_date_field_id,
+        int $duration_field_id,
+        int $artifact_link_field_id
+    ): self {
+        return new self(
+            TitleFieldReferenceStub::withId($title_field_id),
+            DescriptionFieldReferenceStub::withId($description_field_id),
+            StatusFieldReferenceStub::withId($status_field_id),
+            StartDateFieldReferenceStub::withId($start_date_field_id),
+            null,
+            DurationFieldReferenceStub::withId($duration_field_id),
             ArtifactLinkFieldReferenceStub::withId($artifact_link_field_id)
         );
     }
@@ -55,6 +76,7 @@ final class SynchronizedFieldsStubPreparation
     public static function withOnlyArtifactLinkField(int $artifact_link_field_id): self
     {
         return new self(
+            null,
             null,
             null,
             null,

@@ -22,18 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndDateValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 
-final class DescriptionValueFormatter
+final class DateValueFormatter
 {
     /**
-     * @return array{content: string, format: string}
+     * Format a date value (UNIX Timestamp) to a format accepted by Tracker
+     * Date field validation
+     * @see \Rule_Date::isValid()
+     * @see \Tracker_FormElement_DateFormatter::formatDate()
      */
-    public function formatForTrackerPlugin(DescriptionValue $description): array
+    public function formatForTrackerPlugin(StartDateValue|EndDateValue $value): string
     {
-        return [
-            'content' => $description->value,
-            'format'  => $description->format
-        ];
+        return \date(\Tracker_FormElement_DateFormatter::DATE_FORMAT, $value->getValue());
     }
 }

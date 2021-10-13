@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
@@ -99,17 +100,17 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         return StartDateFieldReferenceProxy::fromTrackerField($start_date_field);
     }
 
-    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndPeriodFieldReference
+    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndDateFieldReference|DurationFieldReference
     {
         $full_tracker   = $this->getFullTracker($tracker_identifier);
         $semantic       = $this->timeframe_builder->getSemantic($full_tracker);
         $duration_field = $semantic->getDurationField();
         if ($duration_field !== null) {
-            return EndPeriodFieldReferenceProxy::fromTrackerField($duration_field);
+            return DurationFieldReferenceProxy::fromTrackerField($duration_field);
         }
         $end_date_field = $semantic->getEndDateField();
         if ($end_date_field !== null) {
-            return EndPeriodFieldReferenceProxy::fromTrackerField($end_date_field);
+            return EndDateFieldReferenceProxy::fromTrackerField($end_date_field);
         }
 
         throw new MissingTimeFrameFieldException($tracker_identifier->getId(), 'end date or duration');

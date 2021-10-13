@@ -38,9 +38,9 @@ final class MirroredTimeboxChangesetValuesBuilder
         int $status_field_id,
         int $mapped_status_bind_value_id,
         int $start_date_field_id,
-        string $start_date_value,
+        int $start_date_value,
         int $end_date_field_id,
-        string $end_date_value,
+        int $end_date_value,
         int $artifact_link_field_id,
         ArtifactLinkValue $artifact_link_value
     ): MirroredTimeboxChangesetValues {
@@ -70,6 +70,39 @@ final class MirroredTimeboxChangesetValuesBuilder
             $source_values,
             $target_fields,
             $artifact_link_value
+        );
+    }
+
+    public static function buildWithDuration(
+        int $duration_field_id,
+        int $duration_value
+    ): MirroredTimeboxChangesetValues {
+        $status_mapper = MapStatusByValueStub::withSuccessiveBindValueIds(8401);
+        $source_values = SourceTimeboxChangesetValuesBuilder::buildWithDuration(
+            'furacious',
+            'encephalin lindackerite',
+            'text',
+            ['philosophization'],
+            1455568188,
+            $duration_value,
+            46,
+            1593932709
+        );
+        $target_fields = SynchronizedFieldReferencesBuilder::buildWithPreparations(
+            SynchronizedFieldsStubPreparation::withDuration(
+                1882,
+                1652,
+                5095,
+                3928,
+                $duration_field_id,
+                8117
+            )
+        );
+        return MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
+            $status_mapper,
+            $source_values,
+            $target_fields,
+            null
         );
     }
 }

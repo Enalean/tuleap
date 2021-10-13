@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Mirrore
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
@@ -44,7 +45,7 @@ final class SourceTimeboxChangesetValues
         private DescriptionValue $description_value,
         private StatusValue $status_value,
         private StartDateValue $start_date_value,
-        private EndPeriodValue $end_period_value
+        private DurationValue|EndDateValue $end_period_value
     ) {
     }
 
@@ -70,7 +71,9 @@ final class SourceTimeboxChangesetValues
         $description_value = DescriptionValue::fromDescriptionReference($values_gatherer, $fields->description);
         $status_value      = StatusValue::fromStatusReference($values_gatherer, $fields->status);
         $start_date_value  = StartDateValue::fromStartDateReference($values_gatherer, $fields->start_date);
-        $end_period_value  = EndPeriodValue::fromEndPeriodReference($values_gatherer, $fields->end_period);
+        $end_period_value  = $fields->end_period instanceof DurationFieldReference
+            ? DurationValue::fromDurationReference($values_gatherer, $fields->end_period)
+            : EndDateValue::fromEndDateReference($values_gatherer, $fields->end_period);
 
         return new self(
             $timebox,
@@ -113,7 +116,7 @@ final class SourceTimeboxChangesetValues
         return $this->start_date_value;
     }
 
-    public function getEndPeriodValue(): EndPeriodValue
+    public function getEndPeriodValue(): DurationValue|EndDateValue
     {
         return $this->end_period_value;
     }

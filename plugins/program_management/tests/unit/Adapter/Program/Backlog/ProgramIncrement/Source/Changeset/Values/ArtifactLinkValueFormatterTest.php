@@ -37,7 +37,7 @@ final class ArtifactLinkValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItFormatsNullValueToAnEmptyValue(): void
     {
-        $formatted_value = $this->getFormatter()->format(null);
+        $formatted_value = $this->getFormatter()->formatForTrackerPlugin(null);
         self::assertArrayHasKey('new_values', $formatted_value);
         self::assertArrayHasKey('natures', $formatted_value);
         self::assertSame('', $formatted_value['new_values']);
@@ -50,7 +50,7 @@ final class ArtifactLinkValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
             ArtifactIdentifierStub::withId(self::TIMEBOX_ID),
             ArtifactLinkTypeProxy::fromMirrorTimeboxType()
         );
-        $formatted_value = $this->getFormatter()->format($value);
+        $formatted_value = $this->getFormatter()->formatForTrackerPlugin($value);
         self::assertArrayHasKey('new_values', $formatted_value);
         self::assertArrayHasKey('natures', $formatted_value);
         self::assertSame((string) self::TIMEBOX_ID, $formatted_value['new_values']);

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DurationValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 
 /**
@@ -33,26 +34,31 @@ final class ChangesetValuesFormatter
 {
     public function __construct(
         private ArtifactLinkValueFormatter $artifact_link_formatter,
-        private DescriptionValueFormatter $description_formatter
+        private DescriptionValueFormatter $description_formatter,
+        private DateValueFormatter $date_value_formatter
     ) {
     }
 
     /**
      * @return array<int,string|array>
      */
-    public function format(MirroredTimeboxChangesetValues $values): array
+    public function formatForTrackerPlugin(MirroredTimeboxChangesetValues $values): array
     {
+        $formatted_end_period_value = $values->end_period_value instanceof DurationValue
+            ? $values->end_period_value->getValue()
+            : $this->date_value_formatter->formatForTrackerPlugin($values->end_period_value);
+
         return [
-            $values->artifact_link_field->getId() => $this->artifact_link_formatter->format(
+            $values->artifact_link_field->getId() => $this->artifact_link_formatter->formatForTrackerPlugin(
                 $values->artifact_link_value
             ),
             $values->title_field->getId()         => $values->title_value->getValue(),
-            $values->description_field->getId()   => $this->description_formatter->format(
+            $values->description_field->getId()   => $this->description_formatter->formatForTrackerPlugin(
                 $values->description_value
             ),
             $values->status_field->getId()        => $values->mapped_status_value->getValues(),
-            $values->start_date_field->getId()    => $values->start_date_value->getValue(),
-            $values->end_period_field->getId()    => $values->end_period_value->getValue()
+            $values->start_date_field->getId()    => $this->date_value_formatter->formatForTrackerPlugin($values->start_date_value),
+            $values->end_period_field->getId()    => $formatted_end_period_value
         ];
     }
 
@@ -62,7 +68,7 @@ final class ChangesetValuesFormatter
     public function formatArtifactLink(ArtifactLinkFieldReference $artifact_link_field, ArtifactLinkValue $value): array
     {
         return [
-            $artifact_link_field->getId() => $this->artifact_link_formatter->format($value)
+            $artifact_link_field->getId() => $this->artifact_link_formatter->formatForTrackerPlugin($value)
         ];
     }
 }

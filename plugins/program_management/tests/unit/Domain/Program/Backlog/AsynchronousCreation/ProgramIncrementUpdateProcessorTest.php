@@ -50,8 +50,8 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private const DESCRIPTION_FORMAT                 = 'text';
     private const FIRST_MAPPED_STATUS_BIND_VALUE_ID  = 8889;
     private const SECOND_MAPPED_STATUS_BIND_VALUE_ID = 9771;
-    private const START_DATE_VALUE                   = '2015-09-20';
-    private const END_DATE_VALUE                     = '2016-06-08';
+    private const START_DATE_VALUE                   = 1442752621;
+    private const END_DATE_VALUE                     = 1465344427;
     private const FIRST_TITLE_FIELD_ID               = 205;
     private const FIRST_DESCRIPTION_FIELD_ID         = 430;
     private const FIRST_STATUS_FIELD_ID              = 472;

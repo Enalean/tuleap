@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
@@ -36,7 +37,8 @@ final class GatherFieldValuesStub implements GatherFieldValues
         private RetrieveTitleValueStub $title_stub,
         private RetrieveDescriptionValueStub $description_stub,
         private RetrieveStartDateValueStub $start_date_stub,
-        private RetrieveEndPeriodValueStub $end_period_stub,
+        private ?RetrieveEndDateValueStub $end_date_stub,
+        private ?RetrieveDurationValueStub $duration_stub,
         private RetrieveStatusValuesStub $status_stub
     ) {
     }
@@ -46,28 +48,55 @@ final class GatherFieldValuesStub implements GatherFieldValues
         return new self(
             RetrieveTitleValueStub::withError(),
             RetrieveDescriptionValueStub::withValue('enfasten', 'text'),
-            RetrieveStartDateValueStub::withValue('2024-05-24'),
-            RetrieveEndPeriodValueStub::withValue('2031-01-15'),
+            RetrieveStartDateValueStub::withValue(1675447200),
+            RetrieveEndDateValueStub::withValue(1939931281),
+            null,
             RetrieveStatusValuesStub::withValues('Planned')
         );
     }
 
     /**
      * @param string[] $status_values
+     * @param int      $start_date UNIX Timestamp
+     * @param int      $end_date   UNIX Timestamp
      */
     public static function withValues(
         string $title,
         string $description_value,
         string $description_format,
-        string $start_date,
-        string $end_period,
+        int $start_date,
+        int $end_date,
         array $status_values
     ): self {
         return new self(
             RetrieveTitleValueStub::withValue($title),
             RetrieveDescriptionValueStub::withValue($description_value, $description_format),
             RetrieveStartDateValueStub::withValue($start_date),
-            RetrieveEndPeriodValueStub::withValue($end_period),
+            RetrieveEndDateValueStub::withValue($end_date),
+            null,
+            RetrieveStatusValuesStub::withValues(...$status_values)
+        );
+    }
+
+    /**
+     * @param string[] $status_values
+     * @param int      $start_date UNIX Timestamp
+     * @param int      $duration   Number of days
+     */
+    public static function withDuration(
+        string $title,
+        string $description_value,
+        string $description_format,
+        int $start_date,
+        int $duration,
+        array $status_values
+    ): self {
+        return new self(
+            RetrieveTitleValueStub::withValue($title),
+            RetrieveDescriptionValueStub::withValue($description_value, $description_format),
+            RetrieveStartDateValueStub::withValue($start_date),
+            null,
+            RetrieveDurationValueStub::withValue($duration),
             RetrieveStatusValuesStub::withValues(...$status_values)
         );
     }
@@ -82,14 +111,25 @@ final class GatherFieldValuesStub implements GatherFieldValues
         return $this->description_stub->getDescriptionValue($description);
     }
 
-    public function getStartDateValue(StartDateFieldReference $start_date): string
+    public function getStartDateValue(StartDateFieldReference $start_date): int
     {
         return $this->start_date_stub->getStartDateValue($start_date);
     }
 
-    public function getEndPeriodValue(EndPeriodFieldReference $end_period): string
+    public function getDurationValue(DurationFieldReference $duration): int
     {
-        return $this->end_period_stub->getEndPeriodValue($end_period);
+        if (! $this->duration_stub) {
+            throw new \LogicException('No Duration stub configured');
+        }
+        return $this->duration_stub->getDurationValue($duration);
+    }
+
+    public function getEndDateValue(EndDateFieldReference $end_date): int
+    {
+        if (! $this->end_date_stub) {
+            throw new \LogicException('No End date stub configured');
+        }
+        return $this->end_date_stub->getEndDateValue($end_date);
     }
 
     public function getStatusValues(StatusFieldReference $status): array

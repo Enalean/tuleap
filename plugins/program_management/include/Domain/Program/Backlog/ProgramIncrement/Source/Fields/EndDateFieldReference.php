@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
-
-interface RetrieveStartDateValue
+/**
+ * I am a reference to the Time Frame Semantic's end date field.
+ * I hold a field identifier and a label.
+ * @psalm-immutable
+ */
+interface EndDateFieldReference
 {
-    /**
-     * @throws ChangesetValueNotFoundException
-     * @return int UNIX Timestamp
-     */
-    public function getStartDateValue(StartDateFieldReference $start_date): int;
+    public function getId(): int;
+    public function getLabel(): string;
 }

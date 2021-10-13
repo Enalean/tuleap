@@ -20,32 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Tests\Stub\DurationFieldReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveDurationValueStub;
 
-/**
- * @psalm-immutable
- */
-final class EndPeriodFieldReferenceProxy implements EndPeriodFieldReference
+final class DurationValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private function __construct(private int $id, private string $label)
-    {
-    }
+    private const VALUE = 36;
 
-    public static function fromTrackerField(
-        \Tracker_FormElement_Field_Date|\Tracker_FormElement_Field_Numeric $end_period_field
-    ): self {
-        return new self($end_period_field->getId(), $end_period_field->getLabel());
-    }
-
-    public function getId(): int
+    public function testItBuildsFromDurationReference(): void
     {
-        return $this->id;
-    }
-
-    public function getLabel(): string
-    {
-        return $this->label;
+        $value = DurationValue::fromDurationReference(
+            RetrieveDurationValueStub::withValue(self::VALUE),
+            DurationFieldReferenceStub::withDefaults()
+        );
+        self::assertSame(self::VALUE, $value->getValue());
     }
 }

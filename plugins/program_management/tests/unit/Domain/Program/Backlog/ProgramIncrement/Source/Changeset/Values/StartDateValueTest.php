@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\StartDateFieldReferenceStub;
 
 final class StartDateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const VALUE = '2018-05-02';
+    private const VALUE = 1525268947;
 
     public function testItBuildsFromStartDateReference(): void
     {

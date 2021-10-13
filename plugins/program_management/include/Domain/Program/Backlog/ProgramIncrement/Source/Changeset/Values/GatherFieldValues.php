@@ -22,6 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-interface GatherFieldValues extends RetrieveTitleValue, RetrieveEndPeriodValue, RetrieveStartDateValue, RetrieveDescriptionValue, RetrieveStatusValues
+interface GatherFieldValues extends RetrieveTitleValue, RetrieveDurationValue, RetrieveEndDateValue, RetrieveStartDateValue, RetrieveDescriptionValue, RetrieveStatusValues
 {
 }

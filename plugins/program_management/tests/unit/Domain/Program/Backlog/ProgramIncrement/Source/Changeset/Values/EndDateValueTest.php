@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,13 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Tests\Stub\EndDateFieldReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndDateValueStub;
 
-interface RetrieveStartDateValue
+final class EndDateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @throws ChangesetValueNotFoundException
-     * @return int UNIX Timestamp
-     */
-    public function getStartDateValue(StartDateFieldReference $start_date): int;
+    private const VALUE = 1693552563;
+
+    public function testItBuildsFromEndDateReference(): void
+    {
+        $value = EndDateValue::fromEndDateReference(
+            RetrieveEndDateValueStub::withValue(self::VALUE),
+            EndDateFieldReferenceStub::withDefaults()
+        );
+        self::assertSame(self::VALUE, $value->getValue());
+    }
 }

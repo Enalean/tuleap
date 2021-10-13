@@ -26,7 +26,8 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
@@ -54,12 +55,12 @@ final class VerifyFieldPermissionsStub implements VerifyFieldPermissions
         return new self(true, false);
     }
 
-    public function canUserSubmit(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field): bool
+    public function canUserSubmit(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field): bool
     {
         return $this->is_submittable;
     }
 
-    public function canUserUpdate(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field): bool
+    public function canUserUpdate(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field): bool
     {
         return $this->is_updatable;
     }

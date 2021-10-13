@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 
 final class SourceTimeboxChangesetValuesBuilder
 {
@@ -42,8 +43,8 @@ final class SourceTimeboxChangesetValuesBuilder
             'Description',
             'text',
             ['Planned'],
-            '2020-10-01',
-            '2020-10-10',
+            1601579528,
+            1602288660,
             $source_timebox_id,
             1234567890
         );
@@ -56,8 +57,8 @@ final class SourceTimeboxChangesetValuesBuilder
             'Description',
             'text',
             ['Planned'],
-            '2020-10-01',
-            '2020-10-10',
+            1601579528,
+            1602288660,
             112,
             $submission_date
         );
@@ -65,38 +66,17 @@ final class SourceTimeboxChangesetValuesBuilder
 
     /**
      * @param string[] $status
-     */
-    public static function buildWithValuesAndSubmissionDate(
-        string $title,
-        string $description_content,
-        string $description_format,
-        array $status,
-        string $start_date,
-        string $end_date,
-        int $submission_date
-    ): SourceTimeboxChangesetValues {
-        return self::buildWithValues(
-            $title,
-            $description_content,
-            $description_format,
-            $status,
-            $start_date,
-            $end_date,
-            112,
-            $submission_date
-        );
-    }
-
-    /**
-     * @param string[] $status
+     * @param int      $start_date      UNIX Timestamp
+     * @param int      $end_date        UNIX Timestamp
+     * @param int      $submission_date UNIX Timestamp
      */
     public static function buildWithValues(
         string $title,
         string $description_content,
         string $description_format,
         array $status,
-        string $start_date,
-        string $end_date,
+        int $start_date,
+        int $end_date,
         int $source_timebox_id,
         int $submission_date
     ): SourceTimeboxChangesetValues {
@@ -109,6 +89,41 @@ final class SourceTimeboxChangesetValuesBuilder
                     $description_format,
                     $start_date,
                     $end_date,
+                    $status
+                )
+            ),
+            RetrieveChangesetSubmissionDateStub::withDate($submission_date),
+            ProgramIncrementCreationBuilder::buildWithProgramIncrementId($source_timebox_id)
+        );
+    }
+
+    /**
+     * @param string[] $status
+     * @param int      $start_date      UNIX Timestamp
+     * @param int      $duration        Number of days
+     * @param int      $submission_date UNIX Timestamp
+     */
+    public static function buildWithDuration(
+        string $title,
+        string $description_content,
+        string $description_format,
+        array $status,
+        int $start_date,
+        int $duration,
+        int $source_timebox_id,
+        int $submission_date
+    ): SourceTimeboxChangesetValues {
+        return SourceTimeboxChangesetValues::fromMirroringOrder(
+            GatherSynchronizedFieldsStub::withFieldsPreparations(
+                SynchronizedFieldsStubPreparation::withDuration(141, 255, 752, 801, 901, 280)
+            ),
+            RetrieveFieldValuesGathererStub::withGatherer(
+                GatherFieldValuesStub::withDuration(
+                    $title,
+                    $description_content,
+                    $description_format,
+                    $start_date,
+                    $duration,
                     $status
                 )
             ),

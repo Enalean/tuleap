@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveEndDateValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 
-interface RetrieveStartDateValue
+final class RetrieveEndDateValueStub implements RetrieveEndDateValue
 {
+    private function __construct(private int $value)
+    {
+    }
+
     /**
-     * @throws ChangesetValueNotFoundException
-     * @return int UNIX Timestamp
+     * @param int $value UNIX Timestamp
      */
-    public function getStartDateValue(StartDateFieldReference $start_date): int;
+    public static function withValue(int $value): self
+    {
+        return new self($value);
+    }
+
+    public function getEndDateValue(EndDateFieldReference $end_date): int
+    {
+        return $this->value;
+    }
 }

@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
@@ -240,7 +242,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getGatherer()->getEndPeriodField($this->tracker_identifier);
     }
 
-    public function testItReturnsEndPeriodReferenceWithDuration(): void
+    public function testItReturnsDurationReference(): void
     {
         $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $timeframe_semantic = new SemanticTimeframe(
@@ -250,11 +252,12 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
         $end_period = $this->getGatherer()->getEndPeriodField($this->tracker_identifier);
+        self::assertInstanceOf(DurationFieldReference::class, $end_period);
         self::assertSame(429, $end_period->getId());
         self::assertSame('Maclura', $end_period->getLabel());
     }
 
-    public function testItReturnsEndPeriodReferenceWithEndDate(): void
+    public function testItReturnsEndDateReference(): void
     {
         $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $timeframe_semantic = new SemanticTimeframe(
@@ -264,6 +267,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
         $end_period = $this->getGatherer()->getEndPeriodField($this->tracker_identifier);
+        self::assertInstanceOf(EndDateFieldReference::class, $end_period);
         self::assertSame(754, $end_period->getId());
         self::assertSame('block', $end_period->getLabel());
     }

@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
@@ -102,6 +103,12 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             $form_element_factory
         );
 
+        $changeset_values_formatter = new ChangesetValuesFormatter(
+            new ArtifactLinkValueFormatter(),
+            new DescriptionValueFormatter(),
+            new DateValueFormatter()
+        );
+
         $artifact_creator = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
                 \Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
@@ -110,10 +117,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             ),
             $tracker_factory,
             $user_retriever,
-            new ChangesetValuesFormatter(
-                new ArtifactLinkValueFormatter(),
-                new DescriptionValueFormatter()
-            )
+            $changeset_values_formatter
         );
 
         $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
@@ -161,10 +165,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $changeset_adder = new ChangesetAdder(
             $artifact_factory,
             $user_retriever,
-            new ChangesetValuesFormatter(
-                new ArtifactLinkValueFormatter(),
-                new DescriptionValueFormatter()
-            ),
+            $changeset_values_formatter,
             $changeset_creator
         );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,13 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 
-interface RetrieveStartDateValue
+/**
+ * I hold the value of the End Date timeframe field of the source Timebox.
+ * I am the reference value that must be copied to Mirrored Timeboxes.
+ * @psalm-immutable
+ */
+final class EndDateValue
 {
+    private function __construct(private int $value)
+    {
+    }
+
+    public static function fromEndDateReference(
+        RetrieveEndDateValue $end_date_retriever,
+        EndDateFieldReference $end_date
+    ): self {
+        return new self($end_date_retriever->getEndDateValue($end_date));
+    }
+
     /**
-     * @throws ChangesetValueNotFoundException
      * @return int UNIX Timestamp
      */
-    public function getStartDateValue(StartDateFieldReference $start_date): int;
+    public function getValue(): int
+    {
+        return $this->value;
+    }
 }

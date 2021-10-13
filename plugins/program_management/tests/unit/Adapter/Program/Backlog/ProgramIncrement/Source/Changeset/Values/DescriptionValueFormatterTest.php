@@ -44,7 +44,7 @@ final class DescriptionValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertEquals(
             ['content' => self::DESCRIPTION_VALUE, 'format' => self::DESCRIPTION_FORMAT],
-            $this->getFormatter()->format($description)
+            $this->getFormatter()->formatForTrackerPlugin($description)
         );
     }
 }

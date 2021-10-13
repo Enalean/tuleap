@@ -35,8 +35,8 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
     private const DESCRIPTION_FORMAT                  = 'html';
     private const SOURCE_TIMEBOX_ID                   = 11;
     private const SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP = 1628844094;
-    private const START_DATE_VALUE                    = '2013-07-24';
-    private const END_PERIOD_VALUE                    = '2016-10-17';
+    private const START_DATE_VALUE                    = 1374629589;
+    private const END_PERIOD_VALUE                    = 1476705188;
     private const STATUS_VALUE                        = 'Ongoing';
     private GatherFieldValuesStub $values_gatherer;
 

@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldReferences;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
@@ -38,18 +40,25 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
     private const STATUS_ID                   = 656;
     private const START_DATE_ID               = 801;
     private const END_DATE_ID                 = 234;
+    private const DURATION_ID                 = 756;
     private const LINKED_ARTIFACT_ID          = 95;
     private const TITLE_VALUE                 = 'Circassian';
     private const DESCRIPTION_VALUE           = 'consideringly palpebral';
     private const DESCRIPTION_FORMAT          = 'html';
     private const MAPPED_STATUS_BIND_VALUE_ID = 4192;
-    private const START_DATE_VALUE            = '2020-04-16';
-    private const END_DATE_VALUE              = '2024-08-14';
+    private const START_DATE_VALUE            = 1587058228;
+    private const END_DATE_VALUE              = 1723649644;
+    private const DURATION_VALUE              = 34;
+    private MapStatusByValueStub $status_mapper;
+    private SourceTimeboxChangesetValues $source_values;
+    private ArtifactLinkValue $artifact_link_value;
+    private SynchronizedFieldReferences $target_fields;
 
-    public function testItBuildsFromSourceValuesAndFields(): void
+    protected function setUp(): void
     {
-        $status_mapper       = MapStatusByValueStub::withSuccessiveBindValueIds(self::MAPPED_STATUS_BIND_VALUE_ID);
-        $source_values       = SourceTimeboxChangesetValuesBuilder::buildWithValues(
+        $this->status_mapper = MapStatusByValueStub::withSuccessiveBindValueIds(self::MAPPED_STATUS_BIND_VALUE_ID);
+
+        $this->source_values       = SourceTimeboxChangesetValuesBuilder::buildWithValues(
             self::TITLE_VALUE,
             self::DESCRIPTION_VALUE,
             self::DESCRIPTION_FORMAT,
@@ -59,11 +68,11 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
             self::LINKED_ARTIFACT_ID,
             1604793787
         );
-        $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
-            $source_values->getSourceTimebox(),
+        $this->artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
+            $this->source_values->getSourceTimebox(),
             ArtifactLinkTypeProxy::fromMirrorTimeboxType()
         );
-        $target_fields       = SynchronizedFieldReferencesBuilder::buildWithPreparations(
+        $this->target_fields       = SynchronizedFieldReferencesBuilder::buildWithPreparations(
             SynchronizedFieldsStubPreparation::withAllFields(
                 self::TITLE_ID,
                 self::DESCRIPTION_ID,
@@ -73,16 +82,21 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
                 self::ARTIFACT_LINK_ID
             )
         );
-        $values              = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
-            $status_mapper,
-            $source_values,
-            $target_fields,
-            $artifact_link_value
+    }
+
+    public function testItBuildsFromSourceValuesAndFields(): void
+    {
+        $values = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
+            $this->status_mapper,
+            $this->source_values,
+            $this->target_fields,
+            $this->artifact_link_value
         );
 
         self::assertSame(self::ARTIFACT_LINK_ID, $values->artifact_link_field->getId());
-        self::assertSame(self::LINKED_ARTIFACT_ID, $values->artifact_link_value?->linked_artifact->getId());
-        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value?->type);
+        self::assertNotNull($values->artifact_link_value);
+        self::assertSame(self::LINKED_ARTIFACT_ID, $values->artifact_link_value->linked_artifact->getId());
+        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value->type);
         self::assertSame(self::TITLE_ID, $values->title_field->getId());
         self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
         self::assertSame(self::DESCRIPTION_ID, $values->description_field->getId());
@@ -94,5 +108,53 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
         self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
         self::assertSame(self::END_DATE_ID, $values->end_period_field->getId());
         self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
+    }
+
+    public function testItBuildsWithDurationFieldAndValue(): void
+    {
+        $source_values = SourceTimeboxChangesetValuesBuilder::buildWithDuration(
+            self::TITLE_VALUE,
+            self::DESCRIPTION_VALUE,
+            self::DESCRIPTION_FORMAT,
+            ['Circumcellion'],
+            self::START_DATE_VALUE,
+            self::DURATION_VALUE,
+            self::LINKED_ARTIFACT_ID,
+            1436068265
+        );
+
+        $target_fields = SynchronizedFieldReferencesBuilder::buildWithPreparations(
+            SynchronizedFieldsStubPreparation::withDuration(
+                self::TITLE_ID,
+                self::DESCRIPTION_ID,
+                self::STATUS_ID,
+                self::START_DATE_ID,
+                self::DURATION_ID,
+                self::ARTIFACT_LINK_ID
+            )
+        );
+
+        $values = MirroredTimeboxChangesetValues::fromSourceChangesetValuesAndSynchronizedFields(
+            $this->status_mapper,
+            $source_values,
+            $target_fields,
+            $this->artifact_link_value
+        );
+
+        self::assertSame(self::ARTIFACT_LINK_ID, $values->artifact_link_field->getId());
+        self::assertNotNull($values->artifact_link_value);
+        self::assertSame(self::LINKED_ARTIFACT_ID, $values->artifact_link_value->linked_artifact->getId());
+        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value->type);
+        self::assertSame(self::TITLE_ID, $values->title_field->getId());
+        self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
+        self::assertSame(self::DESCRIPTION_ID, $values->description_field->getId());
+        self::assertSame(self::DESCRIPTION_VALUE, $values->description_value->value);
+        self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
+        self::assertSame(self::STATUS_ID, $values->status_field->getId());
+        self::assertEquals([self::MAPPED_STATUS_BIND_VALUE_ID], $values->mapped_status_value->getValues());
+        self::assertSame(self::START_DATE_ID, $values->start_date_field->getId());
+        self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
+        self::assertSame(self::DURATION_ID, $values->end_period_field->getId());
+        self::assertSame(self::DURATION_VALUE, $values->end_period_value->getValue());
     }
 }

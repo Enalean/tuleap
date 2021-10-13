@@ -34,7 +34,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
      */
     private array $synchronized_fields_ids = [];
     /**
-     * @var TitleFieldReference[]|DescriptionFieldReference[]|StatusFieldReference[]|StartDateFieldReference[]|EndPeriodFieldReference[]|ArtifactLinkFieldReference[]
+     * @var array<TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference>
      */
     private array $synchronized_fields = [];
 
@@ -128,7 +128,6 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
             $this->synchronized_fields,
             $synchronized_field_data->getSynchronizedFieldsData()->getAllFields()
         );
-        $this->synchronized_fields_ids = $this->synchronized_fields_ids + $synchronized_field_data->getSynchronizedFieldDataIds(
-        );
+        $this->synchronized_fields_ids = $this->synchronized_fields_ids + $synchronized_field_data->getSynchronizedFieldDataIds();
     }
 }

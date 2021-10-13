@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
@@ -57,7 +58,8 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         $descriptions   = [];
         $statuses       = [];
         $start_dates    = [];
-        $end_periods    = [];
+        $end_dates      = [];
+        $durations      = [];
         $artifact_links = [];
         foreach ($preparations as $preparation) {
             if ($preparation->title) {
@@ -72,19 +74,28 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
             if ($preparation->start_date) {
                 $start_dates[] = $preparation->start_date;
             }
-            if ($preparation->end_period) {
-                $end_periods[] = $preparation->end_period;
+            if ($preparation->end_date) {
+                $end_dates[] = $preparation->end_date;
+            }
+            if ($preparation->duration) {
+                $durations[] = $preparation->duration;
             }
             if ($preparation->artifact_link) {
                 $artifact_links[] = $preparation->artifact_link;
             }
         }
+        $duration_stub   = ! empty($durations)
+            ? RetrieveEndPeriodFieldStub::withDurationFields(...$durations)
+            : RetrieveEndPeriodFieldStub::withError();
+        $end_period_stub = ! empty($end_dates)
+            ? RetrieveEndPeriodFieldStub::withEndDateFields(...$end_dates)
+            : $duration_stub;
         return new self(
             RetrieveTitleFieldStub::withFields(...$titles),
             RetrieveDescriptionFieldStub::withFields(...$descriptions),
             RetrieveStatusFieldStub::withFields(...$statuses),
             RetrieveStartDateFieldStub::withFields(...$start_dates),
-            RetrieveEndPeriodFieldStub::withFields(...$end_periods),
+            $end_period_stub,
             RetrieveArtifactLinkFieldStub::withFields(...$artifact_links)
         );
     }
@@ -96,7 +107,7 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
             RetrieveDescriptionFieldStub::withFields(DescriptionFieldReferenceStub::withDefaults()),
             RetrieveStatusFieldStub::withFields(StatusFieldReferenceStub::withDefaults()),
             RetrieveStartDateFieldStub::withFields(StartDateFieldReferenceStub::withDefaults()),
-            RetrieveEndPeriodFieldStub::withFields(EndPeriodFieldReferenceStub::withDefaults()),
+            RetrieveEndPeriodFieldStub::withEndDateFields(EndDateFieldReferenceStub::withDefaults()),
             RetrieveArtifactLinkFieldStub::withFields(ArtifactLinkFieldReferenceStub::withDefaults())
         );
     }
@@ -121,9 +132,9 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         return $this->start_date_stub->getStartDateField($program_increment);
     }
 
-    public function getEndPeriodField(TrackerIdentifier $program_increment): EndPeriodFieldReference
+    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndDateFieldReference|DurationFieldReference
     {
-        return $this->end_period_stub->getEndPeriodField($program_increment);
+        return $this->end_period_stub->getEndPeriodField($tracker_identifier);
     }
 
     public function getArtifactLinkField(
