@@ -20,6 +20,7 @@
 @use "codemirror/lib/codemirror";
 @use "codemirror/addon/hint/show-hint";
 @use "../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "../../../../../src/themes/FlamingParrot/css/utils/variables-common";
 @use "includes/cards";
 @use "includes/field-bound-colors";
 @use "includes/columns-colors";
@@ -883,6 +884,11 @@ select.tracker-report-expert-allowed-fields {
     border-bottom: 1px solid #e0e0e0;
     border-radius: var(--tlp-medium-radius);
     background: #ffffff;
+    scroll-margin-top: calc(#{variables-common.$navbar-height} + var(--tlp-medium-spacing));
+}
+
+.has-visible-platform-banner .tracker_artifact_followup {
+    scroll-margin-top: calc(#{variables-common.$platform-banner-base-height} + #{variables-common.$navbar-height} + var(--tlp-medium-spacing));
 }
 
 .tracker_artifact_followup:not(.tracker_artifact_followup-with_comment) {
