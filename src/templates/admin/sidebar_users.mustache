@@ -23,13 +23,13 @@
             <a href="/admin/approve_pending_users.php?page=pending" class="admin-sidebar-section-nav-item {{# isTherePendingUsers }}tlp-text-warning{{/ isTherePendingUsers }}">
                 {{ users_nav_pending_users }}
                 {{# isTherePendingUsers }}
-                    <span class="tlp-badge-warning tlp-badge-outline">{{ pending_users_count }}</span>
+                    <span class="tlp-badge-warning tlp-badge-outline tlp-badge-on-dark-background">{{ pending_users_count }}</span>
                 {{/ isTherePendingUsers }}
             </a>
             <a href="/admin/approve_pending_users.php?page=validated" class="admin-sidebar-section-nav-item {{# isThereValidatedUsers }}tlp-text-warning{{/ isThereValidatedUsers }}">
                 {{ users_nav_validated_users }}
                 {{# isThereValidatedUsers }}
-                    <span class="tlp-badge-warning tlp-badge-outline">{{ validated_users_count }}</span>
+                    <span class="tlp-badge-warning tlp-badge-outline tlp-badge-on-dark-background">{{ validated_users_count }}</span>
                 {{/ isThereValidatedUsers }}
             </a>
         {{/ users_need_approval}}
