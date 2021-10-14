@@ -123,11 +123,12 @@ def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAn
     """
 }
 
-def runDeptrac(String configPath, String reportName) {
+def runDeptrac() {
     dir ('sources') {
         sh """
-        mkdir -p ../results/deptrac/
-        scl enable php80 "src/vendor/bin/deptrac analyze --no-progress --no-interaction --formatter=junit --junit-dump-xml='../results/deptrac/${reportName}.xml' -- ${configPath}"
+        export CI_REPORT_OUTPUT_PATH="\$WORKSPACE/results/deptrac/"
+        mkdir -p "\$CI_REPORT_OUTPUT_PATH"
+        scl enable php80 "./tests/deptrac/run.sh"
         """
     }
 }
