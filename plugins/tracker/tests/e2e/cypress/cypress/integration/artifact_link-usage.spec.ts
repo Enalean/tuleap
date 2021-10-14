@@ -17,8 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function submitArtifactAndStay(): void {
+    cy.get("[data-test=artifact-submit-options]").click();
+    cy.get("[data-test=artifact-submit-and-stay]").click();
+}
+
+function createArtifact(title: string): void {
+    cy.visitProjectService("tracker-artifact", "Trackers");
+    cy.get("[data-test=tracker-link-artifact_link]").click();
+    cy.get("[data-test=create-new]").click();
+    cy.get("[data-test=create-new-item]").first().click();
+    cy.get("[data-test=title]").type(title);
+    submitArtifactAndStay();
+
+    cy.get("[data-test=feedback]").contains("Artifact Successfully");
+}
+
 describe("Artifact link usage", () => {
     let project_id: string;
+    let fixed_by_artifact: string;
+    let fixed_in_artifact: string;
+    let parent_artifact: string;
+    let child_artifact: string;
     describe("Site administrator", () => {
         before(() => {
             cy.clearSessionCookie();
@@ -46,11 +66,20 @@ describe("Artifact link usage", () => {
         });
     });
 
-    function toggleArtifactLinkUsage(project_id: string): void {
+    function disableArtifactLinkUsage(project_id: string): void {
         cy.visit("/plugins/tracker/global-admin/" + project_id);
         cy.get("[data-test=artifact-links]").click();
         // tlp switch made input not visible, need to force the uncheck action
         cy.get("[data-test=toggle-fixed_in-link]").uncheck({ force: true });
+        cy.get("[data-test=artifact-link-form-fixed_in]").submit();
+    }
+
+    function enableArtifactLinkUsage(project_id: string): void {
+        cy.visit("/plugins/tracker/global-admin/" + project_id);
+        cy.get("[data-test=artifact-links]").click();
+        // tlp switch made input not visible, need to force the uncheck action
+        cy.get("[data-test=toggle-fixed_in-link]").check({ force: true });
+        cy.get("[data-test=artifact-link-form-fixed_in]").submit();
     }
 
     describe("Tracker administration", function () {
@@ -58,6 +87,26 @@ describe("Artifact link usage", () => {
             cy.clearSessionCookie();
             cy.projectAdministratorLogin();
             cy.getProjectId("tracker-artifact").as("project_id");
+
+            createArtifact("Fixed By");
+            cy.get("[data-test=current-artifact-id]").should(($input) => {
+                fixed_by_artifact = String($input.val());
+            });
+
+            createArtifact("Fixed In");
+            cy.get("[data-test=current-artifact-id]").should(($input) => {
+                fixed_in_artifact = String($input.val());
+            });
+
+            createArtifact("Parent of");
+            cy.get("[data-test=current-artifact-id]").should(($input) => {
+                parent_artifact = String($input.val());
+            });
+
+            createArtifact("Child of");
+            cy.get("[data-test=current-artifact-id]").should(($input) => {
+                child_artifact = String($input.val());
+            });
         });
 
         beforeEach(function () {
@@ -66,16 +115,50 @@ describe("Artifact link usage", () => {
 
         it("can enable/disable artifact links", function () {
             project_id = this.project_id;
-            toggleArtifactLinkUsage(project_id);
+            disableArtifactLinkUsage(project_id);
 
+            cy.log("Fixed in nature is not available when nature is disabled");
             cy.visitProjectService("tracker-artifact", "Trackers");
             cy.get("[data-test=tracker-link-artifact_link]").click();
             cy.get("[data-test=direct-link-to-artifact]").first().click();
             cy.get("[data-test=edit-field-links]").click();
 
-            cy.get("[data-test=artifact-link-nature-selector]").should("not.contain", "fixed_in");
+            cy.get("[data-test=artifact-link-nature-selector]").should("not.contain", "Fixed in");
 
-            toggleArtifactLinkUsage(project_id);
+            enableArtifactLinkUsage(project_id);
+            cy.log("Fixed in nature can be used");
+            cy.visitProjectService("tracker-artifact", "Trackers");
+            cy.visit("/plugins/tracker/?&aid=" + fixed_in_artifact);
+            cy.get("[data-test=edit-field-links]").click();
+            cy.get("[data-test=artifact-link-submit]").type(fixed_by_artifact);
+            cy.get("[data-test=artifact-link-nature-selector]").first().select("Fixed in");
+            submitArtifactAndStay();
+
+            cy.get("[data-test=feedback]").contains("Successfully Updated");
+
+            cy.get("[data-test=artifact-link-section]").contains(fixed_by_artifact);
+
+            cy.log("Reverse link display fixed in nature");
+            cy.visit("/plugins/tracker/?&aid=" + fixed_by_artifact);
+            cy.get("[data-test=display-reverse-links]").click();
+            cy.get("[data-test=reverse-link-section").contains(fixed_in_artifact);
+        });
+
+        it("can use _is_child nature", function () {
+            cy.visitProjectService("tracker-artifact", "Trackers");
+            cy.visit("/plugins/tracker/?&aid=" + child_artifact);
+            cy.get("[data-test=edit-field-links]").click();
+            cy.get("[data-test=artifact-link-submit]").type(parent_artifact);
+            cy.get("[data-test=artifact-link-nature-selector]").first().select("Child");
+            submitArtifactAndStay();
+
+            cy.get("[data-test=feedback]").contains("Successfully Updated");
+
+            cy.get("[data-test=artifact-link-section]").contains(parent_artifact);
+
+            cy.visit("https://tuleap/plugins/tracker/?&aid=" + parent_artifact);
+            cy.get("[data-test=display-reverse-links]").click();
+            cy.get("[data-test=reverse-link-section").contains(child_artifact);
         });
     });
 });
