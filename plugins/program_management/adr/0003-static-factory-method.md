@@ -2,7 +2,7 @@
 
 * Status: accepted
 * Deciders: Joris MASSON (@jmasson), Marie Ange GARNIER (@mgarnier)
-* Date: 2021-09-21
+* Date: 2021-10-12
 
 Technical Story: [epic #16683 Program Management][0]
 
@@ -73,6 +73,43 @@ We are not used to passing interfaces as method parameters, and it can feel awkw
 
 Instead of a static method, we could choose to make a second `Builder` object responsible for building our `ProgramIncrementIdentifier`. However, we would be forced to make `ProgramIncrementIdentifier`'s constructor public again. Since the constructor would be public, we could not guarantee that it is not called by some other class or with invalid parameters. We could not guarantee either that all checks are made before calling the constructor. We would be back to square one. Builders cannot provide the same guarantees as the static factory method pattern.
 
+### Multiple returns
+
+In some cases, you can even build multiple instances of your object. For example, it is expected that a `Program Increment` has multiple corresponding `Mirrored Program Increments`. A method to build `MirroredProgramIncrementIdentifier` from a `ProgramIncrementIdentifier` must return more than one result. In that case, the static factory method allows us to build an array of objects. A constructor would only let us build them one by one.
+
+```php
+final class MirroredProgramIncrementIdentifier
+{
+    private function __construct(private int $id)
+    {
+    }
+
+    // Add a docblock to specify the type of objects in the array (always "self[]")
+    /**
+     * @return self[]
+     */
+    public static function buildCollectionFromProgramIncrement(
+        // Interface parameters come first
+        SearchMirroredTimeboxes $timebox_searcher,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        // Then, other parameters
+        ProgramIncrementIdentifier $program_increment,
+        UserIdentifier $user
+    ): array {
+        $ids               = $timebox_searcher->searchMirroredTimeboxes($program_increment);
+        $valid_identifiers = [];
+        foreach ($ids as $id) {
+            if ($visibility_verifier->isVisible($id, $user)) {
+                // If none of the objects are visible, it will return an empty array.
+                // The method could also throw an exception.
+                $valid_identifiers[] = new self($id);
+            }
+        }
+        return $valid_identifiers;
+    }
+}
+```
+
 ### Naming conventions
 
 By convention, the static factory method is named `from<Something>()` where `<Something>` is the main parameter (for example `fromId()`). Implicitly, it means `buildFrom<Something>()`, but since the method returns `self`, we can omit the `build` prefix, as it should be obvious from the signature that the method "builds" an instance.
@@ -80,6 +117,8 @@ By convention, the static factory method is named `from<Something>()` where `<So
 It is named `from<Something>()` to be able to distinguish the kind of parameter it takes when there is more than one static factory method. Taking the habit of naming them always `from<Something>()` instead of `build()` will make it easier to add new methods, as we won't have to rename all the old ones.
 
 It is conventional to always pass the interface parameters first and then the other (sometimes primitive, sometimes object) parameters.
+
+By convention, we name static factory methods that return arrays `buildCollectionFrom<Something>()`. The `buildCollection` prefix makes it more obvious that we expect this method to return an array (that could be empty) instead of a single result.
 
 For `Stubs` (see [ADR-0002 Hexagonal Architecture][4]), they also have static methods to build them. By convention, their static method is named `with<Something>()`. They are usually built to always return the same result, so the method "builds" a stub "with" a result. Again, since the method returns `self`, we can omit the `build` prefix as it should be obvious from the signature.
 
