@@ -25,6 +25,7 @@ namespace Tuleap\CLI\Events;
 
 use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyMetadata;
 
 final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +37,7 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $all_keys = $get_whitelisted_keys->getSortedKeysWithMetadata();
         self::assertArrayHasKey('sys_use_project_registration', $all_keys);
         self::assertEquals(
-            new ConfigKeyMetadata('Is project creation allowed to regular users (1) or not (0)', true),
+            new ConfigKeyMetadata('Is project creation allowed to regular users (1) or not (0)', true, null),
             $all_keys['sys_use_project_registration'],
         );
     }
@@ -109,5 +110,22 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $get_whitelisted_keys->addConfigClass($class::class);
 
         self::assertFalse($get_whitelisted_keys->canBeModified('foo'));
+    }
+
+    public function testConfigKeyHasCategory(): void
+    {
+        // phpcs 3.6.0 detect an error with annotation bellow, ignore the error until phpcs is fixed
+        // https://github.com/squizlabs/PHP_CodeSniffer/issues/3456
+        // phpcs:ignore PSR12.Classes.ClassInstantiation.MissingParentheses
+        $class = new #[ConfigKeyCategory('bar')] class {
+            #[ConfigKey('summary')]
+            public const SOME_STUFF = 'foo';
+        };
+
+        $get_whitelisted_keys = new GetWhitelistedKeys();
+        $get_whitelisted_keys->addConfigClass($class::class);
+
+        $keys = $get_whitelisted_keys->getSortedKeysWithMetadata();
+        self::assertEquals('bar', $keys['foo']->category);
     }
 }

@@ -33,7 +33,5 @@ $sys_enablessl          = '0';
 $sys_db_ssl_ca          = '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem';
 $sys_db_ssl_verify_cert = '0';
 
-// for phpWiki
-$sys_server='mysql';
 //The value should be 20 due to mysql max join limit
 $sys_server_join='20';

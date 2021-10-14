@@ -25,17 +25,46 @@ namespace Tuleap\DB;
 
 use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
 
+#[ConfigKeyCategory('Database')]
 final class DBConfig
 {
     #[ConfigKey('Database server hostname or IP address')]
     #[ConfigCannotBeModified]
-    public const CONF_HOST             = 'sys_dbhost';
-    public const CONF_PORT             = 'sys_dbport';
-    public const CONF_DBNAME           = 'sys_dbname';
-    private const CONF_ENABLE_SSL      = 'sys_enablessl';
-    private const CONF_SSL_CA          = 'sys_db_ssl_ca';
-    private const CONF_SSL_VERIFY_CERT = 'sys_db_ssl_verify_cert';
+    public const CONF_HOST = 'sys_dbhost';
+
+    #[ConfigKey('Database server port')]
+    #[ConfigCannotBeModified]
+    public const CONF_PORT = 'sys_dbport';
+
+    #[ConfigKey('Database name')]
+    #[ConfigCannotBeModified]
+    public const CONF_DBNAME = 'sys_dbname';
+
+    #[ConfigKey('Database application user')]
+    #[ConfigCannotBeModified]
+    public const CONF_DBUSER = 'sys_dbuser';
+
+    #[ConfigKey('Database application user password')]
+    #[ConfigCannotBeModified]
+    public const CONF_DBPASSWORD = 'sys_dbpasswd';
+
+    #[ConfigKey('Database is accessed with TLS')]
+    #[ConfigCannotBeModified]
+    public const CONF_ENABLE_SSL = 'sys_enablessl';
+
+    #[ConfigKey('Database TLS CA')]
+    #[ConfigCannotBeModified]
+    public const CONF_SSL_CA = 'sys_db_ssl_ca';
+
+    #[ConfigKey('Toggle verification of database certificate')]
+    #[ConfigCannotBeModified]
+    public const CONF_SSL_VERIFY_CERT = 'sys_db_ssl_verify_cert';
+
+    #[ConfigKey('Adjust the maximum number of JOIN the mysql server can accept')]
+    #[ConfigCannotBeModified]
+    public const CONF_NB_MAX_JOIN = 'sys_server_join';
 
     public const DEFAULT_MYSQL_PORT = 3306;
 

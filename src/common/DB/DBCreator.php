@@ -42,8 +42,8 @@ class DBCreator
     {
         return Factory::fromArray([
             DBConfig::getPDODSN($this->database_name),
-            \ForgeConfig::get('sys_dbuser'),
-            \ForgeConfig::get('sys_dbpasswd'),
+            \ForgeConfig::get(DBConfig::CONF_DBUSER),
+            \ForgeConfig::get(DBConfig::CONF_DBPASSWORD),
             $this->getOptions(),
         ]);
     }

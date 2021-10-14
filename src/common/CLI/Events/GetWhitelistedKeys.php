@@ -28,6 +28,7 @@ use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManage
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyMetadata;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\DB\DBConfig;
@@ -136,6 +137,7 @@ final class GetWhitelistedKeys implements Dispatchable
     private function findTlpConfigConst(string $class_name): void
     {
         $reflected_class = new \ReflectionClass($class_name);
+        $category        = $this->getClassCategory($reflected_class);
         foreach ($reflected_class->getReflectionConstants() as $const) {
             $key             = '';
             $summary         = '';
@@ -164,7 +166,23 @@ final class GetWhitelistedKeys implements Dispatchable
             if (! $key) {
                 continue;
             }
-            $this->white_listed_keys[$key] = new ConfigKeyMetadata($summary, $can_be_modified);
+            $this->white_listed_keys[$key] = new ConfigKeyMetadata(
+                $summary,
+                $can_be_modified,
+                $category
+            );
         }
+    }
+
+    private function getClassCategory(\ReflectionClass $reflected_class): ?string
+    {
+        $class_attributes = $reflected_class->getAttributes(ConfigKeyCategory::class);
+        if (count($class_attributes) !== 1) {
+            return null;
+        }
+
+        $category_attribute = $class_attributes[0]->newInstance();
+        assert($category_attribute instanceof ConfigKeyCategory);
+        return $category_attribute->name;
     }
 }
