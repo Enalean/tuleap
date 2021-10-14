@@ -24,24 +24,15 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
 use Transition;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\DeletePostAction;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class AddToTopBacklogPostActionValueUpdater implements PostActionUpdater
+final class AddToTopBacklogPostActionValueUpdater implements PostActionUpdater
 {
-    /**
-     * @var AddToTopBacklogPostActionDAO
-     */
-    private $add_to_top_backlog_post_action_dao;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $db_transaction_executor;
-
-    public function __construct(AddToTopBacklogPostActionDAO $add_to_top_backlog_post_action_dao, DBTransactionExecutor $db_transaction_executor)
+    public function __construct(private DeletePostAction $delete_post_action, private DBTransactionExecutor $db_transaction_executor, private CreatePostAction $create_post_action)
     {
-        $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
-        $this->db_transaction_executor            = $db_transaction_executor;
     }
 
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
@@ -56,10 +47,10 @@ class AddToTopBacklogPostActionValueUpdater implements PostActionUpdater
         $transition_id = (int) $transition->getId();
 
         $this->db_transaction_executor->execute(function () use ($transition_id, $add_to_top_backlog_post_action_value) {
-            $this->add_to_top_backlog_post_action_dao->deleteTransitionPostActions($transition_id);
+            $this->delete_post_action->deleteTransitionPostActions($transition_id);
 
             if (count($add_to_top_backlog_post_action_value) > 0) {
-                $this->add_to_top_backlog_post_action_dao->createPostActionForTransitionID($transition_id);
+                $this->create_post_action->createPostActionForTransitionID($transition_id);
             }
         });
     }

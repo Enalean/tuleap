@@ -23,8 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\DeletePostAction;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
 
-class AddToTopBacklogPostActionDAO extends DataAccessObject
+final class AddToTopBacklogPostActionDAO extends DataAccessObject implements SearchByTransitionId, SearchByWorkflow, DeletePostAction, CreatePostAction
 {
     /**
      * @psalm-return list<array{id: int, transition_id: int}>

@@ -849,10 +849,14 @@ final class program_managementPlugin extends Plugin
 
     private function getAddToTopBacklogPostActionFactory(): AddToTopBacklogPostActionFactory
     {
+        $dao = new AddToTopBacklogPostActionDAO();
+
         return new AddToTopBacklogPostActionFactory(
-            new AddToTopBacklogPostActionDAO(),
+            $dao,
             $this->getProgramAdapter(),
-            $this->getTopBacklogChangeProcessor()
+            $this->getTopBacklogChangeProcessor(),
+            $dao,
+            $dao,
         );
     }
 
@@ -912,10 +916,12 @@ final class program_managementPlugin extends Plugin
 
     public function getWorkflowExternalPostActionsValueUpdater(GetWorkflowExternalPostActionsValueUpdater $event): void
     {
+        $dao = new AddToTopBacklogPostActionDAO();
         $event->addValueUpdater(
             new AddToTopBacklogPostActionValueUpdater(
-                new AddToTopBacklogPostActionDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                $dao,
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                $dao,
             )
         );
     }

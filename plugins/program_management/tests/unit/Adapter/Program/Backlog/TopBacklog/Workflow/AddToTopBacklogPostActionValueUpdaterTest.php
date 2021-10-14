@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
+use Tuleap\ProgramManagement\Tests\Stub\CreatePostActionStub;
+use Tuleap\ProgramManagement\Tests\Stub\DeletePostActionStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
@@ -33,17 +35,18 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
      * @var AddToTopBacklogPostActionValueUpdater
      */
     private $updater;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AddToTopBacklogPostActionDAO
-     */
-    private $dao;
+
+    private DeletePostActionStub $delete_post_action;
+    private CreatePostActionStub $create_post_action;
 
     protected function setUp(): void
     {
-        $this->dao     = $this->createMock(AddToTopBacklogPostActionDAO::class);
-        $this->updater = new AddToTopBacklogPostActionValueUpdater(
-            $this->dao,
-            new DBTransactionExecutorPassthrough()
+        $this->delete_post_action = DeletePostActionStub::withCount();
+        $this->create_post_action = CreatePostActionStub::withCount();
+        $this->updater            = new AddToTopBacklogPostActionValueUpdater(
+            $this->delete_post_action,
+            new DBTransactionExecutorPassthrough(),
+            $this->create_post_action
         );
     }
 
@@ -51,20 +54,19 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     {
         $actions = new PostActionCollection(new AddToTopBacklogPostActionValue(), self::buildOtherPostAction());
 
-        $this->dao->expects(self::once())->method('deleteTransitionPostActions')->with(14);
-        $this->dao->expects(self::once())->method('createPostActionForTransitionID')->with(14);
-
         $this->updater->updateByTransition($actions, new \Transition(14, 321, null, null));
+        self::assertEquals(1, $this->delete_post_action->getCallCount());
+        self::assertEquals(1, $this->create_post_action->getCallCount());
     }
 
     public function testOnlyCreatesThePostActionForTheTransitionIfTheAppropriatePostActionValueIsPresent(): void
     {
         $actions = new PostActionCollection(self::buildOtherPostAction());
 
-        $this->dao->expects(self::once())->method('deleteTransitionPostActions')->with(15);
-        $this->dao->expects(self::never())->method('createPostActionForTransitionID');
-
         $this->updater->updateByTransition($actions, new \Transition(15, 321, null, null));
+
+        self::assertEquals(1, $this->delete_post_action->getCallCount());
+        self::assertEquals(0, $this->create_post_action->getCallCount());
     }
 
     private static function buildOtherPostAction(): PostAction

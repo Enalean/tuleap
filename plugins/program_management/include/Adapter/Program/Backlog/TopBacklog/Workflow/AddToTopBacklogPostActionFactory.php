@@ -28,6 +28,9 @@ use Transition_PostAction;
 use Transition_PostActionSubFactory;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -41,18 +44,14 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
      * @var array<int, array<int, int>>
      */
     private array $cache = [];
-    private AddToTopBacklogPostActionDAO $add_to_top_backlog_post_action_dao;
-    private BuildProgram $build_program;
-    private TopBacklogChangeProcessor $top_backlog_change_processor;
 
     public function __construct(
-        AddToTopBacklogPostActionDAO $add_to_top_backlog_post_action_dao,
-        BuildProgram $build_program,
-        TopBacklogChangeProcessor $top_backlog_change_processor
+        private SearchByTransitionId $add_to_top_backlog_post_action_dao,
+        private BuildProgram $build_program,
+        private TopBacklogChangeProcessor $top_backlog_change_processor,
+        private SearchByWorkflow $search_by_workflow,
+        private CreatePostAction $create_post_action
     ) {
-        $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
-        $this->build_program                      = $build_program;
-        $this->top_backlog_change_processor       = $top_backlog_change_processor;
     }
 
     public function warmUpCacheForWorkflow(Workflow $workflow): void
@@ -62,7 +61,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
             return;
         }
 
-        foreach ($this->add_to_top_backlog_post_action_dao->searchByWorkflow($workflow) as $row) {
+        foreach ($this->search_by_workflow->searchByWorkflow($workflow) as $row) {
             $this->cache[$workflow_id][$row['transition_id']] = $row['id'];
         }
     }
@@ -116,7 +115,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
     {
         $to_transition_id = (int) $post_action->getTransition()->getId();
 
-        $this->add_to_top_backlog_post_action_dao->createPostActionForTransitionID(
+        $this->create_post_action->createPostActionForTransitionID(
             $to_transition_id
         );
     }
@@ -130,7 +129,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
     {
         $postactions = $this->loadPostActions($from_transition);
         if (count($postactions) > 0) {
-            $this->add_to_top_backlog_post_action_dao->createPostActionForTransitionID(
+            $this->create_post_action->createPostActionForTransitionID(
                 $to_transition_id
             );
         }
