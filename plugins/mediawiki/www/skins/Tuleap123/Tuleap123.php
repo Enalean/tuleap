@@ -137,8 +137,8 @@ class Tuleap123Template extends BaseTemplate
             echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
             echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
-        ?><div id="globalWrapper">
-<div id="column-content"><div data-test="mediawiki-content" id="content" class="mw-body-primary" role="main">
+        ?><div id="globalWrapper" data-test="mediawiki-content">
+<div id="column-content"><div id="content" class="mw-body-primary" role="main">
     <a id="top"></a>
         <?php if ($this->data['sitenotice']) {
             ?><div id="siteNotice"><?php $this->html('sitenotice') ?></div><?php

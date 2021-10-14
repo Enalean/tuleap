@@ -26,6 +26,7 @@
                    placeholder="PowerRangers"
                    size="30"
                    value="{{ name }}"
+                   data-test="permission-group-name"
                    required>
         </div>
 
@@ -46,7 +47,7 @@
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{ group_cancel }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="permission-delegation-create-button">
             <i class="fa fa-{{# is_new }}plus{{/ is_new }}{{^ is_new }}pencil{{/ is_new }} tlp-button-icon"></i> {{ group_submit }}
         </button>
     </div>

@@ -19,13 +19,15 @@
                     <select class="tlp-select"
                             id="siteadmin-permission-delegation-group-details-users-actions-add-input"
                             name="user"
+                            data-test="add-user-to-delegation-permission"
                             data-placeholder="Paul"></select>
-                    <button type="submit" class="tlp-append tlp-button-primary" name="add-user" value="1">
+                    <button type="submit" class="tlp-append tlp-button-primary" name="add-user" value="1" data-test="add-user-permission-button">
                         <i class="fa fa-plus tlp-button-icon"></i> {{ users_action_add }}
                     </button>
                 </div>
                 <button type="submit"
                         id="siteadmin-permission-delegation-group-details-users-actions-delete"
+                        data-test="permission-delegation-remove-permission-button"
                         class="tlp-button-danger tlp-button-outline"
                         disabled="disabled"
                         name="remove-users"
@@ -40,7 +42,7 @@
                     <tbody>
                         {{# users }}
                         <tr>
-                            <td><input type="checkbox" name="user-ids[]" class="user" value="{{ getId }}" /></td>
+                            <td><input type="checkbox" name="user-ids[]" class="user" value="{{ getId }}" data-test="{{ getUserName }}" /></td>
                             <td class="siteadmin-permission-delegation-group-details-users-user-name">
                                 <div class="tlp-avatar-small siteadmin-permission-delegation-group-details-users-user-avatar">
                                     {{# hasAvatar }}<img src="{{ getAvatarUrl }}">{{/ hasAvatar }}
@@ -53,7 +55,7 @@
                 </table>
             {{/ has_users }}
             {{^ has_users }}
-                <section class="empty-state-pane">
+                <section class="empty-state-pane" data-test="admin-delegation-no-user">
                     <p class="empty-state-text empty-state-text-smaller">{{ no_user }}</p>
                 </section>
             {{/ has_users }}

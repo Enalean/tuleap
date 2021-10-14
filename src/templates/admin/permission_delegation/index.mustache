@@ -1,4 +1,4 @@
-<div class="tlp-framed-vertically">
+<div class="tlp-framed-vertically" data-test="permission-delegation-page">
     <h1 class="tlp-framed-horizontally">{{ page_title }}</h1>
 
     {{# has_groups }}
@@ -63,6 +63,7 @@
             <button type="button"
                     id="siteadmin-permission-delegation-add-group"
                     class="empty-state-action tlp-button-primary"
+                    data-test="permission-delegation-group-creation-button"
             >
                 <i class="fa fa-plus tlp-button-icon"></i> {{ group_action_add }}
             </button>
