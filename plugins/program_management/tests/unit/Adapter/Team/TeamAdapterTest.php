@@ -25,13 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 use ProjectManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
@@ -42,7 +40,6 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private const TEAM_ID = 202;
     private VerifyIsProgram $program_verifier;
-    private ProgramForAdministrationIdentifier $program;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&ExplicitBacklogDao
      */
@@ -65,7 +62,6 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_verifier     = VerifyIsProgramStub::withValidProgram();
         $this->user                 = $this->createMock(\PFUser::class);
         $this->user_identifier      = UserIdentifierStub::buildGenericUser();
-        $this->program              = ProgramForAdministrationIdentifierBuilder::build();
 
         $this->team_project = new \Project(['group_id' => self::TEAM_ID, 'status' => 'A', 'access' => 'public', 'unix_group_name' => 'a_project', 'group_name' => 'A project', 'icon_codepoint' => '']);
         $this->project_manager->expects(self::once())
