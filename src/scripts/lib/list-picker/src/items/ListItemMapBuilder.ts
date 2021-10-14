@@ -18,8 +18,8 @@
  */
 
 import type { ListPickerItem, ListPickerItemMap, ListPickerOptions } from "../type";
-import type { TemplateResult } from "lit-html";
-import { html, render } from "lit-html";
+import type { TemplateResult, HTMLTemplateResult } from "lit/html.js";
+import { html, render } from "lit/html.js";
 import { getOptionsLabel } from "../helpers/option-label-helper";
 import {
     hasOptionPredefinedTemplate,
@@ -164,7 +164,7 @@ export class ListItemMapBuilder {
         return ListItemMapBuilder.buildDefaultTemplateForItem(option_label);
     }
 
-    public static buildDefaultTemplateForItem(value: string): TemplateResult {
+    public static buildDefaultTemplateForItem(value: string): HTMLTemplateResult {
         return html`
             ${value}
         `;

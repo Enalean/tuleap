@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TemplateResult } from "lit-html";
-import { html, render } from "lit-html";
+import type { TemplateResult } from "lit/html.js";
+import { html, render } from "lit/html.js";
 import type { GettextProvider } from "@tuleap/gettext";
 
 export interface HTMLOrTextEditorArea {
@@ -37,7 +37,7 @@ export interface MarkdownTextEditorArea extends HTMLOrTextEditorArea {
 export const renderHTMLOrTextEditor = (
     presenter: HTMLOrTextEditorArea,
     gettext_provider: GettextProvider
-): void =>
+): void => {
     render(
         html`
             <div class="rte_format">
@@ -47,11 +47,12 @@ export const renderHTMLOrTextEditor = (
         `,
         presenter.mount_point
     );
+};
 
 export const renderMarkdownEditor = (
     presenter: MarkdownTextEditorArea,
     gettext_provider: GettextProvider
-): void =>
+): void => {
     render(
         html`
             <div class="rte_format">
@@ -63,3 +64,4 @@ export const renderMarkdownEditor = (
         `,
         presenter.mount_point
     );
+};

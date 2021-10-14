@@ -18,8 +18,8 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TemplateResult } from "lit-html";
-import { html } from "lit-html";
+import type { TemplateResult } from "lit/html.js";
+import { html } from "lit/html.js";
 import { getCommonMarkSyntaxPopoverHelperContent } from "../commonmark-syntax-helper";
 import "../FlamingParrotPopoverButtonElement";
 
@@ -44,7 +44,7 @@ export function createSyntaxHelpButton(
                 <i class="fas fa-question-circle" aria-hidden="true"></i>
                 ${gettext_provider.gettext("Help")}
             </button>
-            <template data-popover-content>${helper_popover}</template>
+            ${helper_popover}
         </fp-popover-button>
     `;
 }

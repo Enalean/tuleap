@@ -18,8 +18,9 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import { html } from "lit-html";
+import { html } from "lit/html.js";
 import { renderHTMLOrTextEditor, renderMarkdownEditor } from "./lit-html-adapter";
+import { stripLitExpressionComments } from "../../test-helper";
 
 describe(`lit-html-adapter`, () => {
     let gettext_provider: GettextProvider, doc: Document, mount_point: HTMLDivElement;
@@ -64,26 +65,25 @@ describe(`lit-html-adapter`, () => {
                 },
                 gettext_provider
             );
-            expect(mount_point.innerHTML).toMatchInlineSnapshot(`
-                <!---->
-                <div class="rte_format">
-                  Format:
-                  <!---->
-                  <select></select>
-                  <!---->
-                  <input type="hidden">
-                  <!---->
-                  <button>Preview</button>
-                  <!---->
-                  <button>Help</button>
-
-                </div>
-
-                <textarea></textarea>
-                <!---->
-                <div>Preview Area</div>
-
-                <!---->
+            expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
+                "
+                            <div class=\\"rte_format\\">
+                                Format:
+                                <select></select>
+                            
+                                <input type=\\"hidden\\">
+                            
+                                <button>Preview</button>
+                            
+                                <button>Help</button>
+                            
+                            </div>
+                            
+                                <textarea></textarea>
+                            
+                                <div>Preview Area</div>
+                            
+                        "
             `);
         });
     });
@@ -105,18 +105,17 @@ describe(`lit-html-adapter`, () => {
                 },
                 gettext_provider
             );
-            expect(mount_point.innerHTML).toMatchInlineSnapshot(`
-                <!---->
-                <div class="rte_format">
-                  Format:
-                  <!---->
-                  <select></select>
-
-                </div>
-
-                <textarea></textarea>
-
-                <!---->
+            expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
+                "
+                            <div class=\\"rte_format\\">
+                                Format:
+                                <select></select>
+                            
+                            </div>
+                            
+                                <textarea></textarea>
+                            
+                        "
             `);
         });
     });

@@ -19,7 +19,8 @@
 
 import { createSyntaxHelpButton } from "./SyntaxHelpButton";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit-html";
+import { render } from "lit/html.js";
+import { stripLitExpressionComments } from "../../../test-helper";
 
 describe(`SyntaxHelpButton`, () => {
     let mount_point: HTMLDivElement, gettext_provider: GettextProvider;
@@ -34,7 +35,7 @@ describe(`SyntaxHelpButton`, () => {
     it(`will create a custom element with the button and the popover content`, () => {
         const template = createSyntaxHelpButton({ is_disabled: false }, gettext_provider);
         render(template, mount_point);
-        expect(mount_point.innerHTML).toMatchSnapshot();
+        expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchSnapshot();
     });
 
     it(`when is_selected is true, it will disable the button`, () => {

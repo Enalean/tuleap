@@ -22,7 +22,7 @@ import { appendSimpleOptionsToSourceSelectBox } from "../../test-helpers/select-
 import { ItemsMapManager } from "../../items/ItemsMapManager";
 import { createItemBadgeTemplate } from "./list-picker-element-badge-creator";
 import { ListItemMapBuilder } from "../../items/ListItemMapBuilder";
-import { render } from "lit-html";
+import { render } from "lit/html.js";
 
 describe("list-picker-element-badge-creator", () => {
     let source_select_box: HTMLSelectElement,
@@ -48,7 +48,7 @@ describe("list-picker-element-badge-creator", () => {
             if (!badge_document_element) {
                 throw new Error("badge_document_element should not be null");
             }
-            expect(badge_document_element.className).toEqual("list-picker-badge");
+            expect(badge_document_element.className).toEqual(" list-picker-badge ");
         });
 
         it("should create the custom colored badge if the source option has the color data set", () => {
@@ -79,7 +79,7 @@ describe("list-picker-element-badge-creator", () => {
                 throw new Error("badge_document_element should not be null");
             }
             expect(badge_document_element.className).toEqual(
-                "list-picker-badge list-picker-badge-custom"
+                " list-picker-badge list-picker-badge-custom "
             );
         });
 

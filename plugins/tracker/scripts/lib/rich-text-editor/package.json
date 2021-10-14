@@ -12,7 +12,7 @@
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "dompurify": "^2.2.9",
-    "lit-html": "^1.4.1",
+    "lit": "^2.0.2",
     "marked": "^3.0.4",
     "turndown": "^7.0.0"
   },

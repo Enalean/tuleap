@@ -20,7 +20,7 @@
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
-import { html, render } from "lit-html";
+import { html, render } from "lit/html.js";
 
 export class SingleSelectionManager implements SelectionManager {
     private selection_state: ListPickerSelectionStateSingle | null;

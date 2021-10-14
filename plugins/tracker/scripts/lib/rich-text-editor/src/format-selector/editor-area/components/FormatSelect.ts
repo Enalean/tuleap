@@ -25,8 +25,8 @@ import {
     TEXT_FORMAT_TEXT,
 } from "../../../../../../constants/fields-constants";
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TemplateResult } from "lit-html";
-import { html } from "lit-html";
+import type { TemplateResult } from "lit/html.js";
+import { html } from "lit/html.js";
 
 interface OptionPresenter {
     readonly value: TextFieldFormat;

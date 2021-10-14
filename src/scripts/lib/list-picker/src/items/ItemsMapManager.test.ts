@@ -20,8 +20,8 @@
 import { ItemsMapManager } from "./ItemsMapManager";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
-import type { TemplateResult } from "lit-html";
-import { html } from "lit-html";
+import type { TemplateResult } from "lit/html.js";
+import { html } from "lit/html.js";
 
 describe("ItemsMapManager", () => {
     let items_manager: ItemsMapManager, source_select_box: HTMLSelectElement;

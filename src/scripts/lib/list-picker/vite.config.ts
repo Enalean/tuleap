@@ -33,16 +33,16 @@ export default defineConfig(
             },
             rollupOptions: {
                 external: [
-                    "lit-html",
-                    "lit-html/directives/style-map",
-                    "lit-html/directives/class-map",
+                    "lit/html.js",
+                    "lit/directives/style-map.js",
+                    "lit/directives/class-map.js",
                     "@tuleap/gettext",
                 ],
                 output: {
                     globals: {
-                        "lit-html": "lit-html",
-                        "lit-html/directives/style-map": "lit-html/directives/style-map",
-                        "lit-html/directives/class-map": "lit-html/directives/class-map",
+                        "lit/html.js": "lit/html.js",
+                        "lit/directives/style-map.js": "lit/directives/style-map.js",
+                        "lit/directives/class-map.js": "lit/directives/class-map.js",
                         "@tuleap/gettext": "@tuleap/gettext",
                     },
                 },

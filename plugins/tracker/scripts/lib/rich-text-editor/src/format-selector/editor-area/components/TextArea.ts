@@ -18,8 +18,8 @@
  *
  */
 
-import type { TemplateResult } from "lit-html";
-import { html } from "lit-html";
+import type { TemplateResult } from "lit/html.js";
+import { html } from "lit/html.js";
 
 const HIDDEN_TEXTAREA_CLASSNAME = "rte-hide-textarea";
 
