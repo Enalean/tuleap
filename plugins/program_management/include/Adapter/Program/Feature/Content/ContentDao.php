@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
 
-class ContentDao extends DataAccessObject implements ContentStore
+final class ContentDao extends DataAccessObject implements ContentStore
 {
     public function searchContent(int $program_increment_id): array
     {

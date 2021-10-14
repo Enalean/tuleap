@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\ProjectAdmin;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\ProgramService;
 use UGroupManager;
 
@@ -34,10 +35,7 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
      * @var PermissionPerGroupSectionBuilder
      */
     private $permission_section_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CanPrioritizeFeaturesDAO
-     */
-    private $can_prioritize_features_dao;
+    private RetrieveProjectUgroupsCanPrioritizeItems $retrieve_project_ugroups_can_prioritize_items;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&PermissionPerGroupUGroupFormatter
      */
@@ -46,13 +44,14 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
      * @var \PHPUnit\Framework\MockObject\MockObject&UGroupManager
      */
     private $ugroup_manager;
+    private \TemplateRenderer $template_renderer;
 
     protected function setUp(): void
     {
-        $this->can_prioritize_features_dao = $this->createMock(CanPrioritizeFeaturesDAO::class);
-        $this->formatter                   = $this->createMock(PermissionPerGroupUGroupFormatter::class);
-        $this->ugroup_manager              = $this->createMock(UGroupManager::class);
-        $template_renderer                 = new class extends \TemplateRenderer {
+        $this->retrieve_project_ugroups_can_prioritize_items = RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4);
+        $this->formatter                                     = $this->createMock(PermissionPerGroupUGroupFormatter::class);
+        $this->ugroup_manager                                = $this->createMock(UGroupManager::class);
+        $this->template_renderer                             = new class extends \TemplateRenderer {
             public function renderToString($template_name, $presenter): string
             {
                 return 'Rendered template';
@@ -60,10 +59,10 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
         };
 
         $this->permission_section_builder = new PermissionPerGroupSectionBuilder(
-            $this->can_prioritize_features_dao,
+            $this->retrieve_project_ugroups_can_prioritize_items,
             $this->formatter,
             $this->ugroup_manager,
-            $template_renderer
+            $this->template_renderer
         );
     }
 
@@ -74,7 +73,6 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
         $event = new PermissionPerGroupPaneCollector($project, false);
 
-        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([4]);
         $this->ugroup_manager->method('getUGroup')->with($project, false)->willReturn(null);
         $this->formatter->method('getFormattedUGroups')->willReturn([['name' => 'Project admin']]);
 
@@ -90,7 +88,6 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
         $event = new PermissionPerGroupPaneCollector($project, 4);
 
-        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([4]);
         $this->ugroup_manager->method('getUGroup')->with($project, 4)->willReturn(new \ProjectUGroup(['group_id' => 102, 'ugroup_id' => 4]));
         $this->formatter->method('getFormattedUGroups')->willReturn([['name' => 'Project admin']]);
 
@@ -106,7 +103,7 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
         $event = new PermissionPerGroupPaneCollector($project, 4);
 
-        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([2]);
+        $this->retrieve_project_ugroups_can_prioritize_items = RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(2);
         $this->ugroup_manager->method('getUGroup')->with($project, 4)->willReturn(new \ProjectUGroup(['group_id' => 102, 'ugroup_id' => 4]));
         $this->formatter->method('getFormattedUGroups')->willReturn([['name' => 'Project admin']]);
 
@@ -133,11 +130,17 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $project->method('getID')->willReturn(102);
         $project->method('getService')->willReturn(new ProgramService($project, ['rank' => 100]));
 
-        $this->can_prioritize_features_dao->method('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->willReturn([]);
+        $retrieve_project_ugroups_can_prioritize_items = RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds();
+        $permission_section_builder                    = new PermissionPerGroupSectionBuilder(
+            $retrieve_project_ugroups_can_prioritize_items,
+            $this->formatter,
+            $this->ugroup_manager,
+            $this->template_renderer
+        );
 
         $event = new PermissionPerGroupPaneCollector($project, false);
 
-        $this->permission_section_builder->collectSections($event);
+        $permission_section_builder->collectSections($event);
 
         self::assertEmpty($event->getPanes());
     }

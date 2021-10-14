@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
@@ -33,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\OrderFeatureRankStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramIncrementLinkedToFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -63,10 +63,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact_link_updater;
     private SearchProgramIncrementLinkedToFeature $program_increment_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&FeaturesRankOrderer
-     */
-    private $feature_orderer;
+    private OrderFeatureRankStub $feature_orderer;
     private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
@@ -75,7 +72,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao                   = $this->createMock(TopBacklogStore::class);
         $this->artifact_link_updater = $this->createMock(ArtifactLinkUpdater::class);
         $this->program_increment_dao = SearchProgramIncrementLinkedToFeatureStub::withoutLink();
-        $this->feature_orderer       = $this->createMock(FeaturesRankOrderer::class);
+        $this->feature_orderer       = OrderFeatureRankStub::withCount();
         $this->user                  = $this->createMock(\PFUser::class);
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
@@ -235,7 +232,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $feature_reorder = FeaturesToReorderProxy::buildFromRESTRepresentation($element_to_order);
 
         $program = ProgramIdentifierBuilder::buildWithId(666);
-        $this->feature_orderer->expects(self::once())->method('reorder')->with($feature_reorder, $program->getId(), $program);
 
         $this->getProcessor()->processTopBacklogChangeForAProgram(
             $program,
@@ -243,6 +239,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_identifier,
             null
         );
+
+        self::assertEquals(1, $this->feature_orderer->getCallCount());
     }
 
     /**

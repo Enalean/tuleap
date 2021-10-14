@@ -24,8 +24,10 @@ namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Tests\Stub\BuildTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\TeamStoreStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
@@ -37,14 +39,8 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveProjectStub $project_retriever;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&BuildTeam
-     */
-    private $team_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TeamStore
-     */
-    private $team_store;
+    private BuildTeam $team_builder;
+    private TeamStoreStub $team_store;
     private UserReference $user_identifier;
 
     protected function setUp(): void
@@ -52,8 +48,8 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_retriever   = RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::buildWithId(self::PROGRAM_ID));
         $this->team_verifier       = VerifyIsTeamStub::withNotValidTeam();
         $this->permission_verifier = VerifyProjectPermissionStub::withAdministrator();
-        $this->team_builder        = $this->createStub(BuildTeam::class);
-        $this->team_store          = $this->createMock(TeamStore::class);
+        $this->team_builder        = BuildTeamStub::withValidTeam();
+        $this->team_store          = TeamStoreStub::withCount();
         $this->user_identifier     = UserReferenceStub::withDefaults();
     }
 
@@ -70,10 +66,8 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesAPlan(): void
     {
-        $this->team_builder->method('checkProjectIsATeam');
-        $this->team_store->expects(self::once())->method('save');
-
         $this->getCreator()->create($this->user_identifier, self::PROGRAM_ID, [self::TEAM_ID]);
+        self::assertEquals(1, $this->team_store->getCallCount());
     }
 
     public function testThrowExceptionWhenTeamIdsContainProgram(): void
@@ -81,5 +75,6 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(ProgramIsTeamException::class);
 
         $this->getCreator()->create($this->user_identifier, self::PROGRAM_ID, [self::TEAM_ID, self::PROGRAM_ID]);
+        self::assertEquals(0, $this->team_store->getCallCount());
     }
 }

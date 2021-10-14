@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-interface TopBacklogStore
+interface VerifyIsLinkedToProgramIncrement
 {
-    /**
-     * @psalm-param non-empty-array<int> $artifact_ids
-     */
-    public function addArtifactsToTheExplicitTopBacklog(array $artifact_ids): void;
-
-    /**
-     * @psalm-param non-empty-array<int> $artifact_ids
-     */
-    public function removeArtifactsFromExplicitTopBacklog(array $artifact_ids): void;
+    public function isLinkedToASprintInMirroredProgramIncrement(int $artifact_id, int $release_tracker_id, int $project_id): bool;
 }

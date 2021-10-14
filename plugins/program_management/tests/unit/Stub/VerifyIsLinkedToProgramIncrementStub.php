@@ -21,12 +21,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-interface SearchProgramIncrementLinkedToFeature
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToProgramIncrement;
+
+final class VerifyIsLinkedToProgramIncrementStub implements VerifyIsLinkedToProgramIncrement
 {
-    /**
-     * @return array{id: int}[]
-     */
-    public function getProgramIncrementsLinkToFeatureId(int $artifact_id): array;
+    private function __construct(private bool $is_linked)
+    {
+    }
+    public static function buildIsLinked(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildIsNotLinked(): self
+    {
+        return new self(false);
+    }
+
+    public function isLinkedToASprintInMirroredProgramIncrement(
+        int $artifact_id,
+        int $release_tracker_id,
+        int $project_id
+    ): bool {
+        return $this->is_linked;
+    }
 }

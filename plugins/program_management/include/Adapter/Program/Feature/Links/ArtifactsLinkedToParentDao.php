@@ -26,9 +26,9 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
 
 final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone
 {

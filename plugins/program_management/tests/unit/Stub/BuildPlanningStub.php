@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class BuildPlanningStub implements BuildPlanning
+final class BuildPlanningStub implements BuildPlanning
 {
     private bool $valid_root_planning;
 
