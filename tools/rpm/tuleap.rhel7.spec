@@ -242,7 +242,7 @@ Archive deleted items before purging them from filesystem
 Summary: Mediawiki plugin
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: php-mediawiki-tuleap-123 >= 1.23.9-16
+Requires: php-mediawiki-tuleap-123 >= 1.23.9-17
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
