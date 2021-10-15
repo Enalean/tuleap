@@ -2,7 +2,7 @@
     <label class="tlp-label" for="clone-input-{{ id }}">{{ label }}</label>
     <div class="tlp-form-element tlp-form-element-prepend tlp-form-element-append">
         {{# is_read_only }}
-            <span class="tlp-prepend"><span class="tlp-badge-info">{{# dgettext }}tuleap-git | Read-only{{/ dgettext }}</span></span>
+            <span class="tlp-prepend"><span class="tlp-badge-info tlp-badge-outline">{{# dgettext }}tuleap-git | Read-only{{/ dgettext }}</span></span>
         {{/ is_read_only }}
         <input
             type="text"

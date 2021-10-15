@@ -108,7 +108,6 @@ $width-bar-left-sprints: 16px;
 
         &::after {
             right: -11px;
-            filter: drop-shadow(1px 0 0 var(--tlp-main-color));
             border-color: transparent transparent transparent var(--tlp-main-color-lighter-90);
         }
     }

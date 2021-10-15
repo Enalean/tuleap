@@ -19,7 +19,7 @@
 
 @use "../variables/colors/swatch-colors";
 
-$tlp-badge-radius: 15px;
+$tlp-badge-radius: var(--tlp-small-radius);
 $tlp-badge-color: var(--tlp-white-color);
 $tlp-badge-font-size: 0.75rem;
 $tlp-badge-line-height: 0.75rem;
@@ -42,6 +42,10 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
         text-decoration: none;
     }
 
+    &.tlp-badge-rounded {
+        border-radius: var(--tlp-medium-spacing);
+    }
+
     &.tlp-badge-outline.tlp-badge-on-dark-background {
         font-weight: normal;
     }
@@ -55,16 +59,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-primary {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-main-color);
     background: var(--tlp-main-color);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-main-color-transparent-40);
         background: var(--tlp-main-color-transparent-90);
         color: var(--tlp-main-color);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-main-color-lighter-30);
             background: var(--tlp-main-color-transparent-80);
             color: var(--tlp-main-color-lighter-50);
         }
@@ -74,17 +75,14 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-secondary {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-neutral-dark-color);
     background: var(--tlp-neutral-dark-color);
     color: var(--tlp-dimmed-color-darker-10);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-neutral-dark-color-darker-20);
         background: var(--tlp-neutral-dark-color-transparent-50);
         color: var(--tlp-dimmed-color-darker-10);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-neutral-dark-color-darker-10);
             background: var(--tlp-neutral-normal-color-transparent-80);
             color: var(--tlp-neutral-dark-color);
         }
@@ -94,16 +92,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-info {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-info-color);
     background: var(--tlp-info-color);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-info-color-transparent-40);
         background: var(--tlp-badge-info-background);
         color: var(--tlp-info-dark-color);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-info-color-lighter-15);
             background: var(--tlp-info-color-transparent-85);
             color: var(--tlp-info-color-lighter-35);
         }
@@ -113,16 +108,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-success {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-success-color);
     background: var(--tlp-success-color);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-success-color-transparent-40);
         background: var(--tlp-badge-success-background);
         color: var(--tlp-success-dark-color);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-success-color-lighter-15);
             background: var(--tlp-success-color-transparent-85);
             color: var(--tlp-success-color-lighter-35);
         }
@@ -132,16 +124,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-warning {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-warning-color);
     background: var(--tlp-warning-color);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-warning-color-transparent-40);
         background: var(--tlp-badge-warning-background);
         color: var(--tlp-warning-dark-color);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-warning-color-lighter-15);
             background: var(--tlp-warning-color-transparent-85);
             color: var(--tlp-warning-color-lighter-20);
         }
@@ -151,16 +140,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-danger {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-danger-color);
     background: var(--tlp-danger-color);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-danger-color-transparent-40);
         background: var(--tlp-badge-danger-background);
         color: var(--tlp-danger-dark-color);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-danger-color-lighter-30);
             background: var(--tlp-danger-color-transparent-75);
             color: var(--tlp-danger-color-lighter-60);
         }
@@ -171,16 +157,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
     .tlp-badge-#{$color-name} {
         @extend %tlp-badge;
 
-        border: 1px solid map-get($colors, "primary");
-        background: map-get($colors, "primary");
+        background: map-get($colors, "text");
 
         &.tlp-badge-outline {
-            border: 1px solid transparentize(map-get($colors, "primary"), 0.4);
-            background: transparentize(map-get($colors, "primary"), 0.9);
+            background: map-get($colors, "secondary");
             color: map-get($colors, "text");
 
             &.tlp-badge-on-dark-background {
-                border: 1px solid mix(map-get($colors, "primary"), #ffffff, 85%);
                 background: transparentize(map-get($colors, "primary"), 0.85);
                 color: mix(map-get($colors, "border"), #ffffff, 90%);
 

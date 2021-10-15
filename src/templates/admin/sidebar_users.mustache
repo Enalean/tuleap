@@ -1,7 +1,7 @@
 <section class="admin-sidebar-section">
     <h1 class="admin-sidebar-section-title">
         <i class="fas fa-users admin-sidebar-section-title-icon"></i> {{ users_section_title }}
-        <span class="tlp-badge-primary tlp-badge-outline tlp-badge-on-dark-background">{{ all_users_count }}</span>
+        <span class="tlp-badge-primary tlp-badge-outline tlp-badge-rounded tlp-badge-on-dark-background">{{ all_users_count }}</span>
     </h1>
 
     <form action="/admin/userlist.php" method="get" class="admin-sidebar-form">
@@ -23,13 +23,13 @@
             <a href="/admin/approve_pending_users.php?page=pending" class="admin-sidebar-section-nav-item {{# isTherePendingUsers }}tlp-text-warning{{/ isTherePendingUsers }}">
                 {{ users_nav_pending_users }}
                 {{# isTherePendingUsers }}
-                    <span class="tlp-badge-warning tlp-badge-outline tlp-badge-on-dark-background">{{ pending_users_count }}</span>
+                    <span class="tlp-badge-warning tlp-badge-outline tlp-badge-rounded tlp-badge-on-dark-background">{{ pending_users_count }}</span>
                 {{/ isTherePendingUsers }}
             </a>
             <a href="/admin/approve_pending_users.php?page=validated" class="admin-sidebar-section-nav-item {{# isThereValidatedUsers }}tlp-text-warning{{/ isThereValidatedUsers }}">
                 {{ users_nav_validated_users }}
                 {{# isThereValidatedUsers }}
-                    <span class="tlp-badge-warning tlp-badge-outline tlp-badge-on-dark-background">{{ validated_users_count }}</span>
+                    <span class="tlp-badge-warning tlp-badge-outline tlp-badge-rounded tlp-badge-on-dark-background">{{ validated_users_count }}</span>
                 {{/ isThereValidatedUsers }}
             </a>
         {{/ users_need_approval}}

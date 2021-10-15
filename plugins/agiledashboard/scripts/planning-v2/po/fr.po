@@ -111,10 +111,10 @@ msgid "Planning"
 msgstr "Planification"
 
 msgid ""
-"Press <span class=\"tlp-badge-primary\">ESC</span> to cancel the selection, "
-"only siblings can be multi-selected."
+"Press <kbd>ESC</kbd> to cancel the selection, only siblings can be multi-"
+"selected."
 msgstr ""
-"Appuyez sur <span class=\\\"tlp-badge-primary\\\">Échap</span> pour annuler "
+"Appuyez sur <kbd>Échap</kbd> pour annuler "
 "la sélection, seuls les éléments frères peuvent être multi-sélectionnés."
 
 msgid "Reload the page"

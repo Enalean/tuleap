@@ -64,12 +64,13 @@
     <div class="backlog-item-details-effort-container">
         <span ng-if="details.backlog_item.initial_effort"
             ng-class="'tlp-badge-' + details.getCardColorName()"
+            class="tlp-badge-rounded"
             title="{{::'Initial effort' | translate }}"
             ng-bind-html="(details.backlog_item.initial_effort | tuleapHighlight:details.backlog_filter.terms)"
         ></span>
 
         <span ng-if="! details.backlog_item.initial_effort"
-            class="tlp-badge-secondary backlog-item-details-effort-container-content-no-initial-effort"
+            class="tlp-badge-secondary tlp-badge-rounded tlp-badge-outline backlog-item-details-effort-container-content-no-initial-effort"
             title="{{::'No initial effort defined' | translate }}"
         ><i class="fas fa-question"></i></span>
     </div>
@@ -134,13 +135,14 @@
 
     <div class="backlog-item-details-effort-container">
         <span ng-if="details.backlog_item.initial_effort"
+              class="tlp-badge-rounded"
               ng-class="'tlp-badge-' + details.getCardColorName()"
               title="{{::'Initial effort' | translate }}"
               ng-bind-html="(details.backlog_item.initial_effort | tuleapHighlight:details.backlog_filter.terms)"
         ></span>
 
         <span ng-if="! details.backlog_item.initial_effort"
-              class="tlp-badge-secondary backlog-item-details-effort-container-content-no-initial-effort"
+              class="tlp-badge-secondary tlp-badge-rounded tlp-badge-outline backlog-item-details-effort-container-content-no-initial-effort"
               title="{{::'No initial effort defined' | translate }}"
         ><i class="fas fa-question"></i></span>
     </div>

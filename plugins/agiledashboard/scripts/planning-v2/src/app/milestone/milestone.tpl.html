@@ -67,16 +67,16 @@
     <div class="milestone-info"
         ng-if="! milestoneController.milestone.collapsed"
     >
-        <span class="tlp-badge-secondary milestone-info-badge"
+        <span class="tlp-badge-secondary tlp-badge-outline milestone-info-badge"
             translate
             ng-if="milestoneController.milestone.capacity"
         >Capacity: {{ milestoneController.milestone.capacity }}</span>
-        <span class="tlp-badge-secondary milestone-info-badge"
+        <span class="tlp-badge-secondary tlp-badge-outline milestone-info-badge"
             translate
             ng-if="! milestoneController.milestone.capacity"
         >Capacity: N/A</span>
 
-        <span class="milestone-info-badge"
+        <span class="milestone-info-badge tlp-badge-outline"
             ng-if="milestoneController.milestone.initialEffort"
             ng-class="{
                 'tlp-badge-warning': milestoneController.milestone.initialEffort > milestoneController.milestone.capacity,
@@ -84,7 +84,7 @@
             }"
             translate
         >Initial effort: {{ milestoneController.milestone.initialEffort }}</span>
-        <span class="tlp-badge-secondary milestone-info-badge"
+        <span class="tlp-badge-secondary tlp-badge-outline milestone-info-badge"
             ng-if="! milestoneController.milestone.initialEffort"
             translate
         >Initial effort: N/A</span>
