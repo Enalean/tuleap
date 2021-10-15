@@ -22,32 +22,36 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon"></i>
-        <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon()"></i>
+        <a v-bind:href="document_link_url()" class="document-folder-subitem-link" draggable="false">
             {{ item.title }}
         </a>
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_LINK } from "../../../constants";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Link } from "../../../type";
+import { namespace } from "vuex-class";
 
-export default {
-    name: "LinkCellTitle",
-    components: { FakeCaret },
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("configuration", ["project_id"]),
-        document_link_url() {
-            return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
-        },
-        icon() {
-            return ICON_LINK;
-        },
-    },
-};
+const configuration = namespace("configuration");
+
+@Component({ components: { FakeCaret } })
+export default class LinkCellTitle extends Vue {
+    @Prop({ required: true })
+    readonly item!: Link;
+
+    @configuration.State
+    readonly project_id!: number;
+
+    document_link_url(): string {
+        return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
+    }
+
+    icon(): string {
+        return ICON_LINK;
+    }
+}
 </script>

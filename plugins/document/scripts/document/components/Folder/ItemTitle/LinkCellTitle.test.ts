@@ -18,20 +18,25 @@
  *
  */
 
-import { shallowMount } from "@vue/test-utils";
 import LinkCellTitle from "./LinkCellTitle.vue";
-import localVue from "../../../helpers/local-vue";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import { TYPE_LINK } from "../../../constants";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import Vuex from "vuex";
+import type { Link, RootState } from "../../../type";
+import type { ConfigurationState } from "../../../store/configuration";
+
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
 describe("LinkCellTitle", () => {
     it(`should render link title`, () => {
         const item = {
             id: 42,
             title: "my link",
-            link_properties: null,
+            link_properties: {},
             type: TYPE_LINK,
-        };
+        } as Link;
 
         const component_options = {
             localVue,
@@ -40,16 +45,18 @@ describe("LinkCellTitle", () => {
             },
         };
 
-        const state = {
-            configuration: { project_id: 101 },
-        };
+        const configuration = { project_id: 101 } as unknown as ConfigurationState;
+        const state = { configuration: configuration } as RootState;
 
         const store_options = {
             state,
         };
 
         const store = createStoreMock(store_options);
-        const wrapper = shallowMount(LinkCellTitle, { store, ...component_options });
+        const wrapper = shallowMount(LinkCellTitle, {
+            mocks: { $store: store },
+            ...component_options,
+        });
 
         expect(wrapper.element).toMatchSnapshot();
     });

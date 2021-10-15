@@ -22,9 +22,9 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon"></i>
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon()"></i>
         <a
-            v-bind:href="wiki_url"
+            v-bind:href="wiki_url()"
             class="document-folder-subitem-link"
             draggable="false"
             data-test="wiki-document-link"
@@ -34,25 +34,29 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_WIKI } from "../../../constants";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Wiki } from "../../../type";
+import { namespace } from "vuex-class";
 
-export default {
-    name: "WikiCellTitle",
-    components: { FakeCaret },
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("configuration", ["project_id"]),
-        wiki_url() {
-            return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
-        },
-        icon() {
-            return ICON_WIKI;
-        },
-    },
-};
+const configuration = namespace("configuration");
+
+@Component({ components: { FakeCaret } })
+export default class WikiCellTitle extends Vue {
+    @Prop({ required: true })
+    readonly item!: Wiki;
+
+    @configuration.State
+    readonly project_id!: number;
+
+    wiki_url(): string {
+        return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
+    }
+
+    icon(): string {
+        return ICON_WIKI;
+    }
+}
 </script>

@@ -54,7 +54,9 @@ describe("FolderContentRow", () => {
         store_options = {
             state: {
                 folded_items_ids: [],
-                configuration: { date_time_format: "Y-m-d" },
+                configuration: { date_time_format: "Y-m-d", project_id: 101 },
+                current_folder: {},
+                folder_content: [],
             },
         };
 
