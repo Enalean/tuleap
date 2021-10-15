@@ -62,6 +62,17 @@ export interface RichTextEditor {
 }
 export type HostElement = RichTextEditor & HTMLElement;
 
+export const getValidFormat = (
+    host: unknown,
+    value: string,
+    lastValue: TextFieldFormat | undefined
+): TextFieldFormat => {
+    if (isValidTextFormat(value)) {
+        return value;
+    }
+    return lastValue ?? TEXT_FORMAT_COMMONMARK;
+};
+
 export const onTextareaInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLTextAreaElement)) {
         return;
@@ -199,14 +210,7 @@ export const connect = (host: HostElement): DisconnectFunction | void => {
 export const RichTextEditor: TaggedHybrids<RichTextEditor> = {
     tag: "tuleap-artifact-modal-rich-text-editor",
     identifier: property("", connect),
-    format: {
-        set: (host, value, lastValue) => {
-            if (isValidTextFormat(value)) {
-                return value;
-            }
-            return lastValue ?? TEXT_FORMAT_COMMONMARK;
-        },
-    },
+    format: { set: getValidFormat },
     contentValue: "",
     disabled: false,
     required: false,

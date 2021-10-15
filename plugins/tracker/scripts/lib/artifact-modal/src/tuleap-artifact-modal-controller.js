@@ -115,6 +115,7 @@ function ArtifactModalController(
         setFieldValueForCustomElement,
         setFieldValueForRadioButtonsCustomElement,
         addToFilesAddedByTextField,
+        addToFilesAddedByTextFieldForCustomElement,
         setFollowupComment,
         toggleFieldset,
         hasHiddenFieldsets,
@@ -411,8 +412,12 @@ function ArtifactModalController(
         );
     }
 
-    function setFollowupComment(value) {
-        self.new_followup_comment = value;
+    function addToFilesAddedByTextFieldForCustomElement(event) {
+        addToFilesAddedByTextField(event.detail.field_id, event.detail.image);
+    }
+
+    function setFollowupComment(event) {
+        self.new_followup_comment = event.detail;
     }
 
     function extractHiddenFieldsets(fields) {
