@@ -59,7 +59,7 @@ import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
 import { loadImage } from "./Image/image-loader";
 import { transformLargeContentIntoParagraphs } from "./TextContent/transform-large-content-into-paragraphs";
-import { HTML_ORDERED_LIST_NUMBERING } from "./TextContent/transform-html-into-paragraphs";
+import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -329,6 +329,7 @@ export async function downloadDocx(
                         },
                     ],
                 },
+                HTML_UNORDERED_LIST_NUMBERING,
                 HTML_ORDERED_LIST_NUMBERING,
             ],
         },
@@ -702,6 +703,9 @@ async function buildFieldValuesDisplayZone(
                         field.content_format,
                         {
                             ordered_title_levels: [HeadingLevel.HEADING_5, HeadingLevel.HEADING_6],
+                            unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
+                            ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
+                            monospace_font: "Courier New",
                         }
                     ))
                 );
