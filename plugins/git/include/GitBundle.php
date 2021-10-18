@@ -94,7 +94,7 @@ class GitBundle
         ArchiveInterface $archive
     ) {
         $command = "umask 77 && cd " . escapeshellarg($repository_path) .
-            " && git bundle create " . escapeshellarg($file_name) . " --all" .
+            " && " . \Git_Exec::getGitCommand() . " bundle create " . escapeshellarg($file_name) . " --all" .
             " && mv " . escapeshellarg($file_name) . " " . escapeshellarg($dump_path_on_filesystem);
 
         $this->system_command->exec($command);
