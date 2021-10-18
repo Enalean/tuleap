@@ -215,27 +215,7 @@ async function parseTreeContent(
                 break;
             case "UL":
             case "OL":
-                for (const list_item of child.childNodes) {
-                    content_children.push(
-                        ...buildParagraphsFromTreeContent(
-                            await parseTreeContent(options, list_item.childNodes, {
-                                ...state,
-                                list_level: state.list_level + 1,
-                            }),
-                            (children: ParagraphChild[]): Paragraph =>
-                                new Paragraph({
-                                    children,
-                                    numbering: {
-                                        level: state.list_level,
-                                        reference:
-                                            child.nodeName === "UL"
-                                                ? options.unordered_list_reference
-                                                : options.ordered_list_reference,
-                                    },
-                                })
-                        )
-                    );
-                }
+                content_children.push(...(await getList(child, state, options)));
                 break;
             case "IMG":
                 content_children.push(...(await getImageRun(child, state)));
@@ -324,6 +304,42 @@ async function parseTreeContent(
             default:
                 content_children.push(...defaultNodeHandling(child, state));
         }
+    }
+
+    return content_children;
+}
+
+async function getList(
+    element: Element,
+    state: TreeContentState,
+    options: TransformationOptions
+): Promise<Paragraph[]> {
+    const content_children: Paragraph[] = [];
+    for (const list_item of element.childNodes) {
+        list_item.childNodes.forEach((child_node) => {
+            if (child_node.nodeName === "#text" && child_node.textContent?.trim() === "") {
+                child_node.textContent = "";
+            }
+        });
+        content_children.push(
+            ...buildParagraphsFromTreeContent(
+                await parseTreeContent(options, list_item.childNodes, {
+                    ...state,
+                    list_level: state.list_level + 1,
+                }),
+                (children: ParagraphChild[]): Paragraph =>
+                    new Paragraph({
+                        children,
+                        numbering: {
+                            level: state.list_level,
+                            reference:
+                                element.nodeName === "UL"
+                                    ? options.unordered_list_reference
+                                    : options.ordered_list_reference,
+                        },
+                    })
+            )
+        );
     }
 
     return content_children;

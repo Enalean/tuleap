@@ -104,7 +104,7 @@ describe("transform-html-into-paragraph", () => {
 
     it("transforms unordered lists", async () => {
         const paragraphs = await transformHTML(
-            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul></li><li>B</li></ul>"
+            "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul>                   </li><li>B</li></ul>"
         );
 
         expect(paragraphs).toStrictEqual([
