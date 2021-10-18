@@ -109,6 +109,35 @@ describe("Create ArtifactValues Collection", () => {
                         value: "Some long description in art #1001",
                         format: "text",
                     },
+                    {
+                        field_id: 14,
+                        type: "file",
+                        label: "Attachments",
+                        file_descriptions: [
+                            {
+                                id: 1,
+                                submitted_by: 101,
+                                description: "",
+                                name: "file01.jpg",
+                                size: 254,
+                                type: "image/jpg",
+                                html_url: "/plugins/tracker/attachments/file01.jpg",
+                                html_preview_url: "/plugins/tracker/attachments/preview/file01.jpg",
+                                uri: "artifact_files/1",
+                            },
+                            {
+                                id: 2,
+                                submitted_by: 101,
+                                description: "",
+                                name: "file02.jpg",
+                                size: 5841,
+                                type: "image/jpg",
+                                html_url: "/plugins/tracker/attachments/file02.jpg",
+                                html_preview_url: "/plugins/tracker/attachments/preview/file02.jpg",
+                                uri: "artifact_files/2",
+                            },
+                        ],
+                    },
                 ],
                 containers: [
                     {
@@ -206,6 +235,12 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Description",
                         value: "<p>Some long description in art #1002</p>",
                         format: "html",
+                    },
+                    {
+                        field_id: 14,
+                        type: "file",
+                        label: "Attachments",
+                        file_descriptions: [],
                     },
                 ],
                 containers: [
@@ -308,6 +343,11 @@ describe("Create ArtifactValues Collection", () => {
                         field_name: "Description",
                         field_value: "Some long description in art #1001",
                     },
+                    {
+                        content_length: "short",
+                        field_name: "Attachments",
+                        field_value: "file01.jpg, file02.jpg",
+                    },
                 ],
                 containers: [
                     {
@@ -388,6 +428,11 @@ describe("Create ArtifactValues Collection", () => {
                         content_format: "html",
                         field_name: "Description",
                         field_value: "<p>Some long description in art #1002</p>",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Attachments",
+                        field_value: "",
                     },
                 ],
                 containers: [

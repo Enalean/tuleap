@@ -116,6 +116,12 @@ function formatFieldValue(
         } else if (value.is_autocomputed && value.value !== null) {
             artifact_field_value = value.value.toString();
         }
+    } else if (value.type === "file") {
+        const file_descriptions_content = [];
+        for (const file_description of value.file_descriptions) {
+            file_descriptions_content.push(file_description.name);
+        }
+        artifact_field_value = file_descriptions_content.join(", ");
     } else {
         return null;
     }
