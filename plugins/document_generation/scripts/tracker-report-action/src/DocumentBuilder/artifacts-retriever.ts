@@ -179,7 +179,8 @@ export type ArtifactReportFieldValue =
     | ArtifactReportResponseStringFieldValue
     | ArtifactReportResponseTextFieldValue
     | (ArtifactReportResponseDateFieldValue & { is_time_displayed: boolean })
-    | ArtifactReportResponseComputedFieldValue;
+    | ArtifactReportResponseComputedFieldValue
+    | ArtifactReportResponseFileFieldValue;
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -187,7 +188,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseStringFieldValue
     | ArtifactReportResponseTextFieldValue
     | ArtifactReportResponseDateFieldValue
-    | ArtifactReportResponseComputedFieldValue;
+    | ArtifactReportResponseComputedFieldValue
+    | ArtifactReportResponseFileFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -225,6 +227,25 @@ interface ArtifactReportResponseComputedFieldValue {
     value: number | null;
     manual_value: number | null;
     is_autocomputed: boolean;
+}
+
+interface ArtifactReportResponseFileFieldValue {
+    field_id: number;
+    type: "file";
+    label: string;
+    file_descriptions: Array<ArtifactReportResponseFileDescriptionFieldValue>;
+}
+
+interface ArtifactReportResponseFileDescriptionFieldValue {
+    id: number;
+    submitted_by: number;
+    description: string;
+    name: string;
+    size: number;
+    type: string;
+    html_url: string;
+    html_preview_url: string;
+    uri: string;
 }
 
 export interface ArtifactReportResponseUnknownFieldValue {
