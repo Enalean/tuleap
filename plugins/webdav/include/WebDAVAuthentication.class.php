@@ -44,6 +44,7 @@ class WebDAVAuthentication
 
     public function __construct(
         UserManager $user_manager,
+        private User_LoginManager $login_manager,
         HeadersSender $headers_sender,
         HTTPBasicAuthUserAccessKeyAuthenticator $access_key_authenticator
     ) {
@@ -109,6 +110,17 @@ class WebDAVAuthentication
         } catch (HTTPBasicAuthUserAccessKeyMisusageException $exception) {
             $this->setHeader();
         }
-        return $user ?? $this->user_manager->login($username, $password);
+        return $user ?? $this->getUserFromUsernameAndPassword($username, $password);
+    }
+
+    private function getUserFromUsernameAndPassword(string $username, ConcealedString $password): PFUser
+    {
+        try {
+            $user = $this->login_manager->authenticate($username, $password);
+            $this->login_manager->validateAndSetCurrentUser($user);
+            return $user;
+        } catch (\User_LoginException $e) {
+            return $this->user_manager->getUserAnonymous();
+        }
     }
 }
