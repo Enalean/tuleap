@@ -151,6 +151,10 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
             return false;
         }
 
+        if ($task_end_date > $now) {
+            return false;
+        }
+
         $diff_from_now = $now->diff($task_end_date);
 
         return $diff_from_now->days > 365;

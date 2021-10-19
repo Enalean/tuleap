@@ -394,6 +394,7 @@ class TaskOutOfDateDetectorTest extends TestCase
     /**
      * @testWith ["2020-01-15", true]
      *           ["2021-01-15", false]
+     *           ["2023-01-15", false]
      */
     public function testItReturnsTrueForArtifactsThatAreClosedWhoseEndDateIsLaterThanOneYearAgo(
         $end_string_date,
