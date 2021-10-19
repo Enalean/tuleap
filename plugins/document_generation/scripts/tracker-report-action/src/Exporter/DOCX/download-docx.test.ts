@@ -57,12 +57,29 @@ describe("download-docx", () => {
                                 content_length: "short",
                                 field_name: "Field 1",
                                 field_value: "Some string",
+                                value_type: "string",
                             },
                             {
                                 content_length: "long",
                                 content_format: "plaintext",
                                 field_name: "Field 2",
                                 field_value: "Long text content",
+                                value_type: "string",
+                            },
+                            {
+                                content_length: "short",
+                                field_name: "Field List 01",
+                                field_value: [
+                                    {
+                                        link_label: "file01.jpg",
+                                        link_url: "/plugins/tracker/attachments/file01.jpg",
+                                    },
+                                    {
+                                        link_label: "file02.jpg",
+                                        link_url: "/plugins/tracker/attachments/file02.jpg",
+                                    },
+                                ],
+                                value_type: "links",
                             },
                         ],
                         containers: [
@@ -73,12 +90,14 @@ describe("download-docx", () => {
                                         content_length: "short",
                                         field_name: "Field 1",
                                         field_value: "Some string",
+                                        value_type: "string",
                                     },
                                     {
                                         content_length: "long",
                                         content_format: "html",
                                         field_name: "Field 3",
                                         field_value: "Long HTML content inside a fieldset",
+                                        value_type: "string",
                                     },
                                 ],
                                 containers: [],
@@ -110,6 +129,7 @@ describe("download-docx", () => {
                     is_in_expert_mode: true,
                     query: "field01 = value01",
                 },
+                base_url: "https://example.com",
             },
             {
                 locale: "en-US",

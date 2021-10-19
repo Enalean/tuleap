@@ -734,14 +734,33 @@ function buildShortFieldValuesDisplayZone(
     const fields_rows: TableRow[] = [];
 
     for (const artifact_value of artifact_values) {
-        const table_row = new TableRow({
-            children: [
-                buildTableCellLabel(artifact_value.field_name),
-                buildTableCellContent(new TextRun(artifact_value.field_value)),
-            ],
-        });
+        if (artifact_value.value_type === "links") {
+            const links_value: ExternalHyperlink[] = [];
+            for (const link of artifact_value.field_value) {
+                links_value.push(
+                    new ExternalHyperlink({
+                        children: [new TextRun({ text: link.link_label, style: "Hyperlink" })],
+                        link: link.link_url,
+                    })
+                );
+            }
 
-        fields_rows.push(table_row);
+            const table_row = new TableRow({
+                children: [
+                    buildTableCellLabel(artifact_value.field_name),
+                    buildTableCellLinksContent(links_value),
+                ],
+            });
+            fields_rows.push(table_row);
+        } else {
+            const table_row = new TableRow({
+                children: [
+                    buildTableCellLabel(artifact_value.field_name),
+                    buildTableCellContent(new TextRun(artifact_value.field_value)),
+                ],
+            });
+            fields_rows.push(table_row);
+        }
     }
 
     return buildTable(fields_rows);
@@ -816,6 +835,21 @@ function buildTableCellContent(content: TextRun | ExternalHyperlink): TableCell 
         children: [
             new Paragraph({
                 children: [content],
+                style: "table_value",
+            }),
+        ],
+        margins: TABLE_MARGINS,
+    });
+}
+
+function buildTableCellLinksContent(links: Array<ExternalHyperlink>): TableCell {
+    const content = links.flatMap((l) => [l, new TextRun(", ")]);
+    content.splice(-1);
+
+    return new TableCell({
+        children: [
+            new Paragraph({
+                children: content,
                 style: "table_value",
             }),
         ],

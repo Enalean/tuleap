@@ -275,7 +275,8 @@ describe("Create ArtifactValues Collection", () => {
             "report_name",
             123,
             "tracker_shortname",
-            { locale: "en-US", timezone: "UTC" }
+            { locale: "en-US", timezone: "UTC" },
+            "https://example.com/"
         );
 
         expect(report.name).toEqual("tracker_shortname - report_name");
@@ -291,62 +292,85 @@ describe("Create ArtifactValues Collection", () => {
                         content_length: "short",
                         field_name: "Artifact Number",
                         field_value: "1001",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Title",
                         field_value: "title01",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Capacity",
                         field_value: "5",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Effort",
                         field_value: "1.5",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Per tracker ID",
                         field_value: "1",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Rank",
                         field_value: "50",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Computed",
                         field_value: "10",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Submitted On",
                         field_value: "12/28/2020 9:55:55 AM",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Last Update Date",
                         field_value: "7/30/2021",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Closed Date",
                         field_value: "",
+                        value_type: "string",
                     },
                     {
                         content_length: "long",
                         content_format: "plaintext",
                         field_name: "Description",
                         field_value: "Some long description in art #1001",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Attachments",
-                        field_value: "file01.jpg, file02.jpg",
+                        field_value: [
+                            {
+                                link_label: "file01.jpg",
+                                link_url:
+                                    "https://example.com/plugins/tracker/attachments/file01.jpg",
+                            },
+                            {
+                                link_label: "file02.jpg",
+                                link_url:
+                                    "https://example.com/plugins/tracker/attachments/file02.jpg",
+                            },
+                        ],
+                        value_type: "links",
                     },
                 ],
                 containers: [
@@ -361,6 +385,7 @@ describe("Create ArtifactValues Collection", () => {
                                         content_length: "short",
                                         field_name: "A detail",
                                         field_value: "Value in art #1001",
+                                        value_type: "string",
                                     },
                                 ],
                                 containers: [],
@@ -377,62 +402,74 @@ describe("Create ArtifactValues Collection", () => {
                         content_length: "short",
                         field_name: "Artifact Number",
                         field_value: "1002",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Title",
                         field_value: "title02",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Capacity",
                         field_value: "2",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Effort",
                         field_value: "2.5",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Per tracker ID",
                         field_value: "2",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Rank",
                         field_value: "51",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Computed",
                         field_value: "10",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Submitted On",
                         field_value: "12/29/2020 9:55:55 AM",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Last Update Date",
                         field_value: "7/29/2021",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Closed Date",
                         field_value: "",
+                        value_type: "string",
                     },
                     {
                         content_length: "long",
                         content_format: "html",
                         field_name: "Description",
                         field_value: "<p>Some long description in art #1002</p>",
+                        value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Attachments",
-                        field_value: "",
+                        field_value: [],
+                        value_type: "links",
                     },
                 ],
                 containers: [
@@ -447,6 +484,7 @@ describe("Create ArtifactValues Collection", () => {
                                         content_length: "short",
                                         field_name: "A detail",
                                         field_value: "Value in art #1002",
+                                        value_type: "string",
                                     },
                                 ],
                                 containers: [],

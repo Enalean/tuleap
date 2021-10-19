@@ -42,7 +42,8 @@ export async function startDownloadExportDocument(
         global_export_properties.report_name,
         global_export_properties.tracker_id,
         global_export_properties.tracker_shortname,
-        datetime_locale_information
+        datetime_locale_information,
+        global_export_properties.base_url
     );
 
     await document_exporter(
