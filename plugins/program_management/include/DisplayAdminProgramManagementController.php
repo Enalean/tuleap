@@ -61,7 +61,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
-use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;

@@ -21,9 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyTrackerSemantics;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\VerifyTrackerSemantics;
 
 final class TrackerSemantics implements VerifyTrackerSemantics
 {

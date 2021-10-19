@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ArtifactIdentifierProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerIdentifierProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 

@@ -21,11 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Domain\Workspace\Tracker;
 
-interface VerifyTrackerSemantics
+/**
+ * I am the ID (identifier) of a Tracker.
+ * @psalm-immutable
+ */
+interface TrackerIdentifier
 {
-    public function hasTitleSemantic(int $tracker_id): bool;
-
-    public function hasStatusSemantic(int $tracker_id): bool;
+    public function getId(): int;
 }

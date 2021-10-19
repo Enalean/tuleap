@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 
 /**
  * @psalm-immutable

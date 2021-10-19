@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;

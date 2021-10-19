@@ -23,7 +23,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
 
 final class SearchTrackersOfProgramStub implements SearchTrackersOfProgram
 {

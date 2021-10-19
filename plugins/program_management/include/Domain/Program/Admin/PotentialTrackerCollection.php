@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\SearchTrackersOfProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
 
 /**
  * I contain a list of TrackerReference. All TrackerReferences come from the same project.
