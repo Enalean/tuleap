@@ -26,24 +26,17 @@ use Transition;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\CreatePostActionStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchByTransitionIdStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchByWorkflowStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    /**
-     * @var int
-     */
-    private $transition_id;
-    /**
-     * @var Transition
-     */
-    private $transition;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AddToTopBacklogPostActionDAO
-     */
-    private $dao;
+    private int $transition_id;
+    private Transition $transition;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Workflow
      */
@@ -51,16 +44,14 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     protected function setUp(): void
     {
-        $this->dao = $this->createMock(AddToTopBacklogPostActionDAO::class);
-
         $workflow_id    = 112;
         $this->workflow = $this->createConfiguredMock(
             \Workflow::class,
             [
-                'getId' => (string) $workflow_id,
+                'getId'      => (string) $workflow_id,
                 'getTracker' =>
                     TrackerTestBuilder::aTracker()
-                        ->withProject(new \Project(['group_id' => 101]))->build()
+                                      ->withProject(new \Project(['group_id' => 101]))->build(),
             ]
         );
 
@@ -71,12 +62,12 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBuildsThePostAction(): void
     {
-        $this->dao->method('searchByTransitionID')->with($this->transition_id)->willReturn(['id' => 88]);
-
         $factory = new AddToTopBacklogPostActionFactory(
-            $this->dao,
+            SearchByTransitionIdStub::withTransitions(['id' => 88]),
             BuildProgramStub::stubValidProgram(),
-            $this->createMock(TopBacklogChangeProcessor::class)
+            $this->createMock(TopBacklogChangeProcessor::class),
+            SearchByWorkflowStub::withoutTransitions(),
+            CreatePostActionStub::withCount()
         );
 
         $post_actions = $factory->loadPostActions($this->transition);
@@ -88,12 +79,12 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testDoesNotBuildThePostActionIfWeAreOutsideOfAProgram(): void
     {
-        $this->dao->expects(self::never())->method('searchByTransitionId');
-
         $factory = new AddToTopBacklogPostActionFactory(
-            $this->dao,
+            SearchByTransitionIdStub::withoutTransitions(),
             BuildProgramStub::stubInvalidProgram(),
-            $this->createMock(TopBacklogChangeProcessor::class)
+            $this->createMock(TopBacklogChangeProcessor::class),
+            SearchByWorkflowStub::withoutTransitions(),
+            CreatePostActionStub::withCount()
         );
 
         $post_actions = $factory->loadPostActions($this->transition);
@@ -102,26 +93,23 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testWarmsUpTheCacheBeforeGettingThePostAction(): void
     {
-        $this->dao->method('searchByWorkflow')
-            ->with($this->workflow)
-            ->willReturn(
-                [
-                    [
-                        'id' => 2,
-                        'transition_id' => 329
-                    ],
-                    [
-                        'id' => 88,
-                        'transition_id' => $this->transition_id
-                    ],
-                ]
-            );
-        $this->dao->expects(self::never())->method('searchByTransitionId');
+        $transitions = [
+            [
+                'id'            => 2,
+                'transition_id' => 329,
+            ],
+            [
+                'id'            => 88,
+                'transition_id' => $this->transition_id,
+            ],
+        ];
 
         $factory = new AddToTopBacklogPostActionFactory(
-            $this->dao,
+            SearchByTransitionIdStub::withoutTransitions(),
             BuildProgramStub::stubValidProgram(),
-            $this->createMock(TopBacklogChangeProcessor::class)
+            $this->createMock(TopBacklogChangeProcessor::class),
+            SearchByWorkflowStub::withTransitions($transitions),
+            CreatePostActionStub::withCount()
         );
 
         $factory->warmUpCacheForWorkflow($this->workflow);

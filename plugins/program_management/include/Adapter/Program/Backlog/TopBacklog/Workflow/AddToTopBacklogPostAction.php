@@ -37,28 +37,18 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
-class AddToTopBacklogPostAction extends Transition_PostAction
+final class AddToTopBacklogPostAction extends Transition_PostAction
 {
     public const SHORT_NAME   = 'program_management_add_to_top_backlog';
     public const XML_TAG_NAME = 'postaction_add_to_program_top_backlog';
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var TopBacklogChangeProcessor
-     */
-    private $top_backlog_change_processor;
 
     public function __construct(
         Transition $transition,
         int $id,
-        BuildProgram $build_program,
-        TopBacklogChangeProcessor $top_backlog_change_processor
+        private BuildProgram $build_program,
+        private TopBacklogChangeProcessor $top_backlog_change_processor
     ) {
         parent::__construct($transition, $id);
-        $this->build_program                = $build_program;
-        $this->top_backlog_change_processor = $top_backlog_change_processor;
     }
 
     public function getShortName(): string
