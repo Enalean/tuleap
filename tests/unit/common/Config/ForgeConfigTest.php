@@ -39,7 +39,8 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        putenv('TULEAP_LOCAL_INC=');
+        putenv('TULEAP_LOCAL_INC');
+        putenv('TULEAP_SYS_DBHOST');
         parent::tearDown();
     }
 
@@ -70,6 +71,29 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
         ForgeConfig::loadInSequence();
         self::assertEquals('1', ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL));
+    }
+
+    public function testDatabaseParametersFallbackOnFiles(): void
+    {
+        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
+        $dao = $this->createMock(ConfigDao::class);
+        $dao->method('searchAll')->willReturn([]);
+        ForgeConfig::setDatabaseConfigDao($dao);
+
+        ForgeConfig::loadInSequence();
+        self::assertEquals('foo', ForgeConfig::get('sys_dbhost'));
+    }
+
+    public function testEnvironmentTakesPrecedenceForDatabaseParameters(): void
+    {
+        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
+        putenv('TULEAP_SYS_DBHOST=localhost');
+        $dao = $this->createMock(ConfigDao::class);
+        $dao->method('searchAll')->willReturn([]);
+        ForgeConfig::setDatabaseConfigDao($dao);
+
+        ForgeConfig::loadInSequence();
+        self::assertEquals('localhost', ForgeConfig::get('sys_dbhost'));
     }
 
     public function testUsage(): void
