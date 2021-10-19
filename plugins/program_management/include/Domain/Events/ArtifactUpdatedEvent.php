@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Events;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 

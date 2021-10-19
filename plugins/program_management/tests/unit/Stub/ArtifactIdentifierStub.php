@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 
 /**
  * @psalm-immutable

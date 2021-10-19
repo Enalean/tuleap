@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 
 final class RetrieveChangesetSubmissionDateStub implements RetrieveChangesetSubmissionDate
 {

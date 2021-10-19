@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTrackerOfArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 

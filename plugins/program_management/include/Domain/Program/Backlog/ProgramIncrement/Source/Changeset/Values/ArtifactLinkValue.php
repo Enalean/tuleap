@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 
 /**
  * I hold a value of the Artifact link field.

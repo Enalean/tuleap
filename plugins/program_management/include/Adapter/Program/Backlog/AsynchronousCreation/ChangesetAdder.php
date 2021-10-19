@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddChan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;

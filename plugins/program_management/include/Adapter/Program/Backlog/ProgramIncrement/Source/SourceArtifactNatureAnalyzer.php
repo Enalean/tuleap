@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Natu
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 
 /**
  * I am the id (identifier) of a Timebox. Either a Program Increment or an Iteration.

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace\Tracker;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 
 interface RetrieveTrackerOfArtifact
 {

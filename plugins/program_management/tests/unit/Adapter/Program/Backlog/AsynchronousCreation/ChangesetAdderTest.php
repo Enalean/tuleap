@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ArtifactLinkChangesetBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredTimeboxChangesetBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;

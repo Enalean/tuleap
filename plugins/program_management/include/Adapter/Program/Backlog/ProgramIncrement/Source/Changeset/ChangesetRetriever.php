@@ -26,8 +26,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Changes
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\ArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 
 final class ChangesetRetriever implements RetrieveChangesetSubmissionDate
 {
