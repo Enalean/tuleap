@@ -12,7 +12,7 @@
             }"
         ></i>
         <div class="tlp-pane-title milestone-header-label external-milestone" ng-if="milestoneController.hasExternalParent()">
-            <span>{{ milestoneController.milestone.original_project_provider.label }}</span>
+            <span>{{ milestoneController.milestone.original_project_provider.icon }} {{ milestoneController.milestone.original_project_provider.label }}</span>
             <span>↳&nbsp;{{ milestoneController.milestone.label }}</span>
         </div>
         <span class="tlp-pane-title milestone-header-label" ng-if="! milestoneController.hasExternalParent()">

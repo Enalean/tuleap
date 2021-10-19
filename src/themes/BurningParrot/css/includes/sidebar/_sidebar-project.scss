@@ -105,6 +105,10 @@
         @extend %background-action-hover;
         text-decoration: none;
     }
+
+    > .project-sidebar-title-icon {
+        margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
+    }
 }
 
 .project-administration-link {
@@ -369,8 +373,10 @@
     position: relative;
     top: -1px;
     flex: 0 0 auto;
+    width: 12px;
     margin: 0 4px 0 0;
-    font-size: 0.5rem;
+    font-size: 0.65rem;
+    text-align: center;
 }
 
 .project-sidebar-tools-section-label {

@@ -6,8 +6,13 @@
         <section class="tlp-pane-section-for-cards">
             {{# aggregated_teams }}
                 <a class="tlp-card tlp-card-selectable program-management-card-teams" href="{{ url }}">
-                    <i class="tlp-tab-icon fas fa-fw fa-archive" aria-hidden="true"></i>
-                    <span aria-hidden="true">{{project_icon}}</span>{{ public_name }}
+                    {{# project_icon}}
+                        <span class="program-management-card-teams-icon" aria-hidden="true">{{project_icon}}</span>
+                    {{/ project_icon}}
+                    {{^ project_icon}}
+                        <i class="program-management-card-teams-icon fas fa-fw fa-archive" aria-hidden="true"></i>
+                    {{/ project_icon}}
+                    {{ public_name }}
                     <button
                         type="button"
                         class="tlp-button-danger tlp-button-small tlp-button-outline program-management-admin-remove-teams-open-modal-button"
