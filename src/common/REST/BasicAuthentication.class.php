@@ -38,6 +38,7 @@ class BasicAuthentication implements iAuthenticate
      * @var UserManager
      */
     private $user_manager;
+    private \User_LoginManager $login_manager;
 
     public function __construct()
     {
@@ -47,22 +48,32 @@ class BasicAuthentication implements iAuthenticate
             )
         );
 
-        $this->user_manager = UserManager::instance();
+        $this->user_manager  = UserManager::instance();
+        $password_handler    = \PasswordHandlerFactory::getPasswordHandler();
+        $this->login_manager = new \User_LoginManager(
+            \EventManager::instance(),
+            $this->user_manager,
+            new \Tuleap\User\PasswordVerifier($password_handler),
+            new \User_PasswordExpirationChecker(),
+            $password_handler
+        );
     }
 
     public function __isAllowed() // phpcs:ignore
     {
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-            $current_user = $this->user_manager->login($_SERVER['PHP_AUTH_USER'], new ConcealedString($_SERVER['PHP_AUTH_PW']));
-
-            if ($current_user->isLoggedIn()) {
+            try {
+                $current_user = $this->login_manager->authenticate(
+                    $_SERVER['PHP_AUTH_USER'],
+                    new ConcealedString($_SERVER['PHP_AUTH_PW'])
+                );
+                $this->login_manager->validateAndSetCurrentUser($current_user);
                 $current_user = $this->read_only_admin_user_builder->buildReadOnlyAdminUser($current_user);
                 $this->user_manager->setCurrentUser($current_user);
-
                 return true;
+            } catch (\User_LoginException $e) {
+                throw new InvalidAuthCredentials(401, 'Basic Authentication Required', [], $e);
             }
-
-            throw new InvalidAuthCredentials(401, 'Basic Authentication Required');
         }
     }
 

@@ -104,8 +104,17 @@ class WebDAVPlugin extends Plugin
 
     private function getWebDAVAuthentication(): WebDAVAuthentication
     {
+        $user_manager     = UserManager::instance();
+        $password_handler = PasswordHandlerFactory::getPasswordHandler();
         return new WebDAVAuthentication(
-            UserManager::instance(),
+            $user_manager,
+            new User_LoginManager(
+                EventManager::instance(),
+                $user_manager,
+                new \Tuleap\User\PasswordVerifier($password_handler),
+                new User_PasswordExpirationChecker(),
+                $password_handler
+            ),
             new HeadersSender(),
             new \Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator(
                 new \Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer(
@@ -114,7 +123,7 @@ class WebDAVPlugin extends Plugin
                 new AccessKeyVerifier(
                     new AccessKeyDAO(),
                     new SplitTokenVerificationStringHasher(),
-                    \UserManager::instance(),
+                    $user_manager,
                     new AccessKeyScopeRetriever(
                         new AccessKeyScopeDAO(),
                         $this->buildAccessKeyScopeBuilder()
