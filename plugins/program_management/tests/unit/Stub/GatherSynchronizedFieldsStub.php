@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
 {

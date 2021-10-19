@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 /**
  * I hold all synchronized field references (identifier + label) for a given Timebox or Mirrored Timebox.

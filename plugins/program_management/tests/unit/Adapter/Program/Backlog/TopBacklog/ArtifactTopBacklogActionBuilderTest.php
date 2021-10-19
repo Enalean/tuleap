@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\Layout\JavascriptAsset;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;

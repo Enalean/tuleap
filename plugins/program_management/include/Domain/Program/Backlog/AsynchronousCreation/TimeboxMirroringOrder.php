@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**

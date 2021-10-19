@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveStatusField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
-use Tuleap\ProgramManagement\Domain\Workspace\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 final class RetrieveStatusFieldStub implements RetrieveStatusField
 {

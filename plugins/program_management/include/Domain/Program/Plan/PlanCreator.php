@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class PlanCreator implements CreatePlan

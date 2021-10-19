@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyTrackerSemantics;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\VerifyTrackerSemantics;
 
 final class VerifyTrackerSemanticsStub implements VerifyTrackerSemantics
 {

@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Planning;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TeamPlanning;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 
 final class RetrieveTrackerStub implements RetrieveTracker
 {

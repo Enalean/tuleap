@@ -47,7 +47,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterati
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTrackerOfArtifact;
 
 final class IterationsCreator implements CreateIterations
 {

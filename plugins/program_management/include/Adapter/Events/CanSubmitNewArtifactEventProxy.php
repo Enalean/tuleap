@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Events\CanSubmitNewArtifactEvent;
 use Tuleap\ProgramManagement\Domain\TrackerReference;

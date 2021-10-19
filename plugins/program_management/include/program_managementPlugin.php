@@ -112,9 +112,9 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ScrumBlocksServiceVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerReferenceProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserCanSubmitInTrackerVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -764,7 +764,7 @@ final class program_managementPlugin extends Plugin
             new ArtifactsExplicitTopBacklogDAO(),
             new PlannedFeatureDAO(),
             new \Tuleap\Layout\JavascriptAsset($assets, 'artifact_additional_action.js'),
-            new \Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics(TrackerFactory::instance())
+            new \Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics(TrackerFactory::instance())
         );
 
         $artifact = $event->getArtifact();

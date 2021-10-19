@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncremen
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerOfArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTrackerOfArtifact;
 
 final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUpdate
 {

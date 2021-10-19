@@ -55,7 +55,7 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;

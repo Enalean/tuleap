@@ -21,13 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
+
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 /**
- * I am the ID (identifier) of a Tracker.
  * @psalm-immutable
  */
-interface TrackerIdentifier
+final class TrackerIdentifierProxy implements TrackerIdentifier
 {
-    public function getId(): int;
+    private function __construct(private int $id)
+    {
+    }
+
+    public static function fromTracker(\Tracker $tracker): self
+    {
+        return new self($tracker->getId());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

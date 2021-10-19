@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Domain\Workspace\Tracker;
 
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-
-final class TrackerIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
+interface VerifyTrackerSemantics
 {
-    private const TRACKER_ID = 91;
+    public function hasTitleSemantic(int $tracker_id): bool;
 
-    public function testItBuildsFromTracker(): void
-    {
-        $full_tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $proxy        = TrackerIdentifierProxy::fromTracker($full_tracker);
-        self::assertSame(self::TRACKER_ID, $proxy->getId());
-    }
+    public function hasStatusSemantic(int $tracker_id): bool;
 }
