@@ -50,7 +50,7 @@ export function uploadFile(
     parent: Folder
 ): Upload {
     const uploader = new Upload(dropped_file, {
-        uploadUrl: docman_item.file_properties.upload_href ?? null,
+        uploadUrl: docman_item.file_properties?.upload_href ?? null,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,

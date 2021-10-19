@@ -125,7 +125,7 @@ export interface ApprovableDocument extends Item {
 
 export interface ItemFile extends Item, ApprovableDocument {
     parent_id: number;
-    file_properties: FileProperties;
+    file_properties: FileProperties | null;
     type: "file";
     is_uploading_in_collapsed_folder: boolean;
     is_uploading: boolean;

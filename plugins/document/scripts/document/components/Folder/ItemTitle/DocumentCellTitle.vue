@@ -22,27 +22,26 @@
 <template>
     <div data-test="empty-file-title">
         <fake-caret v-bind:item="item" />
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class()"></i>
         <span tabindex="0" class="document-folder-subitem-link">
             {{ item.title }}
         </span>
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ICON_EMPTY } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 
-export default {
-    name: "DocumentCellTitle",
-    components: { FakeCaret },
-    props: {
-        item: Object,
-    },
-    computed: {
-        icon_class() {
-            return ICON_EMPTY;
-        },
-    },
-};
+@Component({ components: { FakeCaret } })
+export default class DocumentCellTitle extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    icon_class(): string {
+        return ICON_EMPTY;
+    }
+}
 </script>

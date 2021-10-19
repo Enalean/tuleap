@@ -21,32 +21,38 @@
 <template>
     <i
         class="fa fa-fw document-folder-toggle document-folder-content-fake-caret"
-        v-if="can_be_displayed"
+        v-if="can_be_displayed()"
     ></i>
 </template>
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import { isFolder } from "../../../helpers/type-check-helper";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Folder, Item } from "../../../type";
+import { State } from "vuex-class";
 
-export default {
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState(["current_folder", "folder_content"]),
-        is_item_in_current_folder() {
-            return this.item.parent_id === this.current_folder.id;
-        },
-        is_item_sibling_of_a_folder() {
-            return Boolean(
-                this.folder_content.find(
-                    (item) => item.parent_id === this.current_folder.id && isFolder(item)
-                )
-            );
-        },
-        can_be_displayed() {
-            return !this.is_item_in_current_folder || this.is_item_sibling_of_a_folder;
-        },
-    },
-};
+@Component
+export default class FakeCaret extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @State
+    readonly current_folder!: Folder;
+
+    @State
+    readonly folder_content!: Array<Item>;
+
+    is_item_in_current_folder(): boolean {
+        return this.item.parent_id === this.current_folder.id;
+    }
+    is_item_sibling_of_a_folder(): boolean {
+        return Boolean(
+            this.folder_content.find(
+                (item) => item.parent_id === this.current_folder.id && isFolder(item)
+            )
+        );
+    }
+    can_be_displayed(): boolean {
+        return !this.is_item_in_current_folder() || this.is_item_sibling_of_a_folder();
+    }
+}
 </script>
