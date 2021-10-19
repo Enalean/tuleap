@@ -24,13 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Project;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ContentStoreStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -65,17 +66,14 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Stub&\Tracker_FormElementFactory
      */
     private $form_element_factory;
-    /**
-     * @var Stub&BackgroundColorRetriever
-     */
-    private $background_color_retriever;
+    private RetrieveBackgroundColor $background_color_retriever;
     private UserIdentifier $user;
 
     protected function setUp(): void
     {
         $this->artifact_factory           = $this->createStub(\Tracker_ArtifactFactory::class);
         $this->form_element_factory       = $this->createStub(\Tracker_FormElementFactory::class);
-        $this->background_color_retriever = $this->createStub(BackgroundColorRetriever::class);
+        $this->background_color_retriever = RetrieveBackgroundColorStub::withDefaults();
 
         $this->user = UserIdentifierStub::buildGenericUser();
     }
@@ -142,9 +140,6 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->form_element_factory->method('getFieldById')
             ->willReturnOnConsecutiveCalls($first_title_field, $second_title_field);
-
-        $this->background_color_retriever->method('retrieveBackgroundColor')
-            ->willReturn(new BackgroundColor('lake-placid-blue'));
 
         $collection = [
             new FeatureRepresentation(

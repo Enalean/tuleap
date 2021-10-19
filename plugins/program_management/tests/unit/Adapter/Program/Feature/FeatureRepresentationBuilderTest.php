@@ -28,10 +28,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -54,10 +56,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElementFactory
      */
     private $form_element_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BackgroundColorRetriever
-     */
-    private $retrieve_background;
+    private RetrieveBackgroundColor $retrieve_background;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
      */
@@ -69,7 +68,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->retrieve_background  = $this->createMock(BackgroundColorRetriever::class);
+        $this->retrieve_background  = RetrieveBackgroundColorStub::withDefaults();
         $this->parent_dao           = $this->createMock(ArtifactsLinkedToParentDao::class);
         $this->build_planning       = BuildPlanningStub::withValidRootPlanning();
         $this->user                 = UserTestBuilder::aUser()->build();
@@ -132,7 +131,6 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $field->method('userCanRead')->willReturn(true);
 
         $background_color = new BackgroundColor("lake-placid-blue");
-        $this->retrieve_background->method('retrieveBackgroundColor')->willReturn($background_color);
 
         $this->parent_dao->method('getPlannedUserStory')->willReturn(
             [

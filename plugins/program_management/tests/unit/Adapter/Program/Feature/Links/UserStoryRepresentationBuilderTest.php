@@ -23,21 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var UserStoryRepresentationBuilder
@@ -52,17 +52,14 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact_factory;
     private UserIdentifier $user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BackgroundColorRetriever
-     */
-    private $retrieve_background;
+    private RetrieveBackgroundColor $retrieve_background;
 
     protected function setUp(): void
     {
         $this->dao                 = $this->createMock(ArtifactsLinkedToParentDao::class);
         $this->artifact_factory    = $this->createMock(Tracker_ArtifactFactory::class);
         $this->user                = UserIdentifierStub::buildGenericUser();
-        $this->retrieve_background = $this->createMock(BackgroundColorRetriever::class);
+        $this->retrieve_background = RetrieveBackgroundColorStub::withDefaults();
 
         $plan_store = new class () implements PlanStore {
             public function isPlannable(int $plannable_tracker_id): bool
@@ -124,11 +121,6 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact_126,
         );
 
-        $this->retrieve_background->method('retrieveBackgroundColor')->willReturnOnConsecutiveCalls(
-            new BackgroundColor("lake-placid-blue"),
-            new BackgroundColor("fiesta-red"),
-        );
-
         $children = $this->builder->buildFeatureStories(10, $this->user);
 
         self::assertCount(2, $children);
@@ -152,7 +144,7 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(true, $children[1]->project->id);
         self::assertEquals("Project", $children[1]->project->label);
         self::assertEquals("projects/100", $children[1]->project->uri);
-        self::assertEquals("fiesta-red", $children[1]->background_color);
+        self::assertEquals("lake-placid-blue", $children[1]->background_color);
         self::assertEquals("inca-silver", $children[1]->tracker->color_name);
     }
 
@@ -186,7 +178,7 @@ class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildArtifact(int $id)
     {
         $artifact = $this->createMock(Artifact::class);
-        $artifact->expects(self::once())->method('getId')->willReturn($id);
+        $artifact->expects(self::atLeast(1))->method('getId')->willReturn($id);
         $artifact->expects(self::once())->method('getUri')->willReturn('trackers?aid=' . $id);
         $artifact->expects(self::once())->method('getXRef')->willReturn('story #' . $id);
         $artifact->expects(self::once())->method('getTitle')->willReturn("Title");
