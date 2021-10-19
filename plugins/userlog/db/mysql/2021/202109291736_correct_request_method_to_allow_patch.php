@@ -31,52 +31,12 @@ final class b202109291736_correct_request_method_to_allow_patch extends \Tuleap\
     public function up(): void
     {
         $this->alterUserlogRequestMethod();
-        $this->updateUserlogPatchMethods();
-        $this->updateUserlogTraceMethods();
-        $this->updateUserlogDeleteMethods();
-        $this->updateUserlogConnectMethods();
-        $this->updateUserlogOptionsMethods();
     }
 
     private function alterUserlogRequestMethod(): void
     {
         $this->api->dbh->exec(
             "ALTER TABLE plugin_userlog_request MODIFY http_request_method VARCHAR(7)"
-        );
-    }
-
-    private function updateUserlogPatchMethods(): void
-    {
-        $this->api->dbh->exec(
-            "UPDATE plugin_userlog_request SET http_request_method='PATCH' WHERE http_request_method='PATC'"
-        );
-    }
-
-    private function updateUserlogTraceMethods(): void
-    {
-        $this->api->dbh->exec(
-            "UPDATE plugin_userlog_request SET http_request_method='TRACE' WHERE http_request_method='TRAC'"
-        );
-    }
-
-    private function updateUserlogDeleteMethods(): void
-    {
-        $this->api->dbh->exec(
-            "UPDATE plugin_userlog_request SET http_request_method='DELETE' WHERE http_request_method='DELE'"
-        );
-    }
-
-    private function updateUserlogConnectMethods(): void
-    {
-        $this->api->dbh->exec(
-            "UPDATE plugin_userlog_request SET http_request_method='CONNECT' WHERE http_request_method='CONN'"
-        );
-    }
-
-    private function updateUserlogOptionsMethods(): void
-    {
-        $this->api->dbh->exec(
-            "UPDATE plugin_userlog_request SET http_request_method='OPTIONS' WHERE http_request_method='OPTI'"
         );
     }
 }
