@@ -633,10 +633,11 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-po.php
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/scripts/
-/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/scripts" -type d -execdir %{__rm} -rf "{}" \;
-/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/themes" -type d -execdir %{__rm} -rf "{}" \;
-/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/tests" -type d -execdir %{__rm} -rf "{}" \;
-/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
+find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/scripts" -type d -execdir %{__rm} -rf "{}" \;
+find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/themes" -type d -execdir %{__rm} -rf "{}" \;
+find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/tests" -type d -execdir %{__rm} -rf "{}" \;
+find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/additional-packages" -type d -execdir %{__rm} -rf "{}" \;
+find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
     -name 'composer.json' -o -name 'composer.lock' -o -name 'package.json' -o -name 'pnpm-lock.yaml' -o \
     -name 'tsconfig.json' -o -name 'webpack.common.js' -o -name 'webpack.dev.js' -o -name 'webpack.prod.js' -o \
     -name 'Makefile' -o -name 'jest.config.js' -o -name 'build-manifest.json' \
