@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HeadingLevel, ImageRun, IRunPropertiesOptions, ParagraphChild } from "docx";
+import type {
+    HeadingLevel,
+    ImageRun,
+    IRunPropertiesOptions,
+    ParagraphChild,
+    IRunStylePropertiesOptions,
+} from "docx";
 import {
     BorderStyle,
     convertInchesToTwip,
@@ -33,7 +39,6 @@ import {
 import { loadImage } from "../Image/image-loader";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
 import { extractInlineStyles } from "./extract-style-html-element";
-import type { IRunStylePropertiesOptions } from "docx/src/file/paragraph/run/properties";
 
 const PAGE_WIDTH_DXA = 9638;
 
