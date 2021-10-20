@@ -180,7 +180,8 @@ export type ArtifactReportFieldValue =
     | ArtifactReportResponseTextFieldValue
     | (ArtifactReportResponseDateFieldValue & { is_time_displayed: boolean })
     | ArtifactReportResponseComputedFieldValue
-    | ArtifactReportResponseFileFieldValue;
+    | ArtifactReportResponseFileFieldValue
+    | ArtifactReportResponseSubmittedByFieldValue;
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -189,7 +190,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseTextFieldValue
     | ArtifactReportResponseDateFieldValue
     | ArtifactReportResponseComputedFieldValue
-    | ArtifactReportResponseFileFieldValue;
+    | ArtifactReportResponseFileFieldValue
+    | ArtifactReportResponseSubmittedByFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -234,6 +236,26 @@ interface ArtifactReportResponseFileFieldValue {
     type: "file";
     label: string;
     file_descriptions: Array<ArtifactReportResponseFileDescriptionFieldValue>;
+}
+
+interface ArtifactReportResponseSubmittedByFieldValue {
+    field_id: number;
+    type: "subby";
+    label: string;
+    value: {
+        email: string;
+        status: string;
+        id: number;
+        uri: string;
+        user_url: string;
+        real_name: string;
+        display_name: string;
+        username: string;
+        ldap_id: string;
+        avatar_url: string;
+        is_anonymous: boolean;
+        has_avatar: boolean;
+    };
 }
 
 interface ArtifactReportResponseFileDescriptionFieldValue {
