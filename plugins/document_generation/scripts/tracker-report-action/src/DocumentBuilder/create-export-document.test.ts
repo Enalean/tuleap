@@ -138,6 +138,25 @@ describe("Create ArtifactValues Collection", () => {
                             },
                         ],
                     },
+                    {
+                        field_id: 15,
+                        type: "subby",
+                        label: "Submitted By",
+                        value: {
+                            email: "email_address",
+                            status: "A",
+                            id: 101,
+                            uri: "users/101",
+                            user_url: "/users/user01",
+                            real_name: "User 01",
+                            display_name: "User 01 (user01)",
+                            username: "user01",
+                            ldap_id: "101",
+                            avatar_url: "https://example.com/users/user01/avatar-abcdef.png",
+                            is_anonymous: false,
+                            has_avatar: true,
+                        },
+                    },
                 ],
                 containers: [
                     {
@@ -241,6 +260,25 @@ describe("Create ArtifactValues Collection", () => {
                         type: "file",
                         label: "Attachments",
                         file_descriptions: [],
+                    },
+                    {
+                        field_id: 15,
+                        type: "subby",
+                        label: "Submitted By",
+                        value: {
+                            email: "email_address_02",
+                            status: "A",
+                            id: 102,
+                            uri: "users/102",
+                            user_url: "/users/user02",
+                            real_name: "User 02",
+                            display_name: "User 02 (user02)",
+                            username: "user02",
+                            ldap_id: "",
+                            avatar_url: "https://example.com/users/user02/avatar-qwerty.png",
+                            is_anonymous: false,
+                            has_avatar: true,
+                        },
                     },
                 ],
                 containers: [
@@ -372,6 +410,12 @@ describe("Create ArtifactValues Collection", () => {
                         ],
                         value_type: "links",
                     },
+                    {
+                        content_length: "short",
+                        field_name: "Submitted By",
+                        field_value: "User 01",
+                        value_type: "string",
+                    },
                 ],
                 containers: [
                     {
@@ -470,6 +514,12 @@ describe("Create ArtifactValues Collection", () => {
                         field_name: "Attachments",
                         field_value: [],
                         value_type: "links",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Submitted By",
+                        field_value: "User 02",
+                        value_type: "string",
                     },
                 ],
                 containers: [
