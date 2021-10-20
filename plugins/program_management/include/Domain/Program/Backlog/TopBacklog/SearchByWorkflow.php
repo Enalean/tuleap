@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
 
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Workflow\WorkflowIdentifier;
+
 interface SearchByWorkflow
 {
     /**
      * @psalm-return list<array{id: int, transition_id: int}>
      */
-    public function searchByWorkflow(\Workflow $workflow): array;
+    public function searchByWorkflowId(WorkflowIdentifier $workflow_id): array;
 }

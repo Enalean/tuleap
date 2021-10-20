@@ -27,20 +27,21 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\DeletePostAction;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Workflow\WorkflowIdentifier;
 
 final class AddToTopBacklogPostActionDAO extends DataAccessObject implements SearchByTransitionId, SearchByWorkflow, DeletePostAction, CreatePostAction
 {
     /**
      * @psalm-return list<array{id: int, transition_id: int}>
      */
-    public function searchByWorkflow(\Workflow $workflow): array
+    public function searchByWorkflowId(WorkflowIdentifier $workflow_identifier): array
     {
         $sql = 'SELECT plugin_program_management_workflow_action_add_top_backlog.id, plugin_program_management_workflow_action_add_top_backlog.transition_id
             FROM plugin_program_management_workflow_action_add_top_backlog
             JOIN tracker_workflow_transition ON (tracker_workflow_transition.transition_id = plugin_program_management_workflow_action_add_top_backlog.transition_id)
             WHERE tracker_workflow_transition.workflow_id = ?';
 
-        return $this->getDB()->run($sql, $workflow->getId());
+        return $this->getDB()->run($sql, $workflow_identifier->getId());
     }
 
     /**

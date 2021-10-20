@@ -27,6 +27,7 @@ use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Workflow\WorkflowProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
@@ -61,7 +62,8 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
             return;
         }
 
-        foreach ($this->search_by_workflow->searchByWorkflow($workflow) as $row) {
+        $workflow_identifier = WorkflowProxy::fromWorkflow($workflow);
+        foreach ($this->search_by_workflow->searchByWorkflowId($workflow_identifier) as $row) {
             $this->cache[$workflow_id][$row['transition_id']] = $row['id'];
         }
     }

@@ -21,29 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Workspace\Tracker\Workflow;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Workflow\WorkflowIdentifier;
-
-final class SearchByWorkflowStub implements SearchByWorkflow
+interface WorkflowIdentifier
 {
-    private function __construct(private array $transitions)
-    {
-    }
-
-    public static function withTransitions(array $transitions): self
-    {
-        return new self($transitions);
-    }
-
-    public static function withoutTransitions(): self
-    {
-        return new self([]);
-    }
-
-    public function searchByWorkflowId(WorkflowIdentifier $workflow_identifier): array
-    {
-        return $this->transitions;
-    }
+    public function getId(): int;
 }
