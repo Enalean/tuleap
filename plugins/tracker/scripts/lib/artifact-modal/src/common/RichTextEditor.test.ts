@@ -36,6 +36,7 @@ import type { HostElement } from "./RichTextEditor";
 import {
     RichTextEditor,
     connect,
+    createEditor,
     getValidFormat,
     onInstanceReady,
     onTextareaInput,
@@ -164,8 +165,8 @@ describe(`RichTextEditor`, () => {
         });
         describe(`onInstanceReady()`, () => {
             it(`and when the editor dispatched the "change" event,
-                and the editor's data was different from its prop
-                then it will dispatch an "input" event with the new content`, () => {
+                and the editor's data was different from its contentValue
+                then it will dispatch a "content-change" event with the new content`, () => {
                 let triggerChange = noopHandler;
                 ckeditor = {
                     on(event_name: string, handler: CKEditorEventHandler) {
@@ -186,14 +187,15 @@ describe(`RichTextEditor`, () => {
                 onInstanceReady(getHost(), ckeditor);
                 triggerChange(null_event);
 
-                const event_content = dispatchEvent.mock.calls[0][0].detail.content;
-                expect(event_content).toEqual("caramba");
+                const event = dispatchEvent.mock.calls[0][0];
+                expect(event.type).toEqual("content-change");
+                expect(event.detail.content).toEqual("caramba");
             });
 
             it(`and when the editor dispatched the "mode" event,
                 and the editor was in "source" mode (direct HTML edition)
                 and the editor's editable textarea dispatched the "input" event,
-                then it will dispatch an "input" event with the new content`, () => {
+                then it will dispatch a "content-change" event with the new content`, () => {
                 let triggerMode = noopHandler,
                     triggerEditableInput = noopHandler;
                 const editable = {
@@ -232,20 +234,31 @@ describe(`RichTextEditor`, () => {
                     "input",
                     expect.any(Function)
                 );
-                const event_content = dispatchEvent.mock.calls[0][0].detail.content;
-                expect(event_content).toEqual("noniodized");
+                const event = dispatchEvent.mock.calls[0][0];
+                expect(event.type).toEqual("content-change");
+                expect(event.detail.content).toEqual("noniodized");
             });
         });
 
         describe(`disconnect()`, () => {
             it(`if the editor was created, then it will destroy the editor`, () => {
-                const disconnect = connect(getHost());
-                if (typeof disconnect !== "function") {
-                    throw new Error("Disconnect should be a function");
-                }
+                const host = getHost();
+                const disconnect = connect(host);
+                host.editor = editor;
                 disconnect();
 
                 expect(editor.destroy).toHaveBeenCalled();
+            });
+        });
+
+        describe(`createEditor()`, () => {
+            it(`will not create an editor if given identifier is empty`, () => {
+                const host = getHost();
+                host.identifier = "";
+                host.textarea = {} as HTMLTextAreaElement;
+                host.editor = createEditor(host);
+
+                expect(host.editor).toBeUndefined();
             });
         });
 
@@ -255,13 +268,13 @@ describe(`RichTextEditor`, () => {
             });
 
             it(`removes the uploadimage plugin from ckeditor's configuration`, () => {
-                const createEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+                const createRichEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 
                 const host = getHost();
                 host.textarea = {} as HTMLTextAreaElement;
-                connect(host);
+                host.editor = createEditor(host);
 
-                const editor_options = createEditor.mock.calls[0][1];
+                const editor_options = createRichEditor.mock.calls[0][1];
                 if (typeof editor_options.getAdditionalOptions !== "function") {
                     throw new Error("Expected getAdditionalOptions to be a function");
                 }
@@ -441,13 +454,13 @@ describe(`RichTextEditor`, () => {
         });
 
         it(`will compute CKEditor's readOnly configuration from the "disabled" prop`, () => {
-            const createEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+            const createRichEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 
             const host = getHost();
             host.textarea = {} as HTMLTextAreaElement;
-            connect(host);
+            host.editor = createEditor(host);
 
-            const editor_options = createEditor.mock.calls[0][1];
+            const editor_options = createRichEditor.mock.calls[0][1];
             if (typeof editor_options.getAdditionalOptions !== "function") {
                 throw new Error("Expected getAdditionalOptions to be a function");
             }

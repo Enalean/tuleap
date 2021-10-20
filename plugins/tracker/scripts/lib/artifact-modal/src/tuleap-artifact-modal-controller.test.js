@@ -528,7 +528,11 @@ describe("TuleapArtifactModalController", () => {
                     id: 16,
                     download_href: "https://example.com/microthorax",
                 };
-                ArtifactModalController.addToFilesAddedByTextField(204, uploaded_file);
+                ArtifactModalController.addToFilesAddedByTextField(
+                    new CustomEvent("upload-image", {
+                        detail: { field_id: 204, image: uploaded_file },
+                    })
+                );
 
                 expect(ArtifactModalController.values[204].images_added_by_text_fields).toContain(
                     uploaded_file

@@ -39,11 +39,6 @@ export interface FormatSelector {
     content: () => HTMLElement;
 }
 
-const connect = (host: FormatSelector): void => {
-    // Force render so that @tuleap/plugin-tracker-rich-text-editor will find the <select> element
-    host.content();
-};
-
 const isFormatSelectboxDisabled = (host: FormatSelector): boolean =>
     host.disabled || host.isInPreviewMode || host.isPreviewLoading;
 
@@ -60,7 +55,7 @@ const isSelected = (host: FormatSelector, value: TextFieldFormat): boolean => ho
 
 export const FormatSelector = define<FormatSelector>({
     tag: "tuleap-artifact-modal-format-selector",
-    identifier: { value: "", connect },
+    identifier: "",
     label: "",
     value: "",
     disabled: false,
