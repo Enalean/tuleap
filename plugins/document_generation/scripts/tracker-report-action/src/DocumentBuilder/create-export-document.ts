@@ -142,8 +142,8 @@ function formatFieldValue(
             content_length: "short",
             value_type: "links",
         };
-    } else if (value.type === "subby") {
-        artifact_field_value = value.value.real_name;
+    } else if (value.type === "subby" || value.type === "luby") {
+        artifact_field_value = value.value.display_name;
     } else {
         return null;
     }
