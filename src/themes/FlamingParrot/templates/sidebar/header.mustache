@@ -2,7 +2,7 @@
     <div class="project-sidebar-header-name">
         <div class="project-title-container">
             <a href="{{ project_link }}" id="sidebar-dashboard" class="project-sidebar-title">
-                    <span aria-hidden="true">{{ project_icon }}</span>
+                    <span class="project-sidebar-title-icon" aria-hidden="true">{{ project_icon }}</span>
                 {{ project_name }}
             </a>
             <span class="project-title-spacer"></span>
@@ -88,10 +88,15 @@
                 {{# projects }}
                     <li class="project-sidebar-linked-projects-item">
                         <a href="{{ uri }}" class="project-sidebar-linked-projects-item-link">
-                            <i class="project-sidebar-linked-projects-item-icon fas fa-archive" aria-hidden="true"></i>
-                            <span
-                                class="project-sidebar-linked-projects-item-name">
-                                    <span aria-hidden="true">{{ project_icon }}</span>
+                            {{# project_icon }}
+                                <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ project_icon }}</span>
+                            {{/ project_icon }}
+                            {{^ project_icon }}
+                                <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
+                                aria-hidden="true"
+                                ></i>
+                            {{/ project_icon }}
+                            <span class="project-sidebar-linked-projects-item-name">
                                 {{ public_name }}
                             </span>
                         </a>
@@ -114,9 +119,15 @@
                     {{# projects }}
                         <li class="project-sidebar-linked-projects-item">
                             <div class="project-sidebar-linked-projects-item-link">
-                                <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
-                                   aria-hidden="true"></i>
-                                 {{ project_icon }} {{ public_name }}
+                                {{# project_icon }}
+                                    <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ project_icon }}</span>
+                                {{/ project_icon }}
+                                {{^ project_icon }}
+                                    <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
+                                    aria-hidden="true"
+                                    ></i>
+                                {{/ project_icon }}
+                                {{ public_name }}
                             </div>
                         </li>
                     {{/ projects }}

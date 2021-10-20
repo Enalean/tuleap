@@ -118,10 +118,15 @@
                                     {{# projects }}
                                         <li class="project-sidebar-linked-projects-item">
                                             <div class="project-sidebar-linked-projects-item-link">
-                                                <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
-                                                   aria-hidden="true"></i>
+                                                {{# project_icon }}
+                                                    <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ project_icon }}</span>
+                                                {{/ project_icon }}
+                                                {{^ project_icon }}
+                                                    <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
+                                                    aria-hidden="true"
+                                                    ></i>
+                                                {{/ project_icon }}
                                                 <span class="project-sidebar-linked-projects-item-name">
-                                                        <span aria-hidden="true">{{ project_icon }}</span>
                                                     {{ public_name }}
                                                 </span>
                                             </div>
