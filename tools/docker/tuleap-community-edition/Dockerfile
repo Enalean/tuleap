@@ -43,6 +43,6 @@ ENV TLP_SYSTEMCTL=docker-centos7
 
 COPY --from=0 / /
 
-HEALTHCHECK --start-period=2m --timeout=5s CMD /usr/bin/tuleap healthcheck
+HEALTHCHECK --start-period=5m --timeout=5s CMD /usr/bin/tuleap healthcheck
 
 ENTRYPOINT ["/usr/bin/tuleap-cfg", "docker:tuleap-run"]
