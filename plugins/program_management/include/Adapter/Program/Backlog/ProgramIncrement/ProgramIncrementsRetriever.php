@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchOpenProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
@@ -38,33 +39,17 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 {
-    private ProgramIncrementsDAO $program_increments_dao;
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private SemanticTimeframeBuilder $semantic_timeframe_builder;
-    private LoggerInterface $logger;
-    private RetrieveUser $user_manager_adapter;
-    private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier;
-    private VerifyIsProgramIncrement $program_increment_verifier;
-    private VerifyIsVisibleArtifact $visibility_verifier;
 
     public function __construct(
-        ProgramIncrementsDAO $program_increments_dao,
-        \Tracker_ArtifactFactory $artifact_factory,
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
-        LoggerInterface $logger,
-        RetrieveUser $user_manager_adapter,
-        VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
-        VerifyIsProgramIncrement $program_increment_verifier,
-        VerifyIsVisibleArtifact $visibility_verifier
+        private SearchOpenProgramIncrement $program_increments_dao,
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private SemanticTimeframeBuilder $semantic_timeframe_builder,
+        private LoggerInterface $logger,
+        private RetrieveUser $user_manager_adapter,
+        private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
+        private VerifyIsProgramIncrement $program_increment_verifier,
+        private VerifyIsVisibleArtifact $visibility_verifier
     ) {
-        $this->program_increments_dao                 = $program_increments_dao;
-        $this->artifact_factory                       = $artifact_factory;
-        $this->semantic_timeframe_builder             = $semantic_timeframe_builder;
-        $this->logger                                 = $logger;
-        $this->user_manager_adapter                   = $user_manager_adapter;
-        $this->can_plan_in_program_increment_verifier = $can_plan_in_program_increment_verifier;
-        $this->program_increment_verifier             = $program_increment_verifier;
-        $this->visibility_verifier                    = $visibility_verifier;
     }
 
     /**
