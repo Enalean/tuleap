@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Project;
 use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
@@ -56,14 +56,7 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElementFactory
      */
     private $form_element_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BackgroundColorRetriever
-     */
-    private $retrieve_background;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
-     */
-    private $parent_dao;
+    private RetrieveBackgroundColorStub $retrieve_background;
     private UserIdentifier $user;
 
     protected function setUp(): void
@@ -72,8 +65,7 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $build_program              = BuildProgramStub::stubValidProgram();
         $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->retrieve_background  = $this->createMock(BackgroundColorRetriever::class);
-        $this->parent_dao           = $this->createMock(ArtifactsLinkedToParentDao::class);
+        $this->retrieve_background  = RetrieveBackgroundColorStub::withDefaults();
         $pfuser                     = UserTestBuilder::aUser()->build();
         $retrieve_user              = RetrieveUserStub::withUser($pfuser);
         $this->user                 = UserIdentifierStub::buildGenericUser();
@@ -121,11 +113,6 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [$this->user, 1, $artifact_one],
             [$this->user, 2, $artifact_two],
         ]);
-
-        $this->retrieve_background->method('retrieveBackgroundColor')
-            ->willReturn(new BackgroundColor("lake-placid-blue"));
-
-        $this->parent_dao->method('getPlannedUserStory')->willReturn([]);
 
         $collection = [
             new FeatureRepresentation(

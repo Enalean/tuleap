@@ -48,12 +48,17 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
     public function __construct()
     {
         $this->user_manager                      = \UserManager::instance();
+        $user_manager_adapter                    = new UserManagerAdapter($this->user_manager);
         $this->user_story_representation_builder = new UserStoryRepresentationBuilder(
             new ArtifactsLinkedToParentDao(),
             \Tracker_ArtifactFactory::instance(),
             new PlanDao(),
-            new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
-            new UserManagerAdapter($this->user_manager)
+            new BackgroundColorRetriever(
+                new BackgroundColorBuilder(new BindDecoratorRetriever()),
+                \Tracker_ArtifactFactory::instance(),
+                $user_manager_adapter
+            ),
+            $user_manager_adapter
         );
     }
 
@@ -62,11 +67,11 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
      *
      * In a feature, get all elements planned in team and linked to a program increment
      *
-     * @url GET {id}/children
+     * @url    GET {id}/children
      * @access hybrid
      *
-     * @param int $id Id of the feature
-     * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
+     * @param int $id     Id of the feature
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
      * @return UserStoryRepresentation[]
@@ -78,7 +83,10 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $children = $this->user_story_representation_builder->buildFeatureStories($id, UserProxy::buildFromPFUser($user));
+            $children = $this->user_story_representation_builder->buildFeatureStories(
+                $id,
+                UserProxy::buildFromPFUser($user)
+            );
 
             Header::sendPaginationHeaders($limit, $offset, count($children), self::MAX_LIMIT);
 

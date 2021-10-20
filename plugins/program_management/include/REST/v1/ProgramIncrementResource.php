@@ -101,7 +101,11 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new FeatureRepresentationBuilder(
                 $artifact_factory,
                 \Tracker_FormElementFactory::instance(),
-                new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
+                new BackgroundColorRetriever(
+                    new BackgroundColorBuilder(new BindDecoratorRetriever()),
+                    $artifact_factory,
+                    $this->user_manager_adapter
+                ),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
                 $this->linked_to_feature_checker,
                 $this->user_manager_adapter

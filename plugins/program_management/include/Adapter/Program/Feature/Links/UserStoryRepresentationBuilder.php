@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -38,7 +39,7 @@ class UserStoryRepresentationBuilder
         private ArtifactsLinkedToParentDao $dao,
         private \Tracker_ArtifactFactory $artifact_factory,
         private PlanStore $plan_store,
-        private BackgroundColorRetriever $retrieve_background_color,
+        private RetrieveBackgroundColor $retrieve_background_color,
         private RetrieveUser $retrieve_user
     ) {
     }
@@ -74,7 +75,10 @@ class UserStoryRepresentationBuilder
                     $story->isOpen(),
                     new ProjectReference($story->getTracker()->getProject()),
                     MinimalTrackerRepresentation::build($story->getTracker()),
-                    $this->retrieve_background_color->retrieveBackgroundColor($story, $user)->getBackgroundColorName(),
+                    $this->retrieve_background_color->retrieveBackgroundColor(
+                        ArtifactIdentifierProxy::fromArtifact($story),
+                        $user_identifier
+                    )->getBackgroundColorName(),
                 );
             }
         }

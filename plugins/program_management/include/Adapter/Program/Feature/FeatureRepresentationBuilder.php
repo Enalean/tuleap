@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -36,7 +38,7 @@ class FeatureRepresentationBuilder
     public function __construct(
         private \Tracker_ArtifactFactory $artifact_factory,
         private \Tracker_FormElementFactory $form_element_factory,
-        private BackgroundColorRetriever $retrieve_background_color,
+        private RetrieveBackgroundColor $retrieve_background_color,
         private VerifyIsVisibleFeature $feature_verifier,
         private VerifyLinkedUserStoryIsNotPlanned $user_story_checker,
         private RetrieveUser $retrieve_user
@@ -72,7 +74,10 @@ class FeatureRepresentationBuilder
             $full_artifact->getXRef(),
             $full_artifact->getUri(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
-            $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user),
+            $this->retrieve_background_color->retrieveBackgroundColor(
+                ArtifactIdentifierProxy::fromArtifact($full_artifact),
+                $user_identifier
+            ),
             $this->user_story_checker->isLinkedToAtLeastOnePlannedUserStory($user_identifier, $feature),
             $this->user_story_checker->hasStoryLinked($user_identifier, $feature)
         );
