@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-class CannotFindSourceTrackerUsingXmlReference extends \Exception implements XMLConfigExtractionException
+final class CannotFindSourceTrackerUsingXmlReference extends \Exception implements XMLConfigExtractionException
 {
     public function __construct(string $source_tracker_ref)
     {

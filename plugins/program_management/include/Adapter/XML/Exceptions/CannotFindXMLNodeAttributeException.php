@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-class CannotFindXMLNodeAttributeException extends \Exception implements XMLConfigExtractionException
+final class CannotFindXMLNodeAttributeException extends \Exception implements XMLConfigExtractionException
 {
     public function __construct(string $attribute_name, string $xml_node_name)
     {

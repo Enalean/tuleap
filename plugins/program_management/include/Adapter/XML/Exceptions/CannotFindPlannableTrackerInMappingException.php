@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-class CannotFindPlannableTrackerInMappingException extends \Exception implements XMLConfigExtractionException
+final class CannotFindPlannableTrackerInMappingException extends \Exception implements XMLConfigExtractionException
 {
     public function __construct(string $tracker_ref)
     {

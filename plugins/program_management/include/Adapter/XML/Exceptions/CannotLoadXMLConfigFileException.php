@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\XML\Exceptions;
 
-class CannotLoadXMLConfigFileException extends \Exception implements XMLConfigExtractionException
+final class CannotLoadXMLConfigFileException extends \Exception implements XMLConfigExtractionException
 {
     public function __construct(string $xml_path)
     {
