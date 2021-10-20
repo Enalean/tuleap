@@ -28,7 +28,8 @@ export async function createExportDocument(
     report_name: string,
     tracker_id: number,
     tracker_shortname: string,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
+    base_url: string
 ): Promise<ExportDocument> {
     const report_artifacts = await retrieveReportArtifacts(
         tracker_id,
@@ -48,8 +49,12 @@ export async function createExportDocument(
         artifact_data.push({
             id: artifact_id,
             title: formatted_title,
-            fields: formatFieldValues(artifact.values, datetime_locale_information),
-            containers: formatContainers(artifact.containers, datetime_locale_information),
+            fields: formatFieldValues(artifact.values, datetime_locale_information, base_url),
+            containers: formatContainers(
+                artifact.containers,
+                datetime_locale_information,
+                base_url
+            ),
         });
     }
 
@@ -58,10 +63,15 @@ export async function createExportDocument(
 
 function formatFieldValues(
     values: ReadonlyArray<ArtifactReportFieldValue>,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
+    base_url: string
 ): ReadonlyArray<ArtifactFieldValue> {
     return values.flatMap((value) => {
-        const formatted_field_value = formatFieldValue(value, datetime_locale_information);
+        const formatted_field_value = formatFieldValue(
+            value,
+            datetime_locale_information,
+            base_url
+        );
         if (formatted_field_value === null) {
             return [];
         }
@@ -71,7 +81,8 @@ function formatFieldValues(
 
 function formatFieldValue(
     value: ArtifactReportFieldValue,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
+    base_url: string
 ): ArtifactFieldValue | null {
     if (value.type === "text") {
         return {
@@ -79,6 +90,7 @@ function formatFieldValue(
             field_value: value.value ?? "",
             content_length: "long",
             content_format: value.format === "html" ? "html" : "plaintext",
+            value_type: "string",
         };
     }
 
@@ -119,9 +131,17 @@ function formatFieldValue(
     } else if (value.type === "file") {
         const file_descriptions_content = [];
         for (const file_description of value.file_descriptions) {
-            file_descriptions_content.push(file_description.name);
+            file_descriptions_content.push({
+                link_label: file_description.name,
+                link_url: new URL(base_url.replace(/\/$/, "") + file_description.html_url).href,
+            });
         }
-        artifact_field_value = file_descriptions_content.join(", ");
+        return {
+            field_name: value.label,
+            field_value: file_descriptions_content,
+            content_length: "short",
+            value_type: "links",
+        };
     } else {
         return null;
     }
@@ -130,18 +150,24 @@ function formatFieldValue(
         field_name: value.label,
         field_value: artifact_field_value,
         content_length: "short",
+        value_type: "string",
     };
 }
 
 function formatContainers(
     containers: ReadonlyArray<ArtifactReportContainer>,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
+    base_url: string
 ): ReadonlyArray<ArtifactContainer> {
     return containers.map((container) => {
         return {
             name: container.name,
-            fields: formatFieldValues(container.values, datetime_locale_information),
-            containers: formatContainers(container.containers, datetime_locale_information),
+            fields: formatFieldValues(container.values, datetime_locale_information, base_url),
+            containers: formatContainers(
+                container.containers,
+                datetime_locale_information,
+                base_url
+            ),
         };
     });
 }

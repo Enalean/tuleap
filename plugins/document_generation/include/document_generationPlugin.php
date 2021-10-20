@@ -99,7 +99,8 @@ class document_generationPlugin extends Plugin
                             "user_display_name" => UserHelper::instance()->getDisplayNameFromUser($current_user),
                             "user_timezone" => \Tuleap\TimezoneRetriever::getUserTimezone($current_user),
                             "report_url" => \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id),
-                            "report_criteria" => $report_criteria_json
+                            "report_criteria" => $report_criteria_json,
+                            "base_url" => \Tuleap\ServerHostname::HTTPSUrl()
                         ],
                         JSON_THROW_ON_ERROR
                     )

@@ -31,6 +31,7 @@ export interface GlobalExportProperties {
     readonly user_timezone: string;
     readonly report_url: string;
     readonly report_criteria: ReportCriteria;
+    readonly base_url: string;
 }
 
 export type ReportCriteria = ExportReportCriteria | ClassicReportCriteria;
@@ -78,6 +79,7 @@ interface DateReportCriterionAdvancedValue {
 interface ArtifactFieldValueContent {
     readonly field_name: string;
     readonly field_value: string;
+    readonly value_type: "string";
 }
 
 interface ArtifactFieldValueShort {
@@ -89,8 +91,21 @@ interface ArtifactFieldValueLong {
     readonly content_format: "plaintext" | "html";
 }
 
-export type ArtifactFieldValue = ArtifactFieldValueContent &
-    (ArtifactFieldValueShort | ArtifactFieldValueLong);
+interface ArtifactFieldValueLinksContent {
+    readonly field_name: string;
+    readonly field_value: Array<ArtifactFieldValueLink>;
+    readonly value_type: "links";
+    readonly content_length: "short";
+}
+
+interface ArtifactFieldValueLink {
+    readonly link_label: string;
+    readonly link_url: string;
+}
+
+export type ArtifactFieldValue =
+    | (ArtifactFieldValueContent & (ArtifactFieldValueShort | ArtifactFieldValueLong))
+    | ArtifactFieldValueLinksContent;
 
 export interface ExportDocument {
     readonly name: string;
