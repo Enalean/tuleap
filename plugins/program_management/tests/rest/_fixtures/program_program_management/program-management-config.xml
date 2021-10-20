@@ -27,4 +27,7 @@
       <ugroup ugroup_name="project_admins"/>
     </can_prioritize>
   </increments>
+  <iterations>
+    <source_tracker REF="T977"/>
+  </iterations>
 </program_management>

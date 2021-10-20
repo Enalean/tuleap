@@ -185,6 +185,32 @@ class ProjectResourceTest extends \RestBase
     /**
      * @depends testGetProgramIncrements
      */
+    public function testGetIterations(int $program_increment_id): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'program_increment/' . urlencode((string) $program_increment_id) . '/iterations')
+        );
+
+        $iteration = [
+            "id" => 140,
+            "uri" =>  "/plugins/tracker/?aid=140",
+            "xref" =>  "iteration #140",
+            "title" => "iteration",
+            "status" => "On Going",
+            "start_date" => "2021-06-14T00:00:00+02:00",
+            "end_date" => "2021-07-01T00:00:00+02:00",
+            "user_can_update" => true
+        ];
+
+        self::assertEquals(200, $response->getStatusCode());
+        $iterations = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $iterations);
+        self::assertEquals($iteration, $iterations[0]);
+    }
+
+    /**
+     * @depends testGetProgramIncrements
+     */
     public function testGetProgramIncrementContent(int $id): void
     {
         $this->checkGetFirstElementOfProgramIncrement($id, 'title', 'My other artifact for top backlog manipulation');
