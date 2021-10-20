@@ -29,5 +29,5 @@ interface RetrieveEndPeriodField
     /**
      * @throws MissingTimeFrameFieldException
      */
-    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndPeriodFieldReference;
+    public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndDateFieldReference|DurationFieldReference;
 }

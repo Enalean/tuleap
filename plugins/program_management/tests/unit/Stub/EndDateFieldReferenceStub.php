@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 
 /**
  * @psalm-immutable
  */
-final class EndPeriodFieldReferenceStub implements EndPeriodFieldReference
+final class EndDateFieldReferenceStub implements EndDateFieldReference
 {
     private function __construct(private int $id, private string $label)
     {
@@ -35,7 +35,7 @@ final class EndPeriodFieldReferenceStub implements EndPeriodFieldReference
 
     public static function withDefaults(): self
     {
-        return new self(663, 'End Date');
+        return new self(556, 'End Date');
     }
 
     public static function withId(int $id): self

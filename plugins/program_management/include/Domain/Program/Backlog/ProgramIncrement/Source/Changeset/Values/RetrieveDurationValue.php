@@ -20,15 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-/**
- * I am a reference to the Time Frame Semantic's end period field. I am either an End date field
- * or a duration (numeric) field. I hold a field identifier and a label.
- * @psalm-immutable
- */
-interface EndPeriodFieldReference
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+
+interface RetrieveDurationValue
 {
-    public function getId(): int;
-    public function getLabel(): string;
+    /**
+     * @throws ChangesetValueNotFoundException
+     * @return int Number of days
+     */
+    public function getDurationValue(DurationFieldReference $duration): int;
 }

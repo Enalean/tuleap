@@ -53,7 +53,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
         }
 
         $pfuser           = $this->retrieve_user->getUserWithId($first_changeset->user);
-        $formatted_values = $this->formatter->format($first_changeset->values);
+        $formatted_values = $this->formatter->formatForTrackerPlugin($first_changeset->values);
         $artifact         = $this->artifact_creator->create(
             $full_tracker,
             $formatted_values,

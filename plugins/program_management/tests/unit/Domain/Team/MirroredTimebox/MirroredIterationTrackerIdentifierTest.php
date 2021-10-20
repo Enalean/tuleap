@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Tests\Builder\ProjectReferenceBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -40,7 +40,7 @@ final class MirroredIterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\
         $this->tracker_retriever = RetrieveMirroredIterationTrackerStub::withValidTrackers(
             TrackerReferenceStub::withId(self::TRACKER_ID)
         );
-        $this->team_project      = ProjectReferenceBuilder::buildGeneric();
+        $this->team_project      = ProjectReferenceStub::buildGeneric();
         $this->user              = UserIdentifierStub::buildGenericUser();
     }
 
@@ -51,6 +51,7 @@ final class MirroredIterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\
             $this->team_project,
             $this->user
         );
+        self::assertNotNull($mirrored_iteration_tracker);
         self::assertSame(self::TRACKER_ID, $mirrored_iteration_tracker->getId());
     }
 

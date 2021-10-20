@@ -38,7 +38,7 @@ final class SynchronizedFieldReferences
         public DescriptionFieldReference $description,
         public StatusFieldReference $status,
         public StartDateFieldReference $start_date,
-        public EndPeriodFieldReference $end_period,
+        public DurationFieldReference|EndDateFieldReference $end_period,
         public ArtifactLinkFieldReference $artifact_link
     ) {
     }

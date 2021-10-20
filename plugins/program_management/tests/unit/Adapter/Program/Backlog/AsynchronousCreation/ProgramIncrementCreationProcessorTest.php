@@ -57,8 +57,8 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
     private const DESCRIPTION_FORMAT                           = 'commonmark';
     private const FIRST_MAPPED_STATUS_BIND_VALUE_ID            = 2271;
     private const SECOND_MAPPED_STATUS_BIND_VALUE_ID           = 6281;
-    private const START_DATE_VALUE                             = '2020-12-06';
-    private const END_DATE_VALUE                               = '2025-08-18';
+    private const START_DATE_VALUE                             = 1607291762;
+    private const END_DATE_VALUE                               = 1755522942;
     private const FIRST_TITLE_FIELD_ID                         = 604;
     private const FIRST_DESCRIPTION_FIELD_ID                   = 335;
     private const FIRST_STATUS_FIELD_ID                        = 772;

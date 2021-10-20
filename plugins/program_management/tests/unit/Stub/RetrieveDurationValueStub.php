@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDurationValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
 
-interface RetrieveStartDateValue
+final class RetrieveDurationValueStub implements RetrieveDurationValue
 {
+    private function __construct(private int $value)
+    {
+    }
+
     /**
-     * @throws ChangesetValueNotFoundException
-     * @return int UNIX Timestamp
+     * @param int $value Number of days
      */
-    public function getStartDateValue(StartDateFieldReference $start_date): int;
+    public static function withValue(int $value): self
+    {
+        return new self($value);
+    }
+
+    public function getDurationValue(DurationFieldReference $duration): int
+    {
+        return $this->value;
+    }
 }

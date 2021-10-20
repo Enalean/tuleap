@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
  */
 final class StartDateValue
 {
-    private function __construct(private string $date_value)
+    private function __construct(private int $date_value)
     {
     }
 
@@ -45,7 +45,10 @@ final class StartDateValue
         return new self($start_date_retriever->getStartDateValue($start_date));
     }
 
-    public function getValue(): string
+    /**
+     * @return int UNIX Timestamp
+     */
+    public function getValue(): int
     {
         return $this->date_value;
     }

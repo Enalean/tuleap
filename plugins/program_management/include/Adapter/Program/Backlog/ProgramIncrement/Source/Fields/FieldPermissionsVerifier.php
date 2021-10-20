@@ -26,7 +26,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
@@ -43,7 +44,7 @@ final class FieldPermissionsVerifier implements VerifyFieldPermissions
 
     public function canUserSubmit(
         UserIdentifier $user_identifier,
-        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field
     ): bool {
         $user       = $this->retrieve_user->getUserWithId($user_identifier);
         $full_field = $this->form_element_factory->getFieldById($field->getId());
@@ -57,7 +58,7 @@ final class FieldPermissionsVerifier implements VerifyFieldPermissions
 
     public function canUserUpdate(
         UserIdentifier $user_identifier,
-        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|EndPeriodFieldReference|ArtifactLinkFieldReference $field
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field
     ): bool {
         $user       = $this->retrieve_user->getUserWithId($user_identifier);
         $full_field = $this->form_element_factory->getFieldById($field->getId());

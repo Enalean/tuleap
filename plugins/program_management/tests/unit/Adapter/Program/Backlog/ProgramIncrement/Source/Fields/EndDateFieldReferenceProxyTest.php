@@ -22,22 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-
-final class EndPeriodFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EndDateFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID    = 430;
-    private const FIELD_LABEL = 'extrovert';
+    private const FIELD_ID    = 755;
+    private const FIELD_LABEL = 'actualist';
 
-    public function testItBuildsFromEndDateField(): void
+    public function testItBuildsFromTrackerField(): void
     {
-        $field = EndPeriodFieldReferenceProxy::fromTrackerField($this->getDateField());
-        self::assertSame(self::FIELD_ID, $field->getId());
-        self::assertSame(self::FIELD_LABEL, $field->getLabel());
-    }
-
-    public function testItBuildsFromDurationField(): void
-    {
-        $field = EndPeriodFieldReferenceProxy::fromTrackerField($this->getIntField());
+        $field = EndDateFieldReferenceProxy::fromTrackerField($this->getDateField());
         self::assertSame(self::FIELD_ID, $field->getId());
         self::assertSame(self::FIELD_LABEL, $field->getLabel());
     }
@@ -46,24 +38,7 @@ final class EndPeriodFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         return new \Tracker_FormElement_Field_Date(
             self::FIELD_ID,
-            30,
-            1,
-            'irrelevant',
-            self::FIELD_LABEL,
-            'Irrelevant',
-            true,
-            'P',
-            true,
-            '',
-            1
-        );
-    }
-
-    private function getIntField(): \Tracker_FormElement_Field_Integer
-    {
-        return new \Tracker_FormElement_Field_Integer(
-            self::FIELD_ID,
-            30,
+            62,
             1,
             'irrelevant',
             self::FIELD_LABEL,

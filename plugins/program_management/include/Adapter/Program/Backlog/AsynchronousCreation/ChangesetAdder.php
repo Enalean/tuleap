@@ -52,7 +52,7 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
     {
         $full_artifact    = $this->getFullArtifact($changeset->mirrored_timebox);
         $full_user        = $this->user_retriever->getUserWithId($changeset->user);
-        $formatted_values = $this->formatter->format($changeset->values);
+        $formatted_values = $this->formatter->formatForTrackerPlugin($changeset->values);
         try {
             $this->createChangeset(
                 $full_artifact,

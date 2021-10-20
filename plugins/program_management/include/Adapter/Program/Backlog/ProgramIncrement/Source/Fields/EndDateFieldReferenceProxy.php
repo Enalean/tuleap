@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveStartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 
-final class RetrieveStartDateValueStub implements RetrieveStartDateValue
+/**
+ * @psalm-immutable
+ */
+final class EndDateFieldReferenceProxy implements EndDateFieldReference
 {
-    private function __construct(private int $value)
+    private function __construct(private int $id, private string $label)
     {
     }
 
-    /**
-     * @param int $value UNIX Timestamp
-     */
-    public static function withValue(int $value): self
+    public static function fromTrackerField(\Tracker_FormElement_Field_Date $end_date_field): self
     {
-        return new self($value);
+        return new self($end_date_field->getId(), $end_date_field->getLabel());
     }
 
-    public function getStartDateValue(StartDateFieldReference $start_date): int
+    public function getId(): int
     {
-        return $this->value;
+        return $this->id;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
     }
 }

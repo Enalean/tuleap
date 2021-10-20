@@ -29,7 +29,7 @@ final class ArtifactLinkValueFormatter
     /**
      * @return array{new_values: string, natures: array<string, string>}
      */
-    public function format(?ArtifactLinkValue $value): array
+    public function formatForTrackerPlugin(?ArtifactLinkValue $value): array
     {
         if (! $value) {
             return [

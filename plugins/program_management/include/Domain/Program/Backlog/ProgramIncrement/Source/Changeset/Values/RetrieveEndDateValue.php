@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,31 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 
-/**
- * I hold the value of the end period (end date or duration) field from the Timeframe semantic of the source Timebox.
- * I am the reference value that must be copied to Mirrored Timeboxes.
- * @psalm-immutable
- */
-final class EndPeriodValue
+interface RetrieveEndDateValue
 {
-    private function __construct(private string $value)
-    {
-    }
-
     /**
      * @throws ChangesetValueNotFoundException
+     * @return int UNIX Timestamp
      */
-    public static function fromEndPeriodReference(
-        RetrieveEndPeriodValue $end_period_retriever,
-        EndPeriodFieldReference $end_period
-    ): self {
-        return new self($end_period_retriever->getEndPeriodValue($end_period));
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
+    public function getEndDateValue(EndDateFieldReference $end_date): int;
 }

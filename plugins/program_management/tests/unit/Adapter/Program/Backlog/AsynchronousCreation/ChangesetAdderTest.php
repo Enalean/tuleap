@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueFormatter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangesetException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
@@ -58,9 +59,9 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const STATUS_ID                     = 2319;
     private const MAPPED_STATUS_BIND_VALUE_ID   = 3971;
     private const START_DATE_ID                 = 2225;
-    private const START_DATE_VALUE              = '2011-02-21';
+    private const START_DATE_VALUE              = 1298323326; // 2011-02-21T22:22:06+01:00
     private const END_PERIOD_ID                 = 3513;
-    private const END_PERIOD_VALUE              = '2022-05-21';
+    private const END_PERIOD_VALUE              = 1653168968; // 2022-05-21T23:36:08+02:00
     private const ARTIFACT_LINK_ID              = 7248;
     private const MIRRORED_PROGRAM_INCREMENT_ID = 86;
     private const MIRRORED_ITERATION_ID         = 33;
@@ -89,13 +90,14 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::ARTIFACT_LINK_ID
         );
 
-        $source_values = SourceTimeboxChangesetValuesBuilder::buildWithValuesAndSubmissionDate(
+        $source_values = SourceTimeboxChangesetValuesBuilder::buildWithValues(
             self::TITLE_VALUE,
             self::DESCRIPTION_VALUE,
             self::DESCRIPTION_FORMAT,
             ['superelevation'],
             self::START_DATE_VALUE,
             self::END_PERIOD_VALUE,
+            112,
             self::SUBMISSION_DATE
         );
 
@@ -123,7 +125,8 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveUserStub::withUser($this->pfuser),
             new ChangesetValuesFormatter(
                 new ArtifactLinkValueFormatter(),
-                new DescriptionValueFormatter()
+                new DescriptionValueFormatter(),
+                new DateValueFormatter()
             ),
             $this->changeset_creator
         );
@@ -148,8 +151,8 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'format'  => self::DESCRIPTION_FORMAT
                     ],
                     self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
-                    self::START_DATE_ID    => self::START_DATE_VALUE,
-                    self::END_PERIOD_ID    => self::END_PERIOD_VALUE
+                    self::START_DATE_ID    => '2011-02-21',
+                    self::END_PERIOD_ID    => '2022-05-21'
                 ],
                 '',
                 $this->pfuser,

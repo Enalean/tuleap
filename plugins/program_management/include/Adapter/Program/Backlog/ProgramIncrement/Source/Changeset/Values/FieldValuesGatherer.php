@@ -28,7 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndPeriodFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StartDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
@@ -38,7 +39,8 @@ final class FieldValuesGatherer implements GatherFieldValues
 {
     public function __construct(
         private \Tracker_Artifact_Changeset $changeset,
-        private \Tracker_FormElementFactory $form_element_factory
+        private \Tracker_FormElementFactory $form_element_factory,
+        private DateValueRetriever $date_value_retriever
     ) {
     }
 
@@ -82,41 +84,28 @@ final class FieldValuesGatherer implements GatherFieldValues
         return TextFieldValueProxy::fromChangesetValue($description_value);
     }
 
-    public function getStartDateValue(StartDateFieldReference $start_date): string
+    public function getStartDateValue(StartDateFieldReference $start_date): int
     {
-        $full_field = $this->form_element_factory->getFieldById($start_date->getId());
-        if (! $full_field) {
-            throw new FieldNotFoundException($start_date->getId());
-        }
-
-        $start_date_value = $this->changeset->getValue($full_field);
-        if (! $start_date_value) {
-            throw new ChangesetValueNotFoundException(
-                (int) $this->changeset->getId(),
-                $start_date->getId(),
-                'timeframe start date'
-            );
-        }
-        assert($start_date_value instanceof \Tracker_Artifact_ChangesetValue_Date);
-        return $start_date_value->getDate();
+        return $this->date_value_retriever->getDateFieldTimestamp($this->changeset, $start_date);
     }
 
-    public function getEndPeriodValue(EndPeriodFieldReference $end_period): string
+    public function getEndDateValue(EndDateFieldReference $end_date): int
     {
-        $full_field = $this->form_element_factory->getFieldById($end_period->getId());
+        return $this->date_value_retriever->getDateFieldTimestamp($this->changeset, $end_date);
+    }
+
+    public function getDurationValue(DurationFieldReference $duration): int
+    {
+        $full_field = $this->form_element_factory->getFieldById($duration->getId());
         if (! $full_field) {
-            throw new FieldNotFoundException($end_period->getId());
+            throw new FieldNotFoundException($duration->getId());
         }
 
-        $end_period_value = $this->changeset->getValue($full_field);
-        if (! $end_period_value) {
-            throw new ChangesetValueNotFoundException(
-                (int) $this->changeset->getId(),
-                $end_period->getId(),
-                'timeframe end period'
-            );
+        $duration_value = $this->changeset->getValue($full_field);
+        if (! $duration_value) {
+            throw new ChangesetValueNotFoundException((int) $this->changeset->getId(), $duration->getId(), 'timeframe duration');
         }
-        return (string) $end_period_value->getValue();
+        return $duration_value->getValue();
     }
 
     public function getStatusValues(StatusFieldReference $status): array
