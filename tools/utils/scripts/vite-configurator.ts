@@ -24,6 +24,7 @@ import { esbuild_target } from "./browserslist_config";
 import type { UserPluginConfig as PluginCheckerConfig } from "vite-plugin-checker";
 import checker from "vite-plugin-checker";
 import dts from "vite-dts";
+import path from "path";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
 type OverloadedServerOptions = Omit<ServerOptions, "fs">;
@@ -37,11 +38,49 @@ export function defineConfig(
     typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
 ): UserConfigExport {
     const plugins = config.plugins ?? [];
+    if (typechecks !== null && config.build?.lib) {
+        plugins.push(dts());
+    }
+    return defineBaseConfig({ ...config, plugins }, typechecks);
+}
+
+type OverloadedBuildAppOptions = Omit<
+    OverloadedBuildOptions,
+    "lib" | "manifest" | "outDir" | "emptyOutDir"
+>;
+type OverloadedAppUserConfig = Omit<UserConfigWithoutBuildAndServer, "base"> & {
+    build?: OverloadedBuildAppOptions;
+} & {
+    server?: OverloadedServerOptions;
+};
+
+export function defineAppConfig(
+    app_name: string,
+    config: OverloadedAppUserConfig,
+    typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
+): UserConfigExport {
+    return defineBaseConfig(
+        {
+            ...config,
+            base: `/assets/${app_name}/`,
+            build: {
+                ...config.build,
+                manifest: true,
+                emptyOutDir: true,
+                outDir: path.resolve(__dirname, `../../../src/www/assets/${app_name}/`),
+            },
+        },
+        typechecks
+    );
+}
+
+function defineBaseConfig(
+    config: UserConfig,
+    typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
+): UserConfigExport {
+    const plugins = config.plugins ?? [];
     if (typechecks !== null) {
         plugins.push(checker(typechecks));
-        if (config.build?.lib) {
-            plugins.push(dts());
-        }
     }
     return viteDefineConfig({
         ...config,

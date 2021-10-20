@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 
@@ -108,14 +108,14 @@ class document_generationPlugin extends Plugin
             )
         );
 
-        $document_generation_asset = new IncludeAssets(
+        $document_generation_asset = new IncludeViteAssets(
             __DIR__ . '/../../../src/www/assets/document_generation',
             '/assets/document_generation'
         );
 
         $javascript_asset = new JavascriptAsset(
             $document_generation_asset,
-            "tracker-report-action.js"
+            "scripts/tracker-report-action/src/index.ts"
         );
 
         $event->addJavascriptAssets($javascript_asset);

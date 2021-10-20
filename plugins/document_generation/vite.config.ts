@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+import {
+    createPOGettextPlugin,
+    defineAppConfig,
+} from "../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+export default defineAppConfig(
+    "document_generation",
+    {
+        plugins: [createPOGettextPlugin()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "tracker-report-action": path.resolve(
+                        __dirname,
+                        "scripts/tracker-report-action/src/index.ts"
+                    ),
+                },
+            },
+        },
+    },
+    { typescript: true }
+);

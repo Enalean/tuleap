@@ -41,29 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
         loading_modal_element.classList.add("tuleap-modal-loading");
         document.body.appendChild(loading_modal_element);
 
-        const export_document_module = import(
-            /* webpackChunkName: "document_generation-download-export" */ "./export-document"
-        );
+        const export_document_module = import("./export-document");
 
-        const download_docx_module = import(
-            /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/DOCX/download-docx"
-        );
+        const download_docx_module = import("./Exporter/DOCX/download-docx");
 
-        const gettext_module = import(
-            /* webpackChunkName: "document_generation-gettext" */ "../../../../../src/scripts/tuleap/gettext/gettext-init"
-        );
+        const gettext_module = import("../../../../../src/scripts/tuleap/gettext/gettext-init");
 
         try {
-            const { initGettext, getPOFileFromLocale } = await gettext_module;
+            const { initGettext, getPOFileFromLocaleWithoutExtension } = await gettext_module;
 
             const gettext_provider = await initGettext(
                 language,
                 "tracker-report-action",
-                (locale) =>
-                    import(
-                        /* webpackChunkName: "document_generation-po" */ "../po/" +
-                            getPOFileFromLocale(locale)
-                    )
+                (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
             );
 
             const { startDownloadExportDocument } = await export_document_module;

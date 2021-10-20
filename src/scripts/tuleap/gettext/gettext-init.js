@@ -20,10 +20,14 @@
 import Gettext from "node-gettext";
 
 export function getPOFileFromLocale(locale) {
+    return getPOFileFromLocaleWithoutExtension(locale) + ".po";
+}
+
+export function getPOFileFromLocaleWithoutExtension(locale) {
     if (!locale.match(/[a-z]{2,3}_[A-Z]{2,3}/)) {
         throw new Error(`${locale} does not not seem to be a locale string`);
     }
-    return locale + ".po";
+    return locale;
 }
 
 export async function initGettext(locale, domain, load_translations_callback) {

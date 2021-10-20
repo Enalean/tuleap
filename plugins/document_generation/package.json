@@ -13,8 +13,8 @@
     "@types/sprintf-js": "^1.1.2"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "vite build",
+    "watch": "vite build --watch",
     "test": "jest"
   }
 }

@@ -25,17 +25,12 @@ namespace Tuleap\Layout;
 final class JavascriptAsset
 {
     /**
-     * @var IncludeAssets
-     */
-    private $assets;
-    /**
      * @var string
      */
     private $script_name;
 
-    public function __construct(IncludeAssets $assets, string $script_name)
+    public function __construct(private IncludeAssetsGeneric $assets, string $script_name)
     {
-        $this->assets      = $assets;
         $this->script_name = $script_name;
     }
 
