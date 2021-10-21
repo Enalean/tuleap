@@ -140,6 +140,17 @@ function getFieldValueWithAdditionalInformation(
             }
             return { ...value, formatted_values: formatted_values };
         }
+        case "tbl": {
+            const formatted_open_values: string[] = [];
+            for (const open_list_value of value.bind_value_objects) {
+                if ("display_name" in open_list_value) {
+                    formatted_open_values.push(open_list_value.display_name);
+                } else if ("label" in open_list_value) {
+                    formatted_open_values.push(open_list_value.label);
+                }
+            }
+            return { ...value, formatted_open_values: formatted_open_values };
+        }
         default:
             return value;
     }
@@ -168,6 +179,7 @@ async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStru
             case "rb":
             case "msb":
             case "cb":
+            case "tbl":
                 fields_map.set(field.field_id, field);
                 break;
             default:
@@ -199,7 +211,8 @@ export type ArtifactReportFieldValue =
     | ArtifactReportResponseFileFieldValue
     | ArtifactReportResponseSubmittedByFieldValue
     | ArtifactReportResponseLastUpdateByFieldValue
-    | (ArtifactReportResponseSimpleListFieldValue & { formatted_values: string[] });
+    | (ArtifactReportResponseSimpleListFieldValue & { formatted_values: string[] })
+    | (ArtifactReportResponseOpenListFieldValue & { formatted_open_values: string[] });
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -211,7 +224,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseFileFieldValue
     | ArtifactReportResponseSubmittedByFieldValue
     | ArtifactReportResponseLastUpdateByFieldValue
-    | ArtifactReportResponseSimpleListFieldValue;
+    | ArtifactReportResponseSimpleListFieldValue
+    | ArtifactReportResponseOpenListFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -282,6 +296,19 @@ interface ArtifactReportResponseSimpleListFieldValue {
         | Array<ArtifactReportResponseUserGroupRepresentation>;
 }
 
+interface ArtifactReportResponseOpenListFieldValue {
+    field_id: number;
+    type: "tbl";
+    label: string;
+    bind_value_objects:
+        | Array<ArtifactReportResponseUserRepresentation>
+        | Array<
+              | ArtifactReportResponseOpenListValueRepresentation
+              | ArtifactReportResponseStaticValueRepresentation
+          >
+        | Array<ArtifactReportResponseUserGroupRepresentation>;
+}
+
 interface ArtifactReportResponseUserRepresentation {
     email: string;
     status: string;
@@ -302,6 +329,11 @@ interface ArtifactReportResponseStaticValueRepresentation {
     label: string;
     color: string | null;
     tlp_color: string | null;
+}
+
+interface ArtifactReportResponseOpenListValueRepresentation {
+    id: number;
+    label: string;
 }
 
 interface ArtifactReportResponseUserGroupRepresentation {
@@ -357,7 +389,7 @@ interface ContainerFieldStructure extends BaseFieldStructure {
 }
 
 interface ListFieldStructure extends BaseFieldStructure {
-    type: "sb" | "rb" | "msb" | "cb";
+    type: "sb" | "rb" | "msb" | "cb" | "tbl";
 }
 
 interface StructureFormat {
