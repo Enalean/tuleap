@@ -14,3 +14,4 @@ find "$TULEAP_SOURCES" -wholename "$TULEAP_SOURCES/plugins/*/additional-packages
     nix-build "$nix_file" --out-link /tmp/result
     cp -v -r /tmp/result/. "$RPM_BUILD/RPMS/noarch/"
 done
+chmod -v --recursive u+w "$RPM_BUILD/RPMS/noarch/"
