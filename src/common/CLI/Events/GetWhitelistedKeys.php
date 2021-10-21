@@ -26,8 +26,11 @@ use ForgeAccess;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
+use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyMetadata;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\DB\DBConfig;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -67,10 +70,11 @@ final class GetWhitelistedKeys implements Dispatchable
         HelpDropdownPresenterBuilder::class,
         BrowserDeprecationMessage::class,
         SwitchToPresenterBuilder::class,
+        DBConfig::class,
     ];
 
     /**
-     * @var array<string, string>
+     * @var array<string, ConfigKeyMetadata>
      */
     private array $white_listed_keys = [];
 
@@ -87,26 +91,33 @@ final class GetWhitelistedKeys implements Dispatchable
     /**
      * @return string[]
      */
-    public function getWhiteListedKeys(): array
+    public function getKeysThatCanBeModified(): array
     {
         $this->initWhiteList();
-        return array_keys($this->white_listed_keys);
+        $keys = [];
+        foreach ($this->white_listed_keys as $key => $metadata) {
+            if ($metadata->can_be_modified) {
+                $keys[] = $key;
+            }
+        }
+        return $keys;
     }
 
-    public function isKeyWhiteListed(string $key): bool
+    public function canBeModified(string $key): bool
     {
         $this->initWhiteList();
-        return isset($this->white_listed_keys[$key]);
+        return isset($this->white_listed_keys[$key]) && $this->white_listed_keys[$key]->can_be_modified;
     }
 
-    public function getSortedKeysWithMetadata(): \Generator
+    /**
+     * @return array<string, ConfigKeyMetadata>
+     */
+    public function getSortedKeysWithMetadata(): array
     {
         $this->initWhiteList();
         $keys = $this->white_listed_keys;
         ksort($keys, SORT_NATURAL);
-        foreach ($keys as $key => $metadata) {
-            yield $key => ($metadata === true ? '' : $metadata);
-        }
+        return $keys;
     }
 
     private function initWhiteList(): void
@@ -126,22 +137,34 @@ final class GetWhitelistedKeys implements Dispatchable
     {
         $reflected_class = new \ReflectionClass($class_name);
         foreach ($reflected_class->getReflectionConstants() as $const) {
+            $key             = '';
+            $summary         = '';
+            $can_be_modified = true;
             foreach ($const->getAttributes() as $attribute) {
                 if ($attribute->getName() === ConfigKey::class) {
                     $config_key  = $attribute->newInstance();
                     $const_value = $const->getValue();
                     if (is_string($const_value) && is_string($config_key->summary)) {
-                        $this->white_listed_keys[$const_value] = $config_key->summary;
+                        $key     = $const_value;
+                        $summary = $config_key->summary;
                     }
                 }
                 if ($attribute->getName() === FeatureFlagConfigKey::class) {
                     $config_key  = $attribute->newInstance();
                     $const_value = $const->getValue();
                     if (is_string($const_value) && is_string($config_key->summary)) {
-                        $this->white_listed_keys[\ForgeConfig::FEATURE_FLAG_PREFIX . $const_value] = $config_key->summary;
+                        $key     = \ForgeConfig::FEATURE_FLAG_PREFIX . $const_value;
+                        $summary = $config_key->summary;
                     }
                 }
+                if ($attribute->getName() === ConfigCannotBeModified::class) {
+                    $can_be_modified = false;
+                }
             }
+            if (! $key) {
+                continue;
+            }
+            $this->white_listed_keys[$key] = new ConfigKeyMetadata($summary, $can_be_modified);
         }
     }
 }

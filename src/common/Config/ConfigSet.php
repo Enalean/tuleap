@@ -50,7 +50,7 @@ final class ConfigSet
     {
         $white_listed_keys = $this->event_dispatcher->dispatch(new GetWhitelistedKeys());
 
-        if (! $white_listed_keys->isKeyWhiteListed($key)) {
+        if (! $white_listed_keys->canBeModified($key)) {
             throw new InvalidConfigKeyException($white_listed_keys);
         }
 
