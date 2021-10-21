@@ -151,6 +151,19 @@ function getFieldValueWithAdditionalInformation(
             }
             return { ...value, formatted_open_values: formatted_open_values };
         }
+        case "perm": {
+            const formatted_granted_ugroups: string[] = [];
+            for (const ugroup_id of value.granted_groups_ids) {
+                if (field_structure && field_structure.type === value.type) {
+                    for (const structure_ugroup of field_structure.values.ugroup_representations) {
+                        if (structure_ugroup.id === ugroup_id) {
+                            formatted_granted_ugroups.push(structure_ugroup.label);
+                        }
+                    }
+                }
+            }
+            return { ...value, formatted_granted_ugroups: formatted_granted_ugroups };
+        }
         default:
             return value;
     }
@@ -180,6 +193,7 @@ async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStru
             case "msb":
             case "cb":
             case "tbl":
+            case "perm":
                 fields_map.set(field.field_id, field);
                 break;
             default:
@@ -212,7 +226,10 @@ export type ArtifactReportFieldValue =
     | ArtifactReportResponseSubmittedByFieldValue
     | ArtifactReportResponseLastUpdateByFieldValue
     | (ArtifactReportResponseSimpleListFieldValue & { formatted_values: string[] })
-    | (ArtifactReportResponseOpenListFieldValue & { formatted_open_values: string[] });
+    | (ArtifactReportResponseOpenListFieldValue & { formatted_open_values: string[] })
+    | (ArtifactReportResponsePermissionsOnArtifactFieldValue & {
+          formatted_granted_ugroups: string[];
+      });
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -225,7 +242,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseSubmittedByFieldValue
     | ArtifactReportResponseLastUpdateByFieldValue
     | ArtifactReportResponseSimpleListFieldValue
-    | ArtifactReportResponseOpenListFieldValue;
+    | ArtifactReportResponseOpenListFieldValue
+    | ArtifactReportResponsePermissionsOnArtifactFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -345,6 +363,14 @@ interface ArtifactReportResponseUserGroupRepresentation {
     key: string;
 }
 
+interface ArtifactReportResponsePermissionsOnArtifactFieldValue {
+    field_id: number;
+    type: "perm";
+    label: string;
+    granted_groups: string[];
+    granted_groups_ids: string[];
+}
+
 interface ArtifactReportResponseFileDescriptionFieldValue {
     id: number;
     submitted_by: number;
@@ -368,7 +394,8 @@ type FieldsStructure =
     | UnknownFieldStructure
     | DateFieldStructure
     | ContainerFieldStructure
-    | ListFieldStructure;
+    | ListFieldStructure
+    | PermissionsOnArtifactFieldStructure;
 
 interface BaseFieldStructure {
     field_id: number;
@@ -390,6 +417,14 @@ interface ContainerFieldStructure extends BaseFieldStructure {
 
 interface ListFieldStructure extends BaseFieldStructure {
     type: "sb" | "rb" | "msb" | "cb" | "tbl";
+}
+
+interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
+    type: "perm";
+    values: {
+        is_used_by_default: boolean;
+        ugroup_representations: Array<ArtifactReportResponseUserGroupRepresentation>;
+    };
 }
 
 interface StructureFormat {

@@ -153,6 +153,8 @@ function formatFieldValue(
         artifact_field_value = value.formatted_values.join(", ");
     } else if (value.type === "tbl") {
         artifact_field_value = value.formatted_open_values.join(", ");
+    } else if (value.type === "perm") {
+        artifact_field_value = value.formatted_granted_ugroups.join(", ");
     } else {
         return null;
     }
