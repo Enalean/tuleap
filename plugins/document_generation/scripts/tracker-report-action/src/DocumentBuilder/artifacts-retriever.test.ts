@@ -50,7 +50,7 @@ describe("artifacts-retriever", () => {
                     },
                     {
                         field_id: 5,
-                        type: "sb",
+                        type: "msb",
                         label: "User List",
                         values: [
                             {
@@ -64,6 +64,20 @@ describe("artifacts-retriever", () => {
                                 username: "user01",
                                 ldap_id: "101",
                                 avatar_url: "https://example.com/users/user01/avatar-abcdef.png",
+                                is_anonymous: false,
+                                has_avatar: true,
+                            },
+                            {
+                                email: "email_address_02",
+                                status: "A",
+                                id: 102,
+                                uri: "users/102",
+                                user_url: "/users/user02",
+                                real_name: "User 02",
+                                display_name: "User 02 (user02)",
+                                username: "user02",
+                                ldap_id: "",
+                                avatar_url: "https://example.com/users/user02/avatar-qwerty.png",
                                 is_anonymous: false,
                                 has_avatar: true,
                             },
@@ -84,7 +98,7 @@ describe("artifacts-retriever", () => {
                     },
                     {
                         field_id: 7,
-                        type: "sb",
+                        type: "rb",
                         label: "Ugroups List",
                         values: [
                             {
@@ -97,6 +111,25 @@ describe("artifacts-retriever", () => {
                             },
                         ],
                     },
+                    {
+                        field_id: 8,
+                        type: "cb",
+                        label: "Checkbox List",
+                        values: [
+                            {
+                                id: 15,
+                                label: "MulitValue01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                            {
+                                id: 16,
+                                label: "MulitValue02",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                    },
                 ],
             },
         ];
@@ -106,15 +139,17 @@ describe("artifacts-retriever", () => {
             fields: [
                 { field_id: 2, type: "date", is_time_displayed: false },
                 { field_id: 4, type: "fieldset", label: "Fieldset label" },
-                { field_id: 5, type: "sb" },
+                { field_id: 5, type: "msb" },
                 { field_id: 6, type: "sb" },
-                { field_id: 7, type: "sb" },
+                { field_id: 7, type: "rb" },
+                { field_id: 8, type: "cb" },
             ],
             structure: [
                 { id: 3, content: null },
                 { id: 5, content: null },
                 { id: 6, content: null },
                 { id: 7, content: null },
+                { id: 8, content: null },
                 {
                     id: 4,
                     content: [
@@ -142,7 +177,7 @@ describe("artifacts-retriever", () => {
                     },
                     {
                         field_id: 5,
-                        type: "sb",
+                        type: "msb",
                         label: "User List",
                         values: [
                             {
@@ -159,8 +194,22 @@ describe("artifacts-retriever", () => {
                                 is_anonymous: false,
                                 has_avatar: true,
                             },
+                            {
+                                email: "email_address_02",
+                                status: "A",
+                                id: 102,
+                                uri: "users/102",
+                                user_url: "/users/user02",
+                                real_name: "User 02",
+                                display_name: "User 02 (user02)",
+                                username: "user02",
+                                ldap_id: "",
+                                avatar_url: "https://example.com/users/user02/avatar-qwerty.png",
+                                is_anonymous: false,
+                                has_avatar: true,
+                            },
                         ],
-                        formatted_values: ["User 01 (user01)"],
+                        formatted_values: ["User 01 (user01)", "User 02 (user02)"],
                     },
                     {
                         field_id: 6,
@@ -178,7 +227,7 @@ describe("artifacts-retriever", () => {
                     },
                     {
                         field_id: 7,
-                        type: "sb",
+                        type: "rb",
                         label: "Ugroups List",
                         values: [
                             {
@@ -191,6 +240,26 @@ describe("artifacts-retriever", () => {
                             },
                         ],
                         formatted_values: ["Membres du projet"],
+                    },
+                    {
+                        field_id: 8,
+                        type: "cb",
+                        label: "Checkbox List",
+                        values: [
+                            {
+                                id: 15,
+                                label: "MulitValue01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                            {
+                                id: 16,
+                                label: "MulitValue02",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_values: ["MulitValue01", "MulitValue02"],
                     },
                 ],
                 containers: [

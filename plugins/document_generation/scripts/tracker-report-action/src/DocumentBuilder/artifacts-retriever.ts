@@ -126,6 +126,9 @@ function getFieldValueWithAdditionalInformation(
                 };
             }
             return { ...value, is_time_displayed: true };
+        case "rb":
+        case "msb":
+        case "cb":
         case "sb": {
             const formatted_values: string[] = [];
             for (const list_value of value.values) {
@@ -162,6 +165,9 @@ async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStru
             case "subon":
             case "fieldset":
             case "sb":
+            case "rb":
+            case "msb":
+            case "cb":
                 fields_map.set(field.field_id, field);
                 break;
             default:
@@ -268,7 +274,7 @@ interface ArtifactReportResponseLastUpdateByFieldValue {
 
 interface ArtifactReportResponseSimpleListFieldValue {
     field_id: number;
-    type: "sb";
+    type: "sb" | "rb" | "msb" | "cb";
     label: string;
     values:
         | Array<ArtifactReportResponseUserRepresentation>
@@ -351,7 +357,7 @@ interface ContainerFieldStructure extends BaseFieldStructure {
 }
 
 interface ListFieldStructure extends BaseFieldStructure {
-    type: "sb";
+    type: "sb" | "rb" | "msb" | "cb";
 }
 
 interface StructureFormat {
