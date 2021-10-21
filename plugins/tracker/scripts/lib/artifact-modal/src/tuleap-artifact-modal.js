@@ -29,10 +29,8 @@ import french_translations from "../po/fr_FR.po";
 import angular_custom_elements_module from "angular-custom-elements";
 
 import "ngVue";
-import "ngVue/build/plugins.js";
 import Vue from "vue";
 import TextField from "./fields/text-field/TextField.vue";
-import FollowupEditor from "./followups/FollowupEditor.vue";
 import "./ng-vue-config.js";
 
 import "../../../../../../src/scripts/tuleap/custom-elements/relative-date";
@@ -65,6 +63,7 @@ import { CommonmarkPreviewButton } from "./common/CommonmarkPreviewButton";
 import { RadioButtonsField } from "./fields/radio-buttons-field/RadioButtonsField";
 import { FormatSelector } from "./common/FormatSelector";
 import { RichTextEditor } from "./common/RichTextEditor";
+import { FollowupEditor } from "./followups/FollowupEditor";
 
 define(
     IntField,
@@ -74,7 +73,8 @@ define(
     CommonmarkPreviewButton,
     RadioButtonsField,
     FormatSelector,
-    RichTextEditor
+    RichTextEditor,
+    FollowupEditor
 );
 
 export default angular
@@ -82,7 +82,6 @@ export default angular
         angular_moment,
         "gettext",
         "ngVue",
-        "ngVue.plugins",
         angular_tlp,
         angular_custom_elements_module,
         filter,
@@ -119,5 +118,4 @@ export default angular
     .value("TuleapArtifactModalLoading", {
         loading: false,
     })
-    .value(TextField.name, Vue.component(TextField.name, TextField))
-    .value(FollowupEditor.name, Vue.component(FollowupEditor.name, FollowupEditor)).name;
+    .value(TextField.name, Vue.component(TextField.name, TextField)).name;

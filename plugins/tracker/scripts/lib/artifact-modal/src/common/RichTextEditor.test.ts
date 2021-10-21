@@ -25,14 +25,20 @@ import type {
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import * as is_uploading_in_ckeditor_state from "../fields/file-field/is-uploading-in-ckeditor-state";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../../../constants/fields-constants";
 import type { TextFieldFormat } from "../../../../constants/fields-constants";
 import { setCatalog } from "../gettext-catalog";
 import type { HostElement } from "./RichTextEditor";
 import {
+    RichTextEditor,
     connect,
+    getValidFormat,
     onInstanceReady,
     onTextareaInput,
-    RichTextEditor,
     setupImageUpload,
 } from "./RichTextEditor";
 import type { FileField } from "../types";
@@ -473,6 +479,23 @@ describe(`RichTextEditor`, () => {
 
             const textarea = getTextarea(target);
             expect(textarea.required).toBe(true);
+        });
+    });
+
+    describe(`getValidFormat()`, () => {
+        it.each([[TEXT_FORMAT_TEXT], [TEXT_FORMAT_HTML], [TEXT_FORMAT_COMMONMARK]])(
+            `when value is a valid format, it will return it`,
+            (format) => {
+                expect(getValidFormat({}, format, TEXT_FORMAT_TEXT)).toBe(format);
+            }
+        );
+
+        it(`when value is not a valid format, it will return last value`, () => {
+            expect(getValidFormat({}, "invalid_format", TEXT_FORMAT_TEXT)).toBe(TEXT_FORMAT_TEXT);
+        });
+
+        it(`when last value is undefined (no previous cached value), it will default to Commonmark format`, () => {
+            expect(getValidFormat({}, "invalid_format", undefined)).toBe(TEXT_FORMAT_COMMONMARK);
         });
     });
 });

@@ -428,14 +428,17 @@
                 <div ng-if="! modal.followups_comments.loading_comments && modal.followups_comments.content.length === 0" class="tuleap-artifact-modal-followups-comments-empty" translate>No follow-ups</div>
             </div>
 
-            <vue-component
-                name="FollowupEditor"
+            <tuleap-artifact-modal-followup-editor
                 ng-if="modal.isFollowupCommentFormDisplayed()"
-                v-props-value="modal.new_followup_comment"
-                v-props-project-id="modal.tracker.project.id"
-                v-on-input="modal.setFollowupComment"
-                v-on-upload-image="modal.addToFilesAddedByTextField"
-            ></vue-component>
+                class="artifact-modal-followups-add-form"
+                format="modal.new_followup_comment.format"
+                content-value="modal.new_followup_comment.body"
+                project-id="modal.tracker.project.id"
+                on-value-changed="modal.setFollowupComment($event)"
+                on-upload-image="modal.addToFilesAddedByTextFieldForCustomElement($event)"
+                ce-one-way
+                data-test="add-comment-form"
+            ></tuleap-artifact-modal-followup-editor>
         </div>
     </div>
 

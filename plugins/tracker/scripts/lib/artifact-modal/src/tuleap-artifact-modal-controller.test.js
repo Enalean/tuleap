@@ -538,14 +538,15 @@ describe("TuleapArtifactModalController", () => {
         });
 
         describe(`setFollowupComment()`, () => {
-            it(`Given a comment object, it sets the new_followup_comment with the new object`, () => {
-                const comment = {
-                    format: "html",
-                    body: `<p>Lorem ipsum dolor sit amet</p>`,
-                };
-                ArtifactModalController.setFollowupComment(comment);
+            it(`Given an event, it will set the new_followup_comment with the detail`, () => {
+                const format = "html";
+                const body = `<p>Lorem ipsum dolor sit amet</p>`;
+                ArtifactModalController.setFollowupComment(
+                    new CustomEvent("value-changed", { detail: { format, body } })
+                );
 
-                expect(ArtifactModalController.new_followup_comment).toEqual(comment);
+                expect(ArtifactModalController.new_followup_comment.format).toBe(format);
+                expect(ArtifactModalController.new_followup_comment.body).toBe(body);
             });
         });
 
