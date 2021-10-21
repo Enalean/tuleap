@@ -144,7 +144,12 @@ function formatFieldValue(
         };
     } else if (value.type === "subby" || value.type === "luby") {
         artifact_field_value = value.value.display_name;
-    } else if (value.type === "sb") {
+    } else if (
+        value.type === "sb" ||
+        value.type === "rb" ||
+        value.type === "msb" ||
+        value.type === "cb"
+    ) {
         artifact_field_value = value.formatted_values.join(", ");
     } else {
         return null;

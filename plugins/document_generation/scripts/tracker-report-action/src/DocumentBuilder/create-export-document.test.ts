@@ -178,7 +178,7 @@ describe("Create ArtifactValues Collection", () => {
                     },
                     {
                         field_id: 17,
-                        type: "sb",
+                        type: "msb",
                         label: "User List",
                         values: [
                             {
@@ -214,7 +214,7 @@ describe("Create ArtifactValues Collection", () => {
                     },
                     {
                         field_id: 19,
-                        type: "sb",
+                        type: "rb",
                         label: "Ugroups List",
                         values: [
                             {
@@ -227,6 +227,26 @@ describe("Create ArtifactValues Collection", () => {
                             },
                         ],
                         formatted_values: ["Membres du projet"],
+                    },
+                    {
+                        field_id: 20,
+                        type: "cb",
+                        label: "Checkbox List",
+                        values: [
+                            {
+                                id: 15,
+                                label: "MulitValue01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                            {
+                                id: 16,
+                                label: "MulitValue02",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_values: ["MulitValue01", "MulitValue02"],
                     },
                 ],
                 containers: [
@@ -372,9 +392,23 @@ describe("Create ArtifactValues Collection", () => {
                     },
                     {
                         field_id: 17,
-                        type: "sb",
+                        type: "msb",
                         label: "User List",
                         values: [
+                            {
+                                email: "email_address",
+                                status: "A",
+                                id: 101,
+                                uri: "users/101",
+                                user_url: "/users/user01",
+                                real_name: "User 01",
+                                display_name: "User 01 (user01)",
+                                username: "user01",
+                                ldap_id: "101",
+                                avatar_url: "https://example.com/users/user01/avatar-abcdef.png",
+                                is_anonymous: false,
+                                has_avatar: true,
+                            },
                             {
                                 email: "email_address_02",
                                 status: "A",
@@ -390,7 +424,7 @@ describe("Create ArtifactValues Collection", () => {
                                 has_avatar: true,
                             },
                         ],
-                        formatted_values: ["User 02 (user02)"],
+                        formatted_values: ["User 01 (user01)", "User 02 (user02)"],
                     },
                     {
                         field_id: 18,
@@ -398,17 +432,17 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Static List",
                         values: [
                             {
-                                id: 5,
-                                label: "Value02",
+                                id: 4,
+                                label: "Value01",
                                 color: null,
                                 tlp_color: null,
                             },
                         ],
-                        formatted_values: ["Value02"],
+                        formatted_values: ["Value01"],
                     },
                     {
                         field_id: 19,
-                        type: "sb",
+                        type: "rb",
                         label: "Ugroups List",
                         values: [
                             {
@@ -421,6 +455,20 @@ describe("Create ArtifactValues Collection", () => {
                             },
                         ],
                         formatted_values: ["Membres du projet"],
+                    },
+                    {
+                        field_id: 20,
+                        type: "cb",
+                        label: "Checkbox List",
+                        values: [
+                            {
+                                id: 17,
+                                label: "MulitValue03",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_values: ["MulitValue03"],
                     },
                 ],
                 containers: [
@@ -582,6 +630,12 @@ describe("Create ArtifactValues Collection", () => {
                         field_value: "Membres du projet",
                         value_type: "string",
                     },
+                    {
+                        content_length: "short",
+                        field_name: "Checkbox List",
+                        field_value: "MulitValue01, MulitValue02",
+                        value_type: "string",
+                    },
                 ],
                 containers: [
                     {
@@ -696,19 +750,25 @@ describe("Create ArtifactValues Collection", () => {
                     {
                         content_length: "short",
                         field_name: "User List",
-                        field_value: "User 02 (user02)",
+                        field_value: "User 01 (user01), User 02 (user02)",
                         value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Static List",
-                        field_value: "Value02",
+                        field_value: "Value01",
                         value_type: "string",
                     },
                     {
                         content_length: "short",
                         field_name: "Ugroups List",
                         field_value: "Membres du projet",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Checkbox List",
+                        field_value: "MulitValue03",
                         value_type: "string",
                     },
                 ],
