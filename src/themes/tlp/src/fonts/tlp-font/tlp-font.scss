@@ -64,6 +64,7 @@ $tlp-fontawesome-icons: (
     webhooks: "\f033",
     select-test: "\f034",
     project-boxes: "\f035",
+    level-down: "\f036",
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {

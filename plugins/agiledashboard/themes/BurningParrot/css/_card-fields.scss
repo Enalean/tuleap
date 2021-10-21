@@ -25,13 +25,16 @@ card-fields {
 
 .extra-card-fields {
     margin: 0;
-    padding: 0 5px 5px var(--tlp-small-spacing);
+    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
+    border-top: 1px solid var(--border-transparent-color, var(--tlp-neutral-light-color));
+    font-size: 0.6875rem;
+    line-height: 0.8125rem;
 }
 
 .extra-card-field {
     display: inline-block;
+    flex: 0 0 auto;
     list-style-type: none;
-    font-size: 12px;
 
     &.large {
         width: 100%;
@@ -39,19 +42,28 @@ card-fields {
 }
 
 .extra-card-field-content {
-    margin: 0 15px 0 0;
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-small-spacing) 0;
+
+    a {
+        color: var(--tlp-dark-color);
+        text-decoration: underline;
+        text-decoration-color: rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            text-decoration-color: var(--tlp-dark-color);
+        }
+    }
 }
 
 .extra-card-field-title {
-    margin: 0 3px 0 0;
-    color: var(--tlp-dimmed-color);
+    color: var(--text-color, var(--tlp-dimmed-color));
 }
 
 .extra-card-field-color {
     display: inline-block;
-    width: 9px;
-    height: 9px;
-    margin: 0 3px 0 0;
+    width: var(--tlp-small-spacing);
+    height: var(--tlp-small-spacing);
+    margin: 0 2px 0 0;
     border-radius: 50%;
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
@@ -61,10 +73,16 @@ card-fields {
     }
 }
 
+.extra-card-field-file-icon {
+    margin: 0 2px 0 0;
+}
+
 .extra-card-field-list-item:not(:last-child)::after {
     content: ", ";
 }
 
 .extra-card-field-user > .tlp-avatar-mini {
-    margin: 0 3px 0 0;
+    width: var(--tlp-medium-spacing);
+    height: var(--tlp-medium-spacing);
+    margin: 0 2px 0 0;
 }

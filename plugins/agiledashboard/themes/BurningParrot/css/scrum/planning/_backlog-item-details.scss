@@ -17,63 +17,71 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
 @use "../../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 @import "../../card-fields";
 @import "backlog-item-moves";
 
 .backlog-item-details {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+        &.backlog-item-color-#{$color-name} {
+            --item-type-color: #{map-get($colors, "primary")};
+        }
+
+        &.tlp-swatch-#{$color-name} {
+            --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --background-color-darker: #{darken(map-get($colors, "secondary"), 7%)};
+            --text-color-darker: #{darken(map-get($colors, "text"), 7%)};
+            --border-transparent-color: #{transparentize(map-get($colors, "border"), 0.75)};
+
+            &.closed {
+                --border-color: transparent;
+                --box-shadow: var(--tlp-card-shadow);
+                --secondary-color: var(--tlp-background-color);
+            }
+
+            + .backlog-item-show-children > .backlog-item-show-children-handle {
+                --children-handle-border-top: transparent;
+            }
+        }
+    }
+
     display: flex;
     position: relative;
     flex-direction: column;
     width: 100%;
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
-    background: var(--tlp-white-color);
+    background: var(--secondary-color, var(--tlp-white-color));
+    box-shadow: var(--box-shadow, var(--tlp-card-shadow));
     cursor: move;
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-        &.#{$color-name} {
-            border-top-color: map-get($colors, "border");
-            border-right-color: map-get($colors, "border");
-            border-bottom-color: map-get($colors, "border");
-            background: map-get($colors, "secondary");
-
-            .backlog-item-details-id,
-            .extra-card-field-title,
-            .backlog-item-details-effort-container-content-no-initial-effort,
-            .backlog-item-details-parent,
-            .backlog-item-details-parent-link {
-                color: map-get($colors, "text");
-            }
-
-            .backlog-item-details-effort-container-content-no-initial-effort {
-                $background-color-no-initial-effort: darken(map-get($colors, "secondary"), 5%);
-                border-color: $background-color-no-initial-effort;
-                background: $background-color-no-initial-effort;
-            }
-
-            .backlog-item-details-parent {
-                border-color: transparent;
-                background: transparent;
-            }
-        }
-    }
-
     &.closed {
-        border-color: var(--tlp-neutral-normal-color-transparent-50);
-        background: transparent;
+        background: var(--secondary-color, var(--tlp-background-color));
 
-        .backlog-item-details-id {
-            color: var(--tlp-dimmed-color-transparent-50);
-        }
-
-        .backlog-item-details-type-border,
+        .backlog-item-details-shortname-content,
         .backlog-item-details-title,
         .backlog-item-details-parent,
         .backlog-item-details-effort-container,
-        .extra-card-fields {
+        .extra-card-fields,
+        .extra-card-field-title,
+        .extra-card-field-content a {
+            color: var(--tlp-dimmed-color-transparent-50);
+        }
+
+        .extra-card-field-content a:hover {
+            text-decoration-color: var(--tlp-dimmed-color-transparent-50);
+        }
+
+        .card-accessibility,
+        .backlog-item-details-parent,
+        .backlog-item-details-parent-link,
+        .backlog-item-details-effort-container,
+        .extra-card-field-color,
+        .tlp-avatar-mini,
+        .item-progress {
             opacity: 0.5;
         }
     }
@@ -114,129 +122,125 @@
         background: var(--tlp-success-color-transparent-90);
     }
 
-    &:hover,
-    &.moving-to {
-        > .backlog-item-details-moves {
-            transition: opacity 100ms ease-in-out 500ms;
-            opacity: 1;
-        }
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: -1px;
+        left: -1px;
+        width: 4px;
+        height: calc(100% + 2px);
+        border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
+        background: var(--item-type-color, var(--tlp-white-color));
+    }
 
-        > .backlog-item-details-content {
-            > .backlog-item-details-parent,
-            > .card-accessibility,
-            > .backlog-item-details-effort-container {
-                transform: translateX(-15px);
-            }
-        }
+    + .backlog-item-show-children > .backlog-item-show-children-handle {
+        border-top-color: var(--children-handle-border-top, var(--tlp-neutral-normal-color));
     }
 }
 
-.backlog-item-details-type-border {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    border-left-width: 4px;
-    border-left-style: solid;
-    border-top-left-radius: var(--tlp-medium-radius);
-    border-bottom-left-radius: var(--tlp-medium-radius);
-
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-        &.#{$color-name} {
-            border-left-color: map-get($colors, "primary");
-        }
-    }
-}
-
-.backlog-item-details-content {
-    display: flex;
-    flex: 1 0 auto;
-    align-items: baseline;
-    width: 100%;
-    padding: var(--tlp-small-spacing) 0 var(--tlp-small-spacing) 0;
-}
-
-.card-accessibility {
-    flex: 0 0 auto;
-    align-self: stretch;
-    width: 20px;
-    margin: 0 0 0 5px;
-    transition: transform 100ms ease-in-out 500ms;
-
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-        &.#{$color-name} {
-            opacity: 0.5;
-            background-color: map-get($colors, "text");
-            mask-image: url("#{map-get($colors, 'pattern')}");
-        }
-    }
-}
-
-.backlog-item-details-id {
-    display: flex;
-    flex: 0 0 auto;
-    margin: 0 7px 0 0;
-    padding: 0 var(--tlp-small-spacing) 0 var(--tlp-small-spacing);
-    color: var(--tlp-dimmed-color);
-    font-size: 12px;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-
-    &:hover {
-        opacity: 0.7;
-        text-decoration: none;
-    }
-}
-
-.backlog-item-details-id-icon {
-    visibility: hidden;
-    margin: 0 0 0 4px;
-}
-
-.tlp-dropdown > .backlog-item-details-id > .backlog-item-details-id-icon {
-    visibility: visible;
-}
-
-.backlog-item-details-title {
-    display: block;
-    flex: 1 1 auto;
-    padding-right: var(--tlp-small-spacing);
-    font-size: 14px;
-    line-height: 18px;
-}
-
-$backlog-item-details-parent-color: var(--project-color, var(--tlp-dimmed-color-darker-10));
-$backlog-item-details-parent-background: var(--project-color-background, var(--tlp-neutral-normal-color));
-
-.backlog-item-details-parent {
+.backlog-item-details-metadata {
     display: flex;
     position: relative;
-    left: 0;
+    flex: 0 0 auto;
+    justify-content: space-between;
+    max-width: 100%;
+    padding: calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing);
+}
+
+.backlog-item-details-metadata-container {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    max-width: 50%;
+    gap: var(--tlp-small-spacing);
+
+    &:last-child {
+        justify-content: flex-end;
+    }
+}
+
+.backlog-item-details-shortname {
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.backlog-item-details-shortname-content {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    color: var(--text-color, var(--tlp-dimmed-color));
+    font-size: 0.6875rem;
+    line-height: 0.8125rem;
+    white-space: nowrap;
+    gap: 4px;
+    font-variant-numeric: tabular-nums;
+
+    &:hover,
+    &:focus,
+    &:active {
+        text-decoration: none;
+
+        > .backlog-item-details-shortname-content-text {
+            text-decoration: underline;
+        }
+    }
+}
+
+.backlog-item-details-shortname-icon {
+    font-size: 0.8em;
+}
+
+$backlog-item-details-parent-color: var(--project-color, var(--text-color-darker, var(--tlp-dimmed-color-darker-10)));
+$backlog-item-details-parent-background: var(--project-color-background, var(--background-color-darker, var(--tlp-neutral-dark-color-transparent-50)));
+
+card-parent-link {
+    flex: 0 1 auto;
+    overflow: hidden;
+}
+
+.backlog-item-details-parent.tlp-badge-secondary {
+    display: flex;
+    gap: 2px;
     flex: 0 1 auto;
     flex-direction: column;
-    align-self: center;
-    margin: 0 5px 0 13px;
-    padding: 3px 5px;
-    transition: transform 100ms ease-in-out 500ms;
-    border: 1px hidden;
-    border-radius: var(--tlp-small-radius);
+    width: 100%;
     background: $backlog-item-details-parent-background;
     fill: $backlog-item-details-parent-color;
     color: $backlog-item-details-parent-color;
-    font-size: 12px;
+    font-size: 0.625rem;
 
     &:hover,
     &:focus {
         text-decoration: none;
 
-        > span {
-            opacity: 0.7;
+        .backlog-item-details-parent-link {
+            text-decoration: underline;
         }
     }
 }
 
+.backlog-items-details-parent-project,
+.backlog-items-details-parent-name {
+    display: flex;
+    gap: 4px;
+}
+
+.backlog-items-details-parent-project-icon,
+.backlog-items-details-parent-name-icon {
+    flex: 0 0 auto;
+    width: 0.7rem;
+    text-align: right;
+}
+
 .backlog-item-details-parent-link {
+    display: block;
+    width: 100%;
+    overflow: hidden;
     color: $backlog-item-details-parent-color;
+    text-overflow: ellipsis;
 
     &:hover {
         text-decoration: none;
@@ -248,11 +252,57 @@ $backlog-item-details-parent-background: var(--project-color-background, var(--t
 }
 
 .backlog-item-details-effort-container {
-    position: relative;
-    left: 0;
+    display: flex;
     flex: 0 0 auto;
+    align-items: flex-start;
+    justify-content: flex-end;
     min-width: 40px;
-    margin: 0 5px;
     transition: transform 100ms ease-in-out 500ms;
-    text-align: right;
+}
+
+.backlog-item-details-effort-container-content-no-initial-effort {
+    font-size: 0.65rem;
+
+    &.tlp-badge-outline {
+        background: $backlog-item-details-parent-background;
+        color: $backlog-item-details-parent-color;
+    }
+}
+
+.card-accessibility {
+    position: relative;
+    width: 40px;
+    height: 9px; // magic value
+    overflow: hidden;
+    border-radius: 5px;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+    }
+
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+        &.#{$color-name} {
+            background-color: map-get($colors, "border");
+
+            &::after {
+                background-color: map-get($colors, "text");
+                mask-image: url("#{map-get($colors, 'pattern')}");
+            }
+        }
+    }
+}
+
+.backlog-item-details-title {
+    display: block;
+    position: relative;
+    flex: 1 1 auto;
+    padding: 0 var(--tlp-small-spacing) var(--tlp-small-spacing);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
 }

@@ -30,7 +30,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
 .milestone-header {
     display: flex;
     position: sticky;
-    z-index: 2;
+    z-index: 3;
     top: 44px;
     align-items: center;
     transition: background 0.1s linear;

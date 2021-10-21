@@ -24,7 +24,7 @@ $transition-delay: 500ms;
     position: absolute;
     z-index: 1000;
     top: 0;
-    right: 13px;
+    right: var(--tlp-small-spacing);
     height: 100%;
     transition: opacity $transition-duration $transition-delay;
     opacity: 0;
@@ -39,14 +39,14 @@ $transition-delay: 500ms;
     height: 20px;
     padding: 0;
     border-radius: 50%;
-    font-size: 10px;
+    font-size: 0.7rem;
 
     &:first-child {
-        top: -4px;
+        top: calc((-1) * var(--tlp-small-spacing));
     }
 
     &:last-child {
-        bottom: -4px;
+        bottom: calc((-1) * var(--tlp-small-spacing));
     }
 }
 
