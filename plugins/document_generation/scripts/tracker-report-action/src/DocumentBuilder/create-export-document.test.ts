@@ -262,6 +262,14 @@ describe("Create ArtifactValues Collection", () => {
                         ],
                         formatted_open_values: ["OpenValue02"],
                     },
+                    {
+                        field_id: 22,
+                        type: "perm",
+                        label: "Permissions",
+                        granted_groups: ["membres_projet", "newgroup"],
+                        granted_groups_ids: ["101_3", "105"],
+                        formatted_granted_ugroups: ["Membres du projet", "newgroup"],
+                    },
                 ],
                 containers: [
                     {
@@ -502,6 +510,14 @@ describe("Create ArtifactValues Collection", () => {
                         ],
                         formatted_open_values: ["azerty", "OpenValue01"],
                     },
+                    {
+                        field_id: 22,
+                        type: "perm",
+                        label: "Permissions",
+                        granted_groups: [],
+                        granted_groups_ids: [],
+                        formatted_granted_ugroups: [],
+                    },
                 ],
                 containers: [
                     {
@@ -674,6 +690,12 @@ describe("Create ArtifactValues Collection", () => {
                         field_value: "OpenValue02",
                         value_type: "string",
                     },
+                    {
+                        content_length: "short",
+                        field_name: "Permissions",
+                        field_value: "Membres du projet, newgroup",
+                        value_type: "string",
+                    },
                 ],
                 containers: [
                     {
@@ -813,6 +835,12 @@ describe("Create ArtifactValues Collection", () => {
                         content_length: "short",
                         field_name: "Open List",
                         field_value: "azerty, OpenValue01",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Permissions",
+                        field_value: "",
                         value_type: "string",
                     },
                 ],

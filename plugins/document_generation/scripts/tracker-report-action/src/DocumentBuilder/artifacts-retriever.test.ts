@@ -147,6 +147,13 @@ describe("artifacts-retriever", () => {
                             },
                         ],
                     },
+                    {
+                        field_id: 10,
+                        type: "perm",
+                        label: "Permissions",
+                        granted_groups: ["membres_projet", "newgroup"],
+                        granted_groups_ids: ["101_3", "105"],
+                    },
                 ],
             },
         ];
@@ -161,6 +168,31 @@ describe("artifacts-retriever", () => {
                 { field_id: 7, type: "rb" },
                 { field_id: 8, type: "cb" },
                 { field_id: 9, type: "tbl" },
+                {
+                    field_id: 10,
+                    type: "perm",
+                    values: {
+                        is_used_by_default: false,
+                        ugroup_representations: [
+                            {
+                                id: "101_3",
+                                uri: "user_groups/101_3",
+                                label: "Membres du projet",
+                                users_uri: "user_groups/101_3/users",
+                                short_name: "project_members",
+                                key: "ugroup_project_members_name_key",
+                            },
+                            {
+                                id: "105",
+                                uri: "user_groups/105",
+                                label: "newgroup",
+                                users_uri: "user_groups/105/users",
+                                short_name: "newgroup",
+                                key: "newgroup",
+                            },
+                        ],
+                    },
+                },
             ],
             structure: [
                 { id: 3, content: null },
@@ -169,6 +201,7 @@ describe("artifacts-retriever", () => {
                 { id: 7, content: null },
                 { id: 8, content: null },
                 { id: 9, content: null },
+                { id: 10, content: null },
                 {
                     id: 4,
                     content: [
@@ -297,6 +330,14 @@ describe("artifacts-retriever", () => {
                             },
                         ],
                         formatted_open_values: ["azerty", "OpenValue01"],
+                    },
+                    {
+                        field_id: 10,
+                        type: "perm",
+                        label: "Permissions",
+                        granted_groups: ["membres_projet", "newgroup"],
+                        granted_groups_ids: ["101_3", "105"],
+                        formatted_granted_ugroups: ["Membres du projet", "newgroup"],
                     },
                 ],
                 containers: [
