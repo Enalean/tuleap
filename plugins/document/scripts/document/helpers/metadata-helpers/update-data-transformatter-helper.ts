@@ -25,7 +25,8 @@ import {
     formatMetadataListValue,
     formatMetadataMultipleValue,
 } from "./value-transformer/list-value-helper";
-import type { Folder, Item, Metadata } from "../../type";
+import type { Folder, Item } from "../../type";
+import type { Metadata } from "../../store/metadata/module";
 
 export function transformFolderMetadataForRecursionAtUpdate(item: Folder): Folder {
     const folder_to_update = JSON.parse(JSON.stringify(item));

@@ -146,6 +146,6 @@ describe("OtherInformationMetadataForCreate", () => {
         });
         await wrapper.vm.$nextTick().then(() => {});
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata", [store]);
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata");
     });
 });

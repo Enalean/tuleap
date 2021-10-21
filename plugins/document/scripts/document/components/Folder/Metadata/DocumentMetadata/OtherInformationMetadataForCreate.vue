@@ -82,7 +82,7 @@ export default {
     },
     mounted() {
         if (!this.has_loaded_metadata) {
-            this.$store.dispatch("metadata/loadProjectMetadata", [this.$store]);
+            this.$store.dispatch("metadata/loadProjectMetadata");
         }
     },
 };

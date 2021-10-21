@@ -23,7 +23,8 @@ import {
     transformDocumentMetadataForUpdate,
     transformFolderMetadataForRecursionAtUpdate,
 } from "./update-data-transformatter-helper";
-import type { Folder, FolderMetadata, ItemFile, ListValue, Metadata } from "../../type";
+import type { Folder, ItemFile } from "../../type";
+import type { Metadata, FolderMetadata, ListValue } from "../../store/metadata/module";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
     it("Given an existing folder, then we add specific status update key for update", () => {

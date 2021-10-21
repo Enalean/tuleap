@@ -162,11 +162,11 @@ export default {
             this.$store.commit("error/resetModalError");
 
             this.item_to_update.metadata = this.formatted_item_metadata;
-            await this.$store.dispatch("metadata/updateMetadata", [
-                this.item,
-                this.item_to_update,
-                this.current_folder,
-            ]);
+            await this.$store.dispatch("metadata/updateMetadata", {
+                item: this.item,
+                item_to_update: this.item_to_update,
+                current_folder: this.current_folder,
+            });
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();

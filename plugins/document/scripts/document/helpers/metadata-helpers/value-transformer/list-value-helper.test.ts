@@ -24,7 +24,7 @@ import {
     formatMetadataMultipleValue,
     processFormattingOnKnownType,
 } from "./list-value-helper";
-import type { Metadata, ListValue } from "../../../type";
+import type { Metadata, ListValue } from "../../../store/metadata/module";
 
 describe("list-value-helper", () => {
     describe("assertListIsOnlyMultipleValue", () => {

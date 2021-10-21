@@ -22,7 +22,7 @@ import {
     getStatusMetadata,
     getStatusIdFromName,
 } from "./hardcoded-metadata-mapping-helper";
-import type { Metadata } from "../../type";
+import type { Metadata } from "../../store/metadata/module";
 
 describe("getStatusMetadata", () => {
     it("Given metadata has a status, then its return the corresponding metadata", () => {

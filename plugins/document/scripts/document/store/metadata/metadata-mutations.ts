@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Metadata, MetadataState } from "./module";
+
 export { saveProjectMetadata };
 
-function saveProjectMetadata(state, project_metadata) {
+function saveProjectMetadata(state: MetadataState, project_metadata: Array<Metadata>): void {
     state.project_metadata_list = project_metadata;
     state.has_loaded_metadata = true;
 }

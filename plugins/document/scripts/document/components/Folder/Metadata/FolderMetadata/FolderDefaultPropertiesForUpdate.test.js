@@ -63,7 +63,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 itemMetadata: [],
             });
 
-            expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata", [store]);
+            expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata");
         });
 
         it(`Given custom component are loading

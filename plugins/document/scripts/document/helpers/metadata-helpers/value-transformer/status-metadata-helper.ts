@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Item, Metadata, ListValue } from "../../../type";
+import type { Item } from "../../../type";
+import type { Metadata, ListValue } from "../../../store/metadata/module";
 import { getStatusFromMapping } from "../hardcoded-metadata-mapping-helper";
 import { assertListIsOnlyMultipleValue } from "./list-value-helper";
 

@@ -20,6 +20,7 @@
 import type { ConfigurationState } from "./store/configuration";
 import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
+import type { FolderMetadata, FolderStatus, Metadata } from "./store/metadata/module";
 
 export interface State {
     is_loading_folder: boolean;
@@ -47,36 +48,6 @@ export interface GettextProvider {
     $pgettext: (context: string, msgid: string) => string;
 }
 
-export interface Metadata {
-    short_name: string;
-    name: string;
-    description: string | null;
-    type: string;
-    is_required: boolean;
-    is_multiple_value_allowed: boolean;
-    is_used: boolean;
-    list_value: Array<number> | Array<ListValue> | null | [];
-    value: number | string | null;
-}
-
-export interface FolderMetadata extends Metadata {
-    recursion: string | null;
-}
-
-/**
- * Note of metadata usage:
- *
- * For single and multiple list when data comes from rest route, list_value has Array<ListValue>
- * For single metadata, after transformation, list_value is null, value is a number (chosen option)
- * For multiple value metadata, after transformation, value is null, list value is and Array<number>
- *
- * Please also note that value is used for dates/string
- */
-export interface ListValue {
-    id: number;
-    value: string | number;
-}
-
 export interface Item {
     id: number;
     title: string;
@@ -93,6 +64,7 @@ export interface Item {
     type: string;
     status: string | FolderStatus;
     created?: boolean;
+    obsolescence_date: null | number;
 }
 
 export interface FakeItem extends Item {
@@ -112,11 +84,6 @@ export interface Folder extends Item {
     status: FolderStatus;
 }
 
-export interface FolderStatus {
-    value: string;
-    recursion: string;
-}
-
 export interface ApprovableDocument extends Item {
     has_approval_table: boolean;
     is_approval_table_enabled: boolean;
@@ -134,6 +101,7 @@ export interface ItemFile extends Item, ApprovableDocument {
     size?: number;
     uploader?: FileUploader;
     level?: number;
+    status: string;
 }
 
 export interface ItemFileUploader extends ItemFile {
@@ -148,12 +116,14 @@ export interface Link extends Item, ApprovableDocument {
     parent_id: number;
     link_properties: LinkProperties;
     type: "link";
+    status: string;
 }
 
 export interface Embedded extends Item, ApprovableDocument {
     parent_id: number;
     embedded_file_properties: EmbeddedProperties;
     type: "embedded";
+    status: string;
 }
 
 export interface Wiki extends Item {
