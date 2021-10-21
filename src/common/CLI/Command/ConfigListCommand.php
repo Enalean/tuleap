@@ -26,9 +26,13 @@ namespace Tuleap\CLI\Command;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableCellStyle;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\ConfigKeyMetadata;
 
 class ConfigListCommand extends Command
 {
@@ -51,11 +55,32 @@ class ConfigListCommand extends Command
         $table = new Table($output);
         $table->setHeaders(['Variable', 'Documentation', 'Can be set ?']);
 
+        $categorized_rows   = [];
+        $uncategorized_rows = [];
         foreach ($white_listed_keys->getSortedKeysWithMetadata() as $key => $key_metadata) {
-            $table->addRow([$key, $key_metadata->description, $key_metadata->can_be_modified ? 'Yes' : 'No']);
+            if ($key_metadata->category) {
+                $categorized_rows[$key_metadata->category][] = $this->getKeyRow($key, $key_metadata);
+            } else {
+                $uncategorized_rows[] = $this->getKeyRow($key, $key_metadata);
+            }
         }
+        foreach ($categorized_rows as $category => $rows) {
+            $table->addRow([new TableCell(strtoupper($category), ['colspan' => 3, 'style' => new TableCellStyle(['align' => 'center'])])]);
+            $table->addRows($rows);
+            $table->addRow(new TableSeparator());
+        }
+        $table->addRows($uncategorized_rows);
 
         $table->render();
         return 0;
+    }
+
+    private function getKeyRow(string $key, ConfigKeyMetadata $key_metadata): array
+    {
+        return [
+            $key,
+            $key_metadata->description,
+            $key_metadata->can_be_modified ? 'Yes' : 'No'
+        ];
     }
 }

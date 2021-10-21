@@ -26,10 +26,10 @@ namespace Tuleap\Config;
 /**
  * @psalm-immutable
  */
-#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
-final class ConfigKey
+#[\Attribute(\Attribute::TARGET_CLASS)]
+final class ConfigKeyCategory
 {
-    public function __construct(public string $summary)
+    public function __construct(public string $name)
     {
     }
 }
