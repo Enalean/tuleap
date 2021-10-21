@@ -151,6 +151,8 @@ function formatFieldValue(
         value.type === "cb"
     ) {
         artifact_field_value = value.formatted_values.join(", ");
+    } else if (value.type === "tbl") {
+        artifact_field_value = value.formatted_open_values.join(", ");
     } else {
         return null;
     }

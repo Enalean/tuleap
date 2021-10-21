@@ -130,6 +130,23 @@ describe("artifacts-retriever", () => {
                             },
                         ],
                     },
+                    {
+                        field_id: 9,
+                        type: "tbl",
+                        label: "Open List",
+                        bind_value_objects: [
+                            {
+                                id: 1,
+                                label: "azerty",
+                            },
+                            {
+                                id: 12548,
+                                label: "OpenValue01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                    },
                 ],
             },
         ];
@@ -143,6 +160,7 @@ describe("artifacts-retriever", () => {
                 { field_id: 6, type: "sb" },
                 { field_id: 7, type: "rb" },
                 { field_id: 8, type: "cb" },
+                { field_id: 9, type: "tbl" },
             ],
             structure: [
                 { id: 3, content: null },
@@ -150,6 +168,7 @@ describe("artifacts-retriever", () => {
                 { id: 6, content: null },
                 { id: 7, content: null },
                 { id: 8, content: null },
+                { id: 9, content: null },
                 {
                     id: 4,
                     content: [
@@ -260,6 +279,24 @@ describe("artifacts-retriever", () => {
                             },
                         ],
                         formatted_values: ["MulitValue01", "MulitValue02"],
+                    },
+                    {
+                        field_id: 9,
+                        type: "tbl",
+                        label: "Open List",
+                        bind_value_objects: [
+                            {
+                                id: 1,
+                                label: "azerty",
+                            },
+                            {
+                                id: 12548,
+                                label: "OpenValue01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_open_values: ["azerty", "OpenValue01"],
                     },
                 ],
                 containers: [

@@ -248,6 +248,20 @@ describe("Create ArtifactValues Collection", () => {
                         ],
                         formatted_values: ["MulitValue01", "MulitValue02"],
                     },
+                    {
+                        field_id: 21,
+                        type: "tbl",
+                        label: "Open List",
+                        bind_value_objects: [
+                            {
+                                id: 12549,
+                                label: "OpenValue02",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_open_values: ["OpenValue02"],
+                    },
                 ],
                 containers: [
                     {
@@ -470,6 +484,24 @@ describe("Create ArtifactValues Collection", () => {
                         ],
                         formatted_values: ["MulitValue03"],
                     },
+                    {
+                        field_id: 21,
+                        type: "tbl",
+                        label: "Open List",
+                        bind_value_objects: [
+                            {
+                                id: 1,
+                                label: "azerty",
+                            },
+                            {
+                                id: 12548,
+                                label: "OpenValue01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_open_values: ["azerty", "OpenValue01"],
+                    },
                 ],
                 containers: [
                     {
@@ -636,6 +668,12 @@ describe("Create ArtifactValues Collection", () => {
                         field_value: "MulitValue01, MulitValue02",
                         value_type: "string",
                     },
+                    {
+                        content_length: "short",
+                        field_name: "Open List",
+                        field_value: "OpenValue02",
+                        value_type: "string",
+                    },
                 ],
                 containers: [
                     {
@@ -769,6 +807,12 @@ describe("Create ArtifactValues Collection", () => {
                         content_length: "short",
                         field_name: "Checkbox List",
                         field_value: "MulitValue03",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Open List",
+                        field_value: "azerty, OpenValue01",
                         value_type: "string",
                     },
                 ],
