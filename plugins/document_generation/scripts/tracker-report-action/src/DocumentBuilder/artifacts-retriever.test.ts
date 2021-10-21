@@ -48,6 +48,55 @@ describe("artifacts-retriever", () => {
                         label: "Some String",
                         value: null,
                     },
+                    {
+                        field_id: 5,
+                        type: "sb",
+                        label: "User List",
+                        values: [
+                            {
+                                email: "email_address",
+                                status: "A",
+                                id: 101,
+                                uri: "users/101",
+                                user_url: "/users/user01",
+                                real_name: "User 01",
+                                display_name: "User 01 (user01)",
+                                username: "user01",
+                                ldap_id: "101",
+                                avatar_url: "https://example.com/users/user01/avatar-abcdef.png",
+                                is_anonymous: false,
+                                has_avatar: true,
+                            },
+                        ],
+                    },
+                    {
+                        field_id: 6,
+                        type: "sb",
+                        label: "Static List",
+                        values: [
+                            {
+                                id: 4,
+                                label: "Value01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                    },
+                    {
+                        field_id: 7,
+                        type: "sb",
+                        label: "Ugroups List",
+                        values: [
+                            {
+                                id: "101_3",
+                                uri: "user_groups/101_3",
+                                label: "Membres du projet",
+                                users_uri: "user_groups/101_3/users",
+                                short_name: "project_members",
+                                key: "ugroup_project_members_name_key",
+                            },
+                        ],
+                    },
                 ],
             },
         ];
@@ -56,12 +105,18 @@ describe("artifacts-retriever", () => {
         const tracker_definition_response: TrackerDefinition = {
             fields: [
                 { field_id: 2, type: "date", is_time_displayed: false },
-                { field_id: 5, type: "fieldset", label: "Fieldset label" },
+                { field_id: 4, type: "fieldset", label: "Fieldset label" },
+                { field_id: 5, type: "sb" },
+                { field_id: 6, type: "sb" },
+                { field_id: 7, type: "sb" },
             ],
             structure: [
                 { id: 3, content: null },
+                { id: 5, content: null },
+                { id: 6, content: null },
+                { id: 7, content: null },
                 {
-                    id: 5,
+                    id: 4,
                     content: [
                         { id: 2, content: null },
                         { id: 1, content: null },
@@ -84,6 +139,58 @@ describe("artifacts-retriever", () => {
                         label: "Some String",
                         type: "string",
                         value: null,
+                    },
+                    {
+                        field_id: 5,
+                        type: "sb",
+                        label: "User List",
+                        values: [
+                            {
+                                email: "email_address",
+                                status: "A",
+                                id: 101,
+                                uri: "users/101",
+                                user_url: "/users/user01",
+                                real_name: "User 01",
+                                display_name: "User 01 (user01)",
+                                username: "user01",
+                                ldap_id: "101",
+                                avatar_url: "https://example.com/users/user01/avatar-abcdef.png",
+                                is_anonymous: false,
+                                has_avatar: true,
+                            },
+                        ],
+                        formatted_values: ["User 01 (user01)"],
+                    },
+                    {
+                        field_id: 6,
+                        type: "sb",
+                        label: "Static List",
+                        values: [
+                            {
+                                id: 4,
+                                label: "Value01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_values: ["Value01"],
+                    },
+                    {
+                        field_id: 7,
+                        type: "sb",
+                        label: "Ugroups List",
+                        values: [
+                            {
+                                id: "101_3",
+                                uri: "user_groups/101_3",
+                                label: "Membres du projet",
+                                users_uri: "user_groups/101_3/users",
+                                short_name: "project_members",
+                                key: "ugroup_project_members_name_key",
+                            },
+                        ],
+                        formatted_values: ["Membres du projet"],
                     },
                 ],
                 containers: [

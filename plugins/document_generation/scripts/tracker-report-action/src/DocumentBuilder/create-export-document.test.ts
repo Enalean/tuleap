@@ -176,6 +176,58 @@ describe("Create ArtifactValues Collection", () => {
                             has_avatar: true,
                         },
                     },
+                    {
+                        field_id: 17,
+                        type: "sb",
+                        label: "User List",
+                        values: [
+                            {
+                                email: "email_address",
+                                status: "A",
+                                id: 101,
+                                uri: "users/101",
+                                user_url: "/users/user01",
+                                real_name: "User 01",
+                                display_name: "User 01 (user01)",
+                                username: "user01",
+                                ldap_id: "101",
+                                avatar_url: "https://example.com/users/user01/avatar-abcdef.png",
+                                is_anonymous: false,
+                                has_avatar: true,
+                            },
+                        ],
+                        formatted_values: ["User 01 (user01)"],
+                    },
+                    {
+                        field_id: 18,
+                        type: "sb",
+                        label: "Static List",
+                        values: [
+                            {
+                                id: 4,
+                                label: "Value01",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_values: ["Value01"],
+                    },
+                    {
+                        field_id: 19,
+                        type: "sb",
+                        label: "Ugroups List",
+                        values: [
+                            {
+                                id: "101_3",
+                                uri: "user_groups/101_3",
+                                label: "Membres du projet",
+                                users_uri: "user_groups/101_3/users",
+                                short_name: "project_members",
+                                key: "ugroup_project_members_name_key",
+                            },
+                        ],
+                        formatted_values: ["Membres du projet"],
+                    },
                 ],
                 containers: [
                     {
@@ -317,6 +369,58 @@ describe("Create ArtifactValues Collection", () => {
                             is_anonymous: false,
                             has_avatar: true,
                         },
+                    },
+                    {
+                        field_id: 17,
+                        type: "sb",
+                        label: "User List",
+                        values: [
+                            {
+                                email: "email_address_02",
+                                status: "A",
+                                id: 102,
+                                uri: "users/102",
+                                user_url: "/users/user02",
+                                real_name: "User 02",
+                                display_name: "User 02 (user02)",
+                                username: "user02",
+                                ldap_id: "",
+                                avatar_url: "https://example.com/users/user02/avatar-qwerty.png",
+                                is_anonymous: false,
+                                has_avatar: true,
+                            },
+                        ],
+                        formatted_values: ["User 02 (user02)"],
+                    },
+                    {
+                        field_id: 18,
+                        type: "sb",
+                        label: "Static List",
+                        values: [
+                            {
+                                id: 5,
+                                label: "Value02",
+                                color: null,
+                                tlp_color: null,
+                            },
+                        ],
+                        formatted_values: ["Value02"],
+                    },
+                    {
+                        field_id: 19,
+                        type: "sb",
+                        label: "Ugroups List",
+                        values: [
+                            {
+                                id: "101_3",
+                                uri: "user_groups/101_3",
+                                label: "Membres du projet",
+                                users_uri: "user_groups/101_3/users",
+                                short_name: "project_members",
+                                key: "ugroup_project_members_name_key",
+                            },
+                        ],
+                        formatted_values: ["Membres du projet"],
                     },
                 ],
                 containers: [
@@ -460,6 +564,24 @@ describe("Create ArtifactValues Collection", () => {
                         field_value: "User 02 (user02)",
                         value_type: "string",
                     },
+                    {
+                        content_length: "short",
+                        field_name: "User List",
+                        field_value: "User 01 (user01)",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Static List",
+                        field_value: "Value01",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Ugroups List",
+                        field_value: "Membres du projet",
+                        value_type: "string",
+                    },
                 ],
                 containers: [
                     {
@@ -569,6 +691,24 @@ describe("Create ArtifactValues Collection", () => {
                         content_length: "short",
                         field_name: "Last Update By",
                         field_value: "User 02 (user02)",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "User List",
+                        field_value: "User 02 (user02)",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Static List",
+                        field_value: "Value02",
+                        value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "Ugroups List",
+                        field_value: "Membres du projet",
                         value_type: "string",
                     },
                 ],

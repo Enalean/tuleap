@@ -126,6 +126,17 @@ function getFieldValueWithAdditionalInformation(
                 };
             }
             return { ...value, is_time_displayed: true };
+        case "sb": {
+            const formatted_values: string[] = [];
+            for (const list_value of value.values) {
+                if ("display_name" in list_value) {
+                    formatted_values.push(list_value.display_name);
+                } else if ("label" in list_value) {
+                    formatted_values.push(list_value.label);
+                }
+            }
+            return { ...value, formatted_values: formatted_values };
+        }
         default:
             return value;
     }
@@ -149,9 +160,8 @@ async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStru
             case "date":
             case "lud":
             case "subon":
-                fields_map.set(field.field_id, field);
-                break;
             case "fieldset":
+            case "sb":
                 fields_map.set(field.field_id, field);
                 break;
             default:
@@ -182,7 +192,8 @@ export type ArtifactReportFieldValue =
     | ArtifactReportResponseComputedFieldValue
     | ArtifactReportResponseFileFieldValue
     | ArtifactReportResponseSubmittedByFieldValue
-    | ArtifactReportResponseLastUpdateByFieldValue;
+    | ArtifactReportResponseLastUpdateByFieldValue
+    | (ArtifactReportResponseSimpleListFieldValue & { formatted_values: string[] });
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -193,7 +204,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseComputedFieldValue
     | ArtifactReportResponseFileFieldValue
     | ArtifactReportResponseSubmittedByFieldValue
-    | ArtifactReportResponseLastUpdateByFieldValue;
+    | ArtifactReportResponseLastUpdateByFieldValue
+    | ArtifactReportResponseSimpleListFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -254,6 +266,16 @@ interface ArtifactReportResponseLastUpdateByFieldValue {
     value: ArtifactReportResponseUserRepresentation;
 }
 
+interface ArtifactReportResponseSimpleListFieldValue {
+    field_id: number;
+    type: "sb";
+    label: string;
+    values:
+        | Array<ArtifactReportResponseUserRepresentation>
+        | Array<ArtifactReportResponseStaticValueRepresentation>
+        | Array<ArtifactReportResponseUserGroupRepresentation>;
+}
+
 interface ArtifactReportResponseUserRepresentation {
     email: string;
     status: string;
@@ -267,6 +289,22 @@ interface ArtifactReportResponseUserRepresentation {
     avatar_url: string;
     is_anonymous: boolean;
     has_avatar: boolean;
+}
+
+interface ArtifactReportResponseStaticValueRepresentation {
+    id: number;
+    label: string;
+    color: string | null;
+    tlp_color: string | null;
+}
+
+interface ArtifactReportResponseUserGroupRepresentation {
+    id: string;
+    uri: string;
+    label: string;
+    users_uri: string;
+    short_name: string;
+    key: string;
 }
 
 interface ArtifactReportResponseFileDescriptionFieldValue {
@@ -288,7 +326,11 @@ export interface ArtifactReportResponseUnknownFieldValue {
     value: never;
 }
 
-type FieldsStructure = UnknownFieldStructure | DateFieldStructure | ContainerFieldStructure;
+type FieldsStructure =
+    | UnknownFieldStructure
+    | DateFieldStructure
+    | ContainerFieldStructure
+    | ListFieldStructure;
 
 interface BaseFieldStructure {
     field_id: number;
@@ -306,6 +348,10 @@ interface DateFieldStructure extends BaseFieldStructure {
 interface ContainerFieldStructure extends BaseFieldStructure {
     type: "column" | "fieldset";
     label: string;
+}
+
+interface ListFieldStructure extends BaseFieldStructure {
+    type: "sb";
 }
 
 interface StructureFormat {
