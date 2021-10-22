@@ -24,40 +24,12 @@ use Tuleap\DB\DataAccessObject;
 
 class MediawikiExtensionDAO extends DataAccessObject
 {
-    public function saveMLEBActivationForProjectID($project_id)
-    {
-        $sql = 'INSERT INTO plugin_mediawiki_extension (project_id, extension_mleb) VALUES (?, 1)
-                ON DUPLICATE KEY UPDATE extension_mleb = 1';
-
-        $this->getDB()->run($sql, $project_id);
-    }
-
     public function saveMathActivationForProjectID($project_id)
     {
         $sql = 'INSERT INTO plugin_mediawiki_extension (project_id, extension_math) VALUES (?, 1)
                 ON DUPLICATE KEY UPDATE extension_math = 1';
 
         $this->getDB()->run($sql, $project_id);
-    }
-
-    public function getProjectIdsEligibleToMLEBExtensionActivation()
-    {
-        $sql = "SELECT pmv.project_id
-                FROM plugin_mediawiki_version pmv
-                LEFT JOIN plugin_mediawiki_extension pme
-                  ON pme.project_id = pmv.project_id
-                WHERE (pme.project_id IS NULL OR  pme.extension_mleb = 0)
-                  AND pmv.mw_version = '1.23'";
-
-        return $this->getDB()->column($sql);
-    }
-
-    public function isMLEBActivatedForProjectID($project_id)
-    {
-        return (bool) $this->getDB()->single(
-            'SELECT extension_mleb FROM plugin_mediawiki_extension WHERE project_id = ?',
-            [$project_id]
-        );
     }
 
     public function isMathActivatedForProjectID($project_id)

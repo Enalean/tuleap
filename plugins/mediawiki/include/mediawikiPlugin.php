@@ -24,7 +24,6 @@
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
@@ -71,7 +70,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->setName("mediawiki");
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
 
         $this->addHook('permission_get_name');
         $this->addHook(Event::SERVICE_IS_USED);
@@ -133,8 +131,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->addHook(ExportXmlProject::NAME);
 
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
-
-        $this->addHook(GetWhitelistedKeys::NAME);
 
         /**
          * HACK
@@ -228,14 +224,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                 $this->getMediawikiSearchURI($params['project'], $params['words'])
             );
         }
-    }
-
-    /**
-     * @see Event::PROCCESS_SYSTEM_CHECK
-     */
-    public function proccess_system_check($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $this->getMediawikiMLEBExtensionManager()->activateMLEBForCompatibleProjects($params['logger']);
     }
 
     private function getMediawikiSearchURI(Project $project, $words)
@@ -459,7 +447,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             $this->getMediawikiManager(),
             $this->getMediawikiLanguageManager(),
             $this->getMediawikiVersionManager(),
-            $this->getMediawikiMLEBExtensionManager()
         );
     }
 
@@ -733,7 +720,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                     $this->getMediawikiMigrator(),
                     $this->getProjectManager(),
                     $this->getMediawikiVersionManager(),
-                    $this->getMediawikiMLEBExtensionManager(),
                     new MediawikiSiteAdminResourceRestrictor(
                         new MediawikiSiteAdminResourceRestrictorDao(),
                         $this->getProjectManager()
@@ -803,20 +789,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     private function getMediawikiVersionManager()
     {
         return new MediawikiVersionManager(new MediawikiVersionDao());
-    }
-
-    /**
-     * @return MediawikiMLEBExtensionManager
-     */
-    private function getMediawikiMLEBExtensionManager()
-    {
-        return new MediawikiMLEBExtensionManager(
-            $this->getMediawikiMigrator(),
-            new \Tuleap\Mediawiki\MediawikiExtensionDAO(),
-            $this->getProjectManager(),
-            $this->getMediawikiVersionManager(),
-            $this->getMediawikiLanguageManager()
-        );
     }
 
     /**
@@ -914,10 +886,5 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             $rank_in_project = $service->getRank();
             $event->addPane($content, $rank_in_project);
         }
-    }
-
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
-    {
-        $event->addConfigClass(MediawikiMLEBExtensionManager::class);
     }
 }

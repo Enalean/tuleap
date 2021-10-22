@@ -27,7 +27,6 @@ $config_path = '/etc/tuleap';
 $src_path = '/usr/share/mediawiki-tuleap-123';
 $mw_style_path = '/plugins/mediawiki/www/skins';
 $enable_compatibility_view = false;
-$extension_mleb_path = '/usr/share/mediawiki-mleb-tuleap';
 
 // Uncomment the variable below if you want to have one central DB for all
 // Mediawiki instances (they will be split with table prefix)
