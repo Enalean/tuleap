@@ -229,7 +229,8 @@ export type ArtifactReportFieldValue =
     | (ArtifactReportResponseOpenListFieldValue & { formatted_open_values: string[] })
     | (ArtifactReportResponsePermissionsOnArtifactFieldValue & {
           formatted_granted_ugroups: string[];
-      });
+      })
+    | ArtifactReportResponseCrossReferencesFieldValue;
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -243,7 +244,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseLastUpdateByFieldValue
     | ArtifactReportResponseSimpleListFieldValue
     | ArtifactReportResponseOpenListFieldValue
-    | ArtifactReportResponsePermissionsOnArtifactFieldValue;
+    | ArtifactReportResponsePermissionsOnArtifactFieldValue
+    | ArtifactReportResponseCrossReferencesFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -369,6 +371,17 @@ interface ArtifactReportResponsePermissionsOnArtifactFieldValue {
     label: string;
     granted_groups: string[];
     granted_groups_ids: string[];
+}
+
+interface ArtifactReportResponseCrossReferencesFieldValue {
+    field_id: number;
+    type: "cross";
+    label: string;
+    value: Array<{
+        ref: string;
+        url: string;
+        direction: string;
+    }>;
 }
 
 interface ArtifactReportResponseFileDescriptionFieldValue {
