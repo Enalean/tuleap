@@ -270,6 +270,33 @@ describe("Create ArtifactValues Collection", () => {
                         granted_groups_ids: ["101_3", "105"],
                         formatted_granted_ugroups: ["Membres du projet", "newgroup"],
                     },
+                    {
+                        field_id: 23,
+                        type: "cross",
+                        label: "References",
+                        value: [
+                            {
+                                ref: "task #359",
+                                url: "https://example.com/goto?key=task&val=359&group_id=101",
+                                direction: "out",
+                            },
+                            {
+                                ref: "git #repo01/1cc07fe8c3b59c0c6af414672e89fe27e3fed41d",
+                                url: "https://example.com/goto?key=git&val=repo01%2F1cc07fe8c3b59c0c6af414672e89fe27e3fed41d&group_id=101",
+                                direction: "in",
+                            },
+                            {
+                                ref: "git #testRefs/47870155006fa81640f5b9646fddf6ef33c6680a",
+                                url: "https://example.com/goto?key=git&val=testRefs%2F47870155006fa81640f5b9646fddf6ef33c6680a&group_id=101",
+                                direction: "in",
+                            },
+                            {
+                                ref: "rel #3",
+                                url: "https://example.com/goto?key=rel&val=3&group_id=101",
+                                direction: "in",
+                            },
+                        ],
+                    },
                 ],
                 containers: [
                     {
@@ -518,6 +545,12 @@ describe("Create ArtifactValues Collection", () => {
                         granted_groups_ids: [],
                         formatted_granted_ugroups: [],
                     },
+                    {
+                        field_id: 23,
+                        type: "cross",
+                        label: "References",
+                        value: [],
+                    },
                 ],
                 containers: [
                     {
@@ -696,6 +729,32 @@ describe("Create ArtifactValues Collection", () => {
                         field_value: "Membres du projet, newgroup",
                         value_type: "string",
                     },
+                    {
+                        content_length: "short",
+                        field_name: "References",
+                        field_value: [
+                            {
+                                link_label: "task #359",
+                                link_url: "https://example.com/goto?key=task&val=359&group_id=101",
+                            },
+                            {
+                                link_label: "git #repo01/1cc07fe8c3b59c0c6af414672e89fe27e3fed41d",
+                                link_url:
+                                    "https://example.com/goto?key=git&val=repo01%2F1cc07fe8c3b59c0c6af414672e89fe27e3fed41d&group_id=101",
+                            },
+                            {
+                                link_label:
+                                    "git #testRefs/47870155006fa81640f5b9646fddf6ef33c6680a",
+                                link_url:
+                                    "https://example.com/goto?key=git&val=testRefs%2F47870155006fa81640f5b9646fddf6ef33c6680a&group_id=101",
+                            },
+                            {
+                                link_label: "rel #3",
+                                link_url: "https://example.com/goto?key=rel&val=3&group_id=101",
+                            },
+                        ],
+                        value_type: "links",
+                    },
                 ],
                 containers: [
                     {
@@ -842,6 +901,12 @@ describe("Create ArtifactValues Collection", () => {
                         field_name: "Permissions",
                         field_value: "",
                         value_type: "string",
+                    },
+                    {
+                        content_length: "short",
+                        field_name: "References",
+                        field_value: [],
+                        value_type: "links",
                     },
                 ],
                 containers: [

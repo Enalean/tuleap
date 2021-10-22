@@ -155,6 +155,20 @@ function formatFieldValue(
         artifact_field_value = value.formatted_open_values.join(", ");
     } else if (value.type === "perm") {
         artifact_field_value = value.formatted_granted_ugroups.join(", ");
+    } else if (value.type === "cross") {
+        const references_content = [];
+        for (const cross_reference of value.value) {
+            references_content.push({
+                link_label: cross_reference.ref,
+                link_url: cross_reference.url,
+            });
+        }
+        return {
+            field_name: value.label,
+            field_value: references_content,
+            content_length: "short",
+            value_type: "links",
+        };
     } else {
         return null;
     }
