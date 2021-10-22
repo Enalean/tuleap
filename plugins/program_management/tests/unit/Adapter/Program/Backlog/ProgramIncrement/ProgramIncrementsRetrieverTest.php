@@ -109,7 +109,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(new SemanticTimeframe($tracker, $timeframe_calculator));
 
 
-        $timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')->willReturnOnConsecutiveCalls($time_period_15, $time_period_14);
+        $timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifact')->willReturnOnConsecutiveCalls($time_period_15, $time_period_14);
         $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanRead')->willReturn(true);
         $tracker->method('getStatusField')->willReturn($status_field);

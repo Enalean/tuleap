@@ -58,6 +58,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
     private \Tracker $program_increment;
     private \Tracker $user_story;
     private \Tracker $feature;
+    private \Tracker $iteration;
     private \Tracker_ArtifactFactory $artifact_factory;
     private ProgramIncrementsDAO $program_increment_DAO;
 
@@ -104,11 +105,13 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
 
         $this->feature    = $this->getTrackerByName($program_trackers, "features");
         $this->user_story = $this->getTrackerByName($team_trackers, "story");
+        $this->iteration  = $this->getTrackerByName($program_trackers, "iteration");
 
         $this->program_increment = $this->getTrackerByName($program_trackers, "pi");
 
         $this->linkFeatureAndUserStories();
         $this->linkProgramIncrementToMirroredRelease();
+        $this->linkProgramIncrementToIteration();
     }
 
     private function linkFeatureAndUserStories(): void
@@ -128,7 +131,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $fieldsA_data[$featureA_artifact_link->getId(
         )]['nature']                                                      = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
         $fieldsA_data[$featureA_artifact_link->getId()]['natures']        = [
-            $us1->getId() => Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            $us1->getId() => Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
         ];
         $fieldsA_data[$featureA_artifact_link->getId()]['removed_values'] = [];
 
@@ -196,5 +199,25 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         }
 
         return $program_project;
+    }
+
+    private function linkProgramIncrementToIteration(): void
+    {
+        $program_increment_list = $this->artifact_factory->getArtifactsByTrackerId($this->program_increment->getId());
+        $iteration_list         = $this->artifact_factory->getArtifactsByTrackerId($this->iteration->getId());
+
+        $iteration = $this->getArtifactByTitle($iteration_list, "iteration");
+        $pi        = $this->getArtifactByTitle($program_increment_list, "PI");
+
+        $pi_artifact_link_field = $pi->getAnArtifactLinkField($this->user);
+        assert($pi_artifact_link_field instanceof \Tracker_FormElement_Field_ArtifactLink);
+        $data                                                     = [];
+        $data[$pi_artifact_link_field->getId()]['new_values']     = (string) $iteration->getId();
+        $data[$pi_artifact_link_field->getId()]['nature']         = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        $data[$pi_artifact_link_field->getId()]['natures']        = [
+            $iteration->getId() => Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+        ];
+        $data[$pi_artifact_link_field->getId()]['removed_values'] = [];
+        $pi->createNewChangeset($data, "", $this->user);
     }
 }

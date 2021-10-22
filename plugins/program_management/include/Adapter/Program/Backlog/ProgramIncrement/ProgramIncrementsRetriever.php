@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
@@ -101,24 +102,10 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         Artifact $program_increment_artifact
     ): ?ProgramIncrement {
         $user_identifier = UserProxy::buildFromPFUser($user);
-        $title           = $program_increment_artifact->getTitle();
-        if ($title === null) {
+        $proxy           = ArtifactProxy::buildFromArtifact($this->semantic_timeframe_builder, $this->logger, $program_increment_artifact, $user);
+        if (! $proxy) {
             return null;
         }
-
-        $status       = null;
-        $status_field = $program_increment_artifact->getTracker()->getStatusField();
-        if ($status_field !== null && $status_field->userCanRead($user)) {
-            $status = $program_increment_artifact->getStatus();
-        }
-
-        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($program_increment_artifact->getTracker());
-        $time_period        = $semantic_timeframe->getTimeframeCalculator(
-        )->buildTimePeriodWithoutWeekendForArtifactForREST(
-            $program_increment_artifact,
-            $user,
-            $this->logger
-        );
 
         $user_can_plan = $this->can_plan_in_program_increment_verifier->userCanPlan(
             ProgramIncrementIdentifier::fromId(
@@ -132,14 +119,14 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 
         return new ProgramIncrement(
             $program_increment_artifact->getId(),
-            $title,
+            $proxy->getTitle(),
             $program_increment_artifact->getUri(),
             $program_increment_artifact->getXRef(),
             $program_increment_artifact->userCanUpdate($user),
             $user_can_plan,
-            $status,
-            $time_period->getStartDate(),
-            $time_period->getEndDate()
+            $proxy->getStatus(),
+            $proxy->getStartDate(),
+            $proxy->getEndDate()
         );
     }
 

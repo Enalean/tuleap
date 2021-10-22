@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
+use BackendLogger;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureAdditionProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -68,9 +71,13 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class ProgramIncrementResource extends AuthenticatedResource
 {
@@ -266,5 +273,63 @@ final class ProgramIncrementResource extends AuthenticatedResource
     public function optionsContent(int $id): void
     {
         Header::allowOptionsGetPatch();
+    }
+    /**
+     * Get iterations linked to a program increment
+     *
+     * In a program increment get all its iterations
+     *
+     * @url GET {id}/iterations
+     * @access hybrid
+     *
+     * @param int $id Id of the program increment
+     * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@min 0}
+     *
+     * @return IterationRepresentation[]
+     *
+     * @throws RestException 401
+     * @throws RestException 400
+     */
+    public function getIterations(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $artifact_factory    = \Tracker_ArtifactFactory::instance();
+        $iteration_retriever = new IterationsRetriever(
+            new ProgramIncrementsDAO(),
+            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+            new IterationsLinkedToProgramIncrementDAO(),
+            $artifact_factory,
+            new SemanticTimeframeBuilder(
+                new SemanticTimeframeDao(),
+                \Tracker_FormElementFactory::instance(),
+                \TrackerFactory::instance(),
+                new LinksRetriever(new ArtifactLinkFieldValueDao(), $artifact_factory)
+            ),
+            $this->user_manager_adapter,
+            BackendLogger::getDefaultLogger("program_management_syslog")
+        );
+        $user                = $this->user_manager->getCurrentUser();
+        try {
+            $elements = $iteration_retriever->retrieveIterations(
+                $id,
+                UserProxy::buildFromPFUser($user)
+            );
+
+            Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
+
+            return array_slice($elements, $offset, $limit);
+        } catch (ProgramIncrementNotFoundException $e) {
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
+        }
+    }
+
+    /**
+     * @url OPTIONS {id}/iterations
+     *
+     * @param int $id Id of the program increment
+     */
+    public function optionsIterations(int $id): void
+    {
+        Header::allowOptionsGet();
     }
 }
