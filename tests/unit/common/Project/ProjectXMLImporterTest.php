@@ -26,6 +26,7 @@ use Mockery as M;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Email\EmailCopier;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -105,6 +106,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(ProjectServiceActivator::class),
             $this->createMock(ProjectRegistrationChecker::class),
             $this->createMock(ProjectCategoriesUpdater::class),
+            $this->createStub(EmailCopier::class),
             false
         );
 

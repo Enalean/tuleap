@@ -5,6 +5,7 @@ project_attributes =
     attribute full-name { xsd:string },
     attribute description { xsd:string },
     attribute access { xsd:string { pattern = "(public|private|unrestricted|private-wo-restr)" } },
+    attribute icon-codepoint { xsd:string }?,
     attribute inherit-from-template { xsd:boolean }?
 
 project_tags =

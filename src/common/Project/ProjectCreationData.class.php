@@ -47,6 +47,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      * @var TemplateFromProjectForCreation
      */
     private $built_from_template;
+    private string $icon_codepoint = "";
 
     private CategoryCollection $trove_data;
     private $inherit_from_template = true;
@@ -269,6 +270,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->trove_data          = new CategoryCollection();
         $this->data_services       = [];
         $this->is_built_from_xml   = true;
+        $this->icon_codepoint      = ($attrs['icon-codepoint']) ? (string) $attrs['icon-codepoint'] : "";
 
         $requested_access_level = (string) $attrs['access'];
         if (in_array($requested_access_level, [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE], true)) {
@@ -334,5 +336,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public function getDataFields(): ProjectRegistrationSubmittedFieldsCollection
     {
         return $this->data_fields;
+    }
+
+    public function getIconCodePoint(): string
+    {
+        return $this->icon_codepoint;
     }
 }

@@ -40,9 +40,11 @@ use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Categories\TroveSetNodeFacade;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\Email\EmailCopier;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
@@ -168,6 +170,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         ProjectServiceActivator $project_service_activator,
         ProjectRegistrationChecker $registration_checker,
         ProjectCategoriesUpdater $project_categories_updater,
+        private EmailCopier $email_copier,
         $force_activation = false
     ) {
         $this->send_notifications                         = $send_notifications;
@@ -301,6 +304,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 new ProjectHistoryDao(),
                 new TroveSetNodeFacade(),
             ),
+            new EmailCopier(),
             $force_activation
         );
     }
@@ -419,7 +423,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->reference_manager->addProjectReferences($template_group->getID(), $group_id);
         }
 
-        $this->copyEmailOptionsFromTemplate($group_id, $template_group->getID());
+        $this->email_copier->copyEmailOptionsFromTemplate($group_id, (int) $template_group->getID());
 
         $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
 
@@ -480,7 +484,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'register_time'       => time(),
             'rand_hash'           => "'" . db_es(bin2hex(random_bytes(16))) . "'",
             'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),
-            'type'                => db_ei($type)
+            'type'                => db_ei($type),
+            'icon_codepoint'      =>  "'" . db_es(EmojiCodepointConverter::convertEmojiToStoreFormat($data->getIconCodePoint())) . "'",
         ];
         $sql         = 'INSERT INTO `groups`(' . implode(', ', array_keys($insert_data)) . ') VALUES (' . implode(', ', array_values($insert_data)) . ')';
         $result      = db_query($sql);
@@ -742,23 +747,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->dashboard_duplicator->duplicate($template, $new_project, $mapping_registry);
     }
 
-    /**
-     * Copy Truncated email option
-     * protected for testing support
-     */
-    protected function copyEmailOptionsFromTemplate($group_id, $template_id)
-    {
-        $sql = "UPDATE `groups` AS g1
-                JOIN `groups` AS g2
-                  ON g2.group_id = " . db_ei($template_id) . "
-                SET g1.truncated_emails = g2.truncated_emails
-                WHERE g1.group_id = " . db_ei($group_id);
 
-        $result = db_query($sql);
-        if (! $result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_truncated_emails'));
-        }
-    }
 
    /**
     * Verify if the approbation of the new project is automatic or not

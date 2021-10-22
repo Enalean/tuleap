@@ -35,6 +35,7 @@ use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\Email\EmailCopier;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
 use Tuleap\Project\Registration\ProjectInvalidFullNameException;
@@ -103,6 +104,10 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&ProjectCategoriesUpdater
      */
     private $project_categories_updater;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&EmailCopier
+     */
+    private $email_copier;
 
     protected function setUp(): void
     {
@@ -121,6 +126,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_updator                            = Mockery::mock(ProjectServiceActivator::class);
         $this->registration_checker                       = $this->createMock(ProjectRegistrationChecker::class);
         $this->project_categories_updater                 = $this->createMock(ProjectCategoriesUpdater::class);
+        $this->email_copier                               = $this->createStub(EmailCopier::class);
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
@@ -238,7 +244,8 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
         $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();
         $this->creator->shouldReceive('initWikiModuleFromTemplate')->once();
-        $this->creator->shouldReceive('copyEmailOptionsFromTemplate')->once();
+
+        $this->email_copier->expects(self::once())->method('copyEmailOptionsFromTemplate');
 
         $this->dashboard_duplicator->shouldReceive('duplicate')->once();
         $this->field_updator->shouldReceive('update')->once();
@@ -293,7 +300,8 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
         $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();
         $this->creator->shouldReceive('initWikiModuleFromTemplate')->once();
-        $this->creator->shouldReceive('copyEmailOptionsFromTemplate')->once();
+
+        $this->email_copier->expects(self::once())->method('copyEmailOptionsFromTemplate');
 
         $this->dashboard_duplicator->shouldReceive('duplicate')->once();
         $this->field_updator->shouldReceive('update')->once();
@@ -337,6 +345,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->service_updator,
                 $this->registration_checker,
                 $this->project_categories_updater,
+                $this->email_copier,
                 $force_activation
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
