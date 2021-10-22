@@ -52,4 +52,9 @@ final class EmojiCodepointConverterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertEquals("😬", EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat('"\ud83d\ude2c"'));
     }
+
+    public function testItReturnsEmptyWhenJsonDecodeFail(): void
+    {
+        self::assertEquals("", EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat('"\aaa\bbb"'));
+    }
 }

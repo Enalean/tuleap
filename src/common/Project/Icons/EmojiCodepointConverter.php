@@ -46,6 +46,10 @@ final class EmojiCodepointConverter
             return '';
         }
 
-        return json_decode($stored_emoji);
+        try {
+            return json_decode($stored_emoji, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return "";
+        }
     }
 }
