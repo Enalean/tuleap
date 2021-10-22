@@ -441,9 +441,8 @@ abstract class LDAP_GroupManager
      *
      * @param int $id Id of the Group
      *
-     * @return LDAPResult
      */
-    public function getLdapGroupByGroupId($id)
+    public function getLdapGroupByGroupId($id): ?LDAPResult
     {
         $ldapGroup = null;
         $dao       = $this->getDao();

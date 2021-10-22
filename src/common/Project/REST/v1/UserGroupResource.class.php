@@ -123,7 +123,12 @@ class UserGroupResource extends AuthenticatedResource
             $this->userCanSeeUserGroups($project_id);
         }
 
-        $ugroup_representation = new UserGroupRepresentation($project, $ugroup);
+        $ugroup_representation = UserGroupRepresentation::build(
+            $project,
+            $ugroup,
+            $this->user_manager->getCurrentUser(),
+            \EventManager::instance()
+        );
         $this->sendAllowHeadersForUserGroupId();
 
         return $ugroup_representation;
@@ -553,7 +558,12 @@ class UserGroupResource extends AuthenticatedResource
             );
 
             $new_ugroup = $this->ugroup_manager->getById($new_ugroup_id);
-            return new UserGroupRepresentation($project, $new_ugroup);
+            return UserGroupRepresentation::build(
+                $project,
+                $new_ugroup,
+                $user,
+                \EventManager::instance()
+            );
         } catch (CannotCreateUGroupException $exception) {
             throw new RestException(400, $exception->getMessage());
         } finally {

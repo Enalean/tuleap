@@ -212,6 +212,7 @@ final class TrackersTest extends TrackerBase
         $static_ugroup_2   = [];
         $project_members   = [];
         foreach ($all_user_groups as $user_group) {
+            unset($user_group['additional_information']);
             if ($user_group['short_name'] === 'developers') {
                 $developers_ugroup = $user_group;
             }

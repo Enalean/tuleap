@@ -1099,7 +1099,8 @@ class ProjectTest extends ProjectBase
                 'label' => 'Project members',
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
                 'key' => REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY,
-                'short_name' => 'project_members'
+                'short_name' => 'project_members',
+                'additional_information' => []
             ],
             [
                 'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
@@ -1107,7 +1108,8 @@ class ProjectTest extends ProjectBase
                 'label' => 'Project administrators',
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
                 'key' => 'ugroup_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL . '_name_key',
-                'short_name' => 'project_admins'
+                'short_name' => 'project_admins',
+                'additional_information' => []
             ],
             [
                 'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
@@ -1115,7 +1117,8 @@ class ProjectTest extends ProjectBase
                 'label'      => REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_LABEL,
                 'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID . '/users',
                 'key'        => 'ugroup_file_manager_admin_name_key',
-                'short_name' => 'file_manager_admins'
+                'short_name' => 'file_manager_admins',
+                'additional_information' => []
             ],
             [
                 'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
@@ -1123,7 +1126,8 @@ class ProjectTest extends ProjectBase
                 'label' => 'Wiki administrators',
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID . '/users',
                 'key' => 'ugroup_wiki_admin_name_key',
-                'short_name' => 'wiki_admins'
+                'short_name' => 'wiki_admins',
+                'additional_information' => []
             ],
             [
                 'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
@@ -1131,7 +1135,8 @@ class ProjectTest extends ProjectBase
                 'label' => 'Forum moderators',
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID . '/users',
                 'key' => 'ugroup_forum_admin_name_key',
-                'short_name' => 'forum_admins'
+                'short_name' => 'forum_admins',
+                'additional_information' => []
             ],
             [
                 'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
@@ -1139,7 +1144,8 @@ class ProjectTest extends ProjectBase
                 'label'      => 'News administrators',
                 'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID . '/users',
                 'key'        => 'ugroup_news_admin_name_key',
-                'short_name' => 'news_admins'
+                'short_name' => 'news_admins',
+                'additional_information' => []
 
             ],
             [
@@ -1148,7 +1154,8 @@ class ProjectTest extends ProjectBase
                 'label'      => 'News writers',
                 'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID . '/users',
                 'key'        => 'ugroup_news_writer_name_key',
-                'short_name' => 'news_editors'
+                'short_name' => 'news_editors',
+                'additional_information' => []
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
@@ -1156,7 +1163,8 @@ class ProjectTest extends ProjectBase
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'short_name' => 'static_ugroup_1'
+                'short_name' => 'static_ugroup_1',
+                'additional_information' => []
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
@@ -1164,7 +1172,8 @@ class ProjectTest extends ProjectBase
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
-                'short_name' => 'static_ugroup_2'
+                'short_name' => 'static_ugroup_2',
+                'additional_information' => []
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
@@ -1172,7 +1181,8 @@ class ProjectTest extends ProjectBase
                 'label' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
-                'short_name' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL
+                'short_name' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
+                'additional_information' => []
             ]
         ];
         self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));

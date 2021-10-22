@@ -391,7 +391,12 @@ class UserResource extends AuthenticatedResource
         foreach ($ugroup_ids as $id) {
             $ugroup                    = $this->user_group_retriever->getExistingUserGroup($id);
             $project                   = $ugroup->getProject();
-            $user_group_representation = new UserGroupRepresentation($project, $ugroup);
+            $user_group_representation = UserGroupRepresentation::build(
+                $project,
+                $ugroup,
+                $this->user_manager->getCurrentUser(),
+                \EventManager::instance()
+            );
             $user_groups[]             = $user_group_representation;
         }
         return $user_groups;
