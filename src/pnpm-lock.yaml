@@ -48,7 +48,7 @@ specifiers:
   node-gettext: ^3.0.0
   panzoom: ^9.4.1
   prismjs: ^1.23.0
-  slugify: ^1.5.1
+  slugify: ^1.6.1
   sprintf-js: ^1.1.2
   turndown: ^7.0.0
   vue: ^2.6.14
@@ -93,7 +93,7 @@ dependencies:
   node-gettext: 3.0.0
   panzoom: 9.4.1
   prismjs: 1.25.0
-  slugify: 1.5.1
+  slugify: 1.6.1
   sprintf-js: 1.1.2
   turndown: 7.1.1
   vue: 2.6.14
@@ -1680,8 +1680,8 @@ packages:
     resolution: {integrity: sha1-P/IfGYytIXX587eBhT/ZTQ0ZtZA=}
     dev: true
 
-  /slugify/1.5.1:
-    resolution: {integrity: sha512-54gP60qIkxaUCFXORn/u+tNPqdTsqvqonB2nxjQV52wWTCuJJ4kbfU7URkpn8646Lr2T3CSh8ecDzzBK/dD9jA==}
+  /slugify/1.6.1:
+    resolution: {integrity: sha512-5ofqMTbetNhxlzjYYLBaZFQd6oiTuSkQlyfPEFIMwgUABlZQ0hbk5xIV9Ydd5jghWeRoO7GkiJliUvTpLOjNRA==}
     engines: {node: '>=8.0.0'}
     dev: false
 
