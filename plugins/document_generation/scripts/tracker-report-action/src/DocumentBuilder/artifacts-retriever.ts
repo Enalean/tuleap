@@ -230,7 +230,8 @@ export type ArtifactReportFieldValue =
     | (ArtifactReportResponsePermissionsOnArtifactFieldValue & {
           formatted_granted_ugroups: string[];
       })
-    | ArtifactReportResponseCrossReferencesFieldValue;
+    | ArtifactReportResponseCrossReferencesFieldValue
+    | ArtifactReportResponseStepDefinitionFieldValue;
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -245,7 +246,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseSimpleListFieldValue
     | ArtifactReportResponseOpenListFieldValue
     | ArtifactReportResponsePermissionsOnArtifactFieldValue
-    | ArtifactReportResponseCrossReferencesFieldValue;
+    | ArtifactReportResponseCrossReferencesFieldValue
+    | ArtifactReportResponseStepDefinitionFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -381,6 +383,20 @@ interface ArtifactReportResponseCrossReferencesFieldValue {
         ref: string;
         url: string;
         direction: string;
+    }>;
+}
+
+export interface ArtifactReportResponseStepDefinitionFieldValue {
+    field_id: number;
+    type: "ttmstepdef";
+    label: string;
+    value: Array<{
+        id: number;
+        description: string;
+        description_format: string;
+        expected_results: string;
+        expected_results_format: string;
+        rank: number;
     }>;
 }
 

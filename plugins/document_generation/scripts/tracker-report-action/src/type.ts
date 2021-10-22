@@ -103,8 +103,28 @@ interface ArtifactFieldValueLink {
     readonly link_url: string;
 }
 
+interface ArtifactFieldValueStepDefinitionContent {
+    readonly field_name: string;
+    readonly content_length: "block";
+    readonly value_type: "string";
+    readonly steps: Array<ArtifactFieldValueStepDefinition>;
+}
+
+export interface ArtifactFieldValueStepDefinition {
+    readonly description: string;
+    readonly description_format: "plaintext" | "html";
+    readonly expected_results: string;
+    readonly expected_results_format: "plaintext" | "html";
+    readonly rank: number;
+}
+
 export type ArtifactFieldValue =
     | (ArtifactFieldValueContent & (ArtifactFieldValueShort | ArtifactFieldValueLong))
+    | ArtifactFieldValueLinksContent
+    | ArtifactFieldValueStepDefinitionContent;
+
+export type ArtifactFieldShortValue =
+    | (ArtifactFieldValueContent & ArtifactFieldValueShort)
     | ArtifactFieldValueLinksContent;
 
 export interface ExportDocument {

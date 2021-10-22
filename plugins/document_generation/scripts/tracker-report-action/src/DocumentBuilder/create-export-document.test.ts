@@ -22,6 +22,7 @@ import { createExportDocument } from "./create-export-document";
 import type {
     ArtifactFromReport,
     ArtifactReportResponseUnknownFieldValue,
+    ArtifactReportResponseStepDefinitionFieldValue,
 } from "./artifacts-retriever";
 
 describe("Create ArtifactValues Collection", () => {
@@ -297,6 +298,31 @@ describe("Create ArtifactValues Collection", () => {
                             },
                         ],
                     },
+                    {
+                        field_id: 24,
+                        type: "ttmstepdef",
+                        label: "Step Definition",
+                        value: [
+                            {
+                                id: 50,
+                                description: "01",
+                                description_format: "text",
+                                expected_results: "01",
+                                expected_results_format: "text",
+                                rank: 1,
+                            },
+                            {
+                                id: 51,
+                                description: "<p>04</p>\n",
+                                description_format: "html",
+                                commonmark_description: "04",
+                                expected_results: "<p>04</p>\n",
+                                expected_results_format: "html",
+                                commonmark_expected_results: "04",
+                                rank: 2,
+                            },
+                        ],
+                    } as ArtifactReportResponseStepDefinitionFieldValue,
                 ],
                 containers: [
                     {
@@ -551,6 +577,12 @@ describe("Create ArtifactValues Collection", () => {
                         label: "References",
                         value: [],
                     },
+                    {
+                        field_id: 24,
+                        type: "ttmstepdef",
+                        label: "Step Definition",
+                        value: [],
+                    },
                 ],
                 containers: [
                     {
@@ -755,6 +787,27 @@ describe("Create ArtifactValues Collection", () => {
                         ],
                         value_type: "links",
                     },
+                    {
+                        content_length: "block",
+                        field_name: "Step Definition",
+                        value_type: "string",
+                        steps: [
+                            {
+                                description: "01",
+                                description_format: "plaintext",
+                                expected_results: "01",
+                                expected_results_format: "plaintext",
+                                rank: 1,
+                            },
+                            {
+                                description: "<p>04</p>\n",
+                                description_format: "html",
+                                expected_results: "<p>04</p>\n",
+                                expected_results_format: "html",
+                                rank: 2,
+                            },
+                        ],
+                    },
                 ],
                 containers: [
                     {
@@ -907,6 +960,12 @@ describe("Create ArtifactValues Collection", () => {
                         field_name: "References",
                         field_value: [],
                         value_type: "links",
+                    },
+                    {
+                        content_length: "block",
+                        field_name: "Step Definition",
+                        value_type: "string",
+                        steps: [],
                     },
                 ],
                 containers: [
