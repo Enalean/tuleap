@@ -26,16 +26,54 @@ export function initIconPicker(doc: Document, icon_picker: EmojiButton | null): 
     if (!icon_picker) {
         return;
     }
-    const icon_input = doc.getElementById("form-group-name-icon");
-    const icon_button = doc.getElementById("form-group-name-icon-button");
 
-    if (icon_button !== null && icon_input !== null) {
-        icon_picker.on(ICON_PICKER_EVENT, (selection) => {
-            icon_input.setAttribute("value", selection.emoji);
-        });
+    const icon_input = doc.getElementById("icon-input");
+    const icon_removal_button = doc.getElementById("icon-removal-button");
 
-        icon_button.addEventListener("click", () => {
-            icon_picker.togglePicker(icon_input);
-        });
+    if (
+        !(icon_removal_button instanceof HTMLButtonElement) ||
+        !(icon_input instanceof HTMLInputElement)
+    ) {
+        return;
     }
+
+    if (icon_input.value.length > 0) {
+        showIconRemovalButton(icon_removal_button);
+    }
+
+    icon_picker.on(ICON_PICKER_EVENT, (selection) => {
+        icon_input.setAttribute("value", selection.emoji);
+        showIconRemovalButton(icon_removal_button);
+    });
+
+    icon_input.addEventListener("click", () => {
+        if (icon_picker.isPickerVisible()) {
+            return;
+        }
+
+        icon_picker.togglePicker(icon_input);
+    });
+
+    icon_removal_button.addEventListener("click", () => {
+        icon_input.removeAttribute("value");
+        hideIconRemovalButton(icon_removal_button);
+    });
+}
+
+function showIconRemovalButton(icon_removal_button: HTMLButtonElement): void {
+    icon_removal_button.classList.add("show");
+    if (icon_removal_button.parentElement === null) {
+        return;
+    }
+
+    icon_removal_button.parentElement.classList.add("tlp-form-element-append");
+}
+
+function hideIconRemovalButton(icon_removal_button: HTMLButtonElement): void {
+    icon_removal_button.classList.remove("show");
+    if (icon_removal_button.parentElement === null) {
+        return;
+    }
+
+    icon_removal_button.parentElement.classList.remove("tlp-form-element-append");
 }

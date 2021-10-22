@@ -57,17 +57,17 @@ describe("icon-picker-initializer", () => {
     it("does not initialize the icon picker if the picker is not built", () => {
         const icon_picker_instance = null;
 
-        const icon_button = doc.createElement("button");
-        icon_button.id = "form-group-name-icon-button";
+        const icon_removal_button = doc.createElement("button");
+        icon_removal_button.id = "icon-removal-button";
 
         const icon_input = doc.createElement("input");
-        icon_input.id = "form-group-name-icon";
+        icon_input.id = "icon-input";
         const input_spy = jest.spyOn(icon_input, "setAttribute");
 
-        doc.body.append(icon_button, icon_input);
+        doc.body.append(icon_removal_button, icon_input);
 
         initIconPicker(doc, icon_picker_instance);
-        icon_button.click();
+        icon_removal_button.click();
 
         expect(input_spy).not.toHaveBeenCalled();
     });
@@ -75,15 +75,31 @@ describe("icon-picker-initializer", () => {
     it("does initialize the icon picker if the button and the input are found", () => {
         const icon_picker_instance = new icon_picker.EmojiButton();
 
-        const icon_button = doc.createElement("button");
-        icon_button.id = "form-group-name-icon-button";
+        const icon_removal_button = doc.createElement("button");
+        icon_removal_button.id = "icon-removal-button";
 
         const icon_input = doc.createElement("input");
-        icon_input.id = "form-group-name-icon";
+        icon_input.id = "icon-input";
 
-        doc.body.append(icon_button, icon_input);
+        doc.body.append(icon_removal_button, icon_input);
 
         initIconPicker(doc, icon_picker_instance);
         expect(icon_picker_instance.on).toHaveBeenCalled();
+    });
+
+    it("does not show the icon removal button when there is no selected icon", () => {
+        const icon_picker_instance = new icon_picker.EmojiButton();
+
+        const icon_removal_button = doc.createElement("button");
+        icon_removal_button.id = "icon-removal-button";
+
+        const icon_input = doc.createElement("input");
+        icon_input.id = "icon-input";
+        icon_input.value = "happy";
+
+        doc.body.append(icon_removal_button, icon_input);
+
+        initIconPicker(doc, icon_picker_instance);
+        expect(icon_removal_button.classList.contains("show")).toBe(true);
     });
 });
