@@ -10,6 +10,8 @@ services:
     #entrypoint: ["/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run"]
     #command: ["--no-supervisord", "--exec=sleep 62"]
     hostname: ${TULEAP_FQDN}
+    ports:
+      - "443:443"
     volumes:
       - ../../../:/usr/share/tuleap:ro,cached
       - tuleap-data:/data
