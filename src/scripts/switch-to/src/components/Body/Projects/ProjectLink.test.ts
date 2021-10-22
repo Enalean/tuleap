@@ -32,7 +32,8 @@ describe("ProjectLink", () => {
                 project: {
                     is_public: true,
                     project_name: "Guinea Pig",
-                    project_uri: "/pojects/gpig",
+                    project_uri: "/projects/gpig",
+                    icon: "🐹",
                 } as Project,
                 has_programmatically_focus: false,
             },

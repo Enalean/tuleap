@@ -22,35 +22,20 @@ namespace Tuleap\Project;
 
 use ForgeConfig;
 use Project;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 class ProjectPresenter
 {
-    /** @var string */
-    public $project_name;
+    public string $project_name;
+    public string $project_uri;
+    public string $project_config_uri;
+    public string $icon;
 
-    /** @var string */
-    public $project_uri;
-
-    /** @var string */
-    public $project_config_uri;
-
-    /** @var bool */
-    public $is_current_user_admin;
-
-    /** @var bool */
-    public $is_private;
-    /**
-     * @var bool
-     */
-    public $is_public;
-    /**
-     * @var bool
-     */
-    public $is_public_incl_restricted = false;
-    /**
-     * @var bool
-     */
-    public $is_private_incl_restricted = false;
+    public bool $is_current_user_admin;
+    public bool $is_private;
+    public bool $is_public;
+    public bool $is_public_incl_restricted  = false;
+    public bool $is_private_incl_restricted = false;
 
     public function __construct(
         string $project_name,
@@ -65,6 +50,7 @@ class ProjectPresenter
         $this->is_private            = ! $project->isPublic();
         $this->is_public             = $project->isPublic();
         $this->is_current_user_admin = $is_current_user_admin;
+        $this->icon                  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
 
         $are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($are_restricted_users_allowed) {

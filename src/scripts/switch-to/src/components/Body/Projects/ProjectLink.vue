@@ -30,8 +30,13 @@
             ref="project_link"
             data-test="project-link"
         >
-            <i class="fas fa-fw switch-to-projects-project-icon" v-bind:class="project_icon"></i>
-            <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
+            <i
+                class="fas fa-fw switch-to-projects-project-icon"
+                v-bind:class="project_privacy_icon"
+            ></i>
+            <span class="switch-to-projects-project-label">
+                {{ project.icon }} {{ project.project_name }}
+            </span>
         </a>
         <a
             v-if="project.is_current_user_admin"
@@ -100,7 +105,7 @@ export default class ProjectLink extends Vue {
         window.location.href = this.project.project_config_uri;
     }
 
-    get project_icon(): string {
+    get project_privacy_icon(): string {
         const privacy: ProjectPrivacy = {
             project_is_public: this.project.is_public,
             project_is_private: this.project.is_private,
