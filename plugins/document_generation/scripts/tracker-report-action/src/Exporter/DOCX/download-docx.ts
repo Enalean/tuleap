@@ -20,6 +20,7 @@
 import type {
     ArtifactContainer,
     ArtifactFieldValue,
+    ArtifactFieldShortValue,
     DateReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
@@ -143,9 +144,13 @@ export async function downloadDocx(
             })
         );
 
-        artifacts_content.push(...(await buildFieldValuesDisplayZone(artifact.fields)));
+        artifacts_content.push(
+            ...(await buildFieldValuesDisplayZone(artifact.fields, gettext_provider))
+        );
 
-        artifacts_content.push(...(await buildContainersDisplayZone(artifact.containers)));
+        artifacts_content.push(
+            ...(await buildContainersDisplayZone(artifact.containers, gettext_provider))
+        );
     }
 
     const table_of_contents = [
@@ -518,12 +523,18 @@ function buildCoverTableRow(label: string, value: TextRun | ExternalHyperlink): 
 }
 
 async function buildContainersDisplayZone(
-    containers: ReadonlyArray<ArtifactContainer>
+    containers: ReadonlyArray<ArtifactContainer>,
+    gettext_provider: GetText
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
-        const sub_containers_display_zones = await buildContainersDisplayZone(container.containers);
+        const sub_containers_display_zones = await buildContainersDisplayZone(
+            container.containers,
+            gettext_provider
+        );
         const field_values_display_zone: XmlComponent[] = [];
-        field_values_display_zone.push(...(await buildFieldValuesDisplayZone(container.fields)));
+        field_values_display_zone.push(
+            ...(await buildFieldValuesDisplayZone(container.fields, gettext_provider))
+        );
 
         if (sub_containers_display_zones.length === 0 && field_values_display_zone.length === 0) {
             return [];
@@ -682,9 +693,10 @@ function buildDateReportCriterionValue(
 }
 
 async function buildFieldValuesDisplayZone(
-    artifact_values: ReadonlyArray<ArtifactFieldValue>
+    artifact_values: ReadonlyArray<ArtifactFieldValue>,
+    gettext_provider: GetText
 ): Promise<XmlComponent[]> {
-    const short_fields = [];
+    const short_fields: ArtifactFieldShortValue[] = [];
     const display_zone_long_fields: XmlComponent[] = [];
 
     for (const field of artifact_values) {
@@ -710,6 +722,54 @@ async function buildFieldValuesDisplayZone(
                     ))
                 );
                 break;
+            case "block":
+                display_zone_long_fields.push(
+                    new Paragraph({
+                        heading: HeadingLevel.HEADING_4,
+                        children: [new TextRun(field.field_name)],
+                    })
+                );
+                for (const step of field.steps) {
+                    display_zone_long_fields.push(
+                        new Paragraph({
+                            heading: HeadingLevel.HEADING_5,
+                            children: [
+                                new TextRun(
+                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
+                                ),
+                            ],
+                        }),
+                        new Paragraph({
+                            heading: HeadingLevel.HEADING_6,
+                            children: [new TextRun(gettext_provider.gettext("Description"))],
+                        }),
+                        ...(await transformLargeContentIntoParagraphs(
+                            step.description,
+                            step.description_format,
+                            {
+                                ordered_title_levels: [HeadingLevel.HEADING_6],
+                                unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
+                                ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
+                                monospace_font: "Courier New",
+                            }
+                        )),
+                        new Paragraph({
+                            heading: HeadingLevel.HEADING_6,
+                            children: [new TextRun(gettext_provider.gettext("Expected results"))],
+                        }),
+                        ...(await transformLargeContentIntoParagraphs(
+                            step.expected_results,
+                            step.expected_results_format,
+                            {
+                                ordered_title_levels: [HeadingLevel.HEADING_6],
+                                unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
+                                ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
+                                monospace_font: "Courier New",
+                            }
+                        ))
+                    );
+                }
+                break;
             default:
                 ((value: never): never => {
                     throw new Error("Should never happen, all fields must be handled " + value);
@@ -729,7 +789,7 @@ async function buildFieldValuesDisplayZone(
 }
 
 function buildShortFieldValuesDisplayZone(
-    artifact_values: ReadonlyArray<ArtifactFieldValue>
+    artifact_values: ReadonlyArray<ArtifactFieldShortValue>
 ): Table {
     const fields_rows: TableRow[] = [];
 

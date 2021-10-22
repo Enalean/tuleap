@@ -20,7 +20,11 @@
 import type { ArtifactContainer, DateTimeLocaleInformation, ExportDocument } from "../type";
 import type { ArtifactReportContainer, ArtifactReportFieldValue } from "./artifacts-retriever";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
-import type { ArtifactFieldValue, FormattedArtifact } from "../type";
+import type {
+    ArtifactFieldValue,
+    FormattedArtifact,
+    ArtifactFieldValueStepDefinition,
+} from "../type";
 
 export async function createExportDocument(
     report_id: number,
@@ -91,6 +95,27 @@ function formatFieldValue(
             content_length: "long",
             content_format: value.format === "html" ? "html" : "plaintext",
             value_type: "string",
+        };
+    }
+
+    if (value.type === "ttmstepdef") {
+        const steps: ArtifactFieldValueStepDefinition[] = [];
+        for (const step of value.value) {
+            steps.push({
+                description: step.description,
+                description_format: step.description_format === "html" ? "html" : "plaintext",
+                expected_results: step.expected_results,
+                expected_results_format:
+                    step.expected_results_format === "html" ? "html" : "plaintext",
+                rank: step.rank,
+            });
+        }
+
+        return {
+            field_name: value.label,
+            content_length: "block",
+            value_type: "string",
+            steps: steps,
         };
     }
 

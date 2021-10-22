@@ -26,6 +26,12 @@ msgstr "Le %s"
 msgid "Before %s"
 msgstr "Avant le %s"
 
+msgid "Description"
+msgstr "Description"
+
+msgid "Expected results"
+msgstr "Résultats attendus"
+
 msgid "Exported by"
 msgstr "Exporté par"
 
@@ -59,6 +65,9 @@ msgstr "URL du rapport"
 
 msgid "Search criteria"
 msgstr "Critère de recherche"
+
+msgid "Step %d"
+msgstr "Étape %d"
 
 msgid "TQL query: "
 msgstr "Requête TQL : "
