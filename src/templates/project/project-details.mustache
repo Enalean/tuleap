@@ -50,13 +50,23 @@
                             <p class="tlp-text-info">{{ project_name_info }}</p>
                         </div>
                             <div class="tlp-form-element">
-                                <label class="tlp-label" for="form-group-name-icon">{{ icon_label_name }}</label>
-                                <div id="form-group-name-icon-input-container" class="tlp-form-element tlp-form-element-append" data-all-project-icons="{{all_project_icon}}">
-                                    <input type="text" readonly maxlength="1" class="tlp-input form-group-name-icon-input" id="form-group-name-icon" name="form-group-name-icon"
-                                           value="{{ project_icon }}"/>
-                                    <button id="form-group-name-icon-button" type="button"
-                                            class="tlp-append tlp-button-primary tlp-button-outline">
-                                        <i class="fas fa-caret-down"></i>
+                                <label class="tlp-label" for="icon-input">{{ icon_label_name }}</label>
+                                <div id="form-group-name-icon-input-container" class="tlp-form-element {{# project_icon }} tlp-form-element-append {{/ project_icon }}" data-all-project-icons="{{all_project_icon}}">
+                                    <input id="icon-input"
+                                           type="text"
+                                           readonly
+                                           maxlength="1"
+                                           class="tlp-input form-group-name-icon-input"
+                                           name="form-group-name-icon"
+                                           value="{{ project_icon }}"
+                                    />
+                                    <button
+                                        id="icon-removal-button"
+                                        type="button"
+                                        class="tlp-append tlp-button-primary tlp-button-outline tlp-button-danger {{# project_icon }} show {{/ project_icon }}"
+                                    >
+                                        <i class="fas fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                        {{# gettext }} Remove {{/ gettext }}
                                     </button>
                                 </div>
                             </div>

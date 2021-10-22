@@ -22,12 +22,27 @@
     gap: var(--tlp-large-spacing);
 }
 
-.form-group-name-icon-input {
-    width: 50px;
-}
-
 .form-group-name-element {
     width: 80%;
+}
+
+#icon-input {
+    width: 60px;
+    background: var(--tlp-white-color) url("./includes/images/tlp-icon-picker-background.png") no-repeat;
+    background-position: right var(--tlp-medium-spacing) center;
+    cursor: pointer;
+
+    &::selection {
+        user-select: none;
+    }
+}
+
+#icon-removal-button {
+    display: none;
+
+    &.show {
+        display: block;
+    }
 }
 
 .project-admin-details-form {
