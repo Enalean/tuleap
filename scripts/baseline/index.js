@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const project_id = Number(vue_mount_point.dataset.projectId);
     const project_public_name = vue_mount_point.dataset.projectPublicName;
+    const project_icon = vue_mount_point.dataset.projectIcon;
     const project_url = vue_mount_point.dataset.projectUrl;
     const privacy = JSON.parse(vue_mount_point.dataset.privacy);
     const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
@@ -60,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const AppComponent = Vue.extend(App);
     new AppComponent({
         store,
-        propsData: { project_id, project_public_name, project_url, privacy, project_flags },
+        propsData: { project_id, project_public_name, project_icon, project_url, privacy, project_flags },
         router,
     }).$mount(vue_mount_point);
 });

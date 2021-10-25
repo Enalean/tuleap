@@ -30,6 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -137,6 +138,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
                 'project_url'         => $project->getUrl(),
                 'privacy'             => json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR),
                 'project_flags'       => json_encode($this->project_flags_builder->buildProjectFlags($project), JSON_THROW_ON_ERROR),
+                'project_icon'        => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint())
             ]
         );
         $layout->footer(["without_content" => true]);

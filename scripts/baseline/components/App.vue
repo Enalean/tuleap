@@ -29,7 +29,7 @@
             <nav class="breadcrumb">
                 <div class="breadcrumb-item breadcrumb-project">
                     <a v-bind:href="project_url" class="breadcrumb-link">
-                        {{ project_public_name }}
+                        {{ project_icon }} {{ project_public_name }}
                     </a>
                 </div>
                 <div class="breadcrumb-item">
@@ -73,6 +73,10 @@ export default {
             type: Number,
         },
         project_public_name: {
+            required: true,
+            type: String,
+        },
+        project_icon: {
             required: true,
             type: String,
         },

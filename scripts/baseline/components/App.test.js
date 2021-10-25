@@ -42,6 +42,7 @@ describe("App", () => {
             propsData: {
                 project_public_name: "Project Public Name",
                 project_url: "/project_url",
+                project_icon: "🌷",
                 privacy: {},
                 project_flags: [],
             },
