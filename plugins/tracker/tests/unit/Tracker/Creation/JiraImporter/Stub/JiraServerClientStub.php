@@ -28,6 +28,8 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 abstract class JiraServerClientStub implements JiraClient
 {
+    public array $urls = [];
+
     public function isJiraCloud(): bool
     {
         return false;
@@ -35,7 +37,7 @@ abstract class JiraServerClientStub implements JiraClient
 
     public function getUrl(string $url): ?array
     {
-        return null;
+        return $this->urls[$url] ?? null;
     }
 
     public function getAttachmentContents(Attachment $attachment): string

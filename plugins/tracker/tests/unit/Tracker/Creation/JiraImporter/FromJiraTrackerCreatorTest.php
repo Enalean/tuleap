@@ -35,7 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetr
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
-use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
+use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesCheckerInterface;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
@@ -70,10 +70,6 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlatformConfigurationRetriever
      */
     private $platform_configuration_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserRolesChecker
-     */
-    private $user_roles_checker;
 
     protected function setUp(): void
     {
@@ -83,7 +79,6 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger                           = Mockery::mock(LoggerInterface::class);
         $this->jira_user_on_tuleap_cache        = Mockery::mock(JiraUserOnTuleapCache::class);
         $this->platform_configuration_retriever = Mockery::mock(PlatformConfigurationRetriever::class);
-        $this->user_roles_checker               = Mockery::mock(UserRolesChecker::class);
     }
 
     public function testItDuplicatedATrackerFromJira(): void
@@ -109,6 +104,15 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 new PlatformConfiguration()
             );
 
+        $user_roles_checker = new class implements UserRolesCheckerInterface {
+            public function checkUserIsAdminOfJiraProject(
+                JiraClient $jira_client,
+                LoggerInterface $logger,
+                string $jira_project
+            ): void {
+            }
+        };
+
         $creator = Mockery::mock(
             FromJiraTrackerCreator::class,
             [
@@ -118,7 +122,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->logger,
                 $this->jira_user_on_tuleap_cache,
                 $this->platform_configuration_retriever,
-                $this->user_roles_checker
+                $user_roles_checker
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -130,7 +134,6 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(Mockery::mock(Tracker::class));
 
         $this->logger->shouldReceive('info');
-        $this->user_roles_checker->shouldReceive('checkUserIsAdminOfJiraProject')->once();
 
         $creator->createFromJira(
             $project,
@@ -168,6 +171,16 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 new PlatformConfiguration()
             );
 
+        $user_roles_checker = new class implements UserRolesCheckerInterface {
+            public function checkUserIsAdminOfJiraProject(
+                JiraClient $jira_client,
+                LoggerInterface $logger,
+                string $jira_project
+            ): void {
+                throw new UserIsNotProjectAdminException();
+            }
+        };
+
         $creator = Mockery::mock(
             FromJiraTrackerCreator::class,
             [
@@ -177,7 +190,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->logger,
                 $this->jira_user_on_tuleap_cache,
                 $this->platform_configuration_retriever,
-                $this->user_roles_checker
+                $user_roles_checker
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -186,12 +199,6 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->shouldNotReceive('getTrackerById');
 
         $this->logger->shouldReceive('info');
-        $this->user_roles_checker
-            ->shouldReceive('checkUserIsAdminOfJiraProject')
-            ->once()
-            ->andThrow(
-                new UserIsNotProjectAdminException()
-            );
 
         $this->expectException(TrackerCreationHasFailedException::class);
 
