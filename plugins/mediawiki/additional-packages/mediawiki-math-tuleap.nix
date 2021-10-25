@@ -1,11 +1,11 @@
-{ pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {} }:
+{ pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {}, nixpkgsPinEpoch ? (import ../../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; } }:
 
 pkgs.stdenv.mkDerivation {
   name = "mediawiki-math-tuleap";
   src = pkgs.fetchgit {
     url = "https://tuleap.net/plugins/git/tuleap/deps/tuleap/mediawiki-math-tuleap.git";
-    rev = "729d88339858b94844a52556cfe9d3b4c5a0b7ff";
-    sha256 = "19lvymjaw5wjsijpv3c8k0gg3kvnkqmb1mqjbml3x1hp6rwgbdnz";
+    rev = "b4a2ddae9673530398de382411828b6009b2ecc5";
+    sha256 = "08q8mrhznf0brnl282dar06s0nhgjapm87z955h7l0hvq86i2vvf";
   };
 
   buildInputs = [ pkgs.glibc.static ];
@@ -15,6 +15,7 @@ pkgs.stdenv.mkDerivation {
 
   buildPhase = ''
     rpmbuild --nodeps \
+        --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
         --define "_sourcedir $(pwd)" \
         --define "_rpmdir $(pwd)" \
         --dbpath="$(pwd)"/rpmdb \

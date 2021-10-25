@@ -1,11 +1,11 @@
-{ pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {} }:
+{ pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {}, nixpkgsPinEpoch ? (import ../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; } }:
 
 pkgs.stdenv.mkDerivation {
   name = "sha1collisiondetector";
   src = pkgs.fetchgit {
     url = "https://tuleap.net/plugins/git/tuleap/deps/3rdparty/sha1collisiondetector.git";
-    rev = "ec26bbff49d24fa94ea74d7dbf5d233622e1b579";
-    sha256 = "0xmzn25a7f95c6n8g4h5pl5s678f1a126ycgx8y1899alg33d6lp";
+    rev = "66dc87cf8ad2bc60c1c5be383996b79f003eb218";
+    sha256 = "13l56m9xp5g8flwwbx8dm070mknm1522srzd16a2h6cwnbnr2pz6";
   };
 
   buildInputs = [ pkgs.glibc.static ];
@@ -16,6 +16,7 @@ pkgs.stdenv.mkDerivation {
   buildPhase = ''
     CC="gcc -static"
     rpmbuild \
+        --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
         --define "_sourcedir $(pwd)" \
         --define "_rpmdir $(pwd)" \
         --dbpath="$(pwd)"/rpmdb \
