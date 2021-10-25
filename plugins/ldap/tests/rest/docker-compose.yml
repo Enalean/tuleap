@@ -1,0 +1,9 @@
+version: "2.1"
+
+services:
+  ldap:
+    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/ldap
+    environment:
+      LDAP_ROOT_PASSWORD: DumpPass4Tests
+      LDAP_MANAGER_PASSWORD: DumpPass4Tests
+      DEBUG_LEVEL: 0

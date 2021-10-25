@@ -1100,7 +1100,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
                 'key' => REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY,
                 'short_name' => 'project_members',
-                'additional_information' => []
+                'additional_information' => ['ldap' => null]
             ],
             [
                 'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
@@ -1164,7 +1164,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
                 'short_name' => 'static_ugroup_1',
-                'additional_information' => []
+                'additional_information' => ['ldap' => null]
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
@@ -1173,7 +1173,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'short_name' => 'static_ugroup_2',
-                'additional_information' => []
+                'additional_information' => ['ldap' => null]
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
@@ -1182,7 +1182,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
                 'short_name' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
-                'additional_information' => []
+                'additional_information' => ['ldap' => null]
             ]
         ];
         self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
