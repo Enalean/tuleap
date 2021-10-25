@@ -46,7 +46,7 @@ class LinkedList extends Collection
      */
     public function equals($obj)
     {
-        if (is_a($obj, "Collection") && $this->size() === $obj->size()) {
+        if ($obj instanceof \Collection && $this->size() === $obj->size()) {
             //We walk through the two LinkedList to see if both
             //contain same values
             $it1          = $this->iterator();

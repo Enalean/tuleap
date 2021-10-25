@@ -58,7 +58,7 @@ class Docman_ListMetadata extends \Docman_Metadata
     }
     public function setDefaultValue($v)
     {
-        if (\is_a($v, 'Iterator')) {
+        if ($v instanceof \Iterator) {
             $v->rewind();
             //if(is_a($love, 'Docman_MetadataListOfValuesElement')) {
             while ($v->valid()) {

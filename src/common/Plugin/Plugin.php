@@ -132,7 +132,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getPluginInfo()
     {
-        if (! is_a($this->pluginInfo, 'PluginInfo')) {
+        if (! $this->pluginInfo instanceof \PluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;

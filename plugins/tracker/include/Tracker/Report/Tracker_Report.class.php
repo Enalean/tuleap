@@ -821,9 +821,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
 
         // We need an ArtifactLinkable renderer for ArtifactLink
-        if ($link_artifact_id && ! is_a($current_renderer, 'Tracker_Report_Renderer_ArtifactLinkable')) {
+        if ($link_artifact_id && ! $current_renderer instanceof \Tracker_Report_Renderer_ArtifactLinkable) {
             foreach ($renderers as $r) {
-                if (is_a($r, 'Tracker_Report_Renderer_ArtifactLinkable')) {
+                if ($r instanceof \Tracker_Report_Renderer_ArtifactLinkable) {
                     $current_renderer = $r;
                     break;
                 }
@@ -863,7 +863,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
             foreach ($renderers as $r) {
                 $active = $r->id == $current_renderer->id ? 'tracker_report_renderers-current active dropdown' : '';
-                if ($active || ! $link_artifact_id || is_a($r, 'Tracker_Report_Renderer_ArtifactLinkable')) {
+                if ($active || ! $link_artifact_id || $r instanceof \Tracker_Report_Renderer_ArtifactLinkable) {
                     $parameters = [
                         'report'   => $this->id,
                         'renderer' => $r->id
@@ -1201,7 +1201,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function moveRenderer($renderer, $position)
     {
         $rrf = Tracker_Report_RendererFactory::instance();
-        if (! is_a($renderer, 'Tracker_Report_Renderer')) {
+        if (! $renderer instanceof \Tracker_Report_Renderer) {
             $renderer_id = (int) $renderer;
             $renderer    = $rrf->getReportRendererByReportAndId($this, $renderer_id);
         }

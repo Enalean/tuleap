@@ -95,7 +95,7 @@ class Docman_View_Details extends Docman_View_Display
             );
         }
 
-        if ($user_can_read && ! is_a($params['item'], 'Docman_Empty')) {
+        if ($user_can_read && ! ($params['item'] instanceof Docman_Empty)) {
             if ($view && $section == 'approval') {
                 $approval = $view;
             } else {
@@ -116,7 +116,7 @@ class Docman_View_Details extends Docman_View_Display
             $details->addSection(new Docman_View_ItemDetailsSectionReferences($params['item'], $params['default_url']));
         }
 
-        if ($user_can_read && is_a($params['item'], 'Docman_Folder')) {
+        if ($user_can_read && $params['item'] instanceof \Docman_Folder) {
             $sections['statistics'] = true;
             $details->addSection(new Docman_View_ItemDetailsSectionStatistics($params['item'], $params['default_url'], $this->_controller, $token));
         }

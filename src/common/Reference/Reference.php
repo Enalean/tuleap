@@ -241,7 +241,7 @@ class Reference
      */
     public function &_getReferenceDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        if (! is_a($this->referenceDao, 'ReferenceDao')) {
+        if (! $this->referenceDao instanceof \ReferenceDao) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
         }
         return $this->referenceDao;

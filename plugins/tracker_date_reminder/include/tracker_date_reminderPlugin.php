@@ -56,7 +56,7 @@ class tracker_date_reminderPlugin extends Plugin
 
     public function getPluginInfo()
     {
-        if (! is_a($this->pluginInfo, 'TrackerDateReminderPluginInfo')) {
+        if (! $this->pluginInfo instanceof \TrackerDateReminderPluginInfo) {
             include_once('TrackerDateReminderPluginInfo.class.php');
             $this->pluginInfo = new TrackerDateReminderPluginInfo($this);
         }

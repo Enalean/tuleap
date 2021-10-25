@@ -513,10 +513,9 @@ class Docman_Controller extends Controler
                         $g  = $pm->getProject($this->getGroupId());
                         $this->_set_doesnot_belong_to_project_error($item, $g);
                     } else {
-                        $user               = $this->getUser();
-                        $dpm                = $this->_getPermissionsManager();
-                        $can_read           = $dpm->userCanAccess($user, $item->getId());
-                        $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
+                        $user     = $this->getUser();
+                        $dpm      = $this->_getPermissionsManager();
+                        $can_read = $dpm->userCanAccess($user, $item->getId());
                         if (! $can_read) {
                             if ($this->request->get('action') == 'ajax_reference_tooltip') {
                                 $this->_setView('AjaxReferenceTooltipError');
@@ -1596,7 +1595,7 @@ class Docman_Controller extends Controler
         $valid = true;
         foreach ($fields as $field) {
             $validatorList = null;
-            if (is_a($field, 'Docman_MetadataHtml')) {
+            if ($field instanceof \Docman_MetadataHtml) {
                 $fv = $field->getValidator($this->request);
                 if ($fv !== null) {
                     if (! is_array($fv)) {
@@ -1792,7 +1791,7 @@ class Docman_Controller extends Controler
     public function _count(&$item, &$hierarchy, $go = false)
     {
         $nb = $go ? 1 : 0;
-        if (is_a($hierarchy, 'Docman_Folder')) {
+        if ($hierarchy instanceof \Docman_Folder) {
             $list = $hierarchy->getAllItems();
             $iter = $list->iterator();
             while ($iter->valid()) {

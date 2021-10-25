@@ -138,13 +138,13 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
     {
         $field = $changeset_value->getField();
 
-        return is_a($field, 'Tracker_FormElement_Field_File');
+        return $field instanceof \Tracker_FormElement_Field_File;
     }
 
     private function isComputedField(Tracker_Artifact_ChangesetValue $changeset_value)
     {
         $field = $changeset_value->getField();
 
-        return is_a($field, Tracker_FormElement_Field_Computed::class);
+        return $field instanceof Tracker_FormElement_Field_Computed;
     }
 }

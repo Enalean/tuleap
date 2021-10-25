@@ -296,7 +296,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 $if   = new Docman_ItemFactory();
                 $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
-                    $params['object_type'] = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
+                    $params['object_type'] = $item instanceof \Docman_Folder ? 'folder' : 'document';
                 }
             }
         }

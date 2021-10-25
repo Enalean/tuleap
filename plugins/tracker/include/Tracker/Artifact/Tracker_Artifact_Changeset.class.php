@@ -656,7 +656,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $has_changes = false;
         $used_fields = $this->getFormElementFactory()->getUsedFields($this->artifact->getTracker());
         foreach ($used_fields as $field) {
-            if (is_a($field, 'Tracker_FormElement_Field_ReadOnly')) {
+            if ($field instanceof Tracker_FormElement_Field_ReadOnly) {
                 continue;
             }
 

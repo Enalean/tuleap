@@ -109,7 +109,7 @@ class Map
      */
     public function equals($obj)
     {
-        if (is_a($obj, "Map") && $this->size() === $obj->size()) {
+        if ($obj instanceof \Map && $this->size() === $obj->size()) {
             if ($this->getKeys()->equals($obj->getKeys())) {
                 $is_identical = true;
                 $obj_elements = $obj->elements;

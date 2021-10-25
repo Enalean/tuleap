@@ -63,6 +63,6 @@ final class BackOffDelayFailedMessage
     {
         $exponent = min($nb_time_message_has_been_queued - 1, self::MAX_RETRIES_EXPONENT);
 
-        return self::BASE_DELAY_SEC * (2 ** $exponent);
+        return (int) (self::BASE_DELAY_SEC * (2 ** $exponent));
     }
 }

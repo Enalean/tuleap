@@ -101,7 +101,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
     public function _getNewTable()
     {
         $html = '';
-        if (is_a($this->table, 'Docman_ApprovalTableVersionned')) {
+        if ($this->table instanceof \Docman_ApprovalTableVersionned) {
             $lastDocumentVersion = $this->atf->getLastDocumentVersionNumber();
             if ($this->table->getVersionNumber() < $lastDocumentVersion) {
                 $html .= '<h3>' . dgettext('tuleap-docman', 'Create a new approval table') . '</h3>';
@@ -121,7 +121,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html .= '<table>';
 
         // Version
-        if (is_a($this->table, 'Docman_ApprovalTableVersionned')) {
+        if ($this->table instanceof \Docman_ApprovalTableVersionned) {
             $html .= '<tr>';
             $html .= '<td>' . dgettext('tuleap-docman', 'Attached to document version:') . '</td>';
             $html .= '<td>';

@@ -111,7 +111,7 @@ class Backend
             $backend = new $base();
 
             //check that all is ok
-            if (! is_a($backend, $wanted_base)) {
+            if (! $backend instanceof $wanted_base) {
                 throw new Exception('Backend should inherit from ' . $wanted_base . '. Received: "' . $backend::class . '"');
             }
 

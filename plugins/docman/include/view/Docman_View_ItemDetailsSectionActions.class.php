@@ -49,7 +49,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //{{{ Move
         $content .= '<dt>' . dgettext('tuleap-docman', 'Move') . '</dt><dd>';
         if (! $this->is_moveable || ! ($this->_controller->userCanWrite($this->item->getId()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
-            if (is_a($this->item, 'Docman_Folder')) {
+            if ($this->item instanceof \Docman_Folder) {
                 $content .= dgettext('tuleap-docman', 'You cannot move this folder.');
             } else {
                 $content .= dgettext('tuleap-docman', 'You cannot move this document.');
@@ -60,7 +60,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 ['default_url' => $this->url],
                 ['action' => 'move', 'id' => $this->item->getId()]
             );
-            if (is_a($this->item, 'Docman_Folder')) {
+            if ($this->item instanceof \Docman_Folder) {
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">move this folder</a> to another folder or inside the current folder.'), $move_url);
             } else {
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">move this document</a> to another folder or inside the current folder.'), $move_url);
@@ -80,7 +80,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 ['default_url' => $this->url],
                 ['action' => 'action_cut', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()]
             );
-            if (is_a($this->item, 'Docman_Folder')) {
+            if ($this->item instanceof \Docman_Folder) {
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">cut this folder</a>.'), $cuturl);
             } else {
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">cut this document</a>.'), $cuturl);
@@ -96,7 +96,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             ['default_url' => $this->url],
             ['action' => 'action_copy', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()]
         );
-        if (is_a($this->item, 'Docman_Folder')) {
+        if ($this->item instanceof \Docman_Folder) {
             $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">copy this folder</a>.'), $copyurl);
         } else {
             $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">copy this document</a>.'), $copyurl);
@@ -107,7 +107,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //{{{ Delete
         $content .= '<dt>' . dgettext('tuleap-docman', 'Delete') . '</dt><dd>';
         if (! $this->is_deleteable || $this->_controller->userCannotDelete($user, $this->item)) {
-            if (is_a($this->item, 'Docman_Folder')) {
+            if ($this->item instanceof \Docman_Folder) {
                 $content .= dgettext('tuleap-docman', 'You cannot delete this folder.');
             } else {
                 $content .= dgettext('tuleap-docman', 'You cannot delete this document.');
@@ -120,7 +120,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             );
 
             $data_test = "delete-item-" . $this->item->getId();
-            if (is_a($this->item, 'Docman_Folder')) {
+            if ($this->item instanceof \Docman_Folder) {
                 $content .= sprintf(
                     dgettext(
                         'tuleap-docman',

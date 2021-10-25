@@ -110,7 +110,7 @@ class TreeNode /*implements Visitable*/
      */
     public function _setParentNode(&$node)
     {
-        if (is_object($node) && is_a($node, 'TreeNode')) {
+        if (is_object($node) && $node instanceof \TreeNode) {
             $this->parentNode =& $node;
         } else {
             trigger_error(static::class . '::setParentNode => require: TreeNode given: "' .  $node::class . '"', E_USER_ERROR);
@@ -136,7 +136,7 @@ class TreeNode /*implements Visitable*/
      */
     public function addChild($c)
     {
-        if (is_object($c) && is_a($c, 'TreeNode')) {
+        if (is_object($c) && $c instanceof \TreeNode) {
             if ($this->children === null) {
                 $this->children = [];
             }

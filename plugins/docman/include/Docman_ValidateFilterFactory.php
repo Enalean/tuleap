@@ -29,7 +29,7 @@ class Docman_ValidateFilterFactory
     public function getFromFilter($filter)
     {
         $f = \null;
-        if (\is_a($filter, 'Docman_FilterDate')) {
+        if ($filter instanceof \Docman_FilterDate) {
             $f = new \Docman_ValidateFilterDate($filter);
         }
         return $f;

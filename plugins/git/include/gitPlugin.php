@@ -399,7 +399,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function getPluginInfo()
     {
-        if (! is_a($this->pluginInfo, 'GitPluginInfo')) {
+        if (! $this->pluginInfo instanceof \GitPluginInfo) {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;

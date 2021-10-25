@@ -49,7 +49,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
     {
         $html = '';
 
-        if (is_a($this->item, 'Docman_Folder')) {
+        if ($this->item instanceof \Docman_Folder) {
             $if    = Docman_ItemFactory::instance($this->_controller->getGroupId());
             $stats = $if->getFolderStats($this->item, $this->_controller->getUser());
 

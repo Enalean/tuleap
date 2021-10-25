@@ -190,13 +190,13 @@ class ReleaseResource extends AuthenticatedResource
         $user    = $this->user_manager->getCurrentUser();
         $package = $this->package_factory->getFRSPackageFromDb($body->package_id);
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            \ProjectManager::instance()->getProject($package->getGroupID())
-        );
-
         if (! $package) {
             throw new RestException(400, "Package not found");
         }
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            \ProjectManager::instance()->getProject($package->getGroupID())
+        );
 
         if (! $package->isActive()) {
             throw new RestException(403, "Package is not active");

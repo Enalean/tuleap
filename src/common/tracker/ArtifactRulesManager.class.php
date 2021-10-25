@@ -120,7 +120,7 @@ class ArtifactRulesManager
         // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
         $dependencies = [];
         foreach ($this->getAllRulesByArtifactTypeWithOrder($artifact_type_id) as $rule) {
-            if (is_a($rule, 'ArtifactRuleValue')) {
+            if ($rule instanceof \ArtifactRuleValue) {
                 if (! isset($dependencies[$rule->source_field])) {
                     $dependencies[$rule->source_field] = [];
                 }

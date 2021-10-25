@@ -615,9 +615,9 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $openvalues     = [];
             $bindvalues     = [];
             foreach ($criteria_value as $v) {
-                if (is_a($v, 'Tracker_FormElement_Field_List_UnsavedValue')) {
+                if ($v instanceof \Tracker_FormElement_Field_List_UnsavedValue) {
                     //ignore it
-                } elseif (is_a($v, 'Tracker_FormElement_Field_List_OpenValue')) {
+                } elseif ($v instanceof \Tracker_FormElement_Field_List_OpenValue) {
                     $openvalues[] = $v->getId();
                 } else { //bindvalue
                     $bindvalues[] = $v->getId();

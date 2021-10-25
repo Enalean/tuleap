@@ -64,7 +64,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getPluginInfo()
     {
-        if (! is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
+        if (! $this->pluginInfo instanceof \ForumMLPluginInfo) {
             require_once('ForumMLPluginInfo.class.php');
             $this->pluginInfo = new ForumMLPluginInfo($this);
         }

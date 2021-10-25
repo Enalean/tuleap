@@ -356,7 +356,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getPluginInfo()
     {
-        if (! is_a($this->pluginInfo, 'trackerPluginInfo')) {
+        if (! $this->pluginInfo instanceof \trackerPluginInfo) {
             $this->pluginInfo = new trackerPluginInfo($this);
         }
         return $this->pluginInfo;

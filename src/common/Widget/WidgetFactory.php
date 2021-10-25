@@ -178,7 +178,7 @@ class WidgetFactory implements IBuildInstanceOfWidgets
                 break;
         }
 
-        if (! $widget || ! is_a($widget, 'Widget')) {
+        if (! $widget || ! $widget instanceof Widget) {
             $widget = null;
         }
 
