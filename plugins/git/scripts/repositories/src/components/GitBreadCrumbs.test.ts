@@ -22,6 +22,7 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
+import { setBreadcrumbSettings } from "../breadcrumb-presenter";
 
 describe("GitBreadcrumbs", () => {
     it("displays breadcrumbs", () => {
@@ -31,6 +32,25 @@ describe("GitBreadcrumbs", () => {
             translations: {},
             silent: true,
         });
+
+        setBreadcrumbSettings(
+            "/admin/url",
+            "/repositories/url",
+            "/fork/url",
+            "Guinea Pig",
+            "/guinea-pig/url",
+            {
+                are_restricted_users_allowed: false,
+                project_is_public_incl_restricted: false,
+                project_is_private: false,
+                project_is_public: true,
+                project_is_private_incl_restricted: false,
+                explanation_text: "Public",
+                privacy_title: "Public",
+            },
+            [],
+            "🐹"
+        );
 
         const wrapper = shallowMount(GitBreadcrumbs, {
             localVue,

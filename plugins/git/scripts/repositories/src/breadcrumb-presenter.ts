@@ -28,6 +28,7 @@ export {
     getProjectUrl,
     getPrivacy,
     getProjectFlags,
+    getProjectIcon,
 };
 
 let administration_url: string,
@@ -36,7 +37,8 @@ let administration_url: string,
     project_public_name: string,
     project_url: string,
     privacy: ProjectPrivacy,
-    project_flags: Array<ProjectFlag>;
+    project_flags: Array<ProjectFlag>,
+    project_icon: string;
 
 function setBreadcrumbSettings(
     admin_url: string,
@@ -45,7 +47,8 @@ function setBreadcrumbSettings(
     proj_public_name: string,
     proj_url: string,
     proj_privacy: ProjectPrivacy,
-    proj_flags: Array<ProjectFlag>
+    proj_flags: Array<ProjectFlag>,
+    proj_icon: string
 ): void {
     administration_url = admin_url;
     repository_list_url = repositories_url;
@@ -54,6 +57,7 @@ function setBreadcrumbSettings(
     project_url = proj_url;
     privacy = proj_privacy;
     project_flags = proj_flags;
+    project_icon = proj_icon;
 }
 
 function getAdministrationUrl(): string {
@@ -82,4 +86,8 @@ function getPrivacy(): ProjectPrivacy {
 
 function getProjectFlags(): Array<ProjectFlag> {
     return project_flags;
+}
+
+function getProjectIcon(): string {
+    return project_icon;
 }

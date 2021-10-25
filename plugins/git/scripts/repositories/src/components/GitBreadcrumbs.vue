@@ -27,7 +27,7 @@
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
                 <a v-bind:href="project_url()" class="breadcrumb-link">
-                    {{ project_public_name() }}
+                    {{ project_icon() }} {{ project_public_name() }}
                 </a>
             </div>
             <div class="breadcrumb-switchable breadcrumb-item">
@@ -78,6 +78,7 @@ import {
     getProjectPublicName,
     getPrivacy,
     getProjectFlags,
+    getProjectIcon,
 } from "../breadcrumb-presenter";
 import { getUserIsAdmin } from "../repository-list-presenter";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
@@ -108,6 +109,9 @@ export default class GitBreadcrumbs extends Vue {
     }
     project_flags(): Array<ProjectFlag> {
         return getProjectFlags();
+    }
+    project_icon() {
+        return getProjectIcon();
     }
 }
 </script>
