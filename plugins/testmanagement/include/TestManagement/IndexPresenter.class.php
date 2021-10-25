@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement;
 use CSRFSynchronizerToken;
 use ForgeConfig as TuleapConfig;
 use PFUser;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
@@ -125,6 +126,10 @@ class IndexPresenter
      * @psalm-readonly
      */
     public int $file_upload_max_size;
+    /**
+     * @psalm-readonly
+     */
+    public string $project_icon;
 
     /**
      * @param int|false                         $campaign_tracker_id
@@ -151,6 +156,7 @@ class IndexPresenter
         $this->project_id   = $project->getID();
         $this->project_name = $project->getPublicName();
         $this->project_url  = $project->getUrl();
+        $this->project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
 
         $user_representation = UserRepresentation::build($current_user);
         $this->current_user  = json_encode($user_representation);
