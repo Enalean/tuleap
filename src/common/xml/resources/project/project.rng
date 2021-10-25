@@ -78,6 +78,11 @@
       </data>
     </attribute>
     <optional>
+      <attribute name="icon-codepoint">
+        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </attribute>
+    </optional>
+    <optional>
       <attribute name="inherit-from-template">
         <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
       </attribute>

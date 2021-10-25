@@ -121,6 +121,10 @@ describe("Project admin", function () {
     });
 
     context("project basic administration", function () {
+        it("Emoji is displayed", function () {
+            cy.get("[data-test=project-sidebar-title").contains("😀");
+        });
+
         it("should be able to create a new public project", function () {
             cy.get("[data-test=new-button]").click();
             cy.get("[data-test=create-new-item]").click();

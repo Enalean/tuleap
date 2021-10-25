@@ -18,6 +18,11 @@
       </data>
     </attribute>
     <optional>
+      <attribute name="icon-codepoint">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <optional>
       <attribute name="inherit-from-template">
         <data type="boolean"/>
       </attribute>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project access="public" description="" full-name="Project administration test" unix-name="project-admin-test">
+<project access="public" description="" full-name="Project administration test" unix-name="project-admin-test" icon-codepoint="😀">
     <long-description/>
     <ugroups>
         <ugroup name="project_members" description="">
