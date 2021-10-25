@@ -33,9 +33,6 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
     /** @var MediawikiVersionManager */
     private $version_manager;
 
-    /** @var MediawikiMLEBExtensionManager */
-    private $mleb_manager;
-
     /** @var MediawikiSiteAdminResourceRestrictor */
     private $resource_restrictor;
 
@@ -43,13 +40,11 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
         Mediawiki_Migration_MediawikiMigrator $mediawiki_migrator,
         ProjectManager $project_manager,
         MediawikiVersionManager $version_manager,
-        MediawikiMLEBExtensionManager $mleb_manager,
         MediawikiSiteAdminResourceRestrictor $resource_restrictor
     ) {
         $this->project_manager     = $project_manager;
         $this->mediawiki_migrator  = $mediawiki_migrator;
         $this->version_manager     = $version_manager;
-        $this->mleb_manager        = $mleb_manager;
         $this->resource_restrictor = $resource_restrictor;
     }
 
@@ -82,9 +77,6 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
         $this->resource_restrictor->allowProject($project);
         $this->mediawiki_migrator->migrateProjectTo123($project);
         $this->version_manager->saveVersionForProject($project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
-        if ($this->mleb_manager->isMLEBExtensionInstalled()) {
-            $this->mleb_manager->saveMLEBActivationForProject($project);
-        }
     }
 
     private function getProjectsFromParameters()

@@ -58,17 +58,12 @@ class MediaWikiInstantiater
 
     /** @var Backend */
     private $backend;
-    /**
-     * @var MediawikiMLEBExtensionManager
-     */
-    private $mleb_manager;
 
     public function __construct(
         Project $project,
         MediawikiManager $mediawiki_manager,
         MediawikiLanguageManager $language_manager,
         MediawikiVersionManager $version_manager,
-        MediawikiMLEBExtensionManager $mleb_manager
     ) {
         $this->logger              = BackendLogger::getDefaultLogger();
         $this->project             = $project;
@@ -78,7 +73,6 @@ class MediaWikiInstantiater
         $this->dao                 = $mediawiki_manager->getDao();
         $this->language_manager    = $language_manager;
         $this->version_manager     = $version_manager;
-        $this->mleb_manager        = $mleb_manager;
         $this->resource_restrictor = new MediawikiSiteAdminResourceRestrictor(
             new MediawikiSiteAdminResourceRestrictorDao(),
             ProjectManager::instance()
@@ -135,7 +129,6 @@ class MediaWikiInstantiater
             $this->createDirectory();
             $this->createDatabase(self::MW_123_PATH);
             $this->version_manager->saveVersionForProject($this->project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
-            $this->mleb_manager->activateMLEBForProject($this->project);
             $this->resource_restrictor->allowProject($this->project);
             return true;
         }
