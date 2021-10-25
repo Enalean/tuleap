@@ -8,7 +8,7 @@ exports[`ProjectLink Displays the link to a project 1`] = `
   <a
     class="switch-to-projects-project-link"
     data-test="project-link"
-    href="/pojects/gpig"
+    href="/projects/gpig"
   >
     <i
       class="fas fa-fw switch-to-projects-project-icon fa-lock-open"
@@ -17,7 +17,9 @@ exports[`ProjectLink Displays the link to a project 1`] = `
     <span
       class="switch-to-projects-project-label"
     >
-      Guinea Pig
+      
+            🐹 Guinea Pig
+        
     </span>
   </a>
    

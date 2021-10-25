@@ -26,6 +26,7 @@ export interface Project {
     readonly is_public_incl_restricted: boolean;
     readonly is_private_incl_restricted: boolean;
     readonly is_current_user_admin: boolean;
+    readonly icon: string;
 }
 
 export interface HiddenField {
