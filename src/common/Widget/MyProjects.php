@@ -27,6 +27,7 @@ use ForgeConfig;
 use Project;
 use RSS;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\User\Account\RemoveFromProjectController;
 use UserManager;
 
@@ -57,18 +58,9 @@ class MyProjects extends \Widget
         $display_privacy = ForgeConfig::get('sys_display_project_privacy_in_service_bar');
         $user            = UserManager::instance()->getCurrentUser();
 
-        $order = '`groups`.group_name';
-        if ($display_privacy) {
-            $order = 'access, `groups`.group_name';
-        }
-        $result = db_query("SELECT `groups`.group_id, `groups`.group_name, `groups`.unix_group_name, `groups`.status, `groups`.access, user_group.admin_flags" .
-                           " FROM `groups`" .
-                           " JOIN user_group USING (group_id)" .
-                           " WHERE user_group.user_id = " . db_ei($user->getId()) .
-                           " AND `groups`.status = 'A'" .
-                           " ORDER BY $order");
-        $rows   = db_numrows($result);
-        if (! $result || $rows < 1) {
+        $projects_user_is_member_of = $this->getProjectUserIsMemberOf($user, $display_privacy);
+
+        if (empty($projects_user_is_member_of)) {
             $html .= '<div class="empty-state-pane">';
             $html .= '<svg class="empty-state-illustration" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
             $html .= '    <defs>';
@@ -94,31 +86,36 @@ class MyProjects extends \Widget
             $html           .= '<table cellspacing="0" class="tlp-table" data-test="dashboard-my-projects">';
             $i               = 0;
             $disable_contact = (bool) ForgeConfig::get(self::CONFIG_DISABLE_CONTACT);
-            while ($row = db_fetch_array($result)) {
+
+            foreach ($projects_user_is_member_of as $project) {
+                $project_access = $project->getAccess();
+
                 if (
-                    $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                    $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                     ForgeConfig::areRestrictedUsersAllowed() &&
                     $user->isRestricted()
                 ) {
                     continue;
                 }
 
+                $project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
+
                 $html .= '<tr class="' . util_get_alt_row_color($i++) . '" >';
 
                 // Privacy
                 if ($display_privacy) {
                     if (ForgeConfig::areRestrictedUsersAllowed()) {
-                        if ($row['access'] === Project::ACCESS_PUBLIC_UNRESTRICTED) {
+                        if ($project_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {
                             $privacy = 'fas fa-tlp-unlock-plus-r';
-                        } elseif ($row['access'] === Project::ACCESS_PRIVATE) {
+                        } elseif ($project_access === Project::ACCESS_PRIVATE) {
                             $privacy = 'fas fa-tlp-lock-plus-r';
-                        } elseif ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+                        } elseif ($project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
                             $privacy = 'fas fa-lock';
                         } else {
                             $privacy = 'fas fa-lock-open';
                         }
                     } else {
-                        if (in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
+                        if (in_array($project_access, [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
                             $privacy = 'fas fa-lock';
                         } else {
                             $privacy = 'fas fa-lock-open';
@@ -128,14 +125,16 @@ class MyProjects extends \Widget
                 }
 
                 // Project name
-                $html .= '<td class="dashboard-widget-my-projects-project-name"><a href="/projects/' . urlencode($row['unix_group_name']) . '/">';
-                $html .= Codendi_HTMLPurifier::instance()->purify($row['group_name']);
+                $html .= '<td class="dashboard-widget-my-projects-project-name">';
+                $html .= $project_icon . ' &nbsp;';
+                $html .= '<a href="/projects/' . urlencode($project->getUnixName()) . '/">';
+                $html .= Codendi_HTMLPurifier::instance()->purify($project->getPublicName());
                 $html .= '</a></td>';
 
                 // Admin link
                 $html .= '<td>';
-                if ($row['admin_flags'] === 'A') {
-                    $html .= '<a href="/project/admin/?group_id=' . $row['group_id'] . '">[' . $GLOBALS['Language']->getText('my_index', 'admin_link') . ']</a>';
+                if ($user->isAdmin((int) $project->getID())) {
+                    $html .= '<a href="/project/admin/?group_id=' . $project->getID() . '">[' . $GLOBALS['Language']->getText('my_index', 'admin_link') . ']</a>';
                 } else {
                     $html .= '&nbsp;';
                 }
@@ -143,15 +142,20 @@ class MyProjects extends \Widget
 
                 if ($disable_contact === false) {
                     // Mailing tool
-                    $html .= '<td>';
-                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="' . $row['group_id'] . '" title="' . $GLOBALS['Language']->getText('my_index', 'send_mail', $hp->purify($row['group_name'])) . '" data-toggle="modal"><span class="far fa-envelope"></span></a>';
-                    $html .= '</td>';
+                    $massmail_link_title = $GLOBALS['Language']->getText(
+                        'my_index',
+                        'send_mail',
+                        $project_icon . " " . $hp->purify($project->getPublicName())
+                    );
+                    $html               .= '<td>';
+                    $html               .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="' . $project->getID() . '" title="' . $massmail_link_title . '" data-toggle="modal"><span class="far fa-envelope"></span></a>';
+                    $html               .= '</td>';
                 }
 
                 // Remove from project
                 $html .= '<td class="tlp-table-cell-actions">';
-                if ($row['admin_flags'] !== 'A') {
-                    $link       = '/account/remove_from_project/' . urlencode((string) $row['group_id']);
+                if (! $user->isAdmin((int) $project->getID())) {
+                    $link       = '/account/remove_from_project/' . urlencode((string) $project->getID());
                     $csrf_token = new CSRFSynchronizerToken(RemoveFromProjectController::CSRF_TOKEN_NAME);
                     $warn       = $GLOBALS['Language']->getText('my_index', 'quit_proj');
                     $html      .= '<form method="post" action="' . $hp->purify($link) . '" onclick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">';
@@ -284,5 +288,27 @@ class MyProjects extends \Widget
             ['file' => '/scripts/tuleap/tuleap-ckeditor-toolbar.js'],
             ['file' => $assets->getFileURL('dashboards/widget-contact-modal.js')],
         ];
+    }
+
+    /**
+     * @return Project[]
+     */
+    private function getProjectUserIsMemberOf(\PFUser $user, bool $display_privacy): array
+    {
+        $projects = [];
+        $dar      = (new MyProjectsDao())->searchProjectsUserIsMemberOf(
+            (int) $user->getId(),
+            ($display_privacy) ? 'access, `groups`.group_name' : '`groups`.group_name'
+        );
+
+        if (! $dar) {
+            return [];
+        }
+
+        foreach ($dar as $project_row) {
+            $projects[] = new Project($project_row);
+        }
+
+        return $projects;
     }
 }
