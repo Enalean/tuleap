@@ -47,7 +47,7 @@ class LDAP_ProjectGroupDao extends DataAccessObject
      *
      * @param int $groupId Project id
      *
-     * @return DataAccessResult
+     * @return array|false
      */
     public function searchByGroupId($groupId)
     {

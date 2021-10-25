@@ -34,7 +34,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @param int $ugroupId User group id
      *
-     * @return DataAccessResult
+     * @return array|false
      */
     public function searchByGroupId($ugroupId)
     {

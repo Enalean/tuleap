@@ -43,6 +43,7 @@ use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection
 use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Request\CollectRoutesEvent;
@@ -176,6 +177,8 @@ class LdapPlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
 
         $this->addHook(ConfigDumpEvent::NAME);
+
+        $this->addHook(UserGroupAdditionalInformationEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1426,5 +1429,17 @@ class LdapPlugin extends Plugin
     {
         // load properties
         $this->getPluginInfo();
+    }
+
+    public function addAdditionalInformation(UserGroupAdditionalInformationEvent $event): void
+    {
+        (
+            new \Tuleap\LDAP\REST\LDAPUserGroupRepresentationInformationAdder(
+                $this->getLdapProjectGroupManager(),
+                $this->getLdapProjectGroupDao(),
+                $this->getLdapUserGroupManager(),
+                $this->getUserGroupDao()
+            )
+        )->addAdditionalUserGroupInformation($event);
     }
 }

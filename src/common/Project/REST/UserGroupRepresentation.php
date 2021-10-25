@@ -21,6 +21,7 @@ namespace Tuleap\Project\REST;
 
 use Project;
 use ProjectUGroup;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\User\UserGroup\NameTranslator;
 use Exception;
 
@@ -68,9 +69,21 @@ class UserGroupRepresentation
      * @var MinimalProjectRepresentation
      */
     public $project;
+    /**
+     * @var UserGroupAdditionalInformation[] | null[]
+     * @psalm-var array<string,UserGroupAdditionalInformation|null>
+     */
+    public array $additional_information;
 
-    public function __construct(Project $project, ProjectUGroup $ugroup)
-    {
+    /**
+     * @param UserGroupAdditionalInformation[]|null[] $additional_information
+     * @psalm-param array<string,UserGroupAdditionalInformation|null> $additional_information
+     */
+    private function __construct(
+        Project $project,
+        ProjectUGroup $ugroup,
+        array $additional_information
+    ) {
         $this->id         = self::getRESTIdForProject((int) $project->getGroupId(), $ugroup->getId());
         $this->uri        = self::ROUTE . '/' . $this->id;
         $this->label      = NameTranslator::getUserGroupDisplayName($ugroup->getName());
@@ -81,6 +94,15 @@ class UserGroupRepresentation
         if (! $project->isError()) {
             $this->project = new MinimalProjectRepresentation($project);
         }
+        $this->additional_information = $additional_information;
+    }
+
+    public static function build(Project $project, ProjectUGroup $ugroup, \PFUser $current_user, EventDispatcherInterface $event_dispatcher): self
+    {
+        $event = $event_dispatcher->dispatch(
+            new UserGroupAdditionalInformationEvent($ugroup, $current_user)
+        );
+        return new self($project, $ugroup, $event->additional_information);
     }
 
     public static function getRESTIdForProject(int $project_id, int $user_group_id): string
