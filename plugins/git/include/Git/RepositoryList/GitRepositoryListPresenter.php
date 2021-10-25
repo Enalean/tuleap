@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\RepositoryList;
 
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
 class GitRepositoryListPresenter
@@ -60,6 +61,10 @@ class GitRepositoryListPresenter
      * @var string
      */
     public $external_services_name_used;
+    /**
+     * @psalm-readonly
+     */
+    public string $project_icon;
 
     public function __construct(
         \PFUser $current_user,
@@ -99,5 +104,6 @@ class GitRepositoryListPresenter
 
         $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
         $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->project_icon  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
     }
 }

@@ -136,7 +136,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         projectPublicName,
         projectUrl,
         JSON.parse(privacy),
-        JSON.parse(projectFlags)
+        JSON.parse(projectFlags),
+        vue_mount_point.dataset.projectIcon || ""
     );
     buildRepositoryListPresenter(
         parseInt(userId, 10),

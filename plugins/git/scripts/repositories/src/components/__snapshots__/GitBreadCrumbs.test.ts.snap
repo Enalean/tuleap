@@ -2,17 +2,17 @@
 
 exports[`GitBreadcrumbs displays breadcrumbs 1`] = `
 <div class="breadcrumb-container">
-  <breadcrumb-privacy-stub></breadcrumb-privacy-stub>
+  <breadcrumb-privacy-stub project_flags="" privacy="[object Object]" project_public_name="Guinea Pig"></breadcrumb-privacy-stub>
   <nav class="breadcrumb">
-    <div class="breadcrumb-item breadcrumb-project"><a class="breadcrumb-link">
-
+    <div class="breadcrumb-item breadcrumb-project"><a href="/guinea-pig/url" class="breadcrumb-link">
+        🐹 Guinea Pig
       </a></div>
-    <div class="breadcrumb-switchable breadcrumb-item"><a title="Repository list" class="breadcrumb-link"><i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
+    <div class="breadcrumb-switchable breadcrumb-item"><a href="/repositories/url" title="Repository list" class="breadcrumb-link"><i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
         <translate-stub tag="span">Git repositories</translate-stub>
       </a>
       <div class="breadcrumb-switch-menu-container">
         <nav class="breadcrumb-switch-menu">
-          <!----> <span class="breadcrumb-dropdown-item"><a title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i> <translate-stub tag="span">Fork repositories</translate-stub></a></span></nav>
+          <!----> <span class="breadcrumb-dropdown-item"><a href="/fork/url" title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i> <translate-stub tag="span">Fork repositories</translate-stub></a></span></nav>
       </div>
     </div>
   </nav>
