@@ -45,6 +45,7 @@ function TestManagementCtrl(
 
         const project_public_name = testmanagement_init_data.projectPublicName;
         const project_url = testmanagement_init_data.projectUrl;
+        const project_icon = testmanagement_init_data.projectIcon;
         const ttm_admin_url = testmanagement_init_data.ttmAdminUrl;
         const ttm_admin_label = testmanagement_init_data.ttmAdminLabel;
 
@@ -71,7 +72,13 @@ function TestManagementCtrl(
         );
         SharedPropertiesService.setFileUploadMaxSize(file_upload_max_size);
 
-        moveBreadCrumbs(project_public_name, project_url, ttm_admin_url, ttm_admin_label);
+        moveBreadCrumbs(
+            project_public_name,
+            project_url,
+            project_icon,
+            ttm_admin_url,
+            ttm_admin_label
+        );
         replaceSkipToMainContentLink();
     };
 }

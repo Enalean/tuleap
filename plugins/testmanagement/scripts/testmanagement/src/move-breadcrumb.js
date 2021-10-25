@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function moveBreadCrumbs(project_public_name, project_url, ttm_admin_url, ttm_admin_label) {
+export function moveBreadCrumbs(
+    project_public_name,
+    project_url,
+    project_icon,
+    ttm_admin_url,
+    ttm_admin_label
+) {
     window.setTimeout(function () {
         const origin = document.getElementById("testmanagement-breadcrumb");
         if (!origin) {
@@ -55,7 +61,7 @@ export function moveBreadCrumbs(project_public_name, project_url, ttm_admin_url,
         const project_link = document.createElement("a");
         project_link.classList.add("breadcrumb-link");
         project_link.href = project_url;
-        project_link.textContent = project_public_name;
+        project_link.textContent = `${project_icon} ${project_public_name}`;
 
         project_item.appendChild(project_link);
         nav.insertBefore(project_item, campaigns_item);
