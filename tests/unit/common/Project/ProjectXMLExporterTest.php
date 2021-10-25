@@ -51,7 +51,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager = M::spy(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01', "isActive" => true]);
+        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01', "isActive" => true, "getIconUnicodeCodepoint" => '"\ud83d\ude2c"']);
 
         $this->dashboard_exporter = $this->createMock(\Tuleap\Dashboard\Project\DashboardXMLExporter::class);
 
@@ -158,6 +158,9 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals((string) $xml_objet->ugroups->ugroup[4]['description'], 'descr03');
         $this->assertNotNull($xml_objet->ugroups->ugroup[4]->members);
         $this->assertNull($xml_objet->ugroups->ugroup[4]->members->member[0]);
+
+        $attrs = $xml_objet->attributes();
+        $this->assertEquals("😬", (string) $attrs['icon-codepoint']);
     }
 
     public function testItExportsDynamicUgroupsForTheGivenProject(): void
