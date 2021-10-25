@@ -1340,7 +1340,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function isUpdateable()
     {
-        return ! is_a($this, 'Tracker_FormElement_Field_ReadOnly');
+        return ! $this instanceof Tracker_FormElement_Field_ReadOnly;
     }
 
     /**
@@ -1350,7 +1350,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function isSubmitable()
     {
-        return ! is_a($this, 'Tracker_FormElement_Field_ReadOnly');
+        return ! $this instanceof Tracker_FormElement_Field_ReadOnly;
     }
 
     /**

@@ -736,16 +736,12 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
     /**
      * Open a session for user
      *
-     * @return type
      * @throws UserNotExistException
      * @throws UserNotActiveException
      * @throws SessionNotCreatedException
      */
-    public function openSessionForUser(PFUser $user)
+    public function openSessionForUser(PFUser $user): void
     {
-        if (! $user) {
-            throw new UserNotExistException();
-        }
         try {
             $status_manager = new User_UserStatusManager();
             $status_manager->checkStatus($user);

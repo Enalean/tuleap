@@ -267,15 +267,15 @@ class Docman_FilterFactory
     {
         $dao = $this->getDao();
 
-        if (is_a($filter, 'Docman_FilterDateAdvanced')) {
+        if ($filter instanceof \Docman_FilterDateAdvanced) {
             $dao->createFilterDateAdvanced($reportId, $filter->md->getLabel(), $filter->getValueStart(), $filter->getValueEnd());
-        } elseif (is_a($filter, 'Docman_FilterDate')) {
+        } elseif ($filter instanceof \Docman_FilterDate) {
             $dao->createFilterDate($reportId, $filter->md->getLabel(), $filter->getValue(), $filter->getOperator());
-        } elseif (is_a($filter, 'Docman_FilterListAdvanced')) {
+        } elseif ($filter instanceof \Docman_FilterListAdvanced) {
             foreach ($filter->getValue() as $val) {
                 $dao->createFilterList($reportId, $filter->md->getLabel(), $val);
             }
-        } elseif (is_a($filter, 'Docman_FilterList')) {
+        } elseif ($filter instanceof \Docman_FilterList) {
             $dao->createFilterList($reportId, $filter->md->getLabel(), $filter->getValue());
         } else {
             $dao->createFilterText($reportId, $filter->md->getLabel(), $filter->getValue());
@@ -380,13 +380,13 @@ class Docman_FilterFactory
     {
         $dstVal = null;
 
-        if (is_a($srcFilter, 'Docman_FilterDateAdvanced')) {
+        if ($srcFilter instanceof \Docman_FilterDateAdvanced) {
             $dstFilter->setValueStart($srcFilter->getValueStart());
             $dstFilter->setValueEnd($srcFilter->getValueEnd());
-        } elseif (is_a($srcFilter, 'Docman_FilterDate')) {
+        } elseif ($srcFilter instanceof \Docman_FilterDate) {
             $dstFilter->setValue($srcFilter->getValue());
             $dstFilter->setOperator($srcFilter->getOperator());
-        } elseif (is_a($srcFilter, 'Docman_FilterListAdvanced')) {
+        } elseif ($srcFilter instanceof \Docman_FilterListAdvanced) {
             $dstVal = [];
             foreach ($srcFilter->getValue() as $val) {
                 $v = $this->getLoveClonedValue($srcFilter, $val, $metadataMapping);
@@ -394,7 +394,7 @@ class Docman_FilterFactory
                     $dstVal[] = $v;
                 }
             }
-        } elseif (is_a($srcFilter, 'Docman_FilterList')) {
+        } elseif ($srcFilter instanceof \Docman_FilterList) {
             $dstVal = $this->getLoveClonedValue($srcFilter, $srcFilter->getValue(), $metadataMapping);
         } else {
             $dstVal = $srcFilter->getValue();

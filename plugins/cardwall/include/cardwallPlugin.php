@@ -261,7 +261,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function getPluginInfo()
     {
-        if (! is_a($this->pluginInfo, 'CardwallPluginInfo')) {
+        if (! $this->pluginInfo instanceof \CardwallPluginInfo) {
             $this->pluginInfo = new CardwallPluginInfo($this);
         }
         return $this->pluginInfo;

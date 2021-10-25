@@ -80,7 +80,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
         }
         $content .= '</table>';
 
-        if (is_a($this->item, 'Docman_Folder')) {
+        if ($this->item instanceof \Docman_Folder) {
             $content .= '<div>';
             $content .= '<input type="checkbox" name="recursive" id="docman_recusrsive_permissions" value="1" /><label for="docman_recusrsive_permissions">' . dgettext('tuleap-docman', 'recursive (apply same permissions to all sub-items of this folder)') . '</label>';
             $content .= '</div>';

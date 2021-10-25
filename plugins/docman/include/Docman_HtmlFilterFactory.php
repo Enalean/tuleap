@@ -30,17 +30,17 @@ class Docman_HtmlFilterFactory
     public static function getFromFilter($filter)
     {
         $f = \null;
-        if (\is_a($filter, 'Docman_FilterDateAdvanced')) {
+        if ($filter instanceof \Docman_FilterDateAdvanced) {
             $f = new \Docman_HtmlFilterDateAdvanced($filter);
-        } elseif (\is_a($filter, 'Docman_FilterDate')) {
+        } elseif ($filter instanceof \Docman_FilterDate) {
             $f = new \Docman_HtmlFilterDate($filter);
-        } elseif (\is_a($filter, 'Docman_FilterListAdvanced')) {
+        } elseif ($filter instanceof \Docman_FilterListAdvanced) {
             $f = new \Docman_HtmlFilterListAdvanced($filter);
-        } elseif (\is_a($filter, 'Docman_FilterList')) {
+        } elseif ($filter instanceof \Docman_FilterList) {
             $f = new \Docman_HtmlFilterList($filter);
-        } elseif (\is_a($filter, 'Docman_FilterText')) {
+        } elseif ($filter instanceof \Docman_FilterText) {
             $f = new \Docman_HtmlFilterText($filter);
-        } elseif (\is_a($filter, 'Docman_FilterOwner')) {
+        } elseif ($filter instanceof \Docman_FilterOwner) {
             $f = new \Docman_HtmlFilterText($filter);
         } else {
             $f = new \Docman_HtmlFilter($filter);

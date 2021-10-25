@@ -32,7 +32,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     }
     public function getContent($params = [])
     {
-        $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
+        $folder_or_document = $this->item instanceof \Docman_Folder ? 'folder' : ($this->item instanceof \Docman_File ? 'file' : 'document');
         $item_type          = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
 
         $vVersion = new Valid_UInt('version');

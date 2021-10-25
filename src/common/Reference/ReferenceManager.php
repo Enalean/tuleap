@@ -1339,7 +1339,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
      */
     public function _getReferenceDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        if (! is_a($this->referenceDao, 'ReferenceDao')) {
+        if (! $this->referenceDao instanceof \ReferenceDao) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
         }
         return $this->referenceDao;
@@ -1347,7 +1347,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
 
     public function _getCrossReferenceDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        if (! is_a($this->cross_reference_dao, 'CrossReferenceDao')) {
+        if (! $this->cross_reference_dao instanceof \CrossReferenceDao) {
             $this->cross_reference_dao = new CrossReferenceDao();
         }
         return $this->cross_reference_dao;

@@ -2325,7 +2325,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 $html_table .= '<td style="color:gray;">' . ($line_number + 1) . '</td>';
                                 $mode        = 'creation';
                                 foreach ($data_line as $idx => $data_cell) {
-                                    if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
+                                    if ($fields[$idx] && $fields[$idx] instanceof \Tracker_FormElement_Field) {
                                         $field          = $fields[$idx];
                                         $displayed_data = $field->getFieldDataForCSVPreview($data_cell);
                                     } else {
@@ -2714,7 +2714,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 $is_error = true;
                             }
                         }
-                    } elseif (is_a($fields[$idx], 'Tracker_FormElement')) {
+                    } elseif ($fields[$idx] instanceof \Tracker_FormElement) {
                         $field = $fields[$idx];
                         if ($field->isCSVImportable()) {
                             $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell, $artifact);

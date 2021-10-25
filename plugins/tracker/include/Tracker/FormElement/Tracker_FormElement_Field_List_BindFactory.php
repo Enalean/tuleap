@@ -456,9 +456,9 @@ class Tracker_FormElement_Field_List_BindFactory
 
     public function getType($bind)
     {
-        return is_a($bind, 'Tracker_FormElement_Field_List_Bind_Static') ? self::STATIK :
-                (is_a($bind, 'Tracker_FormElement_Field_List_Bind_Users') ? self::USERS :
-                    (is_a($bind, 'Tracker_FormElement_Field_List_Bind_Ugroups') ? self::UGROUPS : '')
+        return $bind instanceof \Tracker_FormElement_Field_List_Bind_Static ? self::STATIK :
+                ($bind instanceof \Tracker_FormElement_Field_List_Bind_Users ? self::USERS :
+                    ($bind instanceof \Tracker_FormElement_Field_List_Bind_Ugroups ? self::UGROUPS : '')
                 );
     }
 

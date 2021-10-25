@@ -79,7 +79,7 @@ class Collection
      */
     public function equals($obj)
     {
-        if (is_a($obj, "Collection") && $this->size() === $obj->size()) {
+        if ($obj instanceof \Collection && $this->size() === $obj->size()) {
             //We walk through the first collection to see if the second
             //contains each value. Remember that there is no order, and
             //we cannot see $obj->elements (protected)

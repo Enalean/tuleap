@@ -29,21 +29,21 @@ class Docman_SqlFilterFactory
     public static function getFromFilter($filter)
     {
         $f = \null;
-        if (\is_a($filter, 'Docman_FilterDateAdvanced')) {
+        if ($filter instanceof \Docman_FilterDateAdvanced) {
             $f = new \Docman_SqlFilterDateAdvanced($filter);
-        } elseif (\is_a($filter, 'Docman_FilterDate')) {
+        } elseif ($filter instanceof \Docman_FilterDate) {
             $f = new \Docman_SqlFilterDate($filter);
-        } elseif (\is_a($filter, 'Docman_FilterGlobalText')) {
+        } elseif ($filter instanceof \Docman_FilterGlobalText) {
             $f = new \Docman_SqlFilterGlobalText($filter);
-        } elseif (\is_a($filter, 'Docman_FilterOwner')) {
+        } elseif ($filter instanceof \Docman_FilterOwner) {
             $f = new \Docman_SqlFilterOwner($filter);
-        } elseif (\is_a($filter, 'Docman_FilterText')) {
+        } elseif ($filter instanceof \Docman_FilterText) {
             $f = new \Docman_SqlFilterText($filter);
-        } elseif (\is_a($filter, 'Docman_FilterListAdvanced')) {
+        } elseif ($filter instanceof \Docman_FilterListAdvanced) {
             if (! \in_array(0, $filter->getValue())) {
                 $f = new \Docman_SqlFilterListAdvanced($filter);
             }
-        } elseif (\is_a($filter, 'Docman_FilterList')) {
+        } elseif ($filter instanceof \Docman_FilterList) {
             // A value equals to 0 means that we selected "All" in the list
             // so we don't want to use this filter
             if ($filter->getValue() != 0) {

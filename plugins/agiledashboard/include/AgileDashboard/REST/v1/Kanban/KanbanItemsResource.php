@@ -214,14 +214,14 @@ class KanbanItemsResource extends AuthenticatedResource
         $current_user = $this->getCurrentUser();
         $artifact     = $this->artifact_factory->getArtifactById($id);
 
+        if (! $artifact) {
+            throw new RestException(404, 'Kanban item not found.');
+        }
+
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $current_user,
             $artifact->getTracker()->getProject()
         );
-
-        if (! $artifact) {
-            throw new RestException(404, 'Kanban item not found.');
-        }
 
         if (! $artifact->userCanView($current_user)) {
             throw new RestException(403, 'You cannot access this kanban item.');

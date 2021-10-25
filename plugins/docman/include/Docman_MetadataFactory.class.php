@@ -242,7 +242,7 @@ class Docman_MetadataFactory
      */
     public function appendMetadataValueList(&$md, $onlyActive = true)
     {
-        if (is_a($md, 'Docman_ListMetadata')) {
+        if ($md instanceof \Docman_ListMetadata) {
             $mdLoveFactory = new Docman_MetadataListOfValuesElementFactory();
             $mdLoveArray   = $mdLoveFactory->getListByFieldId($md->getId(), $md->getLabel(), $onlyActive);
             $md->setListOfValueElements($mdLoveArray);

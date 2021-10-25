@@ -233,7 +233,7 @@ class FRSPackageFactory
 
     public function update($data)
     {
-        if (is_a($data, 'FRSPackage')) {
+        if ($data instanceof \FRSPackage) {
             $data = $data->toArray();
         }
         $dao = $this->_getFRSPackageDao();

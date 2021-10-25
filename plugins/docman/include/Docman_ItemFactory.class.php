@@ -1347,7 +1347,7 @@ class Docman_ItemFactory
      */
     public function getFolderStats($folder, $user)
     {
-        if (is_a($folder, 'Docman_Folder') && $folder->getId() !== null) {
+        if ($folder instanceof \Docman_Folder && $folder->getId() !== null) {
             $folderSubTree = $this->getItemSubTree($folder, $user, false, true);
             return $this->getFolderTreeStats($folderSubTree);
         } else {
@@ -1365,7 +1365,7 @@ class Docman_ItemFactory
         $stats['size']  = 0;
         $stats['types'] = [];
 
-        if (is_a($folder, 'Docman_Folder')) {
+        if ($folder instanceof \Docman_Folder) {
             $items = $folder->getAllItems();
             foreach ($items->iterator() as $item) {
                 $class = $item::class;
