@@ -42,7 +42,7 @@ export function getSlugifiedShortname(tracker_name: string): string {
     const slugified_shortname = slugify(tracker_name, {
         lower: true,
         replacement: "_",
-    });
+    }).replace(/_+/, "_");
 
     if (slugified_shortname.length > 25) {
         return slugified_shortname.substring(0, 25);

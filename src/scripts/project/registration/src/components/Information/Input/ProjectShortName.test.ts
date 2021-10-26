@@ -265,6 +265,26 @@ describe("ProjectShortName", () => {
             });
         });
 
+        it(`Slugified project name does not repeat replacement when special characters are siblings`, async () => {
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            const data = {
+                slugified_project_name: "",
+                has_slug_error: false,
+                is_in_edit_mode: false,
+            };
+            const wrapper = await createWrapper(data);
+            EventBus.$emit("slugify-project-name", "valid'*©®11");
+
+            expect(wrapper.vm.$data.slugified_project_name).toBe("valid-11");
+            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+
+            expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
+                slugified_name: wrapper.vm.$data.slugified_project_name,
+                name: "valid'*©®11",
+            });
+        });
+
         it(`Does not slugify in edit mode`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
