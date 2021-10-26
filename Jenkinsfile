@@ -96,7 +96,7 @@ pipeline {
                     steps { script { actions.runJestTests('Baseline', 'plugins/baseline/') } }
                     post {
                         always {
-                            junit 'results/jest/test-*-results.xml'
+                            junit 'results/jest/junit-*.xml'
                             publishCoverage adapters: [istanbulCoberturaAdapter('results/jest/coverage/cobertura-coverage.xml')], tag: 'Javascript'
                         }
                     }
