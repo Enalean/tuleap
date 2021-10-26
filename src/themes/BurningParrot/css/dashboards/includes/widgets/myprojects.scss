@@ -34,6 +34,12 @@
     width: 100%;
 }
 
+.dashboard-widget-my-projects-project-name-icon {
+    width: 1rem;
+    margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
+    text-align: center;
+}
+
 .empty-project-box-inside {
     fill: var(--tlp-white-color);
 }
