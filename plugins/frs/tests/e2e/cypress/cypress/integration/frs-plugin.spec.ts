@@ -23,11 +23,10 @@ describe("FRS plugin", () => {
         cy.clearSessionCookie();
         cy.projectAdministratorLogin();
         cy.getProjectId("frs-plugin").as("frs_project_id");
-
-        now = Date.now();
     });
 
     beforeEach(() => {
+        now = Date.now();
         cy.preserveSessionCookies();
     });
 
@@ -67,9 +66,11 @@ describe("FRS plugin", () => {
 
                 cy.get(`[data-test=linked-artifacts]`).click();
 
-                cy.get("[data-test=frs-artifact-links]").within(() => {
+                cy.get("[data-test=frs-artifact-links-fixed_in-forward]").within(() => {
                     cy.get(`[data-test=artifact]`).contains("bug 1");
                     cy.get(`[data-test=artifact]`).contains("bug 2");
+                });
+                cy.get("[data-test=frs-artifact-links-fixed_in-reverse]").within(() => {
                     cy.get(`[data-test=artifact]`).contains("reverse 1");
                     cy.get(`[data-test=artifact]`).contains("reverse 2");
                 });
