@@ -21,7 +21,12 @@
 <template>
     <span>
         <artifact-link v-bind:artifact="artifact">
-            <span class="baseline-artifact-badge tlp-badge-primary tlp-badge-outline">
+            <span
+                class="
+                    baseline-artifact-badge
+                    tlp-badge-primary tlp-badge-outline tlp-badge-rounded
+                "
+            >
                 {{ artifact.tracker_name }} #{{ artifact.id }}
             </span>
             <span class="baseline-artifact-title">{{ artifact.title }}</span>

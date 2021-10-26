@@ -28,7 +28,11 @@
                         <span
                             v-if="baselines !== null"
                             class="
-                                tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right
+                                tlp-badge-secondary
+                                tlp-badge-outline
+                                tlp-badge-rounded
+                                tlp-tooltip
+                                tlp-tooltip-right
                                 baselines-count
                             "
                             v-bind:data-tlp-tooltip="baselines_tooltip"
@@ -65,7 +69,11 @@
                         <span
                             v-if="comparisons !== null"
                             class="
-                                tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right
+                                tlp-badge-secondary
+                                tlp-badge-outline
+                                tlp-badge-rounded
+                                tlp-tooltip
+                                tlp-tooltip-right
                                 comparisons-count
                             "
                             v-bind:data-tlp-tooltip="comparisons_tooltip"

@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <span class="baseline-artifact-badge tlp-badge-outline" v-bind:class="tlp_badge_class">
+    <span class="baseline-cross-ref-badge cross-ref-badge" v-bind:class="artifact_badge_class">
         {{ tracker.item_name }} #{{ artifact.id }}
     </span>
 </template>
@@ -36,9 +36,9 @@ export default {
         },
     },
     computed: {
-        tlp_badge_class() {
+        artifact_badge_class() {
             const normalized_color = this.tracker.color_name.replace("_", "-");
-            return `tlp-badge-${normalized_color}`;
+            return `cross-ref-badge-${normalized_color}`;
         },
     },
 };
