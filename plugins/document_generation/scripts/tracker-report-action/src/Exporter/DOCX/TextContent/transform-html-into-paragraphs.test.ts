@@ -355,6 +355,14 @@ describe("transform-html-into-paragraph", () => {
             }),
         ]);
     });
+
+    it("cleans DOM before processing it", async () => {
+        const paragraphs = await transformHTML(
+            "<p><!--[if gte mso 9]><xml></xml><![endif]--></p><p>A</p>"
+        );
+
+        expect(paragraphs).toStrictEqual([new Paragraph({ children: [new TextRun("A")] })]);
+    });
 });
 
 function transformHTML(content: string): Promise<Paragraph[]> {
