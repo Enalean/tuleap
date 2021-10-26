@@ -9,15 +9,6 @@ TIMEOUT="$(command -v gtimeout || echo timeout)"
 BASEDIR="$(dirname "$($READLINK -f "$0")")/../../../"
 export BASEDIR
 pushd "$BASEDIR"
-DOCKERCOMPOSE="docker-compose --project-name rest-${BUILD_TAG:-$RANDOM} -f tests/rest/docker-compose.yml"
-
-function cleanup {
-    if [ -n "${TESTS_RESULT:-}" ]; then
-        docker cp "$($DOCKERCOMPOSE ps -q tests)":/output/. "$TESTS_RESULT" || echo "Failed to copy tests result"
-    fi
-    $DOCKERCOMPOSE down
-}
-trap cleanup EXIT
 
 case "${1:-}" in
     "80")
@@ -43,9 +34,20 @@ case "${2:-}" in
     exit 1
 esac
 
+plugins_compose_file="$(find ./plugins/*/tests/rest/ -name docker-compose.yml -printf '-f %p ')"
+DOCKERCOMPOSE="docker-compose --project-name rest-${BUILD_TAG:-$RANDOM} -f tests/rest/docker-compose.yml -f tests/rest/docker-compose-${DB_HOST}.yml $plugins_compose_file"
+
+function cleanup {
+    if [ -n "${TESTS_RESULT:-}" ]; then
+        docker cp "$($DOCKERCOMPOSE ps -q tests)":/output/. "$TESTS_RESULT" || echo "Failed to copy tests result"
+    fi
+    $DOCKERCOMPOSE down
+}
+trap cleanup EXIT
+
 if [ -n "${SETUP_ONLY:-}" ] && [ "$SETUP_ONLY" != "0" ]; then
-    $DOCKERCOMPOSE up -d "$DB_HOST"
+    $DOCKERCOMPOSE up -d --scale tests=0
     $DOCKERCOMPOSE run tests /usr/share/tuleap/tests/rest/bin/run.sh setup
 else
-    $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests "$DB_HOST" tests
+    $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests
 fi

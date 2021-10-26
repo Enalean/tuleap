@@ -192,9 +192,6 @@ class ProjectResourceTest extends \RestBase
         );
 
         $iteration = [
-            "id" => 140,
-            "uri" =>  "/plugins/tracker/?aid=140",
-            "xref" =>  "iteration #140",
             "title" => "iteration",
             "status" => "On Going",
             "start_date" => "2021-06-14T00:00:00+02:00",
@@ -205,7 +202,9 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
         $iterations = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(1, $iterations);
-        self::assertEquals($iteration, $iterations[0]);
+        $received_iteration = $iterations[0];
+        unset($received_iteration['id'], $received_iteration['uri'], $received_iteration['xref']);
+        self::assertEquals($iteration, $received_iteration);
     }
 
     /**
