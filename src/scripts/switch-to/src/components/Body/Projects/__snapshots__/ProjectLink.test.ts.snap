@@ -17,8 +17,15 @@ exports[`ProjectLink Displays the link to a project 1`] = `
     <span
       class="switch-to-projects-project-label"
     >
+      <span
+        class="switch-to-projects-project-label-icon"
+      >
+        
+                🐹
+            
+      </span>
       
-            🐹 Guinea Pig
+            Guinea Pig
         
     </span>
   </a>

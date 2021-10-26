@@ -126,7 +126,9 @@ class MyProjects extends \Widget
 
                 // Project name
                 $html .= '<td class="dashboard-widget-my-projects-project-name">';
-                $html .= $project_icon . ' &nbsp;';
+                if ($project_icon) {
+                    $html .= '<span class="dashboard-widget-my-projects-project-name-icon">' . $project_icon . '</span>';
+                }
                 $html .= '<a href="/projects/' . urlencode($project->getUnixName()) . '/">';
                 $html .= Codendi_HTMLPurifier::instance()->purify($project->getPublicName());
                 $html .= '</a></td>';

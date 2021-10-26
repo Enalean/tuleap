@@ -35,7 +35,10 @@
                 v-bind:class="project_privacy_icon"
             ></i>
             <span class="switch-to-projects-project-label">
-                {{ project.icon }} {{ project.project_name }}
+                <span v-if="project.icon" class="switch-to-projects-project-label-icon">
+                    {{ project.icon }}
+                </span>
+                {{ project.project_name }}
             </span>
         </a>
         <a

@@ -164,6 +164,12 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     }
 }
 
+.switch-to-projects-project-label-icon {
+    width: 1rem;
+    margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
+    text-align: center;
+}
+
 .switch-to-projects-project-icon {
     margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: 0.8rem;
