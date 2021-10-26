@@ -2,19 +2,29 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@types/dompurify': ^2.3.1
   '@types/sprintf-js': ^1.1.2
   docx: ^7.1.1
+  dompurify: ^2.2.9
   sprintf-js: ^1.1.2
 
 dependencies:
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
   docx: 7.1.1
+  dompurify: 2.3.3
   sprintf-js: 1.1.2
 
 devDependencies:
+  '@types/dompurify': 2.3.1
   '@types/sprintf-js': 1.1.2
 
 packages:
+
+  /@types/dompurify/2.3.1:
+    resolution: {integrity: sha512-YJth9qa0V/E6/XPH1Jq4BC8uCMmO8V1fKWn8PCvuZcAhMn7q0ez9LW6naQT04UZzjFfAPhyRMZmI2a2rbMlEFA==}
+    dependencies:
+      '@types/trusted-types': 2.0.2
+    dev: true
 
   /@types/node/16.10.2:
     resolution: {integrity: sha512-zCclL4/rx+W5SQTzFs9wyvvyCwoK9QtBpratqz2IYJ3O8Umrn0m3nsTv0wQBk9sRGpvUe9CwPDrQFB10f1FIjQ==}
@@ -22,6 +32,10 @@ packages:
 
   /@types/sprintf-js/1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
+    dev: true
+
+  /@types/trusted-types/2.0.2:
+    resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
     dev: true
 
   /core-util-is/1.0.3:
@@ -37,6 +51,10 @@ packages:
       nanoid: 3.1.28
       xml: 1.0.1
       xml-js: 1.6.11
+    dev: false
+
+  /dompurify/2.3.3:
+    resolution: {integrity: sha512-dqnqRkPMAjOZE0FogZ+ceJNM2dZ3V/yNOuFB7+39qpO93hHhfRpHw3heYQC7DPK9FqbQTfBKUJhiSfz4MvXYwg==}
     dev: false
 
   /immediate/3.0.6:

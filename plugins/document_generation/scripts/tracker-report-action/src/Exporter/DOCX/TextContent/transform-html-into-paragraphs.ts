@@ -36,6 +36,7 @@ import {
     UnderlineType,
     WidthType,
 } from "docx";
+import dompurify from "dompurify";
 import { loadImage } from "../Image/image-loader";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
 import { extractInlineStyles } from "./extract-style-html-element";
@@ -55,10 +56,10 @@ export async function transformHTMLIntoParagraphs(
     content: string,
     options: TransformationOptions
 ): Promise<Paragraph[]> {
-    const doc = new DOMParser().parseFromString(content, "text/html");
+    const doc = dompurify.sanitize(content, { RETURN_DOM_FRAGMENT: true });
 
     return buildParagraphsFromTreeContent(
-        await parseTreeContent(options, doc.body.childNodes, {
+        await parseTreeContent(options, doc.childNodes, {
             style: {},
             list_level: 0,
             paragraph_builder: defaultParagraphBuilder,
