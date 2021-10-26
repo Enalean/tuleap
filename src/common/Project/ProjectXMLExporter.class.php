@@ -22,6 +22,7 @@
 
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Event\Events\ExportXmlProject;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -75,12 +76,18 @@ class ProjectXMLExporter
         return BackendLogger::getDefaultLogger('project_xml_export_syslog');
     }
 
-    private function exportProjectInfo(Project $project, SimpleXMLElement $project_node)
+    private function exportProjectInfo(Project $project, SimpleXMLElement $project_node): void
     {
         $project_node->addAttribute('unix-name', $project->getUnixName());
         $project_node->addAttribute('full-name', $project->getPublicName());
         $project_node->addAttribute('description', $project->getDescription());
         $project_node->addAttribute('access', $project->getAccess());
+        if ($project->getIconUnicodeCodepoint()) {
+            $project_node->addAttribute(
+                'icon-codepoint',
+                EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint())
+            );
+        }
 
         $project_node->addChild('long-description', '');
 
