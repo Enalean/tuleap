@@ -141,15 +141,10 @@ export async function downloadDocx(
                         children: [new TextRun(artifact.title)],
                     }),
                 ],
-            })
-        );
-
-        artifacts_content.push(
-            ...(await buildFieldValuesDisplayZone(artifact.fields, gettext_provider))
-        );
-
-        artifacts_content.push(
-            ...(await buildContainersDisplayZone(artifact.containers, gettext_provider))
+            }),
+            ...(await buildFieldValuesDisplayZone(artifact.fields, gettext_provider)),
+            ...(await buildContainersDisplayZone(artifact.containers, gettext_provider)),
+            new Paragraph({ children: [new PageBreak()] })
         );
     }
 
