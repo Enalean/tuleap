@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_fetch from "@tuleap/tlp-fetch";
-import type { ArtifactReportResponse, TrackerDefinition } from "./artifacts-retriever";
+import * as rest_querier from "./rest-querier";
+import type {
+    ArtifactReportResponse,
+    TrackerDefinition,
+    TestExecutionResponse,
+} from "./artifacts-retriever";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("artifacts-retriever", () => {
     it("retrieves artifacts from a report with additional information", async () => {
-        const recursive_get_spy = jest.spyOn(tlp_fetch, "recursiveGet");
+        const get_report_artifacts_spy = jest.spyOn(rest_querier, "getReportArtifacts");
         const artifacts_report_response: ArtifactReportResponse[] = [
             {
                 id: 74,
@@ -157,7 +160,7 @@ describe("artifacts-retriever", () => {
                 ],
             },
         ];
-        recursive_get_spy.mockResolvedValue(artifacts_report_response);
+        get_report_artifacts_spy.mockResolvedValue(artifacts_report_response);
 
         const tracker_definition_response: TrackerDefinition = {
             fields: [
@@ -193,6 +196,7 @@ describe("artifacts-retriever", () => {
                         ],
                     },
                 },
+                { field_id: 11, type: "ttmstepexec", label: "Test Execution" },
             ],
             structure: [
                 { id: 3, content: null },
@@ -202,6 +206,7 @@ describe("artifacts-retriever", () => {
                 { id: 8, content: null },
                 { id: 9, content: null },
                 { id: 10, content: null },
+                { id: 11, content: null },
                 {
                     id: 4,
                     content: [
@@ -211,9 +216,55 @@ describe("artifacts-retriever", () => {
                 },
             ],
         };
-        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), {
-            return_json: tracker_definition_response,
-        });
+        jest.spyOn(rest_querier, "getTrackerDefinition").mockResolvedValue(
+            tracker_definition_response
+        );
+
+        const testmanagement_execution_response: TestExecutionResponse = {
+            definition: {
+                description: "",
+                description_format: "text",
+                steps: [
+                    {
+                        id: 13,
+                        description: "01",
+                        description_format: "text",
+                        expected_results: "01",
+                        expected_results_format: "text",
+                        rank: 1,
+                    },
+                    {
+                        id: 14,
+                        description: "This is text",
+                        description_format: "text",
+                        expected_results: "text\nwith\nnewlines",
+                        expected_results_format: "text",
+                        rank: 2,
+                    },
+                    {
+                        id: 15,
+                        description: "<p>This is HTML</p>",
+                        description_format: "html",
+                        expected_results: "<p>HTML</p>\n\n<p>with</p>\n\n<p>newlines</p>",
+                        expected_results_format: "html",
+                        rank: 3,
+                    },
+                ],
+            },
+            steps_results: {
+                "13": {
+                    step_id: 13,
+                    status: "passed",
+                },
+                "15": {
+                    step_id: 15,
+                    status: "blocked",
+                },
+            },
+        };
+        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue(
+            testmanagement_execution_response
+        );
 
         const artifacts = await retrieveReportArtifacts(123, 852, false);
         expect(artifacts).toStrictEqual([
@@ -338,6 +389,44 @@ describe("artifacts-retriever", () => {
                         granted_groups: ["membres_projet", "newgroup"],
                         granted_groups_ids: ["101_3", "105"],
                         formatted_granted_ugroups: ["Membres du projet", "newgroup"],
+                    },
+                    {
+                        field_id: 11,
+                        type: "ttmstepexec",
+                        label: "Test Execution",
+                        value: {
+                            steps: [
+                                {
+                                    id: 13,
+                                    description: "01",
+                                    description_format: "text",
+                                    expected_results: "01",
+                                    expected_results_format: "text",
+                                    rank: 1,
+                                    status: "passed",
+                                },
+                                {
+                                    id: 14,
+                                    description: "This is text",
+                                    description_format: "text",
+                                    expected_results: "text\nwith\nnewlines",
+                                    expected_results_format: "text",
+                                    rank: 2,
+                                    status: null,
+                                },
+                                {
+                                    id: 15,
+                                    description: "<p>This is HTML</p>",
+                                    description_format: "html",
+                                    expected_results:
+                                        "<p>HTML</p>\n\n<p>with</p>\n\n<p>newlines</p>",
+                                    expected_results_format: "html",
+                                    rank: 3,
+                                    status: "blocked",
+                                },
+                            ],
+                            steps_values: ["passed", null, "blocked"],
+                        },
                     },
                 ],
                 containers: [

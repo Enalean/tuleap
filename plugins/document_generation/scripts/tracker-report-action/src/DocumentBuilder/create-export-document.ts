@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactContainer, DateTimeLocaleInformation, ExportDocument } from "../type";
+import type {
+    ArtifactContainer,
+    ArtifactFieldValueStepDefinitionEnhanced,
+    DateTimeLocaleInformation,
+    ExportDocument,
+} from "../type";
 import type { ArtifactReportContainer, ArtifactReportFieldValue } from "./artifacts-retriever";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
 import type {
@@ -113,9 +118,36 @@ function formatFieldValue(
 
         return {
             field_name: value.label,
-            content_length: "block",
+            content_length: "blockttmstepdef",
             value_type: "string",
             steps: steps,
+        };
+    }
+
+    if (value.type === "ttmstepexec") {
+        if (value.value === null) {
+            return null;
+        }
+
+        const steps: ArtifactFieldValueStepDefinitionEnhanced[] = [];
+        for (const step of value.value.steps) {
+            steps.push({
+                description: step.description,
+                description_format: step.description_format === "html" ? "html" : "plaintext",
+                expected_results: step.expected_results,
+                expected_results_format:
+                    step.expected_results_format === "html" ? "html" : "plaintext",
+                rank: step.rank,
+                status: step.status,
+            });
+        }
+
+        return {
+            field_name: value.label,
+            content_length: "blockttmstepexec",
+            value_type: "string",
+            steps: steps,
+            steps_values: value.value.steps_values,
         };
     }
 

@@ -42,7 +42,7 @@ import { transformTextWithNewlines } from "./transform-text-with-newlines";
 import { extractInlineStyles } from "./extract-style-html-element";
 import { getListInstanceID } from "./list-instance-id-generator";
 
-type ReadonlyArrayWithAtLeastOneElement<T> = { 0: T } & ReadonlyArray<T>;
+export type ReadonlyArrayWithAtLeastOneElement<T> = { 0: T } & ReadonlyArray<T>;
 
 export interface TransformationOptions {
     ordered_title_levels: ReadonlyArrayWithAtLeastOneElement<HeadingLevel>;

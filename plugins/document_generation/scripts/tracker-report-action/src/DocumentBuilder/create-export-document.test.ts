@@ -323,6 +323,44 @@ describe("Create ArtifactValues Collection", () => {
                             },
                         ],
                     } as ArtifactReportResponseStepDefinitionFieldValue,
+                    {
+                        field_id: 25,
+                        type: "ttmstepexec",
+                        label: "Test Execution",
+                        value: {
+                            steps: [
+                                {
+                                    id: 13,
+                                    description: "01",
+                                    description_format: "text",
+                                    expected_results: "01",
+                                    expected_results_format: "text",
+                                    rank: 1,
+                                    status: "passed",
+                                },
+                                {
+                                    id: 14,
+                                    description: "This is text",
+                                    description_format: "text",
+                                    expected_results: "text\nwith\nnewlines",
+                                    expected_results_format: "text",
+                                    rank: 2,
+                                    status: null,
+                                },
+                                {
+                                    id: 15,
+                                    description: "<p>This is HTML</p>",
+                                    description_format: "html",
+                                    expected_results:
+                                        "<p>HTML</p>\n\n<p>with</p>\n\n<p>newlines</p>",
+                                    expected_results_format: "html",
+                                    rank: 3,
+                                    status: "blocked",
+                                },
+                            ],
+                            steps_values: ["passed", null, "blocked"],
+                        },
+                    },
                 ],
                 containers: [
                     {
@@ -583,6 +621,12 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Step Definition",
                         value: [],
                     },
+                    {
+                        field_id: 25,
+                        type: "ttmstepexec",
+                        label: "Test Execution",
+                        value: null,
+                    },
                 ],
                 containers: [
                     {
@@ -788,7 +832,7 @@ describe("Create ArtifactValues Collection", () => {
                         value_type: "links",
                     },
                     {
-                        content_length: "block",
+                        content_length: "blockttmstepdef",
                         field_name: "Step Definition",
                         value_type: "string",
                         steps: [
@@ -807,6 +851,38 @@ describe("Create ArtifactValues Collection", () => {
                                 rank: 2,
                             },
                         ],
+                    },
+                    {
+                        content_length: "blockttmstepexec",
+                        field_name: "Test Execution",
+                        value_type: "string",
+                        steps: [
+                            {
+                                description: "01",
+                                description_format: "plaintext",
+                                expected_results: "01",
+                                expected_results_format: "plaintext",
+                                rank: 1,
+                                status: "passed",
+                            },
+                            {
+                                description: "This is text",
+                                description_format: "plaintext",
+                                expected_results: "text\nwith\nnewlines",
+                                expected_results_format: "plaintext",
+                                rank: 2,
+                                status: null,
+                            },
+                            {
+                                description: "<p>This is HTML</p>",
+                                description_format: "html",
+                                expected_results: "<p>HTML</p>\n\n<p>with</p>\n\n<p>newlines</p>",
+                                expected_results_format: "html",
+                                rank: 3,
+                                status: "blocked",
+                            },
+                        ],
+                        steps_values: ["passed", null, "blocked"],
                     },
                 ],
                 containers: [
@@ -962,7 +1038,7 @@ describe("Create ArtifactValues Collection", () => {
                         value_type: "links",
                     },
                     {
-                        content_length: "block",
+                        content_length: "blockttmstepdef",
                         field_name: "Step Definition",
                         value_type: "string",
                         steps: [],

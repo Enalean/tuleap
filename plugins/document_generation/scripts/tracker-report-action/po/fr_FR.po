@@ -66,6 +66,15 @@ msgstr "URL du rapport"
 msgid "Search criteria"
 msgstr "Critère de recherche"
 
+msgid "Status"
+msgstr "Statut"
+
+msgid "Status: %s"
+msgstr "Statut : %s"
+
+msgid "Step"
+msgstr "Étape"
+
 msgid "Step %d"
 msgstr "Étape %d"
 

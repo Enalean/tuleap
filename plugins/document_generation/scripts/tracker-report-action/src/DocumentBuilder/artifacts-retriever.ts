@@ -17,9 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, recursiveGet } from "@tuleap/tlp-fetch";
+import {
+    getReportArtifacts,
+    getTestManagementExecution,
+    getTrackerDefinition,
+} from "./rest-querier";
 
-export interface ArtifactFromReport extends ArtifactReportResponse {
+import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
+
+export interface ArtifactFromReport {
+    readonly id: number;
+    readonly title: string | null;
     values: ReadonlyArray<ArtifactReportFieldValue>;
     containers: ReadonlyArray<ArtifactReportContainer>;
 }
@@ -30,47 +38,53 @@ export async function retrieveReportArtifacts(
     report_has_changed: boolean
 ): Promise<ReadonlyArray<ArtifactFromReport>> {
     const tracker_structure_promise = retrieveTrackerStructure(tracker_id);
-    const report_artifacts: ArtifactReportResponse[] = await recursiveGet(
-        `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
-        {
-            params: {
-                values: "all",
-                with_unsaved_changes: report_has_changed,
-                limit: 50,
-            },
-        }
+    const report_artifacts: ArtifactReportResponse[] = await getReportArtifacts(
+        report_id,
+        report_has_changed
     );
 
     const tracker_structure = await tracker_structure_promise;
 
-    const report_artifacts_with_additional_info: ArtifactFromReport[] = [];
+    const report_artifacts_with_additional_info: ArtifactFromReport[] = await limitConcurrencyPool(
+        5,
+        report_artifacts,
+        async (report_artifact: ArtifactReportResponse): Promise<ArtifactFromReport> => {
+            const values_by_field_id = new Map(
+                report_artifact.values.map((value) => [value.field_id, value])
+            );
 
-    for (const report_artifact of report_artifacts) {
-        const values_by_field_id = new Map(
-            report_artifact.values.map((value) => [value.field_id, value])
-        );
-        report_artifacts_with_additional_info.push({
-            ...report_artifact,
-            ...extractFieldValuesWithAdditionalInfoInStructuredContainers(
-                tracker_structure.disposition,
-                values_by_field_id,
-                tracker_structure.fields
-            ),
-        });
-    }
+            return {
+                ...report_artifact,
+                ...(await extractFieldValuesWithAdditionalInfoInStructuredContainers(
+                    report_artifact.id,
+                    tracker_structure.disposition,
+                    values_by_field_id,
+                    tracker_structure.fields
+                )),
+            };
+        }
+    );
 
     return report_artifacts_with_additional_info;
 }
 
-function extractFieldValuesWithAdditionalInfoInStructuredContainers(
+async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
+    artifact_id: number,
     structure_elements: ReadonlyArray<StructureFormat>,
     field_values: ReadonlyMap<number, ArtifactReportResponseFieldValue>,
     fields_structure: ReadonlyMap<number, FieldsStructure>
-): Omit<ArtifactReportContainer, "name"> {
+): Promise<Omit<ArtifactReportContainer, "name">> {
     const values_with_additional_information: ArtifactReportFieldValue[] = [];
     const containers: ArtifactReportContainer[] = [];
     for (const structure_element of structure_elements) {
         if (structure_element.content === null) {
+            const field = fields_structure.get(structure_element.id);
+            if (field && field.type === "ttmstepexec") {
+                const test_execution_value = await getStepExecutionsFieldValue(artifact_id, field);
+                values_with_additional_information.push(test_execution_value);
+                continue;
+            }
+
             const field_value = field_values.get(structure_element.id);
             if (!field_value) {
                 continue;
@@ -85,17 +99,19 @@ function extractFieldValuesWithAdditionalInfoInStructuredContainers(
         if (container_field_definition && container_field_definition.type === "fieldset") {
             containers.push({
                 name: container_field_definition.label,
-                ...extractFieldValuesWithAdditionalInfoInStructuredContainers(
+                ...(await extractFieldValuesWithAdditionalInfoInStructuredContainers(
+                    artifact_id,
                     structure_element.content,
                     field_values,
                     fields_structure
-                ),
+                )),
             });
             continue;
         }
 
         const children_structured_information =
-            extractFieldValuesWithAdditionalInfoInStructuredContainers(
+            await extractFieldValuesWithAdditionalInfoInStructuredContainers(
+                artifact_id,
                 structure_element.content,
                 field_values,
                 fields_structure
@@ -108,6 +124,53 @@ function extractFieldValuesWithAdditionalInfoInStructuredContainers(
         values: values_with_additional_information,
         containers: containers,
     };
+}
+
+async function getStepExecutionsFieldValue(
+    artifact_id: number,
+    field: StepExecutionFieldStructure
+): Promise<ArtifactStepExecutionFieldValue> {
+    try {
+        const test_execution: TestExecutionResponse = await getTestManagementExecution(artifact_id);
+
+        const test_execution_status: Array<string | null> = [];
+        const test_executions: Array<ArtifactReportResponseStepRepresentationEnhanced> = [];
+
+        for (const test_definition of test_execution.definition.steps) {
+            if (test_definition.id.toString() in test_execution.steps_results) {
+                test_execution_status.push(
+                    test_execution.steps_results[test_definition.id.toString()].status
+                );
+                test_executions.push({
+                    ...test_definition,
+                    status: test_execution.steps_results[test_definition.id.toString()].status,
+                });
+            } else {
+                test_execution_status.push(null);
+                test_executions.push({
+                    ...test_definition,
+                    status: null,
+                });
+            }
+        }
+
+        return {
+            field_id: field.field_id,
+            type: "ttmstepexec",
+            label: field.label,
+            value: {
+                steps: test_executions,
+                steps_values: test_execution_status,
+            },
+        };
+    } catch (e) {
+        return {
+            field_id: field.field_id,
+            type: "ttmstepexec",
+            label: field.label,
+            value: null,
+        };
+    }
 }
 
 function getFieldValueWithAdditionalInformation(
@@ -175,10 +238,7 @@ interface TrackerStructure {
 }
 
 async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStructure> {
-    const tracker_structure_response = await get(
-        `/api/v1/trackers/${encodeURIComponent(tracker_id)}`
-    );
-    const tracker_structure: TrackerDefinition = await tracker_structure_response.json();
+    const tracker_structure: TrackerDefinition = await getTrackerDefinition(tracker_id);
 
     const fields_map: Map<number, FieldsStructure> = new Map();
 
@@ -194,6 +254,7 @@ async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStru
             case "cb":
             case "tbl":
             case "perm":
+            case "ttmstepexec":
                 fields_map.set(field.field_id, field);
                 break;
             default:
@@ -231,7 +292,8 @@ export type ArtifactReportFieldValue =
           formatted_granted_ugroups: string[];
       })
     | ArtifactReportResponseCrossReferencesFieldValue
-    | ArtifactReportResponseStepDefinitionFieldValue;
+    | ArtifactReportResponseStepDefinitionFieldValue
+    | ArtifactStepExecutionFieldValue;
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -390,14 +452,31 @@ export interface ArtifactReportResponseStepDefinitionFieldValue {
     field_id: number;
     type: "ttmstepdef";
     label: string;
-    value: Array<{
-        id: number;
-        description: string;
-        description_format: string;
-        expected_results: string;
-        expected_results_format: string;
-        rank: number;
-    }>;
+    value: Array<ArtifactReportResponseStepRepresentation>;
+}
+
+interface ArtifactReportResponseStepRepresentation {
+    id: number;
+    description: string;
+    description_format: string;
+    expected_results: string;
+    expected_results_format: string;
+    rank: number;
+}
+
+interface ArtifactReportResponseStepRepresentationEnhanced
+    extends ArtifactReportResponseStepRepresentation {
+    status: string | null;
+}
+
+interface ArtifactStepExecutionFieldValue {
+    field_id: number;
+    type: "ttmstepexec";
+    label: string;
+    value: null | {
+        steps: Array<ArtifactReportResponseStepRepresentationEnhanced>;
+        steps_values: Array<string | null>;
+    };
 }
 
 interface ArtifactReportResponseFileDescriptionFieldValue {
@@ -424,7 +503,8 @@ type FieldsStructure =
     | DateFieldStructure
     | ContainerFieldStructure
     | ListFieldStructure
-    | PermissionsOnArtifactFieldStructure;
+    | PermissionsOnArtifactFieldStructure
+    | StepExecutionFieldStructure;
 
 interface BaseFieldStructure {
     field_id: number;
@@ -448,6 +528,11 @@ interface ListFieldStructure extends BaseFieldStructure {
     type: "sb" | "rb" | "msb" | "cb" | "tbl";
 }
 
+interface StepExecutionFieldStructure extends BaseFieldStructure {
+    type: "ttmstepexec";
+    label: string;
+}
+
 interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
     type: "perm";
     values: {
@@ -464,4 +549,18 @@ interface StructureFormat {
 export interface TrackerDefinition {
     fields: ReadonlyArray<FieldsStructure>;
     structure: ReadonlyArray<StructureFormat>;
+}
+
+export interface TestExecutionResponse {
+    definition: {
+        description: string;
+        description_format: string;
+        steps: Array<ArtifactReportResponseStepRepresentation>;
+    };
+    steps_results: {
+        [key: string]: {
+            step_id: number;
+            status: string;
+        };
+    };
 }
