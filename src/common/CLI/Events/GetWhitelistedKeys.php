@@ -138,7 +138,7 @@ final class GetWhitelistedKeys implements Dispatchable
     {
         $reflected_class = new \ReflectionClass($class_name);
         $category        = $this->getClassCategory($reflected_class);
-        foreach ($reflected_class->getReflectionConstants() as $const) {
+        foreach ($reflected_class->getReflectionConstants(\ReflectionClassConstant::IS_PUBLIC) as $const) {
             $key             = '';
             $summary         = '';
             $can_be_modified = true;
