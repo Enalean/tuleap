@@ -244,8 +244,14 @@ msgstr ""
 msgid "No project have been aggregated yet."
 msgstr "Aucun projet n'a encore été regroupé."
 
+msgid "Nothing to see here for the moment"
+msgstr "Rien à voir ici pour le moment"
+
 msgid "Permission"
 msgstr "Permission"
+
+msgid "Plan iterations"
+msgstr "Plannification des itérations"
 
 msgid "Plannable tracker id cannot be empty"
 msgstr "L'id de l'outils de suivi panifiable ne doit pas être vide"
@@ -374,8 +380,9 @@ msgid ""
 "Second-level planning not found in project <a href='/plugins/agiledashboard/?"
 "group_id=%s&action=admin'>%s</a> or you can't access it"
 msgstr ""
-"Le planning de second niveau du projet <a href='/plugins/agiledashboard/?group_id=%s&action=admin'>"
-"%s</a> n'a pas été trouvé ou vous ne pouvez pas y accéder"
+"Le planning de second niveau du projet <a href='/plugins/agiledashboard/?"
+"group_id=%s&action=admin'>%s</a> n'a pas été trouvé ou vous ne pouvez pas y "
+"accéder"
 
 msgid ""
 "Semantic '%s' is not well configured. Please check semantic of following "

@@ -80,6 +80,21 @@
     background: var(--tlp-white-color);
 }
 
+.program-increment-info-link {
+    font-size: 14px;
+    white-space: nowrap;
+
+    &:not(:first-child) {
+        margin: 0 0 0 var(--tlp-medium-spacing);
+    }
+
+    > .program-increment-info-link-icon {
+        margin: 0 6px 0 0;
+        font-size: 12px;
+        text-decoration: none;
+    }
+}
+
 .program-increment-content {
     position: relative;
     padding: var(--tlp-small-spacing);

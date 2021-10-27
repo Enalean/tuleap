@@ -49,13 +49,29 @@
         >
             <a
                 v-bind:href="`/plugins/tracker/?aid=${increment.id}&program_increment=update`"
-                class="tlp-button-primary tlp-button-outline tlp-button-mini"
+                class="program-increment-info-link"
                 v-bind:title="$gettext('Edit')"
                 data-not-drag-handle="true"
                 data-test="program-increment-info-edit-link"
             >
-                <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i>
+                <i
+                    class="fas fa-pencil-alt program-increment-info-link-icon"
+                    aria-hidden="true"
+                ></i>
                 <span v-translate>Edit</span>
+            </a>
+            <a
+                v-bind:href="`/program_management/${short_name}/increments/${increment.id}/plan`"
+                class="program-increment-info-link"
+                v-bind:title="$gettext('Plan Iterations')"
+                data-not-drag-handle="true"
+                data-test="program-increment-plan-iterations-link"
+            >
+                <i
+                    class="fas fa-sign-in-alt program-increment-info-link-icon"
+                    aria-hidden="true"
+                ></i>
+                <span v-translate>Plan Iterations</span>
             </a>
         </div>
         <section
@@ -87,6 +103,9 @@ export default class ProgramIncrementCard extends Vue {
 
     @configuration.State
     readonly user_locale!: string;
+
+    @configuration.State
+    readonly short_name!: string;
 
     private is_open = false;
 
