@@ -41,8 +41,6 @@ import { loadImage } from "../Image/image-loader";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
 import { extractInlineStyles } from "./extract-style-html-element";
 
-const PAGE_WIDTH_DXA = 9638;
-
 type ReadonlyArrayWithAtLeastOneElement<T> = { 0: T } & ReadonlyArray<T>;
 
 export interface TransformationOptions {
@@ -301,8 +299,8 @@ async function parseTreeContent(
                     new Table({
                         rows: await getTableRows(child.getElementsByTagName("tr"), options, state),
                         width: {
-                            size: PAGE_WIDTH_DXA,
-                            type: WidthType.DXA,
+                            size: 100,
+                            type: WidthType.PERCENTAGE,
                         },
                     })
                 );

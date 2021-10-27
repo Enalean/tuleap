@@ -318,8 +318,8 @@ describe("transform-html-into-paragraph", () => {
                             }),
                         ],
                         width: {
-                            size: 9638,
-                            type: WidthType.DXA,
+                            size: 100,
+                            type: WidthType.PERCENTAGE,
                         },
                     }),
                 ],

@@ -19,8 +19,8 @@
 
 import type {
     ArtifactContainer,
-    ArtifactFieldValue,
     ArtifactFieldShortValue,
+    ArtifactFieldValue,
     DateReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
@@ -37,6 +37,7 @@ import {
     File,
     Footer,
     Header,
+    HeadingLevel,
     LevelFormat,
     Packer,
     PageBreak,
@@ -46,12 +47,12 @@ import {
     StyleLevel,
     Table,
     TableCell,
+    TableLayoutType,
     TableRow,
     TabStopPosition,
     TabStopType,
     TextRun,
     WidthType,
-    HeadingLevel,
 } from "docx";
 import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
 import { getAnchorToArtifactContent } from "./sections-anchor";
@@ -491,11 +492,12 @@ function buildCoverTable(
 ): Table {
     return new Table({
         width: {
-            size: 0,
-            type: WidthType.AUTO,
+            size: 100,
+            type: WidthType.PERCENTAGE,
         },
         borders: TABLE_BORDERS,
         columnWidths: [2000, 7638],
+        layout: TableLayoutType.FIXED,
         rows: [
             buildCoverTableRow(gettext_provider.gettext("Platform"), new TextRun(platform_name)),
             buildCoverTableRow(gettext_provider.gettext("Project"), new TextRun(project_name)),
@@ -835,11 +837,12 @@ function buildTable(fields_rows: TableRow[]): Table {
         // we set the size of the labels column 3000 and the size of the values column to 6638 so
         // (3000 + 6638) = 9638 DXA
         width: {
-            size: 0,
-            type: WidthType.AUTO,
+            size: 100,
+            type: WidthType.PERCENTAGE,
         },
         borders: TABLE_BORDERS,
         columnWidths: [3000, 6638],
+        layout: TableLayoutType.FIXED,
     });
 }
 
