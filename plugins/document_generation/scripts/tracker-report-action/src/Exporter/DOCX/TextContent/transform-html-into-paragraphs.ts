@@ -40,6 +40,7 @@ import dompurify from "dompurify";
 import { loadImage } from "../Image/image-loader";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
 import { extractInlineStyles } from "./extract-style-html-element";
+import { getListInstanceID } from "./list-instance-id-generator";
 
 const PAGE_WIDTH_DXA = 9638;
 
@@ -321,6 +322,7 @@ async function getList(
     options: TransformationOptions
 ): Promise<Paragraph[]> {
     const content_children: Paragraph[] = [];
+    const list_instance_id = getListInstanceID();
     for (const list_item of element.childNodes) {
         list_item.childNodes.forEach((child_node) => {
             if (child_node.nodeName === "#text" && child_node.textContent?.trim() === "") {
@@ -342,6 +344,7 @@ async function getList(
                                 element.nodeName === "UL"
                                     ? options.unordered_list_reference
                                     : options.ordered_list_reference,
+                            instance: list_instance_id,
                         },
                     })
             )
