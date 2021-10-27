@@ -30,46 +30,40 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
+use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
 use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
 
 final class SetupMysqlInitCommand extends Command
 {
-    private const OPT_ADMIN_USER                  = 'admin-user';
-    private const OPT_ADMIN_PASSWORD              = 'admin-password';
-    private const OPT_APP_DBNAME                  = 'db-name';
-    private const OPT_APP_USER                    = 'app-user';
-    private const OPT_APP_PASSWORD                = 'app-password';
-    private const OPT_NSS_USER                    = 'nss-user';
-    private const OPT_NSS_PASSWORD                = 'nss-password';
-    private const OPT_MEDIAWIKI                   = 'mediawiki';
-    private const OPT_MEDIAWIKI_VALUE_PER_PROJECT = 'per-project';
-    private const OPT_MEDIAWIKI_VALUE_CENTRAL     = 'central';
-    private const OPT_SKIP_DATABASE               = 'skip-database';
-    private const OPT_GRANT_HOSTNAME              = 'grant-hostname';
-    private const OPT_LOG_PASSWORD                = 'log-password';
-    private const OPT_AZURE_SUFFIX                = 'azure-suffix';
-    private const ENV_AZURE_SUFFIX                = 'TULEAP_DB_AZURE_SUFFIX';
+    private const OPT_ADMIN_USER     = 'admin-user';
+    private const OPT_ADMIN_PASSWORD = 'admin-password';
+    private const OPT_APP_DBNAME     = 'db-name';
+    private const OPT_APP_USER       = 'app-user';
+    private const OPT_APP_PASSWORD   = 'app-password';
+    private const OPT_NSS_USER       = 'nss-user';
+    private const OPT_NSS_PASSWORD   = 'nss-password';
+    private const OPT_MEDIAWIKI      = 'mediawiki';
+    private const OPT_SKIP_DATABASE  = 'skip-database';
+    private const OPT_GRANT_HOSTNAME = 'grant-hostname';
+    private const OPT_LOG_PASSWORD   = 'log-password';
+    private const OPT_AZURE_SUFFIX   = 'azure-suffix';
+    private const ENV_AZURE_SUFFIX   = 'TULEAP_DB_AZURE_SUFFIX';
 
     /**
      * @var MysqlCommandHelper
      */
     private $command_helper;
     /**
-     * @var ConnectionManagerInterface
-     */
-    private $connection_manager;
-    /**
      * @var string
      */
     private $base_directory;
 
-    public function __construct(ConnectionManagerInterface $connection_manager, ?string $base_directory = null)
+    public function __construct(private ConnectionManagerInterface $connection_manager, private DatabaseConfigurator $database_configurator, ?string $base_directory = null)
     {
-        $this->base_directory     = $base_directory ?: '/';
-        $this->command_helper     = new MysqlCommandHelper($this->base_directory);
-        $this->connection_manager = $connection_manager;
+        $this->base_directory = $base_directory ?: '/';
+        $this->command_helper = new MysqlCommandHelper($this->base_directory);
 
         parent::__construct('setup:mysql-init');
     }
@@ -228,21 +222,7 @@ final class SetupMysqlInitCommand extends Command
             return;
         }
 
-        $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($app_dbname, false)));
-        if ($existing_db) {
-            $output->writeln(sprintf('<info>Database %s already exists</info>', $app_dbname));
-        } else {
-            $output->writeln(sprintf('<info>Create database %s</info>', $app_dbname));
-            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $db->escapeIdentifier($app_dbname)));
-        }
-
-        $output->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $app_dbname, $app_user));
-        $this->createUser($db, $app_user, $app_password, $grant_hostname);
-        $db->run(sprintf(
-            'GRANT ALL PRIVILEGES ON %s.* TO %s',
-            $db->escapeIdentifier($app_dbname),
-            $this->quoteDbUser($app_user, $grant_hostname),
-        ));
+        $this->database_configurator->initializeDatabase($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
 
         $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
         if (is_string($log_password)) {
@@ -263,7 +243,7 @@ final class SetupMysqlInitCommand extends Command
             return;
         }
 
-        $this->setUpNss(
+        $this->database_configurator->setUpNss(
             $output,
             $db,
             $app_dbname,
@@ -292,105 +272,7 @@ final class SetupMysqlInitCommand extends Command
         $mediawiki = $input->getOption(self::OPT_MEDIAWIKI);
         if ($mediawiki) {
             assert(is_string($mediawiki));
-            $this->setUpMediawiki($output, $db, $mediawiki, $app_user, $grant_hostname);
-        }
-    }
-
-
-    /**
-     * @see https://bugs.mysql.com/bug.php?id=80379
-     */
-    private function setUpNss(SymfonyStyle $io, DBWrapperInterface $db, string $target_dbname, string $nss_user, string $nss_password, string $grant_hostname): void
-    {
-        $io->writeln(sprintf('<info>Grant privileges to %s</info>', $nss_user));
-
-        $this->createUser($db, $nss_user, $nss_password, $grant_hostname);
-
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'user', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'groups', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'user_group', $nss_user, $grant_hostname);
-
-        $this->grantOn($db, ['SELECT', 'UPDATE'], $target_dbname, 'svn_token', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'plugin_ldap_user', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'plugin_openidconnectclient_user_mapping', $nss_user, $grant_hostname);
-    }
-
-    private function grantOn(DBWrapperInterface $db, array $grants, string $db_name, string $table_name, string $user, string $grant_hostname): void
-    {
-        array_walk(
-            $grants,
-            static function (string $grant) {
-                // List is not complete because no need for other type yet, feel free to add supported one if you feel
-                // the need
-                // @see https://dev.mysql.com/doc/refman/8.0/en/grant.html#grant-table-privileges
-                if (! in_array($grant, ['SELECT', 'UPDATE', 'DELETE', 'INSERT'])) {
-                    throw new \RuntimeException('Invalid grant type: ' . $grant);
-                }
-            },
-        );
-        $db->run(sprintf(
-            'GRANT CREATE,%s ON %s.%s TO %s',
-            implode(',', $grants),
-            $db->escapeIdentifier($db_name),
-            $db->escapeIdentifier($table_name),
-            $this->quoteDbUser($user, $grant_hostname),
-        ));
-        $db->run(sprintf(
-            'REVOKE CREATE ON %s.%s FROM %s',
-            $db->escapeIdentifier($db_name),
-            $db->escapeIdentifier($table_name),
-            $this->quoteDbUser($user, $grant_hostname),
-        ));
-    }
-
-    private function createUser(DBWrapperInterface $db, string $user, string $password, string $grant_hostname): void
-    {
-        $db->run(sprintf(
-            'CREATE USER IF NOT EXISTS %s IDENTIFIED BY \'%s\'',
-            $this->quoteDbUser($user, $grant_hostname),
-            $db->escapeIdentifier($password, false),
-        ));
-    }
-
-    private function quoteDbUser(string $user_identifier, string $grant_hostname): string
-    {
-        return sprintf("'%s'@'%s'", $user_identifier, $grant_hostname);
-    }
-
-    private function setUpMediawiki(SymfonyStyle $io, DBWrapperInterface $db, string $mediawiki, string $app_user, string $grant_hostname): void
-    {
-        if ($mediawiki !== self::OPT_MEDIAWIKI_VALUE_CENTRAL && $mediawiki !== self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
-            throw new \RuntimeException(sprintf('Invalid --mediawiki value. Valid values are `%s` or `%s`', self::OPT_MEDIAWIKI_VALUE_PER_PROJECT, self::OPT_MEDIAWIKI_VALUE_CENTRAL));
-        }
-        if ($mediawiki === self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
-            $io->writeln(sprintf('<info>Configure mediawiki per-project permissions on %s to %s</info>', 'plugin_mediawiki_%', $app_user));
-            $db->run(
-                sprintf(
-                    'GRANT ALL PRIVILEGES ON `plugin_mediawiki_%%`.* TO %s',
-                    $this->quoteDbUser($app_user, $grant_hostname),
-                )
-            );
-        } else {
-            $mediawiki_database = 'tuleap_mediawiki';
-            $io->writeln(sprintf('<info>Configure mediawiki central permissions on %s to %s</info>', $mediawiki_database, $app_user));
-            $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($mediawiki_database, false)));
-            if ($existing_db) {
-                $io->writeln(sprintf('<info>Database %s already exists</info>', $mediawiki_database));
-            } else {
-                $db->run(
-                    sprintf(
-                        'CREATE DATABASE %s',
-                        $db->escapeIdentifier($mediawiki_database)
-                    )
-                );
-            }
-            $db->run(
-                sprintf(
-                    'GRANT ALL PRIVILEGES ON %s.* TO %s',
-                    $db->escapeIdentifier($mediawiki_database),
-                    $this->quoteDbUser($app_user, $grant_hostname)
-                )
-            );
+            $this->database_configurator->setUpMediawiki($output, $db, $mediawiki, $app_user, $grant_hostname);
         }
     }
 

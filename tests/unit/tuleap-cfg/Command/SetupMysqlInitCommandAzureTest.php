@@ -25,6 +25,7 @@ namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
+use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
 final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -53,6 +54,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->command_tester = new CommandTester(
             new SetupMysqlInitCommand(
                 new TestConnectionManager($this->db_wrapper),
+                new DatabaseConfigurator(\PasswordHandlerFactory::getPasswordHandler()),
                 $this->base_dir
             )
         );

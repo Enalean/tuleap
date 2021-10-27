@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command;
 
-use PasswordHandlerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,18 +31,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Cryptography\ConcealedString;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
+use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
 use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
-use TuleapCfg\Command\SetupMysql\StatementLoader;
 
 final class SetupMysqlCommand extends Command
 {
-    /**
-     * @var MysqlCommandHelper
-     */
-    private $command_helper;
+    private MysqlCommandHelper $command_helper;
 
-    public function __construct()
+    public function __construct(private DatabaseConfigurator $database_configurator)
     {
         $this->command_helper = new MysqlCommandHelper('/');
         parent::__construct('setup:mysql');
@@ -100,27 +96,8 @@ final class SetupMysqlCommand extends Command
 
         $connexion_manager->checkSQLModes($db);
 
-        $password_handler = PasswordHandlerFactory::getPasswordHandler();
+        $this->database_configurator->loadInitValues($db, $admin_password, $domain_name);
 
-        $row = $db->run('SHOW TABLES');
-        if (count($row) === 0) {
-            $statement_loader = new StatementLoader($db);
-            $statement_loader->loadFromFile(__DIR__ . '/../../db/mysql/database_structure.sql');
-            $statement_loader->loadFromFile(__DIR__ . '/../../db/mysql/database_initvalues.sql');
-            $statement_loader->loadFromFile(__DIR__ . '/../../forgeupgrade/db/install-mysql.sql');
-
-            $tuleap_version = trim(file_get_contents(__DIR__ . '/../../../VERSION'));
-            $db->run('INSERT INTO tuleap_installed_version VALUES (?)', $tuleap_version);
-
-            $db->run(
-                'UPDATE user SET password=?, unix_pw=?, email=?, add_date=? WHERE user_id=101',
-                $password_handler->computeHashPassword($admin_password),
-                $password_handler->computeUnixPassword($admin_password),
-                'codendi-admin@' . $domain_name,
-                time(),
-            );
-            $db->run('UPDATE user SET email=? WHERE user_id = 100', 'noreply@' . $domain_name);
-        }
         return 0;
     }
 }
