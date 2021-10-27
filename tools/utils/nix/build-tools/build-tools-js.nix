@@ -1,4 +1,4 @@
-{ pkgs, php }:
+{ pkgs }:
 
 let
     node = pkgs.nodejs-16_x;

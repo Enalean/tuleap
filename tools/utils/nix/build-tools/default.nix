@@ -7,5 +7,5 @@ in pkgs.buildEnv {
     paths = (import ./build-tools-general.nix { inherit pkgs; }) ++
             (import ./build-tools-packages.nix { inherit pkgs; }) ++
             (php) ++
-            [(import ./build-tools-js.nix { inherit pkgs; php = php; })];
+            [(import ./build-tools-js.nix { inherit pkgs; })];
 }
