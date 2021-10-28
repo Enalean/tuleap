@@ -22,38 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_List;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchOpenProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveCrossRefStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUriStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserCanUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValueUserCanSeeStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeframeValueUserCanSeeStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 
 final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private NullLogger $logger;
     private UserIdentifier $user_identifier;
     private SearchOpenProgramIncrement $dao;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
+
     /**
      * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -61,11 +57,9 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao                        = SearchOpenProgramIncrementStub::withoutOpenIncrement();
-        $this->artifact_factory           = $this->createMock(\Tracker_ArtifactFactory::class);
-        $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
-        $this->logger                     = new NullLogger();
-        $this->user                       = $this->createMock(\PFUser::class);
+        $this->dao              = SearchOpenProgramIncrementStub::withoutOpenIncrement();
+        $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->user             = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
         $this->user->method('getName')->willReturn("John");
         $this->user_identifier = UserReferenceStub::withDefaults();
@@ -76,74 +70,18 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao   = SearchOpenProgramIncrementStub::with([['id' => 14], ['id' => 15]]);
         $artifact_14 = $this->createMock(Artifact::class);
         $artifact_14->method('getId')->willReturn(14);
-        $artifact_14->method('userCanUpdate')->willReturn(true);
-        $artifact_14->method('getUri')->willReturn("/plugins/tracker/?aid=14");
-        $artifact_14->method('getXref')->willReturn("art #14");
-        $field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $field->method('userCanUpdate')->willReturn(false);
-        $artifact_14->method('getAnArtifactLinkField')->willReturn($field);
+
         $artifact_15 = $this->createMock(Artifact::class);
         $artifact_15->method('getId')->willReturn(15);
-        $artifact_15->method('userCanUpdate')->willReturn(false);
-        $artifact_15->method('getUri')->willReturn("/plugins/tracker/?aid=15");
-        $artifact_15->method('getXref')->willReturn("art #15");
-        $artifact_15->method('getAnArtifactLinkField')->willReturn(null);
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnOnConsecutiveCalls($artifact_15, $artifact_14);
 
-        $artifact_14->method('getTitle')->willReturn('Artifact 14');
-        $artifact_15->method('getTitle')->willReturn('Artifact 15');
-        $tracker = $this->createMock(\Tracker::class);
-        $tracker->method('getGroupId')->willReturn(101);
-        $time_period_14 = \TimePeriodWithoutWeekEnd::buildFromDuration(1611067637, 10);
-        $time_period_15 = \TimePeriodWithoutWeekEnd::buildFromDuration(1631067637, 10);
-        foreach ([$artifact_14, $artifact_15] as $mock_artifact) {
-            $mock_artifact->method('getTracker')->willReturn($tracker);
-            $mock_artifact->method('getStatus')->willReturn('Open');
-        }
-
-        $timeframe_calculator = $this->createMock(TimeframeWithDuration::class);
-
-        $this->semantic_timeframe_builder->method('getSemantic')
-            ->with($tracker)
-            ->willReturn(new SemanticTimeframe($tracker, $timeframe_calculator));
-
-
-        $timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifact')->willReturnOnConsecutiveCalls($time_period_15, $time_period_14);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $status_field->method('userCanRead')->willReturn(true);
-        $tracker->method('getStatusField')->willReturn($status_field);
+        $this->artifact_factory->expects(self::atLeast(2))->method('getArtifactByIdUserCanView');
 
         $program_increments = $this->buildProgramIncrementsRetriever(
-            VerifyUserCanPlanInProgramIncrementStub::buildCanNotPlan()
+            RetrieveTitleValueUserCanSeeStub::withValue('Artifact 15')
         )->retrieveOpenProgramIncrements(self::buildProgram($this->user_identifier), $this->user_identifier);
 
-        self::assertEquals(
-            [
-                new ProgramIncrement(
-                    $artifact_15->getId(),
-                    'Artifact 15',
-                    $artifact_15->getUri(),
-                    $artifact_15->getXRef(),
-                    false,
-                    false,
-                    'Open',
-                    $time_period_15->getStartDate(),
-                    $time_period_15->getEndDate()
-                ),
-                new ProgramIncrement(
-                    $artifact_14->getId(),
-                    'Artifact 14',
-                    $artifact_14->getUri(),
-                    $artifact_14->getXRef(),
-                    true,
-                    false,
-                    'Open',
-                    $time_period_14->getStartDate(),
-                    $time_period_14->getEndDate()
-                ),
-            ],
-            $program_increments
-        );
+        self::assertCount(2, $program_increments);
     }
 
     public function testDoesNotRetrieveArtifactsTheUserCannotRead(): void
@@ -152,7 +90,9 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
 
         self::assertEmpty(
-            $this->buildProgramIncrementsRetriever(VerifyUserCanPlanInProgramIncrementStub::buildCanPlan())->retrieveOpenProgramIncrements(
+            $this->buildProgramIncrementsRetriever(
+                RetrieveTitleValueUserCanSeeStub::withValue('Artifact 15')
+            )->retrieveOpenProgramIncrements(
                 self::buildProgram($this->user_identifier),
                 $this->user_identifier
             )
@@ -163,12 +103,13 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao = SearchOpenProgramIncrementStub::with([['id' => 16]]);
         $artifact  = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(16);
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $artifact->method('getTitle')->willReturn(null);
-
         self::assertEmpty(
-            $this->buildProgramIncrementsRetriever(VerifyUserCanPlanInProgramIncrementStub::buildCanPlan())->retrieveOpenProgramIncrements(
+            $this->buildProgramIncrementsRetriever(
+                RetrieveTitleValueUserCanSeeStub::withoutValue()
+            )->retrieveOpenProgramIncrements(
                 self::buildProgram($this->user_identifier),
                 $this->user_identifier
             )
@@ -180,17 +121,21 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user, null);
     }
 
-    private function buildProgramIncrementsRetriever(VerifyUserCanPlanInProgramIncrement $user_can_plan): ProgramIncrementsRetriever
+    private function buildProgramIncrementsRetriever(RetrieveTitleValueUserCanSee $retrieve_title): ProgramIncrementsRetriever
     {
         return new ProgramIncrementsRetriever(
             $this->dao,
             $this->artifact_factory,
-            $this->semantic_timeframe_builder,
-            $this->logger,
             RetrieveUserStub::buildMockedRegularUser($this->user),
-            $user_can_plan,
             VerifyIsProgramIncrementStub::withValidProgramIncrement(),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            RetrieveStatusValueUserCanSeeStub::withValue('On going'),
+            $retrieve_title,
+            RetrieveTimeframeValueUserCanSeeStub::withValues(1633189968, 1635868368),
+            RetrieveUriStub::withDefault(),
+            RetrieveCrossRefStub::withDefault(),
+            RetrieveUserCanUpdateStub::withUpdatePermission(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
     }
 }

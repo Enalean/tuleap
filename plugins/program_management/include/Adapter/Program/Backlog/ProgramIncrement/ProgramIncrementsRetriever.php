@@ -22,34 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchOpenProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueUserCanSee;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 {
-
     public function __construct(
         private SearchOpenProgramIncrement $program_increments_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
-        private SemanticTimeframeBuilder $semantic_timeframe_builder,
-        private LoggerInterface $logger,
         private RetrieveUser $user_manager_adapter,
-        private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
         private VerifyIsProgramIncrement $program_increment_verifier,
-        private VerifyIsVisibleArtifact $visibility_verifier
+        private VerifyIsVisibleArtifact $visibility_verifier,
+        private RetrieveStatusValueUserCanSee $retrieve_status,
+        private RetrieveTitleValueUserCanSee $retrieve_title,
+        private RetrieveTimeframeValueUserCanSee $retrieve_timeframe,
+        private RetrieveUri $retrieve_uri,
+        private RetrieveCrossRef $retrieve_cross_ref,
+        private RetrieveUserCanUpdate $retrieve_user_can_update,
+        private VerifyUserCanPlanInProgramIncrement $user_can_plan,
     ) {
     }
 
@@ -86,32 +92,24 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         \PFUser $user,
         Artifact $program_increment_artifact
     ): ?ProgramIncrement {
-        $user_identifier = UserProxy::buildFromPFUser($user);
-        $proxy           = ArtifactProxy::buildFromArtifact($this->semantic_timeframe_builder, $this->logger, $program_increment_artifact, $user);
-        if (! $proxy) {
-            return null;
-        }
-
-        $user_can_plan = $this->can_plan_in_program_increment_verifier->userCanPlan(
-            ProgramIncrementIdentifier::fromId(
-                $this->program_increment_verifier,
-                $this->visibility_verifier,
-                $program_increment_artifact->getId(),
-                $user_identifier
-            ),
+        $user_identifier              = UserProxy::buildFromPFUser($user);
+        $program_increment_identifier = ProgramIncrementIdentifier::fromId(
+            $this->program_increment_verifier,
+            $this->visibility_verifier,
+            $program_increment_artifact->getId(),
             $user_identifier
         );
 
-        return new ProgramIncrement(
-            $program_increment_artifact->getId(),
-            $proxy->getTitle(),
-            $program_increment_artifact->getUri(),
-            $program_increment_artifact->getXRef(),
-            $program_increment_artifact->userCanUpdate($user),
-            $user_can_plan,
-            $proxy->getStatus(),
-            $proxy->getStartDate(),
-            $proxy->getEndDate()
+        return ProgramIncrement::build(
+            $this->retrieve_status,
+            $this->retrieve_title,
+            $this->retrieve_timeframe,
+            $this->retrieve_uri,
+            $this->retrieve_cross_ref,
+            $this->retrieve_user_can_update,
+            $this->user_can_plan,
+            $user_identifier,
+            $program_increment_identifier,
         );
     }
 

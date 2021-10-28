@@ -21,14 +21,10 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\REST\v1;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Iteration;
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 /**
  * @psalm-immutable
@@ -88,25 +84,18 @@ final class IterationRepresentation
         $this->user_can_update = JsonCast::toBoolean($user_can_update);
     }
 
-    public static function buildFromArtifact(
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
-        LoggerInterface $logger,
-        Artifact $iteration,
-        \PFUser $user
-    ): ?self {
-        $proxy = ArtifactProxy::buildFromArtifact($semantic_timeframe_builder, $logger, $iteration, $user);
-        if (! $proxy) {
-            return null;
-        }
+    public static function buildFromIteration(
+        Iteration $iteration,
+    ): self {
         return new self(
-            $iteration->getId(),
-            $proxy->getTitle(),
-            $iteration->getUri(),
-            $iteration->getXRef(),
-            $iteration->userCanUpdate($user),
-            $proxy->getStatus(),
-            $proxy->getStartDate(),
-            $proxy->getEndDate()
+            $iteration->id,
+            $iteration->title,
+            $iteration->uri,
+            $iteration->cross_ref,
+            $iteration->user_can_update,
+            $iteration->status,
+            $iteration->start_date,
+            $iteration->end_date
         );
     }
 }

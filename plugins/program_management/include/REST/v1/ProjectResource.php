@@ -34,6 +34,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramInc
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
@@ -188,12 +194,21 @@ final class ProjectResource extends AuthenticatedResource
             new ProgramIncrementsRetriever(
                 $program_increments_dao,
                 $artifact_factory,
-                SemanticTimeframeBuilder::build(),
-                BackendLogger::getDefaultLogger(),
                 $this->user_manager_adapter,
-                new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter),
                 $program_increments_dao,
-                new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter)
+                new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+                new StatusValueRetriever($artifact_factory, $this->user_manager_adapter),
+                new TitleValueRetriever($artifact_factory),
+                new TimeframeValueRetriever(
+                    $artifact_factory,
+                    $this->user_manager_adapter,
+                    SemanticTimeframeBuilder::build(),
+                    BackendLogger::getDefaultLogger(),
+                ),
+                new UriRetriever($artifact_factory),
+                new CrossReferenceRetriever($artifact_factory),
+                new UserCanUpdateRetriever($artifact_factory, $this->user_manager_adapter),
+                new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter)
             )
         );
     }

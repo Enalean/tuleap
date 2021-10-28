@@ -29,13 +29,18 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureAdditionProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
@@ -55,6 +60,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationsRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddOrOrderMustBeSetException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ContentChange;
@@ -71,13 +77,10 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class ProgramIncrementResource extends AuthenticatedResource
 {
@@ -298,26 +301,33 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ProgramIncrementsDAO(),
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
             new IterationsLinkedToProgramIncrementDAO(),
-            $artifact_factory,
-            new SemanticTimeframeBuilder(
-                new SemanticTimeframeDao(),
-                \Tracker_FormElementFactory::instance(),
-                \TrackerFactory::instance(),
-                new LinksRetriever(new ArtifactLinkFieldValueDao(), $artifact_factory)
+            new StatusValueRetriever($artifact_factory, $this->user_manager_adapter),
+            new TitleValueRetriever($artifact_factory),
+            new TimeframeValueRetriever(
+                $artifact_factory,
+                $this->user_manager_adapter,
+                SemanticTimeframeBuilder::build(),
+                BackendLogger::getDefaultLogger(),
             ),
-            $this->user_manager_adapter,
-            BackendLogger::getDefaultLogger("program_management_syslog")
+            new UriRetriever($artifact_factory),
+            new CrossReferenceRetriever($artifact_factory),
+            new UserCanUpdateRetriever($artifact_factory, $this->user_manager_adapter),
         );
         $user                = $this->user_manager->getCurrentUser();
         try {
-            $elements = $iteration_retriever->retrieveIterations(
+            $iterations = $iteration_retriever->retrieveIterations(
                 $id,
                 UserProxy::buildFromPFUser($user)
             );
 
-            Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
+            $representations = [];
+            foreach ($iterations as $iteration) {
+                $representations[] = IterationRepresentation::buildFromIteration($iteration);
+            }
 
-            return array_slice($elements, $offset, $limit);
+            Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
+
+            return array_slice($representations, $offset, $limit);
         } catch (ProgramIncrementNotFoundException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }

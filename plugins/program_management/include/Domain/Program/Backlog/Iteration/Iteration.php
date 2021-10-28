@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueUserCanSee;
@@ -29,26 +30,20 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUs
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 
-/**
- * @psalm-immutable
- */
-final class ProgramIncrement
+final class Iteration
 {
     private function __construct(
         public int $id,
         public string $title,
-        public string $uri,
-        public string $xref,
-        public bool $user_can_update,
-        public bool $user_can_plan,
         public ?string $status,
         public ?int $start_date,
-        public ?int $end_date
+        public ?int $end_date,
+        public string $uri,
+        public string $cross_ref,
+        public bool $user_can_update
     ) {
     }
-
     public static function build(
         RetrieveStatusValueUserCanSee $retrieve_status_value,
         RetrieveTitleValueUserCanSee $retrieve_title_value,
@@ -56,31 +51,26 @@ final class ProgramIncrement
         RetrieveUri $retrieve_uri,
         RetrieveCrossRef $retrieve_cross_ref,
         RetrieveUserCanUpdate $retrieve_user_can_update,
-        VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
         UserIdentifier $user_identifier,
-        ProgramIncrementIdentifier $program_increment_identifier,
+        IterationIdentifier $iteration_identifier
     ): ?self {
-        $title = $retrieve_title_value->getTitle($program_increment_identifier);
+        $title = $retrieve_title_value->getTitle($iteration_identifier);
         if (! $title) {
             return null;
         }
-        $status     = $retrieve_status_value->getLabel($program_increment_identifier, $user_identifier);
-        $start_date = $retrive_semantic_value->getStartDateValueTimestamp($program_increment_identifier, $user_identifier);
-        $end_date   = $retrive_semantic_value->getEndDateValueTimestamp($program_increment_identifier, $user_identifier);
+        $status     = $retrieve_status_value->getLabel($iteration_identifier, $user_identifier);
+        $start_date = $retrive_semantic_value->getStartDateValueTimestamp($iteration_identifier, $user_identifier);
+        $end_date   = $retrive_semantic_value->getEndDateValueTimestamp($iteration_identifier, $user_identifier);
 
         return new self(
-            $program_increment_identifier->getId(),
+            $iteration_identifier->getId(),
             $title,
-            $retrieve_uri->getUri($program_increment_identifier),
-            $retrieve_cross_ref->getXRef($program_increment_identifier),
-            $retrieve_user_can_update->userCanUpdate($program_increment_identifier, $user_identifier),
-            $can_plan_in_program_increment_verifier->userCanPlan(
-                $program_increment_identifier,
-                $user_identifier
-            ),
             $status,
             $start_date,
             $end_date,
+            $retrieve_uri->getUri($iteration_identifier),
+            $retrieve_cross_ref->getXRef($iteration_identifier),
+            $retrieve_user_can_update->userCanUpdate($iteration_identifier, $user_identifier)
         );
     }
 }
