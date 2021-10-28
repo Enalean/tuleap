@@ -30,7 +30,7 @@ use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
 
-class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -221,14 +221,17 @@ class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function testItReturnsBatchResponseActionContentWhenEverythingIsOk()
+    /**
+     * @dataProvider dataProviderRepositoryPath
+     */
+    public function testItReturnsBatchResponseActionContentWhenEverythingIsOk(string $repository_path): void
     {
         $user_operation = \Mockery::mock(UserOperation::class);
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns($user_operation);
 
         $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
+        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->with('foo')->andReturns($project);
 
         $user = Mockery::mock(\PFUser::class, ['isAlive' => true]);
         $this->user_manager->shouldReceive('getUserByUserName')->with('mary')->andReturns($user);
@@ -248,7 +251,19 @@ class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
             })
         )->andReturns(Mockery::mock(BatchResponseActionContent::class));
 
-        $response = $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
+        $response = $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', $repository_path, 'download']);
         $this->assertInstanceOf(BatchResponseActionContent::class, $response);
+    }
+
+    /**
+     * @return \string[][]
+     * @psalm-return array<string, array{0: string}>
+     */
+    public function dataProviderRepositoryPath(): array
+    {
+        return [
+            'Git LFS before 3.0.0' => ['foo/faa.git'],
+            'Git LFS starting 3.0.0' => ['/foo/faa.git'],
+        ];
     }
 }
