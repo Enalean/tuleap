@@ -64,6 +64,7 @@ if [ "$OS" == "centos7" ]; then
     docker pull ghcr.io/enalean/tuleap-installrpms:centos7
     cosign verify -key "$SRC_DIR"/tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-installrpms:centos7
     docker run -t -d --rm --name rpm-installer --volumes-from rpm-builder -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+        -v /dev/null:/etc/yum.repos.d/tuleap.repo:ro \
         --mount type=tmpfs,destination=/run ghcr.io/enalean/tuleap-installrpms:centos7
     docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
     docker exec -ti rpm-installer bash
