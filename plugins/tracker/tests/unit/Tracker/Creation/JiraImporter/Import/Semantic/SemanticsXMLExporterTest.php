@@ -87,10 +87,6 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $collection = new StatusValuesCollection(
             new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
-                public function getUrl(string $url): ?array
-                {
-                    return null;
-                }
             },
             new NullLogger()
         );

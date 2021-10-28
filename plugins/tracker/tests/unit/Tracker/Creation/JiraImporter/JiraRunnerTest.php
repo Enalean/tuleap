@@ -41,6 +41,7 @@ use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use UserManager;
 use XML_ParseException;
 
@@ -98,6 +99,8 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $jira_user_on_tuleap_cache;
 
+    private ClientWrapperBuilder $jira_client_builder;
+
     protected function setUp(): void
     {
         $this->logger                    = Mockery::mock(LoggerInterface::class);
@@ -110,6 +113,10 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->error_notifier            = Mockery::mock(JiraErrorImportNotifier::class);
         $this->user_manager              = Mockery::mock(UserManager::class);
         $this->jira_user_on_tuleap_cache = Mockery::mock(JiraUserOnTuleapCache::class);
+        $this->jira_client_builder       = new ClientWrapperBuilder(
+            fn () => new class extends JiraCloudClientStub{
+            }
+        );
 
         $this->anonymous_user = new PFUser(['user_id' => 0, 'language_id' => 'en_US']);
         $this->user_manager->shouldReceive(['getUserAnonymous' => $this->anonymous_user]);
@@ -124,7 +131,8 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->success_notifier,
             $this->error_notifier,
             $this->user_manager,
-            $this->jira_user_on_tuleap_cache
+            $this->jira_user_on_tuleap_cache,
+            $this->jira_client_builder,
         );
     }
 
@@ -176,6 +184,8 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTheProjectWithGreatSuccess(): void
     {
+        $this->logger->shouldReceive('debug');
+
         $encryption_key = \Mockery::mock(EncryptionKey::class);
         $encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
             str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)

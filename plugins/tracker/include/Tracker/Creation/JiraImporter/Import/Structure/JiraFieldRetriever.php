@@ -25,23 +25,13 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\XML\IDGenerator;
 
 class JiraFieldRetriever
 {
-    /**
-     * @var ClientWrapper
-     */
-    private $wrapper;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(ClientWrapper $wrapper, LoggerInterface $logger)
+    public function __construct(private JiraClient $wrapper, private LoggerInterface $logger)
     {
-        $this->wrapper = $wrapper;
-        $this->logger  = $logger;
     }
 
     /**

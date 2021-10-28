@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,14 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-final class JiraInstanceURLChecker
+final class JiraCloudClient extends ClientWrapper
 {
-    private const JIRA_CLOUD_DOMAIN = '.atlassian.net';
-
-    public static function isAJiraCloudURL(string $url): bool
+    public function isJiraCloud(): bool
     {
-        $host = parse_url($url, PHP_URL_HOST);
-
-        return substr($host, -strlen(self::JIRA_CLOUD_DOMAIN)) === self::JIRA_CLOUD_DOMAIN;
+        return true;
     }
 }

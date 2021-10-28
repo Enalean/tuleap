@@ -23,16 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Closure;
+use Psr\Log\LoggerInterface;
 use Rule_Regexp;
 use Tuleap\Cryptography\ConcealedString;
 use Valid_LocalURI;
 
 class ClientWrapperBuilder
 {
+
+    /**
+     * @param Closure(JiraCredentials, LoggerInterface):JiraClient $build_wrapper
+     */
+    public function __construct(private Closure $build_wrapper)
+    {
+    }
+
     /**
      * @throws JiraConnectionException
      */
-    public function buildFromRequest(\HTTPRequest $request): ClientWrapper
+    public function buildFromRequest(\HTTPRequest $request, LoggerInterface $logger): JiraClient
     {
         $body = $request->getJsonDecodedBody();
 
@@ -58,6 +68,12 @@ class ClientWrapperBuilder
 
         $jira_credentials = new JiraCredentials($jira_server, $jira_user, $jira_token);
 
-        return ClientWrapper::build($jira_credentials);
+        return $this->build($jira_credentials, $logger);
+    }
+
+    public function build(JiraCredentials $jira_credentials, LoggerInterface $logger): JiraClient
+    {
+        $fn = $this->build_wrapper;
+        return $fn($jira_credentials, $logger);
     }
 }

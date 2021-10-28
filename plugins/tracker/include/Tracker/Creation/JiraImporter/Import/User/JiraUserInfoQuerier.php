@@ -24,25 +24,15 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class JiraUserInfoQuerier
 {
-    /**
-     * @var ClientWrapper
-     */
-    private $wrapper;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        ClientWrapper $wrapper,
-        LoggerInterface $logger
+        private JiraClient $wrapper,
+        private LoggerInterface $logger
     ) {
-        $this->wrapper = $wrapper;
-        $this->logger  = $logger;
     }
 
     /**

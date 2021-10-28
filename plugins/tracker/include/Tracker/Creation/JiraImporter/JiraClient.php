@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
+
 interface JiraClient
 {
     /**
@@ -31,4 +33,6 @@ interface JiraClient
     public function getUrl(string $url): ?array;
 
     public function isJiraCloud(): bool;
+
+    public function getAttachmentContents(Attachment $attachment): string;
 }

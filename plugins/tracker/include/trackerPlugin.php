@@ -108,6 +108,7 @@ use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCleaner;
@@ -1654,28 +1655,17 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return $current_page->isDashboard();
     }
 
-    public function workerEvent(WorkerEvent $event)
+    public function workerEvent(WorkerEvent $event): void
     {
-        $user_manager              = $this->getUserManager();
-        $forge_user                = $user_manager->getUserById(TrackerImporterUser::ID);
-        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
-            new JiraTuleapUsersMapping(),
-            $forge_user
-        );
-        $worker_availability       = new \Tuleap\Queue\WorkerAvailability();
+        $user_manager        = $this->getUserManager();
+        $worker_availability = new \Tuleap\Queue\WorkerAvailability();
+        $logger              = $event->getLogger();
 
         AsynchronousJiraRunner::addListener(
             $event,
-            new QueueFactory($event->getLogger()),
-            $worker_availability,
-            new KeyFactory(),
             new PendingJiraImportDao(),
             new PendingJiraImportBuilder(ProjectManager::instance(), $user_manager),
-            FromJiraTrackerCreator::build($jira_user_on_tuleap_cache),
-            $this->getJiraSuccessImportNotifier(),
-            $this->getJiraErrorImportNotifier(),
-            $user_manager,
-            $jira_user_on_tuleap_cache
+            $this->getJiraRunner($logger),
         );
 
         AsynchronousActionsRunner::addListener($event);
@@ -1967,7 +1957,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getProjectManager(),
             $this->getTrackerCreationPermissionChecker(),
             new JiraProjectBuilder(),
-            new ClientWrapperBuilder(),
+            new ClientWrapperBuilder(Closure::fromCallable([ClientWrapper::class, 'build'])),
             $this->getBackendLogger(),
         );
     }
@@ -1978,7 +1968,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getProjectManager(),
             $this->getTrackerCreationPermissionChecker(),
             new JiraTrackerBuilder(),
-            new ClientWrapperBuilder()
+            new ClientWrapperBuilder(Closure::fromCallable([ClientWrapper::class, 'build'])),
         );
     }
 
@@ -2417,7 +2407,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getJiraSuccessImportNotifier(),
             $this->getJiraErrorImportNotifier(),
             $this->getUserManager(),
-            $jira_user_on_tuleap_cache
+            $jira_user_on_tuleap_cache,
+            new ClientWrapperBuilder(Closure::fromCallable([ClientWrapper::class, 'build'])),
         );
     }
 

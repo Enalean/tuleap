@@ -189,7 +189,7 @@ class FromJiraTrackerCreator
         $trackers_xml = $xml->addChild('trackers');
         $tracker_xml  = $tracker_for_export->export($trackers_xml);
 
-        $jira_exporter = $this->getJiraExporter($jira_credentials);
+        $jira_exporter = $this->getJiraExporter($jira_client, $this->logger);
         $jira_exporter->exportJiraToXml(
             $platform_configuration_collection,
             $tracker_xml,
@@ -243,12 +243,12 @@ class FromJiraTrackerCreator
     /**
      * protected for testing purpose
      * @throws \RuntimeException
+     * @throws \JsonException
      */
-    protected function getJiraExporter(JiraCredentials $jira_credentials): JiraXmlExporter
+    protected function getJiraExporter(JiraClient $client, LoggerInterface $logger): JiraXmlExporter
     {
         return JiraXmlExporter::build(
-            $jira_credentials,
-            ClientWrapper::build($jira_credentials),
+            $client,
             $this->logger,
             $this->jira_user_on_tuleap_cache,
         );

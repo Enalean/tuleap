@@ -21,25 +21,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub;
+namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-
-abstract class JiraServerClientStub implements JiraClient
+final class JiraServerClient extends ClientWrapper
 {
     public function isJiraCloud(): bool
     {
         return false;
-    }
-
-    public function getUrl(string $url): ?array
-    {
-        return null;
-    }
-
-    public function getAttachmentContents(Attachment $attachment): string
-    {
-        return '';
     }
 }

@@ -23,121 +23,96 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Values;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var StatusValuesCollection
-     */
-    private $collection;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
-     */
-    private $wrapper;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->wrapper = Mockery::mock(ClientWrapper::class);
-        $this->logger  = Mockery::mock(LoggerInterface::class);
-
-        $this->collection = new StatusValuesCollection(
-            $this->wrapper,
-            $this->logger
-        );
-    }
-
     public function testItInitsCollections(): void
     {
         $jira_project_key = 'key';
         $jira_issue_type  = '10002';
 
-        $this->logger->shouldReceive('debug');
+        $wrapper = new class extends JiraCloudClientStub {
+            public string $url = '';
 
-        $this->wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/key/statuses')->andReturn($this->getAPIResponse());
+            public function getUrl(string $url): ?array
+            {
+                $this->url = $url;
+                return [
+                    [
+                        'self' => 'URL/rest/api/3/issuetype/10002',
+                        'id' => '10002' ,
+                        'name' => 'bug' ,
+                        'subtask' => false,
+                        'statuses' => [
+                            [
+                                'self' => 'URL/rest/api/3/status/10000',
+                                'description' => '' ,
+                                'iconUrl' => 'URL/' ,
+                                'name' => 'To Do',
+                                'untranslatedName' => 'To Do',
+                                'id' => '10000',
+                                'statusCategory' => [
+                                    'self' => 'URL/rest/api/3/statuscategory/2',
+                                    'id' => 2,
+                                    'key' => 'new' ,
+                                    'colorName' => 'blue-gray',
+                                    'name' => 'To Do',
+                                ]
+                            ],
+                            [
+                                'self' => 'URL/rest/api/3/status/3',
+                                'description' => 'This issue is being actively worked on at the moment by the assignee.',
+                                'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
+                                'name' => 'In Progress',
+                                'untranslatedName' => 'In Progress',
+                                'id' => '3',
+                                'statusCategory' => [
+                                    'self' => 'URL/rest/api/3/statuscategory/4',
+                                    'id' => 4,
+                                    'key' => 'indeterminate',
+                                    'colorName' => 'yellow',
+                                    'name' => 'In Progress'
+                                ]
+                            ],
+                            [
+                                'self' => 'URL/rest/api/3/status/10001',
+                                'description' => '',
+                                'iconUrl' => 'URL/',
+                                'name' => 'Done',
+                                'untranslatedName' => 'Done',
+                                'id' => '10001',
+                                'statusCategory' => [
+                                    'self' => 'URL/rest/api/3/statuscategory/3',
+                                    'id' => 3,
+                                    'key' => 'done',
+                                    'colorName' => 'green',
+                                    'name' => 'Done',
+                                ]
+                            ]
+                        ]
 
-        $this->collection->initCollectionForProjectAndIssueType(
+                    ]
+                ];
+            }
+        };
+
+        $collection = new StatusValuesCollection(
+            $wrapper,
+            new NullLogger()
+        );
+        $collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
             $jira_issue_type,
             new FieldAndValueIDGenerator(),
         );
 
-        $this->assertCount(3, $this->collection->getAllValues());
-        $this->assertCount(2, $this->collection->getOpenValues());
-        $this->assertCount(1, $this->collection->getClosedValues());
-    }
-
-    private function getAPIResponse(): array
-    {
-        return [
-            [
-                'self' => 'URL/rest/api/3/issuetype/10002',
-                'id' => '10002' ,
-                'name' => 'bug' ,
-                'subtask' => false,
-                'statuses' => [
-                    [
-                        'self' => 'URL/rest/api/3/status/10000',
-                        'description' => '' ,
-                        'iconUrl' => 'URL/' ,
-                        'name' => 'To Do',
-                        'untranslatedName' => 'To Do',
-                        'id' => '10000',
-                        'statusCategory' => [
-                            'self' => 'URL/rest/api/3/statuscategory/2',
-                            'id' => 2,
-                            'key' => 'new' ,
-                            'colorName' => 'blue-gray',
-                            'name' => 'To Do',
-                        ]
-                    ],
-                    [
-                        'self' => 'URL/rest/api/3/status/3',
-                        'description' => 'This issue is being actively worked on at the moment by the assignee.',
-                        'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
-                        'name' => 'In Progress',
-                        'untranslatedName' => 'In Progress',
-                        'id' => '3',
-                        'statusCategory' => [
-                            'self' => 'URL/rest/api/3/statuscategory/4',
-                            'id' => 4,
-                            'key' => 'indeterminate',
-                            'colorName' => 'yellow',
-                            'name' => 'In Progress'
-                        ]
-                    ],
-                    [
-                        'self' => 'URL/rest/api/3/status/10001',
-                        'description' => '',
-                        'iconUrl' => 'URL/',
-                        'name' => 'Done',
-                        'untranslatedName' => 'Done',
-                        'id' => '10001',
-                        'statusCategory' => [
-                            'self' => 'URL/rest/api/3/statuscategory/3',
-                            'id' => 3,
-                            'key' => 'done',
-                            'colorName' => 'green',
-                            'name' => 'Done',
-                        ]
-                    ]
-                ]
-
-            ]
-        ];
+        self::assertCount(3, $collection->getAllValues());
+        self::assertCount(2, $collection->getOpenValues());
+        self::assertCount(1, $collection->getClosedValues());
+        self::assertEquals(ClientWrapper::JIRA_CORE_BASE_URL . '/project/key/statuses', $wrapper->url);
     }
 }

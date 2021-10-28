@@ -29,6 +29,7 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectCollection;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 use function PHPUnit\Framework\assertEquals;
 
@@ -38,49 +39,44 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsRecursivelyProjects(): void
     {
-        $project_one = [
-            'key'  => "TO",
-            'name' => 'toto'
-        ];
-
-        $result = [
-            'isLast'     => false,
-            'maxResults' => 2,
-            'startAt'    => 0,
-            'values'     => [$project_one]
-        ];
-
-        $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0')->andReturn($result);
-
-        $project_two = [
-            'key'  => "TU",
-            'name' => 'tutu'
-        ];
-
-        $other_result = [
-            'isLast'     => true,
-            'maxResults' => 2,
-            'startAt'    => 1,
-            'values'     => [$project_two]
-        ];
-
-        $wrapper->shouldReceive('isJiraCloud')->andReturnTrue();
-        $wrapper->shouldReceive('getUrl')->with(
-            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1"
-        )->andReturn($other_result);
+        $wrapper = new class extends JiraCloudClientStub {
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
+                    'isLast'     => false,
+                    'maxResults' => 2,
+                    'startAt'    => 0,
+                    'values'     => [
+                        [
+                            'key'  => "TO",
+                            'name' => 'toto'
+                        ]
+                    ]
+                ],
+                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => [
+                    'isLast'     => true,
+                    'maxResults' => 2,
+                    'startAt'    => 1,
+                    'values'     => [
+                        [
+                            'key'  => "TU",
+                            'name' => 'tutu'
+                        ]
+                    ]
+                ],
+            ];
+        };
 
         $expected_collection = new JiraProjectCollection();
         $expected_collection->addProject(
             [
-                'id'    => $project_one['key'],
-                'label' => $project_one['name'],
+                'id'    => "TO",
+                'label' => "toto",
             ]
         );
         $expected_collection->addProject(
             [
-                'id'    => $project_two['key'],
-                'label' => $project_two['name'],
+                'id'    => "TU",
+                'label' => "tutu",
             ]
         );
 
@@ -92,25 +88,22 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAndExceptionIfRecursiveCallGoesWrong(): void
     {
-        $project_one = [
-            'key'  => "TO",
-            'name' => 'toto'
-        ];
-
-        $result = [
-            'isLast'     => false,
-            'maxResults' => 2,
-            'startAt'    => 0,
-            'values'     => [$project_one]
-        ];
-
-        $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('isJiraCloud')->andReturnTrue();
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0')->andReturn($result);
-
-        $wrapper->shouldReceive('getUrl')->with(
-            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1"
-        )->andReturn(null);
+        $wrapper = new class extends JiraCloudClientStub {
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
+                    'isLast'     => false,
+                    'maxResults' => 2,
+                    'startAt'    => 0,
+                    'values'     => [
+                        [
+                            'key'  => "TO",
+                            'name' => 'toto'
+                        ]
+                    ]
+                ],
+                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => null,
+            ];
+        };
 
         $this->expectException(UnexpectedFormatException::class);
 
@@ -118,31 +111,29 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $builder->build($wrapper, new NullLogger());
     }
 
-    public function itThrowsALogicExceptionIfJiraAPIHaveChanged(): void
+    public function testItThrowsALogicExceptionIfJiraAPIHaveChanged(): void
     {
-        $project_one = [
-            'key'      => "TO",
-            'dsdsdsds' => 'toto'
-        ];
+        $wrapper = new class extends JiraCloudClientStub {
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
+                    'isLast'     => false,
+                    'maxResults' => 2,
+                    'startAt'    => 0,
+                    'values'     => [
+                        [
+                            'key'  => "TO",
+                            'dsdsdsds' => 'toto'
+                        ]
+                    ]
+                ],
+                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => null,
+            ];
+        };
 
-        $result = [
-            'isLast'     => false,
-            'maxResults' => 2,
-            'startAt'    => 0,
-            'values'     => [$project_one]
-        ];
-
-        $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search')->andReturn($result);
-
-        $wrapper->shouldReceive('getUrl')->with(
-            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
-        )->andReturn(null);
-
-        $this->expectException(\LogicException::class);
+        $this->expectException(UnexpectedFormatException::class);
 
         $builder = new JiraProjectBuilder();
-        $builder->build($wrapper);
+        $builder->build($wrapper, new NullLogger());
     }
 
     public function testItIteratesOverJiraServerPayload(): void
