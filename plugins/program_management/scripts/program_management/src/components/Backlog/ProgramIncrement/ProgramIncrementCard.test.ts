@@ -20,22 +20,39 @@
 import { shallowMount } from "@vue/test-utils";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+
+import type { Wrapper } from "@vue/test-utils";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
 describe("ProgramIncrementCard", () => {
-    it("Display a card with closed state", async () => {
-        const wrapper = shallowMount(ProgramIncrementCard, {
+    async function getWrapper(increment: ProgramIncrement): Promise<Wrapper<ProgramIncrementCard>> {
+        return shallowMount(ProgramIncrementCard, {
             localVue: await createProgramManagementLocalVue(),
             propsData: {
-                increment: {
-                    id: 1,
-                    title: "PI 1",
-                    status: '"To be Planned',
-                    start_date: null,
-                    end_date: null,
-                    user_can_update: true,
-                },
+                increment,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            short_name: "guinea-pig",
+                        },
+                    },
+                }),
             },
         });
+    }
+
+    it("Display a card with closed state", async () => {
+        const wrapper = await getWrapper({
+            id: 1,
+            title: "PI 1",
+            status: '"To be Planned',
+            start_date: null,
+            end_date: null,
+            user_can_update: true,
+        } as ProgramIncrement);
 
         expect(
             wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right")
@@ -48,19 +65,14 @@ describe("ProgramIncrementCard", () => {
     });
 
     it("Don't display update button if user doesn't have the permission", async () => {
-        const wrapper = shallowMount(ProgramIncrementCard, {
-            localVue: await createProgramManagementLocalVue(),
-            propsData: {
-                increment: {
-                    id: 1,
-                    title: "PI 1",
-                    status: '"To be Planned',
-                    start_date: null,
-                    end_date: null,
-                    user_can_update: false,
-                },
-            },
-        });
+        const wrapper = await getWrapper({
+            id: 1,
+            title: "PI 1",
+            status: '"To be Planned',
+            start_date: null,
+            end_date: null,
+            user_can_update: false,
+        } as ProgramIncrement);
 
         wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 
@@ -71,19 +83,14 @@ describe("ProgramIncrementCard", () => {
     });
 
     it("Display a card and its content", async () => {
-        const wrapper = shallowMount(ProgramIncrementCard, {
-            localVue: await createProgramManagementLocalVue(),
-            propsData: {
-                increment: {
-                    id: 1,
-                    title: "PI 1",
-                    status: '"To be Planned',
-                    start_date: null,
-                    end_date: null,
-                    user_can_update: true,
-                },
-            },
-        });
+        const wrapper = await getWrapper({
+            id: 1,
+            title: "PI 1",
+            status: '"To be Planned',
+            start_date: null,
+            end_date: null,
+            user_can_update: true,
+        } as ProgramIncrement);
 
         wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 
@@ -108,5 +115,8 @@ describe("ProgramIncrementCard", () => {
         expect(
             wrapper.get("[data-test=program-increment-info-edit-link]").attributes().href
         ).toEqual("/plugins/tracker/?aid=1&program_increment=update");
+        expect(
+            wrapper.get("[data-test=program-increment-plan-iterations-link]").attributes().href
+        ).toEqual("/program_management/guinea-pig/increments/1/plan");
     });
 });

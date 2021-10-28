@@ -124,6 +124,7 @@ use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
 use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementXMLConfigExtractor;
 use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementXMLConfigParser;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
+use Tuleap\ProgramManagement\DisplayPlanIterationsController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
@@ -333,6 +334,7 @@ final class program_managementPlugin extends Plugin
                     '/admin/{project_name:[A-z0-9-]+}[/]',
                     $this->getRouteHandler('routeGetAdminProgramManagement')
                 );
+                $r->get('/{project_name:[A-z0-9-]+}/increments/{increment_id:\d+}/plan[\]', $this->getRouteHandler('routeGetPlanIterations'));
                 $r->get('/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetProgramManagement'));
             }
         );
@@ -488,6 +490,15 @@ final class program_managementPlugin extends Plugin
                 $tracker_factory
             ),
             $project_manager
+        );
+    }
+
+    public function routeGetPlanIterations(): DisplayPlanIterationsController
+    {
+        return new DisplayPlanIterationsController(
+            ProjectManager::instance(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
+            new TeamDao()
         );
     }
 
