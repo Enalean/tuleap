@@ -35,6 +35,7 @@ import {
 } from "docx";
 import * as image_loader from "../Image/image-loader";
 import * as style_extractor from "./extract-style-html-element";
+import * as list_instance_id_generator from "./list-instance-id-generator";
 
 describe("transform-html-into-paragraph", () => {
     it("transforms paragraphs that are the root of the document", async () => {
@@ -103,6 +104,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("transforms unordered lists", async () => {
+        setListInstanceIDGenerator();
         const paragraphs = await transformHTML(
             "<ul><li>A<ul><li>A.1</li><li><strong>A.2</strong></li></ul>                   </li><li>B</li></ul>"
         );
@@ -110,24 +112,25 @@ describe("transform-html-into-paragraph", () => {
         expect(paragraphs).toStrictEqual([
             new Paragraph({
                 children: [new TextRun({ text: "A" })],
-                numbering: { level: 0, reference: "html-unordered-list" },
+                numbering: { level: 0, reference: "html-unordered-list", instance: 90000 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.1" })],
-                numbering: { level: 1, reference: "html-unordered-list" },
+                numbering: { level: 1, reference: "html-unordered-list", instance: 90001 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.2", bold: true })],
-                numbering: { level: 1, reference: "html-unordered-list" },
+                numbering: { level: 1, reference: "html-unordered-list", instance: 90001 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "B" })],
-                numbering: { level: 0, reference: "html-unordered-list" },
+                numbering: { level: 0, reference: "html-unordered-list", instance: 90000 },
             }),
         ]);
     });
 
     it("transforms ordered lists", async () => {
+        setListInstanceIDGenerator();
         const paragraphs = await transformHTML(
             "<ol><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ol>"
         );
@@ -135,24 +138,25 @@ describe("transform-html-into-paragraph", () => {
         expect(paragraphs).toStrictEqual([
             new Paragraph({
                 children: [new TextRun({ text: "A" })],
-                numbering: { level: 0, reference: "html-ordered-list" },
+                numbering: { level: 0, reference: "html-ordered-list", instance: 90000 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.1" })],
-                numbering: { level: 1, reference: "html-ordered-list" },
+                numbering: { level: 1, reference: "html-ordered-list", instance: 90001 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.2", bold: true })],
-                numbering: { level: 1, reference: "html-ordered-list" },
+                numbering: { level: 1, reference: "html-ordered-list", instance: 90001 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "B" })],
-                numbering: { level: 0, reference: "html-ordered-list" },
+                numbering: { level: 0, reference: "html-ordered-list", instance: 90000 },
             }),
         ]);
     });
 
     it("transforms mixed ordered and unordered lists", async () => {
+        setListInstanceIDGenerator();
         const paragraphs = await transformHTML(
             "<ul><li>A<ol><li>A.1</li><li><strong>A.2</strong></li></ol></li><li>B</li></ul>"
         );
@@ -160,19 +164,19 @@ describe("transform-html-into-paragraph", () => {
         expect(paragraphs).toStrictEqual([
             new Paragraph({
                 children: [new TextRun({ text: "A" })],
-                numbering: { level: 0, reference: "html-unordered-list" },
+                numbering: { level: 0, reference: "html-unordered-list", instance: 90000 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.1" })],
-                numbering: { level: 1, reference: "html-ordered-list" },
+                numbering: { level: 1, reference: "html-ordered-list", instance: 90001 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "A.2", bold: true })],
-                numbering: { level: 1, reference: "html-ordered-list" },
+                numbering: { level: 1, reference: "html-ordered-list", instance: 90001 },
             }),
             new Paragraph({
                 children: [new TextRun({ text: "B" })],
-                numbering: { level: 0, reference: "html-unordered-list" },
+                numbering: { level: 0, reference: "html-unordered-list", instance: 90000 },
             }),
         ]);
     });
@@ -372,4 +376,11 @@ function transformHTML(content: string): Promise<Paragraph[]> {
         unordered_list_reference: "html-unordered-list",
         monospace_font: "Courier New",
     });
+}
+
+function setListInstanceIDGenerator(): void {
+    let list_instance_id = 90000;
+    jest.spyOn(list_instance_id_generator, "getListInstanceID").mockImplementation(
+        () => list_instance_id++
+    );
 }
