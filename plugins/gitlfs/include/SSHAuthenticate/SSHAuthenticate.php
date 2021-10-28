@@ -68,12 +68,7 @@ class SSHAuthenticate
         $this->plugin                 = $plugin;
     }
 
-    /**
-     * @param string $username
-     * @param array $argv
-     * @return BatchResponseActionContent
-     */
-    public function main($username, array $argv)
+    public function main(string $username, array $argv): BatchResponseActionContent
     {
         if ($this->plugin === null) {
             throw new InvalidCommandException('git-lfs-authenticate is not available when Tuleap gitlfs plugin is disabled');
@@ -89,8 +84,9 @@ class SSHAuthenticate
             throw new InvalidCommandException($ex->getMessage());
         }
 
-        $repository_path = explode('/', $argv[1]);
-        $project         = $this->project_manager->getProjectByCaseInsensitiveUnixName($repository_path[0]);
+        $repository_full_path = trim($argv[1], '/');
+        $repository_path      = explode('/', $repository_full_path);
+        $project              = $this->project_manager->getProjectByCaseInsensitiveUnixName($repository_path[0]);
         if ($project === null || $project->isActive() !== true) {
             throw new InvalidCommandException('git-lfs-authenticate arg 1 must be in a valid project');
         }
@@ -99,7 +95,7 @@ class SSHAuthenticate
             throw new InvalidCommandException('git-lfs-authenticate project is not allowed to do git-lfs');
         }
 
-        $repository = $this->git_repository_factory->getRepositoryByPath($project->getID(), $argv[1]);
+        $repository = $this->git_repository_factory->getRepositoryByPath($project->getID(), $repository_full_path);
         if ($repository === null) {
             throw new InvalidCommandException('git-lfs-authenticate arg 1 must be a valid repository');
         }
