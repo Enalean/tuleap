@@ -32,7 +32,7 @@ import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 
 export default {
-    name: "Widget",
+    name: "TimetrackingWidget",
     components: {
         WidgetReadingMode,
         WidgetWritingMode,
