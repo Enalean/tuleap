@@ -42,7 +42,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     INNER JOIN plugin_agiledashboard_planning_backlog_tracker backlog ON (backlog.planning_id = planning.id AND child_art.tracker_id = backlog.tracker_id)
                     INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
                 WHERE parent_art.id = $milestone_artifact_id
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -52,7 +52,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
         $limit                 = $this->da->escapeInt($limit);
         $offset                = $this->da->escapeInt($offset);
-        $sql                   = "SELECT SQL_CALC_FOUND_ROWS child_art.*, tracker_artifact_priority_rank.rank as rank
+        $sql                   = "SELECT SQL_CALC_FOUND_ROWS child_art.*, tracker_artifact_priority_rank.`rank` as `rank`
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
@@ -62,7 +62,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     INNER JOIN plugin_agiledashboard_planning_backlog_tracker backlog ON (backlog.planning_id = planning.id AND child_art.tracker_id = backlog.tracker_id)
                     INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
                 WHERE parent_art.id = $milestone_artifact_id
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -76,7 +76,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                 FROM tracker_artifact
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = tracker_artifact.id)
                 WHERE tracker_id IN ($backlog_tracker_ids)
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -91,7 +91,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                 FROM tracker_artifact
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = tracker_artifact.id)
                 WHERE tracker_id IN ($backlog_tracker_ids)
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -129,7 +129,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                         CVL2.bindvalue_id = SS.open_value_id
                      )
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -155,7 +155,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
 
         return $this->retrieve($sql);
     }
@@ -194,7 +194,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                         CVL2.bindvalue_id = SS.open_value_id
                      )
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -223,7 +223,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -254,7 +254,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);

@@ -48,7 +48,7 @@ class MetadataListOfValuesElementDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $sql_update = "UPDATE plugin_docman_metadata_love AS love" .
             " SET love.name = '" . $name . "'" .
             "  , love.description = '" . $description . "'" .
-            "  , love.rank = 15" .
+            "  , love.`rank` = 15" .
             "  , love.status = '" . $status . "'" .
             " WHERE love.value_id = " . $valueId;
         $dao->shouldReceive('update')->with($sql_update)->once()->andReturns(true);

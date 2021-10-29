@@ -57,7 +57,7 @@ final class FeaturesDao extends DataAccessObject implements RetrieveOpenFeatureC
                         INNER JOIN plugin_program_management_explicit_top_backlog ON (plugin_program_management_explicit_top_backlog.artifact_id = artifact.id)
                         INNER JOIN tracker_artifact_priority_rank ON plugin_program_management_explicit_top_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
                 WHERE project.group_id = ?
-                ORDER BY tracker_artifact_priority_rank.rank';
+                ORDER BY tracker_artifact_priority_rank.`rank`';
 
         return $this->getDB()->run($sql, $program->getId());
     }

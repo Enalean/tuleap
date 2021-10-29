@@ -41,7 +41,7 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
                 WHERE changeset_value_id = $changeset_value_id
                     AND `groups`.status = 'A'
                     AND tracker.deletion_date IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank";
+                ORDER BY tracker_artifact_priority_rank.`rank`";
 
         return $this->retrieve($sql);
     }

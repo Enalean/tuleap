@@ -40,7 +40,7 @@ setup_database() {
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
     MYSQL_CLI="/opt/rh/rh-mysql57/root/usr/bin/mysql"
-    MYSQL="$MYSQL_CLI -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
+    MYSQL="$MYSQL_CLI --local-infile=1 -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
     MYSQLROOT="$MYSQL_CLI -h$DB_HOST -uroot -pwelcome0"
     echo "Use remote db $DB_HOST"
