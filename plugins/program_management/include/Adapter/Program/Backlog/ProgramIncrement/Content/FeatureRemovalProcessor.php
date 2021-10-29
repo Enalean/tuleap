@@ -22,33 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchProgramIncrementLinkedToFeature;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureRemovalProcessor implements RemoveFeature
 {
-    /**
-     * @var ProgramIncrementsDAO
-     */
-    private ProgramIncrementsDAO $program_increments_dao;
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private ArtifactLinkUpdater $artifact_link_updater;
-    private RetrieveUser $retrieve_user;
-
     public function __construct(
-        ProgramIncrementsDAO $program_increments_dao,
-        \Tracker_ArtifactFactory $artifact_factory,
-        ArtifactLinkUpdater $artifact_link_updater,
-        RetrieveUser $retrieve_user
+        private SearchProgramIncrementLinkedToFeature $program_increments_dao,
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private ArtifactLinkUpdater $artifact_link_updater,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->program_increments_dao = $program_increments_dao;
-        $this->artifact_factory       = $artifact_factory;
-        $this->artifact_link_updater  = $artifact_link_updater;
-        $this->retrieve_user          = $retrieve_user;
     }
 
     public function removeFromAllProgramIncrements(FeatureRemoval $feature_removal): void

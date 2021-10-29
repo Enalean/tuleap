@@ -25,10 +25,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchOpenProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -43,10 +45,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private NullLogger $logger;
     private UserIdentifier $user_identifier;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProgramIncrementsDAO
-     */
-    private $dao;
+    private SearchOpenProgramIncrement $dao;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
@@ -62,7 +61,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao                        = $this->createMock(ProgramIncrementsDAO::class);
+        $this->dao                        = SearchOpenProgramIncrementStub::withoutOpenIncrement();
         $this->artifact_factory           = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $this->logger                     = new NullLogger();
@@ -74,7 +73,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanRetrievesOpenProgramIncrements(): void
     {
-        $this->dao->method('searchOpenProgramIncrements')->willReturn([['id' => 14], ['id' => 15]]);
+        $this->dao   = SearchOpenProgramIncrementStub::with([['id' => 14], ['id' => 15]]);
         $artifact_14 = $this->createMock(Artifact::class);
         $artifact_14->method('getId')->willReturn(14);
         $artifact_14->method('userCanUpdate')->willReturn(true);
@@ -149,7 +148,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotRetrieveArtifactsTheUserCannotRead(): void
     {
-        $this->dao->method('searchOpenProgramIncrements')->willReturn([['id' => 403]]);
+        $this->dao = SearchOpenProgramIncrementStub::with([['id' => 403]]);
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
 
         self::assertEmpty(
@@ -162,8 +161,8 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotRetrieveArtifactsWhereTheUserCannotReadTheTitle(): void
     {
-        $this->dao->method('searchOpenProgramIncrements')->willReturn([['id' => 16]]);
-        $artifact = $this->createMock(Artifact::class);
+        $this->dao = SearchOpenProgramIncrementStub::with([['id' => 16]]);
+        $artifact  = $this->createMock(Artifact::class);
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
         $artifact->method('getTitle')->willReturn(null);
