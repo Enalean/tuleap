@@ -21,6 +21,14 @@ services:
       - ../etc/DBConfig/mysql-server.cnf:/etc/mysql/mysql.conf.d/mysql-server.cnf:ro,cached
     tmpfs: /tmp
 
+  mysql80:
+    image: ${DOCKER_REGISTRY:-docker.io}/mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=welcome0
+    volumes:
+      - ../etc/DBConfig/mysql-server-80.cnf:/etc/mysql/conf.d/mysql-server.cnf:ro,cached
+    tmpfs: /tmp
+
   mariadb-10.3:
     image: ${DOCKER_REGISTRY:-docker.io}/mariadb:10.3
     environment:
