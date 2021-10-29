@@ -43,18 +43,21 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import { isLink } from "../../../helpers/type-check-helper";
-export default {
-    name: "LinkProperties",
-    props: {
-        value: Object,
-        item: Object,
-    },
-    computed: {
-        is_displayed() {
-            return isLink(this.item);
-        },
-    },
-};
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
+
+@Component
+export default class LinkProperties extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @Prop({ required: true })
+    readonly value!: Item;
+
+    get is_displayed(): boolean {
+        return isLink(this.item);
+    }
+}
 </script>

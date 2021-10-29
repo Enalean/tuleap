@@ -33,7 +33,7 @@
                 class="tlp-input"
                 id="document-new-item-wiki-page-name"
                 name="page-name"
-                v-bind:placeholder="placeholder"
+                v-bind:placeholder="`${$gettext('My wiki page')}`"
                 required
                 v-bind:value="value.page_name"
                 v-on:input="$emit('input', { page_name: $event.target.value })"
@@ -42,21 +42,22 @@
         </div>
     </div>
 </template>
-<script>
-import { isWiki } from "../../../helpers/type-check-helper";
 
-export default {
-    props: {
-        value: Object,
-        item: Object,
-    },
-    computed: {
-        is_displayed() {
-            return isWiki(this.item);
-        },
-        placeholder() {
-            return this.$gettext("My wiki page");
-        },
-    },
-};
+<script lang="ts">
+import { isWiki } from "../../../helpers/type-check-helper";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
+
+@Component
+export default class WikiProperties extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @Prop({ required: true })
+    readonly value!: Item;
+
+    get is_displayed(): boolean {
+        return isWiki(this.item);
+    }
+}
 </script>

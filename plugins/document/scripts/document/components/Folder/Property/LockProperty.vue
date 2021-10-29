@@ -32,21 +32,20 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "LockProperty",
-    props: {
-        item: Object,
-    },
-    computed: {
-        is_checked() {
-            return this.item.lock_info !== null;
-        },
-        lock_label() {
-            return this.is_checked
-                ? this.$gettext("Keep lock?")
-                : this.$gettext("Lock new version");
-        },
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
+
+@Component
+export default class LockProperty extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    get is_checked(): boolean {
+        return this.item.lock_info !== null;
+    }
+    get lock_label(): string {
+        return this.is_checked ? this.$gettext("Keep lock?") : this.$gettext("Lock new version");
+    }
+}
 </script>
