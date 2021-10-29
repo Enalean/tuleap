@@ -27,6 +27,8 @@ use PFUser;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyIsInTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
@@ -41,30 +43,15 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
 final class ArtifactTopBacklogActionBuilder
 {
-    private BuildProgram $build_program;
-    private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
-    private PlanStore $plan_store;
-    private ArtifactsExplicitTopBacklogDAO $artifacts_explicit_top_backlog_dao;
-    private PlannedFeatureDAO $planned_feature_dao;
-    private JavascriptAsset $asset;
-    private VerifyTrackerSemantics $tracker_factory;
-
     public function __construct(
-        BuildProgram $build_program,
-        VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
-        PlanStore $plan_store,
-        ArtifactsExplicitTopBacklogDAO $artifacts_explicit_top_backlog_dao,
-        PlannedFeatureDAO $planned_feature_dao,
-        JavascriptAsset $asset,
-        VerifyTrackerSemantics $tracker_factory
+        private BuildProgram $build_program,
+        private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
+        private PlanStore $plan_store,
+        private VerifyIsInTopBacklog $artifacts_explicit_top_backlog_dao,
+        private VerifyFeaturePlanned $planned_feature_dao,
+        private JavascriptAsset $asset,
+        private VerifyTrackerSemantics $tracker_factory
     ) {
-        $this->build_program                           = $build_program;
-        $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
-        $this->plan_store                              = $plan_store;
-        $this->artifacts_explicit_top_backlog_dao      = $artifacts_explicit_top_backlog_dao;
-        $this->planned_feature_dao                     = $planned_feature_dao;
-        $this->asset                                   = $asset;
-        $this->tracker_factory                         = $tracker_factory;
     }
 
     public function buildTopBacklogActionBuilder(

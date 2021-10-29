@@ -25,10 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyIsInTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 
-class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBacklogStore, RemovePlannedFeaturesFromTopBacklog
+final class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBacklogStore, RemovePlannedFeaturesFromTopBacklog, VerifyIsInTopBacklog
 {
     public function isInTheExplicitTopBacklog(int $artifact_id): bool
     {

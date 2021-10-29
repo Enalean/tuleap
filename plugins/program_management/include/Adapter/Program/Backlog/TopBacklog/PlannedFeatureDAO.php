@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlanned;
 
-class PlannedFeatureDAO extends DataAccessObject
+final class PlannedFeatureDAO extends DataAccessObject implements VerifyFeaturePlanned
 {
     public function isFeaturePlannedInAProgramIncrement(int $feature_id): bool
     {
