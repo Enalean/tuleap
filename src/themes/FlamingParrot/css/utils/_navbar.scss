@@ -117,7 +117,7 @@ body.has-sidebar {
         color: var(--tlp-dark-color);
         font-family: var(--tlp-font-family);
         font-size: 0.875rem;
-        font-weight: 400;
+        font-weight: 500;
         letter-spacing: 0;
         line-height: 1.5rem;
         text-decoration: none;
@@ -144,6 +144,20 @@ body.has-sidebar {
         > .btn-icon {
             margin: 0 8px 0 0;
             font-size: 0.85rem;
+        }
+
+        @media screen and (max-width: 1100px) {
+            width: 40px;
+
+            > .btn-icon {
+                margin: 0;
+            }
+
+            > .header-button-label {
+                position: absolute;
+                clip-path: inset(50%);
+                white-space: nowrap;
+            }
         }
     }
 }
