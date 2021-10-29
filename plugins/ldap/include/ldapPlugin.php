@@ -246,12 +246,15 @@ class LdapPlugin extends Plugin
         return false;
     }
 
-    private function getLDAPParams()
+    private function getLDAPParams(): array
     {
+        $this->getPluginInfo()->loadProperties();
         $ldap_params = [];
-        foreach (LDAP::CONFIGURATION_VARIABLES as $k) {
-            $nk               = str_replace('sys_ldap_', '', $k);
-            $ldap_params[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
+        foreach (LDAP::CONFIGURATION_VARIABLES as $configuration_variable) {
+            $ldap_params[str_replace('sys_ldap_', '', $configuration_variable)] = ForgeConfig::get(
+                $configuration_variable,
+                null
+            );
         }
         return $ldap_params;
     }
