@@ -33,11 +33,10 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import SkeletonTable from "../../../../../../src/scripts/vue-components/skeletons/SkeletonTable.vue";
+import { Component, Vue } from "vue-property-decorator";
 
-export default {
-    name: "FolderLoadingScreen",
-    components: { SkeletonTable },
-};
+@Component({ components: { SkeletonTable } })
+export default class FolderLoadingScreen extends Vue {}
 </script>
