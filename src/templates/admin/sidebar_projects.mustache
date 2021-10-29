@@ -1,7 +1,7 @@
 <section class="admin-sidebar-section">
     <h1 class="admin-sidebar-section-title">
         <i class="fa fa-archive admin-sidebar-section-title-icon"></i> {{ projects_section_title }}
-        <span class="tlp-badge-primary tlp-badge-outline tlp-badge-on-dark-background">{{ all_projects_count }}</span>
+        <span class="tlp-badge-primary tlp-badge-outline tlp-badge-rounded tlp-badge-on-dark-background">{{ all_projects_count }}</span>
     </h1>
 
     <form action="/admin/grouplist.php" method="get" class="admin-sidebar-form">
@@ -19,7 +19,7 @@
         <a href="/admin/approve-pending.php"  class="admin-sidebar-section-nav-item {{# isTherePendingProjects }}tlp-text-warning{{/ isTherePendingProjects }}">
             {{ projects_nav_pending_projects }}
             {{# isTherePendingProjects }}
-                <span class="tlp-badge-warning tlp-badge-outline tlp-badge-on-dark-background">{{ pending_projects_count }}</span>
+                <span class="tlp-badge-warning tlp-badge-outline tlp-badge-rounded tlp-badge-on-dark-background">{{ pending_projects_count }}</span>
             {{/ isTherePendingProjects }}
         </a>
         <a href="/admin/project-creation/moderation" class="admin-sidebar-section-nav-item" data-test="project-settings-link">{{ projects_nav_configuration }}</a>

@@ -3,6 +3,7 @@
   "children": [
     "types",
     "outline",
+    "rounded",
     "dark-background"
   ]
 }

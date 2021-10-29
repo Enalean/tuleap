@@ -18,6 +18,7 @@
             {{# access }}
                 <span
                     class="tlp-badge-primary
+                        tlp-badge-outline
                         dashboard-project-header-access
                         {{# is_incl_restricted }}
                             tlp-tooltip tlp-tooltip-bottom
@@ -35,7 +36,7 @@
                     ></i> {{ access }}
                 </span>
             {{/ access }}
-            <span class="tlp-badge-primary dashboard-project-header-members">
+            <span class="tlp-badge-primary tlp-badge-outline dashboard-project-header-members">
                 <i class="tlp-badge-icon fa fa-users"></i>
                 {{ nb_members }}
             </span>

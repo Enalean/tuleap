@@ -107,36 +107,6 @@ kbd {
     color: var(--tlp-alert-danger-color);
 }
 
-@each $color-name, $colors in colors.$swatch-color-map {
-    .badge.tlp-badge-#{$color-name},
-    .badge.#{$color-name} {
-        padding: 5px 8px;
-        border: 1px solid map-get($colors, "primary");
-        border-radius: 15px;
-        background: map-get($colors, "primary");
-        color: #ffffff;
-        font-size: 0.75rem;
-        line-height: 1;
-        text-shadow: none;
-
-        &.tlp-badge-outline {
-            border: 1px solid transparentize(map-get($colors, "primary"), 0.4);
-            background: transparentize(map-get($colors, "primary"), 0.9);
-            color: map-get($colors, "text");
-
-            &.tlp-badge-on-dark-background {
-                border: 1px solid mix(map-get($colors, "primary"), #ffffff, 85%);
-                background: transparentize(map-get($colors, "primary"), 0.85);
-                color: mix(map-get($colors, "border"), #ffffff, 90%);
-
-                @if $color-name == "teddy-brown" or $color-name == "plum-crazy" or $color-name == "red-wine" or $color-name == "army-green" {
-                    color: mix(map-get($colors, "border"), #ffffff, 70%);
-                }
-            }
-        }
-    }
-}
-
 legend {
     box-sizing: border-box;
 }

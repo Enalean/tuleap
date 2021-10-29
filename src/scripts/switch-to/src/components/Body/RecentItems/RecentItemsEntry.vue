@@ -30,8 +30,7 @@
             <span
                 class="
                     switch-to-recent-items-entry-badge
-                    badge
-                    tlp-badge-outline tlp-badge-on-dark-background
+                    cross-ref-badge cross-ref-badge-on-dark-background
                 "
                 v-bind:class="xref_color"
                 v-if="entry.xref"
@@ -104,7 +103,7 @@ export default class RecentItemsEntry extends Vue {
     }
 
     get xref_color(): string {
-        return "tlp-badge-" + this.entry.color_name;
+        return "cross-ref-badge-" + this.entry.color_name;
     }
 
     get has_quick_links(): boolean {

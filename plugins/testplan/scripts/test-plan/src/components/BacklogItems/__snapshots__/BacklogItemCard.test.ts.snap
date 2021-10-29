@@ -12,7 +12,7 @@ exports[`BacklogItemCard Displays the backlog item as a card 1`] = `
     />
      
     <span
-      class="tlp-badge-outline tlp-badge-fiesta-red"
+      class="cross-ref-badge cross-ref-badge-fiesta-red"
     >
       
             bug #123

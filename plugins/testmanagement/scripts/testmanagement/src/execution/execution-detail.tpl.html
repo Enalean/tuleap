@@ -86,7 +86,7 @@
                             href="/plugins/tracker/?aid={{ bug.id }}"
                             ng-repeat="bug in execution.linked_bugs track by bug.id"
                             >
-                                <span ng-class="['tlp-badge-outline', 'tlp-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
+                                <span ng-class="['cross-ref-badge', 'cross-ref-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
                                     {{ bug.xref }}
                                 </span> {{ bug.title }}
                             </a>
@@ -129,7 +129,7 @@
             >
                 <i class="fas fa-long-arrow-alt-right current-test-requirement-arrow"></i>
                 <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
-                    <span ng-class="['current-test-requirement-badge', 'tlp-badge-outline', 'tlp-badge-' + execution.definition.requirement.tracker.color_name]">
+                    <span ng-class="['current-test-requirement-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.definition.requirement.tracker.color_name]">
                         {{ execution.definition.requirement.xref }}
                     </span>
                     <span>{{ execution.definition.requirement.title }}</span>

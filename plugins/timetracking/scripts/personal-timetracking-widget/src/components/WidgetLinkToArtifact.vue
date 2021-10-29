@@ -24,7 +24,7 @@
         v-bind:title="artifact.title"
     >
         <span
-            class="tlp-badge-outline timetracking-badge-direct-link-to-artifact"
+            class="cross-ref-badge timetracking-badge-direct-link-to-artifact"
             v-bind:class="badge_color"
         >
             {{ artifact.xref }}
@@ -40,7 +40,7 @@ export default {
     },
     computed: {
         badge_color() {
-            return "tlp-badge-" + this.artifact.badge_color;
+            return "cross-ref-badge-" + this.artifact.badge_color;
         },
     },
 };

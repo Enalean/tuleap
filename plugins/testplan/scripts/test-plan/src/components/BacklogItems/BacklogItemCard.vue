@@ -31,7 +31,7 @@
                 v-bind:class="caret"
                 aria-hidden="true"
             ></i>
-            <span class="tlp-badge-outline" v-bind:class="badge_color">
+            <span class="cross-ref-badge" v-bind:class="badge_color">
                 {{ backlog_item.short_type }} #{{ backlog_item.id }}
             </span>
             <span class="test-plan-backlog-item-title">
@@ -89,7 +89,7 @@ export default class BacklogItemCard extends Vue {
     }
 
     get badge_color(): string {
-        return "tlp-badge-" + this.backlog_item.color;
+        return "cross-ref-badge-" + this.backlog_item.color;
     }
 
     get caret(): string {

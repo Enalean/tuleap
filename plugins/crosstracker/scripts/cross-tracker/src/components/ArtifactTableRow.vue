@@ -21,7 +21,7 @@
     <tr>
         <td data-test="cross-tracker-results-artifact">
             <a class="direct-link-to-artifact" v-bind:href="artifact.badge.uri">
-                <span class="tlp-badge-outline link-to-tracker-badge" v-bind:class="badge_color">
+                <span class="cross-ref-badge link-to-tracker-badge" v-bind:class="badge_color">
                     {{ artifact.badge.cross_ref }}
                 </span>
                 {{ artifact.title }}
@@ -55,8 +55,8 @@ export default class ArtifactTableRow extends Vue {
     @Prop({ required: true })
     readonly artifact!: Artifact;
 
-    badge_color(): string {
-        return "tlp-badge-" + this.artifact.badge.color;
+    get badge_color(): string {
+        return "cross-ref-badge-" + this.artifact.badge.color;
     }
 }
 </script>
