@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\OpenIDConnectClient\Login\Registration;
+namespace Tuleap\User;
 
 class DataIncompatibleWithUsernameGenerationException extends \Exception
 {

@@ -60,6 +60,7 @@ use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\AfterLocalLogin;
 use Tuleap\User\BeforeLogin;
+use Tuleap\User\UserNameNormalizer;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -264,7 +265,7 @@ class LdapPlugin extends Plugin
     public function getLdapUserManager()
     {
         if (! isset($this->_ldapUmInstance)) {
-            $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
+            $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance(), new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()));
         }
         return $this->_ldapUmInstance;
     }

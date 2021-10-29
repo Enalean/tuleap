@@ -20,30 +20,24 @@
 
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
-use Rule_UserName;
+use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
+use Tuleap\User\UserNameNormalizer;
 
 class UsernameGenerator
 {
-    /**
-     * @var Rule_UserName
-     */
-    private $username_rule;
-
-    public function __construct(Rule_UserName $username_rule)
+    public function __construct(private UserNameNormalizer $username_generator)
     {
-        $this->username_rule = $username_rule;
     }
 
     /**
-     * @return string
      * @throws NotEnoughDataToGenerateUsernameException
      * @throws DataIncompatibleWithUsernameGenerationException
      */
-    public function getUsername(array $user_information)
+    public function getUsername(array $user_information): string
     {
         try {
             if (isset($user_information['preferred_username'])) {
-                return $this->generate($user_information['preferred_username']);
+                return $this->username_generator->normalize($user_information['preferred_username']);
             }
         } catch (DataIncompatibleWithUsernameGenerationException $ex) {
         }
@@ -65,32 +59,9 @@ class UsernameGenerator
 
         if (mb_strlen($family_name_without_spaces) > 0) {
             $base_username = mb_substr($given_name_without_spaces, 0, 1) . $family_name_without_spaces;
-            return $this->generate($base_username);
+            return $this->username_generator->normalize($base_username);
         }
 
-        return $this->generate($given_name_without_spaces);
-    }
-
-    /**
-     * @return string
-     * @throws DataIncompatibleWithUsernameGenerationException
-     */
-    private function generate($username)
-    {
-        if (! $this->username_rule->isUnixValid($username)) {
-            throw new DataIncompatibleWithUsernameGenerationException();
-        }
-
-        if ($this->username_rule->isValid($username)) {
-            return $username;
-        }
-
-        $username_suffix = 1;
-
-        while (! $this->username_rule->isValid("$username$username_suffix")) {
-            $username_suffix++;
-        }
-
-        return "$username$username_suffix";
+        return $this->username_generator->normalize($given_name_without_spaces);
     }
 }

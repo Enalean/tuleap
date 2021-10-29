@@ -44,6 +44,7 @@
     }
   ],
   "require": {
+    "cocur/slugify": "^4.0",
     "embed/embed": "^4.3",
     "ezyang/htmlpurifier": "^4.10",
     "graylog2/gelf-php": "^1.6",

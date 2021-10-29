@@ -21,6 +21,8 @@
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
+use Tuleap\User\UserNameNormalizer;
 
 require_once(__DIR__ . '/../../bootstrap.php');
 
@@ -28,19 +30,33 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private UserNameNormalizer $userNameNormalizer;
+
+    protected function setUp(): void
+    {
+        $this->userNameNormalizer = \Mockery::mock(UserNameNormalizer::class);
+    }
+
     public function testItGeneratesUsernameFromPreferredUsername(): void
     {
         $rule = \Mockery::spy(\Rule_UserName::class);
         $rule->shouldReceive('isUnixValid')->andReturns(true);
         $rule->shouldReceive('isValid')->andReturns(true);
-        $username_generator = new UsernameGenerator($rule);
+
+        $username_generator = new UsernameGenerator($this->userNameNormalizer);
+
+        $username = "mypreferredusername";
+        $this->userNameNormalizer->shouldReceive("normalize")->withArgs(["mypreferredusername"])->andReturn(
+            $username
+        );
 
         $generated_username = $username_generator->getUsername(
             [
-                'preferred_username' => 'mypreferredusername'
+                'preferred_username' => $username
             ]
         );
-        $this->assertEquals('mypreferredusername', $generated_username);
+
+        $this->assertEquals($username, $generated_username);
     }
 
     public function testItGeneratesUsernameFromGivenAndFamilyNames(): void
@@ -48,7 +64,13 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule = \Mockery::spy(\Rule_UserName::class);
         $rule->shouldReceive('isUnixValid')->andReturns(true);
         $rule->shouldReceive('isValid')->andReturns(true);
-        $username_generator = new UsernameGenerator($rule);
+        $username_generator = new UsernameGenerator($this->userNameNormalizer);
+
+        $username = "gfamilyname";
+
+        $this->userNameNormalizer->shouldReceive("normalize")->withArgs([$username])->andReturn(
+            $username
+        );
 
         $generated_username = $username_generator->getUsername(
             [
@@ -56,7 +78,7 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'family_name' => 'Family Name'
             ]
         );
-        $this->assertEquals('gfamilyname', $generated_username);
+        $this->assertEquals($username, $generated_username);
     }
 
     public function testItGeneratesUsernameFromFamilyName(): void
@@ -64,14 +86,20 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule = \Mockery::spy(\Rule_UserName::class);
         $rule->shouldReceive('isUnixValid')->andReturns(true);
         $rule->shouldReceive('isValid')->andReturns(true);
-        $username_generator = new UsernameGenerator($rule);
+        $username_generator = new UsernameGenerator($this->userNameNormalizer);
+
+        $username = "familyname";
+
+        $this->userNameNormalizer->shouldReceive("normalize")->withArgs(["familyname"])->andReturn(
+            $username
+        );
 
         $generated_username = $username_generator->getUsername(
             [
                 'family_name' => 'Family Name'
             ]
         );
-        $this->assertEquals('familyname', $generated_username);
+        $this->assertEquals($username, $generated_username);
     }
 
     public function testItGeneratesUsernameFromGivenName(): void
@@ -79,39 +107,33 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule = \Mockery::spy(\Rule_UserName::class);
         $rule->shouldReceive('isUnixValid')->andReturns(true);
         $rule->shouldReceive('isValid')->andReturns(true);
-        $username_generator = new UsernameGenerator($rule);
+        $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
+        $username = "givenname";
+
+        $this->userNameNormalizer->shouldReceive("normalize")->withArgs([$username])->andReturn(
+            $username
+        );
         $generated_username = $username_generator->getUsername(
             [
                 'given_name' => 'Given Name'
             ]
         );
-        $this->assertEquals('givenname', $generated_username);
+        $this->assertEquals($username, $generated_username);
     }
 
-    public function testItGeneratesUsernameWhenASimilarOneAlreadyExist(): void
-    {
-        $rule = \Mockery::spy(\Rule_UserName::class);
-        $rule->shouldReceive('isUnixValid')->andReturns(true);
-        $rule->shouldReceive('isValid')->andReturns(false, true);
-        $username_generator = new UsernameGenerator($rule);
-
-        $generated_username = $username_generator->getUsername(
-            [
-                'preferred_username' => 'mypreferredusername'
-            ]
-        );
-        $this->assertEquals('mypreferredusername1', $generated_username);
-    }
 
     public function testItNeedsAtLeastGivenOrFamilyNamesToGenerateUsername(): void
     {
         $rule = \Mockery::spy(\Rule_UserName::class);
         $rule->shouldReceive('isUnixValid')->andReturns(true);
         $rule->shouldReceive('isValid')->andReturns(true);
-        $username_generator = new UsernameGenerator($rule);
+        $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToGenerateUsernameException');
+        $this->userNameNormalizer->shouldReceive("normalize")->never();
+        $this->expectException(
+            'Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToGenerateUsernameException'
+        );
         $username_generator->getUsername([]);
     }
 
@@ -120,9 +142,14 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule = \Mockery::spy(\Rule_UserName::class);
         $rule->shouldReceive('isUnixValid')->andReturns(false);
         $rule->shouldReceive('isValid')->andReturns(true);
-        $username_generator = new UsernameGenerator($rule);
+        $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\DataIncompatibleWithUsernameGenerationException');
+        $this->userNameNormalizer->shouldReceive("normalize")->andThrow(
+            DataIncompatibleWithUsernameGenerationException::class
+        );
+        $this->expectException(
+            DataIncompatibleWithUsernameGenerationException::class
+        );
         $username_generator->getUsername(
             [
                 'given_name'  => 'IncompatibleGivenName',
@@ -136,7 +163,17 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule = \Mockery::spy(\Rule_UserName::class);
         $rule->shouldReceive('isUnixValid')->andReturns(false, true);
         $rule->shouldReceive('isValid')->andReturns(true);
-        $username_generator = new UsernameGenerator($rule);
+        $username_generator = new UsernameGenerator($this->userNameNormalizer);
+
+        $username = "gfamilyname";
+
+        $this->userNameNormalizer->shouldReceive("normalize")->andThrow(
+            DataIncompatibleWithUsernameGenerationException::class
+        )->once();
+
+        $this->userNameNormalizer->shouldReceive("normalize")->withArgs([$username])->andReturn(
+            $username
+        );
 
         $generated_username = $username_generator->getUsername(
             [
@@ -145,6 +182,6 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'family_name'        => 'Family Name'
             ]
         );
-        $this->assertEquals('gfamilyname', $generated_username);
+        $this->assertEquals($username, $generated_username);
     }
 }

@@ -82,6 +82,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\UserAuthenticationSucceeded;
+use Tuleap\User\UserNameNormalizer;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -399,7 +400,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             new RandomNumberGenerator()
         );
 
-        $username_generator = new Login\Registration\UsernameGenerator(new Rule_UserName());
+        $username_generator = new Login\Registration\UsernameGenerator(new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()));
         $provider_manager   = $this->getProviderManager();
 
         $automatic_user_registration = new Login\Registration\AutomaticUserRegistration(
@@ -432,7 +433,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             new UnlinkedAccountDao(),
             new RandomNumberGenerator()
         );
-        $username_generator          = new Login\Registration\UsernameGenerator(new Rule_UserName());
+        $username_generator          = new Login\Registration\UsernameGenerator(new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()));
         $automatic_user_registration = new Login\Registration\AutomaticUserRegistration(
             $user_manager,
             $username_generator,

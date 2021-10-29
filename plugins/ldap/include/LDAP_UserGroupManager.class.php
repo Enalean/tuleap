@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\UserNameNormalizer;
+
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
@@ -70,7 +72,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      */
     public function addListOfUsersToGroup($userList)
     {
-        $ldapUserManager = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
+        $ldapUserManager = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance(), new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()));
         $userIds         = $ldapUserManager->getUserIdsFromUserList($userList);
         foreach ($userIds as $userId) {
             $this->addUserToGroup($this->id, $userId);
