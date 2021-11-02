@@ -105,9 +105,17 @@ interface ArtifactFieldValueLink {
 
 interface ArtifactFieldValueStepDefinitionContent {
     readonly field_name: string;
-    readonly content_length: "block";
+    readonly content_length: "blockttmstepdef";
     readonly value_type: "string";
     readonly steps: Array<ArtifactFieldValueStepDefinition>;
+}
+
+interface ArtifactFieldValueStepExecutionContent {
+    readonly field_name: string;
+    readonly content_length: "blockttmstepexec";
+    readonly value_type: "string";
+    readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
+    readonly steps_values: Array<string | null>;
 }
 
 export interface ArtifactFieldValueStepDefinition {
@@ -118,10 +126,15 @@ export interface ArtifactFieldValueStepDefinition {
     readonly rank: number;
 }
 
+export interface ArtifactFieldValueStepDefinitionEnhanced extends ArtifactFieldValueStepDefinition {
+    readonly status: string | null;
+}
+
 export type ArtifactFieldValue =
     | (ArtifactFieldValueContent & (ArtifactFieldValueShort | ArtifactFieldValueLong))
     | ArtifactFieldValueLinksContent
-    | ArtifactFieldValueStepDefinitionContent;
+    | ArtifactFieldValueStepDefinitionContent
+    | ArtifactFieldValueStepExecutionContent;
 
 export type ArtifactFieldShortValue =
     | (ArtifactFieldValueContent & ArtifactFieldValueShort)

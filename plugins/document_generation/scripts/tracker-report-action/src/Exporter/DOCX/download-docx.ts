@@ -26,6 +26,7 @@ import type {
     ExportDocument,
     GlobalExportProperties,
     ReportCriterionValue,
+    ArtifactFieldValueStepDefinition,
 } from "../../type";
 import type { XmlComponent } from "docx";
 import {
@@ -62,6 +63,7 @@ import { triggerBlobDownload } from "../trigger-blob-download";
 import { loadImage } from "./Image/image-loader";
 import { transformLargeContentIntoParagraphs } from "./TextContent/transform-large-content-into-paragraphs";
 import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
+import type { ReadonlyArrayWithAtLeastOneElement } from "./TextContent/transform-html-into-paragraphs";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -707,19 +709,13 @@ async function buildFieldValuesDisplayZone(
                         heading: HeadingLevel.HEADING_4,
                         children: [new TextRun(field.field_name)],
                     }),
-                    ...(await transformLargeContentIntoParagraphs(
-                        field.field_value,
-                        field.content_format,
-                        {
-                            ordered_title_levels: [HeadingLevel.HEADING_5, HeadingLevel.HEADING_6],
-                            unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
-                            ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
-                            monospace_font: "Courier New",
-                        }
-                    ))
+                    ...(await buildParagraphsFromContent(field.field_value, field.content_format, [
+                        HeadingLevel.HEADING_5,
+                        HeadingLevel.HEADING_6,
+                    ]))
                 );
                 break;
-            case "block":
+            case "blockttmstepdef":
                 display_zone_long_fields.push(
                     new Paragraph({
                         heading: HeadingLevel.HEADING_4,
@@ -736,37 +732,70 @@ async function buildFieldValuesDisplayZone(
                                 ),
                             ],
                         }),
-                        new Paragraph({
-                            heading: HeadingLevel.HEADING_6,
-                            children: [new TextRun(gettext_provider.gettext("Description"))],
-                        }),
-                        ...(await transformLargeContentIntoParagraphs(
-                            step.description,
-                            step.description_format,
-                            {
-                                ordered_title_levels: [HeadingLevel.HEADING_6],
-                                unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
-                                ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
-                                monospace_font: "Courier New",
-                            }
-                        )),
-                        new Paragraph({
-                            heading: HeadingLevel.HEADING_6,
-                            children: [new TextRun(gettext_provider.gettext("Expected results"))],
-                        }),
-                        ...(await transformLargeContentIntoParagraphs(
-                            step.expected_results,
-                            step.expected_results_format,
-                            {
-                                ordered_title_levels: [HeadingLevel.HEADING_6],
-                                unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
-                                ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
-                                monospace_font: "Courier New",
-                            }
-                        ))
+                        ...(await buildStepDefinitionParagraphs(step, gettext_provider))
                     );
                 }
                 break;
+            case "blockttmstepexec": {
+                display_zone_long_fields.push(
+                    new Paragraph({
+                        heading: HeadingLevel.HEADING_4,
+                        children: [new TextRun(field.field_name)],
+                    })
+                );
+
+                if (field.steps.length === 0) {
+                    break;
+                }
+
+                const step_exec_table_rows: TableRow[] = [];
+                step_exec_table_rows.push(
+                    new TableRow({
+                        children: [
+                            buildTableCellHeaderLabel(gettext_provider.gettext("Step")),
+                            buildTableCellHeaderValue(gettext_provider.gettext("Status")),
+                        ],
+                        tableHeader: true,
+                    })
+                );
+                let step_number = 1;
+                for (const step_status of field.steps_values) {
+                    step_exec_table_rows.push(
+                        new TableRow({
+                            children: [
+                                buildTableCellLabel(
+                                    sprintf(gettext_provider.gettext("Step %d"), step_number)
+                                ),
+                                buildTableCellContent(new TextRun(step_status || "")),
+                            ],
+                            tableHeader: true,
+                        })
+                    );
+                    step_number++;
+                }
+                display_zone_long_fields.push(buildTable(step_exec_table_rows));
+                for (const step of field.steps) {
+                    display_zone_long_fields.push(
+                        new Paragraph({
+                            heading: HeadingLevel.HEADING_5,
+                            children: [
+                                new TextRun(
+                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
+                                ),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun(
+                                    sprintf(gettext_provider.gettext("Status: %s"), step.status)
+                                ),
+                            ],
+                        }),
+                        ...(await buildStepDefinitionParagraphs(step, gettext_provider))
+                    );
+                }
+                break;
+            }
             default:
                 ((value: never): never => {
                     throw new Error("Should never happen, all fields must be handled " + value);
@@ -913,4 +942,49 @@ function buildTableCellLinksContent(links: Array<ExternalHyperlink>): TableCell 
         ],
         margins: TABLE_MARGINS,
     });
+}
+
+async function buildStepDefinitionParagraphs(
+    step: ArtifactFieldValueStepDefinition,
+    gettext_provider: GetText
+): Promise<Paragraph[]> {
+    const paragraphs: Paragraph[] = [];
+
+    paragraphs.push(
+        new Paragraph({
+            heading: HeadingLevel.HEADING_6,
+            children: [new TextRun(gettext_provider.gettext("Description"))],
+        }),
+        ...(await buildParagraphsFromContent(step.description, step.description_format, [
+            HeadingLevel.HEADING_6,
+        ])),
+        new Paragraph({
+            heading: HeadingLevel.HEADING_6,
+            children: [new TextRun(gettext_provider.gettext("Expected results"))],
+        }),
+        ...(await buildParagraphsFromContent(step.expected_results, step.expected_results_format, [
+            HeadingLevel.HEADING_6,
+        ]))
+    );
+
+    return paragraphs;
+}
+
+async function buildParagraphsFromContent(
+    content: string,
+    format: "plaintext" | "html",
+    title_levels: ReadonlyArrayWithAtLeastOneElement<HeadingLevel>
+): Promise<Paragraph[]> {
+    const paragraphs: Paragraph[] = [];
+
+    paragraphs.push(
+        ...(await transformLargeContentIntoParagraphs(content, format, {
+            ordered_title_levels: title_levels,
+            unordered_list_reference: HTML_UNORDERED_LIST_NUMBERING.reference,
+            ordered_list_reference: HTML_ORDERED_LIST_NUMBERING.reference,
+            monospace_font: "Courier New",
+        }))
+    );
+
+    return paragraphs;
 }
