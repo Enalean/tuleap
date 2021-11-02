@@ -2355,8 +2355,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void
     {
-        $event->addConfigClass(JiraRunner::class);
         $event->addConfigClass(ListPickerIncluder::class);
+        $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

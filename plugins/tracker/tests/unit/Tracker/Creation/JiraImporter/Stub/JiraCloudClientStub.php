@@ -1,8 +1,8 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,29 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub;
 
-class JiraProjectCollection
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+
+abstract class JiraCloudClientStub implements JiraClient
 {
-    /**
-     * @var array<array{id: string, label: string}>
-     */
-    private $jira_projects = [];
-
-    /**
-     * @param array{id: string, label: string} $project
-     */
-    public function addProject(array $project): self
+    public function isJiraCloud(): bool
     {
-        $this->jira_projects[] = $project;
-        return $this;
-    }
-
-    /**
-     * @return array<array{id: string, label: string}>
-     */
-    public function getJiraProjects(): array
-    {
-        return $this->jira_projects;
+        return true;
     }
 }

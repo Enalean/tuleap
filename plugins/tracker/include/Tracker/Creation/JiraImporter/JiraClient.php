@@ -29,4 +29,6 @@ interface JiraClient
      * @throws JiraConnectionException|\JsonException
      */
     public function getUrl(string $url): ?array;
+
+    public function isJiraCloud(): bool;
 }

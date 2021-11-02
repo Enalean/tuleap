@@ -91,25 +91,27 @@ class JiraConnectionException extends \Exception
                 $jira_warnings = $body['warningMessages'];
             }
         } catch (\JsonException $exception) {
-            return new self(
-                sprintf(
-                    'Query was not successful (code: %d, message: "%s"). Error response cannot be read, invalid json for %s',
-                    $response->getStatusCode(),
-                    $response->getReasonPhrase(),
-                    (string) $request->getUri(),
-                ),
-                ''
-            );
-        }
-        return new self(
-            sprintf(
-                'Query was not successful (code: %d, message: "%s"). Jira errors:' . PHP_EOL . '%s' . PHP_EOL . 'Jira warnings:' . PHP_EOL . '%s',
+            $message = sprintf(
+                'Query was not successful (code: %d, message: "%s"). Error response cannot be read, invalid json for %s',
                 $response->getStatusCode(),
                 $response->getReasonPhrase(),
-                implode(PHP_EOL, $jira_errors),
-                implode(PHP_EOL, $jira_warnings),
-            ),
-            ''
+                (string) $request->getUri(),
+            );
+            return new self(
+                $message,
+                $message
+            );
+        }
+        $message = sprintf(
+            'Query was not successful (code: %d, message: "%s"). Jira errors:' . PHP_EOL . '%s' . PHP_EOL . 'Jira warnings:' . PHP_EOL . '%s',
+            $response->getStatusCode(),
+            $response->getReasonPhrase(),
+            implode(PHP_EOL, $jira_errors),
+            implode(PHP_EOL, $jira_warnings),
+        );
+        return new self(
+            $message,
+            $message
         );
     }
 

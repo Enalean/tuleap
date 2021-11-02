@@ -35,7 +35,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedVal
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -87,7 +86,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $collection = new StatusValuesCollection(
-            new class () implements JiraClient {
+            new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
                 public function getUrl(string $url): ?array
                 {
                     return null;

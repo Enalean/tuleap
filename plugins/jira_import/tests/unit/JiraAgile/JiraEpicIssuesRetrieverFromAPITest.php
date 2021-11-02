@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use function PHPUnit\Framework\assertEquals;
 
 final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCallsTheEpicsIssueURL(): void
     {
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public bool $called = false;
             public function getUrl(string $url): ?array
             {
@@ -52,7 +51,7 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItReturnsTheIssueIds(): void
     {
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [

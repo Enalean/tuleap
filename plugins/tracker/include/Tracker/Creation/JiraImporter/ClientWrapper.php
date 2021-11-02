@@ -26,11 +26,23 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Client\JiraHTTPClientBuilder;
 
+#[ConfigKeyCategory('Jira Import')]
 class ClientWrapper implements JiraClient
 {
+    /**
+     * This is mainly useful in development to test Jira Server REST calls against Jira Cloud
+     */
+    #[ConfigKey('Force Tuleap to use Jira Server APIs even when remote instance is Jira Cloud')]
+    public const CONFIG_KEY_FORCE_JIRA_SERVER = 'tracker_force_jira_server';
+
+    #[ConfigKey('Jira importer will record all request being made and all responses sent back by the client in this directory')]
+    public const CONFIG_KEY_DEBUG_DIRECTORY = 'tracker_jira_debug_directory';
+
     /**
      * According to [1] the v3 API is only available on Jira Cloud with no forseen implementation on Jira Server (on prem)
      * So we stick to v2 because this code should run against on prem instances.
@@ -38,6 +50,8 @@ class ClientWrapper implements JiraClient
      * [1] https://community.atlassian.com/t5/Jira-questions/When-will-Jira-Server-support-REST-API-v3/qaq-p/1303614
      */
     public const JIRA_CORE_BASE_URL = '/rest/api/2';
+
+    private const DEPLOYMENT_TYPE_CLOUD = 'Cloud';
 
     /**
      * @var ClientInterface
@@ -59,6 +73,10 @@ class ClientWrapper implements JiraClient
      * @var ?string
      */
     private $log_file;
+    /**
+     * @var ?bool
+     */
+    private $is_jira_cloud;
 
     public function __construct(ClientInterface $client, RequestFactoryInterface $factory, string $base_url)
     {
@@ -84,7 +102,11 @@ class ClientWrapper implements JiraClient
 
         $request_factory = HTTPFactoryBuilder::requestFactory();
 
-        return new self($client, $request_factory, $jira_credentials->getJiraUrl());
+        $client = new self($client, $request_factory, $jira_credentials->getJiraUrl());
+        if (\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY) && is_dir(\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY))) {
+            $client->setDebugDirectory(\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY));
+        }
+        return $client;
     }
 
     /**
@@ -126,5 +148,17 @@ class ClientWrapper implements JiraClient
         }
 
         return json_decode($body_contents, true, 512, JSON_OBJECT_AS_ARRAY & JSON_THROW_ON_ERROR);
+    }
+
+    public function isJiraCloud(): bool
+    {
+        if (\ForgeConfig::get(self::CONFIG_KEY_FORCE_JIRA_SERVER) === '1') {
+            return false;
+        }
+        if ($this->is_jira_cloud === null) {
+            $json                = $this->getUrl(self::JIRA_CORE_BASE_URL . '/serverInfo');
+            $this->is_jira_cloud = isset($json['deploymentType']) && $json['deploymentType'] === self::DEPLOYMENT_TYPE_CLOUD;
+        }
+        return $this->is_jira_cloud;
     }
 }

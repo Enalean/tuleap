@@ -25,7 +25,6 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
 use RuntimeException;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use function PHPUnit\Framework\assertEquals;
@@ -34,7 +33,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 {
     public function testItCatchesIfJiraReturnsAPayloadWeCannotWorkWith(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -63,7 +62,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItQueriesTheURL(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -91,7 +90,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsEmptySetWhenNoIssues(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -118,7 +117,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsOneIssue(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -152,7 +151,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsIssuesOnSeveralPages(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -205,7 +204,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItThrowAnExceptionIfIdIsNotNumeric(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 

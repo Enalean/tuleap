@@ -24,14 +24,14 @@ namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItBuildsWorklogsFromAPIResponse(): void
     {
-        $jira_client = new class implements JiraClient
+        $jira_client = new class extends JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {

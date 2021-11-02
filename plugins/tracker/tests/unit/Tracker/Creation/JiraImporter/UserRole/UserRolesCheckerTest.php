@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\UserRole;
 
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 final class UserRolesCheckerTest extends TestCase
 {
@@ -32,7 +31,7 @@ final class UserRolesCheckerTest extends TestCase
     {
         $checker = new UserRolesChecker();
 
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [
@@ -59,7 +58,7 @@ final class UserRolesCheckerTest extends TestCase
     {
         $checker = new UserRolesChecker();
 
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [
@@ -89,7 +88,7 @@ final class UserRolesCheckerTest extends TestCase
         $this->expectException(UserIsNotProjectAdminException::class);
         $this->expectExceptionMessage("User is not project administrator.");
 
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [
@@ -114,7 +113,7 @@ final class UserRolesCheckerTest extends TestCase
         $this->expectException(UserRolesResponseNotWellFormedException::class);
         $this->expectExceptionMessage("User roles key `name` not found");
 
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [
@@ -139,7 +138,7 @@ final class UserRolesCheckerTest extends TestCase
         $this->expectException(UserRolesResponseNotWellFormedException::class);
         $this->expectExceptionMessage("User roles data is null");
 
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return null;

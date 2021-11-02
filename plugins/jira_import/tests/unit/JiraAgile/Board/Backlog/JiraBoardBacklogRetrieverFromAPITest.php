@@ -26,7 +26,6 @@ namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 use Psr\Log\NullLogger;
 use RuntimeException;
 use Tuleap\JiraImport\JiraAgile\JiraBoard;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertEquals;
 
@@ -34,7 +33,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 {
     public function testItCatchesIfJiraReturnsAPayloadWeCannotWorkWith(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -63,7 +62,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItQueriesTheURL(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -91,7 +90,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsEmptySetWhenNoIssues(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -118,7 +117,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsOneIssue(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -157,7 +156,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsIssuesOnSeveralPages(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public int $called = 0;
 
