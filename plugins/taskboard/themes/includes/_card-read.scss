@@ -220,9 +220,11 @@ a.taskboard-card-xref {
     background: var(--card-color);
 }
 
+$arrow-after-width: 12px;
+
 .taskboard-card-remaining-effort {
     position: relative;
-    margin: 10px 12px 0 0;
+    margin: var(--tlp-small-spacing) $arrow-after-width 0 0;
     padding-right: 1px;
     border-radius: var(--tlp-medium-spacing);
     border-top-right-radius: 0;
@@ -231,13 +233,12 @@ a.taskboard-card-xref {
     &::after {
         content: "";
         position: absolute;
-        top: -1px;
-        right: -13px;
-        width: 0;
-        height: 0;
-        border-width: calc(12px - (1px * var(--tlp-is-condensed))) 0 calc(12px - (1px * var(--tlp-is-condensed))) 12px;
-        border-style: solid;
-        border-color: transparent transparent transparent var(--primary-color);
+        top: 0;
+        right: -$arrow-after-width;
+        width: $arrow-after-width;
+        height: 100%;
+        background-color: var(--text-color);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
     }
 }
 
