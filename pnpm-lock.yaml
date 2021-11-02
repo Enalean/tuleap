@@ -1,5 +1,8 @@
 lockfileVersion: 5.3
 
+overrides:
+  esbuild: '>=0.13.9'
+
 specifiers:
   '@babel/core': ^7.11.6
   '@babel/preset-env': ^7.11.5
@@ -4511,88 +4514,88 @@ packages:
     resolution: {integrity: sha512-HBL8I3mIki5C1Cc9QjKUenHtnG0A5/xA8Q/AllRcfiwl2CZFXGK7ddBiCoRwAix4i2KxcQfjtIVcrVbB3vbmwg==}
     dev: true
 
-  /esbuild-android-arm64/0.13.5:
-    resolution: {integrity: sha512-xaNH58b9XRAWT5q0rwA2GNTgJynb51JhdotlNKdLmSCyKXPVlF87yqNLNdmlX/zndzRDrZdtpCWSALdn/J63Ug==}
+  /esbuild-android-arm64/0.13.12:
+    resolution: {integrity: sha512-TSVZVrb4EIXz6KaYjXfTzPyyRpXV5zgYIADXtQsIenjZ78myvDGaPi11o4ZSaHIwFHsuwkB6ne5SZRBwAQ7maw==}
     cpu: [arm64]
     os: [android]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-darwin-64/0.13.5:
-    resolution: {integrity: sha512-ClGQeUObXIxEpZviGzjTinDikXy9XodojP9jLKwqLCBpZ9wdV3MW7JOmw60fgXgnbNRvkZCqM6uEi+ur8p80Ow==}
+  /esbuild-darwin-64/0.13.12:
+    resolution: {integrity: sha512-c51C+N+UHySoV2lgfWSwwmlnLnL0JWj/LzuZt9Ltk9ub1s2Y8cr6SQV5W3mqVH1egUceew6KZ8GyI4nwu+fhsw==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-darwin-arm64/0.13.5:
-    resolution: {integrity: sha512-qro6M/qzs1dBPh14Ca+5moIkLo2KE3ll3dOpiN7aAususkM1HmqQptCEchi0XwX+6nfqWI96YvVqPJ3DfUUK5A==}
+  /esbuild-darwin-arm64/0.13.12:
+    resolution: {integrity: sha512-JvAMtshP45Hd8A8wOzjkY1xAnTKTYuP/QUaKp5eUQGX+76GIie3fCdUUr2ZEKdvpSImNqxiZSIMziEiGB5oUmQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-freebsd-64/0.13.5:
-    resolution: {integrity: sha512-vklf7L7fghREEvS1sjAFcxcw/Qqt+Z+L0ySN+pEeb7rA8nPLfRBSFdXAru8UNuHsMWns6CrcZ5eDOKTerZZ5ng==}
+  /esbuild-freebsd-64/0.13.12:
+    resolution: {integrity: sha512-r6On/Skv9f0ZjTu6PW5o7pdXr8aOgtFOEURJZYf1XAJs0IQ+gW+o1DzXjVkIoT+n1cm3N/t1KRJfX71MPg/ZUA==}
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-freebsd-arm64/0.13.5:
-    resolution: {integrity: sha512-kJoouhbZt4QvjiPak7/Lz57Azok0CgFnNtixiOsqEQXTabIaKmMmnq4qgjD6EBFeU/hvSXDrPe6U8dWhBZOrWQ==}
+  /esbuild-freebsd-arm64/0.13.12:
+    resolution: {integrity: sha512-F6LmI2Q1gii073kmBE3NOTt/6zLL5zvZsxNLF8PMAwdHc+iBhD1vzfI8uQZMJA1IgXa3ocr3L3DJH9fLGXy6Yw==}
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-linux-32/0.13.5:
-    resolution: {integrity: sha512-/QufG6tTGKAf42pIYkOVZzKBPxF01xH1kCPyOFJZukZBV/Tk3TeOZfhJIAf7pxl4jhfa+c4Jcdp7CvIAjXrmJg==}
+  /esbuild-linux-32/0.13.12:
+    resolution: {integrity: sha512-U1UZwG3UIwF7/V4tCVAo/nkBV9ag5KJiJTt+gaCmLVWH3bPLX7y+fNlhIWZy8raTMnXhMKfaTvWZ9TtmXzvkuQ==}
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-linux-64/0.13.5:
-    resolution: {integrity: sha512-NmNFMXEthuFJTFaD4cLhAHCxg+y3uXzo7nqH/WNNSZ8PPY11jbeOvMbdArYlbo2Wy1N/mTHXMcK1synSJj+4Iw==}
+  /esbuild-linux-64/0.13.12:
+    resolution: {integrity: sha512-YpXSwtu2NxN3N4ifJxEdsgd6Q5d8LYqskrAwjmoCT6yQnEHJSF5uWcxv783HWN7lnGpJi9KUtDvYsnMdyGw71Q==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-linux-arm/0.13.5:
-    resolution: {integrity: sha512-69nQmbKLBRaAxf88diyaOyarrI7yIdBkZ8bmVzQ7XVWneY+nYIcGtugTSOs5znNGfPqGOElAjh1lX+0sGYHNpA==}
+  /esbuild-linux-arm/0.13.12:
+    resolution: {integrity: sha512-SyiT/JKxU6J+DY2qUiSLZJqCAftIt3uoGejZ0HDnUM2MGJqEGSGh7p1ecVL2gna3PxS4P+j6WAehCwgkBPXNIw==}
     cpu: [arm]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-linux-arm64/0.13.5:
-    resolution: {integrity: sha512-dOS5EZsZj8Lw0TgEj3zy1/slTBbfBw4v7uHEqZXP34dUaRq2oltNaUYIj735CtgB7I5/MXrXEUYkXLqcVfzJQQ==}
+  /esbuild-linux-arm64/0.13.12:
+    resolution: {integrity: sha512-sgDNb8kb3BVodtAlcFGgwk+43KFCYjnFOaOfJibXnnIojNWuJHpL6aQJ4mumzNWw8Rt1xEtDQyuGK9f+Y24jGA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-linux-mips64le/0.13.5:
-    resolution: {integrity: sha512-dmKA8ZI/nHwpxIQW/L5crk7Ac4wJJ2Kquvdo1CdXPW1UljMyKUDuHc4K7D1Iws5igqJmNO6U5vdRUKrdnIov6Q==}
+  /esbuild-linux-mips64le/0.13.12:
+    resolution: {integrity: sha512-qQJHlZBG+QwVIA8AbTEtbvF084QgDi4DaUsUnA+EolY1bxrG+UyOuGflM2ZritGhfS/k7THFjJbjH2wIeoKA2g==}
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-linux-ppc64le/0.13.5:
-    resolution: {integrity: sha512-HkVGKkPL3XOhJqNOJ752Q1li5zeidrJHv+XWX6qCnCipNsVuGqaAGfxeWbL/+A/giolMlP7wvAuiKgoe+a5UAw==}
+  /esbuild-linux-ppc64le/0.13.12:
+    resolution: {integrity: sha512-2dSnm1ldL7Lppwlo04CGQUpwNn5hGqXI38OzaoPOkRsBRWFBozyGxTFSee/zHFS+Pdh3b28JJbRK3owrrRgWNw==}
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
@@ -4604,7 +4607,7 @@ packages:
     peerDependencies:
       webpack: ^4.40.0 || ^5.0.0
     dependencies:
-      esbuild: 0.13.5
+      esbuild: 0.13.12
       joycon: 3.0.1
       json5: 2.2.0
       loader-utils: 2.0.0
@@ -4614,67 +4617,76 @@ packages:
       webpack-sources: 2.3.1
     dev: true
 
-  /esbuild-openbsd-64/0.13.5:
-    resolution: {integrity: sha512-BuOZzmdsdreSs0qDgbuiEhSbUDDW2Wyp4VtpNGBmaLwPMHftdprOJXLkeFud3HlnRB2n9qdiTVKg1B8YqMogSw==}
+  /esbuild-netbsd-64/0.13.12:
+    resolution: {integrity: sha512-D4raxr02dcRiQNbxOLzpqBzcJNFAdsDNxjUbKkDMZBkL54Z0vZh4LRndycdZAMcIdizC/l/Yp/ZsBdAFxc5nbA==}
+    cpu: [x64]
+    os: [netbsd]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /esbuild-openbsd-64/0.13.12:
+    resolution: {integrity: sha512-KuLCmYMb2kh05QuPJ+va60bKIH5wHL8ypDkmpy47lzwmdxNsuySeCMHuTv5o2Af1RUn5KLO5ZxaZeq4GEY7DaQ==}
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-sunos-64/0.13.5:
-    resolution: {integrity: sha512-YJNB6Og1QYAPikvYDbqvk5xCqr6WL2i5cRWPGGgWOEItQPnq6gFsWogS3DiYM8TQKe50KRiD3Lwu7eNYsdPO4w==}
+  /esbuild-sunos-64/0.13.12:
+    resolution: {integrity: sha512-jBsF+e0woK3miKI8ufGWKG3o3rY9DpHvCVRn5eburMIIE+2c+y3IZ1srsthKyKI6kkXLvV4Cf/E7w56kLipMXw==}
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-windows-32/0.13.5:
-    resolution: {integrity: sha512-CigOlBSKsZ61IS+FyhD3luqCpl7LN9ntDaBZXumls/0IZ/8BJ5txqw4a6pv4LtnfIgt0ixGHSH7kAUmApw/HAw==}
+  /esbuild-windows-32/0.13.12:
+    resolution: {integrity: sha512-L9m4lLFQrFeR7F+eLZXG82SbXZfUhyfu6CexZEil6vm+lc7GDCE0Q8DiNutkpzjv1+RAbIGVva9muItQ7HVTkQ==}
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-windows-64/0.13.5:
-    resolution: {integrity: sha512-pg2BZXLpcPcrIcmToGapLRExzj6sm0VmQlqlmnMOtIJh0YQV9c0CRbhfIT0gYvJqCz5JEGiRvYpArRlxWADN3Q==}
+  /esbuild-windows-64/0.13.12:
+    resolution: {integrity: sha512-k4tX4uJlSbSkfs78W5d9+I9gpd+7N95W7H2bgOMFPsYREVJs31+Q2gLLHlsnlY95zBoPQMIzHooUIsixQIBjaQ==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild-windows-arm64/0.13.5:
-    resolution: {integrity: sha512-KKRDmUOIE4oCvJp0I4p4QyazK2X79spF29vsZr2U8qHhmxbTLSQWvYmb2WlF5Clb1URRsX0L013rhwHx1SEu0w==}
+  /esbuild-windows-arm64/0.13.12:
+    resolution: {integrity: sha512-2tTv/BpYRIvuwHpp2M960nG7uvL+d78LFW/ikPItO+2GfK51CswIKSetSpDii+cjz8e9iSPgs+BU4o8nWICBwQ==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /esbuild/0.13.5:
-    resolution: {integrity: sha512-Q9/f1njsZaO+Qqe3dqAdtu4zGHNZIbcEtdg44/NooyPhqCerns4FeC1UPYeB4pKD08iDuWcmyINFJTqpdN+pqg==}
+  /esbuild/0.13.12:
+    resolution: {integrity: sha512-vTKKUt+yoz61U/BbrnmlG9XIjwpdIxmHB8DlPR0AAW6OdS+nBQBci6LUHU2q9WbBobMEIQxxDpKbkmOGYvxsow==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      esbuild-android-arm64: 0.13.5
-      esbuild-darwin-64: 0.13.5
-      esbuild-darwin-arm64: 0.13.5
-      esbuild-freebsd-64: 0.13.5
-      esbuild-freebsd-arm64: 0.13.5
-      esbuild-linux-32: 0.13.5
-      esbuild-linux-64: 0.13.5
-      esbuild-linux-arm: 0.13.5
-      esbuild-linux-arm64: 0.13.5
-      esbuild-linux-mips64le: 0.13.5
-      esbuild-linux-ppc64le: 0.13.5
-      esbuild-openbsd-64: 0.13.5
-      esbuild-sunos-64: 0.13.5
-      esbuild-windows-32: 0.13.5
-      esbuild-windows-64: 0.13.5
-      esbuild-windows-arm64: 0.13.5
+      esbuild-android-arm64: 0.13.12
+      esbuild-darwin-64: 0.13.12
+      esbuild-darwin-arm64: 0.13.12
+      esbuild-freebsd-64: 0.13.12
+      esbuild-freebsd-arm64: 0.13.12
+      esbuild-linux-32: 0.13.12
+      esbuild-linux-64: 0.13.12
+      esbuild-linux-arm: 0.13.12
+      esbuild-linux-arm64: 0.13.12
+      esbuild-linux-mips64le: 0.13.12
+      esbuild-linux-ppc64le: 0.13.12
+      esbuild-netbsd-64: 0.13.12
+      esbuild-openbsd-64: 0.13.12
+      esbuild-sunos-64: 0.13.12
+      esbuild-windows-32: 0.13.12
+      esbuild-windows-64: 0.13.12
+      esbuild-windows-arm64: 0.13.12
     dev: true
 
   /escalade/3.1.1:
@@ -6749,7 +6761,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.8
     dev: true
 
   /jsprim/1.4.1:
@@ -9435,7 +9447,7 @@ packages:
       stylus:
         optional: true
     dependencies:
-      esbuild: 0.13.5
+      esbuild: 0.13.12
       postcss: 8.3.9
       resolve: 1.20.0
       rollup: 2.58.0
