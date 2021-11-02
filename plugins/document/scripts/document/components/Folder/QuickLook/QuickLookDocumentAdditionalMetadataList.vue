@@ -33,7 +33,7 @@
                         {{ value.name }}
                     </li>
                 </ul>
-                <template data-test="metadata-unique-list-value" v-else>
+                <template v-else>
                     {{ metadata.list_value[0].name }}
                 </template>
             </template>

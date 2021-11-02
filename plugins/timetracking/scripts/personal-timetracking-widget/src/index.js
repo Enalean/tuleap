@@ -20,7 +20,7 @@
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../../po/fr.po";
-import Widget from "./components/Widget.vue";
+import TimetrackingWidget from "./components/TimetrackingWidget.vue";
 import { createStore } from "./store/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const user_id = parseInt(document.body.dataset.userId, 10);
         Vue.config.language = locale;
 
-        const rootComponent = Vue.extend(Widget);
+        const rootComponent = Vue.extend(TimetrackingWidget);
         const store = createStore();
 
         new rootComponent({

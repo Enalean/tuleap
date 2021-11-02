@@ -35,7 +35,7 @@
     "eslint-plugin-no-only-tests": "^2.6.0",
     "eslint-plugin-no-unsanitized": "^3.1.5",
     "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-vue": "^7.9.0",
+    "eslint-plugin-vue": "^8.0.3",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.12.0",
     "fork-ts-checker-webpack-plugin": "^5.2.0",
     "gettext-extractor": "^3.5.2",

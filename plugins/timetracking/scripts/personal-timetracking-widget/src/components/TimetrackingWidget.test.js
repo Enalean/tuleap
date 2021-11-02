@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import Widget from "./Widget.vue";
+import TimetrackingWidget from "./TimetrackingWidget.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
@@ -33,7 +33,7 @@ function getPersonalWidgetInstance(store_options) {
         },
         mocks: { $store: store },
     };
-    return shallowMount(Widget, component_options);
+    return shallowMount(TimetrackingWidget, component_options);
 }
 
 describe("Given a personal timetracking widget", () => {
