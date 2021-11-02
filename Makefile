@@ -160,7 +160,7 @@ tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mariadb103)
+tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mysql80, mariadb103)
 	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql57)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
