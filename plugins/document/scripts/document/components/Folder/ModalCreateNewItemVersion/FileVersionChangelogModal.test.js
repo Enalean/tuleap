@@ -20,6 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import FileVersionChangelogModal from "./FileVersionChangelogModal.vue";
+import ItemUpdateProperties from "../Property/ItemUpdateProperties.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import * as tlp from "tlp";
 
@@ -67,6 +68,30 @@ describe("FileVersionChangelogModal", () => {
             "Now, it mentions how to contribute to the project.",
             false,
             null,
+        ]);
+    });
+
+    it("Create a new version of the document with the new approval table.", () => {
+        const wrapper = getWrapper();
+        wrapper.setData({
+            version: {
+                title: "Added the [contributions] section",
+                changelog: "Now, it mentions how to contribute to the project.",
+            },
+        });
+
+        wrapper
+            .findComponent(ItemUpdateProperties)
+            .vm.$emit("approval-table-action-change", "reset");
+        wrapper.get("form").trigger("submit");
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("createNewFileVersionFromModal", [
+            { id: 12, title: "How to.pdf" },
+            expect.any(File),
+            "Added the [contributions] section",
+            "Now, it mentions how to contribute to the project.",
+            false,
+            "reset",
         ]);
     });
 });

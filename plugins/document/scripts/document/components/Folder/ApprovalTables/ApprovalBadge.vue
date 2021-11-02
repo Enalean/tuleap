@@ -31,7 +31,7 @@
 <script lang="ts">
 import { extractApprovalTableData } from "../../../helpers/approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import type { ApprovableDocument } from "../../../type";
 import type { ApprovalTableBadge } from "../../../helpers/approval-table-helper";
 
@@ -48,7 +48,8 @@ export default class ApprovalBadge extends Vue {
     hasAnApprovalTable(): boolean {
         return this.item.approval_table !== null && this.approval_data !== null;
     }
-    translated_approval_states_map(): Map<string, string> {
+
+    getTranslatedApprovalStatesMap(): Map<string, string> {
         const approval_states_map = new Map();
 
         approval_states_map.set(this.$gettext("Approved"), APPROVAL_APPROVED);
@@ -59,12 +60,17 @@ export default class ApprovalBadge extends Vue {
     }
 
     mounted(): void {
+        this.setApprovalData();
+    }
+
+    @Watch("item", { deep: true })
+    setApprovalData(): void {
         if (!this.item.approval_table) {
             return;
         }
 
         this.approval_data = extractApprovalTableData(
-            this.translated_approval_states_map(),
+            this.getTranslatedApprovalStatesMap(),
             this.item.approval_table.approval_state,
             this.isInFolderContentRow
         );
