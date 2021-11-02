@@ -261,35 +261,23 @@
         }
     }
 
-    &.taskboard-card-remaining-effort-edit-mode {
-        margin: 10px 16px 0 0;
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 20px;
-
-        &::after {
-            right: -16px;
-            border-width: calc(14px - (1px * var(--tlp-is-condensed))) 0 calc(14px - (1px * var(--tlp-is-condensed))) 15px;
-        }
-    }
-
     > .fa-long-arrow-alt-right {
         margin: 0 2px;
     }
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.tlp-badge-#{$color-name}::before {
-            color: darken(map-get($colors, "primary"), 10%);
+            color: darken(map-get($colors, "text"), 5%);
         }
 
         &.taskboard-card-remaining-effort-edit-mode,
         &:focus,
         &:hover {
             &.tlp-badge-#{$color-name} {
-                border: 1px solid darken(map-get($colors, "primary"), 10%);
-                background: darken(map-get($colors, "primary"), 10%);
+                background: darken(map-get($colors, "text"), 5%);
 
                 &::after {
-                    border-color: transparent transparent transparent darken(map-get($colors, "primary"), 10%);
+                    background: darken(map-get($colors, "text"), 5%);
                 }
             }
         }
@@ -315,7 +303,7 @@
 
 .taskboard-card-remaining-effort-input {
     width: 30px;
-    padding: 1px 5px;
+    padding: 2px 5px;
     border: 0;
     border-radius: 2px;
     background: var(--secondary-color);
