@@ -45,7 +45,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private ProcessTopBacklogChange $process_top_backlog_change;
     /**
      * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
