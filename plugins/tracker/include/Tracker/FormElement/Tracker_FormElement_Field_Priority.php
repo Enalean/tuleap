@@ -39,7 +39,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     public function getCriteriaWhere($criteria)
     {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            return $this->buildMatchExpression('tracker_artifact_priority_rank.rank', $criteria_value);
+            return $this->buildMatchExpression('tracker_artifact_priority_rank.`rank`', $criteria_value);
         }
         return '';
     }

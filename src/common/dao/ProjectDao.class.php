@@ -201,7 +201,7 @@ class ProjectDao extends DataAccessObject
     private function searchActiveProjectsByUserStatus($user_id, $where = '')
     {
         $user_id = $this->da->escapeInt($user_id);
-        $sql     = "SELECT groups.*
+        $sql     = "SELECT `groups`.*
             FROM `groups`
               JOIN user_group USING (group_id)
             WHERE user_group.user_id = $user_id
@@ -215,7 +215,7 @@ class ProjectDao extends DataAccessObject
     {
         $user_id = $this->da->escapeInt($user_id);
 
-        $sql = "SELECT groups.*
+        $sql = "SELECT `groups`.*
         FROM `groups`
           JOIN user_group USING (group_id)
         WHERE user_group.user_id = $user_id
@@ -364,7 +364,7 @@ class ProjectDao extends DataAccessObject
         $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         if ($user->isSuperUser()) {
-            $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
+            $sql = "SELECT SQL_CALC_FOUND_ROWS `groups`.*
                     FROM `groups`
                     WHERE status = 'A'
                       AND group_id > 100

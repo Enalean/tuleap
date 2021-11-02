@@ -49,7 +49,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                        ' WHERE lovemd.field_id = %d' .
                        ' AND love.value_id = lovemd.value_id' .
                        $where_clause .
-                       ' ORDER BY love.rank',
+                       ' ORDER BY love.`rank`',
             $id
         );
 
@@ -87,7 +87,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                        ' WHERE mdv.field_id = %d' .
                        ' AND mdv.item_id = %d' .
                        ' AND love.status IN ("A", "P")' .
-                       ' ORDER BY love.rank',
+                       ' ORDER BY love.`rank`',
             $fieldId,
             $itemId
         );
@@ -121,7 +121,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
             switch ($rank) {
                 case 'end':
                     //print 'Put a the end<br>';
-                    $sql = sprintf('SELECT MAX(rank)+1 AS rank' .
+                    $sql = sprintf('SELECT MAX(`rank`)+1 AS `rank`' .
                                ' FROM plugin_docman_metadata_love AS love' .
                                ' WHERE value_id IN (' . $valIdList . ')');
                     $dar = $this->retrieve($sql);
@@ -133,7 +133,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                     break;
                 case 'beg':
                     //print 'Put a the beginning<br>';
-                    $sql = sprintf('SELECT MIN(rank) AS rank' .
+                    $sql = sprintf('SELECT MIN(`rank`) AS `rank`' .
                                ' FROM plugin_docman_metadata_love AS love' .
                                ' WHERE value_id IN (' . $valIdList . ')');
                     $dar = $this->retrieve($sql);
@@ -146,8 +146,8 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                 default:
                     $sql = sprintf(
                         'UPDATE plugin_docman_metadata_love AS love' .
-                               ' SET rank = rank + 1' .
-                               ' WHERE rank >= %d' .
+                               ' SET `rank` = `rank` + 1' .
+                               ' WHERE `rank` >= %d' .
                                ' AND value_id IN (' . $valIdList . ')',
                         $rank
                     );
@@ -165,7 +165,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     {
         $sql = sprintf(
             'INSERT INTO plugin_docman_metadata_love(' .
-                       'name, description, rank, status' .
+                       'name, description, `rank`, status' .
                        ') VALUES (' .
                        '%s, %s, %d, %s' .
                        ')',
@@ -227,7 +227,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         if ($rank != '--') {
             $r = $this->prepareLoveRanking($metadataId, $rank);
             if ($r !== false) {
-                $rankStmt = '  , love.rank = ' . $r;
+                $rankStmt = '  , love.`rank` = ' . $r;
             }
         } else {
             $rankStmt = '';

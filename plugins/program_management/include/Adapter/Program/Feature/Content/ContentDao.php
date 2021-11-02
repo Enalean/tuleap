@@ -55,7 +55,7 @@ class ContentDao extends DataAccessObject implements ContentStore
                     INNER JOIN tracker_artifact_priority_rank ON feature_artifact.id = tracker_artifact_priority_rank.artifact_id
                 WHERE program_increment.id =  ?
                   AND plugin_program_management_explicit_top_backlog.artifact_id IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank';
+                ORDER BY tracker_artifact_priority_rank.`rank`';
 
         return $this->getDB()->run($sql, $program_increment_id);
     }

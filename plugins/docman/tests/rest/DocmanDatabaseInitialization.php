@@ -39,7 +39,7 @@ class DocmanDatabaseInitialization extends \DatabaseInitialization
     {
         echo 'Enable the Wiki service to test the Docman' . PHP_EOL;
 
-        $sql = "INSERT INTO tuleap.service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, location, server_id, is_in_iframe)
+        $sql = "INSERT INTO tuleap.service (group_id, label, description, short_name, link, is_active, is_used, scope, `rank`, location, server_id, is_in_iframe)
                 VALUES (?, 'Wiki', 'Wiki', 'wiki', ?, 1, 1, 'system', 105, 'master', NULL, 0)";
 
         $wiki_url   = '/wiki/?group_id=' . $project->getID();

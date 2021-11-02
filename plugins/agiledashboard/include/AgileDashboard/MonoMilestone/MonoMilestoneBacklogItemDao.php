@@ -96,7 +96,7 @@ class MonoMilestoneBacklogItemDao extends DataAccessObject
                     AND content_art.id IS NULL
                     AND child_art.id IS NULL
                     AND child_tracker.deletion_date IS NULL
-                ORDER BY tracker_artifact_priority_rank.rank ASC
+                ORDER BY tracker_artifact_priority_rank.`rank` ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);

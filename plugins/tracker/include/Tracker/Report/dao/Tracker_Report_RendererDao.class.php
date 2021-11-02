@@ -63,7 +63,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
         $description = $this->da->quoteSmart($description);
         $rank        = (int) $this->prepareRanking('tracker_report_renderer', 0, (int) $report_id, $rank, 'id', 'report_id');
         $sql         = "INSERT INTO $this->table_name
-                (report_id, renderer_type, name, description, rank)
+                (report_id, renderer_type, name, description, `rank`)
                 VALUES ($report_id, $type, $name, $description, $rank)";
         return $this->updateAndGetLastId($sql);
     }

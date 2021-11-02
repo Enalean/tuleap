@@ -44,7 +44,7 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
                 INNER JOIN tracker_artifact_priority_rank
                     ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
                 WHERE project_id = ?
-                ORDER BY tracker_artifact_priority_rank.rank
+                ORDER BY tracker_artifact_priority_rank.`rank`
                 LIMIT ?
                 OFFSET ?";
 
@@ -58,7 +58,7 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
                 INNER JOIN tracker_artifact_priority_rank
                     ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
                 WHERE project_id = ?
-                ORDER BY tracker_artifact_priority_rank.rank";
+                ORDER BY tracker_artifact_priority_rank.`rank`";
 
         return $this->getDB()->run($sql, $project_id);
     }

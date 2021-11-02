@@ -15,6 +15,7 @@ tmpdir                              = /tmp
 skip_external_locking
 bind_address                        = 0.0.0.0
 lower_case_table_names              = 1
+local_infile                        = 1
 
 sql-mode="NO_ENGINE_SUBSTITUTION"
 
