@@ -96,7 +96,7 @@ describe("ApprovalBadge", () => {
 
         expect(wrapper.vm.$data.approval_data.icon_badge).toBe("fa-tlp-gavel-pending");
         expect(wrapper.vm.$data.approval_data.badge_label).toBe("Not yet");
-        expect(wrapper.vm.$data.approval_data.badge_class).toBe("tlp-badge-chrome-silver ");
+        expect(wrapper.vm.$data.approval_data.badge_class).toBe("tlp-badge-secondary ");
     });
 
     it(`Given document has approval status and given we are in floder content row

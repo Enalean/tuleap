@@ -31,7 +31,7 @@ describe("extractApprovalTableData", () => {
         const expected_badge: ApprovalTableBadge = {
             icon_badge: "fa-tlp-gavel-pending",
             badge_label: translated_states.get(APPROVAL_NOT_YET),
-            badge_class: `tlp-badge-chrome-silver `,
+            badge_class: `tlp-badge-secondary `,
         };
 
         const badge = extractApprovalTableData(translated_states, APPROVAL_NOT_YET, false);
