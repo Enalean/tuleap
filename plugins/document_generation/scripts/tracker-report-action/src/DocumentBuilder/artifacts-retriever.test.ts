@@ -22,6 +22,7 @@ import type {
     ArtifactReportResponse,
     TrackerDefinition,
     TestExecutionResponse,
+    ArtifactReportResponseUserRepresentation,
 } from "./artifacts-retriever";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
 
@@ -84,6 +85,9 @@ describe("artifacts-retriever", () => {
                                 is_anonymous: false,
                                 has_avatar: true,
                             },
+                            {
+                                id: null,
+                            } as ArtifactReportResponseUserRepresentation,
                         ],
                     },
                     {
@@ -311,6 +315,9 @@ describe("artifacts-retriever", () => {
                                 is_anonymous: false,
                                 has_avatar: true,
                             },
+                            {
+                                id: null,
+                            } as ArtifactReportResponseUserRepresentation,
                         ],
                         formatted_values: ["User 01 (user01)", "User 02 (user02)"],
                     },
