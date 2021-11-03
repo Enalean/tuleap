@@ -1,12 +1,12 @@
-<a data-nodrag="true" ng-href="{{ url }}" class="backlog-item-details-parent tlp-badge-secondary"
+<a data-nodrag="true" ng-href="{{ url }}" class="backlog-item-details-parent tlp-badge-secondary tlp-badge-outline"
    ng-class="getColorClass(parent_project_color_name, parent_project_id, project_id)">
-    <div ng-if="parent_project_id !== project_id">
-        <span aria-hidden="true">{{ parent_project_icon }}</span>
+    <div ng-if="parent_project_id !== project_id" class="backlog-items-details-parent-project">
+        <span class="backlog-items-details-parent-project-icon" aria-hidden="true">{{ parent_project_icon }}</span>
         <span ng-bind-html="parent_project_label | tuleapHighlight:filter_terms"></span>
     </div>
-    <span>
-        <i ng-if="parent_project_id === project_id" class="fas fa-fw fa-level-up-alt" aria-hidden="true"></i>
-        <span ng-if="parent_project_id !== project_id">↳</span>
+    <div class="backlog-items-details-parent-name">
+        <i ng-if="parent_project_id === project_id" class="fas fa-level-up-alt" aria-hidden="true"></i>
+        <i ng-if="parent_project_id !== project_id" class="backlog-items-details-parent-name-icon fas fa-tlp-level-down" aria-hidden="true"></i>
         <span class="backlog-item-details-parent-link" ng-bind-html="text | tuleapHighlight:filter_terms"></span>
-    </span>
+    </div>
 </a>

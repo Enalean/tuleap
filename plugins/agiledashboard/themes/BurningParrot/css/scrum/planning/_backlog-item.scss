@@ -37,19 +37,8 @@
     align-items: center;
     margin: 0 0 var(--tlp-small-spacing);
 
-    &.compact-view {
-        .extra-card-fields {
-            display: none;
-        }
-    }
-
-    &.detailed-view {
-        > .backlog-item-details > .backlog-item-details-content > .card-accessibility {
-            position: absolute;
-            top: 40px;
-            right: 9px;
-            height: calc(100% - 40px);
-        }
+    &.compact-view .extra-card-fields {
+        display: none;
     }
 
     // We must use the child combinator because backlog-item can have children backlog-items
@@ -79,6 +68,16 @@
             display: none;
         }
     }
+
+    &:not([data-nodrag="true"]) {
+        > .backlog-item-details:hover,
+        > .backlog-item-details.moving-to {
+            > .backlog-item-details-moves {
+                transition: opacity 100ms ease-in-out 500ms;
+                opacity: 1;
+            }
+        }
+    }
 }
 
 .backlog-item-children-loading {
@@ -93,16 +92,15 @@
     padding: var(--tlp-small-spacing);
     border-right: 1px solid var(--tlp-neutral-normal-color);
     border-left: 1px solid var(--tlp-neutral-normal-color);
-    background: var(--tlp-background-color-lighter-02);
+    background: var(--tlp-fade-background-color);
 }
 
 .backlog-item-show-children-handle {
     position: relative;
-    height: 13px;
+    height: 20px;
     border: 1px solid var(--tlp-neutral-normal-color);
-    border-top: 0;
     border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
-    background: var(--tlp-background-color-lighter-02);
+    background: var(--tlp-fade-background-color);
     cursor: pointer;
 
     &::before {
@@ -111,17 +109,21 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: var(--tlp-neutral-dark-color-darker-05);
+        color: var(--tlp-neutral-dark-color-darker-20);
         font-family: "Font Awesome 5 Free";
         font-size: 8px;
         font-weight: 900;
     }
 
-    &.closed::before {
-        content: "\f077"; // fa-chevron-up
+    &.closed {
+        border-top: 0;
+
+        &::before {
+            content: "\f077"; // fa-chevron-up
+        }
     }
 
     &:hover {
-        background: var(--tlp-background-color-lighter-03);
+        background: var(--tlp-background-color-darker-02);
     }
 }

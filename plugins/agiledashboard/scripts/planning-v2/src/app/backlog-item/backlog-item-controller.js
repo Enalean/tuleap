@@ -43,6 +43,7 @@ function BacklogItemController(
         moveToTop: moveToTop,
         moveToTopInParent: moveToTopInParent,
         reorderBacklogItemChildren: reorderBacklogItemChildren,
+        getClassNames: getClassNames,
     });
 
     self.init();
@@ -502,5 +503,21 @@ function BacklogItemController(
                 .addBack()
                 .filter('[data-nodrag="true"]').length > 0
         );
+    }
+
+    function getClassNames(backlog_item) {
+        return [
+            "backlog-item-color-" + backlog_item.color,
+            "tlp-swatch-" + backlog_item.background_color_name,
+            backlog_item.status.toLowerCase(),
+            backlog_item.moving_to ? "moving-to" : "",
+            backlog_item.created ? "created" : "",
+            backlog_item.updated ? "updated" : "",
+            backlog_item.updating ? "updating" : "",
+            backlog_item.selected ? "selected" : "",
+            backlog_item.multiple ? "multiple" : "",
+            backlog_item.hidden ? "hidden" : "",
+            backlog_item.shaking ? "shaking" : "",
+        ];
     }
 }

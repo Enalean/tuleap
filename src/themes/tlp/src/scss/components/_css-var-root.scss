@@ -263,7 +263,7 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-flyover-shadow: 0 0 0 1px #{transparentize($tlp-dark-color, 0.93)}, 0 15px 35px 0 #{transparentize($tlp-dark-color, 0.9)}, 0 5px 15px 0 rgba(0, 0, 0, 0.08);
     --tlp-flyover-shadow-above: 0 0 0 1px #{transparentize($tlp-dark-color, 0.93)}, 0 0 20px 0 #{transparentize($tlp-dark-color, 0.9)}, 0 -3px 15px 0 rgba(0, 0, 0, 0.08);
     --tlp-pane-shadow: 0 3px 4px #{transparentize($tlp-dark-color, 0.97)};
-    --tlp-card-shadow: 0 3px 4px #{transparentize($tlp-dark-color, 0.97)}, 0 1px 0 #{transparentize($tlp-neutral-normal-color, 0.25)};
+    --tlp-card-shadow: 0 3px 4px #{transparentize($tlp-dark-color, 0.97)}, 0 1px 0 #{transparentize($tlp-neutral-normal-color, 0.25)}, 0 0 0 1px #{transparentize($tlp-dark-color, 0.95)};
     --tlp-sticky-header-shadow: 0 2px 3px var(--tlp-dark-color-transparent-90);
     --tlp-sticky-footer-shadow: 0 -2px 3px var(--tlp-dark-color-transparent-90);
     --tlp-button-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -0.5px 0 rgba(0, 0, 0, 0.03);

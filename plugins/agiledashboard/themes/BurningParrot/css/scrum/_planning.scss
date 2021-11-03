@@ -44,19 +44,20 @@
 }
 
 .planning-view {
-    display: flex;
+    display: grid;
+    grid: auto-flow / minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--tlp-large-spacing);
 }
 
 .planning-backlog,
 .planning-planned {
-    flex: 1 1 50%;
+    flex: 1;
 }
 
 .planning-divider {
     display: flex;
     flex: 0 0 auto;
     justify-content: center;
-    width: 60px;
     padding: 65px 0 0;
 }
 

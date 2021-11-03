@@ -26,8 +26,8 @@ item-progress {
 }
 
 .item-progress {
-    border-bottom: 2px solid var(--tlp-main-color);
-    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
+    border-bottom: 3px solid var(--tlp-main-color);
+    border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius) var(--tlp-medium-radius);
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {

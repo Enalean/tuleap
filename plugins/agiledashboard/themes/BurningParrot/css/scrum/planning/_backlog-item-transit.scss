@@ -50,14 +50,14 @@
             background: var(--tlp-info-color-transparent-90);
         }
     }
-}
 
-.backlog-item-details {
-    &.undraggable {
+    &[data-nodrag="true"] > .backlog-item-details {
         @extend %hide-moves-icons;
         cursor: auto;
     }
+}
 
+.backlog-item-details {
     &.selected {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         border-color: var(--tlp-info-color);
