@@ -67,7 +67,7 @@ describe("action", () => {
                 token: "azerty1234",
             };
 
-            expect(await getGitlabProjectList(context, credentials)).toEqual([{ id: 10 }]);
+            await expect(getGitlabProjectList(context, credentials)).resolves.toEqual([{ id: 10 }]);
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url:
                     "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
@@ -96,7 +96,7 @@ describe("action", () => {
                 token: "azerty1234",
             };
 
-            expect(await getGitlabProjectList(context, credentials)).toEqual([
+            await expect(getGitlabProjectList(context, credentials)).resolves.toEqual([
                 { id: 10 },
                 { id: 10 },
             ]);
@@ -156,9 +156,9 @@ describe("action", () => {
                 token: "azerty1234",
             };
 
-            expect(await getGitlabRepositoryFromId(context, { credentials, id: 12 })).toEqual([
-                { id: 10 },
-            ]);
+            await expect(
+                getGitlabRepositoryFromId(context, { credentials, id: 12 })
+            ).resolves.toEqual([{ id: 10 }]);
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url: "https://example/api/v4/projects/12",
                 token: "azerty1234",

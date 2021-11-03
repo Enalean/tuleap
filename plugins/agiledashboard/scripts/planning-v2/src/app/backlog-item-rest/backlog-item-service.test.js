@@ -160,7 +160,7 @@ describe("BacklogItemService", () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/backlog_items/307/children", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -190,7 +190,7 @@ describe("BacklogItemService", () => {
                 }
             );
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/backlog_items/307/children", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -216,7 +216,7 @@ describe("BacklogItemService", () => {
 
             const promise = BacklogItemService.removeAddBacklogItemChildren(122, 307, [99, 187]);
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/backlog_items/307/children", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -241,7 +241,7 @@ describe("BacklogItemService", () => {
                 { id: 54 },
             ]);
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/101/backlog", {
                 headers: expected_headers,
                 body: JSON.stringify({

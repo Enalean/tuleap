@@ -63,7 +63,7 @@ describe(`ProjectService`, () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/103/backlog", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -88,7 +88,7 @@ describe(`ProjectService`, () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/103/backlog", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -114,7 +114,7 @@ describe(`ProjectService`, () => {
 
             const promise = ProjectService.removeAddToBacklog(77, 103, [99, 187]);
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/103/backlog", {
                 headers: expected_headers,
                 body: JSON.stringify({

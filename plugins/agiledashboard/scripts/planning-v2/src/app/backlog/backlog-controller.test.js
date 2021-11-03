@@ -374,7 +374,7 @@ describe("BacklogController -", () => {
             var promise = BacklogController.fetchBacklogItems(60, 25);
             expect(BacklogController.backlog_items.loading).toBeTruthy();
 
-            expect(await wrapPromise(promise)).toEqual(34);
+            await expect(wrapPromise(promise)).resolves.toEqual(34);
             expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(736, 60, 25);
             expect(BacklogController.all_backlog_items).toEqual({
                 7: { id: 7 },
@@ -402,7 +402,7 @@ describe("BacklogController -", () => {
             var promise = BacklogController.fetchBacklogItems(60, 25);
             expect(BacklogController.backlog_items.loading).toBeTruthy();
 
-            expect(await wrapPromise(promise)).toEqual(85);
+            await expect(wrapPromise(promise)).resolves.toEqual(85);
             expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(592, 60, 25);
             expect(BacklogController.all_backlog_items).toEqual({
                 7: { id: 7 },

@@ -318,7 +318,7 @@ describe(`fetch-wrapper`, () => {
                     credentials: "same-origin",
                 })
             );
-            expect(await result.headers.get("X-PAGINATION-SIZE")).toEqual("2");
+            expect(result.headers.get("X-PAGINATION-SIZE")).toEqual("2");
         }
     );
 

@@ -63,7 +63,7 @@ describe("ReviewersService", () => {
             const promise = wrapPromise(ReviewersService.getReviewers(pull_request));
             $httpBackend.flush();
 
-            expect(await promise).toEqual([]);
+            await expect(promise).resolves.toEqual([]);
         });
 
         it("Given a pull request with 2 reviewers, then it will return an array with 2 users", async () => {

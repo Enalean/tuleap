@@ -193,7 +193,7 @@ describe("MilestoneService", () => {
 
             const promise = MilestoneService.patchSubMilestones(26, [77, 81]);
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/milestones", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -225,7 +225,7 @@ describe("MilestoneService", () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/backlog", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -250,7 +250,7 @@ describe("MilestoneService", () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/backlog", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -276,7 +276,7 @@ describe("MilestoneService", () => {
 
             const promise = MilestoneService.removeAddToBacklog(77, 26, [99, 187]);
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/backlog", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -300,7 +300,7 @@ describe("MilestoneService", () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/content", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -325,7 +325,7 @@ describe("MilestoneService", () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/content", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -348,7 +348,7 @@ describe("MilestoneService", () => {
 
             const promise = MilestoneService.addToContent(26, [99, 187]);
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/content", {
                 headers: expected_headers,
                 body: JSON.stringify({ add: [{ id: 99 }, { id: 187 }] }),
@@ -367,7 +367,7 @@ describe("MilestoneService", () => {
                 item_id: 265,
             });
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/content", {
                 headers: expected_headers,
                 body: JSON.stringify({
@@ -393,7 +393,7 @@ describe("MilestoneService", () => {
 
             const promise = MilestoneService.removeAddToContent(77, 26, [99, 187]);
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/milestones/26/content", {
                 headers: expected_headers,
                 body: JSON.stringify({

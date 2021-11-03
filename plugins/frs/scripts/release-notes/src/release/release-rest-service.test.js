@@ -83,7 +83,7 @@ describe("ReleaseRestService -", function () {
             var promise = wrapPromise(ReleaseRestService.getReleaseLinkNatures(752));
             $httpBackend.flush();
 
-            expect(await promise).toEqual(natures);
+            await expect(promise).resolves.toEqual(natures);
         });
 
         it("when the server responds with an error, then the error will be set in the error service", async function () {
@@ -136,7 +136,7 @@ describe("ReleaseRestService -", function () {
             var promise = wrapPromise(ReleaseRestService.getLinkedArtifacts(uri, 50, 0));
             $httpBackend.flush();
 
-            expect(await promise).toEqual({
+            await expect(promise).resolves.toEqual({
                 results: linked_artifacts,
                 total: total_linked_artifacts,
             });
@@ -214,7 +214,7 @@ describe("ReleaseRestService -", function () {
 
             var all_artifacts = first_artifacts.concat(second_artifacts);
 
-            expect(await promise).toEqual(all_artifacts);
+            await expect(promise).resolves.toEqual(all_artifacts);
             expect(progress_callback).toHaveBeenCalledWith(first_artifacts);
             expect(progress_callback).toHaveBeenCalledWith(second_artifacts);
             expect(ReleaseRestService.getLinkedArtifacts).toHaveBeenCalledWith(uri, 2, 0);

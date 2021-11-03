@@ -69,7 +69,7 @@ describe("UserRestService -", function () {
             const promise = wrapPromise(UserRestService.getUser(user_id));
             $httpBackend.flush();
 
-            expect(await promise).toEqual(user);
+            await expect(promise).resolves.toEqual(user);
         });
 
         it("when the server responds with an error, then the error modal will be shown", async function () {
@@ -108,7 +108,7 @@ describe("UserRestService -", function () {
             const promise = wrapPromise(UserRestService.getPreference(user_id, "preferred_color"));
             $httpBackend.flush();
 
-            expect(await promise).toEqual(preference);
+            await expect(promise).resolves.toEqual(preference);
         });
 
         it("when the server responds with an error, then the error modal will be shown", async () => {
@@ -149,7 +149,7 @@ describe("UserRestService -", function () {
             );
             $httpBackend.flush();
 
-            expect(await promise).toBeDefined();
+            await expect(promise).resolves.toBeDefined();
         });
     });
 });

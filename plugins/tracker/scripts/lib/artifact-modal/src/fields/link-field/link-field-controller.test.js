@@ -239,7 +239,7 @@ describe("LinkFieldController -", () => {
             const promise = LinkFieldController.hasArtifactAlreadyAParent();
             expect(LinkFieldController.is_loading).toBe(true);
 
-            expect(await wrapPromise(promise)).toBe(parent_artifact);
+            await expect(wrapPromise(promise)).resolves.toBe(parent_artifact);
             expect(getFirstReverseIsChildLink).toHaveBeenCalledWith(82);
             expect(LinkFieldController.is_loading).toBe(false);
         });
@@ -250,7 +250,7 @@ describe("LinkFieldController -", () => {
 
             const promise = LinkFieldController.hasArtifactAlreadyAParent();
 
-            expect(await wrapPromise(promise)).toBe(null);
+            await expect(wrapPromise(promise)).resolves.toBe(null);
         });
     });
 

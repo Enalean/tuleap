@@ -128,7 +128,7 @@ describe("ExecutionLinkIssueController", () => {
 
             var promise = ExecutionLinkIssueController.validateIssueId("", "52");
 
-            expect(await wrapPromise(promise)).toBe(true);
+            await expect(wrapPromise(promise)).resolves.toBe(true);
             expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith("52");
             expect(ExecutionLinkIssueController.issue_artifact).toBe(artifact);
             expect(ExecutionLinkIssueController.issue_artifact.tracker.color_name).toBe(

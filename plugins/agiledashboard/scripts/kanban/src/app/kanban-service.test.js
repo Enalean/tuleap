@@ -171,7 +171,7 @@ describe("KanbanService", () => {
                 ).mockReturnValue(filter_report_id);
 
                 const promise = methodUnderTest();
-                expect(await wrapPromise(promise)).toEqual(27);
+                await expect(wrapPromise(promise)).resolves.toEqual(27);
                 expect(tlpHead).toHaveBeenCalledWith(expected_url, {
                     params: { ...additional_params, ...query },
                 });
@@ -253,7 +253,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = methodUnderTest();
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith(expected_url, {
                 headers: expected_headers,
                 body: JSON.stringify(expected_body),
@@ -294,7 +294,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.updateKanbanLabel(8, "relicmonger");
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
                 headers: expected_headers,
                 body: JSON.stringify({ label: "relicmonger" }),
@@ -308,7 +308,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpDelete);
 
             const promise = KanbanService.deleteKanban(8);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpDelete).toHaveBeenCalledWith("/api/v1/kanban/8");
         });
     });
@@ -319,7 +319,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandColumn(8, 97);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
                 headers: expected_headers,
                 body: JSON.stringify({ collapse_column: { column_id: 97, value: false } }),
@@ -333,7 +333,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseColumn(8, 97);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
                 headers: expected_headers,
                 body: JSON.stringify({ collapse_column: { column_id: 97, value: true } }),
@@ -347,7 +347,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandBacklog(8);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
                 headers: expected_headers,
                 body: JSON.stringify({ collapse_backlog: false }),
@@ -361,7 +361,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseBacklog(8);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
                 headers: expected_headers,
                 body: JSON.stringify({ collapse_backlog: true }),
@@ -375,7 +375,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandArchive(8);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
                 headers: expected_headers,
                 body: JSON.stringify({ collapse_archive: false }),
@@ -389,7 +389,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseArchive(8);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
                 headers: expected_headers,
                 body: JSON.stringify({ collapse_archive: true }),
@@ -420,7 +420,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpPut);
 
             const promise = KanbanService.reorderColumns(8, [20, 19, 21]);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPut).toHaveBeenCalledWith("/api/v1/kanban/8/columns", {
                 headers: expected_headers,
                 body: JSON.stringify([20, 19, 21]),
@@ -434,7 +434,7 @@ describe("KanbanService", () => {
             mockFetchSuccess(tlpDelete);
 
             const promise = KanbanService.removeColumn(8, 19);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpDelete).toHaveBeenCalledWith("/api/v1/kanban_columns/19?kanban_id=8", {
                 headers: expected_headers,
             });
@@ -457,7 +457,7 @@ describe("KanbanService", () => {
                     label: "On going",
                     limit_input: column_wip_limit,
                 });
-                expect(await wrapPromise(promise)).toBeTruthy();
+                await expect(wrapPromise(promise)).resolves.toBeTruthy();
                 expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban_columns/21?kanban_id=8", {
                     headers: expected_headers,
                     body: JSON.stringify({ label: "On going", wip_limit: expected_wip_limit }),
@@ -504,7 +504,7 @@ describe("KanbanService", () => {
             const selectable_report_ids = [61, 21];
 
             const promise = KanbanService.updateSelectableReports(kanban_id, selectable_report_ids);
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPut).toHaveBeenCalledWith("/api/v1/kanban/59/tracker_reports", {
                 headers: expected_headers,
                 body: JSON.stringify({ tracker_report_ids: selectable_report_ids }),
