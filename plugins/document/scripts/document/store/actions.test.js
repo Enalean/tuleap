@@ -98,9 +98,9 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
             expect(handle_error).not.toHaveBeenCalled();
             expect(loadFolderContent).toHaveBeenCalled();
-            expect(
-                await loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).toEqual(root_item);
+            await expect(
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+            ).resolves.toEqual(root_item);
         });
 
         it("When the user does not have access to the project, an error will be raised", async () => {
@@ -192,14 +192,12 @@ describe("Store actions", () => {
             expect(loadFolderContent).toHaveBeenCalled();
             expect(loadAscendantHierarchy).toHaveBeenCalled();
 
-            expect(
-                await loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).toEqual(current_folder);
-            expect(
-                await loadAscendantHierarchy.mock.calls[
-                    loadAscendantHierarchy.mock.calls.length - 1
-                ][2]
-            ).toEqual(current_folder);
+            await expect(
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+            ).resolves.toEqual(current_folder);
+            await expect(
+                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
+            ).resolves.toEqual(current_folder);
         });
 
         it("gets item if there isn't any current folder in the store", async () => {
@@ -221,14 +219,12 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", folder_to_fetch);
             expect(loadFolderContent).toHaveBeenCalled();
             expect(loadAscendantHierarchy).toHaveBeenCalled();
-            expect(
-                await loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).toEqual(folder_to_fetch);
-            expect(
-                await loadAscendantHierarchy.mock.calls[
-                    loadAscendantHierarchy.mock.calls.length - 1
-                ][2]
-            ).toEqual(folder_to_fetch);
+            await expect(
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+            ).resolves.toEqual(folder_to_fetch);
+            await expect(
+                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
+            ).resolves.toEqual(folder_to_fetch);
         });
 
         it("gets item when the requested folder is not in the store", async () => {
@@ -260,14 +256,12 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", folder_to_fetch);
             expect(loadFolderContent).toHaveBeenCalled();
             expect(loadAscendantHierarchy).toHaveBeenCalled();
-            expect(
-                await loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).toEqual(folder_to_fetch);
-            expect(
-                await loadAscendantHierarchy.mock.calls[
-                    loadAscendantHierarchy.mock.calls.length - 1
-                ][2]
-            ).toEqual(folder_to_fetch);
+            await expect(
+                loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
+            ).resolves.toEqual(folder_to_fetch);
+            await expect(
+                loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
+            ).resolves.toEqual(folder_to_fetch);
         });
 
         it("does not load ascendant hierarchy if folder is already inside the current one", async () => {

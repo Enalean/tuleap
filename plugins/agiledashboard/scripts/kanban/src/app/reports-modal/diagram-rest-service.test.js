@@ -81,7 +81,7 @@ describe("DiagramRestService -", () => {
             );
             $httpBackend.flush();
 
-            expect(await wrapPromise(promise)).toEqual(cumulative_flow_data);
+            await expect(wrapPromise(promise)).resolves.toEqual(cumulative_flow_data);
         });
 
         it(`Given that a filtering Tracker report has been selected,
@@ -114,7 +114,7 @@ describe("DiagramRestService -", () => {
             );
             $httpBackend.flush();
 
-            expect(await wrapPromise(promise)).toEqual(cumulative_flow_data);
+            await expect(wrapPromise(promise)).resolves.toEqual(cumulative_flow_data);
         });
     });
 });

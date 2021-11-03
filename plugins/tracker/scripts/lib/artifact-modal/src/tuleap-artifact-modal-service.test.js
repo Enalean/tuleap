@@ -111,7 +111,7 @@ describe("NewTuleapArtifactModalService", () => {
                 parent_artifact_id
             );
 
-            expect(await wrapPromise(promise)).toBeDefined();
+            await expect(wrapPromise(promise)).resolves.toBeDefined();
             expect(getTracker).toHaveBeenCalledWith(tracker_id);
             expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
             expect(getSelectedValues).toHaveBeenCalledWith({}, tracker);
@@ -178,7 +178,7 @@ describe("NewTuleapArtifactModalService", () => {
                     NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
                 );
 
-                expect(await promise).toBeDefined();
+                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
                     null,
                     workflow_field,
@@ -212,7 +212,7 @@ describe("NewTuleapArtifactModalService", () => {
                     NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
                 );
 
-                expect(await promise).toBeDefined();
+                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
             });
 
@@ -237,7 +237,7 @@ describe("NewTuleapArtifactModalService", () => {
                     NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
                 );
 
-                expect(await promise).toBeDefined();
+                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
             });
         });
@@ -317,7 +317,7 @@ describe("NewTuleapArtifactModalService", () => {
                     artifact_id
                 );
 
-                expect(await wrapPromise(promise)).toBeDefined();
+                await expect(wrapPromise(promise)).resolves.toBeDefined();
                 expect(getArtifactWithCompleteTrackerStructure).toHaveBeenCalledWith(artifact_id);
                 expect(getUserPreference).toHaveBeenCalledWith(
                     user_id,
@@ -382,7 +382,7 @@ describe("NewTuleapArtifactModalService", () => {
                     artifact_id
                 );
 
-                expect(await wrapPromise(promise)).toBeDefined();
+                await expect(wrapPromise(promise)).resolves.toBeDefined();
                 const model = promise.$$state.value;
 
                 expect(model.text_fields_format).toEqual("commonmark");
@@ -435,7 +435,7 @@ describe("NewTuleapArtifactModalService", () => {
                     )
                 );
 
-                expect(await promise).toBeDefined();
+                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
                     757,
                     workflow_field,
@@ -480,7 +480,7 @@ describe("NewTuleapArtifactModalService", () => {
                     )
                 );
 
-                expect(await promise).toBeDefined();
+                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
             });
 
@@ -515,7 +515,7 @@ describe("NewTuleapArtifactModalService", () => {
                     )
                 );
 
-                expect(await promise).toBeDefined();
+                await expect(promise).resolves.toBeDefined();
                 expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
                     null,
                     workflow_field,

@@ -130,7 +130,7 @@ describe("ExecutionService", () => {
 
             expect(ExecutionService.loading[campaign.id]).toBe(true);
 
-            expect(await wrapPromise(promise)).toEqual(response.results);
+            await expect(wrapPromise(promise)).resolves.toEqual(response.results);
             expect(ExecutionService.categories).toEqual(categories_results);
             expect(ExecutionService.executions).toEqual(execution_results);
             expect(ExecutionService.executions_by_categories_by_campaigns).toEqual(

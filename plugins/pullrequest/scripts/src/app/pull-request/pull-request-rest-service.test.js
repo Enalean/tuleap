@@ -79,7 +79,7 @@ describe("PullRequestRestService -", function () {
             var promise = wrapPromise(PullRequestRestService.getPullRequest(pull_request_id));
             $httpBackend.flush();
 
-            expect(await promise).toEqual(pull_request);
+            await expect(promise).resolves.toEqual(pull_request);
         });
 
         it("when the server responds with an error, then the error modal will be shown", async function () {

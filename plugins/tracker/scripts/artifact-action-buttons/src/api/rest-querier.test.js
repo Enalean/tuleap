@@ -46,7 +46,7 @@ describe("API querier", () => {
             ];
 
             mockFetchSuccess(recursiveGet, { return_json });
-            expect(await getProjectList()).toBeDefined();
+            await expect(getProjectList()).resolves.toBeDefined();
 
             expect(recursiveGet).toHaveBeenCalledWith("/api/projects", {
                 params: {
@@ -70,7 +70,7 @@ describe("API querier", () => {
             mockFetchSuccess(recursiveGet, { return_json });
             const project_id = 5;
 
-            expect(await getTrackerList(project_id)).toBeDefined();
+            await expect(getTrackerList(project_id)).resolves.toBeDefined();
 
             expect(recursiveGet).toHaveBeenCalledWith("/api/projects/5/trackers/", {
                 params: {
@@ -88,7 +88,7 @@ describe("API querier", () => {
 
             mockFetchSuccess(patch);
 
-            expect(await moveArtifact(artifact_id, tracker_id)).toBeDefined();
+            await expect(moveArtifact(artifact_id, tracker_id)).resolves.toBeDefined();
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
@@ -104,7 +104,7 @@ describe("API querier", () => {
 
             mockFetchSuccess(patch);
 
-            expect(await moveDryRunArtifact(artifact_id, tracker_id)).toBeDefined();
+            await expect(moveDryRunArtifact(artifact_id, tracker_id)).resolves.toBeDefined();
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },

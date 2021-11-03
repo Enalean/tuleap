@@ -61,7 +61,7 @@ describe(`UserPreferencesService`, () => {
                 "compact-view"
             );
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            await expect(wrapPromise(promise)).resolves.toBeTruthy();
             expect(tlpPatch).toHaveBeenCalledWith("/api/v1/users/110/preferences", {
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({

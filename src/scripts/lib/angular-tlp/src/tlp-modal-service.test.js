@@ -139,7 +139,7 @@ describe("TlpModalService -", function () {
                     controllerAs: "plethora",
                 });
 
-                expect(await wrapPromise(promise)).toEqual(fake_modal_object);
+                await expect(wrapPromise(promise)).resolves.toEqual(fake_modal_object);
                 expect(document.querySelector(".tlp-modal")).toBeDefined();
                 expect(tlp_modal).toHaveBeenCalledWith(expect.any(Node), {});
                 expect(fake_modal_object.show).toHaveBeenCalled();

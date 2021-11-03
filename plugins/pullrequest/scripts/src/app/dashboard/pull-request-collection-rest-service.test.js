@@ -91,7 +91,7 @@ describe("PullRequestCollectionRestService -", function () {
             );
             $httpBackend.flush();
 
-            expect(await promise).toEqual({
+            await expect(promise).resolves.toEqual({
                 results: pull_requests,
                 total: total_pull_requests,
             });
@@ -143,7 +143,7 @@ describe("PullRequestCollectionRestService -", function () {
             );
             $httpBackend.flush();
 
-            expect(await promise).toEqual({
+            await expect(promise).resolves.toEqual({
                 results: pull_requests,
                 total: total_pull_requests,
             });
@@ -226,7 +226,7 @@ describe("PullRequestCollectionRestService -", function () {
                     )
                 );
 
-                expect(await promise).toEqual(all_pull_requests);
+                await expect(promise).resolves.toEqual(all_pull_requests);
                 expect(progress_callback).toHaveBeenCalledWith(first_pull_requests);
                 expect(progress_callback).toHaveBeenCalledWith(second_pull_requests);
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
@@ -256,7 +256,7 @@ describe("PullRequestCollectionRestService -", function () {
                     )
                 );
 
-                expect(await promise).toEqual(all_pull_requests);
+                await expect(promise).resolves.toEqual(all_pull_requests);
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
                     repository_id,
                     2,
@@ -284,7 +284,7 @@ describe("PullRequestCollectionRestService -", function () {
                     )
                 );
 
-                expect(await promise).toEqual(all_pull_requests);
+                await expect(promise).resolves.toEqual(all_pull_requests);
                 expect(PullRequestCollectionRestService.getPullRequests).toHaveBeenCalledWith(
                     repository_id,
                     2,

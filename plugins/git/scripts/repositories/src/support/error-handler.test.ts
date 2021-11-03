@@ -33,7 +33,7 @@ describe("error-handler", () => {
                 });
             },
         } as Response);
-        expect(await getErrorCode(error)).toBe(ERROR_TYPE_NO_GIT);
+        await expect(getErrorCode(error)).resolves.toBe(ERROR_TYPE_NO_GIT);
     });
 
     it("When the server responds with another error code, then the unknown error will be committed", async () => {
@@ -47,7 +47,7 @@ describe("error-handler", () => {
                 });
             },
         } as Response);
-        expect(await getErrorCode(error)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
+        await expect(getErrorCode(error)).resolves.toBe(ERROR_TYPE_UNKNOWN_ERROR);
     });
 
     it("When something else happens (no response), then the unknown error will be committed", async () => {
@@ -60,6 +60,6 @@ describe("error-handler", () => {
                 });
             },
         } as Response);
-        expect(await getErrorCode(error)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
+        await expect(getErrorCode(error)).resolves.toBe(ERROR_TYPE_UNKNOWN_ERROR);
     });
 });
