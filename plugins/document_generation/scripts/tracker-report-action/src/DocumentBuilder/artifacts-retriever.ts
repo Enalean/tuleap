@@ -195,7 +195,7 @@ function getFieldValueWithAdditionalInformation(
         case "sb": {
             const formatted_values: string[] = [];
             for (const list_value of value.values) {
-                if ("display_name" in list_value) {
+                if ("display_name" in list_value && list_value.id !== null) {
                     formatted_values.push(list_value.display_name);
                 } else if ("label" in list_value) {
                     formatted_values.push(list_value.label);
@@ -393,10 +393,10 @@ interface ArtifactReportResponseOpenListFieldValue {
         | Array<ArtifactReportResponseUserGroupRepresentation>;
 }
 
-interface ArtifactReportResponseUserRepresentation {
+export interface ArtifactReportResponseUserRepresentation {
     email: string;
     status: string;
-    id: number;
+    id: number | null;
     uri: string;
     user_url: string;
     real_name: string;
