@@ -31,9 +31,12 @@ final class RetrieveProjectReferenceStub implements RetrieveProjectReference
     {
     }
 
-    public static function withProjects(ProjectReference ...$projects): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withProjects(ProjectReference $project, ProjectReference ...$other_projects): self
     {
-        return new self($projects);
+        return new self([$project, ...$other_projects]);
     }
 
     public static function withNoProjects(): self

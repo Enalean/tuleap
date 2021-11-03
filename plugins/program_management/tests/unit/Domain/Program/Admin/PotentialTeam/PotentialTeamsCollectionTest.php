@@ -43,7 +43,7 @@ final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(self::TEAM);
+        $this->teams_of_program_searcher = SearchTeamsOfProgramStub::withTeamIds(self::TEAM);
 
         $this->all_program_searcher = AllProgramSearcherStub::buildPrograms(self::PROGRAM);
         $this->user_identifier      = UserIdentifierStub::buildGenericUser();
@@ -52,10 +52,9 @@ final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildEmptyTeamsIfNoAggregatedTeamsAndNoProjectUserIsAdminOf(): void
     {
-        $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams();
         self::assertEmpty(
             PotentialTeamsCollection::buildPotentialTeams(
-                $this->teams_of_program_searcher,
+                SearchTeamsOfProgramStub::withNoTeams(),
                 $this->all_program_searcher,
                 SearchProjectsUserIsAdminStub::buildWithoutProject(),
                 $this->program,

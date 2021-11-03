@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 
 interface CreateIterations
 {
@@ -34,7 +36,7 @@ interface CreateIterations
      */
     public function createIterations(
         SourceTimeboxChangesetValues $values,
-        TeamProjectsCollection $teams,
+        TeamIdentifierCollection $teams,
         IterationCreation $creation
     ): void;
 }

@@ -27,16 +27,10 @@ use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 final class SearchTeamsOfProgramStub implements SearchTeamsOfProgram
 {
     /**
-     * @var int[]
-     */
-    private array $team_ids;
-
-    /**
      * @param int[] $team_ids
      */
-    private function __construct(array $team_ids)
+    private function __construct(private array $team_ids)
     {
-        $this->team_ids = $team_ids;
     }
 
     public function searchTeamIdsOfProgram(int $project_id): array
@@ -44,9 +38,12 @@ final class SearchTeamsOfProgramStub implements SearchTeamsOfProgram
         return $this->team_ids;
     }
 
-    public static function buildTeams(int ...$ids): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withTeamIds(int $team_id, int ...$other_team_ids): self
     {
-        return new self($ids);
+        return new self([$team_id, ...$other_team_ids]);
     }
 
     public static function withNoTeams(): self

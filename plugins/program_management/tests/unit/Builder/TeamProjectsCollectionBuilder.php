@@ -29,12 +29,16 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 
 final class TeamProjectsCollectionBuilder
 {
-    public static function withProjects(ProjectReference ...$teams): TeamProjectsCollection
+    /**
+     * @no-named-arguments
+     */
+    public static function withProjects(ProjectReference $first_team, ProjectReference ...$other_teams): TeamProjectsCollection
     {
-        $team_ids = array_map(static fn(ProjectReference $team) => $team->getId(), $teams);
+        $all_teams = [$first_team, ...$other_teams];
+        $team_ids  = array_map(static fn(ProjectReference $team) => $team->getId(), $all_teams);
         return TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(...$team_ids),
-            RetrieveProjectReferenceStub::withProjects(...$teams),
+            SearchTeamsOfProgramStub::withTeamIds(...$team_ids),
+            RetrieveProjectReferenceStub::withProjects(...$all_teams),
             ProgramIdentifierBuilder::build()
         );
     }

@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Builder\TeamIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -39,7 +39,6 @@ final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\
     private RetrieveMirroredProgramIncrementFromTeamStub $mirror_retriever;
     private ProgramIncrementIdentifier $program_increment;
     private UserIdentifierStub $user;
-    private ProjectReferenceStub $team_project;
 
     protected function setUp(): void
     {
@@ -52,45 +51,36 @@ final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\
 
         $this->user              = UserIdentifierStub::buildGenericUser();
         $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithId(11);
-        $this->team_project      = ProjectReferenceStub::buildGeneric();
+    }
+
+    private function getFromProgramIncrementAndTeam(): ?MirroredProgramIncrementIdentifier
+    {
+        return MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
+            $this->mirror_retriever,
+            $this->visibility_verifier,
+            $this->program_increment,
+            TeamIdentifierBuilder::build(),
+            $this->user
+        );
     }
 
     public function testItBuildsFromProgramIncrementAndTeam(): void
     {
-        $mirror = MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
-            $this->mirror_retriever,
-            $this->visibility_verifier,
-            $this->program_increment,
-            $this->team_project,
-            $this->user
-        );
-        self::assertSame(self::FIRST_MIRROR_ID, $mirror?->getId());
+        $mirror = $this->getFromProgramIncrementAndTeam();
+        self::assertNotNull($mirror);
+        self::assertSame(self::FIRST_MIRROR_ID, $mirror->getId());
     }
 
     public function testItReturnsNullWhenNoMirrorFound(): void
     {
-        self::assertNull(
-            MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
-                RetrieveMirroredProgramIncrementFromTeamStub::withNoMirror(),
-                $this->visibility_verifier,
-                $this->program_increment,
-                $this->team_project,
-                $this->user
-            )
-        );
+        $this->mirror_retriever = RetrieveMirroredProgramIncrementFromTeamStub::withNoMirror();
+        self::assertNull($this->getFromProgramIncrementAndTeam());
     }
 
     public function testItReturnsNullWhenMirrorIsNotVisible(): void
     {
-        self::assertNull(
-            MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
-                $this->mirror_retriever,
-                VerifyIsVisibleArtifactStub::withNoVisibleArtifact(),
-                $this->program_increment,
-                $this->team_project,
-                $this->user
-            )
-        );
+        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
+        self::assertNull($this->getFromProgramIncrementAndTeam());
     }
 
     public function testItBuildsCollectionFromProgramIncrement(): void

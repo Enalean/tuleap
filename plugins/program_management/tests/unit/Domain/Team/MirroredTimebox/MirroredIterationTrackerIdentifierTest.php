@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Tests\Builder\TeamIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
@@ -32,48 +33,40 @@ final class MirroredIterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\
 {
     private const TRACKER_ID = 21;
     private RetrieveMirroredIterationTrackerStub $tracker_retriever;
-    private ProjectReference $team_project;
-    private UserIdentifierStub $user;
 
     protected function setUp(): void
     {
         $this->tracker_retriever = RetrieveMirroredIterationTrackerStub::withValidTrackers(
             TrackerReferenceStub::withId(self::TRACKER_ID)
         );
-        $this->team_project      = ProjectReferenceStub::buildGeneric();
-        $this->user              = UserIdentifierStub::buildGenericUser();
+    }
+
+    private function getMirroredIterationTracker(): ?MirroredIterationTrackerIdentifier
+    {
+        return MirroredIterationTrackerIdentifier::fromTeam(
+            $this->tracker_retriever,
+            RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::buildGeneric()),
+            TeamIdentifierBuilder::build(),
+            UserIdentifierStub::buildGenericUser(),
+        );
     }
 
     public function testItBuildsFromTeam(): void
     {
-        $mirrored_iteration_tracker = MirroredIterationTrackerIdentifier::fromTeam(
-            $this->tracker_retriever,
-            $this->team_project,
-            $this->user
-        );
+        $mirrored_iteration_tracker = $this->getMirroredIterationTracker();
         self::assertNotNull($mirrored_iteration_tracker);
         self::assertSame(self::TRACKER_ID, $mirrored_iteration_tracker->getId());
     }
 
     public function testItReturnsNullWhenTeamHasNoVisibleRootPlanning(): void
     {
-        self::assertNull(
-            MirroredIterationTrackerIdentifier::fromTeam(
-                RetrieveMirroredIterationTrackerStub::withNoVisibleRootPlanning(),
-                $this->team_project,
-                $this->user
-            )
-        );
+        $this->tracker_retriever = RetrieveMirroredIterationTrackerStub::withNoVisibleRootPlanning();
+        self::assertNull($this->getMirroredIterationTracker());
     }
 
     public function testItReturnsNullWhenTeamHasNoVisibleSecondPlanning(): void
     {
-        self::assertNull(
-            MirroredIterationTrackerIdentifier::fromTeam(
-                RetrieveMirroredIterationTrackerStub::withNoVisibleSecondPlanning(),
-                $this->team_project,
-                $this->user
-            )
-        );
+        $this->tracker_retriever = RetrieveMirroredIterationTrackerStub::withNoVisibleSecondPlanning();
+        self::assertNull($this->getMirroredIterationTracker());
     }
 }

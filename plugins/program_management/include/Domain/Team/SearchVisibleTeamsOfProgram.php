@@ -20,21 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class MirroredProgramIncrementNotFoundException extends \Exception implements MirroredTimeboxReplicationException
+interface SearchVisibleTeamsOfProgram
 {
-    public function __construct(ProgramIncrementIdentifier $program_increment, TeamIdentifier $team)
-    {
-        parent::__construct(
-            sprintf(
-                'Could not find the mirrored program increment in team #%d matching program increment #%d',
-                $team->getId(),
-                $program_increment->getId()
-            )
-        );
-    }
+    /**
+     * Returns non-empty array of int containing all team ids linked to $program.
+     * All returned Teams are guaranteed visible by $user, otherwise it throws an Exception.
+     * Throws an Exception if it finds no team for the given $program.
+     * @throws ProgramHasNoTeamException
+     * @throws TeamIsNotVisibleException
+     */
+    public function searchTeamIdsOfProgram(ProgramIdentifier $program, UserIdentifier $user): array;
 }

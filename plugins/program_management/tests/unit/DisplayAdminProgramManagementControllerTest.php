@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGr
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
-use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
@@ -35,21 +34,21 @@ use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildUGroupRepresentationStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
@@ -63,6 +62,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const TEAM_ID = 150;
     private BuildProgramStub $build_program;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer
@@ -76,8 +76,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      * @var string[]
      */
     private array $variables;
-    private SearchTeamsOfProgramStub $team_searcher;
-    private RetrieveProjectReference $project_retriever;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_builder;
@@ -108,8 +106,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->request                   = HTTPRequestBuilder::get()->withUser($this->user)->build();
         $this->template_renderer         = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder       = $this->createMock(ProgramManagementBreadCrumbsBuilder::class);
-        $this->team_searcher             = SearchTeamsOfProgramStub::buildTeams(150);
-        $this->project_retriever         = RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(150));
         $this->plannable_tracker_builder = new PotentialPlannableTrackersConfigurationPresentersBuilder(
             RetrievePlannableTrackersStub::buildIds()
         );
@@ -131,12 +127,14 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             BuildUGroupRepresentationStub::build()
         );
 
+        $teams_searcher = SearchTeamsOfProgramStub::withTeamIds(self::TEAM_ID);
+
         return new DisplayAdminProgramManagementController(
             SearchProjectsUserIsAdminStub::buildWithoutProject(),
             $this->template_renderer,
             $this->breadcrumbs_builder,
-            $this->team_searcher,
-            $this->project_retriever,
+            $teams_searcher,
+            RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(self::TEAM_ID)),
             $this->team_verifier,
             $this->build_program,
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_tracker),
@@ -156,8 +154,11 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                     BuildProgramStub::stubValidProgram(),
                     $this->program_increment_checker,
                     $this->iteration_checker,
-                    SearchTeamsOfProgramStub::buildTeams(),
-                    $this->project_retriever,
+                    $teams_searcher,
+                    RetrieveProjectReferenceStub::withProjects(
+                        ProjectReferenceStub::withId(self::TEAM_ID),
+                        ProjectReferenceStub::withId(self::TEAM_ID),
+                    )
                 ),
                 RetrievePlannableTrackersStub::buildIds(1, 2),
                 VerifyTrackerSemanticsStub::withAllSemantics(),

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 final class TeamHasNoMirroredIterationTrackerException extends \Exception implements MirroredTimeboxReplicationException
 {
-    public function __construct(ProjectReference $team)
+    public function __construct(TeamIdentifier $team)
     {
         parent::__construct(
             sprintf(

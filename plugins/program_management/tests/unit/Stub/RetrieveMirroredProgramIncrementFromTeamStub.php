@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 final class RetrieveMirroredProgramIncrementFromTeamStub implements RetrieveMirroredProgramIncrementFromTeam
 {
@@ -50,7 +50,7 @@ final class RetrieveMirroredProgramIncrementFromTeamStub implements RetrieveMirr
         return new self(true, []);
     }
 
-    public function getMirrorId(ProgramIncrementIdentifier $program_increment, ProjectReference $team): ?int
+    public function getMirrorId(ProgramIncrementIdentifier $program_increment, TeamIdentifier $team): ?int
     {
         if ($this->should_return_null) {
             return null;

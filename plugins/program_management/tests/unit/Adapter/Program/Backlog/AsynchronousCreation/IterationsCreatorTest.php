@@ -27,11 +27,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Iterati
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredIterationCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamIdentifierCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AddArtifactLinkChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -47,12 +48,14 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIRST_TEAM_ID  = 168;
+    private const SECOND_TEAM_ID = 160;
     private RetrieveMirroredIterationTrackerStub $milestone_retriever;
     private CreateArtifactStub $artifact_creator;
     private RetrieveMirroredProgramIncrementFromTeamStub $mirrored_program_increment_retriever;
     private AddArtifactLinkChangesetStub $link_adder;
     private SourceTimeboxChangesetValues $field_values;
-    private TeamProjectsCollection $teams;
+    private TeamIdentifierCollection $teams;
     private IterationCreation $creation;
 
     protected function setUp(): void
@@ -67,10 +70,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mirrored_program_increment_retriever = RetrieveMirroredProgramIncrementFromTeamStub::withIds(60, 61);
 
         $this->field_values = SourceTimeboxChangesetValuesBuilder::build();
-        $this->teams        = TeamProjectsCollectionBuilder::withProjects(
-            ProjectReferenceStub::withId(168),
-            ProjectReferenceStub::withId(160),
-        );
+        $this->teams        = TeamIdentifierCollectionBuilder::buildWithIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID);
 
         $this->creation = IterationCreationBuilder::buildWithIds(25, 9, 59, 149, 9017);
     }
@@ -91,7 +91,11 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mirrored_program_increment_retriever,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             RetrieveTrackerOfArtifactStub::withIds(95, 64),
-            $this->link_adder
+            $this->link_adder,
+            RetrieveProjectReferenceStub::withProjects(
+                ProjectReferenceStub::withId(self::FIRST_TEAM_ID),
+                ProjectReferenceStub::withId(self::SECOND_TEAM_ID)
+            )
         );
     }
 

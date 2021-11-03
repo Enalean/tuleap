@@ -47,7 +47,7 @@ final class TrackerErrorPresenterTest extends TestCase
         $program_increment_checker = $this->createMock(ProgramIncrementCreatorChecker::class);
         $iteration_checker         = $this->createMock(IterationCreatorChecker::class);
         $build_program             = BuildProgramStub::stubValidProgram();
-        $teams_searcher            = SearchTeamsOfProgramStub::buildTeams(101);
+        $teams_searcher            = SearchTeamsOfProgramStub::withTeamIds(101);
         $this->tracker             = TrackerReferenceStub::withDefaults();
         $this->user_identifier     = UserReferenceStub::withDefaults();
 

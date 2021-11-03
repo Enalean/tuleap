@@ -50,7 +50,7 @@ final class CollectLinkedProjectsProxyTest extends TestCase
         $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($this->source_project, $linked_project);
 
         $this->teams_searcher    = new TeamsSearcher(
-            SearchTeamsOfProgramStub::buildTeams((int) $linked_project->getID()),
+            SearchTeamsOfProgramStub::withTeamIds((int) $linked_project->getID()),
             $retrieve_full_project
         );
         $this->programs_searcher = new ProgramsSearcher(
@@ -103,7 +103,7 @@ final class CollectLinkedProjectsProxyTest extends TestCase
         $blue_team             = ProjectTestBuilder::aProject()->build();
         $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_team, $blue_team);
         $this->teams_searcher  = new TeamsSearcher(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
+            SearchTeamsOfProgramStub::withTeamIds(103, 104),
             $retrieve_full_project
         );
     }

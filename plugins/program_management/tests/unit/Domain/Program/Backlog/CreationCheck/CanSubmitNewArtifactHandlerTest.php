@@ -62,7 +62,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
                 $program_builder,
                 $program_increment_creator_checker,
                 $iteration_creator_checker,
-                SearchTeamsOfProgramStub::buildTeams(104),
+                SearchTeamsOfProgramStub::withTeamIds(104),
                 new ProjectReferenceRetriever($retrieve_full_project),
             )
         );

@@ -103,7 +103,7 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
         $blue_team             = ProjectTestBuilder::aProject()->build();
         $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_team, $blue_team);
         $teams_searcher        = new TeamsSearcher(
-            SearchTeamsOfProgramStub::buildTeams(103, 104),
+            SearchTeamsOfProgramStub::withTeamIds(103, 104),
             $retrieve_full_project
         );
 

@@ -27,14 +27,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
-use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
+use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class IterationCreationProcessor implements ProcessIterationCreation
@@ -46,8 +47,7 @@ final class IterationCreationProcessor implements ProcessIterationCreation
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
         private RetrieveProgramOfIteration $program_retriever,
         private BuildProgram $program_builder,
-        private SearchTeamsOfProgram $teams_searcher,
-        private RetrieveProjectReference $project_reference_retriever,
+        private SearchVisibleTeamsOfProgram $teams_searcher,
         private CreateIterations $iterations_creator
     ) {
     }
@@ -67,7 +67,9 @@ final class IterationCreationProcessor implements ProcessIterationCreation
             FieldSynchronizationException
             | MirroredTimeboxReplicationException
             | ProgramAccessException
-            | ProjectIsNotAProgramException $exception
+            | ProjectIsNotAProgramException
+            | ProgramHasNoTeamException
+            | TeamIsNotVisibleException $exception
         ) {
             $this->logger->error('Error during creation of mirror iterations', ['exception' => $exception]);
             return;
@@ -75,10 +77,12 @@ final class IterationCreationProcessor implements ProcessIterationCreation
     }
 
     /**
-     * @throws MirroredTimeboxReplicationException
      * @throws FieldSynchronizationException
-     * @throws ProjectIsNotAProgramException
+     * @throws MirroredTimeboxReplicationException
      * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramHasNoTeamException
+     * @throws TeamIsNotVisibleException
      */
     private function create(IterationCreation $creation): void
     {
@@ -96,11 +100,7 @@ final class IterationCreationProcessor implements ProcessIterationCreation
             $creation->getUser()
         );
 
-        $team_projects = TeamProjectsCollection::fromProgramIdentifier(
-            $this->teams_searcher,
-            $this->project_reference_retriever,
-            $program
-        );
-        $this->iterations_creator->createIterations($source_values, $team_projects, $creation);
+        $teams = TeamIdentifierCollection::fromProgram($this->teams_searcher, $program, $creation->getUser());
+        $this->iterations_creator->createIterations($source_values, $teams, $creation);
     }
 }

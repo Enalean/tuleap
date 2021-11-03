@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
@@ -186,7 +187,13 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             new MirroredTimeboxesDao(),
             $visibility_verifier,
             new TrackerOfArtifactRetriever($artifact_retriever, $tracker_retriever),
-            $changeset_adder
+            $changeset_adder,
+            new ProjectReferenceRetriever($project_manager_adapter)
+        );
+
+        $project_access_checker = new ProjectAccessChecker(
+            new RestrictedUserCanAccessProjectVerifier(),
+            $event_manager
         );
 
         return new IterationCreationProcessor(
@@ -195,17 +202,8 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
             new SubmissionDateRetriever($artifact_retriever),
             $program_DAO,
-            new ProgramAdapter(
-                $project_manager_adapter,
-                new ProjectAccessChecker(
-                    new RestrictedUserCanAccessProjectVerifier(),
-                    $event_manager
-                ),
-                $program_DAO,
-                $user_retriever
-            ),
-            $program_DAO,
-            new ProjectReferenceRetriever($project_manager_adapter),
+            new ProgramAdapter($project_manager_adapter, $project_access_checker, $program_DAO, $user_retriever),
+            new VisibleTeamSearcher($program_DAO, $user_retriever, $project_manager_adapter, $project_access_checker),
             $mirrors_creator
         );
     }
