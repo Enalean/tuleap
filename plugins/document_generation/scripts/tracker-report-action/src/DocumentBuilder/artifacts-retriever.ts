@@ -133,7 +133,7 @@ async function getStepExecutionsFieldValue(
     try {
         const test_execution: TestExecutionResponse = await getTestManagementExecution(artifact_id);
 
-        const test_execution_status: Array<string | null> = [];
+        const test_execution_status: Array<TestExecStatus | null> = [];
         const test_executions: Array<ArtifactReportResponseStepRepresentationEnhanced> = [];
 
         for (const test_definition of test_execution.definition.steps) {
@@ -464,9 +464,11 @@ interface ArtifactReportResponseStepRepresentation {
     rank: number;
 }
 
+type TestExecStatus = "notrun" | "passed" | "failed" | "blocked";
+
 interface ArtifactReportResponseStepRepresentationEnhanced
     extends ArtifactReportResponseStepRepresentation {
-    status: string | null;
+    status: TestExecStatus | null;
 }
 
 interface ArtifactStepExecutionFieldValue {
@@ -475,7 +477,7 @@ interface ArtifactStepExecutionFieldValue {
     label: string;
     value: null | {
         steps: Array<ArtifactReportResponseStepRepresentationEnhanced>;
-        steps_values: Array<string | null>;
+        steps_values: Array<TestExecStatus | null>;
     };
 }
 
@@ -560,7 +562,7 @@ export interface TestExecutionResponse {
     steps_results: {
         [key: string]: {
             step_id: number;
-            status: string;
+            status: TestExecStatus;
         };
     };
 }

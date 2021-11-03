@@ -64,6 +64,7 @@ import { loadImage } from "./Image/image-loader";
 import { transformLargeContentIntoParagraphs } from "./TextContent/transform-large-content-into-paragraphs";
 import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
 import type { ReadonlyArrayWithAtLeastOneElement } from "./TextContent/transform-html-into-paragraphs";
+import { getInternationalizedTestStatus } from "../internationalize-test-status";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -766,7 +767,14 @@ async function buildFieldValuesDisplayZone(
                                 buildTableCellLabel(
                                     sprintf(gettext_provider.gettext("Step %d"), step_number)
                                 ),
-                                buildTableCellContent(new TextRun(step_status || "")),
+                                buildTableCellContent(
+                                    new TextRun(
+                                        getInternationalizedTestStatus(
+                                            gettext_provider,
+                                            step_status
+                                        )
+                                    )
+                                ),
                             ],
                             tableHeader: true,
                         })
@@ -787,7 +795,13 @@ async function buildFieldValuesDisplayZone(
                         new Paragraph({
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.gettext("Status: %s"), step.status)
+                                    sprintf(
+                                        gettext_provider.gettext("Status: %s"),
+                                        getInternationalizedTestStatus(
+                                            gettext_provider,
+                                            step.status
+                                        )
+                                    )
                                 ),
                             ],
                         }),
