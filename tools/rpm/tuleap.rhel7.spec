@@ -522,17 +522,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 BurningParrot, default theme starting Tuleap 10
 
 #
-## Release
-#
-
-%package release
-Summary: %{APP_NAME} repository configuration
-Group: Development/Tools
-Requires: yum, epel-release
-%description release
-%{summary}.
-
-#
 # Package setup
 %prep
 %setup -q
@@ -844,12 +833,6 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 %{__install} plugins/ldap/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
-#
-## Package release
-%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/yum.repos.d
-%{__install} tools/rpm/tuleap.repo $RPM_BUILD_ROOT/%{_sysconfdir}/yum.repos.d/%{APP_NAME}.repo
-%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/pki/rpm-gpg
-%{__install} tools/rpm/RPM-GPG-KEY-Tuleap $RPM_BUILD_ROOT/%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
 
 # Plugin OpenID Connect Client
 %{__install} plugins/openidconnectclient/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
@@ -1526,18 +1509,6 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/src/themes/BurningParrot
 %{APP_DIR}/src/www/themes/BurningParrot
-
-#
-# Release
-#
-
-%files release
-%defattr(-,root,root,-)
-/etc/yum.repos.d/%{APP_NAME}.repo
-/etc/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
-%attr(00644,root,root) /etc/yum.repos.d/%{APP_NAME}.repo
-%attr(00644,root,root) /etc/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
-%config(noreplace) /etc/yum.repos.d/%{APP_NAME}.repo
 
 %changelog
 * Thu Mar 23 2017 Matthieu MONNIER <matthieu.monnier@enalean.com> -
