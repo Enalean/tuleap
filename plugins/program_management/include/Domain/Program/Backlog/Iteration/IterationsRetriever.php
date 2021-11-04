@@ -21,19 +21,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueUserCanSee;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\REST\v1\IterationRepresentation;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class IterationsRetriever
 {
@@ -41,15 +41,17 @@ final class IterationsRetriever
         private VerifyIsProgramIncrement $verify_is_program_increment,
         private VerifyIsVisibleArtifact $verify_is_visible_artifact,
         private SearchIterations $search_iterations,
-        private \Tracker_ArtifactFactory $artifact_factory,
-        private SemanticTimeframeBuilder $semantic_timeframe_builder,
-        private RetrieveUser $retrieve_user,
-        private LoggerInterface $logger
+        private RetrieveStatusValueUserCanSee $retrieve_status,
+        private RetrieveTitleValueUserCanSee $retrieve_title,
+        private RetrieveTimeframeValueUserCanSee $retrieve_timeframe,
+        private RetrieveUri $retrieve_uri,
+        private RetrieveCrossRef $retrieve_cross_ref,
+        private RetrieveUserCanUpdate $retrieve_user_can_update,
     ) {
     }
 
     /**
-     * @return IterationRepresentation[]
+     * @return Iteration[]
      * @throws ProgramIncrementNotFoundException
      */
     public function retrieveIterations(int $program_increment_id, UserIdentifier $user_identifier): array
@@ -61,35 +63,30 @@ final class IterationsRetriever
             $user_identifier
         );
 
-        $user       = $this->retrieve_user->getUserWithId($user_identifier);
-        $iterations = IterationIdentifier::buildCollectionFromProgramIncrement(
+        $iterations_identifier = IterationIdentifier::buildCollectionFromProgramIncrement(
             $this->search_iterations,
             $this->verify_is_visible_artifact,
             $program_increment,
             $user_identifier
         );
 
-        $representations = [];
-        foreach ($iterations as $iteration) {
-            $iteration_artifact = $this->artifact_factory->getArtifactById($iteration->getId());
-            if (! $iteration_artifact) {
-                continue;
-            }
-
-            $iteration_representation = IterationRepresentation::buildFromArtifact(
-                $this->semantic_timeframe_builder,
-                $this->logger,
-                $iteration_artifact,
-                $user
+        $iteration_list = [];
+        foreach ($iterations_identifier as $iteration_identifier) {
+            $iteration = Iteration::build(
+                $this->retrieve_status,
+                $this->retrieve_title,
+                $this->retrieve_timeframe,
+                $this->retrieve_uri,
+                $this->retrieve_cross_ref,
+                $this->retrieve_user_can_update,
+                $user_identifier,
+                $iteration_identifier
             );
-
-            if (! $iteration_representation) {
-                continue;
+            if ($iteration) {
+                $iteration_list[] = $iteration;
             }
-
-            $representations[] = $iteration_representation;
         }
 
-        return $representations;
+        return $iteration_list;
     }
 }
