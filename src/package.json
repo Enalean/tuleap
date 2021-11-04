@@ -29,7 +29,7 @@
     "d3-transition": "^3.0.1",
     "dompurify": "^2.2.9",
     "dragula": "^3.7.2",
-    "marked": "^3.0.4",
+    "marked": "^4.0.0",
     "mermaid": "^8.13.2",
     "moment": "^2.29.1",
     "mustache": "^4.2.0",
