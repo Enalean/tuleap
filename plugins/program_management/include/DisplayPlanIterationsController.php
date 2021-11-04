@@ -27,7 +27,12 @@ use HTTPRequest;
 use program_managementPlugin;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -39,7 +44,8 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
     public function __construct(
         private \ProjectManager $project_manager,
         private \TemplateRenderer $template_renderer,
-        private VerifyIsTeam $verify_is_team,
+        private BuildProgram $program_adapter,
+        private BuildProgramFlags $build_program_flags,
     ) {
     }
 
@@ -63,20 +69,28 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
             );
         }
 
-        if ($this->verify_is_team->isATeam((int) $project->getID())) {
-            throw new ForbiddenException(
-                dgettext(
-                    "tuleap-program_management",
-                    "Project is defined as a Team project. It can not be used as a Program."
-                )
-            );
-        }
-
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
         $this->includeHeaderAndNavigationBar($layout, $project);
 
-        $this->template_renderer->renderToPage('plan-iterations', []);
+        $user            = $request->getCurrentUser();
+        $user_identifier = UserProxy::buildFromPFUser($user);
+
+        try {
+            $planned_iterations = PlannedIterations::build(
+                $this->build_program_flags,
+                ProgramIdentifier::fromId($this->program_adapter, (int) $project->getID(), $user_identifier, null)
+            );
+        } catch (Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException | Domain\Program\Plan\ProjectIsNotAProgramException $e) {
+            throw new NotFoundException($e->getI18NExceptionMessage());
+        } catch (Domain\Program\Plan\ProgramAccessException $e) {
+            throw new ForbiddenException($e->getI18NExceptionMessage());
+        }
+
+        $this->template_renderer->renderToPage(
+            'plan-iterations',
+            DisplayPlanIterationsPresenter::fromPlannedIterations($planned_iterations)
+        );
 
         $layout->footer([]);
     }

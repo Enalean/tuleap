@@ -22,12 +22,13 @@ namespace Tuleap\ProgramManagement;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DisplayPlanIterationsControllerTest extends TestCase
@@ -40,13 +41,11 @@ final class DisplayPlanIterationsControllerTest extends TestCase
      * @var MockObject&\TemplateRenderer
      */
     private $template_renderer;
-    private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->project_manager   = $this->createStub(\ProjectManager::class);
         $this->template_renderer = $this->createMock(\TemplateRenderer::class);
-        $this->user              = UserTestBuilder::buildWithDefaults();
     }
 
     public function testItThrowsNotFoundExceptionWhenProjectIsNotFoundInVariables(): void
@@ -54,9 +53,12 @@ final class DisplayPlanIterationsControllerTest extends TestCase
         $this->project_manager->method('getProjectByUnixName')->willReturn(null);
 
         $variables = ['project_name' => 'unknown-project-unix-name'];
+        $project   = $this->createMock(\Project::class);
 
+        $project->method('getID')->willReturn(0);
         $this->expectException(NotFoundException::class);
-        $this->getController(VerifyIsTeamStub::withNotValidTeam())
+
+        $this->getController(BuildProgramStub::stubInvalidProgram())
             ->process(
                 HTTPRequestBuilder::get()->build(),
                 LayoutBuilder::build(),
@@ -66,63 +68,95 @@ final class DisplayPlanIterationsControllerTest extends TestCase
 
     public function testItThrowsNotFoundWhenServiceIsNotAvailable(): void
     {
-        $this->mockProject(false);
-
         $variables = ['project_name' => 'guinea-pig'];
+        $project   = $this->getProject(false);
+
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
 
         $this->expectException(NotFoundException::class);
-        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $variables);
+        $this->getController(BuildProgramStub::stubInvalidProgram())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $variables);
     }
 
     public function testPreventsAccessWhenProjectIsATeam(): void
     {
-        $this->mockProject();
-
-        $request   = HTTPRequestBuilder::get()->withUser($this->user)->build();
+        $request   = HTTPRequestBuilder::get()->withUser($this->getUser())->build();
         $variables = ['project_name' => 'guinea-pig'];
+        $project   = $this->getProject();
 
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+        $this->expectException(NotFoundException::class);
+
+        $this->getController(BuildProgramStub::stubInvalidProgram())->process($request, LayoutBuilder::build(), $variables);
+    }
+
+    public function testItThrowsAForbiddenExceptionWhenUserCannotAccessProgram(): void
+    {
+        $request   = HTTPRequestBuilder::get()->withUser($this->getUser())->build();
+        $variables = ['project_name' => 'test_project', 'increment_id' => '100'];
+        $project   = $this->getProject();
+
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
         $this->expectException(ForbiddenException::class);
 
-        $this->getController(VerifyIsTeamStub::withValidTeam())->process($request, LayoutBuilder::build(), $variables);
+        $this->getController(
+            BuildProgramStub::stubInvalidProgramAccess(),
+        )
+        ->process($request, LayoutBuilder::build(), $variables);
     }
 
     public function testItDisplaysIterationsPlanning(): void
     {
-        $this->mockProject();
-
-        $this->template_renderer->expects(self::once())
-            ->method('renderToPage')
-            ->with('plan-iterations', []);
-
-        $user      = $this->createMock(\PFUser::class);
+        $user      = $this->getUser();
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];
+        $project   = $this->getProject();
 
-        $this->getController(VerifyIsTeamStub::withNotValidTeam())
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+        $this->template_renderer->expects(self::once())
+            ->method('renderToPage')
+            ->with('plan-iterations', self::isInstanceOf(DisplayPlanIterationsPresenter::class));
+
+        $this->getController(BuildProgramStub::stubValidProgram())
             ->process($request, LayoutBuilder::build(), $variables);
     }
 
-    private function getController(VerifyIsTeamStub $verify_is_team_stub): DisplayPlanIterationsController
+    private function getController(BuildProgramStub $build_program_stub): DisplayPlanIterationsController
     {
         return new DisplayPlanIterationsController(
             $this->project_manager,
             $this->template_renderer,
-            $verify_is_team_stub
+            $build_program_stub,
+            BuildProgramFlagsStub::withDefaults()
         );
     }
 
-    private function mockProject(bool $is_service_active = true): void
+    private function getProject(bool $is_program_management_used = true): \Project
     {
         $project = $this->createMock(\Project::class);
+
         $project->method('getID')->willReturn(102);
         $project->method('isPublic')->willReturn(true);
         $project->method('getPublicName')->willReturn('Guinea Pig');
         $project->method('getUnixNameLowerCase')->willReturn('guinea-pig');
         $project->method('getIconUnicodeCodepoint')->willReturn('🐹');
+
         $project->expects(self::once())
             ->method('usesService')
             ->with(\program_managementPlugin::SERVICE_SHORTNAME)
-            ->willReturn($is_service_active);
-        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+            ->willReturn($is_program_management_used);
+
+        return $project;
+    }
+
+    protected function getUser(): \PFUser
+    {
+        $user = $this->createMock(\PFUser::class);
+
+        $user->method('getPreference')->willReturn(false);
+        $user->method('isAdmin')->willReturn(true);
+        $user->method('getId')->willReturn(101);
+        $user->method('getName')->willReturn('John');
+
+        return $user;
     }
 }
