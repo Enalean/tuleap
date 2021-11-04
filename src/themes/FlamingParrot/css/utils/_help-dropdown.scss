@@ -129,10 +129,6 @@
         &.help-dropdown-link-highlight {
             color: var(--tlp-warning-color);
         }
-
-        > .review-link-icon {
-            color: map.get(map.get(swatch-colors.$tlp-swatch-color-map, "fiesta-red"), "text-on-dark");
-        }
     }
 
     .dropdown-menu-item-alt {
