@@ -25,7 +25,6 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
-use DateTime;
 use Tuleap\REST\JsonDecoder;
 
 class TimetrackingDatesExtractor
@@ -45,18 +44,21 @@ class TimetrackingDatesExtractor
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
 
         if (empty($query) || (! isset($json_query["start_date"]) && ! isset($json_query["end_date"]))) {
-            $date       = new DateTime();
-            $end_date   = $date->format('Y-m-d');
-            $start_date = $date->modify("-1 month")->format('Y-m-d');
-            $dates      = new DateTrackingTimesPeriod($start_date, $end_date);
-
-            return $dates;
+            $date       = new \DateTimeImmutable();
+            $start_date = $date->modify("-1 month");
+            return new DateTrackingTimesPeriod($start_date, $date);
         }
 
         $checker = new TimetrackingQueryChecker();
         $checker->checkQuery($json_query);
-        $dates = new DateTrackingTimesPeriod($json_query["start_date"], $json_query["end_date"]);
 
-        return $dates;
+        $start_date = \DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $json_query["start_date"]);
+        $end_date   = \DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $json_query["end_date"]);
+
+        if ($start_date === false || $end_date === false) {
+            throw new \LogicException('start_date and end_date are supposed to be checked by TimetrackingQueryChecker::checkQuery');
+        }
+
+        return new DateTrackingTimesPeriod($start_date, $end_date);
     }
 }

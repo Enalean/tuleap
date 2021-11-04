@@ -29,28 +29,16 @@ namespace Tuleap\Timetracking\REST\v1;
 
 class DateTrackingTimesPeriod
 {
-    /**
-     * @var string
-     */
-    private $start_date;
-
-    /**
-     * @var string
-     */
-    private $end_date;
-
-    public function __construct(string $start_date, string $end_date)
+    public function __construct(private \DateTimeImmutable $start_date, private \DateTimeImmutable $end_date)
     {
-        $this->start_date = $start_date;
-        $this->end_date   = $end_date;
     }
 
-    public function getStartDate(): string
+    public function getStartDate(): \DateTimeImmutable
     {
         return $this->start_date;
     }
 
-    public function getEndDate(): string
+    public function getEndDate(): \DateTimeImmutable
     {
         return $this->end_date;
     }

@@ -82,7 +82,7 @@ class TimeDao extends DataAccessObject
         $this->getDB()->run($sql, $day, $minutes, $step, $time_id);
     }
 
-    public function searchTimesIdsForUserInTimePeriodByArtifact($user_id, $start_date, $end_date, $limit, $offset)
+    public function searchTimesIdsForUserInTimePeriodByArtifact($user_id, \DateTimeImmutable $start_date, \DateTimeImmutable $end_date, $limit, $offset)
     {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS GROUP_CONCAT(times.id) AS artifact_times_ids
                 FROM plugin_timetracking_times AS times
@@ -95,15 +95,14 @@ class TimeDao extends DataAccessObject
                     INNER JOIN `groups` AS projects
                         ON tracker.group_id = projects.group_id
                 WHERE user_id = ?
-                AND   day BETWEEN CAST(? AS DATE)
-                            AND   CAST(? AS DATE)
+                AND   day BETWEEN ? AND ?
                 AND projects.status = "A"
                 GROUP BY times.artifact_id
                 ORDER BY times.id
                 LIMIT ?, ?
         ';
 
-        return $this->getDB()->run($sql, $user_id, $start_date, $end_date, $offset, $limit);
+        return $this->getDB()->run($sql, $user_id, $start_date->format('Y-m-d'), $end_date->format('Y-m-d'), $offset, $limit);
     }
 
     public function getLastTime($user_id, $artifact_id)
@@ -118,7 +117,7 @@ class TimeDao extends DataAccessObject
         return $this->getDB()->row($sql, $user_id, $artifact_id);
     }
 
-    public function getTotalTimeByTracker(array $tracker_ids, string $start_date, string $end_date, string $display_name_sql, int $limit, int $offset)
+    public function getTotalTimeByTracker(array $tracker_ids, \DateTimeImmutable $start_date, \DateTimeImmutable $end_date, string $display_name_sql, int $limit, int $offset)
     {
         $trackers_list = EasyStatement::open();
         $trackers_list->in('artifact.tracker_id IN(?*)', $tracker_ids);
@@ -132,11 +131,10 @@ class TimeDao extends DataAccessObject
                 INNER JOIN user as user
                           ON user.user_id = times.user_id
                 WHERE $trackers_list
-                 AND  times.day BETWEEN CAST(? AS DATE)
-                             AND   CAST(? AS DATE)
+                 AND  times.day BETWEEN ? AND ?
                              GROUP BY tracker.id, times.user_id
                              LIMIT ?, ?";
         return $this->getDB()
-                    ->safeQuery($sql, array_merge($trackers_list->values(), [$start_date, $end_date, $offset, $limit]));
+                    ->safeQuery($sql, array_merge($trackers_list->values(), [$start_date->format('Y-m-d'), $end_date->format('Y-m-d'), $offset, $limit]));
     }
 }

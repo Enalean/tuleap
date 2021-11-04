@@ -94,7 +94,7 @@ class TimeRetriever
     /**
      * @return PaginatedTimes
      */
-    public function getPaginatedTimesForUserInTimePeriodByArtifact(PFUser $user, $start_date, $end_date, $limit, $offset)
+    public function getPaginatedTimesForUserInTimePeriodByArtifact(PFUser $user, \DateTimeImmutable $start_date, \DateTimeImmutable $end_date, $limit, $offset)
     {
         $times              = [];
         $matching_times_ids = $this->dao->searchTimesIdsForUserInTimePeriodByArtifact(
