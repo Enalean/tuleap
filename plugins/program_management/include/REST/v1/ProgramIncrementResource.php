@@ -57,11 +57,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
+use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
@@ -199,17 +200,18 @@ final class ProgramIncrementResource extends AuthenticatedResource
      */
     public function patchContent(int $id, ProgramIncrementContentPatchRepresentation $patch_representation): void
     {
-        $user_manager           = \UserManager::instance();
-        $user_retriever         = new UserManagerAdapter($user_manager);
-        $artifact_factory       = \Tracker_ArtifactFactory::instance();
-        $program_increments_dao = new ProgramIncrementsDAO();
-        $plan_dao               = new PlanDao();
-        $program_dao            = new ProgramDao();
-        $artifact_retriever     = new ArtifactFactoryAdapter($artifact_factory);
-        $tracker_factory        = \TrackerFactory::instance();
-        $tracker_retriever      = new TrackerFactoryAdapter($tracker_factory);
-        $form_element_factory   = \Tracker_FormElementFactory::instance();
-        $field_retriever        = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $user_manager            = \UserManager::instance();
+        $user_retriever          = new UserManagerAdapter($user_manager);
+        $artifact_factory        = \Tracker_ArtifactFactory::instance();
+        $program_increments_dao  = new ProgramIncrementsDAO();
+        $plan_dao                = new PlanDao();
+        $program_dao             = new ProgramDao();
+        $artifact_retriever      = new ArtifactFactoryAdapter($artifact_factory);
+        $tracker_factory         = \TrackerFactory::instance();
+        $tracker_retriever       = new TrackerFactoryAdapter($tracker_factory);
+        $form_element_factory    = \Tracker_FormElementFactory::instance();
+        $field_retriever         = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
 
         $artifact_link_updater = new ArtifactLinkUpdater(
             \Tracker_Artifact_PriorityManager::build(),
@@ -226,14 +228,22 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $artifacts_linked_to_parent_dao
         );
 
-        $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
-        $modifier                = new ContentModifier(
+        $project_access_checker = new ProjectAccessChecker(
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+
+        $program_adapter = new ProgramAdapter(
+            $project_manager_adapter,
+            $project_access_checker,
+            $program_dao,
+            $user_retriever
+        );
+
+        $modifier             = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
                 $project_manager_adapter,
-                new ProjectAccessChecker(
-                    new RestrictedUserCanAccessProjectVerifier(),
-                    \EventManager::instance()
-                ),
+                $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
                 $user_retriever,
                 new UserIsProgramAdminVerifier($user_retriever)
@@ -257,18 +267,21 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new UserCanPlanInProgramIncrementVerifier(
                 new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever),
                 $program_increments_dao,
-                new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever)
+                new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever),
+                $program_dao,
+                $program_adapter,
+                new VisibleTeamSearcher(
+                    $program_dao,
+                    $user_retriever,
+                    $project_manager_adapter,
+                    $project_access_checker,
+                ),
             ),
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $program_dao,
-            new ProgramAdapter(
-                $project_manager_adapter,
-                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
-                $program_dao,
-                $user_retriever
-            )
+            $program_adapter,
         );
-        $transaction_executor    = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         $user = $user_manager->getCurrentUser();
 

@@ -116,12 +116,12 @@ use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
@@ -135,6 +135,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserCanSubmitInTrackerVerifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
@@ -545,19 +546,24 @@ final class program_managementPlugin extends Plugin
         $program_increments_DAO   = new ProgramIncrementsDAO();
         $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
         $project_manager_adapter  = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
+        $program_dao              = new ProgramDao();
+
+        $project_access_checker = new ProjectAccessChecker(
+            new RestrictedUserCanAccessProjectVerifier(),
+            EventManager::instance()
+        );
+
+        $program_adapter = new ProgramAdapter(
+            $project_manager_adapter,
+            $project_access_checker,
+            $program_dao,
+            $user_retriever,
+        );
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
-            new ProgramAdapter(
-                $project_manager_adapter,
-                new ProjectAccessChecker(
-                    new RestrictedUserCanAccessProjectVerifier(),
-                    EventManager::instance()
-                ),
-                new ProgramDao(),
-                $user_retriever,
-            ),
+            $program_adapter,
             new ProgramFlagsBuilder(
                 new \Tuleap\Project\Flags\ProjectFlagsBuilder(new ProjectFlagsDao()),
                 $project_manager_adapter
@@ -582,7 +588,15 @@ final class program_managementPlugin extends Plugin
                     new UserCanPlanInProgramIncrementVerifier(
                         $update_verifier,
                         $program_increments_DAO,
-                        new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever)
+                        new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever),
+                        $program_dao,
+                        $program_adapter,
+                        new VisibleTeamSearcher(
+                            $program_dao,
+                            $user_retriever,
+                            $project_manager_adapter,
+                            $project_access_checker,
+                        ),
                     ),
                 )
             ),
