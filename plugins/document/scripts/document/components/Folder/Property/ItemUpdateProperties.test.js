@@ -59,7 +59,7 @@ describe("ItemUpdateProperties", () => {
         });
 
         describe("When the parent modal is open after a DnD", () => {
-            it("Displays only 'version title' and 'changelog' fields", () => {
+            it("Displays only 'version title', 'changelog', and 'approval table' fields", () => {
                 const wrapper = getWrapper({ has_approval_table: true }, true);
 
                 expect(
@@ -70,7 +70,7 @@ describe("ItemUpdateProperties", () => {
                 ).toBeTruthy();
                 expect(
                     wrapper.find("[data-test='update-approval-properties']").exists()
-                ).toBeFalsy();
+                ).toBeTruthy();
                 expect(
                     wrapper.find("[data-test='update-property-lock-version']").exists()
                 ).toBeFalsy();

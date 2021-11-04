@@ -31,7 +31,7 @@
         <changelog-property v-model="version.changelog" data-test="update-property-changelog" />
         <slot></slot>
         <approval-update-properties
-            v-if="item.has_approval_table && !isOpenAfterDnd"
+            v-if="item.has_approval_table"
             v-on:approval-table-action-change="emitApprovalUpdateAction"
             data-test="update-approval-properties"
         />

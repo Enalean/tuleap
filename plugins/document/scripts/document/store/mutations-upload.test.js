@@ -307,6 +307,11 @@ describe("Store mutations", () => {
                     locked_by: { id: 137, uri: "users/137", user_url: "/users/user_url" },
                     lock_date: "2019-04-01T18:17:07+04:00",
                 },
+                has_approval_table: true,
+                is_approval_table_enabled: true,
+                approval_table: {
+                    approval_state: "Approved",
+                },
             };
             const new_version = {
                 id: 2,
@@ -317,6 +322,11 @@ describe("Store mutations", () => {
                     file_type: "image/jpeg",
                 },
                 lock_info: null,
+                has_approval_table: true,
+                is_approval_table_enabled: true,
+                approval_table: {
+                    approval_state: "Not yet",
+                },
             };
 
             const state = {

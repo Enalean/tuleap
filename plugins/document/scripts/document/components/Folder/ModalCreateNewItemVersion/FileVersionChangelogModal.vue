@@ -35,6 +35,7 @@
                 v-bind:version="version"
                 v-bind:item="updatedFile"
                 v-bind:is-open-after-dnd="true"
+                v-on:approval-table-action-change="setApprovalUpdateAction"
             />
         </div>
         <modal-footer
@@ -78,6 +79,7 @@ export default {
             modal: null,
             is_loading: false,
             version: {},
+            approval_table_action: null,
         };
     },
     computed: {
@@ -95,6 +97,9 @@ export default {
         this.modal.show();
     },
     methods: {
+        setApprovalUpdateAction(value) {
+            this.approval_table_action = value;
+        },
         async uploadNewVersion() {
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
@@ -105,7 +110,7 @@ export default {
                 this.version.title,
                 this.version.changelog,
                 false,
-                null,
+                this.approval_table_action,
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {

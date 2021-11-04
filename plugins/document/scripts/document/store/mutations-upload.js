@@ -131,6 +131,9 @@ function resetFolderIsUploading(state, folder) {
 function replaceFileWithNewVersion(state, [existing_item, new_version]) {
     existing_item.file_properties = new_version.file_properties;
     existing_item.lock_info = new_version.lock_info;
+    existing_item.has_approval_table = new_version.has_approval_table;
+    existing_item.is_approval_table_enabled = new_version.is_approval_table_enabled;
+    Vue.set(existing_item, "approval_table", new_version.approval_table);
 }
 
 function replaceLinkWithNewVersion(state, [existing_item, new_version]) {
