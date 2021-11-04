@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,7 +46,8 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     {
         parent::setUp();
 
-        $this->jira_client = Mockery::mock(ClientWrapper::class);
+        $this->jira_client = new class extends JiraCloudClientStub {
+        };
 
         $this->retriever = new JiraTimetrackingConfigurationRetriever(
             $this->jira_client,
@@ -55,13 +57,10 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsTheJiraTimetrackingConfigurationName(): void
     {
-        $this->jira_client->shouldReceive('getUrl')
-            ->once()
-            ->with('/rest/api/2/configuration/timetracking')
-            ->andReturn([
-                'key'  => "JIRA",
-                'name' => "JIRA provided time tracking"
-            ]);
+        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
+            'key'  => "JIRA",
+            'name' => "JIRA provided time tracking"
+        ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
@@ -71,10 +70,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsNullIfTheWrapperReturnsEmptyJson(): void
     {
-        $this->jira_client->shouldReceive('getUrl')
-            ->once()
-            ->with('/rest/api/2/configuration/timetracking')
-            ->andReturn([]);
+        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
@@ -83,12 +79,9 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsNullIfKeyEntryIsMissingInJson(): void
     {
-        $this->jira_client->shouldReceive('getUrl')
-            ->once()
-            ->with('/rest/api/2/configuration/timetracking')
-            ->andReturn([
-                'name' => "JIRA provided time tracking"
-            ]);
+        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
+            'name' => "JIRA provided time tracking"
+        ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
@@ -97,13 +90,10 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsNullIfKeyIsNotMachingExpectedValueInJson(): void
     {
-        $this->jira_client->shouldReceive('getUrl')
-            ->once()
-            ->with('/rest/api/2/configuration/timetracking')
-            ->andReturn([
-                'key'  => "whatever",
-                'name' => "JIRA provided time tracking"
-            ]);
+        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
+            'key'  => "whatever",
+            'name' => "JIRA provided time tracking"
+        ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 

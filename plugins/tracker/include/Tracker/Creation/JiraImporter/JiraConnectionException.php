@@ -103,7 +103,9 @@ class JiraConnectionException extends \Exception
             );
         }
         $message = sprintf(
-            'Query was not successful (code: %d, message: "%s"). Jira errors:' . PHP_EOL . '%s' . PHP_EOL . 'Jira warnings:' . PHP_EOL . '%s',
+            'Query `%s %s` was not successful (code: %d, message: "%s"). Jira errors:' . PHP_EOL . '%s' . PHP_EOL . 'Jira warnings:' . PHP_EOL . '%s',
+            $request->getMethod(),
+            (string) $request->getUri(),
             $response->getStatusCode(),
             $response->getReasonPhrase(),
             implode(PHP_EOL, $jira_errors),

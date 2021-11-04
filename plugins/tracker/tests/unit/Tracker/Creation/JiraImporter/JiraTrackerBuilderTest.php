@@ -23,31 +23,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertNull;
 
 final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsAListOfTracker(): void
     {
+        $wrapper = new class extends JiraCloudClientStub {
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . "/project/IE" => [
+                    "issueTypes" => [
+                        ["id" => "epic", "name" => "Epics", "subtask" => false],
+                        ["id" => "issue", "name" => "Issues", "subtask" => false],
+                    ]
+                ]
+            ];
+        };
+
         $builder = new JiraTrackerBuilder();
-
-        $wrapper     = \Mockery::mock(ClientWrapper::class);
-        $project_key = "IE";
-
-        $tracker_one = ["id" => "epic", "name" => "Epics", "subtask" => false];
-        $tracker_two = ["id" => "issue", "name" => "Issues", "subtask" => false];
-
-
-        $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
-
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . $project_key)->andReturn($project_details);
-
-        $result = $builder->buildFromProjectKey($wrapper, $project_key);
+        $result  = $builder->buildFromProjectKey($wrapper, 'IE');
 
         $this->assertCount(2, $result);
 
@@ -62,40 +59,41 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfJiraRepresentationHasChanged(): void
     {
-        $builder = new JiraTrackerBuilder();
-
-        $wrapper     = \Mockery::mock(ClientWrapper::class);
-        $project_key = "IE";
-
-        $tracker_one = ["id" => "epic", "ezezezez" => "Epics"];
-        $tracker_two = ["id" => "issue", "name" => "Issues"];
-
-        $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
-
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . $project_key)->andReturn($project_details);
+        $wrapper = new class extends JiraCloudClientStub {
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . "/project/IE" => [
+                    "issueTypes" => [
+                        ["id" => "epic", "ezezezez" => "Epics"],
+                        ["id" => "issue", "name" => "Issues"],
+                    ]
+                ]
+            ];
+        };
 
         $this->expectException(\LogicException::class);
-        $builder->buildFromProjectKey($wrapper, $project_key);
+
+        $builder = new JiraTrackerBuilder();
+        $builder->buildFromProjectKey($wrapper, "IE");
     }
 
     public function testItBuildOneIssueType(): void
     {
-        $builder = new JiraTrackerBuilder();
+        $wrapper = new class extends JiraCloudClientStub {
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => [
+                    "self" => "https://jira.example.com/rest/api/3/issuetype/10015",
+                    "id" => "10015",
+                    "description" => "",
+                    "iconUrl" => "https:/jira.example.com/secure/viewavatar?size=medium&avatarId=10300&avatarType=issuetype",
+                    "name" => "Activities-from-Jira",
+                    "untranslatedName" => "Activities-from-Jira",
+                    "subtask" => false,
+                    "avatarId" => 10300,
+                ]
+            ];
+        };
 
-        $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015')->once()->andReturn(
-            [
-                "self" => "https://jira.example.com/rest/api/3/issuetype/10015",
-                "id" => "10015",
-                "description" => "",
-                "iconUrl" => "https:/jira.example.com/secure/viewavatar?size=medium&avatarId=10300&avatarType=issuetype",
-                "name" => "Activities-from-Jira",
-                "untranslatedName" => "Activities-from-Jira",
-                "subtask" => false,
-                "avatarId" => 10300,
-            ]
-        );
-
+        $builder    = new JiraTrackerBuilder();
         $issue_type = $builder->buildFromIssueTypeId($wrapper, '10015');
 
         assertEquals('10015', $issue_type->getId());
@@ -105,11 +103,13 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenClientDoesntHaveResponse(): void
     {
+        $wrapper = new class extends JiraCloudClientStub {
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => null
+            ];
+        };
+
         $builder = new JiraTrackerBuilder();
-
-        $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015')->once()->andReturnNull();
-
         assertNull($builder->buildFromIssueTypeId($wrapper, '10015'));
     }
 }

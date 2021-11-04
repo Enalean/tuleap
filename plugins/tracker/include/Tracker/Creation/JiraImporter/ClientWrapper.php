@@ -23,23 +23,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Message\Authentication\BasicAuth;
+use Http\Message\Authentication\Bearer;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\Client\JiraHTTPClientBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 
-#[ConfigKeyCategory('Jira Import')]
-class ClientWrapper implements JiraClient
+#[ConfigKeyCategory('Import from Jira')]
+abstract class ClientWrapper implements JiraClient
 {
-    /**
-     * This is mainly useful in development to test Jira Server REST calls against Jira Cloud
-     */
-    #[ConfigKey('Force Tuleap to use Jira Server APIs even when remote instance is Jira Cloud')]
-    public const CONFIG_KEY_FORCE_JIRA_SERVER = 'tracker_force_jira_server';
-
     #[ConfigKey('Jira importer will record all request being made and all responses sent back by the client in this directory')]
     public const CONFIG_KEY_DEBUG_DIRECTORY = 'tracker_jira_debug_directory';
 
@@ -53,39 +52,14 @@ class ClientWrapper implements JiraClient
 
     private const DEPLOYMENT_TYPE_CLOUD = 'Cloud';
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $factory;
-    /**
-     * @var string
-     */
-    private $base_url;
-    /**
-     * @var ?string
-     */
-    private $debug_directory;
-    /**
-     * @var ?string
-     */
-    private $log_file;
-    /**
-     * @var ?bool
-     */
-    private $is_jira_cloud;
+    private ?string $debug_directory = null;
+    private ?string $log_file        = null;
 
-    public function __construct(ClientInterface $client, RequestFactoryInterface $factory, string $base_url)
+    final public function __construct(private ClientInterface $client, private RequestFactoryInterface $factory, private string $base_url)
     {
-        $this->client   = $client;
-        $this->factory  = $factory;
-        $this->base_url = $base_url;
     }
 
-    public function setDebugDirectory(string $debug_directory): void
+    final public function setDebugDirectory(string $debug_directory): void
     {
         $this->debug_directory = $debug_directory;
         $this->log_file        = $this->debug_directory . '/manifest.log';
@@ -94,25 +68,64 @@ class ClientWrapper implements JiraClient
         }
     }
 
-    public static function build(JiraCredentials $jira_credentials): self
+    /**
+     * @throws \JsonException
+     */
+    final public static function build(JiraCredentials $jira_credentials, LoggerInterface $logger): self
     {
-        $client = JiraHTTPClientBuilder::buildHTTPClientFromCredentials(
-            $jira_credentials
-        );
-
         $request_factory = HTTPFactoryBuilder::requestFactory();
 
-        $client = new self($client, $request_factory, $jira_credentials->getJiraUrl());
+        $client = self::getClientDependingOnServer($jira_credentials, $request_factory, $logger);
+
         if (\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY) && is_dir(\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY))) {
+            $logger->debug("Set Jira client in debug mode");
             $client->setDebugDirectory(\ForgeConfig::get(self::CONFIG_KEY_DEBUG_DIRECTORY));
         }
         return $client;
     }
 
+    private static function getClientDependingOnServer(
+        JiraCredentials $jira_credentials,
+        RequestFactoryInterface $request_factory,
+        LoggerInterface $logger
+    ): JiraServerClient|JiraCloudClient {
+        $client_without_authentication = HttpClientFactory::createClient();
+        $server_info_uri               = $jira_credentials->getJiraUrl() . self::JIRA_CORE_BASE_URL . '/serverInfo';
+        $logger->debug("Do we talk to JiraCloud or JiraServer ?");
+        $logger->debug("GET $server_info_uri");
+        $server_info_response = $client_without_authentication->sendRequest($request_factory->createRequest('GET', $server_info_uri));
+        $logger->debug("Response: " . $server_info_response->getStatusCode());
+        $server_info = json_decode($server_info_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        if (isset($server_info['deploymentType']) && $server_info['deploymentType'] === self::DEPLOYMENT_TYPE_CLOUD) {
+            $logger->info("Instantiate JiraCloudClient");
+            $authentication = new BasicAuth($jira_credentials->getJiraUsername(), $jira_credentials->getJiraToken()->getString());
+            return new JiraCloudClient(
+                HttpClientFactory::createClient(
+                    new AuthenticationPlugin(
+                        $authentication
+                    )
+                ),
+                $request_factory,
+                $jira_credentials->getJiraUrl(),
+            );
+        }
+
+        $logger->info("Instantiate JiraServerClient");
+        return new JiraServerClient(
+            HttpClientFactory::createClient(
+                new AuthenticationPlugin(
+                    new Bearer($jira_credentials->getJiraToken()->getString())
+                )
+            ),
+            $request_factory,
+            $jira_credentials->getJiraUrl(),
+        );
+    }
+
     /**
      * @throws JiraConnectionException|\JsonException
      */
-    public function getUrl(string $url): ?array
+    final public function getUrl(string $url): ?array
     {
         $request_url         = $this->base_url . $url;
         $response_debug_path = null;
@@ -150,15 +163,12 @@ class ClientWrapper implements JiraClient
         return json_decode($body_contents, true, 512, JSON_OBJECT_AS_ARRAY & JSON_THROW_ON_ERROR);
     }
 
-    public function isJiraCloud(): bool
+    final public function getAttachmentContents(Attachment $attachment): string
     {
-        if (\ForgeConfig::get(self::CONFIG_KEY_FORCE_JIRA_SERVER) === '1') {
-            return false;
-        }
-        if ($this->is_jira_cloud === null) {
-            $json                = $this->getUrl(self::JIRA_CORE_BASE_URL . '/serverInfo');
-            $this->is_jira_cloud = isset($json['deploymentType']) && $json['deploymentType'] === self::DEPLOYMENT_TYPE_CLOUD;
-        }
-        return $this->is_jira_cloud;
+        $request  = $this->factory->createRequest('GET', $attachment->getContentUrl());
+        $response = $this->client->sendRequest($request);
+        return $response->getBody()->getContents();
     }
+
+    abstract public function isJiraCloud(): bool;
 }

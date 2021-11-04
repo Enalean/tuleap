@@ -22,13 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
-use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 
 class AsynchronousJiraRunner
 {
@@ -56,34 +50,16 @@ class AsynchronousJiraRunner
 
     public static function addListener(
         WorkerEvent $event,
-        QueueFactory $queue_factory,
-        WorkerAvailability $worker_availability,
-        KeyFactory $key_factory,
         PendingJiraImportDao $dao,
         PendingJiraImportBuilder $builder,
-        FromJiraTrackerCreator $tracker_creator,
-        JiraSuccessImportNotifier $success_notifier,
-        JiraErrorImportNotifier $error_notifier,
-        \UserManager $user_manager,
-        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
+        JiraRunner $jira_runner,
     ): void {
         if ($event->getEventName() !== self::TOPIC) {
             return;
         }
 
         $async_runner = new self(
-            new JiraRunner(
-                $event->getLogger(),
-                $queue_factory,
-                $worker_availability,
-                $key_factory,
-                $tracker_creator,
-                $dao,
-                $success_notifier,
-                $error_notifier,
-                $user_manager,
-                $jira_user_on_tuleap_cache
-            ),
+            $jira_runner,
             $dao,
             $builder
         );

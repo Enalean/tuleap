@@ -24,47 +24,20 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
 use ForgeConfig;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\Client\JiraHTTPClientBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class AttachmentDownloader
 {
     public const JIRA_TEMP_FOLDER = 'jira_import';
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $factory;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(ClientInterface $client, RequestFactoryInterface $factory, LoggerInterface $logger)
+    public function __construct(private JiraClient $client, private LoggerInterface $logger)
     {
-        $this->client  = $client;
-        $this->factory = $factory;
-        $this->logger  = $logger;
     }
 
     public function downloadAttachment(Attachment $attachment): string
     {
-        $request = $this->factory->createRequest(
-            'GET',
-            $attachment->getContentUrl()
-        );
         $this->logger->debug("GET " . $attachment->getContentUrl());
-
-        $response = $this->client->sendRequest($request);
 
         if (! is_dir(self::getTmpFolderURL())) {
             mkdir(self::getTmpFolderURL());
@@ -78,7 +51,7 @@ class AttachmentDownloader
         if (
             file_put_contents(
                 self::getTmpFolderURL() . $random_name,
-                $response->getBody()->getContents()
+                $this->client->getAttachmentContents($attachment),
             ) === false
         ) {
             $this->logger->debug(sprintf('Impossible to write content into %s' . $random_name));
@@ -87,15 +60,9 @@ class AttachmentDownloader
         return $random_name;
     }
 
-    public static function build(JiraCredentials $jira_credentials, LoggerInterface $logger): self
+    public static function build(JiraClient $client, LoggerInterface $logger): self
     {
-        $client = JiraHTTPClientBuilder::buildHTTPClientFromCredentials(
-            $jira_credentials
-        );
-
-        $request_factory = HTTPFactoryBuilder::requestFactory();
-
-        return new self($client, $request_factory, $logger);
+        return new self($client, $logger);
     }
 
     public static function getTmpFolderURL(): string

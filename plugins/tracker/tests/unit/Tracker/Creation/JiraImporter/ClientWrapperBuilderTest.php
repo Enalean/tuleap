@@ -26,21 +26,24 @@ namespace Tracker\Creation\JiraImporter;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use function PHPUnit\Framework\assertEquals;
 
 final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var ClientWrapperBuilder
-     */
-    private $wrapper_builder;
+    private ClientWrapperBuilder $wrapper_builder;
 
     protected function setUp(): void
     {
-        $this->wrapper_builder = new ClientWrapperBuilder();
+        $this->wrapper_builder = new ClientWrapperBuilder(fn () => new class extends JiraCloudClientStub {
+        });
     }
 
     public function testItThrowsAnExceptionWhenCredentialKeyIsNotProvided(): void
@@ -52,7 +55,7 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage("credentials key is mandatory");
 
-        $this->wrapper_builder->buildFromRequest($request);
+        $this->wrapper_builder->buildFromRequest($request, new NullLogger());
     }
 
     public function testItThrowsAnExceptionWhenCredentialValuesAreMissing(): void
@@ -65,7 +68,7 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage("server, email or token empty");
 
-        $this->wrapper_builder->buildFromRequest($request);
+        $this->wrapper_builder->buildFromRequest($request, new NullLogger());
     }
 
     public function testItThrowsAnExceptionWhenUrlIsInvalid(): void
@@ -82,7 +85,7 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage("server url is invalid");
 
-        $this->wrapper_builder->buildFromRequest($request);
+        $this->wrapper_builder->buildFromRequest($request, new NullLogger());
     }
 
     public function testItBuildsAClientWrapper(): void
@@ -96,6 +99,17 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
 
-        $this->wrapper_builder->buildFromRequest($request);
+        $wrapper_builder = new ClientWrapperBuilder(
+            fn (JiraCredentials $jira_credentials, LoggerInterface $logger) => new class ($jira_credentials) extends JiraCloudClientStub {
+                public function __construct(public JiraCredentials $jira_credentials)
+                {
+                }
+            }
+        );
+        $client          = $wrapper_builder->buildFromRequest($request, new NullLogger());
+
+        assertEquals('https://example.com', $client->jira_credentials->getJiraUrl());
+        assertEquals('user-email@example.com', $client->jira_credentials->getJiraUsername());
+        assertEquals('azerty1234', $client->jira_credentials->getJiraToken());
     }
 }

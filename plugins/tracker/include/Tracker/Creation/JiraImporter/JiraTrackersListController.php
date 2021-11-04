@@ -68,7 +68,7 @@ class JiraTrackersListController implements DispatchableWithRequest, Dispatchabl
         $this->permission_checker->checkANewTrackerCanBeCreated($project, $user);
 
         try {
-            $wrapper             = $this->wrapper_builder->buildFromRequest($request);
+            $wrapper             = $this->wrapper_builder->buildFromRequest($request, \BackendLogger::getDefaultLogger());
             $project_issue_types = $this->jira_tracker_builder->buildFromProjectKey($wrapper, $variables['jira_project_key']);
 
             $json_content = [];

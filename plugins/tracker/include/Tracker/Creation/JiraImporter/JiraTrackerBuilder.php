@@ -29,7 +29,7 @@ class JiraTrackerBuilder
      * @throws JiraConnectionException
      * @return IssueType[]
      */
-    public function buildFromProjectKey(ClientWrapper $wrapper, string $project_key): array
+    public function buildFromProjectKey(JiraClient $wrapper, string $project_key): array
     {
         $project_details = $wrapper->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/project/' . urlencode($project_key));
 

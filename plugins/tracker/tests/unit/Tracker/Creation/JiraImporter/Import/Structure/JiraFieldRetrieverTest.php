@@ -23,14 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var string
      */
@@ -43,40 +40,43 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsJiraFieldAndBuildAnArraySortedById(): void
     {
-        $wrapper         = \Mockery::mock(ClientWrapper::class);
+        $wrapper = new class extends JiraCloudClientStub {
+            public function getUrl(string $url): ?array
+            {
+                $system_field                     = [];
+                $system_field['required']         = true;
+                $system_field['schema']['type']   = 'string';
+                $system_field['schema']['system'] = 'summary';
+                $system_field['name']             = 'Summary';
+                $system_field['key']              = 'summary';
+                $system_field['hasDefaultValue']  = false;
+                $system_field['operation']        = [
+                    'set'
+                ];
+
+                $custom_field                       = [];
+                $custom_field['required']           = false;
+                $custom_field['schema']['type']     = 'user';
+                $custom_field['schema']['custom']   = "com.atlassian.jira.toolkit:lastupdaterorcommenter";
+                $custom_field['schema']['customId'] = 10071;
+                $custom_field['name']               = '[opt] Last updator';
+                $custom_field['key']                = 'customfield_10071';
+                $custom_field['hasDefaultValue']    = false;
+                $custom_field['operation']          = [
+                    'set'
+                ];
+
+                $project_meta_content['projects'][0]['issuetypes'][0]['fields'] = [
+                    'summary' => $system_field,
+                    'custom_01' => $custom_field
+                ];
+
+                return $project_meta_content;
+            }
+        };
+
         $field_retriever = new JiraFieldRetriever($wrapper, new NullLogger());
-
-        $system_field                     = [];
-        $system_field['required']         = true;
-        $system_field['schema']['type']   = 'string';
-        $system_field['schema']['system'] = 'summary';
-        $system_field['name']             = 'Summary';
-        $system_field['key']              = 'summary';
-        $system_field['hasDefaultValue']  = false;
-        $system_field['operation']        = [
-            'set'
-        ];
-
-        $custom_field                       = [];
-        $custom_field['required']           = false;
-        $custom_field['schema']['type']     = 'user';
-        $custom_field['schema']['custom']   = "com.atlassian.jira.toolkit:lastupdaterorcommenter";
-        $custom_field['schema']['customId'] = 10071;
-        $custom_field['name']               = '[opt] Last updator';
-        $custom_field['key']                = 'customfield_10071';
-        $custom_field['hasDefaultValue']    = false;
-        $custom_field['operation']          = [
-            'set'
-        ];
-
-        $project_meta_content['projects'][0]['issuetypes'][0]['fields'] = [
-            'summary' => $system_field,
-            'custom_01' => $custom_field
-        ];
-
-        $wrapper->shouldReceive('getUrl')->andReturn($project_meta_content);
-
-        $result = $field_retriever->getAllJiraFields(
+        $result          = $field_retriever->getAllJiraFields(
             $this->jira_project_id,
             $this->jira_issue_type_name,
             new FieldAndValueIDGenerator(),
@@ -101,10 +101,9 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsAnEmptyArrayWhenNoFieldFound(): void
     {
-        $wrapper         = \Mockery::mock(ClientWrapper::class);
+        $wrapper         = new class extends JiraCloudClientStub {
+        };
         $field_retriever = new JiraFieldRetriever($wrapper, new NullLogger());
-
-        $wrapper->shouldReceive('getUrl')->andReturn(null);
 
         $result = $field_retriever->getAllJiraFields(
             $this->jira_project_id,

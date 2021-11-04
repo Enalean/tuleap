@@ -24,15 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
 use ForgeConfig;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,24 +40,13 @@ class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
         $tmp_folder = vfsStream::setup();
         ForgeConfig::set("tmp_dir", $tmp_folder->url());
 
-        $client  = Mockery::mock(ClientInterface::class);
-        $factory = Mockery::mock(RequestFactoryInterface::class);
-        $logger  = Mockery::mock(LoggerInterface::class);
-
-        $logger->shouldReceive("debug");
+        $client = new class extends JiraCloudClientStub {
+        };
 
         $downloader = new AttachmentDownloader(
             $client,
-            $factory,
-            $logger
+            new NullLogger(),
         );
-
-        $factory->shouldReceive('createRequest')->once();
-        $body = Mockery::mock(StreamInterface::class);
-        $body->shouldReceive('getContents')->once()->andReturn('');
-        $response = Mockery::mock(ResponseInterface::class);
-        $response->shouldReceive('getBody')->once()->andReturn($body);
-        $client->shouldReceive('sendRequest')->once()->andReturn($response);
 
         $attachment = new Attachment(
             10007,

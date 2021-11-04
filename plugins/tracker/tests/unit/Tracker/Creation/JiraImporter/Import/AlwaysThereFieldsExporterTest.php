@@ -36,6 +36,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -90,10 +91,36 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->field_mapping_collection = new FieldMappingCollection($field_id_generator);
 
-        $wrapper = Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/TEST/statuses")->once()->andReturn(
-            $this->getStatusesAPIResponse()
-        );
+        $wrapper = new class extends JiraCloudClientStub {
+            public function __construct()
+            {
+                $this->urls[ClientWrapper::JIRA_CORE_BASE_URL . "/project/TEST/statuses"] = [
+                    [
+                    'self' => 'URL/rest/api/3/issuetype/10002',
+                    'id' => '10002' ,
+                    'name' => 'Story' ,
+                    'subtask' => false,
+                    'statuses' => [
+                        [
+                            'self' => 'URL/rest/api/3/status/3',
+                            'description' => 'This issue is being actively worked on at the moment by the assignee.',
+                            'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
+                            'name' => 'In Progress',
+                            'untranslatedName' => 'In Progress',
+                            'id' => '3',
+                            'statusCategory' => [
+                                'self' => 'URL/rest/api/3/statuscategory/4',
+                                'id' => 4,
+                                'key' => 'indeterminate',
+                                'colorName' => 'yellow',
+                                'name' => 'In Progress'
+                            ]
+                        ]
+                    ]
+                    ]
+                    ];
+            }
+        };
 
         $this->logger                   = Mockery::mock(LoggerInterface::class);
         $this->status_values_collection = new StatusValuesCollection(
@@ -298,34 +325,5 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_mapping_collection,
             $this->status_values_collection
         );
-    }
-
-    private function getStatusesAPIResponse(): array
-    {
-        return [
-            [
-                'self' => 'URL/rest/api/3/issuetype/10002',
-                'id' => '10002' ,
-                'name' => 'Story' ,
-                'subtask' => false,
-                'statuses' => [
-                    [
-                        'self' => 'URL/rest/api/3/status/3',
-                        'description' => 'This issue is being actively worked on at the moment by the assignee.',
-                        'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
-                        'name' => 'In Progress',
-                        'untranslatedName' => 'In Progress',
-                        'id' => '3',
-                        'statusCategory' => [
-                            'self' => 'URL/rest/api/3/statuscategory/4',
-                            'id' => 4,
-                            'key' => 'indeterminate',
-                            'colorName' => 'yellow',
-                            'name' => 'In Progress'
-                        ]
-                    ]
-                ]
-            ]
-        ];
     }
 }

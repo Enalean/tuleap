@@ -280,7 +280,6 @@ final class CreateProjectFromJira
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         assert($import_user !== null);
         $jira_exporter = JiraXmlExporter::build(
-            $jira_credentials,
             $jira_client,
             $logger,
             new JiraUserOnTuleapCache(

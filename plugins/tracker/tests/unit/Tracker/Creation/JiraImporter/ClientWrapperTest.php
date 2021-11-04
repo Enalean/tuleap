@@ -53,7 +53,7 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->client  = \Mockery::mock(ClientInterface::class);
         $this->factory = \Mockery::mock(RequestFactoryInterface::class);
-        $this->wrapper = new ClientWrapper($this->client, $this->factory, "https://example.com");
+        $this->wrapper = new JiraCloudClient($this->client, $this->factory, "https://example.com");
     }
 
     public function testItBuildsAnUrlFromLatestAPIAndReturnContent(): void

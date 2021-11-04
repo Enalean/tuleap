@@ -42,70 +42,19 @@ use XML_ParseException;
 
 class JiraRunner
 {
-    /**
-     * @var QueueFactory
-     */
-    private $queue_factory;
-    /**
-     * @var WorkerAvailability
-     */
-    private $worker_availability;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var FromJiraTrackerCreator
-     */
-    private $tracker_creator;
-    /**
-     * @var PendingJiraImportDao
-     */
-    private $dao;
-    /**
-     * @var JiraSuccessImportNotifier
-     */
-    private $success_notifier;
-    /**
-     * @var JiraErrorImportNotifier
-     */
-    private $error_notifier;
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var JiraUserOnTuleapCache
-     */
-    private $jira_user_on_tuleap_cache;
-
     public function __construct(
-        LoggerInterface $logger,
-        QueueFactory $queue_factory,
-        WorkerAvailability $worker_availability,
-        KeyFactory $key_factory,
-        FromJiraTrackerCreator $tracker_creator,
-        PendingJiraImportDao $dao,
-        JiraSuccessImportNotifier $success_notifier,
-        JiraErrorImportNotifier $error_notifier,
-        UserManager $user_manager,
-        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
+        private LoggerInterface $logger,
+        private QueueFactory $queue_factory,
+        private WorkerAvailability $worker_availability,
+        private KeyFactory $key_factory,
+        private FromJiraTrackerCreator $tracker_creator,
+        private PendingJiraImportDao $dao,
+        private JiraSuccessImportNotifier $success_notifier,
+        private JiraErrorImportNotifier $error_notifier,
+        private UserManager $user_manager,
+        private JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
+        private ClientWrapperBuilder $jira_client_builder
     ) {
-        $this->logger                    = $logger;
-        $this->queue_factory             = $queue_factory;
-        $this->worker_availability       = $worker_availability;
-        $this->key_factory               = $key_factory;
-        $this->tracker_creator           = $tracker_creator;
-        $this->dao                       = $dao;
-        $this->success_notifier          = $success_notifier;
-        $this->error_notifier            = $error_notifier;
-        $this->user_manager              = $user_manager;
-        $this->jira_user_on_tuleap_cache = $jira_user_on_tuleap_cache;
     }
 
     public function canBeProcessedAsynchronously(): bool
@@ -174,7 +123,7 @@ class JiraRunner
                 $token
             );
 
-            $jira_client = ClientWrapper::build($jira_credentials);
+            $jira_client = $this->jira_client_builder->build($jira_credentials, $this->logger);
 
             $tracker = $this->tracker_creator->createFromJira(
                 $pending_import->getProject(),

@@ -55,6 +55,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
@@ -100,7 +101,8 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->wrapper               = Mockery::mock(ClientWrapper::class);
+        $this->wrapper               = new class extends JiraCloudClientStub {
+        };
         $this->attachment_downloader = Mockery::mock(AttachmentDownloader::class);
         $this->user_manager          = Mockery::mock(UserManager::class);
         $this->logger                = new NullLogger();
@@ -225,11 +227,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0')
-            ->andReturn(
-                [
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
                     'startAt'    => 0,
                     'maxResults' => 50,
                     'total'      => 2,
@@ -273,28 +271,21 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                             'renderedFields' => []
                         ]
                     ]
-                ]
-            );
+                ];
 
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0')
-            ->andReturn([
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
                 'comments'   => []
-            ]);
+                ];
 
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0')
-            ->andReturn([
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
                 'comments'   => []
-            ]);
+                ];
 
         $issue_collection = new IssueAPIRepresentationCollection();
         $this->exporter->exportArtifacts(
@@ -344,11 +335,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0')
-            ->andReturn(
-                [
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
                     'startAt'    => 0,
                     'maxResults' => 1,
                     'total'      => 2,
@@ -374,8 +361,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                             'renderedFields' => []
                         ]
                     ]
-                ]
-            );
+                ];
 
         $john_doe = Mockery::mock(\PFUser::class);
         $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
@@ -387,11 +373,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('johndoe@example.com')
             ->andReturn([$john_doe]);
 
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1')
-            ->andReturn(
-                [
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1'] = [
                     'startAt'    => 1,
                     'maxResults' => 1,
                     'total'      => 2,
@@ -416,28 +398,21 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                             'renderedFields' => []
                         ]
                     ]
-                ]
-            );
+                ];
 
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0')
-            ->andReturn([
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
                 'comments'   => []
-            ]);
+                ];
 
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0')
-            ->andReturn([
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
                 'comments'   => []
-            ]);
+                ];
 
         $issue_collection = new IssueAPIRepresentationCollection();
         $this->exporter->exportArtifacts(
@@ -457,30 +432,24 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockChangelogForKey01(): void
     {
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog?startAt=0')
-            ->andReturn([
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog?startAt=0'] = [
                 "maxResults" => 100,
                 "startAt"    => 0,
                 "total"      => 0,
                 "isLast"     => true,
                 "values"     => []
-            ]);
+        ];
     }
 
     private function mockChangelogForKey02(): void
     {
-        $this->wrapper
-            ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog?startAt=0')
-            ->andReturn([
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog?startAt=0'] = [
                 "maxResults" => 100,
                 "startAt"    => 0,
                 "total"      => 0,
                 "isLast"     => true,
                 "values"     => []
-            ]);
+                ];
     }
 
     private function assertXMLArtifactsContent(SimpleXMLElement $tracker_node): void

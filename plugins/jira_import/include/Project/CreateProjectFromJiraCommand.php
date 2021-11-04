@@ -146,7 +146,7 @@ final class CreateProjectFromJiraCommand extends Command
 
         $jira_credentials = new JiraCredentials($jira_host, $jira_username, $jira_token);
 
-        $jira_client = ClientWrapper::build($jira_credentials);
+        $jira_client = ClientWrapper::build($jira_credentials, $logger);
         if ($debug_directory !== null && is_string($debug_directory)) {
             $jira_client->setDebugDirectory($debug_directory);
         }

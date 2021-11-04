@@ -27,7 +27,6 @@ use EventManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
@@ -67,12 +66,12 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
-use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -88,141 +87,34 @@ use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporter
 {
-    /**
-     * @var ErrorCollector
-     */
-    private $error_collector;
-    /**
-     * @var JiraFieldRetriever
-     */
-    private $jira_field_retriever;
-    /**
-     * @var JiraToTuleapFieldTypeMapper
-     */
-    private $field_type_mapper;
-    /**
-     * @var XmlReportExporter
-     */
-    private $report_exporter;
-    /**
-     * @var PermissionsXMLExporter
-     */
-    private $permissions_xml_exporter;
-
-    /**
-     * @var ArtifactsXMLExporter
-     */
-    private $artifacts_xml_exporter;
-
-    /**
-     * @var SemanticsXMLExporter
-     */
-    private $semantics_xml_exporter;
-    /**
-     * @var ContainersXMLCollectionBuilder
-     */
-    private $containers_xml_collection_builder;
-    /**
-     * @var AlwaysThereFieldsExporter
-     */
-    private $always_there_fields_exporter;
-
-    /**
-     * @var XmlReportAllIssuesExporter
-     */
-    private $xml_report_all_issues_exporter;
-
-    /**
-     * @var XmlReportOpenIssuesExporter
-     */
-    private $xml_report_open_issues_exporter;
-
-    /**
-     * @var XmlReportCreatedRecentlyExporter
-     */
-    private $xml_report_created_recently_exporter;
-
-    /**
-     * @var XmlReportUpdatedRecentlyExporter
-     */
-    private $xml_report_updated_recently_exporter;
-
-    /**
-     * @var XmlReportDoneIssuesExporter
-     */
-    private $xml_report_done_issues_exporter;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var ClientWrapper
-     */
-    private $wrapper;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_manager;
-
-    /**
-     * @var JiraUserRetriever
-     */
-    private $jira_user_retriever;
-    /**
-     * @var StoryPointFieldExporter
-     */
-    private $story_point_field_exporter;
-
     public function __construct(
-        LoggerInterface $logger,
-        ClientWrapper $wrapper,
-        ErrorCollector $error_collector,
-        JiraFieldRetriever $jira_field_retriever,
-        JiraToTuleapFieldTypeMapper $field_type_mapper,
-        JiraUserRetriever $jira_user_retriever,
-        XmlReportExporter $report_exporter,
-        PermissionsXMLExporter $permissions_xml_exporter,
-        ArtifactsXMLExporter $artifacts_xml_exporter,
-        SemanticsXMLExporter $semantics_xml_exporter,
-        ContainersXMLCollectionBuilder $containers_xml_collection_builder,
-        AlwaysThereFieldsExporter $always_there_fields_exporter,
-        StoryPointFieldExporter $story_point_field_exporter,
-        XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
-        XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
-        XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
-        XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
-        XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
-        EventDispatcherInterface $event_manager
+        private LoggerInterface $logger,
+        private JiraClient $wrapper,
+        private ErrorCollector $error_collector,
+        private JiraFieldRetriever $jira_field_retriever,
+        private JiraToTuleapFieldTypeMapper $field_type_mapper,
+        private JiraUserRetriever $jira_user_retriever,
+        private XmlReportExporter $report_exporter,
+        private PermissionsXMLExporter $permissions_xml_exporter,
+        private ArtifactsXMLExporter $artifacts_xml_exporter,
+        private SemanticsXMLExporter $semantics_xml_exporter,
+        private ContainersXMLCollectionBuilder $containers_xml_collection_builder,
+        private AlwaysThereFieldsExporter $always_there_fields_exporter,
+        private StoryPointFieldExporter $story_point_field_exporter,
+        private XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
+        private XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
+        private XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
+        private XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
+        private XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
+        private EventDispatcherInterface $event_manager
     ) {
-        $this->logger                               = $logger;
-        $this->wrapper                              = $wrapper;
-        $this->error_collector                      = $error_collector;
-        $this->jira_field_retriever                 = $jira_field_retriever;
-        $this->field_type_mapper                    = $field_type_mapper;
-        $this->jira_user_retriever                  = $jira_user_retriever;
-        $this->report_exporter                      = $report_exporter;
-        $this->permissions_xml_exporter             = $permissions_xml_exporter;
-        $this->artifacts_xml_exporter               = $artifacts_xml_exporter;
-        $this->semantics_xml_exporter               = $semantics_xml_exporter;
-        $this->containers_xml_collection_builder    = $containers_xml_collection_builder;
-        $this->always_there_fields_exporter         = $always_there_fields_exporter;
-        $this->story_point_field_exporter           = $story_point_field_exporter;
-        $this->xml_report_all_issues_exporter       = $xml_report_all_issues_exporter;
-        $this->xml_report_open_issues_exporter      = $xml_report_open_issues_exporter;
-        $this->xml_report_done_issues_exporter      = $xml_report_done_issues_exporter;
-        $this->xml_report_created_recently_exporter = $xml_report_created_recently_exporter;
-        $this->xml_report_updated_recently_exporter = $xml_report_updated_recently_exporter;
-        $this->event_manager                        = $event_manager;
     }
 
     /**
      * @throws \RuntimeException
      */
     public static function build(
-        JiraCredentials $jira_credentials,
-        ClientWrapper $wrapper,
+        JiraClient $wrapper,
         LoggerInterface $logger,
         JiraUserOnTuleapCache $jira_user_on_tuleap_cache
     ): self {
@@ -338,7 +230,7 @@ class JiraXmlExporter
                 ),
                 new AttachmentCollectionBuilder(),
                 new AttachmentXMLExporter(
-                    AttachmentDownloader::build($jira_credentials, $logger),
+                    AttachmentDownloader::build($wrapper, $logger),
                     new XML_SimpleXMLCDATAFactory()
                 ),
                 $logger
