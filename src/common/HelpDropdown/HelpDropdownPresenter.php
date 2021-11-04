@@ -50,22 +50,16 @@ class HelpDropdownPresenter
      * @var bool
      */
     public $has_site_content_links;
-    /**
-     * @var HelpLinkPresenter|null
-     */
-    public $review_link;
 
     public function __construct(
         array $platform_links,
         ?string $explorer_url,
-        ?HelpLinkPresenter $review_link,
         ?HelpLinkPresenter $release_note_link,
         bool $has_release_note_been_seen,
         array $site_content_links
     ) {
         $this->platform_links             = $platform_links;
         $this->release_note_link          = $release_note_link;
-        $this->review_link                = $review_link;
         $this->explorer_url               = $explorer_url;
         $this->has_release_note_been_seen = $has_release_note_been_seen;
         $this->site_content_links         = $site_content_links;

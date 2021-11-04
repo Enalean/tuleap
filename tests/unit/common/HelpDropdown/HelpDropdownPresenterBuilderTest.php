@@ -96,11 +96,6 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs(["https://www.tuleap.org/resources/release-notes/tuleap-11-17"])
             ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
 
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["https://www.tuleap.org/write-a-review"])
-            ->andReturn("https://www.tuleap.org/write-a-review");
-
         $expected_result = new HelpDropdownPresenter(
             [
                 HelpLinkPresenter::build(
@@ -117,12 +112,6 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             ],
             null,
-            HelpLinkPresenter::build(
-                'You enjoy Tuleap? Make a review',
-                'https://www.tuleap.org/write-a-review',
-                "fa-heart",
-                $this->uri_sanitizer
-            ),
             HelpLinkPresenter::build(
                 'Release Note',
                 'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
@@ -149,11 +138,6 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs(["https://www.tuleap.org/resources/release-notes/tuleap-11-17"])
             ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
 
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["https://www.tuleap.org/write-a-review"])
-            ->andReturn("https://www.tuleap.org/write-a-review");
-
         $expected_result = new HelpDropdownPresenter(
             [
                 HelpLinkPresenter::build(
@@ -170,12 +154,6 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             ],
             null,
-            HelpLinkPresenter::build(
-                'You enjoy Tuleap? Make a review',
-                'https://www.tuleap.org/write-a-review',
-                "fa-heart",
-                $this->uri_sanitizer
-            ),
             HelpLinkPresenter::build(
                 'Release Note',
                 'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
@@ -189,56 +167,6 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->release_note_manager->shouldReceive('getReleaseNoteLink')->andReturn(
             "https://www.tuleap.org/resources/release-notes/tuleap-11-17"
         );
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17"));
-    }
-
-    public function testBuildPresenterWithoutReviewLink(): void
-    {
-        ForgeConfig::set('display_tuleap_review_link', "0");
-
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
-
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["https://www.tuleap.org/resources/release-notes/tuleap-11-17"])
-            ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
-
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["https://www.tuleap.org/write-a-review"])
-            ->never();
-
-        $expected_result = new HelpDropdownPresenter(
-            [
-                HelpLinkPresenter::build(
-                    'Get help',
-                    "/help/",
-                    "fa-life-saver",
-                    $this->uri_sanitizer,
-                ),
-                HelpLinkPresenter::build(
-                    'Documentation',
-                    "/doc/en/",
-                    "fa-book",
-                    $this->uri_sanitizer
-                )
-            ],
-            null,
-            null,
-            HelpLinkPresenter::build(
-                'Release Note',
-                'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
-                "fa-star",
-                $this->uri_sanitizer
-            ),
-            true,
-            []
-        );
-
-        $this->release_note_manager
-            ->shouldReceive('getReleaseNoteLink')
-            ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
-
         $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17"));
     }
 }
