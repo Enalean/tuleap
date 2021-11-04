@@ -25,13 +25,13 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\UserCanPlanInProgramIncrementVerifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveCrossRefStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeframeValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUriStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 
 final class ProgramIncrementRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -59,8 +59,8 @@ final class ProgramIncrementRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveTimeframeValueUserCanSeeStub::withValues(1633189968, 1635868368),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),
-            VerifyUserCanUpdateTimeboxStub::withUpdatePermission(),
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
+            VerifyUserCanUpdateTimeboxStub::withAllowed(),
+            UserCanPlanInProgramIncrementVerifierBuilder::buildWithAllowed()
         );
     }
 

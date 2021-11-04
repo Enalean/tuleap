@@ -43,7 +43,7 @@ final class IterationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveTimeframeValueUserCanSeeStub::withValues(1633189968, 1635868368),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),
-            VerifyUserCanUpdateTimeboxStub::withUpdatePermission(),
+            VerifyUserCanUpdateTimeboxStub::withAllowed(),
             UserIdentifierStub::buildGenericUser(),
             IterationIdentifierBuilder::buildWithId(1),
         );

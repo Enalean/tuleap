@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanLinkToProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
@@ -69,6 +69,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementsSearcher;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -197,8 +198,11 @@ final class ProjectResource extends AuthenticatedResource
             new CanPrioritizeFeaturesDAO(),
             $this->user_manager_adapter
         );
-        $program_increments_dao             = new ProgramIncrementsDAO();
-        $this->program_increments_builder   = new ProgramIncrementsSearcher(
+
+        $program_increments_dao = new ProgramIncrementsDAO();
+        $update_verifier        = new UserCanUpdateTimeboxVerifier($artifact_retriever, $this->user_manager_adapter);
+
+        $this->program_increments_builder = new ProgramIncrementsSearcher(
             $this->build_program,
             $program_increments_dao,
             $program_increments_dao,
@@ -214,13 +218,12 @@ final class ProjectResource extends AuthenticatedResource
                 ),
                 new UriRetriever($artifact_retriever),
                 new CrossReferenceRetriever($artifact_retriever),
-                new UserCanUpdateTimeboxVerifier($artifact_retriever, $this->user_manager_adapter),
+                $update_verifier,
                 new UserCanPlanInProgramIncrementVerifier(
-                    $artifact_retriever,
-                    $this->user_manager_adapter,
+                    $update_verifier,
                     $program_increments_dao,
-                    $field_retriever
-                ),
+                    new UserCanLinkToProgramIncrementVerifier($this->user_manager_adapter, $field_retriever)
+                )
             )
         );
     }

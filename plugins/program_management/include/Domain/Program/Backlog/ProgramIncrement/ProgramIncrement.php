@@ -29,7 +29,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUs
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 
 /**
  * @psalm-immutable
@@ -56,28 +55,25 @@ final class ProgramIncrement
         RetrieveUri $retrieve_uri,
         RetrieveCrossRef $retrieve_cross_ref,
         VerifyUserCanUpdateTimebox $verify_user_can_update,
-        VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
-        UserIdentifier $user_identifier,
-        ProgramIncrementIdentifier $program_increment_identifier,
+        UserCanPlanInProgramIncrementVerifier $plan_verifier,
+        UserIdentifier $user,
+        ProgramIncrementIdentifier $program_increment,
     ): ?self {
-        $title = $retrieve_title_value->getTitle($program_increment_identifier);
+        $title = $retrieve_title_value->getTitle($program_increment);
         if (! $title) {
             return null;
         }
-        $status     = $retrieve_status_value->getLabel($program_increment_identifier, $user_identifier);
-        $start_date = $retrieve_timeframe_value->getStartDateValueTimestamp($program_increment_identifier, $user_identifier);
-        $end_date   = $retrieve_timeframe_value->getEndDateValueTimestamp($program_increment_identifier, $user_identifier);
+        $status     = $retrieve_status_value->getLabel($program_increment, $user);
+        $start_date = $retrieve_timeframe_value->getStartDateValueTimestamp($program_increment, $user);
+        $end_date   = $retrieve_timeframe_value->getEndDateValueTimestamp($program_increment, $user);
 
         return new self(
-            $program_increment_identifier->getId(),
+            $program_increment->getId(),
             $title,
-            $retrieve_uri->getUri($program_increment_identifier),
-            $retrieve_cross_ref->getXRef($program_increment_identifier),
-            $verify_user_can_update->canUserUpdate($program_increment_identifier, $user_identifier),
-            $can_plan_in_program_increment_verifier->userCanPlan(
-                $program_increment_identifier,
-                $user_identifier
-            ),
+            $retrieve_uri->getUri($program_increment),
+            $retrieve_cross_ref->getXRef($program_increment),
+            $verify_user_can_update->canUserUpdate($program_increment, $user),
+            $plan_verifier->userCanPlan($program_increment, $user),
             $status,
             $start_date,
             $end_date,

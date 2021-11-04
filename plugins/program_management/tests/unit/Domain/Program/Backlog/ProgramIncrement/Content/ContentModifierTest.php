@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrem
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\Tests\Builder\UserCanPlanInProgramIncrementVerifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -43,7 +44,6 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
 use function PHPUnit\Framework\assertTrue;
 
 final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -81,7 +81,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             $this->feature_reorderer,
             $this->feature_is_planned_verifier,
-            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan(),
+            UserCanPlanInProgramIncrementVerifierBuilder::buildWithAllowed(),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             RetrieveProgramOfProgramIncrementStub::withProgram(self::PROGRAM_ID),
             BuildProgramStub::stubValidProgram()

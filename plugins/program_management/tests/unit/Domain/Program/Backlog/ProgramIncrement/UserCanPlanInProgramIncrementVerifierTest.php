@@ -20,19 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactLinkFieldStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanLinkToProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 
 final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -40,18 +37,14 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     private UserIdentifierStub $user;
     private UserCanPrioritize $user_can_prioritize;
     private ProgramIncrementIdentifier $program_increment;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
-     */
-    private $artifact;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElement_Field_ArtifactLink
-     */
-    private $field;
-    private RetrieveFullArtifactLinkFieldStub $field_retriever;
+    private VerifyUserCanUpdateTimeboxStub $update_verifier;
+    private VerifyUserCanLinkToProgramIncrementStub $link_verifier;
 
     protected function setUp(): void
     {
+        $this->update_verifier = VerifyUserCanUpdateTimeboxStub::withAllowed();
+        $this->link_verifier   = VerifyUserCanLinkToProgramIncrementStub::withAllowed();
+
         $this->user                = UserIdentifierStub::buildGenericUser();
         $this->user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
@@ -63,80 +56,51 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
             self::PROGRAM_INCREMENT_ID,
             $this->user
         );
-        $this->artifact            = $this->createStub(Artifact::class);
-
-        $this->field           = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
-        $this->field_retriever = RetrieveFullArtifactLinkFieldStub::withField($this->field);
     }
 
     private function getVerifier(): UserCanPlanInProgramIncrementVerifier
     {
         return new UserCanPlanInProgramIncrementVerifier(
-            RetrieveFullArtifactStub::withArtifact($this->artifact),
-            RetrieveUserStub::withGenericUser(),
-            RetrieveProgramIncrementTrackerStub::withValidTracker(16),
-            $this->field_retriever
+            $this->update_verifier,
+            RetrieveProgramIncrementTrackerStub::withValidTracker(90),
+            $this->link_verifier
         );
     }
 
     public function testUserCanPlan(): void
     {
-        $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->field->method('userCanUpdate')->willReturn(true);
-
         self::assertTrue($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
 
     public function testUserCannotPlanWhenUserCannotUpdateProgramIncrement(): void
     {
-        $this->artifact->method('userCanUpdate')->willReturn(false);
-
-        self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
-    }
-
-    public function testUserCannotPlanWhenProgramIncrementTrackerHasNoArtifactLinkField(): void
-    {
-        $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->field_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
+        $this->update_verifier = VerifyUserCanUpdateTimeboxStub::withDenied();
 
         self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
 
     public function testUserCannotPlanWhenUserCannotUpdateArtifactLinkOfProgramIncrement(): void
     {
-        $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->field->method('userCanUpdate')->willReturn(false);
+        $this->link_verifier = VerifyUserCanLinkToProgramIncrementStub::withDenied();
 
         self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
 
     public function testUserCanPlanAndPrioritize(): void
     {
-        $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->field->method('userCanUpdate')->willReturn(true);
-
         self::assertTrue($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
     }
 
     public function testUserCannotPlanAndPrioritizeWhenUserCannotUpdateProgramIncrement(): void
     {
-        $this->artifact->method('userCanUpdate')->willReturn(false);
-
-        self::assertFalse($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
-    }
-
-    public function testUserCannotPlanAndPrioritizeWhenProgramIncrementTrackerHasNoArtifactLinkField(): void
-    {
-        $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->field_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
+        $this->update_verifier = VerifyUserCanUpdateTimeboxStub::withDenied();
 
         self::assertFalse($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
     }
 
     public function testUserCannotPlanAndPrioritizeWhenUserCannotUpdateArtifactLinkOfProgramIncrement(): void
     {
-        $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->field->method('userCanUpdate')->willReturn(false);
+        $this->link_verifier = VerifyUserCanLinkToProgramIncrementStub::withDenied();
 
         self::assertFalse($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
     }
