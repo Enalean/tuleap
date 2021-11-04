@@ -27,15 +27,17 @@ use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ContentStoreStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchArtifactsLinksStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -52,35 +54,30 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
     private const TEAM_ID                = 172;
     private const ARTIFACT_LINK_FIELD_ID = 1;
     /**
-     * @var Stub&ContentDao
-     */
-    private $content_dao;
-    /**
      * @var Stub&Tracker_ArtifactFactory
      */
     private $tracker_artifact_factory;
-    /**
-     * @var Stub&ArtifactsLinkedToParentDao
-     */
-    private $artifacts_linked_dao;
+    private SearchArtifactsLinks $search_artifacts_links;
     private ProgramIncrementChanged $program_increment_changed;
+    private ContentStore $content_dao;
 
     protected function setUp(): void
     {
-        $this->artifacts_linked_dao     = $this->createStub(ArtifactsLinkedToParentDao::class);
+        $this->search_artifacts_links   = SearchArtifactsLinksStub::withoutArtifactLinks();
         $this->tracker_artifact_factory = $this->createStub(Tracker_ArtifactFactory::class);
-        $this->content_dao              = $this->createStub(ContentDao::class);
+        $this->content_dao              = ContentStoreStub::withoutRows();
 
         $update                          = ProgramIncrementUpdateBuilder::build();
         $this->program_increment_changed = ProgramIncrementChanged::fromUpdate($update);
     }
+
 
     private function getPlanner(): UserStoriesInMirroredProgramIncrementsPlanner
     {
         $pfuser = UserTestBuilder::aUser()->build();
         return new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorPassthrough(),
-            $this->artifacts_linked_dao,
+            $this->search_artifacts_links,
             $this->tracker_artifact_factory,
             SearchMirroredTimeboxesStub::withIds(self::MIRRORED_TIMEBOX_ID),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
@@ -93,9 +90,9 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     public function testItAddLinksToMirroredMilestones(): void
     {
-        $raw_link = ['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID];
-        $this->content_dao->method('searchContent')->willReturn([['artifact_id' => self::FEATURE_ID]]);
-        $this->artifacts_linked_dao->method('getArtifactsLinkedToId')->willReturn([$raw_link]);
+        $raw_link                     = ['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID];
+        $this->content_dao            = ContentStoreStub::withRows([['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]);
+        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks([$raw_link]);
 
         $milestone = $this->createMock(Artifact::class);
         $milestone->method('getId')->willReturn(self::MIRRORED_TIMEBOX_ID);
@@ -108,9 +105,6 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         $milestone->method('getAnArtifactLinkField')->willReturn($field_artifact_link);
         $this->tracker_artifact_factory->method('getArtifactById')->willReturn($milestone);
 
-        $this->artifacts_linked_dao->method('getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint')
-            ->willReturn([['id' => self::USER_STORY_ID]]);
-
         $fields_data = new FieldData(
             [FeatureChange::fromRaw($raw_link)],
             [],
@@ -118,20 +112,19 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         );
 
         $milestone->expects(self::once())
-            ->method('createNewChangeset')->with(
-                $fields_data->getFieldDataForChangesetCreationFormat(self::TEAM_ID),
-                '',
-                self::isInstanceOf(\PFUser::class)
-            );
+                  ->method('createNewChangeset')->with(
+                      $fields_data->getFieldDataForChangesetCreationFormat(self::TEAM_ID),
+                      '',
+                      self::isInstanceOf(\PFUser::class)
+                  );
 
         $this->getPlanner()->plan($this->program_increment_changed);
     }
 
     public function testItDoesNothingWhenArtifactLinkIsNotFound(): void
     {
-        $this->content_dao->method('searchContent')->willReturn([['artifact_id' => self::FEATURE_ID]]);
-        $this->artifacts_linked_dao->method('getArtifactsLinkedToId')
-            ->willReturn([['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID]]);
+        $this->content_dao            = ContentStoreStub::withRows([['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]);
+        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks([['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID]]);
 
         $milestone = $this->createMock(Artifact::class);
         $milestone->method('getAnArtifactLinkField')->willReturn(null);
@@ -144,9 +137,8 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     public function testItDoesNothingWhenMilestoneIsNotFound(): void
     {
-        $this->content_dao->method('searchContent')->willReturn([['artifact_id' => self::FEATURE_ID]]);
-        $this->artifacts_linked_dao->method('getArtifactsLinkedToId')
-            ->willReturn([['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID]]);
+        $this->content_dao            = ContentStoreStub::withRows([['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]);
+        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks([['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID]]);
 
         $this->tracker_artifact_factory->method('getArtifactById')->willReturn(null);
 
@@ -156,10 +148,12 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     public function testItDoesNotAddUserStoryIfUserStoryIsNotInProject(): void
     {
-        $other_project_id = 122;
-        $this->content_dao->method('searchContent')->willReturn([['artifact_id' => self::FEATURE_ID]]);
-        $this->artifacts_linked_dao->method('getArtifactsLinkedToId')
-            ->willReturn([['id' => self::USER_STORY_ID, 'project_id' => $other_project_id]]);
+        $other_project_id  = 122;
+        $this->content_dao = ContentStoreStub::withRows([['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]);
+
+        $raw_link = ['id' => self::USER_STORY_ID, 'project_id' => $other_project_id];
+
+        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks([$raw_link]);
 
         $milestone = $this->createMock(Artifact::class);
         $milestone->method('getId')->willReturn(self::MIRRORED_TIMEBOX_ID);
@@ -167,11 +161,11 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         $milestone->method('getTracker')->willReturn(
             TrackerTestBuilder::aTracker()->withProject($team_project)->build()
         );
-        $milestone->method('getAnArtifactLinkField')->willReturn($this->getArtifactLinkField());
-        $this->tracker_artifact_factory->method('getArtifactById')->willReturn($milestone);
 
-        $this->artifacts_linked_dao->method('getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint')
-            ->willReturn([['id' => self::USER_STORY_ID]]);
+        $field_artifact_link = $this->createStub(Tracker_FormElement_Field_ArtifactLink::class);
+        $field_artifact_link->method('getId')->willReturn(self::ARTIFACT_LINK_FIELD_ID);
+        $milestone->method('getAnArtifactLinkField')->willReturn($field_artifact_link);
+        $this->tracker_artifact_factory->method('getArtifactById')->willReturn($milestone);
 
         $fields_data = new FieldData(
             [],
@@ -188,22 +182,5 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             );
 
         $this->getPlanner()->plan($this->program_increment_changed);
-    }
-
-    private function getArtifactLinkField(): Tracker_FormElement_Field_ArtifactLink
-    {
-        return new Tracker_FormElement_Field_ArtifactLink(
-            self::ARTIFACT_LINK_FIELD_ID,
-            70,
-            1,
-            'field_artlink',
-            'Field ArtLink',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
     }
 }

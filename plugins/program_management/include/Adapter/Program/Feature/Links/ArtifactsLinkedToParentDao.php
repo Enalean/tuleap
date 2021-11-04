@@ -24,10 +24,13 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ArtifactsLinksSearch;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
 
-class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLinksSearch, RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement
+final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone
 {
     /**
      * @psalm-return array{id: int, project_id: int}[]

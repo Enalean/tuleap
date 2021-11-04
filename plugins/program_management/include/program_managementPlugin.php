@@ -877,6 +877,8 @@ final class program_managementPlugin extends Plugin
         $priority_manager     = \Tracker_Artifact_PriorityManager::build();
         $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
 
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+
         return new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
                 ProjectManager::instance(),
@@ -891,10 +893,12 @@ final class program_managementPlugin extends Plugin
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer($priority_manager),
             new UserStoryLinkedToFeatureVerifier(
-                new ArtifactsLinkedToParentDao(),
+                $artifacts_linked_to_parent_dao,
                 new PlanningAdapter(\PlanningFactory::build(), $user_manager_adapter),
                 $artifact_factory,
-                $user_manager_adapter
+                $user_manager_adapter,
+                $artifacts_linked_to_parent_dao,
+                $artifacts_linked_to_parent_dao
             ),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_manager_adapter),
             new FeatureRemovalProcessor(

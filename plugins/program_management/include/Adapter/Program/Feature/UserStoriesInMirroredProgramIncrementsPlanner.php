@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 use Psr\Log\LoggerInterface;
 use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
@@ -42,7 +42,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
 {
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,
-        private ArtifactsLinkedToParentDao $artifacts_linked_to_parent_dao,
+        private SearchArtifactsLinks $artifacts_links_search,
         private \Tracker_ArtifactFactory $tracker_artifact_factory,
         private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
         private VerifyIsVisibleArtifact $visibility_verifier,
@@ -60,7 +60,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         $user_identifier           = $program_increment_changed->user;
         $potential_feature_to_link = $this->content_dao->searchContent($program_increment->getId());
         $feature_plan_change       = FeaturePlanChange::fromRaw(
-            $this->artifacts_linked_to_parent_dao,
+            $this->artifacts_links_search,
             $potential_feature_to_link,
             $program_increment_changed->tracker->getId()
         );

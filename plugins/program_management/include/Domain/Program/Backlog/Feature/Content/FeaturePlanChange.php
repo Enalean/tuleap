@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ArtifactsLinksSearch;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
 
 /**
  * @psalm-immutable
@@ -45,7 +45,7 @@ final class FeaturePlanChange
     /**
      * @psalm-param array{artifact_id:int|string}[] $feature_to_links
      */
-    public static function fromRaw(ArtifactsLinksSearch $searcher, array $feature_to_links, int $program_increment_tracker_id): self
+    public static function fromRaw(SearchArtifactsLinks $searcher, array $feature_to_links, int $program_increment_tracker_id): self
     {
         $feature_change = [];
         foreach ($feature_to_links as $feature_to_link) {

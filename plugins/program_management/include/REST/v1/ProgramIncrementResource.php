@@ -99,11 +99,14 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $artifact_factory           = \Tracker_ArtifactFactory::instance();
         $program_dao                = new ProgramDao();
 
+        $artifacts_linked_to_parent_dao            = new ArtifactsLinkedToParentDao();
         $this->user_story_linked_verifier          = new UserStoryLinkedToFeatureVerifier(
-            new ArtifactsLinkedToParentDao(),
+            $artifacts_linked_to_parent_dao,
             new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
             $artifact_factory,
-            $this->user_manager_adapter
+            $this->user_manager_adapter,
+            $artifacts_linked_to_parent_dao,
+            $artifacts_linked_to_parent_dao
         );
         $this->program_increment_content_retriever = new FeatureContentRetriever(
             new ProgramIncrementsDAO(),
