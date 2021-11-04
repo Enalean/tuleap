@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyFeatureIsPlannedInProgramIncrement;
 
-class FeatureDAO extends DataAccessObject implements CheckFeatureIsPlannedInProgramIncrement
+class FeatureDAO extends DataAccessObject implements VerifyFeatureIsPlannedInProgramIncrement
 {
     public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool
     {

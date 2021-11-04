@@ -42,7 +42,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -104,7 +104,7 @@ final class ProjectResource extends AuthenticatedResource
     private BuildProgram $build_program;
     private UserManagerAdapter $user_manager_adapter;
     private PrioritizeFeaturesPermissionVerifier $features_permission_verifier;
-    private UserStoryLinkedToFeatureChecker $linked_to_feature_checker;
+    private UserStoryLinkedToFeatureVerifier $user_story_linked_verifier;
 
     public function __construct()
     {
@@ -154,7 +154,7 @@ final class ProjectResource extends AuthenticatedResource
 
         $artifact_factory                   = \Tracker_ArtifactFactory::instance();
         $form_element_factory               = \Tracker_FormElementFactory::instance();
-        $this->linked_to_feature_checker    = new UserStoryLinkedToFeatureChecker(
+        $this->user_story_linked_verifier   = new UserStoryLinkedToFeatureVerifier(
             new ArtifactsLinkedToParentDao(),
             new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
             $artifact_factory,
@@ -172,7 +172,7 @@ final class ProjectResource extends AuthenticatedResource
                     $this->user_manager_adapter
                 ),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
-                $this->linked_to_feature_checker,
+                $this->user_story_linked_verifier,
                 $this->user_manager_adapter
             )
         );
@@ -418,7 +418,7 @@ final class ProjectResource extends AuthenticatedResource
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
-            $this->linked_to_feature_checker,
+            $this->user_story_linked_verifier,
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             new FeatureRemovalProcessor(
                 new ProgramIncrementsDAO(),

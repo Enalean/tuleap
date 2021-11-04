@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckRequiredField;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyRequiredFieldsLimitedToSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProjectFromTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\RetrieveTrackerFromField;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
-final class RequiredFieldChecker implements CheckRequiredField
+final class RequiredFieldVerifier implements VerifyRequiredFieldsLimitedToSynchronizedFields
 {
     private \TrackerFactory $tracker_factory;
 

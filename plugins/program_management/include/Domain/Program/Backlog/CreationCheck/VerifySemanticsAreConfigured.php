@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-interface CheckWorkflow
+interface VerifySemanticsAreConfigured
 {
-    public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-        TrackerCollection $trackers,
-        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
-        ConfigurationErrorsCollector $errors_collector
+    public function areTrackerSemanticsWellConfigured(
+        TrackerReference $tracker,
+        SourceTrackerCollection $source_tracker_collection,
+        ConfigurationErrorsCollector $configuration_errors
     ): bool;
 }

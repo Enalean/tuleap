@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyFeatureIsPlannedInProgramIncrement;
 
-final class CheckFeatureIsPlannedInProgramIncrementStub implements CheckFeatureIsPlannedInProgramIncrement
+final class VerifyFeatureIsPlannedInProgramIncrementStub implements VerifyFeatureIsPlannedInProgramIncrement
 {
     private bool $is_planned;
 

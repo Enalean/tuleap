@@ -56,10 +56,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Progra
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateProcessorBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusSemanticChecker;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticsVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusIsAlignedVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
@@ -87,7 +87,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
@@ -417,14 +417,14 @@ final class program_managementPlugin extends Plugin
 
         $checker = new TimeboxCreatorChecker(
             $synchronized_fields_builder,
-            new SemanticChecker(
+            new SemanticsVerifier(
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
-                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
+                new StatusIsAlignedVerifier(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
             ),
-            new RequiredFieldChecker($tracker_factory),
-            new WorkflowChecker(
+            new RequiredFieldVerifier($tracker_factory),
+            new WorkflowVerifier(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
                 new Tracker_Rule_List_Dao(),
@@ -890,7 +890,7 @@ final class program_managementPlugin extends Plugin
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer($priority_manager),
-            new UserStoryLinkedToFeatureChecker(
+            new UserStoryLinkedToFeatureVerifier(
                 new ArtifactsLinkedToParentDao(),
                 new PlanningAdapter(\PlanningFactory::build(), $user_manager_adapter),
                 $artifact_factory,
@@ -1127,14 +1127,14 @@ final class program_managementPlugin extends Plugin
 
         $checker = new TimeboxCreatorChecker(
             $synchronized_fields_builder,
-            new SemanticChecker(
+            new SemanticsVerifier(
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
-                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
+                new StatusIsAlignedVerifier(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
             ),
-            new RequiredFieldChecker($tracker_factory),
-            new WorkflowChecker(
+            new RequiredFieldVerifier($tracker_factory),
+            new WorkflowVerifier(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
                 new Tracker_Rule_List_Dao(),

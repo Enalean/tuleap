@@ -23,20 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckSemantic;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifySemanticsAreConfigured;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
-final class SemanticChecker implements CheckSemantic
+final class SemanticsVerifier implements VerifySemanticsAreConfigured
 {
     public function __construct(
         private \Tracker_Semantic_TitleDao $semantic_title_dao,
         private \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         private SemanticTimeframeDao $semantic_timeframe_dao,
-        private CheckStatus $semantic_status_checker
+        private VerifyStatusIsAligned $status_verifier
     ) {
     }
 
@@ -86,7 +86,7 @@ final class SemanticChecker implements CheckSemantic
             }
         }
         if (
-            $this->semantic_status_checker->isStatusWellConfigured(
+            $this->status_verifier->isStatusWellConfigured(
                 $tracker,
                 $source_tracker_collection,
                 $configuration_errors

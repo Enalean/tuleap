@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
-final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
@@ -50,6 +50,16 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->user_identifier  = UserIdentifierStub::buildGenericUser();
     }
 
+    private function getVerifier(): UserStoryLinkedToFeatureVerifier
+    {
+        return new UserStoryLinkedToFeatureVerifier(
+            $this->feature_dao,
+            $this->planning_builder,
+            $this->artifact_factory,
+            RetrieveUserStub::withGenericUser()
+        );
+    }
+
     public function testHasNotAPlannedUserStoryIfNoUserStoryIsLinked(): void
     {
         $this->feature_dao
@@ -57,7 +67,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->method('getPlannedUserStory')
             ->willReturn([]);
         self::assertFalse(
-            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -79,7 +89,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturnOnConsecutiveCalls(false, true);
 
         self::assertTrue(
-            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -100,7 +110,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(false);
 
         self::assertFalse(
-            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -112,7 +122,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn([]);
 
         self::assertFalse(
-            $this->getChecker()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
+            $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -132,7 +142,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(null);
 
         self::assertFalse(
-            $this->getChecker()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
+            $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -152,7 +162,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn($this->createMock(\Artifact::class));
 
         self::assertTrue(
-            $this->getChecker()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
+            $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
         );
     }
 
@@ -168,22 +178,12 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->planning_builder = BuildPlanningStub::withoutRootValid();
 
         self::assertFalse(
-            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
         );
     }
 
     private function buildFeature(int $feature_id): FeatureIdentifier
     {
         return FeatureIdentifierBuilder::build($feature_id, 110);
-    }
-
-    private function getChecker(): UserStoryLinkedToFeatureChecker
-    {
-        return new UserStoryLinkedToFeatureChecker(
-            $this->feature_dao,
-            $this->planning_builder,
-            $this->artifact_factory,
-            RetrieveUserStub::withGenericUser()
-        );
     }
 }

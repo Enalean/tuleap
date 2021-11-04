@@ -44,7 +44,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetri
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -87,7 +87,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
     public FeatureContentRetriever $program_increment_content_retriever;
     private \UserManager $user_manager;
     private UserManagerAdapter $user_manager_adapter;
-    private UserStoryLinkedToFeatureChecker $linked_to_feature_checker;
+    private UserStoryLinkedToFeatureVerifier $user_story_linked_verifier;
 
     public function __construct()
     {
@@ -96,7 +96,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $artifact_factory           = \Tracker_ArtifactFactory::instance();
         $program_dao                = new ProgramDao();
 
-        $this->linked_to_feature_checker           = new UserStoryLinkedToFeatureChecker(
+        $this->user_story_linked_verifier          = new UserStoryLinkedToFeatureVerifier(
             new ArtifactsLinkedToParentDao(),
             new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
             $artifact_factory,
@@ -114,7 +114,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     $this->user_manager_adapter
                 ),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
-                $this->linked_to_feature_checker,
+                $this->user_story_linked_verifier,
                 $this->user_manager_adapter
             ),
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
@@ -217,7 +217,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             $plan_dao,
             new FeaturePlanner(
-                $this->linked_to_feature_checker,
+                $this->user_story_linked_verifier,
                 new FeatureRemovalProcessor(
                     $program_increments_dao,
                     $artifact_factory,

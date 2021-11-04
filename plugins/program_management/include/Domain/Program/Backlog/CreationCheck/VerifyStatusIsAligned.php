@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-interface CheckStatus
+interface VerifyStatusIsAligned
 {
     public function isStatusWellConfigured(
         TrackerReference $tracker,
