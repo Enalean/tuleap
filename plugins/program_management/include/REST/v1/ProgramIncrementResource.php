@@ -58,6 +58,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
@@ -201,6 +203,10 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $plan_dao               = new PlanDao();
         $program_dao            = new ProgramDao();
         $artifact_retriever     = new ArtifactFactoryAdapter($artifact_factory);
+        $tracker_factory        = \TrackerFactory::instance();
+        $tracker_retriever      = new TrackerFactoryAdapter($tracker_factory);
+        $form_element_factory   = \Tracker_FormElementFactory::instance();
+        $field_retriever        = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
 
         $artifact_link_updater = new ArtifactLinkUpdater(
             \Tracker_Artifact_PriorityManager::build(),
@@ -243,7 +249,12 @@ final class ProgramIncrementResource extends AuthenticatedResource
             ),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             new FeatureDAO(),
-            new UserCanPlanInProgramIncrementVerifier($artifact_retriever, $user_retriever),
+            new UserCanPlanInProgramIncrementVerifier(
+                $artifact_retriever,
+                $user_retriever,
+                $program_increments_dao,
+                $field_retriever
+            ),
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $program_dao,
             new ProgramAdapter(

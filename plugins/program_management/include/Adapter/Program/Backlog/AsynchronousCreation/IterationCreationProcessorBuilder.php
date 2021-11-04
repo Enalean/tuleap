@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -89,6 +90,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $artifact_changeset_dao   = new \Tracker_Artifact_ChangesetDao();
         $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
         $artifact_retriever       = new ArtifactFactoryAdapter($artifact_factory);
+        $field_retriever          = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
@@ -104,7 +106,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                     $artifact_factory
                 )
             ),
-            $form_element_factory
+            $field_retriever
         );
 
         $changeset_values_formatter = new ChangesetValuesFormatter(

@@ -62,6 +62,7 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -126,6 +127,10 @@ final class ProjectResource extends AuthenticatedResource
         $project_permission_verifier = new ProjectPermissionVerifier($this->user_manager_adapter);
         $artifact_factory            = \Tracker_ArtifactFactory::instance();
         $artifact_retriever          = new ArtifactFactoryAdapter($artifact_factory);
+        $tracker_factory             = \TrackerFactory::instance();
+        $tracker_retriever           = new TrackerFactoryAdapter($tracker_factory);
+        $form_element_factory        = \Tracker_FormElementFactory::instance();
+        $field_retriever             = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
@@ -139,7 +144,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $this->plan_creator = new PlanCreator(
-            new TrackerFactoryAdapter(\TrackerFactory::instance()),
+            $tracker_retriever,
             new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
             $plan_dao,
             $project_retriever,
@@ -161,8 +166,6 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao
         );
 
-        $artifact_factory                   = \Tracker_ArtifactFactory::instance();
-        $form_element_factory               = \Tracker_FormElementFactory::instance();
         $artifacts_linked_to_parent_dao     = new ArtifactsLinkedToParentDao();
         $this->user_story_linked_verifier   = new UserStoryLinkedToFeatureVerifier(
             $artifacts_linked_to_parent_dao,
@@ -212,7 +215,12 @@ final class ProjectResource extends AuthenticatedResource
                 new UriRetriever($artifact_retriever),
                 new CrossReferenceRetriever($artifact_retriever),
                 new UserCanUpdateTimeboxVerifier($artifact_retriever, $this->user_manager_adapter),
-                new UserCanPlanInProgramIncrementVerifier($artifact_retriever, $this->user_manager_adapter)
+                new UserCanPlanInProgramIncrementVerifier(
+                    $artifact_retriever,
+                    $this->user_manager_adapter,
+                    $program_increments_dao,
+                    $field_retriever
+                ),
             )
         );
     }

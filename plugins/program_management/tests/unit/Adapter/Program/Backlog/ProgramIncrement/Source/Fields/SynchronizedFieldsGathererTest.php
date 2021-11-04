@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementTrackerIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactLinkFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -58,20 +59,17 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\Stub&SemanticTimeframeBuilder
      */
     private $timeframe_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private RetrieveFullArtifactLinkFieldStub $artifact_link_retriever;
     private \Tracker $tracker;
     private ProgramIncrementTrackerIdentifier $tracker_identifier;
 
     protected function setUp(): void
     {
-        $this->title_factory        = $this->createStub(\Tracker_Semantic_TitleFactory::class);
-        $this->description_factory  = $this->createStub(\Tracker_Semantic_DescriptionFactory::class);
-        $this->status_factory       = $this->createStub(\Tracker_Semantic_StatusFactory::class);
-        $this->timeframe_builder    = $this->createStub(SemanticTimeframeBuilder::class);
-        $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
+        $this->title_factory           = $this->createStub(\Tracker_Semantic_TitleFactory::class);
+        $this->description_factory     = $this->createStub(\Tracker_Semantic_DescriptionFactory::class);
+        $this->status_factory          = $this->createStub(\Tracker_Semantic_StatusFactory::class);
+        $this->timeframe_builder       = $this->createStub(SemanticTimeframeBuilder::class);
+        $this->artifact_link_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
 
         $this->tracker_identifier = ProgramIncrementTrackerIdentifierBuilder::buildWithId(
             self::PROGRAM_INCREMENT_TRACKER_ID
@@ -91,7 +89,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->description_factory,
             $this->status_factory,
             $this->timeframe_builder,
-            $this->form_element_factory
+            $this->artifact_link_retriever
         );
     }
 
@@ -233,16 +231,15 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenArtifactLinkFieldCantBeFound(): void
     {
-        $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([]);
-
         $this->expectException(NoArtifactLinkFieldException::class);
         $this->getGatherer()->getArtifactLinkField($this->tracker_identifier, null);
     }
 
     public function testItReturnsArtifactLinkReference(): void
     {
-        $this->form_element_factory->method('getUsedArtifactLinkFields')
-            ->willReturn([$this->getArtifactLinkField(623, 'premanifest')]);
+        $this->artifact_link_retriever = RetrieveFullArtifactLinkFieldStub::withField(
+            $this->getArtifactLinkField(623, 'premanifest')
+        );
 
         $artifact_link = $this->getGatherer()->getArtifactLinkField($this->tracker_identifier, null);
         self::assertSame(623, $artifact_link->getId());

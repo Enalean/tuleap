@@ -24,17 +24,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\RetrieveFullArtifactLinkField;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 
 final class UserCanPlanInProgramIncrementVerifier implements VerifyUserCanPlanInProgramIncrement
 {
-    public function __construct(private RetrieveFullArtifact $artifact_retriever, private RetrieveUser $retrieve_user)
-    {
+    public function __construct(
+        private RetrieveFullArtifact $artifact_retriever,
+        private RetrieveUser $retrieve_user,
+        private RetrieveProgramIncrementTracker $tracker_retriever,
+        private RetrieveFullArtifactLinkField $field_retriever
+    ) {
     }
 
     public function userCanPlan(
@@ -48,7 +55,12 @@ final class UserCanPlanInProgramIncrementVerifier implements VerifyUserCanPlanIn
             return false;
         }
 
-        $artifact_link = $program_increment_artifact->getAnArtifactLinkField($user);
+        $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromProgramIncrement(
+            $this->tracker_retriever,
+            $program_increment_identifier
+        );
+
+        $artifact_link = $this->field_retriever->getArtifactLinkField($program_increment_tracker);
         if (! $artifact_link) {
             return false;
         }
