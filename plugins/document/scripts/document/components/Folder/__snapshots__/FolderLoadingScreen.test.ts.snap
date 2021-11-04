@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FolderLoadingScreen displays the folder loading screen 1`] = `
+<div
+  class="tlp-card"
+>
+  <skeleton-table-stub
+    cell_classes=",document-tree-cell-owner,document-tree-cell-updatedate"
+    icons="fa-folder,fa-folder,fa-file-o,fa-file-o,fa-file-o"
+    nb_cols="3"
+    nb_rows="5"
+  >
+    <th
+      class="document-tree-head-name"
+      data-current-language="en_US"
+      data-msgid="Name"
+    >
+      Name
+    </th>
+     
+    <th
+      class="document-tree-head-owner document-tree-head-skeleton"
+      data-current-language="en_US"
+      data-msgid="Owner"
+    >
+      Owner
+    </th>
+     
+    <th
+      class="document-tree-head-updatedate document-tree-head-skeleton"
+      data-current-language="en_US"
+      data-msgid="
+            Last update date
+        "
+    >
+      
+            Last update date
+        
+    </th>
+  </skeleton-table-stub>
+</div>
+`;
