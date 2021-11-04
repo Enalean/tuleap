@@ -23,7 +23,6 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 /**
  * Manage values in changeset for 'artifact link' fields
@@ -32,12 +31,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
 {
 
     /**
-     * @var array of artifact_id => Tracker_ArtifactLinkInfo
+     * @var Tracker_ArtifactLinkInfo[]
+     * @psalm-var array<mixed,Tracker_ArtifactLinkInfo>
      */
     protected $artifact_links;
 
     /**
-     * @var array of artifact_id => Tracker_ArtifactLinkInfo
+     * @var Tracker_ArtifactLinkInfo[]
+     * @psalm-var array<mixed,Tracker_ArtifactLinkInfo>
      */
     protected $reverse_artifact_links;
 
@@ -180,34 +181,44 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return $artifact_links_representation;
     }
 
-    private function getAllOutgoingArtifactIdsUserCanSee(PFUser $user)
+    /**
+     * @return \Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType[]
+     */
+    private function getAllOutgoingArtifactIdsUserCanSee(PFUser $user): array
     {
         $values = [];
 
-        foreach ($this->getArtifactIdsUserCanSee($user) as $id) {
-            $values[] = $this->buildArtifactReference($id);
+        foreach ($this->getLinksUserCanSee($user) as $link_info) {
+            $values[] = $this->buildArtifactReference($link_info);
         }
 
-        return $values;
+        return array_filter($values);
     }
 
-    private function getAllIncomingArtifactIdsUserCanSee(PFUser $user)
+    /**
+     * @return \Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType[]
+     */
+    private function getAllIncomingArtifactIdsUserCanSee(PFUser $user): array
     {
         $values = [];
 
-        foreach ($this->getIncomingArtifactIdsUserCanSee($user) as $id) {
-            $values[] = $this->buildArtifactReference($id);
+        foreach ($this->getIncomingLinksUserCanSee($user) as $link_info) {
+            $values[] = $this->buildArtifactReference($link_info);
         }
 
-        return $values;
+        return array_filter($values);
     }
 
-    private function buildArtifactReference($artifact_id)
+    private function buildArtifactReference(Tracker_ArtifactLinkInfo $link_info): ?\Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType
     {
-        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-        $artifact_reference       = ArtifactReference::build($tracker_artifact_factory->getArtifactById($artifact_id));
-
-        return $artifact_reference;
+        $artifact = $link_info->getArtifact();
+        if ($artifact === null) {
+            return null;
+        }
+        return \Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType::buildWithType(
+            $artifact,
+            $link_info->getNature()
+        );
     }
 
     /**
@@ -228,28 +239,31 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     /**
      * Returns the list of artifact id in all artifact links user can see
      *
-     * @return type
+     * @return Tracker_ArtifactLinkInfo[]
      */
-    public function getArtifactIdsUserCanSee(PFUser $user)
+    private function getLinksUserCanSee(PFUser $user): array
     {
         $artifact_links_user_can_see = [];
 
-        foreach ($this->artifact_links as $artifact_id => $link) {
+        foreach ($this->artifact_links as $link) {
             if ($link->userCanView($user)) {
-                $artifact_links_user_can_see[] = $artifact_id;
+                $artifact_links_user_can_see[] = $link;
             }
         }
 
         return $artifact_links_user_can_see;
     }
 
-    private function getIncomingArtifactIdsUserCanSee(PFUser $user)
+    /**
+     * @return Tracker_ArtifactLinkInfo[]
+     */
+    private function getIncomingLinksUserCanSee(PFUser $user): array
     {
         $reverse_artifact_links_user_can_see = [];
 
-        foreach ($this->reverse_artifact_links as $artifact_id => $link) {
+        foreach ($this->reverse_artifact_links as $link) {
             if ($link->userCanView($user)) {
-                $reverse_artifact_links_user_can_see[] = $artifact_id;
+                $reverse_artifact_links_user_can_see[] = $link;
             }
         }
 
