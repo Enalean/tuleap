@@ -32,7 +32,7 @@ specifiers:
   eslint-plugin-import: ^2.25.2
   eslint-plugin-jest: ^25.2.2
   eslint-plugin-no-only-tests: ^2.6.0
-  eslint-plugin-no-unsanitized: ^3.1.5
+  eslint-plugin-no-unsanitized: ^4.0.0
   eslint-plugin-prettier: ^3.4.0
   eslint-plugin-vue: ^8.0.3
   eslint-plugin-you-dont-need-lodash-underscore: ^6.12.0
@@ -109,7 +109,7 @@ devDependencies:
   eslint-plugin-import: 2.25.2_eslint@7.27.0
   eslint-plugin-jest: 25.2.2_d977f89663e14416e49884c2a9ac7e63
   eslint-plugin-no-only-tests: 2.6.0
-  eslint-plugin-no-unsanitized: 3.1.5_eslint@7.27.0
+  eslint-plugin-no-unsanitized: 4.0.0_eslint@7.27.0
   eslint-plugin-prettier: 3.4.0_6572892a7b6b9c593b016aef4d7364db
   eslint-plugin-vue: 8.0.3_eslint@7.27.0
   eslint-plugin-you-dont-need-lodash-underscore: 6.12.0
@@ -4809,10 +4809,10 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: true
 
-  /eslint-plugin-no-unsanitized/3.1.5_eslint@7.27.0:
-    resolution: {integrity: sha512-s/6w++p1590h/H/dE2Wo660bOkaM/3OEK14Y7xm1UT0bafxkKw1Cq0ksjxkxLdH/WWd014DlsLKuD6CyNrR2Dw==}
+  /eslint-plugin-no-unsanitized/4.0.0_eslint@7.27.0:
+    resolution: {integrity: sha512-Wguc3EZS+7BJ/Pgu8C1/G86eXHUIRz4ZHEhPlwVkS42MbHEyfh8Wm+pDRVAg73EE0TR//SbjkPlHr93yLJT10g==}
     peerDependencies:
-      eslint: ^5 || ^6 || ^7
+      eslint: ^6 || ^7 || ^8
     dependencies:
       eslint: 7.27.0
     dev: true
