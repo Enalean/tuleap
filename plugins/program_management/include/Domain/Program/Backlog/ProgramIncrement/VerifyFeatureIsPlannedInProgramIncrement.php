@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-interface CheckFeatureIsPlannedInProgramIncrement
+interface VerifyFeatureIsPlannedInProgramIncrement
 {
     public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool;
 }

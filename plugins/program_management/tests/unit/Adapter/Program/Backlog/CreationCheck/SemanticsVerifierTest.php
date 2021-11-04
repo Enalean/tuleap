@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
@@ -36,11 +36,11 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
-final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
     private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
-    private SemanticChecker $checker;
+    private SemanticsVerifier $verifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_TitleDao
      */
@@ -54,9 +54,9 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $timeframe_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CheckStatus
+     * @var \PHPUnit\Framework\MockObject\MockObject&VerifyStatusIsAligned
      */
-    private $semantic_status_checker;
+    private $status_verifier;
     private TrackerReference $program_increment_tracker;
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;
@@ -88,15 +88,15 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $user_identifier
         );
 
-        $this->title_dao               = $this->createMock(\Tracker_Semantic_TitleDao::class);
-        $this->description_dao         = $this->createMock(\Tracker_Semantic_DescriptionDao::class);
-        $this->timeframe_dao           = $this->createMock(SemanticTimeframeDao::class);
-        $this->semantic_status_checker = $this->createMock(CheckStatus::class);
-        $this->checker                 = new SemanticChecker(
+        $this->title_dao       = $this->createMock(\Tracker_Semantic_TitleDao::class);
+        $this->description_dao = $this->createMock(\Tracker_Semantic_DescriptionDao::class);
+        $this->timeframe_dao   = $this->createMock(SemanticTimeframeDao::class);
+        $this->status_verifier = $this->createMock(VerifyStatusIsAligned::class);
+        $this->verifier        = new SemanticsVerifier(
             $this->title_dao,
             $this->description_dao,
             $this->timeframe_dao,
-            $this->semantic_status_checker
+            $this->status_verifier
         );
     }
 
@@ -110,7 +110,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);
-        $this->semantic_status_checker->expects(self::once())
+        $this->status_verifier->expects(self::once())
             ->method('isStatusWellConfigured')
             ->willReturn(true);
         $this->timeframe_dao->expects(self::once())
@@ -124,7 +124,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(false);
         self::assertTrue(
-            $this->checker->areTrackerSemanticsWellConfigured(
+            $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -143,7 +143,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([101]);
         $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
             ->willReturn([101]);
-        $this->semantic_status_checker->method('isStatusWellConfigured')
+        $this->status_verifier->method('isStatusWellConfigured')
             ->willReturn(false);
         $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->willReturn(1);
@@ -152,7 +152,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured(
+            $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -176,7 +176,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([101]);
         $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
             ->willReturn([101]);
-        $this->semantic_status_checker->method('isStatusWellConfigured')
+        $this->status_verifier->method('isStatusWellConfigured')
             ->willReturn(false);
         $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->willReturn(1);
@@ -185,7 +185,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(false);
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured(
+            $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -203,7 +203,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(0);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->willReturn(0);
-        $this->semantic_status_checker->method('isStatusWellConfigured')
+        $this->status_verifier->method('isStatusWellConfigured')
             ->willReturn(true);
         $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->willReturn(0);
@@ -212,7 +212,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured(
+            $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors

@@ -42,7 +42,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 
-final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_FIELD_ID         = 789;
     private const DESCRIPTION_FIELD_ID   = 3;
@@ -95,9 +95,9 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = UserIdentifierStub::buildGenericUser();
     }
 
-    private function getChecker(): RequiredFieldChecker
+    private function getVerifier(): RequiredFieldVerifier
     {
-        return new RequiredFieldChecker($this->tracker_factory);
+        return new RequiredFieldVerifier($this->tracker_factory);
     }
 
     public function testAllowsCreationWhenOnlySynchronizedFieldsAreRequired(): void
@@ -137,7 +137,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $other_tracker_with_no_required_field
         );
 
-        $no_other_required_fields = $this->getChecker()->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
+        $no_other_required_fields = $this->getVerifier()->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             $trackers,
             $this->collection,
             $errors_collector,
@@ -184,7 +184,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $trackers         = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user, $errors_collector);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker);
 
-        $no_other_required_fields = $this->getChecker()->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
+        $no_other_required_fields = $this->getVerifier()->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             $trackers,
             $this->collection,
             $errors_collector,

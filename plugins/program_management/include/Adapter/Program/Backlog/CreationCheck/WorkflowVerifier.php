@@ -25,11 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckWorkflow;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifySynchronizedFieldsAreNotUsedInWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
-final class WorkflowChecker implements CheckWorkflow
+final class WorkflowVerifier implements VerifySynchronizedFieldsAreNotUsedInWorkflow
 {
     private \Workflow_Dao $workflow_dao;
     private \Tracker_Rule_Date_Dao $tracker_rule_date_dao;

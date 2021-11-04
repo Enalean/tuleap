@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
@@ -54,7 +54,7 @@ final class ContentModifier implements ModifyContent
         private VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
         private FeaturePlanner $feature_planner,
         private OrderFeatureRank $features_rank_orderer,
-        private CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI,
+        private VerifyFeatureIsPlannedInProgramIncrement $feature_is_planned_verifier,
         private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveProgramOfProgramIncrement $program_retriever,
@@ -161,7 +161,7 @@ final class ContentModifier implements ModifyContent
                 $program_increment->getId()
             );
         }
-        $feature_is_planned = $this->check_feature_is_planned_in_PI->isFeaturePlannedInProgramIncrement($program_increment->getId(), $potential_feature_id_to_manipulate);
+        $feature_is_planned = $this->feature_is_planned_verifier->isFeaturePlannedInProgramIncrement($program_increment->getId(), $potential_feature_id_to_manipulate);
 
         if (! $feature_is_planned) {
             throw new InvalidFeatureIdInProgramIncrementException(

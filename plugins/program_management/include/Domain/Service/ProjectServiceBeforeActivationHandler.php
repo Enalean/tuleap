@@ -31,7 +31,7 @@ final class ProjectServiceBeforeActivationHandler
 {
     public function __construct(
         private VerifyIsTeam $verify_is_team,
-        private VerifyScrumBlocksServiceActivation $check_scrum_configuration
+        private VerifyScrumBlocksServiceActivation $scrum_blocks_activation_verifier
     ) {
     }
 
@@ -47,7 +47,7 @@ final class ProjectServiceBeforeActivationHandler
             );
         }
 
-        if ($this->check_scrum_configuration->doesScrumBlockServiceUsage($event->getUserIdentifier(), $event->getProjectIdentifier())) {
+        if ($this->scrum_blocks_activation_verifier->doesScrumBlockServiceUsage($event->getUserIdentifier(), $event->getProjectIdentifier())) {
             $event->preventActivation(
                 dgettext('tuleap-program_management', 'Program service cannot be enabled when project have a Scrum configuration in AgileDashboard service.')
             );

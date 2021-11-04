@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNotPlanned
+final class UserStoryLinkedToFeatureVerifier implements VerifyLinkedUserStoryIsNotPlanned
 {
     public function __construct(
         private ArtifactsLinkedToParentDao $stories_linked_to_feature_dao,

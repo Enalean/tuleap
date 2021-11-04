@@ -25,11 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class StatusSemanticChecker implements CheckStatus
+final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
 {
     private Tracker_Semantic_StatusDao $semantic_status_dao;
     private Tracker_Semantic_StatusFactory $semantic_status_factory;

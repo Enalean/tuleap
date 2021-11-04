@@ -37,9 +37,9 @@ class TimeboxCreatorChecker
 {
     public function __construct(
         private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
-        private CheckSemantic $semantic_checker,
-        private CheckRequiredField $required_field_checker,
-        private CheckWorkflow $workflow_checker,
+        private VerifySemanticsAreConfigured $semantics_verifier,
+        private VerifyRequiredFieldsLimitedToSynchronizedFields $required_fields_verifier,
+        private VerifySynchronizedFieldsAreNotUsedInWorkflow $workflow_verifier,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
         private RetrieveProjectFromTracker $retrieve_project_from_tracker,
         private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
@@ -54,7 +54,7 @@ class TimeboxCreatorChecker
         ConfigurationErrorsCollector $configuration_errors
     ): bool {
         $can_be_created = true;
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker, $program_and_milestone_trackers, $configuration_errors)) {
+        if (! $this->semantics_verifier->areTrackerSemanticsWellConfigured($tracker, $program_and_milestone_trackers, $configuration_errors)) {
             $can_be_created = false;
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return $can_be_created;
@@ -79,7 +79,7 @@ class TimeboxCreatorChecker
             }
 
             if (
-                ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
+                ! $this->required_fields_verifier->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
                     $team_trackers,
                     $synchronized_fields_data_collection,
                     $configuration_errors,
@@ -94,7 +94,7 @@ class TimeboxCreatorChecker
             }
 
             if (
-                ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+                ! $this->workflow_verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                     $team_trackers,
                     $synchronized_fields_data_collection,
                     $configuration_errors

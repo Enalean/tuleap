@@ -40,10 +40,10 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 758;
-    private WorkflowChecker $checker;
+    private WorkflowVerifier $verifier;
     /**
      * @var MockObject&\Workflow_Dao
      */
@@ -76,7 +76,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retrieve_tracker_from_field = RetrieveTrackerFromFieldStub::withTracker(
             TrackerReferenceStub::withDefaults()
         );
-        $this->checker                     = new WorkflowChecker(
+        $this->verifier                    = new WorkflowVerifier(
             $this->workflow_dao,
             $this->rule_date_dao,
             $this->rule_list_dao,
@@ -128,7 +128,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         self::assertTrue(
-            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+            $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,
                 $this->collection,
                 $this->errors_collector
@@ -148,7 +148,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         self::assertFalse(
-            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+            $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,
                 $this->collection,
                 new ConfigurationErrorsCollector(false)
@@ -170,7 +170,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         self::assertFalse(
-            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+            $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,
                 $this->collection,
                 new ConfigurationErrorsCollector(false)
@@ -193,7 +193,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         self::assertFalse(
-            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+            $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,
                 $this->collection,
                 $this->errors_collector
@@ -225,7 +225,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $errors_collector = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+            $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,
                 $this->collection,
                 $errors_collector

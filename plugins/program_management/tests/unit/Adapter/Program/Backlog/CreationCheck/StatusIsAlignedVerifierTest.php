@@ -40,9 +40,9 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private StatusSemanticChecker $checker;
+    private StatusIsAlignedVerifier $verifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_StatusDao
      */
@@ -74,7 +74,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_status_factory = $this->createMock(Tracker_Semantic_StatusFactory::class);
         $this->tracker_factory         = $this->createMock(\TrackerFactory::class);
 
-        $this->checker = new StatusSemanticChecker(
+        $this->verifier = new StatusIsAlignedVerifier(
             $this->semantic_status_dao,
             $this->semantic_status_factory,
             $this->tracker_factory
@@ -165,7 +165,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertTrue(
-            $this->checker->isStatusWellConfigured(
+            $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -191,7 +191,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->isStatusWellConfigured(
+            $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -219,7 +219,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->isStatusWellConfigured(
+            $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors
@@ -265,7 +265,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->isStatusWellConfigured(
+            $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,
                 $this->source_trackers,
                 $configuration_errors

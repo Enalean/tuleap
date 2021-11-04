@@ -40,7 +40,7 @@ class FeatureRepresentationBuilder
         private \Tracker_FormElementFactory $form_element_factory,
         private RetrieveBackgroundColor $retrieve_background_color,
         private VerifyIsVisibleFeature $feature_verifier,
-        private VerifyLinkedUserStoryIsNotPlanned $user_story_checker,
+        private VerifyLinkedUserStoryIsNotPlanned $user_story_verifier,
         private RetrieveUser $retrieve_user
     ) {
     }
@@ -78,8 +78,8 @@ class FeatureRepresentationBuilder
                 ArtifactIdentifierProxy::fromArtifact($full_artifact),
                 $user_identifier
             ),
-            $this->user_story_checker->isLinkedToAtLeastOnePlannedUserStory($user_identifier, $feature),
-            $this->user_story_checker->hasStoryLinked($user_identifier, $feature)
+            $this->user_story_verifier->isLinkedToAtLeastOnePlannedUserStory($user_identifier, $feature),
+            $this->user_story_verifier->hasStoryLinked($user_identifier, $feature)
         );
     }
 }
