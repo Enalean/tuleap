@@ -25,11 +25,15 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyIsInTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeaturePlannedStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsInTopBacklogStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\IncludeAssetsBuilder;
 
@@ -47,25 +51,19 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
      */
-    private mixed $plan_store;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsExplicitTopBacklogDAO
-     */
-    private mixed $artifacts_explicit_top_backlog_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PlannedFeatureDAO
-     */
-    private mixed $planned_feature_dao;
+    private $plan_store;
+    private VerifyIsInTopBacklog $verify_is_in_top_backlog_stub;
+    private VerifyFeaturePlanned $verify_feature_planned;
 
 
     protected function setUp(): void
     {
-        $this->build_program                      = BuildProgramStub::stubValidProgram();
-        $this->plan_store                         = $this->createMock(PlanStore::class);
-        $this->artifacts_explicit_top_backlog_dao = $this->createMock(ArtifactsExplicitTopBacklogDAO::class);
-        $this->planned_feature_dao                = $this->createMock(PlannedFeatureDAO::class);
-        $this->tracker_factory                    = $this->createStub(\TrackerFactory::class);
-        $this->user                               = $this->createStub(\PFUser::class);
+        $this->build_program                 = BuildProgramStub::stubValidProgram();
+        $this->plan_store                    = $this->createMock(PlanStore::class);
+        $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildIsInTopBacklog();
+        $this->verify_feature_planned        = VerifyFeaturePlannedStub::isPlanned();
+        $this->tracker_factory               = $this->createStub(\TrackerFactory::class);
+        $this->user                          = $this->createStub(\PFUser::class);
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
         $this->user->method('getId')->willReturn(101);
@@ -74,11 +72,11 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testBuildsActionForAnUnplannedArtifact(): void
     {
-        $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
-        $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $source_information                  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
+        $this->build_program                 = BuildProgramStub::stubValidProgram();
+        $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildNotInBacklog();
         $this->plan_store->method('isPlannable')->willReturn(true);
-        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(false);
+        $this->verify_feature_planned = VerifyFeaturePlannedStub::isNotPlanned();
         $this->mockAValidTracker();
 
         self::assertNotNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user));
@@ -88,7 +86,6 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(999, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(true);
         $this->mockAValidTracker();
 
         self::assertNotNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user));
@@ -113,9 +110,9 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testNoActionIsBuiltForArtifactsThatAreNotPlannable(): void
     {
-        $source_information  = new TopBacklogActionArtifactSourceInformation(2, 140, 102);
-        $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $source_information                  = new TopBacklogActionArtifactSourceInformation(2, 140, 102);
+        $this->build_program                 = BuildProgramStub::stubValidProgram();
+        $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildNotInBacklog();
         $this->plan_store->method('isPlannable')->willReturn(false);
         $this->mockAValidTracker();
 
@@ -124,11 +121,10 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testNoActionIsBuiltForArtifactsThatArePlannedInAProgramIncrement(): void
     {
-        $source_information  = new TopBacklogActionArtifactSourceInformation(3, 140, 102);
-        $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $source_information                  = new TopBacklogActionArtifactSourceInformation(3, 140, 102);
+        $this->build_program                 = BuildProgramStub::stubValidProgram();
+        $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildNotInBacklog();
         $this->plan_store->method('isPlannable')->willReturn(true);
-        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(true);
         $this->mockAValidTracker();
 
         self::assertNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $this->user));
@@ -136,12 +132,12 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testDisabledActionIsBuiltWhenTitleIsNotDefined(): void
     {
-        $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
-        $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $source_information                  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
+        $this->build_program                 = BuildProgramStub::stubValidProgram();
+        $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildNotInBacklog();
         $this->plan_store->method('isPlannable')->willReturn(true);
-        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(false);
-        $tracker = $this->createStub(\Tracker::class);
+        $this->verify_feature_planned = VerifyFeaturePlannedStub::isNotPlanned();
+        $tracker                      = $this->createStub(\Tracker::class);
         $tracker->method('hasSemanticsTitle')->willReturn(false);
         $tracker->method('hasSemanticsStatus')->willReturn(true);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
@@ -155,12 +151,12 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testDisabledActionIsBuiltWhenStatusIsNotDefined(): void
     {
-        $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
-        $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->artifacts_explicit_top_backlog_dao->method('isInTheExplicitTopBacklog')->willReturn(false);
+        $source_information                  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
+        $this->build_program                 = BuildProgramStub::stubValidProgram();
+        $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildNotInBacklog();
         $this->plan_store->method('isPlannable')->willReturn(true);
-        $this->planned_feature_dao->method('isFeaturePlannedInAProgramIncrement')->willReturn(false);
-        $tracker = $this->createMock(\Tracker::class);
+        $this->verify_feature_planned = VerifyFeaturePlannedStub::isNotPlanned();
+        $tracker                      = $this->createMock(\Tracker::class);
         $tracker->method('hasSemanticsTitle')->willReturn(true);
         $tracker->method('hasSemanticsStatus')->willReturn(false);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
@@ -179,8 +175,8 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->build_program,
             $prioritize_features_permission_verifier,
             $this->plan_store,
-            $this->artifacts_explicit_top_backlog_dao,
-            $this->planned_feature_dao,
+            $this->verify_is_in_top_backlog_stub,
+            $this->verify_feature_planned,
             new JavascriptAsset(IncludeAssetsBuilder::build(), 'action.js'),
             new TrackerSemantics($this->tracker_factory)
         );
