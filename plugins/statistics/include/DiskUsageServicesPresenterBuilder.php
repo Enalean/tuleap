@@ -72,7 +72,7 @@ class DiskUsageServicesPresenterBuilder
         $title,
         $selected_project,
         $selected_services,
-        $selected_group_by_date,
+        array $selected_group_by_date,
         $start_date,
         $end_date,
         $relative_y_axis
@@ -142,18 +142,11 @@ class DiskUsageServicesPresenterBuilder
 
         $services = $this->getSelectedServices($search_fields->service_values);
 
-        if ($project_id) {
-            $evolution_by_service = $this->usage_manager->returnServiceEvolutionForPeriod(
-                $search_fields->start_date_value,
-                $search_fields->end_date_value,
-                $project_id
-            );
-        } else {
-            $evolution_by_service = $this->usage_manager->returnServiceEvolutionForPeriod(
-                $search_fields->start_date_value,
-                $search_fields->end_date_value
-            );
-        }
+        $evolution_by_service = $this->usage_manager->returnServiceEvolutionForPeriod(
+            $search_fields->start_date_value,
+            $search_fields->end_date_value,
+            $project_id
+        );
 
         foreach ($services as $key => $value) {
             $total_start_size += $evolution_by_service[$value['key']]['start_size'];

@@ -102,7 +102,7 @@ class DiskUsageRouter
         $project_id             = $request->get('project_id');
         $selected_project       = $request->get('project_filter');
         $selected_services      = $request->get('services');
-        $selected_group_by_date = $request->get('group_by');
+        $selected_group_by_date = $request->get('group_by') ?: [DiskUsageServicesPresenterBuilder::GROUP_BY_WEEK_KEY];
         $start_date             = $request->get('start_date');
         $end_date               = $request->get('end_date');
         $relative_y_axis        = $request->get('relative_y_axis');
