@@ -73,13 +73,26 @@ class UserResource extends AuthenticatedResource
         $query_checker          = new TimetrackingQueryChecker();
 
         try {
-            $start_date = $query_parameter_parser->getString($query, 'start_date');
-            $end_date   = $query_parameter_parser->getString($query, 'end_date');
+            $start_date_query = $query_parameter_parser->getString($query, 'start_date');
+            $end_date_query   = $query_parameter_parser->getString($query, 'end_date');
         } catch (QueryParameterException $ex) {
             throw new RestException(400, $ex->getMessage());
         }
         $representation_builder = new TimetrackingRepresentationBuilder();
-        $query_checker->checkTimePeriodIsValid($start_date, $end_date);
+        $query_checker->checkTimePeriodIsValid($start_date_query, $end_date_query);
+
+        $start_date = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ATOM,
+            $query_parameter_parser->getString($query, 'start_date')
+        );
+        $end_date   = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ATOM,
+            $query_parameter_parser->getString($query, 'end_date')
+        );
+
+        if ($start_date === false || $end_date === false) {
+            throw new RestException(400, 'Dates are not in the ISO-8601 format');
+        }
 
         if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only access to your own preferences');
