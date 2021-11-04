@@ -26,6 +26,9 @@ msgstr "Le %s"
 msgid "Before %s"
 msgstr "Avant le %s"
 
+msgid "Blocked"
+msgstr "Bloqué"
+
 msgid "Description"
 msgstr "Description"
 
@@ -41,6 +44,9 @@ msgstr "Exporté le"
 msgid "Exported on %s by %s"
 msgstr "Exporté le %s par %s"
 
+msgid "Failed"
+msgstr "Échoué"
+
 msgid ""
 "No filter has been applied to this report because no TQL query has been set"
 msgstr ""
@@ -53,6 +59,12 @@ msgid ""
 msgstr ""
 "Aucun filtre n'a été appliqué à ce rapport car aucun critère de recherche "
 "n'a de valeur définie"
+
+msgid "Not run"
+msgstr "Non executé"
+
+msgid "Passed"
+msgstr "Passé"
 
 msgid "Platform"
 msgstr "Plateforme"

@@ -110,12 +110,14 @@ interface ArtifactFieldValueStepDefinitionContent {
     readonly steps: Array<ArtifactFieldValueStepDefinition>;
 }
 
+export type ArtifactFieldValueStatus = "notrun" | "passed" | "failed" | "blocked" | null;
+
 interface ArtifactFieldValueStepExecutionContent {
     readonly field_name: string;
     readonly content_length: "blockttmstepexec";
     readonly value_type: "string";
     readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
-    readonly steps_values: Array<string | null>;
+    readonly steps_values: ReadonlyArray<ArtifactFieldValueStatus>;
 }
 
 export interface ArtifactFieldValueStepDefinition {
@@ -127,7 +129,7 @@ export interface ArtifactFieldValueStepDefinition {
 }
 
 export interface ArtifactFieldValueStepDefinitionEnhanced extends ArtifactFieldValueStepDefinition {
-    readonly status: string | null;
+    readonly status: ArtifactFieldValueStatus;
 }
 
 export type ArtifactFieldValue =
