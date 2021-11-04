@@ -29,7 +29,12 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -221,5 +226,72 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
         ];
 
         $this->assertTrue($changeset_value->hasChanges($new_value));
+    }
+
+    public function testBuildsFieldValueRESTRepresentation(): void
+    {
+        $field = new Tracker_FormElement_Field_ArtifactLink(1, 100, null, 'Name', 'Label', 'Description', true, 'P', true, false, 1);
+
+        $artifact_direct_link  = $this->buildArtifact(12);
+        $artifact_reverse_link = $this->buildArtifact(13);
+
+        $changeset_value_artifact_link = new Tracker_Artifact_ChangesetValue_ArtifactLink(
+            1,
+            $this->createStub(Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            [$artifact_direct_link->getId() => $this->buildTrackerLinkInfo($artifact_direct_link, 'link_type')],
+            [$artifact_reverse_link->getId() => $this->buildTrackerLinkInfo($artifact_reverse_link, null)],
+        );
+
+        $representation = $changeset_value_artifact_link->getFullRESTValue(UserTestBuilder::anActiveUser()->build());
+
+        $expected_representation = new ArtifactFieldValueArtifactLinksFullRepresentation();
+        $expected_representation->build(
+            1,
+            'art_link',
+            'Label',
+            [ArtifactReferenceWithType::buildWithType($artifact_direct_link, 'link_type')],
+            [ArtifactReferenceWithType::buildWithType($artifact_reverse_link, null)],
+        );
+
+
+        self::assertEquals($expected_representation, $representation);
+    }
+
+    private function buildArtifact(int $id): Artifact
+    {
+        $artifact = $this->createStub(Artifact::class);
+        $artifact->method('getId')->willReturn($id);
+        $tracker = $this->createStub(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getName')->willReturn('tracker_name');
+        $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('userCanView')->willReturn(true);
+
+        return $artifact;
+    }
+
+    private function buildTrackerLinkInfo(Artifact $artifact, ?string $type): Tracker_ArtifactLinkInfo
+    {
+        return new class ($artifact, $type) extends Tracker_ArtifactLinkInfo {
+            public function __construct(private Artifact $artifact, ?string $type)
+            {
+                parent::__construct(
+                    $artifact->getId(),
+                    'keyword',
+                    102,
+                    $this->artifact->getTracker()->getId(),
+                    10,
+                    $type
+                );
+            }
+
+            public function getArtifact(): ?Artifact
+            {
+                return $this->artifact;
+            }
+        };
     }
 }

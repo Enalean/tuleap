@@ -32676,19 +32676,6 @@
       <code>Tuleap\Tracker\REST\Artifact\ArtifactReference[]</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueArtifactLinksRepresentation.class.php">
-    <MissingParamType occurrences="2">
-      <code>$id</code>
-      <code>$label</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>build</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation[]</code>
-      <code>Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation[]</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueComputedFullRepresentation.class.php">
     <MissingParamType occurrences="6">
       <code>$autocomputed_value</code>
