@@ -138,10 +138,11 @@
         background: var(--tlp-background-color);
     }
 
-    .dashboard-project-header-members,
-    .dashboard-project-header-access {
-        border-color: var(--tlp-white-color);
+    .dashboard-project-header-members.tlp-badge-primary,
+    .dashboard-project-header-access.tlp-badge-primary {
         background: var(--tlp-white-color-transparent-80);
+        color: var(--tlp-white-color);
+        text-shadow: 0 0 1px rgba(0, 0, 0);
     }
 }
 
