@@ -24,9 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Project;
 use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -35,7 +37,10 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchPlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsLinkedToAnotherMilestoneStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -45,8 +50,6 @@ use Tuleap\Tracker\TrackerColor;
 
 final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private FeatureRepresentationBuilder $builder;
-    private \PFUser $user;
     private UserIdentifier $user_identifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
@@ -57,30 +60,44 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $form_element_factory;
     private RetrieveBackgroundColor $retrieve_background;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
-     */
-    private $parent_dao;
     private BuildPlanning $build_planning;
+    private SearchPlannedUserStory $search_planned_user_stories;
+    private SearchChildrenOfFeature $search_children_of_feature;
+    private VerifyIsLinkedToAnotherMilestone $check_is_linked;
+    private \PFUser $user;
 
 
     protected function setUp(): void
     {
-        $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->retrieve_background  = RetrieveBackgroundColorStub::withDefaults();
-        $this->parent_dao           = $this->createMock(ArtifactsLinkedToParentDao::class);
-        $this->build_planning       = BuildPlanningStub::withValidRootPlanning();
-        $this->user                 = UserTestBuilder::aUser()->build();
-        $retrieve_user              = RetrieveUserStub::withUser($this->user);
-        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
+        $this->user                        = UserTestBuilder::aUser()->build();
+        $this->artifact_factory            = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory        = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->retrieve_background         = RetrieveBackgroundColorStub::withDefaults();
+        $this->search_planned_user_stories = SearchPlannedUserStoryStub::withoutUserStories();
+        $this->build_planning              = BuildPlanningStub::withValidRootPlanning();
 
-        $this->builder = new FeatureRepresentationBuilder(
+        $this->user_identifier            = UserIdentifierStub::buildGenericUser();
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withoutChildren();
+        $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsLinked();
+    }
+
+    private function getBuilder(): FeatureRepresentationBuilder
+    {
+        $retrieve_user = RetrieveUserStub::withUser($this->user);
+
+        return new FeatureRepresentationBuilder(
             $this->artifact_factory,
             $this->form_element_factory,
             $this->retrieve_background,
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
-            new UserStoryLinkedToFeatureVerifier($this->parent_dao, $this->build_planning, $this->artifact_factory, $retrieve_user),
+            new UserStoryLinkedToFeatureVerifier(
+                $this->search_planned_user_stories,
+                $this->build_planning,
+                $this->artifact_factory,
+                $retrieve_user,
+                $this->search_children_of_feature,
+                $this->check_is_linked
+            ),
             $retrieve_user
         );
     }
@@ -91,7 +108,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 1)->willReturn(null);
 
-        self::assertNull($this->builder->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
+        self::assertNull($this->getBuilder()->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
@@ -108,7 +125,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->form_element_factory->method('getFieldById')->with(101)->willReturn($field);
         $field->method('userCanRead')->willReturn(false);
 
-        self::assertNull($this->builder->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
+        self::assertNull($this->getBuilder()->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
     }
 
     public function testItBuildsRepresentation(): void
@@ -132,17 +149,19 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $background_color = new BackgroundColor("lake-placid-blue");
 
-        $this->parent_dao->method('getPlannedUserStory')->willReturn(
+        $this->search_planned_user_stories = SearchPlannedUserStoryStub::withUserStories(
             [
-                ['user_story_id' => 1, 'project_id' => 100]
+                ['user_story_id' => 1, 'project_id' => 100],
             ]
         );
-        $this->parent_dao->method('getChildrenOfFeatureInTeamProjects')->willReturn(
+
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren(
             [
-                ['children_id' => 2], ['children_id' => 3]
+                ['children_id' => 2],
+                ['children_id' => 3],
             ]
         );
-        $this->parent_dao->method('isLinkedToASprintInMirroredProgramIncrement')->willReturn(true);
+        $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsLinked();
 
         $expected = new FeatureRepresentation(
             1,
@@ -156,7 +175,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
 
-        self::assertEquals($expected, $this->builder->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
+        self::assertEquals($expected, $this->getBuilder()->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
     }
 
     private function buildProject(int $program_id): Project

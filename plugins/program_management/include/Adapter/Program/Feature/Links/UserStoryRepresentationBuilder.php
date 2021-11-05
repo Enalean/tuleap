@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
@@ -33,10 +34,10 @@ use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
-class UserStoryRepresentationBuilder
+final class UserStoryRepresentationBuilder
 {
     public function __construct(
-        private ArtifactsLinkedToParentDao $dao,
+        private SearchChildrenOfFeature $search_children_of_feature,
         private \Tracker_ArtifactFactory $artifact_factory,
         private PlanStore $plan_store,
         private RetrieveBackgroundColor $retrieve_background_color,
@@ -63,7 +64,7 @@ class UserStoryRepresentationBuilder
         }
 
         $linked_children  = [];
-        $planned_children = $this->dao->getChildrenOfFeatureInTeamProjects($feature_id);
+        $planned_children = $this->search_children_of_feature->getChildrenOfFeatureInTeamProjects($feature_id);
         foreach ($planned_children as $planned_child) {
             $story = $this->artifact_factory->getArtifactByIdUserCanView($user, $planned_child['children_id']);
             if ($story) {

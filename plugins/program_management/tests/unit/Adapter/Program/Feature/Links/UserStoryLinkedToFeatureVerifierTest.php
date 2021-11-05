@@ -23,49 +23,55 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchPlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsLinkedToAnotherMilestoneStub;
 
 final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
-     */
-    private $feature_dao;
+    private SearchPlannedUserStory $search_planned_user_story;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     private UserIdentifier $user_identifier;
     private BuildPlanningStub $planning_builder;
+    private SearchChildrenOfFeature $search_children_of_feature;
+    private VerifyIsLinkedToAnotherMilestone $check_is_linked;
 
     protected function setUp(): void
     {
-        $this->planning_builder = BuildPlanningStub::withValidRootPlanning();
-        $this->feature_dao      = $this->createMock(ArtifactsLinkedToParentDao::class);
-        $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
-        $this->user_identifier  = UserIdentifierStub::buildGenericUser();
+        $this->planning_builder           = BuildPlanningStub::withValidRootPlanning();
+        $this->search_planned_user_story  = SearchPlannedUserStoryStub::withoutUserStories();
+        $this->artifact_factory           = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->user_identifier            = UserIdentifierStub::buildGenericUser();
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withoutChildren();
+        $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsLinked();
     }
 
     private function getVerifier(): UserStoryLinkedToFeatureVerifier
     {
         return new UserStoryLinkedToFeatureVerifier(
-            $this->feature_dao,
+            $this->search_planned_user_story,
             $this->planning_builder,
             $this->artifact_factory,
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withGenericUser(),
+            $this->search_children_of_feature,
+            $this->check_is_linked
         );
     }
 
     public function testHasNotAPlannedUserStoryIfNoUserStoryIsLinked(): void
     {
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('getPlannedUserStory')
-            ->willReturn([]);
+        $this->search_planned_user_story = SearchPlannedUserStoryStub::withoutUserStories();
         self::assertFalse(
             $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
         );
@@ -76,17 +82,9 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
         $user_story_666 = ['project_id' => 666, 'user_story_id' => 666];
         $user_story_236 = ['project_id' => 25, 'user_story_id' => 236];
 
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('getPlannedUserStory')
-            ->with(101)
-            ->willReturn([$user_story_666, $user_story_236]);
-
-        $this->feature_dao
-            ->expects(self::exactly(2))
-            ->method('isLinkedToASprintInMirroredProgramIncrement')
-            ->withConsecutive([666, 20, 666], [236, 20, 25])
-            ->willReturnOnConsecutiveCalls(false, true);
+        $this->search_planned_user_story = SearchPlannedUserStoryStub::withUserStories(
+            [$user_story_666, $user_story_236]
+        );
 
         self::assertTrue(
             $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
@@ -97,17 +95,10 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
     {
         $user_story_666 = ['project_id' => 666, 'user_story_id' => 666];
 
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('getPlannedUserStory')
-            ->with(101)
-            ->willReturn([$user_story_666]);
+        $this->search_planned_user_story = SearchPlannedUserStoryStub::withUserStories([$user_story_666]);
 
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('isLinkedToASprintInMirroredProgramIncrement')
-            ->with(666, 20, 666)
-            ->willReturn(false);
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withoutChildren();
+        $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsNotLinked();
 
         self::assertFalse(
             $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
@@ -116,11 +107,6 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testHasNotALinkedUserStoryToFeature(): void
     {
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('getChildrenOfFeatureInTeamProjects')
-            ->willReturn([]);
-
         self::assertFalse(
             $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
         );
@@ -129,11 +115,8 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
     public function testHasNotALinkedUserStoryToFeatureThatUserCanSee(): void
     {
         $user_story = ['children_id' => 666];
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('getChildrenOfFeatureInTeamProjects')
-            ->with(101)
-            ->willReturn([$user_story]);
+
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren([$user_story]);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -148,12 +131,8 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testHasALinkedUserStoryToFeature(): void
     {
-        $user_story = ['children_id' => 236];
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('getChildrenOfFeatureInTeamProjects')
-            ->with(101)
-            ->willReturn([$user_story]);
+        $user_story                       = ['children_id' => 236];
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren([$user_story]);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -168,12 +147,8 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testReturnFalseWhenUserHasAccessedToTheUserStory(): void
     {
-        $user_story = ['project_id' => 101, 'user_story_id' => 666];
-        $this->feature_dao
-            ->expects(self::once())
-            ->method('getPlannedUserStory')
-            ->with(101)
-            ->willReturn([$user_story]);
+        $user_story                       = ['project_id' => 101, 'user_story_id' => 666];
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren([$user_story]);
 
         $this->planning_builder = BuildPlanningStub::withoutRootValid();
 

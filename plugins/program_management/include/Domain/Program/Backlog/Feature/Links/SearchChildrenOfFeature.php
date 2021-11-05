@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,18 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-interface ArtifactsLinksSearch
+interface SearchChildrenOfFeature
 {
     /**
-     * @psalm-return array{id: int, project_id: int}[]
+     * @psalm-return array{children_id:int}[]
      */
-    public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array;
+    public function getChildrenOfFeatureInTeamProjects(int $artifact_id): array;
 }

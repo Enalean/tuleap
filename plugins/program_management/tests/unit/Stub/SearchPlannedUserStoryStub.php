@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,33 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-final class ContentStoreStub implements \Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
+
+final class SearchPlannedUserStoryStub implements SearchPlannedUserStory
 {
-    private function __construct(private array $rows)
+    private function __construct(private array $user_stories)
     {
     }
-
-    /**
-     * @param array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[] $rows
-     */
-    public static function withRows(array $rows): self
-    {
-        return new self($rows);
-    }
-
-    public static function withoutRows(): self
+    public static function withoutUserStories(): self
     {
         return new self([]);
     }
 
-    public function searchContent(int $program_increment_id): array
+    public static function withUserStories(array $user_stories): self
     {
-        return $this->rows;
+        return new self($user_stories);
+    }
+
+    public function getPlannedUserStory(int $artifact_id): array
+    {
+        return $this->user_stories;
     }
 }

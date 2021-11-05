@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
@@ -32,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -40,26 +42,22 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var UserStoryRepresentationBuilder
-     */
-    private $builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactsLinkedToParentDao
-     */
-    private $dao;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    private UserStoryRepresentationBuilder $builder;
+    private SearchChildrenOfFeature $search_children_of_feature;
     private UserIdentifier $user;
     private RetrieveBackgroundColor $retrieve_background;
 
     protected function setUp(): void
     {
-        $this->dao                 = $this->createMock(ArtifactsLinkedToParentDao::class);
-        $this->artifact_factory    = $this->createMock(Tracker_ArtifactFactory::class);
-        $this->user                = UserIdentifierStub::buildGenericUser();
-        $this->retrieve_background = RetrieveBackgroundColorStub::withDefaults();
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren(
+            [['children_id' => 125], ['children_id' => 126], ['children_id' => 666]]
+        );
+        $this->artifact_factory           = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->user                       = UserIdentifierStub::buildGenericUser();
+        $this->retrieve_background        = RetrieveBackgroundColorStub::withDefaults();
 
         $plan_store = new class () implements PlanStore {
             public function isPlannable(int $plannable_tracker_id): bool
@@ -95,7 +93,7 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         };
 
         $this->builder = new UserStoryRepresentationBuilder(
-            $this->dao,
+            $this->search_children_of_feature,
             $this->artifact_factory,
             $plan_store,
             $this->retrieve_background,
@@ -105,12 +103,6 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testGetBacklogItemsThatUserCanSee(): void
     {
-        $this->dao
-            ->expects(self::once())
-            ->method("getChildrenOfFeatureInTeamProjects")
-            ->with(10)
-            ->willReturn([['children_id' => 125], ['children_id' => 126], ['children_id' => 666]]);
-
         $artifact_125 = $this->buildArtifact(125);
         $artifact_126 = $this->buildArtifact(126);
 
@@ -184,16 +176,16 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $artifact->expects(self::once())->method('getTitle')->willReturn("Title");
         $artifact->expects(self::once())->method('isOpen')->willReturn(true);
         $artifact->expects(self::exactly(2))->method('getTracker')
-            ->willReturn(
-                TrackerTestBuilder::aTracker()
-                    ->withProject(
-                        ProjectTestBuilder::aProject()
-                            ->withId(100)
-                            ->withPublicName("Project")
-                            ->build()
-                    )
-                ->build()
-            );
+                 ->willReturn(
+                     TrackerTestBuilder::aTracker()
+                                       ->withProject(
+                                           ProjectTestBuilder::aProject()
+                                                             ->withId(100)
+                                                             ->withPublicName("Project")
+                                                             ->build()
+                                       )
+                                       ->build()
+                 );
 
         return $artifact;
     }

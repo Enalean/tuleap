@@ -160,11 +160,14 @@ final class ProjectResource extends AuthenticatedResource
 
         $artifact_factory                   = \Tracker_ArtifactFactory::instance();
         $form_element_factory               = \Tracker_FormElementFactory::instance();
+        $artifacts_linked_to_parent_dao     = new ArtifactsLinkedToParentDao();
         $this->user_story_linked_verifier   = new UserStoryLinkedToFeatureVerifier(
-            new ArtifactsLinkedToParentDao(),
+            $artifacts_linked_to_parent_dao,
             new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
             $artifact_factory,
-            $this->user_manager_adapter
+            $this->user_manager_adapter,
+            $artifacts_linked_to_parent_dao,
+            $artifacts_linked_to_parent_dao
         );
         $this->features_retriever           = new FeatureElementsRetriever(
             $this->build_program,
