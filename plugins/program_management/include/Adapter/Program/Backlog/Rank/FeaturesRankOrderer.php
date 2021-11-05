@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\FeaturesToReorder;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-class FeaturesRankOrderer implements OrderFeatureRank
+final class FeaturesRankOrderer implements OrderFeatureRank
 {
     public function __construct(private \Tracker_Artifact_PriorityManager $priority_manager)
     {

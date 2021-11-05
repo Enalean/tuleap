@@ -23,42 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\ProjectAdmin;
 
 use TemplateRenderer;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupCollection;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use UGroupManager;
 
-class PermissionPerGroupSectionBuilder
+final class PermissionPerGroupSectionBuilder
 {
-    /**
-     * @var PermissionPerGroupUGroupFormatter
-     */
-    private $formatter;
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
-    /**
-     * @var CanPrioritizeFeaturesDAO
-     */
-    private $can_prioritize_features_dao;
-
     public function __construct(
-        CanPrioritizeFeaturesDAO $can_prioritize_features_dao,
-        PermissionPerGroupUGroupFormatter $formatter,
-        UGroupManager $ugroup_manager,
-        TemplateRenderer $template_renderer
+        private RetrieveProjectUgroupsCanPrioritizeItems $retrieve_project_ugroups_can_prioritize_items,
+        private PermissionPerGroupUGroupFormatter $formatter,
+        private UGroupManager $ugroup_manager,
+        private TemplateRenderer $template_renderer
     ) {
-        $this->can_prioritize_features_dao = $can_prioritize_features_dao;
-        $this->formatter                   = $formatter;
-        $this->ugroup_manager              = $ugroup_manager;
-        $this->template_renderer           = $template_renderer;
     }
 
     public function collectSections(PermissionPerGroupPaneCollector $event): void
@@ -69,7 +48,7 @@ class PermissionPerGroupSectionBuilder
             return;
         }
 
-        $ugroup_ids = $this->can_prioritize_features_dao->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID((int) $project->getID());
+        $ugroup_ids = $this->retrieve_project_ugroups_can_prioritize_items->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID((int) $project->getID());
         if (count($ugroup_ids) === 0) {
             return;
         }

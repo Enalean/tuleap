@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 
-class CanPrioritizeFeaturesDAO extends DataAccessObject implements RetrieveProjectUgroupsCanPrioritizeItems
+final class CanPrioritizeFeaturesDAO extends DataAccessObject implements RetrieveProjectUgroupsCanPrioritizeItems
 {
     /**
      * @return int[]

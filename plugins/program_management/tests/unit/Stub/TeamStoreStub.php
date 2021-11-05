@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-interface TopBacklogStore
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+
+final class TeamStoreStub implements TeamStore
 {
-    /**
-     * @psalm-param non-empty-array<int> $artifact_ids
-     */
-    public function addArtifactsToTheExplicitTopBacklog(array $artifact_ids): void;
+    private function __construct(private int $call_count)
+    {
+    }
 
-    /**
-     * @psalm-param non-empty-array<int> $artifact_ids
-     */
-    public function removeArtifactsFromExplicitTopBacklog(array $artifact_ids): void;
+    public static function withCount(): self
+    {
+        return new self(0);
+    }
+
+    public function save(TeamCollection $team_collection): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
 }

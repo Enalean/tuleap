@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Adapter\XML\Exceptions\CannotFindSourceTrackerUsing
 use Tuleap\ProgramManagement\Adapter\XML\Exceptions\CannotFindUserGroupInProjectException;
 use Tuleap\ProgramManagement\Adapter\XML\ExtractXMLConfig;
 
-class ExtractXMLConfigStub implements ExtractXMLConfig
+final class ExtractXMLConfigStub implements ExtractXMLConfig
 {
     private bool $will_extraction_fail = false;
 

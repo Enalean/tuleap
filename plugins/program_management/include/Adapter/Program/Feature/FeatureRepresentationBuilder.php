@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
-class FeatureRepresentationBuilder
+final class FeatureRepresentationBuilder
 {
     public function __construct(
         private \Tracker_ArtifactFactory $artifact_factory,

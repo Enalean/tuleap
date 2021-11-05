@@ -21,12 +21,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-interface SearchProgramIncrementLinkedToFeature
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\FeaturesToReorder;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+
+final class OrderFeatureRankStub implements OrderFeatureRank
 {
-    /**
-     * @return array{id: int}[]
-     */
-    public function getProgramIncrementsLinkToFeatureId(int $artifact_id): array;
+    private function __construct(private int $call_count)
+    {
+    }
+
+    public static function withCount(): self
+    {
+        return new self(0);
+    }
+
+    public function reorder(FeaturesToReorder $order, string $context_id, ProgramIdentifier $program): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
 }
