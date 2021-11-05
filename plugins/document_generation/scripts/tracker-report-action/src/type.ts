@@ -145,6 +145,7 @@ export type ArtifactFieldShortValue =
 export interface ExportDocument {
     readonly name: string;
     readonly artifacts: ReadonlyArray<FormattedArtifact>;
+    readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
 }
 
 export interface ArtifactContainer {
@@ -163,4 +164,12 @@ export interface FormattedArtifact {
 export interface DateTimeLocaleInformation {
     readonly locale: string;
     readonly timezone: string;
+}
+
+export interface TraceabilityMatrixElement {
+    readonly test: string;
+    readonly campaign: string;
+    readonly result: ArtifactFieldValueStatus;
+    readonly executed_by: string | null;
+    readonly executed_on: string | null;
 }

@@ -29,8 +29,17 @@ msgstr "Avant le %s"
 msgid "Blocked"
 msgstr "Bloqué"
 
+msgid "Campaigns"
+msgstr "Campagnes"
+
 msgid "Description"
 msgstr "Description"
+
+msgid "Executed By"
+msgstr "Éxécuté par"
+
+msgid "Executed On"
+msgstr "Éxécuté le"
 
 msgid "Expected results"
 msgstr "Résultats attendus"
@@ -75,6 +84,9 @@ msgstr "Projet"
 msgid "Report URL"
 msgstr "URL du rapport"
 
+msgid "Results"
+msgstr "Résultats"
+
 msgid "Search criteria"
 msgstr "Critère de recherche"
 
@@ -95,6 +107,12 @@ msgstr "Requête TQL : "
 
 msgid "Table of contents"
 msgstr "Table des matières"
+
+msgid "Tests"
+msgstr "Tests"
+
+msgid "Traceability Matrix"
+msgstr "Matrice de traçabilité"
 
 msgid "Tracker"
 msgstr "Outil de suivi"

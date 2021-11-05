@@ -30,6 +30,7 @@ import type {
     FormattedArtifact,
     ArtifactFieldValueStepDefinition,
 } from "../type";
+import { createTraceabilityMatrix } from "./create-traceability-matrix";
 
 export async function createExportDocument(
     report_id: number,
@@ -44,6 +45,11 @@ export async function createExportDocument(
         tracker_id,
         report_id,
         report_has_changed
+    );
+
+    const traceability_matrix = createTraceabilityMatrix(
+        report_artifacts,
+        datetime_locale_information
     );
 
     const artifact_data: FormattedArtifact[] = [];
@@ -67,7 +73,11 @@ export async function createExportDocument(
         });
     }
 
-    return { name: `${tracker_shortname} - ${report_name}`, artifacts: artifact_data };
+    return {
+        name: `${tracker_shortname} - ${report_name}`,
+        artifacts: artifact_data,
+        traceability_matrix: await traceability_matrix,
+    };
 }
 
 function formatFieldValues(

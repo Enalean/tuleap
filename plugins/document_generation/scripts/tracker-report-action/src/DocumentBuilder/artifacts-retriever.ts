@@ -293,7 +293,8 @@ export type ArtifactReportFieldValue =
       })
     | ArtifactReportResponseCrossReferencesFieldValue
     | ArtifactReportResponseStepDefinitionFieldValue
-    | ArtifactStepExecutionFieldValue;
+    | ArtifactStepExecutionFieldValue
+    | ArtifactReportResponseArtifactLinksFieldValue;
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -309,7 +310,8 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseOpenListFieldValue
     | ArtifactReportResponsePermissionsOnArtifactFieldValue
     | ArtifactReportResponseCrossReferencesFieldValue
-    | ArtifactReportResponseStepDefinitionFieldValue;
+    | ArtifactReportResponseStepDefinitionFieldValue
+    | ArtifactReportResponseArtifactLinksFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
@@ -455,6 +457,19 @@ export interface ArtifactReportResponseStepDefinitionFieldValue {
     value: Array<ArtifactReportResponseStepRepresentation>;
 }
 
+interface ArtifactLink {
+    type: string | null;
+    id: number;
+}
+
+interface ArtifactReportResponseArtifactLinksFieldValue {
+    field_id: number;
+    type: "art_link";
+    label: string;
+    links: ArtifactLink[];
+    reverse_links: ArtifactLink[];
+}
+
 interface ArtifactReportResponseStepRepresentation {
     id: number;
     description: string;
@@ -555,6 +570,7 @@ export interface TrackerDefinition {
 
 export interface TestExecutionResponse {
     definition: {
+        summary: string;
         description: string;
         description_format: string;
         steps: Array<ArtifactReportResponseStepRepresentation>;
@@ -565,4 +581,9 @@ export interface TestExecutionResponse {
             status: TestExecStatus;
         };
     };
+    previous_result: {
+        status: TestExecStatus | null;
+        submitted_on: string;
+        submitted_by: ArtifactReportResponseUserRepresentation;
+    } | null;
 }

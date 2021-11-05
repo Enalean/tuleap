@@ -226,6 +226,7 @@ describe("artifacts-retriever", () => {
 
         const testmanagement_execution_response: TestExecutionResponse = {
             definition: {
+                summary: "Summary",
                 description: "",
                 description_format: "text",
                 steps: [
@@ -255,6 +256,7 @@ describe("artifacts-retriever", () => {
                     },
                 ],
             },
+            previous_result: null,
             steps_results: {
                 "13": {
                     step_id: 13,

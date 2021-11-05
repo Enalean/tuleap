@@ -21,13 +21,14 @@ import type {
     ArtifactContainer,
     ArtifactFieldShortValue,
     ArtifactFieldValue,
+    ArtifactFieldValueStepDefinition,
     DateReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
     ReportCriterionValue,
-    ArtifactFieldValueStepDefinition,
 } from "../../type";
+import type { TraceabilityMatrixElement } from "../../type";
 import type { XmlComponent } from "docx";
 import {
     AlignmentType,
@@ -356,6 +357,7 @@ export async function downloadDocx(
                 children: [
                     ...report_criteria_data,
                     new Paragraph({ children: [new PageBreak()] }),
+                    ...buildTraceabilityMatrix(document.traceability_matrix, gettext_provider),
                     new Paragraph({
                         text: gettext_provider.gettext("Artifacts"),
                         heading: HEADER_LEVEL_SECTION,
@@ -1001,4 +1003,84 @@ async function buildParagraphsFromContent(
     );
 
     return paragraphs;
+}
+
+function buildTraceabilityMatrix(
+    elements: ReadonlyArray<TraceabilityMatrixElement>,
+    gettext_provider: GetText
+): (Paragraph | Table)[] {
+    if (elements.length === 0) {
+        return [];
+    }
+
+    const buildHeaderCell = (value: string): TableCell =>
+        new TableCell({
+            children: [
+                new Paragraph({
+                    text: value,
+                }),
+            ],
+            margins: TABLE_MARGINS,
+            shading: TABLE_LABEL_SHADING,
+        });
+
+    const buildCellContent = (content: TextRun | ExternalHyperlink): TableCell =>
+        new TableCell({
+            children: [
+                new Paragraph({
+                    children: [content],
+                    style: "table_value",
+                }),
+            ],
+            margins: TABLE_MARGINS,
+        });
+
+    const table = new Table({
+        width: {
+            size: 100,
+            type: WidthType.PERCENTAGE,
+        },
+        borders: TABLE_BORDERS,
+        rows: [
+            new TableRow({
+                tableHeader: true,
+                children: [
+                    buildHeaderCell(gettext_provider.gettext("Tests")),
+                    buildHeaderCell(gettext_provider.gettext("Campaigns")),
+                    buildHeaderCell(gettext_provider.gettext("Results")),
+                    buildHeaderCell(gettext_provider.gettext("Executed By")),
+                    buildHeaderCell(gettext_provider.gettext("Executed On")),
+                ],
+            }),
+            ...elements.map(
+                (element) =>
+                    new TableRow({
+                        children: [
+                            buildCellContent(new TextRun(element.test)),
+                            buildCellContent(new TextRun(element.campaign)),
+                            buildCellContent(
+                                new TextRun(
+                                    getInternationalizedTestStatus(gettext_provider, element.result)
+                                )
+                            ),
+                            buildCellContent(new TextRun(element.executed_by || "")),
+                            buildCellContent(new TextRun(element.executed_on || "")),
+                        ],
+                    })
+            ),
+        ],
+    });
+
+    return [
+        new Paragraph({
+            text: gettext_provider.gettext("Traceability Matrix"),
+            heading: HEADER_LEVEL_SECTION,
+            numbering: {
+                reference: MAIN_TITLES_NUMBERING_ID,
+                level: 0,
+            },
+        }),
+        table,
+        new Paragraph({ children: [new PageBreak()] }),
+    ];
 }
