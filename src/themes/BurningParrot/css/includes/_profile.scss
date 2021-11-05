@@ -67,6 +67,7 @@ $profile-max-width: 720px;
     align-items: center;
     width: 100%;
     max-width: $profile-max-width;
+    line-height: 20px;
 }
 
 .user-profile-avatar {
@@ -99,7 +100,7 @@ $profile-max-width: 720px;
     color: $main-color-on-dark-background;
     font-size: 30px;
     font-weight: 300;
-    line-height: 26px;
+    line-height: 38px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
