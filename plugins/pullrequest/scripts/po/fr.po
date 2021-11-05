@@ -218,6 +218,18 @@ msgstr "Il n'existe pas de pull requests fermées"
 msgid "There are no open pull requests"
 msgstr "Il n'existe pas de pull requests ouvertes"
 
+msgid ""
+"This file contains bidirectional Unicode text. It may be interpreted "
+"differently than what is shown.\n"
+"        This might be used to inject malicious code that looks safe.\n"
+"        You should review the file in an editor that reveals hidden Unicode "
+"characters."
+msgstr ""
+"Ce fichier contient du texte Unicode bidirectionnel. Il peut être interprété "
+"différement de ce qui est affiché. Cela peut être utilisé pour injecter du code "
+"malveillant qui semble sûr. Vous devriez examiner le fichier dans un éditeur qui "
+"révèle les caractères Unicode cachés."
+
 msgid "This pull request will be cleared from all of its reviewers."
 msgstr "Plus aucun relecteur ne sera assigné à cette pull request."
 

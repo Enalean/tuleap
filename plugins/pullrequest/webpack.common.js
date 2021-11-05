@@ -37,11 +37,19 @@ const webpack_config_main_angular_app = {
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_angular_gettext_loader,
         ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getMomentLocalePlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(false),
+    ],
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
 };
 
 const entry_points = {
