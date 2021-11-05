@@ -22,25 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\REST\I18NRestException;
 use Workflow;
 
 final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var AddToTopBacklogPostActionJSONParser
-     */
-    private $parser;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
-     */
-    private $plan_store;
+    private AddToTopBacklogPostActionJSONParser $parser;
+    private VerifyIsPlannable $verify_is_plannable;
 
     protected function setUp(): void
     {
-        $this->plan_store = $this->createMock(PlanStore::class);
-        $this->parser     = new AddToTopBacklogPostActionJSONParser($this->plan_store);
+        $this->verify_is_plannable = VerifyIsPlannableStub::buildPlannableElement();
+        $this->parser              = new AddToTopBacklogPostActionJSONParser($this->verify_is_plannable);
     }
 
     public function testAcceptsWhenItLooksLikeTheAppropriateAction(): void
@@ -68,7 +63,6 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
     {
         $workflow = $this->createMock(Workflow::class);
         $workflow->method('getTrackerId')->willReturn(140);
-        $this->plan_store->method('isPlannable')->willReturn(true);
 
         $post_action = $this->parser->parse($workflow, []);
         self::assertInstanceOf(AddToTopBacklogPostActionValue::class, $post_action);
@@ -79,10 +73,11 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
     {
         $workflow = $this->createMock(Workflow::class);
         $workflow->method('getTrackerId')->willReturn(403);
-        $this->plan_store->method('isPlannable')->willReturn(false);
+        $this->verify_is_plannable = VerifyIsPlannableStub::buildNotPlannableElement();
+        $parser                    = new AddToTopBacklogPostActionJSONParser($this->verify_is_plannable);
 
         $this->expectException(I18NRestException::class);
 
-        $this->parser->parse($workflow, []);
+        $parser->parse($workflow, []);
     }
 }

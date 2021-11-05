@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionUpdateJsonParser;
 use Tuleap\Tracker\Workflow\Update\PostAction;
@@ -30,14 +30,8 @@ use Workflow;
 
 final class AddToTopBacklogPostActionJSONParser implements PostActionUpdateJsonParser
 {
-    /**
-     * @var PlanStore
-     */
-    private $plan_store;
-
-    public function __construct(PlanStore $plan_store)
+    public function __construct(private VerifyIsPlannable $verify_is_plannable)
     {
-        $this->plan_store = $plan_store;
     }
 
     public function accept(array $json): bool
@@ -49,7 +43,7 @@ final class AddToTopBacklogPostActionJSONParser implements PostActionUpdateJsonP
     {
         $tracker_id = $workflow->getTrackerId();
 
-        if (! $this->plan_store->isPlannable($tracker_id)) {
+        if (! $this->verify_is_plannable->isPlannable($tracker_id)) {
             throw new I18NRestException(
                 400,
                 sprintf(

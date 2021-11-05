@@ -31,9 +31,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyIsInTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
@@ -46,11 +46,11 @@ final class ArtifactTopBacklogActionBuilder
     public function __construct(
         private BuildProgram $build_program,
         private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
-        private PlanStore $plan_store,
+        private VerifyIsPlannable $verify_is_plannable,
         private VerifyIsInTopBacklog $artifacts_explicit_top_backlog_dao,
         private VerifyFeaturePlanned $planned_feature_dao,
         private JavascriptAsset $asset,
-        private VerifyTrackerSemantics $tracker_factory
+        private VerifyTrackerSemantics $tracker_factory,
     ) {
     }
 
@@ -96,7 +96,7 @@ final class ArtifactTopBacklogActionBuilder
             $icon       = 'fa-tlp-remove-from-backlog';
             $action     = 'remove';
         } elseif (
-            ! $this->plan_store->isPlannable(
+            ! $this->verify_is_plannable->isPlannable(
                 $source_information->tracker_id
             ) || $this->planned_feature_dao->isFeaturePlannedInAProgramIncrement($source_information->artifact_id)
         ) {

@@ -1029,13 +1029,13 @@ final class program_managementPlugin extends Plugin
 
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
-        $plan_store            = new PlanDao();
+        $verify_is_plannable   = new PlanDao();
         $tracker               = $event->getTracker();
         $external_post_actions = $event->getPostActions()->getExternalPostActionsValue();
         foreach ($external_post_actions as $post_action) {
             if (
                 $post_action instanceof AddToTopBacklogPostAction &&
-                ! $plan_store->isPlannable($tracker->getId())
+                ! $verify_is_plannable->isPlannable($tracker->getId())
             ) {
                 $message = dgettext(
                     'tuleap-program_management',

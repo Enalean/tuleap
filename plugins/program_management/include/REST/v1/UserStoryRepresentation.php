@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -47,7 +48,7 @@ final class UserStoryRepresentation extends ElementRepresentation
      */
     public $background_color;
 
-    public function __construct(
+    private function __construct(
         int $id,
         string $uri,
         string $xref,
@@ -62,5 +63,26 @@ final class UserStoryRepresentation extends ElementRepresentation
         $this->project          = $project;
         $this->tracker          = $tracker;
         $this->background_color = $background_color;
+    }
+
+    public static function build(
+        \TrackerFactory $tracker_factory,
+        UserStory $user_story
+    ): ?self {
+        $tracker = $tracker_factory->getTrackerById($user_story->tracker_id);
+        if (! $tracker) {
+            return null;
+        }
+
+        return new self(
+            $user_story->id,
+            $user_story->uri,
+            $user_story->cross_ref,
+            $user_story->title,
+            $user_story->is_open,
+            new ProjectReference($tracker->getProject()),
+            MinimalTrackerRepresentation::build($tracker),
+            $user_story->background_color
+        );
     }
 }

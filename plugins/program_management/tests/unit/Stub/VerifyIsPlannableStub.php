@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 
-interface PlanStore
+final class VerifyIsPlannableStub implements VerifyIsPlannable
 {
-    public function save(Plan $plan): void;
+    private function __construct(private bool $is_plannable)
+    {
+    }
 
-    public function isPartOfAPlan(TrackerReference $tracker): bool;
+    public static function buildPlannableElement(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildNotPlannableElement(): self
+    {
+        return new self(false);
+    }
+
+    public function isPlannable(int $plannable_tracker_id): bool
+    {
+        return $this->is_plannable;
+    }
 }

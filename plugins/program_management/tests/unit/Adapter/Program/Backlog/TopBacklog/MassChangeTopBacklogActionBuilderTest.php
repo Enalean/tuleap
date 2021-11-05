@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 
 final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,10 +37,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
      * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
-     */
-    private $plan_store;
+    private VerifyIsPlannable $verify_is_plannable;
     private VerifyPrioritizeFeaturesPermissionStub $prioritize_verifier;
 
     protected function setUp(): void
@@ -47,8 +45,8 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->build_program       = BuildProgramStub::stubValidProgram();
         $this->prioritize_verifier = VerifyPrioritizeFeaturesPermissionStub::canPrioritize();
 
-        $this->plan_store = $this->createMock(PlanStore::class);
-        $this->user       = $this->createMock(\PFUser::class);
+        $this->verify_is_plannable = VerifyIsPlannableStub::buildPlannableElement();
+        $this->user                = $this->createMock(\PFUser::class);
         $this->user->method('isSuperUser')->willReturn(true);
         $this->user->method('isAdmin')->willReturn(true);
         $this->user->method('getId')->willReturn(101);
@@ -60,7 +58,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         return new MassChangeTopBacklogActionBuilder(
             $this->build_program,
             $this->prioritize_verifier,
-            $this->plan_store,
+            $this->verify_is_plannable,
             new class extends \TemplateRenderer {
                 public function renderToString($template_name, $presenter): string
                 {
@@ -74,7 +72,6 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
     {
         $source_information  = new TopBacklogActionMassChangeSourceInformation(140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->plan_store->method('isPlannable')->willReturn(true);
 
         self::assertNotNull($this->getBuilder()->buildMassChangeAction($source_information, $this->user));
     }
@@ -98,9 +95,9 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testNoMassChangeTopBacklogActionWhenTheTrackerDoesNotContainsFeatures(): void
     {
-        $source_information  = new TopBacklogActionMassChangeSourceInformation(600, 102);
-        $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->plan_store->method('isPlannable')->willReturn(false);
+        $source_information        = new TopBacklogActionMassChangeSourceInformation(600, 102);
+        $this->build_program       = BuildProgramStub::stubValidProgram();
+        $this->verify_is_plannable = VerifyIsPlannableStub::buildNotPlannableElement();
 
         self::assertNull($this->getBuilder()->buildMassChangeAction($source_information, $this->user));
     }

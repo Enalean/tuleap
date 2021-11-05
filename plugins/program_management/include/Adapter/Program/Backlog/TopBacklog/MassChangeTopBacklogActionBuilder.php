@@ -29,30 +29,21 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 final class MassChangeTopBacklogActionBuilder
 {
-    private BuildProgram $build_program;
-    private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
-    private PlanStore $plan_store;
-    private TemplateRenderer $template_renderer;
-
     public function __construct(
-        BuildProgram $build_program,
-        VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
-        PlanStore $plan_store,
-        TemplateRenderer $template_renderer
+        private BuildProgram $build_program,
+        private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
+        private VerifyIsPlannable $verify_is_plannable,
+        private TemplateRenderer $template_renderer
     ) {
-        $this->build_program                           = $build_program;
-        $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
-        $this->plan_store                              = $plan_store;
-        $this->template_renderer                       = $template_renderer;
     }
 
     public function buildMassChangeAction(TopBacklogActionMassChangeSourceInformation $source_information, PFUser $user): ?string
@@ -70,7 +61,7 @@ final class MassChangeTopBacklogActionBuilder
             return null;
         }
 
-        if (! $this->plan_store->isPlannable($source_information->tracker_id)) {
+        if (! $this->verify_is_plannable->isPlannable($source_information->tracker_id)) {
             return null;
         }
 
