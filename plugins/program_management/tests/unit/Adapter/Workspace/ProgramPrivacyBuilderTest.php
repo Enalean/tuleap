@@ -18,27 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
+class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItBuilds(): void
+    public function testItBuildsProgramPrivacy(): void
     {
-        $planned_iterations = PlannedIterations::build(
-            BuildProgramFlagsStub::withDefaults(),
-            BuildProgramPrivacyStub::withPrivateAccess(),
+        $project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withAccess(\Project::ACCESS_PRIVATE_WO_RESTRICTED)
+            ->build();
+
+        $project_manager = $this->createStub(\ProjectManager::class);
+        $project_manager->method('getProject')->willReturn($project);
+
+        $builder = new ProgramPrivacyBuilder($project_manager);
+
+        $program_privacy = $builder->build(
             ProgramIdentifierBuilder::build()
         );
-
-        self::assertEquals([
-            ProgramFlag::fromLabelAndDescription('Top Secret', 'For authorized eyes only')
-        ], $planned_iterations->getProgramFlag());
 
         self::assertEquals(
             ProgramPrivacy::fromPrivacy(
@@ -47,11 +49,11 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
                 true,
                 false,
                 false,
-                'It is private, please go away',
+                'Project privacy set to private. Only project members can access its content.',
                 'Private',
-                'Guinea Pig'
+                'The Test Project'
             ),
-            $planned_iterations->getProgramPrivacy()
+            $program_privacy
         );
     }
 }

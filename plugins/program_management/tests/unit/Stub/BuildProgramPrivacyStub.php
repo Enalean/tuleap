@@ -20,26 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
+use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
 
-/**
- * @psalm-immutable
- */
-final class DisplayPlanIterationsPresenter
+final class BuildProgramPrivacyStub implements BuildProgramPrivacy
 {
-    private function __construct(
-        public string $program_flags,
-        public string $program_privacy
-    ) {
+    private function __construct(private ProgramPrivacy $privacy)
+    {
     }
 
-    public static function fromPlannedIterations(PlannedIterations $planned_iteration): self
+    public static function withPrivateAccess(): self
     {
         return new self(
-            json_encode($planned_iteration->getProgramFlag(), JSON_THROW_ON_ERROR),
-            json_encode($planned_iteration->getProgramPrivacy(), JSON_THROW_ON_ERROR)
+            ProgramPrivacy::fromPrivacy(
+                false,
+                false,
+                true,
+                false,
+                false,
+                'It is private, please go away',
+                'Private',
+                'Guinea Pig'
+            )
         );
+    }
+
+    public function build(ProgramIdentifier $program_identifier): ProgramPrivacy
+    {
+        return $this->privacy;
     }
 }

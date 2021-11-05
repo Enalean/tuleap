@@ -33,7 +33,8 @@ final class ProjectTestBuilder
         'status'          => Project::STATUS_ACTIVE,
         'unix_group_name' => 'TestProject',
         'group_name'      => 'The Test Project',
-        'icon_codepoint' => '"\ud83d\ude2c"'
+        'icon_codepoint'  => '"\ud83d\ude2c"',
+        'access'          => ''
     ];
 
     public function __construct()
@@ -72,6 +73,12 @@ final class ProjectTestBuilder
     public function withStatusDeleted(): self
     {
         $this->data['status'] = Project::STATUS_DELETED;
+        return $this;
+    }
+
+    public function withAccess(string $access): self
+    {
+        $this->data['access'] = $access;
         return $this;
     }
 }

@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIter
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
+use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -46,6 +47,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private \TemplateRenderer $template_renderer,
         private BuildProgram $program_adapter,
         private BuildProgramFlags $build_program_flags,
+        private BuildProgramPrivacy $build_program_privacy
     ) {
     }
 
@@ -79,6 +81,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         try {
             $planned_iterations = PlannedIterations::build(
                 $this->build_program_flags,
+                $this->build_program_privacy,
                 ProgramIdentifier::fromId($this->program_adapter, (int) $project->getID(), $user_identifier, null)
             );
         } catch (Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException | Domain\Program\Plan\ProjectIsNotAProgramException $e) {
