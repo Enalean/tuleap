@@ -39,7 +39,7 @@ case "${2:-}" in
 esac
 
 plugins_compose_file="$(find ./plugins/*/tests/rest/ -name docker-compose.yml -printf '-f %p ')"
-DOCKERCOMPOSE="docker-compose --project-name rest-${BUILD_TAG:-$RANDOM} -f tests/rest/docker-compose.yml -f tests/rest/docker-compose-${DB_HOST}.yml $plugins_compose_file"
+DOCKERCOMPOSE="docker-compose --project-name rest-${PHP_VERSION}-${DB_HOST}-${BUILD_TAG:-$RANDOM} -f tests/rest/docker-compose.yml -f tests/rest/docker-compose-${DB_HOST}.yml $plugins_compose_file"
 
 function cleanup {
     if [ -n "${TESTS_RESULT:-}" ]; then
