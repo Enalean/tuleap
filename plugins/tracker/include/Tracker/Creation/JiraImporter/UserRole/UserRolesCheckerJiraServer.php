@@ -24,10 +24,17 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\UserRole;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
-final class UserRolesChecker implements UserRolesCheckerInterface
+final class UserRolesCheckerJiraServer implements UserRolesCheckerInterface
 {
+    private const PERMISSIONS_KEY  = 'permissions';
+    private const PERMISSION_NAMES = [
+        'PROJECT_ADMIN',
+        'ADMINISTER_PROJECTS',
+    ];
+
     /**
      * @throws UserRolesResponseNotWellFormedException
      * @throws UserIsNotProjectAdminException
@@ -39,12 +46,23 @@ final class UserRolesChecker implements UserRolesCheckerInterface
         LoggerInterface $logger,
         string $jira_project
     ): void {
-        $logger->debug("Check if user is administrator in Jira Project");
+        $user_role_url = ClientWrapper::JIRA_CORE_BASE_URL . "/mypermissions?projectKey=" . urlencode($jira_project);
+        $logger->debug("  GET " . $user_role_url);
 
-        $checker = match ($jira_client->isJiraCloud()) {
-            true  => new UserRolesCheckerJiraCloud(),
-            false => new UserRolesCheckerJiraServer(),
-        };
-        $checker->checkUserIsAdminOfJiraProject($jira_client, $logger, $jira_project);
+        $user_permissions = $jira_client->getUrl($user_role_url);
+        if ($user_permissions === null) {
+            throw new UserRolesResponseNotWellFormedException("JiraServer user permission data is null");
+        }
+
+        if (! isset($user_permissions[self::PERMISSIONS_KEY])) {
+            throw new UserRolesResponseNotWellFormedException("JiraServer user permissions key `" . self::PERMISSIONS_KEY . "` not found");
+        }
+        foreach ($user_permissions[self::PERMISSIONS_KEY] as $permission_key => $permission_object) {
+            if (in_array($permission_key, self::PERMISSION_NAMES, true)) {
+                $logger->info("User is project administrator.");
+                return;
+            }
+        }
+        throw new UserIsNotProjectAdminException("User is not project administrator.");
     }
 }

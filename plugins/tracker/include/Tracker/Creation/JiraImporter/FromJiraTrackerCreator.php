@@ -43,6 +43,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerat
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
+use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesCheckerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesResponseNotWellFormedException;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
@@ -58,51 +59,15 @@ class FromJiraTrackerCreator
 {
     private const LOG_IDENTIFIER = "jira_import_syslog";
 
-    /**
-     * @var TrackerXmlImport
-     */
-    private $tracker_xml_import;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var TrackerCreationDataChecker
-     */
-    private $creation_data_checker;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var JiraUserOnTuleapCache
-     */
-    private $jira_user_on_tuleap_cache;
-
-    /**
-     * @var PlatformConfigurationRetriever
-     */
-    private $platform_configuration_retriever;
-
-    private UserRolesChecker $user_roles_checker;
-
     public function __construct(
-        TrackerXmlImport $tracker_xml_import,
-        TrackerFactory $tracker_factory,
-        TrackerCreationDataChecker $creation_data_checker,
-        LoggerInterface $logger,
-        JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
-        PlatformConfigurationRetriever $platform_configuration_retriever,
-        UserRolesChecker $user_roles_checker
+        private TrackerXmlImport $tracker_xml_import,
+        private TrackerFactory $tracker_factory,
+        private TrackerCreationDataChecker $creation_data_checker,
+        private LoggerInterface $logger,
+        private JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
+        private PlatformConfigurationRetriever $platform_configuration_retriever,
+        private UserRolesCheckerInterface $user_roles_checker
     ) {
-        $this->tracker_xml_import               = $tracker_xml_import;
-        $this->tracker_factory                  = $tracker_factory;
-        $this->creation_data_checker            = $creation_data_checker;
-        $this->logger                           = $logger;
-        $this->jira_user_on_tuleap_cache        = $jira_user_on_tuleap_cache;
-        $this->platform_configuration_retriever = $platform_configuration_retriever;
-        $this->user_roles_checker               = $user_roles_checker;
     }
 
     public static function build(JiraUserOnTuleapCache $jira_user_on_tuleap_cache): self

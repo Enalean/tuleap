@@ -1,8 +1,8 @@
 <?php
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Tracker\Creation\JiraImporter\UserRole;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
-final class UserRolesChecker implements UserRolesCheckerInterface
+interface UserRolesCheckerInterface
 {
     /**
      * @throws UserRolesResponseNotWellFormedException
@@ -34,17 +32,5 @@ final class UserRolesChecker implements UserRolesCheckerInterface
      * @throws \JsonException
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
-    public function checkUserIsAdminOfJiraProject(
-        JiraClient $jira_client,
-        LoggerInterface $logger,
-        string $jira_project
-    ): void {
-        $logger->debug("Check if user is administrator in Jira Project");
-
-        $checker = match ($jira_client->isJiraCloud()) {
-            true  => new UserRolesCheckerJiraCloud(),
-            false => new UserRolesCheckerJiraServer(),
-        };
-        $checker->checkUserIsAdminOfJiraProject($jira_client, $logger, $jira_project);
-    }
+    public function checkUserIsAdminOfJiraProject(JiraClient $jira_client, LoggerInterface $logger, string $jira_project): void;
 }
