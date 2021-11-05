@@ -62,15 +62,9 @@ setup_database() {
         --db-name="$MYSQL_DBNAME" \
         --app-user="$MYSQL_USER" \
         --app-password="$MYSQL_PASSWORD" \
-        --mediawiki="per-project"
-
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql \
-        --host="$DB_HOST" \
-        --user="$MYSQL_USER" \
-        --dbname="$MYSQL_DBNAME" \
-        --password="$MYSQL_PASSWORD" \
-        welcome0 \
-        localhost
+        --mediawiki="per-project" \
+        --tuleap-fqdn="localhost" \
+        --site-admin-password="welcome0"
 
     $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
     $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"

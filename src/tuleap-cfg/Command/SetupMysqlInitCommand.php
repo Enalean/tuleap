@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Tuleap\Cryptography\ConcealedString;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
@@ -37,19 +38,21 @@ use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
 
 final class SetupMysqlInitCommand extends Command
 {
-    private const OPT_ADMIN_USER     = 'admin-user';
-    private const OPT_ADMIN_PASSWORD = 'admin-password';
-    private const OPT_APP_DBNAME     = 'db-name';
-    private const OPT_APP_USER       = 'app-user';
-    private const OPT_APP_PASSWORD   = 'app-password';
-    private const OPT_NSS_USER       = 'nss-user';
-    private const OPT_NSS_PASSWORD   = 'nss-password';
-    private const OPT_MEDIAWIKI      = 'mediawiki';
-    private const OPT_SKIP_DATABASE  = 'skip-database';
-    private const OPT_GRANT_HOSTNAME = 'grant-hostname';
-    private const OPT_LOG_PASSWORD   = 'log-password';
-    private const OPT_AZURE_SUFFIX   = 'azure-suffix';
-    private const ENV_AZURE_SUFFIX   = 'TULEAP_DB_AZURE_SUFFIX';
+    private const OPT_ADMIN_USER          = 'admin-user';
+    private const OPT_ADMIN_PASSWORD      = 'admin-password';
+    private const OPT_APP_DBNAME          = 'db-name';
+    private const OPT_APP_USER            = 'app-user';
+    private const OPT_APP_PASSWORD        = 'app-password';
+    private const OPT_NSS_USER            = 'nss-user';
+    private const OPT_NSS_PASSWORD        = 'nss-password';
+    private const OPT_MEDIAWIKI           = 'mediawiki';
+    private const OPT_SKIP_DATABASE       = 'skip-database';
+    private const OPT_GRANT_HOSTNAME      = 'grant-hostname';
+    private const OPT_LOG_PASSWORD        = 'log-password';
+    private const OPT_AZURE_SUFFIX        = 'azure-suffix';
+    private const ENV_AZURE_SUFFIX        = 'TULEAP_DB_AZURE_SUFFIX';
+    private const OPT_TULEAP_FQDN         = 'tuleap-fqdn';
+    private const OPT_SITE_ADMIN_PASSWORD = 'site-admin-password';
 
     /**
      * @var MysqlCommandHelper
@@ -116,7 +119,9 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_NSS_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for nss-user')
             ->addOption(self::OPT_MEDIAWIKI, '', InputOption::VALUE_REQUIRED, 'Grant permissions for mediawiki. Possible values: `per-project` or `central`')
             ->addOption(self::OPT_LOG_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Write user & password into given file')
-            ->addOption(self::OPT_AZURE_SUFFIX, '', InputOption::VALUE_REQUIRED, 'Value to add to user\'s name to comply with Microsoft Azure rules');
+            ->addOption(self::OPT_AZURE_SUFFIX, '', InputOption::VALUE_REQUIRED, 'Value to add to user\'s name to comply with Microsoft Azure rules')
+            ->addOption(self::OPT_TULEAP_FQDN, '', InputOption::VALUE_REQUIRED, 'Fully qualified domain name of the tuleap server (eg. tuleap.example.com)')
+            ->addOption(self::OPT_SITE_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for site administrator (`admin`) user ');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -206,6 +211,18 @@ final class SetupMysqlInitCommand extends Command
         return $this->writeLocalIncFile($local_inc_file, $nss_user, $azure_suffix, $nss_password);
     }
 
+    private function getSiteAdminPassword(InputInterface $input): ?ConcealedString
+    {
+        $clear_site_admin_password = $input->getOption(self::OPT_SITE_ADMIN_PASSWORD);
+        if (! is_string($clear_site_admin_password)) {
+            return null;
+        }
+
+        $password = new ConcealedString($clear_site_admin_password);
+        sodium_memzero($clear_site_admin_password);
+        return $password;
+    }
+
     /**
      * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
      */
@@ -222,7 +239,14 @@ final class SetupMysqlInitCommand extends Command
             return;
         }
 
-        $this->database_configurator->initializeDatabase($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
+        $tuleap_fqdn         = $input->getOption(self::OPT_TULEAP_FQDN);
+        $site_admin_password = $this->getSiteAdminPassword($input);
+
+        if ($tuleap_fqdn && $site_admin_password) {
+            $this->database_configurator->initializeDatabaseAndLoadValues($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password, $site_admin_password, $tuleap_fqdn);
+        } else {
+            $this->database_configurator->initializeDatabase($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
+        }
 
         $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
         if (is_string($log_password)) {

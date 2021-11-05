@@ -30,6 +30,8 @@ final class DatabaseConfigurator
 {
     private const OPT_MEDIAWIKI_VALUE_PER_PROJECT = 'per-project';
     private const OPT_MEDIAWIKI_VALUE_CENTRAL     = 'central';
+    private const DB_ALREADY_INIT                 = 1;
+    private const DB_FRESH                        = 2;
 
     public function __construct(private \PasswordHandler $password_handler)
     {
@@ -44,11 +46,12 @@ final class DatabaseConfigurator
         string $app_dbname,
         string $app_user,
         string $grant_hostname,
-        string $app_password
-    ): void {
+        string $app_password,
+    ): int {
         $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($app_dbname, false)));
         if ($existing_db) {
             $output->writeln(sprintf('<info>Database %s already exists</info>', $app_dbname));
+            return self::DB_ALREADY_INIT;
         } else {
             $output->writeln(sprintf('<info>Create database %s</info>', $app_dbname));
             $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $db->escapeIdentifier($app_dbname)));
@@ -61,6 +64,25 @@ final class DatabaseConfigurator
             $db->escapeIdentifier($app_dbname),
             $this->quoteDbUser($app_user, $grant_hostname),
         ));
+        return self::DB_FRESH;
+    }
+
+    public function initializeDatabaseAndLoadValues(
+        SymfonyStyle $output,
+        DBWrapperInterface $db,
+        string $app_dbname,
+        string $app_user,
+        string $grant_hostname,
+        string $app_password,
+        ConcealedString $site_admin_password,
+        string $domain_name
+    ): void {
+        $db_status = $this->initializeDatabase($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
+        if ($db_status === self::DB_ALREADY_INIT) {
+            return;
+        }
+        $db->run('USE ' . $app_dbname);
+        $this->loadInitValues($db, $site_admin_password, $domain_name);
     }
 
     public function loadInitValues(DBWrapperInterface $db, ConcealedString $admin_password, string $domain_name): void

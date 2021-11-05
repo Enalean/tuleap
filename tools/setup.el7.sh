@@ -92,14 +92,9 @@ if [ ${tuleap_installed:-false} = "false" ] || \
             --admin-password="${mysql_password}" \
             --db-name="${sys_db_name}" \
             --app-password="${sys_db_password}" \
+            --tuleap-fqdn="${server_name}" \
+            --site-admin-password="${admin_password}" \
             --log-password=${password_file}
-
-        ${tuleapcfg} setup:mysql \
-            --host="${mysql_server}" \
-            --dbname="${sys_db_name}" \
-            --password="${sys_db_password}" \
-            "${admin_password}" \
-            "${server_name}"
     fi
 
     if [ -f "${tuleap_conf}/${local_inc}" ]; then
