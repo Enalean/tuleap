@@ -42,7 +42,7 @@ export function extractApprovalTableData(
             return {
                 icon_badge: "fa-tlp-gavel-pending",
                 badge_label: approval_table_state,
-                badge_class: `tlp-badge-chrome-silver ${additional_class}`,
+                badge_class: `tlp-badge-secondary ${additional_class}`,
             };
         case APPROVAL_APPROVED:
             return {
