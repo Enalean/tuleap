@@ -9,15 +9,6 @@ TIMEOUT="$(command -v gtimeout || echo timeout)"
 BASEDIR="$(dirname "$($READLINK -f "$0")")/../../../"
 export BASEDIR
 pushd "$BASEDIR"
-DOCKERCOMPOSE="docker-compose --project-name soap-${BUILD_TAG:-$RANDOM} -f tests/soap/docker-compose.yml"
-
-function cleanup {
-    if [ -n "${TESTS_RESULT:-}" ]; then
-        docker cp "$($DOCKERCOMPOSE ps -q tests)":/output/. "$TESTS_RESULT" || echo "Failed to copy tests result"
-    fi
-    $DOCKERCOMPOSE down
-}
-trap cleanup EXIT
 
 case "${1:-}" in
     "80")
@@ -46,5 +37,15 @@ case "${2:-}" in
     echo "* mariadb103"
     exit 1
 esac
+
+DOCKERCOMPOSE="docker-compose --project-name soap-${PHP_VERSION}-${DB_HOST}-${BUILD_TAG:-$RANDOM} -f tests/soap/docker-compose.yml"
+
+function cleanup {
+    if [ -n "${TESTS_RESULT:-}" ]; then
+        docker cp "$($DOCKERCOMPOSE ps -q tests)":/output/. "$TESTS_RESULT" || echo "Failed to copy tests result"
+    fi
+    $DOCKERCOMPOSE down
+}
+trap cleanup EXIT
 
 $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests "$DB_HOST" tests
