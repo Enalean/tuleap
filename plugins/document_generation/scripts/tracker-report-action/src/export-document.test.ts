@@ -29,6 +29,7 @@ describe("export-document", () => {
         export_creator.mockResolvedValue({
             name: "name",
             artifacts: [{ id: 1, title: "title", fields: [], containers: [] }],
+            traceability_matrix: [],
         });
 
         await startDownloadExportDocument(
