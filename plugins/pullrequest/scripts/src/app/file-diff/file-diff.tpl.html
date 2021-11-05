@@ -19,6 +19,14 @@
 
 <div ng-if="$ctrl.is_loading" class="pull-request-file-diff-loading"></div>
 
+<div ng-if="$ctrl.has_potentially_dangerous_bidirectional_unicode_text" class="tlp-alert-warning">
+    <p translate>
+        This file contains bidirectional Unicode text. It may be interpreted differently than what is shown.
+        This might be used to inject malicious code that looks safe.
+        You should review the file in an editor that reveals hidden Unicode characters.
+    </p>
+</div>
+
 <div ng-if="$ctrl.is_binary_file" class="pull-request-file-diff-not-displayable-file">
     <i class="far fa-file"></i><br>{{:: 'Binary file' | translate }}
 </div>

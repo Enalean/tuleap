@@ -20,6 +20,7 @@
 import "./file-diff.tpl.html";
 import { isUnifiedMode, isSideBySideMode } from "./diff-mode-state.js";
 import { initComments } from "./comments-state.js";
+import { doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText } from "./diff-bidirectional-unicode-text";
 
 export default {
     templateUrl: "file-diff.tpl.html",
@@ -34,6 +35,7 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
         is_loading: true,
         is_binary_file: false,
         special_format: "",
+        has_potentially_dangerous_bidirectional_unicode_text: false,
         diff: null,
         file_path: $state.params.file_path,
         pull_request_id: SharedPropertiesService.getPullRequest().id,
@@ -48,6 +50,8 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
                 self.diff = diff;
                 self.is_binary_file = diff.charset === "binary";
                 self.special_format = diff.special_format;
+                self.has_potentially_dangerous_bidirectional_unicode_text =
+                    doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText(diff);
                 initComments(diff.inline_comments);
             })
             .finally(() => {
