@@ -20,9 +20,11 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 
@@ -33,7 +35,8 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
         $planned_iterations = PlannedIterations::build(
             BuildProgramFlagsStub::withDefaults(),
             BuildProgramPrivacyStub::withPrivateAccess(),
-            ProgramIdentifierBuilder::build()
+            BuildProgramBaseInfoStub::withDefault(),
+            ProgramIdentifierBuilder::build(),
         );
 
         self::assertEquals([
@@ -52,6 +55,15 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Guinea Pig'
             ),
             $planned_iterations->getProgramPrivacy()
+        );
+
+        self::assertEquals(
+            ProgramBaseInfo::fromBaseInfo(
+                'Guinea Pig',
+                'guinea-pig',
+                '🐹'
+            ),
+            $planned_iterations->getProgramBaseInfo()
         );
     }
 }

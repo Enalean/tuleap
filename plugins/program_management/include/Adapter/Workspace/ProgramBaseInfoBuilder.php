@@ -22,20 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\Project\Icons\EmojiCodepointConverter;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
+use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
+use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 
-final class ProjectProxyTest extends TestCase
+final class ProgramBaseInfoBuilder implements BuildProgramBaseInfo
 {
-    public function testItBuildsPrimitive(): void
+    public function __construct(private RetrieveProjectReference $retrieve_project_reference)
     {
-        $project = new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "project", 'icon_codepoint' => '"\u26f0\ufe0f"']);
-        $proxy   = ProjectProxy::buildFromProject($project);
+    }
 
-        self::assertEquals($project->getID(), $proxy->getId());
-        self::assertEquals($project->getPublicName(), $proxy->getProjectLabel());
-        self::assertEquals($project->getUnixNameLowerCase(), $proxy->getProjectShortName());
-        self::assertEquals($project->getUrl(), $proxy->getUrl());
-        self::assertEquals(EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat('"\u26f0\ufe0f"'), $proxy->getProjectIcon());
+    public function build(ProgramIdentifier $program_identifier): ProgramBaseInfo
+    {
+        $program_reference = $this->retrieve_project_reference->buildFromId($program_identifier->getId());
+
+        return ProgramBaseInfo::fromBaseInfo(
+            $program_reference->getProjectLabel(),
+            $program_reference->getProjectShortName(),
+            $program_reference->getProjectIcon()
+        );
     }
 }

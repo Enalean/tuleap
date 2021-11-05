@@ -20,28 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
-
-/**
- * @psalm-immutable
- */
-final class DisplayPlanIterationsPresenter
+final class ProgramBaseInfo
 {
     private function __construct(
-        public string $program_flags,
-        public string $program_privacy,
-        public string $program
+        public string $program_label,
+        public string $program_shortname,
+        public string $program_icon
     ) {
     }
 
-    public static function fromPlannedIterations(PlannedIterations $planned_iteration): self
+    public static function fromBaseInfo(string $program_label, string $program_shortname, string $program_icon): self
     {
-        return new self(
-            json_encode($planned_iteration->getProgramFlag(), JSON_THROW_ON_ERROR),
-            json_encode($planned_iteration->getProgramPrivacy(), JSON_THROW_ON_ERROR),
-            json_encode($planned_iteration->getProgramBaseInfo(), JSON_THROW_ON_ERROR)
-        );
+        return new self($program_label, $program_shortname, $program_icon);
     }
 }
