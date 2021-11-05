@@ -20,26 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-/**
- * @psalm-immutable
- */
-final class DisplayPlanIterationsPresenter
+interface BuildProgramPrivacy
 {
-    private function __construct(
-        public string $program_flags,
-        public string $program_privacy
-    ) {
-    }
-
-    public static function fromPlannedIterations(PlannedIterations $planned_iteration): self
-    {
-        return new self(
-            json_encode($planned_iteration->getProgramFlag(), JSON_THROW_ON_ERROR),
-            json_encode($planned_iteration->getProgramPrivacy(), JSON_THROW_ON_ERROR)
-        );
-    }
+    public function build(ProgramIdentifier $program_identifier): ProgramPrivacy;
 }

@@ -100,6 +100,7 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
@@ -515,7 +516,8 @@ final class program_managementPlugin extends Plugin
             new ProgramFlagsBuilder(
                 new \Tuleap\Project\Flags\ProjectFlagsBuilder(new ProjectFlagsDao()),
                 $project_manager
-            )
+            ),
+            new ProgramPrivacyBuilder($project_manager)
         );
     }
 
