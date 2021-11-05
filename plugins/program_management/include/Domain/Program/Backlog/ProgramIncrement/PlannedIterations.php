@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class PlannedIterations
 {
@@ -38,21 +39,29 @@ final class PlannedIterations
     private function __construct(
         private array $program_flags,
         private ProgramPrivacy $program_privacy,
-        private ProgramBaseInfo $program_base_info
+        private ProgramBaseInfo $program_base_info,
+        private ProgramIncrementInfo $program_increment_info
     ) {
     }
 
+    /**
+     * @throws ProgramIncrementNotFoundException
+     */
     public static function build(
         BuildProgramFlags $build_program_flags,
         BuildProgramPrivacy $build_program_privacy,
         BuildProgramBaseInfo $build_program_base_info,
+        BuildProgramIncrementInfo $build_program_increment_info,
         ProgramIdentifier $program_identifier,
+        UserIdentifier $user_identifier,
+        ProgramIncrementIdentifier $increment_identifier
     ): self {
         $program_flags     = $build_program_flags->build($program_identifier);
         $program_privacy   = $build_program_privacy->build($program_identifier);
         $program_base_info = $build_program_base_info->build($program_identifier);
+        $program_increment = $build_program_increment_info->build($user_identifier, $increment_identifier);
 
-        return new self($program_flags, $program_privacy, $program_base_info);
+        return new self($program_flags, $program_privacy, $program_base_info, $program_increment);
     }
 
     /**
@@ -71,5 +80,10 @@ final class PlannedIterations
     public function getProgramBaseInfo(): ProgramBaseInfo
     {
         return $this->program_base_info;
+    }
+
+    public function getProgramIncrementInfo(): ProgramIncrementInfo
+    {
+        return $this->program_increment_info;
     }
 }

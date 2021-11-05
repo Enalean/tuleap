@@ -88,6 +88,16 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         return $program_increments;
     }
 
+    public function retrieveProgramIncrementById(UserIdentifier $user_identifier, ProgramIncrementIdentifier $increment_identifier): ?ProgramIncrement
+    {
+        $user     = $this->user_manager_adapter->getUserWithId($user_identifier);
+        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $increment_identifier->getId());
+        if (! $artifact) {
+            return null;
+        }
+        return $this->getProgramIncrementFromArtifact($user, $artifact);
+    }
+
     private function getProgramIncrementFromArtifact(
         \PFUser $user,
         Artifact $program_increment_artifact

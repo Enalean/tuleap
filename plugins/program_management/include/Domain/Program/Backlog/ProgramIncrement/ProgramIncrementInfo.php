@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-
-interface RetrieveProgramIncrements
+final class ProgramIncrementInfo
 {
-    /**
-     * @return ProgramIncrement[]
-     */
-    public function retrieveOpenProgramIncrements(ProgramIdentifier $program, UserIdentifier $user_identifier): array;
+    private function __construct(
+        public int $id,
+        public string $title
+    ) {
+    }
 
-    public function retrieveProgramIncrementById(UserIdentifier $user_identifier, ProgramIncrementIdentifier $increment_identifier): ?ProgramIncrement;
+    public static function fromIncrementInfo(int $id, string $title): self
+    {
+        return new self($id, $title);
+    }
 }

@@ -29,10 +29,14 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementInfo;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -49,7 +53,10 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private BuildProgram $program_adapter,
         private BuildProgramFlags $build_program_flags,
         private BuildProgramPrivacy $build_program_privacy,
-        private BuildProgramBaseInfo $build_program_base_info
+        private BuildProgramBaseInfo $build_program_base_info,
+        private BuildProgramIncrementInfo $build_program_increment_info,
+        private VerifyIsProgramIncrement $verify_is_program_increment,
+        private VerifyIsVisibleArtifact $verify_is_visible_artifact
     ) {
     }
 
@@ -85,7 +92,15 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 $this->build_program_flags,
                 $this->build_program_privacy,
                 $this->build_program_base_info,
+                $this->build_program_increment_info,
                 ProgramIdentifier::fromId($this->program_adapter, (int) $project->getID(), $user_identifier, null),
+                $user_identifier,
+                ProgramIncrementIdentifier::fromId(
+                    $this->verify_is_program_increment,
+                    $this->verify_is_visible_artifact,
+                    (int) $variables['increment_id'],
+                    $user_identifier
+                )
             );
         } catch (Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException | Domain\Program\Plan\ProjectIsNotAProgramException $e) {
             throw new NotFoundException($e->getI18NExceptionMessage());
