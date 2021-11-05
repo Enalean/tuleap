@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -39,16 +39,11 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Stub&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    /**
-     * @var Stub&\TrackerFactory
-     */
-    private $tracker_factory;
     private ArtifactIdentifierStub $artifact;
 
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
-        $this->tracker_factory  = $this->createStub(\TrackerFactory::class);
 
         $this->artifact = ArtifactIdentifierStub::withId(self::ARTIFACT_ID);
     }
@@ -57,38 +52,22 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new TrackerOfArtifactRetriever(
             $this->artifact_factory,
-            $this->tracker_factory
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withId(self::TRACKER_ID))
         );
     }
 
     public function testItReturnsTrackerOfArtifact(): void
     {
-        $project      = ProjectTestBuilder::aProject()->withId(135)->build();
         $full_tracker = TrackerTestBuilder::aTracker()
             ->withId(self::TRACKER_ID)
-            ->withProject($project)
-            ->withName('Frontingly')
             ->build();
         $artifact     = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
             ->inTracker($full_tracker)
             ->build();
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-        $this->tracker_factory->method('getTrackerById')->willReturn($full_tracker);
 
         $tracker = $this->getRetriever()->getTrackerOfArtifact($this->artifact);
         self::assertSame(self::TRACKER_ID, $tracker->getId());
-    }
-
-    public function testItThrowsWhenTrackerCantBeFound(): void
-    {
-        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
-            ->inTracker(TrackerTestBuilder::aTracker()->withId(723)->build())
-            ->build();
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-        $this->tracker_factory->method('getTrackerById')->willReturn(null);
-
-        $this->expectException(TrackerNotFoundException::class);
-        $this->getRetriever()->getTrackerOfArtifact($this->artifact);
     }
 
     public function testItThrowsWhenArtifactCantBeFound(): void

@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementUpdateProcessor;
@@ -73,6 +74,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
         $artifact_changeset_dao   = new \Tracker_Artifact_ChangesetDao();
         $visibility_verifier      = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
+        $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -119,7 +121,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
-            $tracker_factory,
+            $tracker_retriever,
             new \Tracker_Semantic_TitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             new \Tracker_Semantic_StatusFactory(),
@@ -141,7 +143,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
             new ChangesetRetriever($artifact_factory),
             new MirroredTimeboxesDao(),
             $visibility_verifier,
-            new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory),
+            new TrackerOfArtifactRetriever($artifact_factory, $tracker_retriever),
             new StatusValueMapper($form_element_factory),
             new ChangesetAdder(
                 $artifact_factory,

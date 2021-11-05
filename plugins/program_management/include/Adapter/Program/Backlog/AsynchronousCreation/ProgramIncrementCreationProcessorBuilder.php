@@ -43,6 +43,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementCreation;
@@ -69,6 +70,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $user_retriever                 = new UserManagerAdapter($user_manager);
         $project_manager                = \ProjectManager::instance();
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
+        $tracker_retriever              = new TrackerFactoryAdapter($tracker_factory);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -90,7 +92,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
                 $logger
             ),
-            $tracker_factory,
+            $tracker_retriever,
             $user_retriever,
             new ChangesetValuesFormatter(
                 new ArtifactLinkValueFormatter(),
@@ -100,7 +102,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
-            $tracker_factory,
+            $tracker_retriever,
             new \Tracker_Semantic_TitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             new \Tracker_Semantic_StatusFactory(),

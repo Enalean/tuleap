@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildIterationCreationProcessor;
@@ -85,9 +86,10 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $visibility_verifier      = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
         $artifact_changeset_dao   = new \Tracker_Artifact_ChangesetDao();
+        $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
-            $tracker_factory,
+            $tracker_retriever,
             new \Tracker_Semantic_TitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             new \Tracker_Semantic_StatusFactory(),
@@ -115,7 +117,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                 \Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
                 $logger
             ),
-            $tracker_factory,
+            $tracker_retriever,
             $user_retriever,
             $changeset_values_formatter
         );
@@ -177,7 +179,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             $artifact_creator,
             new MirroredTimeboxesDao(),
             $visibility_verifier,
-            new TrackerOfArtifactRetriever($artifact_factory, $tracker_factory),
+            new TrackerOfArtifactRetriever($artifact_factory, $tracker_retriever),
             $changeset_adder
         );
 

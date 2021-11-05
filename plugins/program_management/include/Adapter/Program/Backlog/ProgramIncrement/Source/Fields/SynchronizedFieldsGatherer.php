@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
@@ -35,14 +36,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldReference;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 {
     public function __construct(
-        private \TrackerFactory $tracker_factory,
+        private RetrieveFullTracker $tracker_retriever,
         private \Tracker_Semantic_TitleFactory $title_factory,
         private \Tracker_Semantic_DescriptionFactory $description_factory,
         private \Tracker_Semantic_StatusFactory $status_factory,
@@ -53,7 +53,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 
     public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
-        $full_tracker = $this->getFullTracker($tracker_identifier);
+        $full_tracker = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $title_field  = $this->title_factory->getByTracker($full_tracker)->getField();
         if (! $title_field) {
             throw new FieldRetrievalException($tracker_identifier->getId(), 'title');
@@ -72,7 +72,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 
     public function getDescriptionField(TrackerIdentifier $tracker_identifier): DescriptionFieldReference
     {
-        $full_tracker      = $this->getFullTracker($tracker_identifier);
+        $full_tracker      = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $description_field = $this->description_factory->getByTracker($full_tracker)->getField();
         if (! $description_field) {
             throw new FieldRetrievalException($tracker_identifier->getId(), 'description');
@@ -82,7 +82,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 
     public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference
     {
-        $full_tracker = $this->getFullTracker($tracker_identifier);
+        $full_tracker = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $status_field = $this->status_factory->getByTracker($full_tracker)->getField();
         if (! $status_field) {
             throw new FieldRetrievalException($tracker_identifier->getId(), 'status');
@@ -92,7 +92,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 
     public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference
     {
-        $full_tracker     = $this->getFullTracker($tracker_identifier);
+        $full_tracker     = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $start_date_field = $this->timeframe_builder->getSemantic($full_tracker)->getStartDateField();
         if (! $start_date_field) {
             throw new MissingTimeFrameFieldException($tracker_identifier->getId(), 'start date');
@@ -102,7 +102,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 
     public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndDateFieldReference|DurationFieldReference
     {
-        $full_tracker   = $this->getFullTracker($tracker_identifier);
+        $full_tracker   = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $semantic       = $this->timeframe_builder->getSemantic($full_tracker);
         $duration_field = $semantic->getDurationField();
         if ($duration_field !== null) {
@@ -118,7 +118,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 
     public function getArtifactLinkField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): ArtifactLinkFieldReference
     {
-        $full_tracker         = $this->getFullTracker($tracker_identifier);
+        $full_tracker         = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($full_tracker);
         if (count($artifact_link_fields) > 0) {
             return ArtifactLinkFieldReferenceProxy::fromTrackerField(($artifact_link_fields[0]));
@@ -129,14 +129,5 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
             $full_tracker->getProject()->getPublicName(),
         );
         throw new NoArtifactLinkFieldException($tracker_identifier);
-    }
-
-    private function getFullTracker(TrackerIdentifier $tracker_identifier): \Tracker
-    {
-        $full_tracker = $this->tracker_factory->getTrackerById($tracker_identifier->getId());
-        if (! $full_tracker) {
-            throw new TrackerNotFoundException($tracker_identifier->getId());
-        }
-        return $full_tracker;
     }
 }

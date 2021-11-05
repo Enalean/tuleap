@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
@@ -31,9 +30,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredTimeboxFirstChangesetBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
@@ -67,16 +66,11 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MockObject&TrackerArtifactCreator
      */
     private $creator;
-    /**
-     * @var Stub&\TrackerFactory
-     */
-    private $tracker_factory;
     private MirroredTimeboxFirstChangeset $changeset;
 
     protected function setUp(): void
     {
-        $this->creator         = $this->createMock(TrackerArtifactCreator::class);
-        $this->tracker_factory = $this->createStub(\TrackerFactory::class);
+        $this->creator = $this->createMock(TrackerArtifactCreator::class);
 
         $fields = SynchronizedFieldsStubPreparation::withAllFields(
             self::TITLE_ID,
@@ -111,7 +105,9 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new ArtifactCreatorAdapter(
             $this->creator,
-            $this->tracker_factory,
+            RetrieveFullTrackerStub::withTracker(
+                TrackerTestBuilder::aTracker()->build()
+            ),
             RetrieveUserStub::withGenericUser(),
             new ChangesetValuesFormatter(
                 new ArtifactLinkValueFormatter(),
@@ -123,8 +119,6 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesAnArtifact(): void
     {
-        $full_tracker = TrackerTestBuilder::aTracker()->build();
-        $this->tracker_factory->method('getTrackerById')->willReturn($full_tracker);
         $this->creator->expects(self::once())
             ->method('create')
             ->with(
@@ -159,19 +153,8 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::NEW_MIRRORED_TIMEBOX_ID, $new_artifact->getId());
     }
 
-    public function testItThrowsIfItCantFindTracker(): void
-    {
-        $this->creator->expects(self::never())->method('create');
-        $this->tracker_factory->method('getTrackerById')->willReturn(null);
-
-        $this->expectException(TrackerNotFoundException::class);
-        $this->getCreator()->create($this->changeset);
-    }
-
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
-        $full_tracker = TrackerTestBuilder::aTracker()->build();
-        $this->tracker_factory->method('getTrackerById')->willReturn($full_tracker);
         $this->creator->method('create')->willReturn(null);
 
         $this->expectException(ArtifactCreationException::class);

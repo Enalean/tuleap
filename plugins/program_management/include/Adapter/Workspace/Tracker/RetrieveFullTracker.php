@@ -20,16 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
-interface RetrieveTitleField
+interface RetrieveFullTracker
 {
     /**
-     * @throws FieldRetrievalException
-     * @throws TitleFieldHasIncorrectTypeException
+     * @throws TrackerNotFoundException
      */
-    public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference;
+    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tracker;
 }
