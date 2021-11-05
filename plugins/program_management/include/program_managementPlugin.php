@@ -91,6 +91,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -161,6 +162,7 @@ use Tuleap\ProgramManagement\Templates\TeamTemplate;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\REST\UserGroupRetriever;
@@ -495,10 +497,25 @@ final class program_managementPlugin extends Plugin
 
     public function routeGetPlanIterations(): DisplayPlanIterationsController
     {
+        $user_manager_adapter = new UserManagerAdapter(\UserManager::instance());
+        $project_manager      = ProjectManager::instance();
+
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
-            new TeamDao()
+            new ProgramAdapter(
+                $project_manager,
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                new ProgramDao(),
+                $user_manager_adapter,
+            ),
+            new ProgramFlagsBuilder(
+                new \Tuleap\Project\Flags\ProjectFlagsBuilder(new ProjectFlagsDao()),
+                $project_manager
+            )
         );
     }
 
