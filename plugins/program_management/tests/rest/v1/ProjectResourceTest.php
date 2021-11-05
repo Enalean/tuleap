@@ -185,7 +185,7 @@ final class ProjectResourceTest extends \RestBase
     /**
      * @depends testGetProgramIncrements
      */
-    public function testGetIterations(int $program_increment_id): void
+    public function testGetIterations(int $program_increment_id): int
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'program_increment/' . urlencode((string) $program_increment_id) . '/iterations')
@@ -203,8 +203,28 @@ final class ProjectResourceTest extends \RestBase
         $iterations = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(1, $iterations);
         $received_iteration = $iterations[0];
+        $iteration_id       = $received_iteration['id'];
         unset($received_iteration['id'], $received_iteration['uri'], $received_iteration['xref']);
         self::assertEquals($iteration, $received_iteration);
+
+        return $iteration_id;
+    }
+
+    /**
+     * @depends testGetIterations
+     */
+    public function testGetIterationContent(int $iteration_id): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'iteration/' . urlencode((string) $iteration_id) . '/content')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $user_stories = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $user_stories);
+        self::assertEquals('US1', $user_stories[0]['title']);
+        self::assertEquals('User Stories', $user_stories[0]['tracker']['label']);
+        self::assertEquals('team', $user_stories[0]['project']['label']);
     }
 
     /**

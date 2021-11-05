@@ -23,17 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST;
 
 use Luracast\Restler\Restler;
+use Tuleap\ProgramManagement\REST\v1\IterationResource;
 use Tuleap\ProgramManagement\REST\v1\ProgramBacklogItemsResource;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\ProgramManagement\REST\v1\ProgramIncrementResource;
 use Tuleap\ProgramManagement\REST\v1\ProjectResource;
 
-class ResourcesInjector
+final class ResourcesInjector
 {
     public function populate(Restler $restler): void
     {
         $restler->addAPIClass(ProjectResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(ProgramIncrementResource::class, ProgramIncrementResource::ROUTE);
         $restler->addAPIClass(ProgramBacklogItemsResource::class, ProgramBacklogItemsResource::ROUTE);
+        $restler->addAPIClass(IterationResource::class, IterationResource::ROUTE);
     }
 }

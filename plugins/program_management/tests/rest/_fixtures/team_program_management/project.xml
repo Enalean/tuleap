@@ -531,6 +531,11 @@
           <label><![CDATA[Sprint Name]]></label>
           <properties size="30"/>
         </formElement>
+        <formElement type="text" ID="F23376" rank="2" id="20909" tracker_id="1004" parent_id="20907">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <properties rows="5" cols="100"/>
+        </formElement>
         <formElement type="fieldset" ID="F21377" rank="886" id="21377" tracker_id="1039" parent_id="0">
           <name><![CDATA[sprint_details]]></name>
           <label><![CDATA[Sprint details]]></label>
@@ -565,6 +570,7 @@
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
+                      <item ID="V6886" label="On Going" is_hidden="0"/>
                       <item ID="V6887" label="Planned" is_hidden="0"/>
                       <item ID="V6888" label="Current" is_hidden="0"/>
                       <item ID="V6889" label="Closed" is_hidden="0"/>
@@ -611,12 +617,25 @@
           <description><![CDATA[Define the title of an artifact]]></description>
           <field REF="F21376"/>
         </semantic>
+        <semantic type="description">
+          <shortname>
+            <![CDATA[description]]>
+          </shortname>
+          <label>
+            <![CDATA[Description]]>
+          </label>
+          <description>
+            <![CDATA[ Define the description of an artifact ]]>
+          </description>
+          <field REF="F23376"/>
+        </semantic>
         <semantic type="status">
           <shortname><![CDATA[status]]></shortname>
           <label><![CDATA[Status]]></label>
           <description><![CDATA[Define the status of an artifact]]></description>
           <field REF="F21383"/>
           <open_values>
+            <open_value REF="V6886"/>
             <open_value REF="V6887"/>
             <open_value REF="V6888"/>
           </open_values>
@@ -703,6 +722,9 @@
         <permission scope="field" REF="F21376" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F21376" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F21376" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23376" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23376" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23376" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F21379" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F21379" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F21379" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -714,9 +736,11 @@
         <permission scope="field" REF="F21381" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F21383" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F21383" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21383" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F21384" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F21387" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F21387" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21387" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
       </permissions>
       <artifacts>
         <artifact id="2207">

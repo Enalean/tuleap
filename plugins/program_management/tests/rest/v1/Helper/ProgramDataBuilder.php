@@ -28,6 +28,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
+use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -60,12 +61,15 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
     private \Tracker $user_story;
     private \Tracker $feature;
     private \Tracker $iteration;
+    private \Tracker $mirrored_iteration;
     private \Tracker_ArtifactFactory $artifact_factory;
     private ProgramIncrementsDAO $program_increment_DAO;
 
     public function setUp(): void
     {
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
+
+        \ForgeConfig::setFeatureFlag(ForgeConfigAdapter::FEATURE_FLAG_KEY, '1');
 
         $user_manager                 = UserManager::instance();
         $user_adapter                 = new UserManagerAdapter($user_manager);
@@ -109,15 +113,17 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $program_trackers = $tracker_factory->getTrackersByGroupId((int) $program_project->getID());
         $team_trackers    = $tracker_factory->getTrackersByGroupId((int) $team_project->getID());
 
-        $this->feature    = $this->getTrackerByName($program_trackers, "features");
-        $this->user_story = $this->getTrackerByName($team_trackers, "story");
-        $this->iteration  = $this->getTrackerByName($program_trackers, "iteration");
+        $this->feature            = $this->getTrackerByName($program_trackers, "features");
+        $this->user_story         = $this->getTrackerByName($team_trackers, "story");
+        $this->iteration          = $this->getTrackerByName($program_trackers, "iteration");
+        $this->mirrored_iteration = $this->getTrackerByName($team_trackers, "sprint");
 
         $this->program_increment = $this->getTrackerByName($program_trackers, "pi");
 
         $this->linkFeatureAndUserStories();
         $this->linkProgramIncrementToMirroredRelease();
         $this->linkProgramIncrementToIteration();
+        $this->linkUserStoryToIteration();
     }
 
     private function linkFeatureAndUserStories(): void
@@ -225,5 +231,23 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         ];
         $data[$pi_artifact_link_field->getId()]['removed_values'] = [];
         $pi->createNewChangeset($data, "", $this->user);
+    }
+
+    private function linkUserStoryToIteration(): void
+    {
+        $mirrored_iteration_list = $this->artifact_factory->getArtifactsByTrackerId($this->mirrored_iteration->getId());
+        $user_story_list         = $this->artifact_factory->getArtifactsByTrackerId($this->user_story->getId());
+
+        $mirrored_iteration = $this->getArtifactByTitle($mirrored_iteration_list, "iteration");
+        $us1                = $this->getArtifactByTitle($user_story_list, "US1");
+
+        $iteration_artifact_link_field = $mirrored_iteration->getAnArtifactLinkField($this->user);
+        assert($iteration_artifact_link_field instanceof \Tracker_FormElement_Field_ArtifactLink);
+        $data                                                            = [];
+        $data[$iteration_artifact_link_field->getId()]['new_values']     = (string) $us1->getId();
+        $data[$iteration_artifact_link_field->getId()]['nature']         = "";
+        $data[$iteration_artifact_link_field->getId()]['natures']        = [];
+        $data[$iteration_artifact_link_field->getId()]['removed_values'] = [];
+        $mirrored_iteration->createNewChangeset($data, "", $this->user);
     }
 }

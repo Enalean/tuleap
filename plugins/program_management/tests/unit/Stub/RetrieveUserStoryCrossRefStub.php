@@ -28,17 +28,17 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifie
 
 final class RetrieveUserStoryCrossRefStub implements RetrieveUserStoryCrossRef
 {
-    private function __construct(private string $cross_reference)
+    private function __construct(private string $tracker_short_name)
     {
     }
 
-    public static function withValues(string $tracker_shortname, int $id): self
+    public static function withShortname(string $tracker_shortname): self
     {
-        return new self($tracker_shortname . " #" . $id);
+        return new self($tracker_shortname);
     }
 
     public function getUserStoryCrossRef(UserStoryIdentifier $user_story_identifier): string
     {
-        return $this->cross_reference;
+        return $this->tracker_short_name . ' #' . $user_story_identifier->getId();
     }
 }

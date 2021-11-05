@@ -25,6 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlannableFeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\SearchUserStoryPlannedInIteration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -53,6 +57,34 @@ final class UserStoryIdentifier implements ArtifactIdentifier
             $id = $row['children_id'];
             if ($visibility_verifier->isVisible($id, $user_identifier)) {
                 $user_stories[] = new self($id);
+            }
+        }
+        return $user_stories;
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function buildCollectionFromIteration(
+        SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration,
+        SearchMirroredTimeboxes $iteration_searcher,
+        VerifyIsVisibleArtifact $artifact_visibility_verifier,
+        IterationIdentifier $iteration,
+        UserIdentifier $user
+    ): array {
+        $mirrored_iterations = MirroredIterationIdentifier::buildCollectionFromIteration(
+            $iteration_searcher,
+            $artifact_visibility_verifier,
+            $iteration,
+            $user
+        );
+        $user_stories        = [];
+        foreach ($mirrored_iterations as $mirror_id) {
+            $planned_user_stories = $search_user_story_planned_in_iteration->searchStoriesOfMirroredIteration($mirror_id);
+            foreach ($planned_user_stories as $user_story_id) {
+                if ($artifact_visibility_verifier->isVisible($user_story_id, $user)) {
+                    $user_stories[] =  new self($user_story_id);
+                }
             }
         }
         return $user_stories;

@@ -89,6 +89,10 @@ msgid "Could not find feature with id #%d"
 msgstr "La fonctionnalité avec l'id #%d n'a pas pu être trouvée"
 
 #, php-format
+msgid "Could not find the iteration #%d"
+msgstr "L'itération #%d n'a pas été trouvée"
+
+#, php-format
 msgid "Could not find the program of iteration #%d"
 msgstr "Le programme de l'itération #%d n'a pas été trouvé"
 
