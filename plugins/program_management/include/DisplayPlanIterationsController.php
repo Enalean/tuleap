@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProgramUserPrivileges;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -56,7 +57,8 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private BuildProgramBaseInfo $build_program_base_info,
         private BuildProgramIncrementInfo $build_program_increment_info,
         private VerifyIsProgramIncrement $verify_is_program_increment,
-        private VerifyIsVisibleArtifact $verify_is_visible_artifact
+        private VerifyIsVisibleArtifact $verify_is_visible_artifact,
+        private RetrieveProgramUserPrivileges $retrieve_program_user_privileges
     ) {
     }
 
@@ -93,6 +95,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 $this->build_program_privacy,
                 $this->build_program_base_info,
                 $this->build_program_increment_info,
+                $this->retrieve_program_user_privileges,
                 ProgramIdentifier::fromId($this->program_adapter, (int) $project->getID(), $user_identifier, null),
                 $user_identifier,
                 ProgramIncrementIdentifier::fromId(

@@ -113,6 +113,7 @@ use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramUserPrivilegesRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
@@ -557,7 +558,8 @@ final class program_managementPlugin extends Plugin
                 )
             ),
             $program_increment_verifier,
-            $visibility_verifier
+            $visibility_verifier,
+            new ProgramUserPrivilegesRetriever($user_manager_adapter)
         );
     }
 

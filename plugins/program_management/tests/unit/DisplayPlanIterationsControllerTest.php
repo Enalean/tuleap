@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserPrivilegesStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Request\ForbiddenException;
@@ -154,7 +155,8 @@ final class DisplayPlanIterationsControllerTest extends TestCase
             BuildProgramBaseInfoStub::withDefault(),
             BuildProgramIncrementInfoStub::withId(self::PROGRAM_INCREMENT_ID),
             VerifyIsProgramIncrementStub::withValidProgramIncrement(),
-            VerifyIsVisibleArtifactStub::withVisibleIds(self::PROGRAM_INCREMENT_ID)
+            VerifyIsVisibleArtifactStub::withVisibleIds(self::PROGRAM_INCREMENT_ID),
+            RetrieveProgramUserPrivilegesStub::withProgramAdminUser()
         );
     }
 
