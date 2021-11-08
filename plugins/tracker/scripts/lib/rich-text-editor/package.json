@@ -13,14 +13,14 @@
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "dompurify": "^2.2.9",
     "lit": "^2.0.2",
-    "marked": "^3.0.4",
+    "marked": "^4.0.0",
     "turndown": "^7.0.0"
   },
   "devDependencies": {
     "@types/bootstrap": "^3.4.0",
     "@types/ckeditor": "^4.9.10",
     "@types/dompurify": "^2.2.2",
-    "@types/marked": "^3.0.1",
+    "@types/marked": "^3.0.2",
     "@types/turndown": "^5.0.0"
   },
   "peerDependencies": {
