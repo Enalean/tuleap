@@ -23,17 +23,17 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementInfo;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
-class ProgramIncrementInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProgramIncrementInfo(): void
     {
         $builder = new ProgramIncrementInfoBuilder(
-            RetrieveProgramIncrementsStub::withOpenProgramIncrements([
+            RetrieveProgramIncrementStub::withSuccessiveProgramIncrements(
                 ProgramIncrementBuilder::buildWithId(1260)
-            ])
+            )
         );
 
         $increment_info = $builder->build(
@@ -41,6 +41,6 @@ class ProgramIncrementInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ProgramIncrementIdentifierBuilder::buildWithId(1260)
         );
 
-        self::assertEquals(ProgramIncrementInfo::fromIncrementInfo(1260, "Increment 1"), $increment_info);
+        self::assertEquals(ProgramIncrementInfo::fromIncrementInfo(1260, 'Increment 1'), $increment_info);
     }
 }

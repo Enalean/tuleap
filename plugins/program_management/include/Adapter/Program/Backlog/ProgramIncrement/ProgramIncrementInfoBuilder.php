@@ -27,12 +27,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgra
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementInfo;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramIncrementInfoBuilder implements BuildProgramIncrementInfo
 {
-    public function __construct(private RetrieveProgramIncrements $retrieve_program_increments)
+    public function __construct(private RetrieveProgramIncrement $retrieve_program_increments)
     {
     }
 

@@ -27,16 +27,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchOpenProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchProgramIncrementLinkedToFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchProgramIncrementsOfProgram;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsProgramIncrementTracker, RetrieveProgramIncrementTracker, RetrieveProgramIncrementLabels, VerifyIsProgramIncrement, SearchProgramIncrementLinkedToFeature, SearchOpenProgramIncrement
+final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsProgramIncrementTracker, RetrieveProgramIncrementTracker, RetrieveProgramIncrementLabels, VerifyIsProgramIncrement, SearchProgramIncrementLinkedToFeature, SearchProgramIncrementsOfProgram
 {
-    /**
-     * @psalm-return array{id:int}[]
-     */
-    public function searchOpenProgramIncrements(int $program_id): array
+    public function searchOpenProgramIncrements(ProgramIdentifier $program): array
     {
         $sql = 'SELECT artifact.id
                 FROM tracker_artifact AS artifact
@@ -50,7 +48,8 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
                 JOIN plugin_program_management_program AS program ON (program.program_increment_tracker_id = artifact.tracker_id)
                 WHERE (status.open_value_id = status_value.bindvalue_id OR status.field_id IS NULL) AND program.program_project_id = ?';
 
-        return $this->getDB()->run($sql, $program_id);
+        $rows = $this->getDB()->run($sql, $program->getId());
+        return array_map(static fn(array $row): int => $row['id'], $rows);
     }
 
     /**

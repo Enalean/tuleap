@@ -23,25 +23,30 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchOpenProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchProgramIncrementsOfProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-final class SearchOpenProgramIncrementStub implements SearchOpenProgramIncrement
+final class SearchProgramIncrementsOfProgramStub implements SearchProgramIncrementsOfProgram
 {
-    private function __construct(private array $program_increments)
+    private function __construct(private array $ids)
     {
-    }
-    public static function with(array $program_increments): self
-    {
-        return new self($program_increments);
     }
 
-    public static function withoutOpenIncrement(): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withIds(int $first_id, int ...$other_ids): self
+    {
+        return new self([$first_id, ...$other_ids]);
+    }
+
+    public static function withoutOpenProgramIncrements(): self
     {
         return new self([]);
     }
 
-    public function searchOpenProgramIncrements(int $program_id): array
+    public function searchOpenProgramIncrements(ProgramIdentifier $program): array
     {
-        return $this->program_increments;
+        return $this->ids;
     }
 }

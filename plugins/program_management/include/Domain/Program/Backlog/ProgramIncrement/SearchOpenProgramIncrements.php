@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-interface SearchOpenProgramIncrement
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
+interface SearchOpenProgramIncrements
 {
     /**
-     * @psalm-return array{id:int}[]
+     * @return ProgramIncrement[]
      */
-    public function searchOpenProgramIncrements(int $program_id): array;
+    public function searchOpenProgramIncrements(int $potential_program_id, UserIdentifier $user): array;
 }
