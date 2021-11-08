@@ -19,7 +19,7 @@
 
 import * as rest_querier from "./rest-querier";
 import type {
-    ArtifactReportResponse,
+    ArtifactResponse,
     TrackerDefinition,
     TestExecutionResponse,
     ArtifactReportResponseUserRepresentation,
@@ -29,7 +29,7 @@ import { retrieveReportArtifacts } from "./artifacts-retriever";
 describe("artifacts-retriever", () => {
     it("retrieves artifacts from a report with additional information", async () => {
         const get_report_artifacts_spy = jest.spyOn(rest_querier, "getReportArtifacts");
-        const artifacts_report_response: ArtifactReportResponse[] = [
+        const artifacts_report_response: ArtifactResponse[] = [
             {
                 id: 74,
                 title: null,

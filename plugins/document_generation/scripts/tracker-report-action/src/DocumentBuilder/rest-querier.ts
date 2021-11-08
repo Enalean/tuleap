@@ -20,9 +20,10 @@
 import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import type {
     TrackerDefinition,
-    ArtifactReportResponse,
+    ArtifactResponse,
     TestExecutionResponse,
 } from "./artifacts-retriever";
+import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 
 export async function getTrackerDefinition(tracker_id: number): Promise<TrackerDefinition> {
     const tracker_structure_response = await get(
@@ -34,8 +35,8 @@ export async function getTrackerDefinition(tracker_id: number): Promise<TrackerD
 export async function getReportArtifacts(
     report_id: number,
     report_has_changed: boolean
-): Promise<ArtifactReportResponse[]> {
-    const report_artifacts: ArtifactReportResponse[] = await recursiveGet(
+): Promise<ArtifactResponse[]> {
+    const report_artifacts: ArtifactResponse[] = await recursiveGet(
         `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
         {
             params: {
@@ -57,4 +58,48 @@ export async function getTestManagementExecution(
     );
 
     return test_execution_response.json();
+}
+
+const MAX_CHUNK_SIZE_ARTIFACTS = 100;
+const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS = 5;
+
+export async function getArtifacts(
+    artifact_ids: ReadonlySet<number>
+): Promise<Map<number, ArtifactResponse>> {
+    const artifacts: Map<number, ArtifactResponse> = new Map();
+    const responses = await limitConcurrencyPool(
+        MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS,
+        getArtifactIDsChunks([...artifact_ids]),
+        (artifact_ids_chunk: ReadonlyArray<number>): Promise<Response> => {
+            return get(
+                `/api/v1/artifacts?query=${encodeURIComponent(
+                    JSON.stringify({ id: artifact_ids_chunk })
+                )}`
+            );
+        }
+    );
+
+    for (const response of responses) {
+        const artifacts_collection: { collection: ArtifactResponse[] } = await response.json();
+
+        for (const artifact of artifacts_collection.collection) {
+            artifacts.set(artifact.id, artifact);
+        }
+    }
+
+    return artifacts;
+}
+
+function getArtifactIDsChunks(
+    artifact_ids: ReadonlyArray<number>
+): ReadonlyArray<ReadonlyArray<number>> {
+    const artifact_ids_chunks: ReadonlyArray<number>[] = [];
+
+    let index = 0;
+    while (index < artifact_ids.length) {
+        artifact_ids_chunks.push(artifact_ids.slice(index, index + MAX_CHUNK_SIZE_ARTIFACTS));
+        index += MAX_CHUNK_SIZE_ARTIFACTS;
+    }
+
+    return artifact_ids_chunks;
 }

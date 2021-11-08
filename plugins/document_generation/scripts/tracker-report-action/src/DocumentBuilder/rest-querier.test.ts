@@ -21,9 +21,10 @@ import * as tlp from "@tuleap/tlp-fetch";
 import type {
     TrackerDefinition,
     TestExecutionResponse,
-    ArtifactReportResponse,
+    ArtifactResponse,
 } from "./artifacts-retriever";
 import {
+    getArtifacts,
     getReportArtifacts,
     getTestManagementExecution,
     getTrackerDefinition,
@@ -65,7 +66,7 @@ describe("API querier", () => {
             const report_has_changed = true;
             const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
 
-            const artifacts_report_response: ArtifactReportResponse[] = [
+            const artifacts_report_response: ArtifactResponse[] = [
                 {
                     id: 74,
                     title: null,
@@ -160,6 +161,26 @@ describe("API querier", () => {
             await getTestManagementExecution(artifact_id);
 
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/testmanagement_executions/101");
+        });
+    });
+
+    describe("getArtifacts", () => {
+        it("retrieves a bunch of artifacts", async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
+
+            const expected_artifacts = [
+                { id: 12 } as ArtifactResponse,
+                { id: 14 } as ArtifactResponse,
+            ];
+
+            mockFetchSuccess(tlpGet, {
+                return_json: {
+                    collection: expected_artifacts,
+                },
+            });
+
+            const artifacts = await getArtifacts(new Set([...Array(20).keys()]));
+            expect([...artifacts.values()]).toStrictEqual(expected_artifacts);
         });
     });
 });
