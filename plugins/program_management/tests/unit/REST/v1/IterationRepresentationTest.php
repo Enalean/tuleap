@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeframeValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUriStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserCanUpdateStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class IterationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,7 +43,7 @@ final class IterationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveTimeframeValueUserCanSeeStub::withValues(1633189968, 1635868368),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),
-            RetrieveUserCanUpdateStub::withUpdatePermission(),
+            VerifyUserCanUpdateTimeboxStub::withUpdatePermission(),
             UserIdentifierStub::buildGenericUser(),
             IterationIdentifierBuilder::buildWithId(1),
         );

@@ -24,23 +24,20 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class StatusValueRetriever implements RetrieveStatusValueUserCanSee
 {
-    public function __construct(private \Tracker_ArtifactFactory $artifact_factory, private RetrieveUser $retrieve_user)
+    public function __construct(private RetrieveFullArtifact $artifact_retriever, private RetrieveUser $retrieve_user)
     {
     }
 
     public function getLabel(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?string
     {
-        $artifact = $this->artifact_factory->getArtifactById($timebox_identifier->getId());
-        if (! $artifact) {
-            return null;
-        }
-
+        $artifact     = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         $user         = $this->retrieve_user->getUserWithId($user_identifier);
         $status_field = $artifact->getTracker()->getStatusField();
         if ($status_field !== null && $status_field->userCanRead($user)) {

@@ -23,43 +23,34 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\TimeboxNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CrossReferenceRetrieverTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private const TRACKER_SHORT_NAME = 'art';
+    private const ARTIFACT_ID        = 1;
     private TimeboxIdentifier $artifact_identifier;
-    private CrossReferenceRetriever $cross_reference_retriever;
-
 
     protected function setUp(): void
     {
-        $this->artifact_factory          = $this->createStub(Tracker_ArtifactFactory::class);
-        $this->cross_reference_retriever = new CrossReferenceRetriever($this->artifact_factory);
-        $this->artifact_identifier       = TimeboxIdentifierStub::withId(1);
+        $this->artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
     }
 
-    public function testItThrowsWhenArtifactIsNotFound(): void
+    private function getRetriever(): CrossReferenceRetriever
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-        $this->expectException(TimeboxNotFoundException::class);
-        $this->cross_reference_retriever->getXRef($this->artifact_identifier);
+        $tracker  = TrackerTestBuilder::aTracker()->withShortName(self::TRACKER_SHORT_NAME)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->inTracker($tracker)->build();
+        return new CrossReferenceRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
     }
 
     public function testItReturnsValue(): void
     {
-        $artifact = $this->createStub(Artifact::class);
-        $artifact->method('getXRef')->willReturn("art #1");
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-
-        self::assertEquals("art #1", $this->cross_reference_retriever->getXRef($this->artifact_identifier));
+        $expected_cross_ref = self::TRACKER_SHORT_NAME . ' #' . self::ARTIFACT_ID;
+        self::assertSame($expected_cross_ref, $this->getRetriever()->getXRef($this->artifact_identifier));
     }
 }

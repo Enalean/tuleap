@@ -24,13 +24,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I identify a Feature, I'm its ID property
  * @psalm-immutable
  */
-final class FeatureIdentifier
+final class FeatureIdentifier implements ArtifactIdentifier
 {
     public int $id;
 
@@ -50,5 +51,10 @@ final class FeatureIdentifier
             return null;
         }
         return new self($feature_id);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

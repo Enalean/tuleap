@@ -23,7 +23,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
@@ -32,50 +34,42 @@ final class LastChangesetRetrieverTest extends TestCase
     private const ITERATION_ID      = 52;
     private const LAST_CHANGESET_ID = 3862;
     /**
-     * @var Stub&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
      * @var Stub&\Tracker_Artifact_ChangesetFactory
      */
     private $changeset_factory;
     private IterationIdentifier $iteration;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
         $this->changeset_factory = $this->createStub(\Tracker_Artifact_ChangesetFactory::class);
 
+        $this->artifact  = ArtifactTestBuilder::anArtifact(self::ITERATION_ID)->build();
         $this->iteration = IterationIdentifierBuilder::buildWithId(self::ITERATION_ID);
     }
 
     private function getRetriever(): LastChangesetRetriever
     {
-        return new LastChangesetRetriever($this->artifact_factory, $this->changeset_factory);
+        return new LastChangesetRetriever(
+            RetrieveFullArtifactStub::withArtifact($this->artifact),
+            $this->changeset_factory
+        );
     }
 
     public function testItReturnsTheLastChangesetIDOfGivenIteration(): void
     {
-        $artifact = ArtifactTestBuilder::anArtifact(self::ITERATION_ID)->build();
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
         $this->changeset_factory->method('getLastChangeset')->willReturn(
-            ChangesetTestBuilder::aChangeset((string) self::LAST_CHANGESET_ID)->ofArtifact($artifact)->build()
+            ChangesetTestBuilder::aChangeset((string) self::LAST_CHANGESET_ID)
+                ->ofArtifact($this->artifact)
+                ->build()
         );
 
         $last_changeset_id = $this->getRetriever()->retrieveLastChangesetId($this->iteration);
         self::assertSame(self::LAST_CHANGESET_ID, $last_changeset_id);
     }
 
-    public function testItReturnsNullWhenGivenIterationCantBeFound(): void
-    {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-        self::assertNull($this->getRetriever()->retrieveLastChangesetId($this->iteration));
-    }
-
     public function testItReturnsNullWhenGivenIterationHasNoLastChangeset(): void
     {
-        $artifact = ArtifactTestBuilder::anArtifact(self::ITERATION_ID)->build();
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
         $this->changeset_factory->method('getLastChangeset')->willReturn(null);
 
         self::assertNull($this->getRetriever()->retrieveLastChangesetId($this->iteration));

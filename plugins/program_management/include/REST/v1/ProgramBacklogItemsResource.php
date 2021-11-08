@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
@@ -41,26 +42,6 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
 {
     private const MAX_LIMIT = 50;
     public const  ROUTE     = 'program_backlog_items';
-
-    private \UserManager $user_manager;
-    private UserStoryRepresentationBuilder $user_story_representation_builder;
-
-    public function __construct()
-    {
-        $this->user_manager                      = \UserManager::instance();
-        $user_manager_adapter                    = new UserManagerAdapter($this->user_manager);
-        $this->user_story_representation_builder = new UserStoryRepresentationBuilder(
-            new ArtifactsLinkedToParentDao(),
-            \Tracker_ArtifactFactory::instance(),
-            new PlanDao(),
-            new BackgroundColorRetriever(
-                new BackgroundColorBuilder(new BindDecoratorRetriever()),
-                \Tracker_ArtifactFactory::instance(),
-                $user_manager_adapter
-            ),
-            $user_manager_adapter
-        );
-    }
 
     /**
      * Get content of a feature
@@ -81,9 +62,25 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
      */
     public function getChildren(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $user = $this->user_manager->getCurrentUser();
+        $user_manager       = \UserManager::instance();
+        $user_retriever     = new UserManagerAdapter($user_manager);
+        $artifact_retriever = new ArtifactFactoryAdapter(\Tracker_ArtifactFactory::instance());
+
+        $user_story_representation_builder = new UserStoryRepresentationBuilder(
+            new ArtifactsLinkedToParentDao(),
+            \Tracker_ArtifactFactory::instance(),
+            new PlanDao(),
+            new BackgroundColorRetriever(
+                new BackgroundColorBuilder(new BindDecoratorRetriever()),
+                $artifact_retriever,
+                $user_retriever
+            ),
+            $user_retriever
+        );
+
+        $user = $user_manager->getCurrentUser();
         try {
-            $children = $this->user_story_representation_builder->buildFeatureStories(
+            $children = $user_story_representation_builder->buildFeatureStories(
                 $id,
                 UserProxy::buildFromPFUser($user)
             );

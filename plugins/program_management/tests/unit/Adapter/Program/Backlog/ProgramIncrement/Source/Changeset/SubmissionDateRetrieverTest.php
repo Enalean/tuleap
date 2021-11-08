@@ -22,76 +22,58 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset;
 
-use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetNotFoundException;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
-final class ChangesetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SubmissionDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SUBMISSION_TIMESTAMP = 1631191239;
     private const ARTIFACT_ID          = 470;
     private const CHANGESET_ID         = 5180;
-    /**
-     * @var Stub&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
     private ArtifactIdentifierStub $artifact_identifier;
     private DomainChangeset $changeset_identifier;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
+     */
+    private $artifact;
 
     protected function setUp(): void
     {
-        $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
-
         $this->artifact_identifier = ArtifactIdentifierStub::withId(self::ARTIFACT_ID);
         $changeset_identifier      = DomainChangeset::fromId(
             VerifyIsChangesetStub::withValidChangeset(),
             self::CHANGESET_ID
         );
-        if (! $changeset_identifier) {
-            throw new \LogicException("Changeset identifier is not built");
-        }
+        assert($changeset_identifier instanceof DomainChangeset);
         $this->changeset_identifier = $changeset_identifier;
+        $this->artifact             = $this->createStub(Artifact::class);
     }
 
-    private function getRetriever(): ChangesetRetriever
+    private function getRetriever(): SubmissionDateRetriever
     {
-        return new ChangesetRetriever($this->artifact_factory);
+        return new SubmissionDateRetriever(RetrieveFullArtifactStub::withArtifact($this->artifact));
     }
 
     public function testItRetrievesTheChangesetsSubmissionDate(): void
     {
-        $artifact  = $this->createStub(Artifact::class);
-        $changeset = new \Tracker_Artifact_Changeset(
-            self::CHANGESET_ID,
-            $artifact,
-            155,
-            self::SUBMISSION_TIMESTAMP,
-            null
-        );
-        $artifact->method('getChangeset')->willReturn($changeset);
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+        $changeset = ChangesetTestBuilder::aChangeset((string) self::CHANGESET_ID)
+            ->ofArtifact($this->artifact)
+            ->submittedOn(self::SUBMISSION_TIMESTAMP)
+            ->build();
+        $this->artifact->method('getChangeset')->willReturn($changeset);
 
         $date = $this->getRetriever()->getSubmissionDate($this->artifact_identifier, $this->changeset_identifier);
         self::assertSame(self::SUBMISSION_TIMESTAMP, $date->getValue());
     }
 
-    public function testItThrowsWhenArtifactCantBeFound(): void
-    {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-
-        $this->expectException(ArtifactNotFoundException::class);
-        $this->getRetriever()->getSubmissionDate($this->artifact_identifier, $this->changeset_identifier);
-    }
-
     public function testItThrowsWhenChangesetCantBeFound(): void
     {
-        $artifact = $this->createStub(Artifact::class);
-        $artifact->method('getChangeset')->willReturn(null);
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+        $this->artifact->method('getChangeset')->willReturn(null);
 
         $this->expectException(ChangesetNotFoundException::class);
         $this->getRetriever()->getSubmissionDate($this->artifact_identifier, $this->changeset_identifier);

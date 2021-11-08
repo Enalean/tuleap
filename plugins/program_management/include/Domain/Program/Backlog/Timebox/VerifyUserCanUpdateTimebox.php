@@ -24,11 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class TimeboxNotFoundException extends \Exception
+interface VerifyUserCanUpdateTimebox
 {
-    public function __construct(TimeboxIdentifier $identifier)
-    {
-        parent::__construct(sprintf("Timebox #%d is not found", $identifier->getId()));
-    }
+    public function canUserUpdate(TimeboxIdentifier $timebox, UserIdentifier $user): bool;
 }

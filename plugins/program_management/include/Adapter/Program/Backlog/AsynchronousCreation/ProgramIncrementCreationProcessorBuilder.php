@@ -27,7 +27,7 @@ use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDateRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
@@ -43,6 +43,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
@@ -71,13 +72,14 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $project_manager                = \ProjectManager::instance();
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $tracker_retriever              = new TrackerFactoryAdapter($tracker_factory);
+        $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         $user_stories_planner = new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             $artifacts_linked_to_parent_dao,
-            $artifact_factory,
+            $artifact_retriever,
             new MirroredTimeboxesDao(),
             $visibility_verifier,
             new ContentDao(),
@@ -134,8 +136,8 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $program_dao,
             new ProjectReferenceRetriever($project_manager),
             $synchronized_fields_gatherer,
-            new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
-            new ChangesetRetriever($artifact_factory),
+            new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
+            new SubmissionDateRetriever($artifact_retriever),
             $program_dao,
             new ProgramAdapter(
                 $project_manager,

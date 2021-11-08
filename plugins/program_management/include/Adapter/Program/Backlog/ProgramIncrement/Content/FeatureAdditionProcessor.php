@@ -22,36 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureAdditionProcessor implements AddFeature
 {
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private ArtifactLinkUpdater $artifact_link_updater;
-    private RetrieveUser $retrieve_user;
-
     public function __construct(
-        \Tracker_ArtifactFactory $artifact_factory,
-        ArtifactLinkUpdater $artifact_link_updater,
-        RetrieveUser $retrieve_user
+        private RetrieveFullArtifact $artifact_retriever,
+        private ArtifactLinkUpdater $artifact_link_updater,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->artifact_factory      = $artifact_factory;
-        $this->artifact_link_updater = $artifact_link_updater;
-        $this->retrieve_user         = $retrieve_user;
     }
 
     public function add(FeatureAddition $feature_addition): void
     {
-        $program_increment_id       = $feature_addition->program_increment->getId();
-        $program_increment_artifact = $this->artifact_factory->getArtifactById(
-            $program_increment_id
-        );
-        if (! $program_increment_artifact) {
+        $program_increment_id = $feature_addition->program_increment->getId();
+        try {
+            $program_increment_artifact = $this->artifact_retriever->getNonNullArtifact(
+                $feature_addition->program_increment
+            );
+        } catch (ArtifactNotFoundException $e) {
             throw new ProgramIncrementNotFoundException($program_increment_id);
         }
         try {

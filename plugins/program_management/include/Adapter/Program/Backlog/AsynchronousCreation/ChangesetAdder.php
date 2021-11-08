@@ -24,24 +24,22 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangesetException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
 {
     public function __construct(
-        private RetrieveArtifact $artifact_retriever,
+        private RetrieveFullArtifact $artifact_retriever,
         private RetrieveUser $user_retriever,
         private ChangesetValuesFormatter $formatter,
         private \Tracker_Artifact_Changeset_NewChangesetCreator $new_changeset_creator
@@ -50,7 +48,7 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
 
     public function addChangeset(MirroredTimeboxChangeset $changeset): void
     {
-        $full_artifact    = $this->getFullArtifact($changeset->mirrored_timebox);
+        $full_artifact    = $this->artifact_retriever->getNonNullArtifact($changeset->mirrored_timebox);
         $full_user        = $this->user_retriever->getUserWithId($changeset->user);
         $formatted_values = $this->formatter->formatForTrackerPlugin($changeset->values);
         try {
@@ -67,7 +65,7 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
 
     public function addArtifactLinkChangeset(ArtifactLinkChangeset $changeset): void
     {
-        $full_artifact    = $this->getFullArtifact($changeset->mirrored_program_increment);
+        $full_artifact    = $this->artifact_retriever->getNonNullArtifact($changeset->mirrored_program_increment);
         $full_user        = $this->user_retriever->getUserWithId($changeset->user);
         $formatted_values = $this->formatter->formatArtifactLink(
             $changeset->artifact_link_field,
@@ -79,18 +77,6 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
         } catch (FieldValidationException | \Tracker_Exception $exception) {
             throw new AddArtifactLinkChangesetException($changeset->mirrored_program_increment, $exception);
         }
-    }
-
-    /**
-     * @throws ArtifactNotFoundException
-     */
-    private function getFullArtifact(ArtifactIdentifier $artifact_identifier): Artifact
-    {
-        $full_artifact = $this->artifact_retriever->getArtifactById($artifact_identifier->getId());
-        if (! $full_artifact) {
-            throw new ArtifactNotFoundException($artifact_identifier);
-        }
-        return $full_artifact;
     }
 
     /**

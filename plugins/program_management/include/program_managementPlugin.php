@@ -123,6 +123,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ScrumBlocksServiceVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
@@ -663,16 +664,16 @@ final class program_managementPlugin extends Plugin
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $program_increments_DAO         = new ProgramIncrementsDAO();
         $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
-        $transaction_executor           = new DBTransactionExecutorWithConnection(
-            DBFactory::getMainTuleapDBConnection()
-        );
+        $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
+
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
             new UserStoriesInMirroredProgramIncrementsPlanner(
                 $transaction_executor,
                 $artifacts_linked_to_parent_dao,
-                $artifact_factory,
+                $artifact_retriever,
                 $mirrored_timeboxes_dao,
                 $visibility_verifier,
                 new ContentDao(),
@@ -687,7 +688,7 @@ final class program_managementPlugin extends Plugin
                 $visibility_verifier,
                 $iterations_linked_dao,
                 MessageLog::buildFromLogger($logger),
-                new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
+                new LastChangesetRetriever($artifact_retriever, Tracker_Artifact_ChangesetFactoryBuilder::build()),
                 new IterationsDAO()
             ),
             new ProgramIncrementUpdateDispatcher(

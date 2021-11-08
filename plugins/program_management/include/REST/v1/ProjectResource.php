@@ -39,7 +39,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetrieve
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimeboxVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
@@ -61,6 +61,7 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -123,6 +124,8 @@ final class ProjectResource extends AuthenticatedResource
         $this->user_manager_adapter  = new UserManagerAdapter($this->user_manager);
         $project_retriever           = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);
         $project_permission_verifier = new ProjectPermissionVerifier($this->user_manager_adapter);
+        $artifact_factory            = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever          = new ArtifactFactoryAdapter($artifact_factory);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
@@ -158,7 +161,6 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao
         );
 
-        $artifact_factory                   = \Tracker_ArtifactFactory::instance();
         $form_element_factory               = \Tracker_FormElementFactory::instance();
         $artifacts_linked_to_parent_dao     = new ArtifactsLinkedToParentDao();
         $this->user_story_linked_verifier   = new UserStoryLinkedToFeatureVerifier(
@@ -173,11 +175,11 @@ final class ProjectResource extends AuthenticatedResource
             $this->build_program,
             new FeaturesDao(),
             new FeatureRepresentationBuilder(
-                $artifact_factory,
+                $artifact_retriever,
                 $form_element_factory,
                 new BackgroundColorRetriever(
                     new BackgroundColorBuilder(new BindDecoratorRetriever()),
-                    $artifact_factory,
+                    $artifact_retriever,
                     $this->user_manager_adapter
                 ),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
@@ -200,18 +202,18 @@ final class ProjectResource extends AuthenticatedResource
                 $this->user_manager_adapter,
                 $program_increments_dao,
                 new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
-                new StatusValueRetriever($artifact_factory, $this->user_manager_adapter),
-                new TitleValueRetriever($artifact_factory),
+                new StatusValueRetriever($artifact_retriever, $this->user_manager_adapter),
+                new TitleValueRetriever($artifact_retriever),
                 new TimeframeValueRetriever(
-                    $artifact_factory,
+                    $artifact_retriever,
                     $this->user_manager_adapter,
                     SemanticTimeframeBuilder::build(),
                     BackendLogger::getDefaultLogger(),
                 ),
-                new UriRetriever($artifact_factory),
-                new CrossReferenceRetriever($artifact_factory),
-                new UserCanUpdateRetriever($artifact_factory, $this->user_manager_adapter),
-                new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter)
+                new UriRetriever($artifact_retriever),
+                new CrossReferenceRetriever($artifact_retriever),
+                new UserCanUpdateTimeboxVerifier($artifact_retriever, $this->user_manager_adapter),
+                new UserCanPlanInProgramIncrementVerifier($artifact_retriever, $this->user_manager_adapter)
             )
         );
     }

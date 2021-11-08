@@ -21,29 +21,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\TimeboxNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class UserCanUpdateRetriever implements RetrieveUserCanUpdate
+final class VerifyUserCanUpdateTimeboxStub implements VerifyUserCanUpdateTimebox
 {
-
-    public function __construct(private \Tracker_ArtifactFactory $artifact_factory, private RetrieveUser $retrieve_user)
+    private function __construct(private bool $user_can_update)
     {
     }
 
-    public function userCanUpdate(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): bool
+    public function canUserUpdate(TimeboxIdentifier $timebox, UserIdentifier $user): bool
     {
-        $artifact = $this->artifact_factory->getArtifactById($timebox_identifier->getId());
-        if (! $artifact) {
-            throw new TimeboxNotFoundException($timebox_identifier);
-        }
+        return $this->user_can_update;
+    }
 
-        $user = $this->retrieve_user->getUserWithId($user_identifier);
-        return $artifact->userCanUpdate($user);
+    public static function withUpdatePermission(): self
+    {
+        return new self(true);
     }
 }

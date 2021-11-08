@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
 use Tracker;
-use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -36,11 +36,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class StatusValueRetrieverTest extends TestCase
 {
-    private RetrieveUserStub $retrieve_user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */
@@ -55,16 +50,9 @@ final class StatusValueRetrieverTest extends TestCase
     private $status_field;
     private TimeboxIdentifier $artifact_identifier;
     private UserIdentifier $user_identifier;
-    private StatusValueRetriever $status_value_retriever;
-
 
     protected function setUp(): void
     {
-        $this->artifact_factory = $this->createStub(Tracker_ArtifactFactory::class);
-        $this->retrieve_user    = RetrieveUserStub::withGenericUser();
-
-        $this->status_value_retriever = new StatusValueRetriever($this->artifact_factory, $this->retrieve_user);
-
         $this->status_field = $this->createStub(Tracker_FormElement_Field_List::class);
 
         $this->tracker = $this->createStub(Tracker::class);
@@ -76,36 +64,32 @@ final class StatusValueRetrieverTest extends TestCase
         $this->user_identifier     = UserIdentifierStub::buildGenericUser();
     }
 
-    public function testItReturnsNullWhenArtifactIsNotFound(): void
+    private function getRetriever(): StatusValueRetriever
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-        self::assertNull($this->status_value_retriever->getLabel($this->artifact_identifier, $this->user_identifier));
+        return new StatusValueRetriever(RetrieveFullArtifactStub::withArtifact($this->artifact), RetrieveUserStub::withGenericUser());
     }
 
     public function testItReturnsNullWhenStatusFieldIsNotFound(): void
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
         $this->tracker->method('getStatusField')->willReturn(null);
 
-        self::assertNull($this->status_value_retriever->getLabel($this->artifact_identifier, $this->user_identifier));
+        self::assertNull($this->getRetriever()->getLabel($this->artifact_identifier, $this->user_identifier));
     }
 
     public function testItReturnsNullWhenUserCanNotReadField(): void
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
         $this->tracker->method('getStatusField')->willReturn($this->status_field);
         $this->status_field->method('userCanRead')->willReturn(false);
 
-        self::assertNull($this->status_value_retriever->getLabel($this->artifact_identifier, $this->user_identifier));
+        self::assertNull($this->getRetriever()->getLabel($this->artifact_identifier, $this->user_identifier));
     }
 
     public function testItReturnsValue(): void
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
         $this->tracker->method('getStatusField')->willReturn($this->status_field);
         $this->status_field->method('userCanRead')->willReturn(true);
-        $this->artifact->method('getStatus')->willReturn("On going");
+        $this->artifact->method('getStatus')->willReturn('On going');
 
-        self::assertEquals("On going", $this->status_value_retriever->getLabel($this->artifact_identifier, $this->user_identifier));
+        self::assertSame('On going', $this->getRetriever()->getLabel($this->artifact_identifier, $this->user_identifier));
     }
 }

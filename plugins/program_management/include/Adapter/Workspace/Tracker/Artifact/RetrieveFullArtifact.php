@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
+use Tuleap\Tracker\Artifact\Artifact;
 
-final class PendingArtifactNotFoundException extends \RuntimeException implements MirroredTimeboxReplicationException
+interface RetrieveFullArtifact
 {
-    public function __construct(int $artifact_id, int $user_id)
-    {
-        parent::__construct("Could not find Program source artifact #$artifact_id while creating program increments for user #$user_id");
-    }
+    /**
+     * @throws ArtifactNotFoundException
+     */
+    public function getNonNullArtifact(ArtifactIdentifier $artifact_identifier): Artifact;
 }

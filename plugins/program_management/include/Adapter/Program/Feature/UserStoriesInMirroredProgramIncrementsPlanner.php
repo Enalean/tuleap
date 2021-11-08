@@ -26,13 +26,14 @@ use Psr\Log\LoggerInterface;
 use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
@@ -43,7 +44,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,
         private SearchArtifactsLinks $artifacts_links_search,
-        private \Tracker_ArtifactFactory $tracker_artifact_factory,
+        private RetrieveFullArtifact $artifact_retriever,
         private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private ContentStore $content_dao,
@@ -93,15 +94,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         \PFUser $user
     ): void {
         $this->logger->info(sprintf("Found mirrored PI %d", $mirrored_program_increment->getId()));
-        $mirror_artifact = $this->tracker_artifact_factory->getArtifactById(
-            $mirrored_program_increment->getId()
-        );
-        if (! $mirror_artifact) {
-            $this->logger->error(
-                sprintf("Mirrored PI %d is not an artifact", $mirrored_program_increment->getId())
-            );
-            return;
-        }
+        $mirror_artifact = $this->artifact_retriever->getNonNullArtifact($mirrored_program_increment);
 
         $field_artifact_link = $mirror_artifact->getAnArtifactLinkField($user);
         if (! $field_artifact_link) {

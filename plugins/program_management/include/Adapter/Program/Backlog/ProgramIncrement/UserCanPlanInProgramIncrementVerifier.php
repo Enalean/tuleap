@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
@@ -32,23 +33,15 @@ use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncremen
 
 final class UserCanPlanInProgramIncrementVerifier implements VerifyUserCanPlanInProgramIncrement
 {
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private RetrieveUser $retrieve_user;
-
-    public function __construct(\Tracker_ArtifactFactory $artifact_factory, RetrieveUser $retrieve_user)
+    public function __construct(private RetrieveFullArtifact $artifact_retriever, private RetrieveUser $retrieve_user)
     {
-        $this->artifact_factory = $artifact_factory;
-        $this->retrieve_user    = $retrieve_user;
     }
 
     public function userCanPlan(
         ProgramIncrementIdentifier $program_increment_identifier,
         UserIdentifier $user_identifier
     ): bool {
-        $program_increment_artifact = $this->artifact_factory->getArtifactById($program_increment_identifier->getId());
-        if (! $program_increment_artifact) {
-            return false;
-        }
+        $program_increment_artifact = $this->artifact_retriever->getNonNullArtifact($program_increment_identifier);
 
         $user = $this->retrieve_user->getUserWithId($user_identifier);
         if (! $program_increment_artifact->userCanUpdate($user)) {

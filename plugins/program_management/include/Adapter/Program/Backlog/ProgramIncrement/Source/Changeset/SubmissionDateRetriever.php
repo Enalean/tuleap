@@ -22,27 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 
-final class ChangesetRetriever implements RetrieveChangesetSubmissionDate
+final class SubmissionDateRetriever implements RetrieveChangesetSubmissionDate
 {
     public function __construct(
-        private \Tracker_ArtifactFactory $artifact_factory
+        private RetrieveFullArtifact $artifact_retriever
     ) {
     }
 
-    public function getSubmissionDate(ArtifactIdentifier $artifact, ChangesetIdentifier $changeset_identifier): SubmissionDate
-    {
-        $full_artifact = $this->artifact_factory->getArtifactById($artifact->getId());
-        if (! $full_artifact) {
-            throw new ArtifactNotFoundException($artifact);
-        }
-        $changeset = $full_artifact->getChangeset($changeset_identifier->getId());
+    public function getSubmissionDate(
+        ArtifactIdentifier $artifact,
+        ChangesetIdentifier $changeset_identifier
+    ): SubmissionDate {
+        $full_artifact = $this->artifact_retriever->getNonNullArtifact($artifact);
+        $changeset     = $full_artifact->getChangeset($changeset_identifier->getId());
         if (! $changeset) {
             throw new ChangesetNotFoundException($changeset_identifier->getId());
         }

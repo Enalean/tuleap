@@ -22,29 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RetrieveLastChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 
 final class LastChangesetRetriever implements RetrieveLastChangeset
 {
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private \Tracker_Artifact_ChangesetFactory $changeset_factory;
-
     public function __construct(
-        \Tracker_ArtifactFactory $artifact_factory,
-        \Tracker_Artifact_ChangesetFactory $changeset_factory
+        private RetrieveFullArtifact $artifact_retriever,
+        private \Tracker_Artifact_ChangesetFactory $changeset_factory
     ) {
-        $this->artifact_factory  = $artifact_factory;
-        $this->changeset_factory = $changeset_factory;
     }
 
     public function retrieveLastChangesetId(IterationIdentifier $iteration_identifier): ?int
     {
-        $iteration_artifact = $this->artifact_factory->getArtifactById($iteration_identifier->getId());
-        if ($iteration_artifact === null) {
-            return null;
-        }
-        $changeset = $this->changeset_factory->getLastChangeset($iteration_artifact);
+        $iteration_artifact = $this->artifact_retriever->getNonNullArtifact($iteration_identifier);
+        $changeset          = $this->changeset_factory->getLastChangeset($iteration_artifact);
         if ($changeset === null) {
             return null;
         }

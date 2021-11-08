@@ -55,6 +55,15 @@ final class ChangesetTestBuilder
     }
 
     /**
+     * @param int $submission_timestamp UNIX Timestamp
+     */
+    public function submittedOn(int $submission_timestamp): self
+    {
+        $this->submission_timestamp = $submission_timestamp;
+        return $this;
+    }
+
+    /**
      * @psalm-pure
      */
     public function build(): \Tracker_Artifact_Changeset

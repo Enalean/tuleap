@@ -22,32 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 
 final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
 {
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private \Tracker_FormElementFactory $form_element_factory;
-
     public function __construct(
-        \Tracker_ArtifactFactory $artifact_factory,
-        \Tracker_FormElementFactory $form_element_factory
+        private RetrieveFullArtifact $artifact_retriever,
+        private \Tracker_FormElementFactory $form_element_factory
     ) {
-        $this->artifact_factory     = $artifact_factory;
-        $this->form_element_factory = $form_element_factory;
     }
 
     public function getFieldValuesGatherer(TimeboxMirroringOrder $order): GatherFieldValues
     {
-        $timebox_id    = $order->getTimebox()->getId();
-        $full_artifact = $this->artifact_factory->getArtifactById($timebox_id);
-        if (! $full_artifact) {
-            throw new PendingArtifactNotFoundException($timebox_id, $order->getUser()->getId());
-        }
+        $full_artifact  = $this->artifact_retriever->getNonNullArtifact($order->getTimebox());
+        $timebox_id     = $order->getTimebox()->getId();
         $changeset_id   = $order->getChangeset()->getId();
         $full_changeset = $full_artifact->getChangeset($changeset_id);
         if (! $full_changeset) {

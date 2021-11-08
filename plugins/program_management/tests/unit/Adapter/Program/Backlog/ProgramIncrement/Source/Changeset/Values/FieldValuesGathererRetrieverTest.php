@@ -25,60 +25,51 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_FormElementFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var Stub&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
      * @var Stub&Tracker_FormElementFactory
      */
     private $factory;
     private ProgramIncrementUpdate $update;
+    /**
+     * @var Stub&Artifact
+     */
+    private $artifact;
 
     protected function setUp(): void
     {
-        $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
-        $this->factory          = $this->createStub(Tracker_FormElementFactory::class);
+        $this->artifact = $this->createStub(Artifact::class);
+        $this->factory  = $this->createStub(Tracker_FormElementFactory::class);
 
         $this->update = ProgramIncrementUpdateBuilder::build();
     }
 
     private function getRetriever(): FieldValuesGathererRetriever
     {
-        return new FieldValuesGathererRetriever($this->artifact_factory, $this->factory);
+        return new FieldValuesGathererRetriever(
+            RetrieveFullArtifactStub::withArtifact($this->artifact),
+            $this->factory
+        );
     }
 
     public function testItReturnsAFieldValuesGatherer(): void
     {
         $changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
-        $artifact  = $this->createStub(Artifact::class);
-        $artifact->method('getChangeset')->willReturn($changeset);
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+        $this->artifact->method('getChangeset')->willReturn($changeset);
 
         $gatherer = $this->getRetriever()->getFieldValuesGatherer($this->update);
         self::assertNotNull($gatherer);
     }
 
-    public function testItThrowsWhenFullArtifactCannotBeRetrieved(): void
-    {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-
-        $this->expectException(PendingArtifactNotFoundException::class);
-        $this->getRetriever()->getFieldValuesGatherer($this->update);
-    }
-
     public function testItThrowsWhenChangesetCannotBeRetrieved(): void
     {
-        $artifact = $this->createStub(Artifact::class);
-        $artifact->method('getChangeset')->willReturn(null);
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+        $this->artifact->method('getChangeset')->willReturn(null);
 
         $this->expectException(PendingArtifactChangesetNotFoundException::class);
         $this->getRetriever()->getFieldValuesGatherer($this->update);

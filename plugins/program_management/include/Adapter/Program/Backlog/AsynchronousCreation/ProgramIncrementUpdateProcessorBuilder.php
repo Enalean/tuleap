@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDateRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -75,6 +76,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
         $artifact_changeset_dao   = new \Tracker_Artifact_ChangesetDao();
         $visibility_verifier      = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
+        $artifact_retriever       = new ArtifactFactoryAdapter($artifact_factory);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -139,14 +141,14 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
         return new ProgramIncrementUpdateProcessor(
             MessageLog::buildFromLogger($logger),
             $synchronized_fields_gatherer,
-            new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
-            new ChangesetRetriever($artifact_factory),
+            new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
+            new SubmissionDateRetriever($artifact_retriever),
             new MirroredTimeboxesDao(),
             $visibility_verifier,
-            new TrackerOfArtifactRetriever($artifact_factory, $tracker_retriever),
+            new TrackerOfArtifactRetriever($artifact_retriever, $tracker_retriever),
             new StatusValueMapper($form_element_factory),
             new ChangesetAdder(
-                $artifact_factory,
+                $artifact_retriever,
                 $user_retriever,
                 new ChangesetValuesFormatter(
                     new ArtifactLinkValueFormatter(),
