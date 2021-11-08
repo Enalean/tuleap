@@ -39,7 +39,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetri
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimeboxVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
@@ -326,7 +326,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 SemanticTimeframeBuilder::build(),
                 BackendLogger::getDefaultLogger(),
             ),
-            new UriRetriever($artifact_retriever),
+            new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever),
         );

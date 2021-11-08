@@ -26,8 +26,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 
-final class TitleValueRetriever implements RetrieveTitleValueUserCanSee
+final class TitleValueRetriever implements RetrieveTitleValueUserCanSee, RetrieveUserStoryTitle
 {
     public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
@@ -36,6 +38,12 @@ final class TitleValueRetriever implements RetrieveTitleValueUserCanSee
     public function getTitle(TimeboxIdentifier $timebox_identifier): ?string
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
+        return $artifact->getTitle();
+    }
+
+    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier): ?string
+    {
+        $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return $artifact->getTitle();
     }
 }

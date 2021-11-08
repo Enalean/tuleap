@@ -21,21 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
-
-final class UriRetriever implements RetrieveUri
+interface VerifyIsOpen
 {
-    public function __construct(private RetrieveFullArtifact $artifact_retriever)
-    {
-    }
-
-    public function getUri(TimeboxIdentifier $timebox_identifier): string
-    {
-        $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
-        return $artifact->getUri();
-    }
+    public function isOpen(UserStoryIdentifier $user_story_identifier): bool;
 }

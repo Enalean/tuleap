@@ -24,6 +24,12 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\TrackerIdRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryRepresentationBuilder;
@@ -93,6 +99,12 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
                 new ProgramDao(),
                 $user_retriever
             ),
+            new TitleValueRetriever($artifact_retriever),
+            new URIRetriever($artifact_retriever),
+            new CrossReferenceRetriever($artifact_retriever),
+            new IsOpenRetriever($artifact_retriever),
+            new TrackerIdRetriever($artifact_retriever),
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever)
         );
 
         $user = $user_manager->getCurrentUser();

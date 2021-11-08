@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 
 final class RetrieveTitleValueUserCanSeeStub implements RetrieveTitleValueUserCanSee
 {
@@ -42,7 +42,7 @@ final class RetrieveTitleValueUserCanSeeStub implements RetrieveTitleValueUserCa
         return new self(null);
     }
 
-    public function getTitle(ArtifactIdentifier $artifact_identifier): ?string
+    public function getTitle(TimeboxIdentifier $timebox_identifier): ?string
     {
         return $this->value;
     }

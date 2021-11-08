@@ -21,29 +21,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerIdentifierProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerId;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
-final class CrossReferenceRetriever implements RetrieveCrossRef, RetrieveUserStoryCrossRef
+final class TrackerIdRetriever implements RetrieveTrackerId
 {
     public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
     }
 
-    public function getXRef(TimeboxIdentifier $timebox_identifier): string
-    {
-        $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
-        return $artifact->getXRef();
-    }
-
-    public function getUserStoryCrossRef(UserStoryIdentifier $user_story_identifier): string
+    public function getTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
-        return $artifact->getXRef();
+        return TrackerIdentifierProxy::fromTracker($artifact->getTracker());
     }
 }

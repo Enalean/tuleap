@@ -26,17 +26,22 @@ use Tracker;
 use Tracker_ArtifactFactory;
 use TrackerFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryCrossRefStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryTitleStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryURIStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerIdStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -44,6 +49,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const TRACKER_ID = 56;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
      */
@@ -62,7 +68,9 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     protected function setUp(): void
     {
         $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren(
-            [['children_id' => 125], ['children_id' => 126], ['children_id' => 666]]
+            [
+                ['children_id' => 125],
+            ]
         );
         $this->artifact_factory           = $this->createMock(Tracker_ArtifactFactory::class);
         $this->tracker_factory            = $this->createMock(TrackerFactory::class);
@@ -90,30 +98,34 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             RetrieveUserStub::withGenericUser(),
             $this->tracker_factory,
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
-            BuildProgramStub::stubValidProgram()
+            BuildProgramStub::stubValidProgram(),
+            RetrieveUserStoryTitleStub::withValue('Title'),
+            RetrieveUserStoryURIStub::withId(125),
+            RetrieveUserStoryCrossRefStub::withValues("story", 125),
+            VerifyIsOpenStub::withOpen(),
+            RetrieveTrackerIdStub::withDefault(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
         );
     }
 
     public function testGetBacklogItemsThatUserCanSee(): void
     {
-        $artifact_125 = $this->buildArtifact(125);
-        $artifact_126 = $this->buildArtifact(126);
+        $artifact_125 = $this->createMock(Artifact::class);
+        $artifact_125->expects(self::atLeast(1))->method('getTracker')->willReturn($this->tracker);
+        $artifact_125->expects(self::atLeast(1))->method('getTrackerId')->willReturn($this->tracker->getId());
 
-        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnOnConsecutiveCalls(
-            $this->createConfiguredMock(Artifact::class, ['getTracker' => TrackerTestBuilder::aTracker()->withId(56)->build(), 'getTrackerId' => 56]),
-            null,
-            $artifact_125,
-            $artifact_126,
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(
+            $artifact_125
         );
         $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
 
         $children = $this->getBuilder()->buildFeatureStories(10, $this->user);
 
-        self::assertCount(2, $children);
+        self::assertCount(1, $children);
 
         self::assertEquals(125, $children[0]->id);
         self::assertEquals('Title', $children[0]->title);
-        self::assertEquals('trackers?aid=125', $children[0]->uri);
+        self::assertEquals('/plugins/tracker/?aid=125', $children[0]->uri);
         self::assertEquals('story #125', $children[0]->xref);
         self::assertEquals(true, $children[0]->is_open);
         self::assertEquals(true, $children[0]->project->id);
@@ -121,29 +133,6 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         self::assertEquals("projects/100", $children[0]->project->uri);
         self::assertEquals("lake-placid-blue", $children[0]->background_color);
         self::assertEquals("inca-silver", $children[0]->tracker->color_name);
-
-        self::assertEquals(126, $children[1]->id);
-        self::assertEquals('Title', $children[1]->title);
-        self::assertEquals('trackers?aid=126', $children[1]->uri);
-        self::assertEquals('story #126', $children[1]->xref);
-        self::assertEquals(true, $children[1]->is_open);
-        self::assertEquals(true, $children[1]->project->id);
-        self::assertEquals("Project", $children[1]->project->label);
-        self::assertEquals("projects/100", $children[1]->project->uri);
-        self::assertEquals("lake-placid-blue", $children[1]->background_color);
-        self::assertEquals("inca-silver", $children[1]->tracker->color_name);
-    }
-
-    public function testThrowErrorIfUserCanNotSeeFeature(): void
-    {
-        $this->artifact_factory
-            ->expects(self::once())
-            ->method('getArtifactByIdUserCanView')
-            ->with(self::isInstanceOf(\PFUser::class), 10)
-            ->willReturn(null);
-
-        $this->expectException(FeatureNotAccessException::class);
-        $this->getBuilder()->buildFeatureStories(10, $this->user);
     }
 
     public function testThrowErrorIfFeatureTrackerIsNotPlannable(): void
@@ -158,22 +147,5 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->expectException(FeatureIsNotPlannableException::class);
         $this->getBuilder()->buildFeatureStories(10, $this->user);
-    }
-
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&Artifact
-     */
-    private function buildArtifact(int $id)
-    {
-        $artifact = $this->createMock(Artifact::class);
-        $artifact->expects(self::atLeast(1))->method('getId')->willReturn($id);
-        $artifact->expects(self::once())->method('getUri')->willReturn('trackers?aid=' . $id);
-        $artifact->expects(self::once())->method('getXRef')->willReturn('story #' . $id);
-        $artifact->expects(self::once())->method('getTitle')->willReturn("Title");
-        $artifact->expects(self::once())->method('isOpen')->willReturn(true);
-        $artifact->expects(self::once())->method('getTracker')
-                 ->willReturn($this->tracker);
-
-        return $artifact;
     }
 }

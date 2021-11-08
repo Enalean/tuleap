@@ -77,7 +77,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetri
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimeboxVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TimeboxArtifactLinkPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
@@ -546,7 +546,7 @@ final class program_managementPlugin extends Plugin
                         SemanticTimeframeBuilder::build(),
                         BackendLogger::getDefaultLogger()
                     ),
-                    new UriRetriever($artifact_retriever),
+                    new URIRetriever($artifact_retriever),
                     new CrossReferenceRetriever($artifact_retriever),
                     new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_manager_adapter),
                     new UserCanPlanInProgramIncrementVerifier($artifact_retriever, $user_manager_adapter)

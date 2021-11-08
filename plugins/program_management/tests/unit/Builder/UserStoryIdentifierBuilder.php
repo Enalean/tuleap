@@ -21,29 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
-final class RetrieveCrossRefStub implements RetrieveCrossRef
+final class UserStoryIdentifierBuilder
 {
-    private function __construct(private string $cross_reference)
+    public static function withId(int $id): UserStoryIdentifier
     {
-    }
-
-    public static function withDefault(): self
-    {
-        return new self("art #1");
-    }
-
-    public static function withValues(string $tracker_shortname, int $id): self
-    {
-        return new self($tracker_shortname . " #" . $id);
-    }
-
-    public function getXRef(TimeboxIdentifier $timebox_identifier): string
-    {
-        return $this->cross_reference;
+        return UserStoryIdentifier::buildCollectionFromFeature(
+            SearchChildrenOfFeatureStub::withChildren([['children_id' => $id]]),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            FeatureIdentifierBuilder::build(1, 100),
+            UserIdentifierStub::buildGenericUser()
+        )[0];
     }
 }
