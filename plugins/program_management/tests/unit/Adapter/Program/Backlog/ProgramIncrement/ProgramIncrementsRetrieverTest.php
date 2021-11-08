@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Sear
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveCrossRefStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUriStub;
@@ -114,6 +115,60 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_identifier
             )
         );
+    }
+
+    public function testItRetrievesProgramIncrementsById(): void
+    {
+        $this->dao = SearchOpenProgramIncrementStub::with([['id' => 16]]);
+        $artifact  = $this->createMock(Artifact::class);
+
+        $artifact->method('getId')->willReturn(16);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
+
+        $program_increment = $this->buildProgramIncrementsRetriever(
+            RetrieveTitleValueUserCanSeeStub::withValue("Increment 16")
+        )->retrieveProgramIncrementById(
+            $this->user_identifier,
+            ProgramIncrementIdentifierBuilder::buildWithIdAndUser(16, $this->user_identifier)
+        );
+
+        self::assertNotNull($program_increment);
+    }
+
+    public function testItDoesRetrievesProgramIncrementsByIdWhenUserCannotSeeIt(): void
+    {
+        $this->dao = SearchOpenProgramIncrementStub::with([['id' => 16]]);
+        $artifact  = $this->createMock(Artifact::class);
+
+        $artifact->method('getId')->willReturn(16);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
+
+        $program_increment = $this->buildProgramIncrementsRetriever(
+            RetrieveTitleValueUserCanSeeStub::withValue("Increment 16")
+        )->retrieveProgramIncrementById(
+            $this->user_identifier,
+            ProgramIncrementIdentifierBuilder::buildWithIdAndUser(16, $this->user_identifier)
+        );
+
+        self::assertNull($program_increment);
+    }
+
+    public function testItDoesRetrievesProgramIncrementsByIdWhenUserCannotSeeItsTitle(): void
+    {
+        $this->dao = SearchOpenProgramIncrementStub::with([['id' => 16]]);
+        $artifact  = $this->createMock(Artifact::class);
+
+        $artifact->method('getId')->willReturn(16);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
+
+        $program_increment = $this->buildProgramIncrementsRetriever(
+            RetrieveTitleValueUserCanSeeStub::withoutValue()
+        )->retrieveProgramIncrementById(
+            $this->user_identifier,
+            ProgramIncrementIdentifierBuilder::buildWithIdAndUser(16, $this->user_identifier)
+        );
+
+        self::assertNull($program_increment);
     }
 
     private static function buildProgram(UserIdentifier $user): ProgramIdentifier

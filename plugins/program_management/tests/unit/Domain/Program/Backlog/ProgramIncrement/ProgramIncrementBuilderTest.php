@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class ProgramIncrementBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -38,18 +37,9 @@ final class ProgramIncrementBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildsOpenProgramIncrements(): void
     {
-        $retrieve_program_increments = new class implements RetrieveProgramIncrements {
-            public function retrieveOpenProgramIncrements(
-                ProgramIdentifier $program,
-                UserIdentifier $user_identifier
-            ): array {
-                return [];
-            }
-        };
-
         $program_increment_builder = new ProgramIncrementBuilder(
             BuildProgramStub::stubValidProgram(),
-            $retrieve_program_increments
+            RetrieveProgramIncrementsStub::withDefaults()
         );
         self::assertEquals([], $program_increment_builder->buildOpenProgramIncrements(12, $this->user));
     }

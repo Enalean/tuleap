@@ -25,8 +25,11 @@ use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -35,6 +38,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class DisplayPlanIterationsControllerTest extends TestCase
 {
+    private const PROGRAM_ID           = 101;
+    private const PROGRAM_INCREMENT_ID = 1260;
+
     /**
      * @var Stub&\ProjectManager
      */
@@ -106,11 +112,26 @@ final class DisplayPlanIterationsControllerTest extends TestCase
         ->process($request, LayoutBuilder::build(), $variables);
     }
 
+    public function testItThrowsANotFoundExceptionWhenProgramIncrementNotFound(): void
+    {
+        $request   = HTTPRequestBuilder::get()->withUser($this->getUser())->build();
+        $variables = ['project_name' => 'test_project', 'increment_id' => '100'];
+        $project   = $this->getProject();
+
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+        $this->expectException(NotFoundException::class);
+
+        $this->getController(
+            BuildProgramStub::stubValidProgram(),
+        )
+        ->process($request, LayoutBuilder::build(), $variables);
+    }
+
     public function testItDisplaysIterationsPlanning(): void
     {
         $user      = $this->getUser();
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
-        $variables = ['project_name' => 'test_project'];
+        $variables = ['project_name' => 'test_project', 'increment_id' => self::PROGRAM_INCREMENT_ID];
         $project   = $this->getProject();
 
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
@@ -130,7 +151,10 @@ final class DisplayPlanIterationsControllerTest extends TestCase
             $build_program_stub,
             BuildProgramFlagsStub::withDefaults(),
             BuildProgramPrivacyStub::withPrivateAccess(),
-            BuildProgramBaseInfoStub::withDefault()
+            BuildProgramBaseInfoStub::withDefault(),
+            BuildProgramIncrementInfoStub::withId(self::PROGRAM_INCREMENT_ID),
+            VerifyIsProgramIncrementStub::withValidProgramIncrement(),
+            VerifyIsVisibleArtifactStub::withVisibleIds(self::PROGRAM_INCREMENT_ID)
         );
     }
 
@@ -138,7 +162,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
     {
         $project = $this->createMock(\Project::class);
 
-        $project->method('getID')->willReturn(102);
+        $project->method('getID')->willReturn(self::PROGRAM_ID);
         $project->method('isPublic')->willReturn(true);
         $project->method('getPublicName')->willReturn('Guinea Pig');
         $project->method('getUnixNameLowerCase')->willReturn('guinea-pig');

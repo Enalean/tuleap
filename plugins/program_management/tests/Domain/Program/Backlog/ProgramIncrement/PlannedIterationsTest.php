@@ -26,7 +26,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,7 +39,10 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             BuildProgramFlagsStub::withDefaults(),
             BuildProgramPrivacyStub::withPrivateAccess(),
             BuildProgramBaseInfoStub::withDefault(),
+            BuildProgramIncrementInfoStub::withId(1260),
             ProgramIdentifierBuilder::build(),
+            UserIdentifierStub::withId(666),
+            ProgramIncrementIdentifierBuilder::buildWithId(1260)
         );
 
         self::assertEquals([
@@ -65,5 +71,6 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             $planned_iterations->getProgramBaseInfo()
         );
+        self::assertEquals(ProgramIncrementInfo::fromIncrementInfo(1260, 'Program increment #1260'), $planned_iterations->getProgramIncrementInfo());
     }
 }

@@ -24,7 +24,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIter
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,7 +38,10 @@ class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
                 BuildProgramFlagsStub::withDefaults(),
                 BuildProgramPrivacyStub::withPrivateAccess(),
                 BuildProgramBaseInfoStub::withDefault(),
-                ProgramIdentifierBuilder::build()
+                BuildProgramIncrementInfoStub::withId(1260),
+                ProgramIdentifierBuilder::build(),
+                UserIdentifierStub::withId(666),
+                ProgramIncrementIdentifierBuilder::buildWithId(1260)
             )
         );
 
@@ -46,5 +52,6 @@ class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEquals('{"program_label":"Guinea Pig","program_shortname":"guinea-pig","program_icon":"\ud83d\udc39"}', $presenter->program);
+        self::assertEquals('{"id":1260,"title":"Program increment #1260"}', $presenter->program_increment);
     }
 }

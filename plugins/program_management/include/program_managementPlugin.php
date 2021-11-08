@@ -63,13 +63,22 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowVerif
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TimeboxArtifactLinkPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
@@ -498,8 +507,11 @@ final class program_managementPlugin extends Plugin
 
     public function routeGetPlanIterations(): DisplayPlanIterationsController
     {
-        $user_manager_adapter = new UserManagerAdapter(\UserManager::instance());
-        $project_manager      = ProjectManager::instance();
+        $user_manager_adapter       = new UserManagerAdapter(\UserManager::instance());
+        $project_manager            = ProjectManager::instance();
+        $tracker_artifact_factory   = Tracker_ArtifactFactory::instance();
+        $program_increment_verifier = new ProgramIncrementsDAO();
+        $visibility_verifier        = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_manager_adapter);
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
@@ -520,7 +532,30 @@ final class program_managementPlugin extends Plugin
             new ProgramPrivacyBuilder($project_manager),
             new ProgramBaseInfoBuilder(
                 new ProjectReferenceRetriever($project_manager)
-            )
+            ),
+            new ProgramIncrementInfoBuilder(
+                new ProgramIncrementsRetriever(
+                    $program_increment_verifier,
+                    $tracker_artifact_factory,
+                    $user_manager_adapter,
+                    $program_increment_verifier,
+                    $visibility_verifier,
+                    new StatusValueRetriever($tracker_artifact_factory, $user_manager_adapter),
+                    new TitleValueRetriever($tracker_artifact_factory),
+                    new TimeframeValueRetriever(
+                        $tracker_artifact_factory,
+                        $user_manager_adapter,
+                        SemanticTimeframeBuilder::build(),
+                        BackendLogger::getDefaultLogger()
+                    ),
+                    new UriRetriever($tracker_artifact_factory),
+                    new CrossReferenceRetriever($tracker_artifact_factory),
+                    new UserCanUpdateRetriever($tracker_artifact_factory, $user_manager_adapter),
+                    new UserCanPlanInProgramIncrementVerifier($tracker_artifact_factory, $user_manager_adapter)
+                )
+            ),
+            $program_increment_verifier,
+            $visibility_verifier
         );
     }
 
