@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TimeboxCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
@@ -47,10 +48,7 @@ final class IterationCreatorCheckerTest extends TestCase
     private VerifyIsIterationTrackerStub $iteration_tracker_verifier;
     private TrackerReference $tracker;
     private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TimeboxCreatorChecker
-     */
-    private $timebox_creator_checker;
+    private TimeboxCreatorChecker $timebox_creator_checker;
     private UserReference $user_identifier;
     private TeamProjectsCollection $teams;
 
@@ -66,7 +64,7 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
         $this->tracker                    = TrackerReferenceStub::withId(102);
 
-        $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
+        $this->timebox_creator_checker = TimeboxCreatorCheckerBuilder::buildValid();
 
         $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withValidTracker(
             $this->tracker
@@ -151,8 +149,6 @@ final class IterationCreatorCheckerTest extends TestCase
 
     public function testAllowArtifactCreationWhenUserCanSeeTrackerAndAllChecksAreGoods(): void
     {
-        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(true);
-
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
                 $this->tracker,
@@ -166,7 +162,7 @@ final class IterationCreatorCheckerTest extends TestCase
 
     public function testDisallowArtifactCreationWhenUserCanSeeTrackerButAllChecksAreNotGoods(): void
     {
-        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(false);
+        $this->timebox_creator_checker = TimeboxCreatorCheckerBuilder::buildInvalid();
 
         self::assertFalse(
             $this->getChecker()->canCreateAnIteration(

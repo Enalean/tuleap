@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-class TimeboxCreatorChecker
+final class TimeboxCreatorChecker
 {
     public function __construct(
         private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
