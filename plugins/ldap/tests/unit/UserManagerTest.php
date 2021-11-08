@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use LDAP_UserManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SystemEvent;
 
@@ -35,67 +34,6 @@ require_once __DIR__ . '/bootstrap.php';
 final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    public function testGetLoginFromString(): void
-    {
-        $ldap = \Mockery::spy(\LDAP::class);
-        $lum  = new LDAP_UserManager($ldap, \Mockery::spy(\LDAP_UserSync::class));
-
-        $this->assertEquals('coincoin', $lum->getLoginFromString('coincoin'));
-
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin.coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin:coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin;coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin,coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin?coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin%coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin^coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin*coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin(coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin)coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin{coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin}coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin[coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin]coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin<coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin>coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin+coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin=coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin$coin'));
-        $this->assertEquals('coin_coin', $lum->getLoginFromString('coin\ coin'));
-
-        $this->assertEquals('coincoin', $lum->getLoginFromString("coincoin'"));
-        $this->assertEquals('coincoin', $lum->getLoginFromString('coincoin"'));
-        $this->assertEquals('coincoin', $lum->getLoginFromString('coin/coin'));
-
-        // Accent test
-        $this->assertEquals('coine', $lum->getLoginFromString('coiné'));
-
-        // getLoginFromString only accept utf8 strings.
-        //$this->assertEquals($lum->getLoginFromString(utf8_decode('coiné')), 'coine');
-    }
-
-    public function testGenerateLoginNotAlreadyUsed(): void
-    {
-        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $lum->shouldReceive('getLoginFromString')->andReturns('john');
-        $lum->shouldReceive('userNameIsAvailable')->andReturns(true);
-
-        $this->assertEquals('john', $lum->generateLogin('john'));
-    }
-
-    public function testGenerateLoginAlreadyUsed(): void
-    {
-        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $lum->shouldReceive('getLoginFromString')->andReturns('john');
-        $lum->shouldReceive('userNameIsAvailable')->once()->andReturns(false);
-        $lum->shouldReceive('userNameIsAvailable')->once()->andReturns(true);
-
-        $this->assertEquals('john2', $lum->generateLogin('john'));
-    }
 
     public function testUpdateLdapUidShouldPrepareRenameOfUserInTheWholePlatform(): void
     {

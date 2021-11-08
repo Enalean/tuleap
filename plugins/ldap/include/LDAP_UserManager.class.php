@@ -24,14 +24,14 @@
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
+use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
+use Tuleap\User\UserNameNormalizer;
 
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
 class LDAP_UserManager
 {
-
-
     public const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
 
     /**
@@ -54,7 +54,7 @@ class LDAP_UserManager
      */
     private $user_sync;
 
-    public function __construct(LDAP $ldap, LDAP_UserSync $user_sync)
+    public function __construct(LDAP $ldap, LDAP_UserSync $user_sync, private UserNameNormalizer $username_generator)
     {
         $this->ldap      = $ldap;
         $this->user_sync = $user_sync;
@@ -208,24 +208,6 @@ class LDAP_UserManager
     }
 
     /**
-     * Generate a valid, not used Codendi login from a string.
-     *
-     * @param String $uid User identifier
-     * @return String
-     */
-    public function generateLogin($uid)
-    {
-        $account_name = $this->getLoginFromString($uid);
-        $uid          = $account_name;
-        $i            = 2;
-        while ($this->userNameIsAvailable($uid) !== true) {
-            $uid = $account_name . $i;
-            $i++;
-        }
-        return $uid;
-    }
-
-    /**
      * Check if a given name is not already a user name or a project name
      *
      * This should be in UserManager
@@ -237,23 +219,6 @@ class LDAP_UserManager
     {
         $dao = $this->getDao();
         return $dao->userNameIsAvailable($name);
-    }
-
-    /**
-     * Return a valid Codendi user_name from a given string
-     *
-     * @param String $uid Identifier to convert
-     * @return String
-     */
-    public function getLoginFromString($uid)
-    {
-        $name = utf8_decode($uid);
-        $name = strtr($name, utf8_decode(' .:;,?%^*(){}[]<>+=$àâéèêùûç'), '____________________aaeeeuuc');
-        $name = str_replace("'", "", $name);
-        $name = str_replace('"', "", $name);
-        $name = str_replace('/', "", $name);
-        $name = str_replace('\\', "", $name);
-        return strtolower($name);
     }
 
     /**
@@ -283,7 +248,12 @@ class LDAP_UserManager
         }
 
         $user = new PFUser();
-        $user->setUserName($this->generateLogin($uid));
+        try {
+            $user->setUserName($this->username_generator->normalize($uid));
+        } catch (DataIncompatibleWithUsernameGenerationException $exception) {
+            return false;
+        }
+
         $user->setLdapId($eduid);
         $user->setRealName($cn);
         $user->setEmail($email);

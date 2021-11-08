@@ -34,6 +34,7 @@ use PFUser;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\User\UserNameNormalizer;
 use UserManager;
 
 final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -76,6 +77,8 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $ldap_user_manager;
 
+    private Mockery\LegacyMockInterface|Mockery\MockInterface|UserNameNormalizer $username_normalizer;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -95,6 +98,8 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->ldap_params
         );
 
+        $this->username_normalizer = Mockery::mock(UserNameNormalizer::class);
+
         $this->ldap = \Mockery::mock(
             \LDAP::class,
             [$this->ldap_params, Mockery::mock(\Psr\Log\LoggerInterface::class)]
@@ -106,7 +111,7 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager      = \Mockery::spy(UserManager::class);
         $this->ldap_user_manager = \Mockery::mock(
             \LDAP_UserManager::class,
-            [$this->ldap, $this->user_sync]
+            [$this->ldap, $this->user_sync, $this->username_normalizer]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
