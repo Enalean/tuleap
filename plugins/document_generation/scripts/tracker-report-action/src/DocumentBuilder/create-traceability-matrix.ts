@@ -26,8 +26,9 @@ import type {
     ArtifactFromReport,
     ArtifactReportContainer,
     ArtifactReportFieldValue,
+    ArtifactResponse,
 } from "./artifacts-retriever";
-import { getTestManagementExecution } from "./rest-querier";
+import { getArtifacts, getTestManagementExecution } from "./rest-querier";
 
 export async function createTraceabilityMatrix(
     artifacts: ReadonlyArray<ArtifactFromReport>,
@@ -36,18 +37,21 @@ export async function createTraceabilityMatrix(
     if (!isFeatureExplicitlyEnabled()) {
         return [];
     }
-    const possible_elements = await getMatrixElements(artifacts, datetime_locale_information);
+    const elements = await getMatrixElements(artifacts, datetime_locale_information);
+    const campaigns = await getCampaignsFromRawElements(elements);
 
-    return possible_elements.flatMap((element) => {
+    return elements.flatMap((element) => {
         const matrix_elements: TraceabilityMatrixElement[] = [];
         for (const campaign_id of element.campaigns) {
+            const campaign_default_title = `#${campaign_id}`;
+            const campaign = campaigns.get(campaign_id);
             matrix_elements.push({
                 requirement: element.requirement,
                 result: element.result,
                 executed_on: element.executed_on,
                 executed_by: element.executed_by,
                 test: element.test,
-                campaign: `#${campaign_id}`,
+                campaign: campaign?.title ?? campaign_default_title,
             });
         }
 
@@ -145,6 +149,18 @@ function getArtifactFieldValues(
             ...getArtifactFieldValues(artifact_section_content.containers),
         ];
     });
+}
+
+async function getCampaignsFromRawElements(
+    elements: ReadonlyArray<RawMatrixElement>
+): Promise<ReadonlyMap<number, ArtifactResponse>> {
+    const campaign_ids = new Set(elements.flatMap((element) => element.campaigns));
+
+    try {
+        return await getArtifacts(campaign_ids);
+    } catch (e) {
+        return new Map();
+    }
 }
 
 function isFeatureExplicitlyEnabled(): boolean {

@@ -38,7 +38,7 @@ export async function retrieveReportArtifacts(
     report_has_changed: boolean
 ): Promise<ReadonlyArray<ArtifactFromReport>> {
     const tracker_structure_promise = retrieveTrackerStructure(tracker_id);
-    const report_artifacts: ArtifactReportResponse[] = await getReportArtifacts(
+    const report_artifacts: ArtifactResponse[] = await getReportArtifacts(
         report_id,
         report_has_changed
     );
@@ -48,7 +48,7 @@ export async function retrieveReportArtifacts(
     const report_artifacts_with_additional_info: ArtifactFromReport[] = await limitConcurrencyPool(
         5,
         report_artifacts,
-        async (report_artifact: ArtifactReportResponse): Promise<ArtifactFromReport> => {
+        async (report_artifact: ArtifactResponse): Promise<ArtifactFromReport> => {
             const values_by_field_id = new Map(
                 report_artifact.values.map((value) => [value.field_id, value])
             );
@@ -264,7 +264,7 @@ async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStru
     return { fields: fields_map, disposition: tracker_structure.structure };
 }
 
-export interface ArtifactReportResponse {
+export interface ArtifactResponse {
     readonly id: number;
     readonly title: string | null;
     readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;

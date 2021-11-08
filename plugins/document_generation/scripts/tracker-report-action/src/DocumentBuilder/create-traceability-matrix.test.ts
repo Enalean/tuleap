@@ -20,6 +20,7 @@
 import type {
     ArtifactFromReport,
     ArtifactReportResponseUserRepresentation,
+    ArtifactResponse,
     TestExecutionResponse,
 } from "./artifacts-retriever";
 import type { TraceabilityMatrixElement } from "../type";
@@ -49,6 +50,12 @@ describe("create-traceability-matrix", () => {
                 },
             },
         } as TestExecutionResponse);
+
+        jest.spyOn(rest_querier, "getArtifacts").mockResolvedValue(
+            new Map<number, ArtifactResponse>([
+                [800, { id: 800, title: "Campaign title" } as ArtifactResponse],
+            ])
+        );
 
         const matrix = await buildMatrix([
             {
@@ -90,7 +97,7 @@ describe("create-traceability-matrix", () => {
                 executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
                 test: "Some definition summary",
-                campaign: "#800",
+                campaign: "Campaign title",
             },
         ]);
     });
@@ -260,6 +267,71 @@ describe("create-traceability-matrix", () => {
         ]);
 
         expect(matrix).toStrictEqual([]);
+    });
+
+    it("fallbacks on default title with the ID if the campaigns cannot be retrieved for some reasons", async () => {
+        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue({
+            previous_result: {
+                status: "passed",
+                submitted_by: {
+                    display_name: "Realname (username)",
+                } as ArtifactReportResponseUserRepresentation,
+                submitted_on: "2021-07-01T00:00:00+02:00",
+            },
+            definition: {
+                summary: "Some definition summary",
+                requirement: {
+                    id: 888,
+                    title: "Requirement title",
+                },
+            },
+        } as TestExecutionResponse);
+
+        jest.spyOn(rest_querier, "getArtifacts").mockRejectedValue(new Error());
+
+        const matrix = await buildMatrix([
+            {
+                id: 10,
+                title: null,
+                values: [
+                    {
+                        field_id: 1,
+                        type: "ttmstepexec",
+                        label: "Step exec",
+                        value: null,
+                    },
+                    {
+                        field_id: 2,
+                        type: "art_link",
+                        label: "Art links",
+                        links: [
+                            {
+                                id: 700,
+                                type: "_covered_by",
+                            },
+                        ],
+                        reverse_links: [
+                            {
+                                id: 800,
+                                type: null,
+                            },
+                        ],
+                    },
+                ],
+                containers: [],
+            },
+        ]);
+
+        expect(matrix).toStrictEqual([
+            {
+                requirement: "Requirement title",
+                result: "passed",
+                executed_on: "6/30/2021 10:00:00 PM",
+                executed_by: "Realname (username)",
+                test: "Some definition summary",
+                campaign: "#800",
+            },
+        ]);
     });
 
     it("does nothing when the feature is not enabled by a specific hash", async () => {
