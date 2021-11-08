@@ -37,6 +37,7 @@ import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
 import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
 
 import "./modes.js";
+import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
 
 export default {
     template: `
@@ -61,13 +62,14 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
         const [left_element, right_element] = $element[0].querySelectorAll(
             ".pull-request-side-by-side-diff"
         );
-        const options = {
-            readOnly: true,
-            lineWrapping: true,
-            gutters: ["gutter-lines"],
-            mode: self.diff.mime_type,
-            scrollbarStyle: "overlay",
-        };
+        const options =
+            getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible({
+                readOnly: true,
+                lineWrapping: true,
+                gutters: ["gutter-lines"],
+                mode: self.diff.mime_type,
+                scrollbarStyle: "overlay",
+            });
 
         const left_code_mirror = CodeMirror(left_element, options);
         const right_code_mirror = CodeMirror(right_element, options);

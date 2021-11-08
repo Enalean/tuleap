@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import CodeMirror from "codemirror";
 
 interface Diff {
     charset: string;
@@ -51,4 +52,25 @@ function doesTextContentPotentiallyDangerousBidirectionalUnicodeText(text: strin
     return UNICODE_POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.some((character) =>
         text.includes(character)
     );
+}
+
+export function getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible(
+    config: Readonly<CodeMirror.EditorConfiguration>
+): CodeMirror.EditorConfiguration {
+    const special_chars_current: RegExp = config.specialChars || CodeMirror.defaults.specialChars;
+    const regex_potentially_dangerous_bidirectional_characters = new RegExp(
+        "[" + UNICODE_POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.join("") + "]"
+    );
+
+    return {
+        ...config,
+        specialChars: new RegExp(
+            "(?:" +
+                special_chars_current.source +
+                ")|(?:" +
+                regex_potentially_dangerous_bidirectional_characters.source +
+                ")",
+            special_chars_current.flags
+        ),
+    };
 }
