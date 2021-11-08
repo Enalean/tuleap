@@ -30,7 +30,7 @@ class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
-            ->withAccess(\Project::ACCESS_PRIVATE_WO_RESTRICTED)
+            ->withAccess(\Project::ACCESS_PUBLIC)
             ->build();
 
         $project_manager = $this->createStub(\ProjectManager::class);
@@ -46,11 +46,11 @@ class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ProgramPrivacy::fromPrivacy(
                 false,
                 false,
+                false,
                 true,
                 false,
-                false,
-                'Project privacy set to private. Only project members can access its content.',
-                'Private',
+                'Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items.',
+                'Public',
                 'The Test Project'
             ),
             $program_privacy

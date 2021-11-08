@@ -91,6 +91,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -105,7 +107,6 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
@@ -516,7 +517,10 @@ final class program_managementPlugin extends Plugin
                 new \Tuleap\Project\Flags\ProjectFlagsBuilder(new ProjectFlagsDao()),
                 $project_manager
             ),
-            new ProgramPrivacyBuilder($project_manager)
+            new ProgramPrivacyBuilder($project_manager),
+            new ProgramBaseInfoBuilder(
+                new ProjectReferenceRetriever($project_manager)
+            )
         );
     }
 

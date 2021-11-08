@@ -34,6 +34,7 @@ final class ProjectProxy implements ProjectReference
     private function __construct(
         private int $project_id,
         private string $project_label,
+        private string $project_shortname,
         private string $project_url,
         private string $project_icon
     ) {
@@ -44,6 +45,7 @@ final class ProjectProxy implements ProjectReference
         return new self(
             (int) $project->getID(),
             $project->getPublicName(),
+            $project->getUnixNameLowerCase(),
             $project->getUrl(),
             EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
                 $project->getIconUnicodeCodepoint()
@@ -69,5 +71,10 @@ final class ProjectProxy implements ProjectReference
     public function getProjectIcon(): string
     {
         return $this->project_icon;
+    }
+
+    public function getProjectShortName(): string
+    {
+        return $this->project_shortname;
     }
 }

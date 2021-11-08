@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-namespace Tuleap\ProgramManagement\Domain;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
-
-/**
- * @psalm-immutable
- */
-interface ProjectReference extends ProjectIdentifier
+interface BuildProgramBaseInfo
 {
-    public function getProjectLabel(): string;
-
-    public function getUrl(): string;
-
-    public function getProjectIcon(): string;
-
-    public function getProjectShortName(): string;
+    public function build(ProgramIdentifier $program_identifier): ProgramBaseInfo;
 }

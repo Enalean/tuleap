@@ -22,6 +22,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 
@@ -33,6 +34,7 @@ class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
             PlannedIterations::build(
                 BuildProgramFlagsStub::withDefaults(),
                 BuildProgramPrivacyStub::withPrivateAccess(),
+                BuildProgramBaseInfoStub::withDefault(),
                 ProgramIdentifierBuilder::build()
             )
         );
@@ -42,5 +44,7 @@ class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
             '{"are_restricted_users_allowed":false,"project_is_public_incl_restricted":false,"project_is_private":true,"project_is_public":false,"project_is_private_incl_restricted":false,"explanation_text":"It is private, please go away","privacy_title":"Private","project_name":"Guinea Pig"}',
             $presenter->program_privacy
         );
+
+        self::assertEquals('{"program_label":"Guinea Pig","program_shortname":"guinea-pig","program_icon":"\ud83d\udc39"}', $presenter->program);
     }
 }

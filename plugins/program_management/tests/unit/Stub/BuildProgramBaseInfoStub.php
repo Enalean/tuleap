@@ -20,28 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
+use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 
-/**
- * @psalm-immutable
- */
-final class DisplayPlanIterationsPresenter
+final class BuildProgramBaseInfoStub implements BuildProgramBaseInfo
 {
-    private function __construct(
-        public string $program_flags,
-        public string $program_privacy,
-        public string $program
-    ) {
+    private function __construct(private ProgramBaseInfo $program_base_info)
+    {
     }
 
-    public static function fromPlannedIterations(PlannedIterations $planned_iteration): self
+    public static function withDefault(): self
     {
         return new self(
-            json_encode($planned_iteration->getProgramFlag(), JSON_THROW_ON_ERROR),
-            json_encode($planned_iteration->getProgramPrivacy(), JSON_THROW_ON_ERROR),
-            json_encode($planned_iteration->getProgramBaseInfo(), JSON_THROW_ON_ERROR)
+            ProgramBaseInfo::fromBaseInfo(
+                'Guinea Pig',
+                'guinea-pig',
+                '🐹'
+            )
         );
+    }
+
+    public function build(ProgramIdentifier $program_identifier): ProgramBaseInfo
+    {
+        return $this->program_base_info;
     }
 }

@@ -23,6 +23,7 @@ namespace Tuleap\ProgramManagement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
@@ -128,7 +129,8 @@ final class DisplayPlanIterationsControllerTest extends TestCase
             $this->template_renderer,
             $build_program_stub,
             BuildProgramFlagsStub::withDefaults(),
-            BuildProgramPrivacyStub::withPrivateAccess()
+            BuildProgramPrivacyStub::withPrivateAccess(),
+            BuildProgramBaseInfoStub::withDefault()
         );
     }
 
