@@ -1045,6 +1045,7 @@ function buildTraceabilityMatrix(
             new TableRow({
                 tableHeader: true,
                 children: [
+                    buildHeaderCell(gettext_provider.gettext("Requirements")),
                     buildHeaderCell(gettext_provider.gettext("Tests")),
                     buildHeaderCell(gettext_provider.gettext("Campaigns")),
                     buildHeaderCell(gettext_provider.gettext("Results")),
@@ -1056,6 +1057,7 @@ function buildTraceabilityMatrix(
                 (element) =>
                     new TableRow({
                         children: [
+                            buildCellContent(new TextRun(element.requirement)),
                             buildCellContent(new TextRun(element.test)),
                             buildCellContent(new TextRun(element.campaign)),
                             buildCellContent(

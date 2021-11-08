@@ -36,17 +36,13 @@ export async function createTraceabilityMatrix(
     if (!isFeatureExplicitlyEnabled()) {
         return [];
     }
-    const possible_elements = await getPossibleMatrixElements(
-        artifacts,
-        datetime_locale_information
-    );
+    const possible_elements = await getMatrixElements(artifacts, datetime_locale_information);
 
-    // Note that the elements are not yet filtered. Elements that do cover an item should not be present in the matrix.
-    // Filtering will come in an upcoming contribution
     return possible_elements.flatMap((element) => {
         const matrix_elements: TraceabilityMatrixElement[] = [];
         for (const campaign_id of element.campaigns) {
             matrix_elements.push({
+                requirement: element.requirement,
                 result: element.result,
                 executed_on: element.executed_on,
                 executed_by: element.executed_by,
@@ -59,7 +55,8 @@ export async function createTraceabilityMatrix(
     });
 }
 
-interface PossibleMatrixElement {
+interface RawMatrixElement {
+    requirement: string;
     result: ArtifactFieldValueStatus;
     executed_by: string | null;
     executed_on: string | null;
@@ -67,10 +64,10 @@ interface PossibleMatrixElement {
     campaigns: ReadonlyArray<number>;
 }
 
-async function getPossibleMatrixElements(
+async function getMatrixElements(
     artifacts: ReadonlyArray<ArtifactFromReport>,
     datetime_locale_information: DateTimeLocaleInformation
-): Promise<ReadonlyArray<Readonly<PossibleMatrixElement>>> {
+): Promise<ReadonlyArray<Readonly<RawMatrixElement>>> {
     const possible_elements = [];
     for (const artifact of artifacts) {
         const fields = getArtifactFieldValues([artifact]);
@@ -104,6 +101,10 @@ async function getPossibleMatrixElements(
             continue;
         }
 
+        if (test_exec.definition.requirement === null) {
+            continue;
+        }
+
         let submitted_on: string | null = null;
         if (test_exec.previous_result !== null) {
             const submitted_on_date = new Date(test_exec.previous_result.submitted_on);
@@ -117,6 +118,8 @@ async function getPossibleMatrixElements(
         }
 
         possible_elements.push({
+            requirement:
+                test_exec.definition.requirement.title ?? `#${test_exec.definition.requirement.id}`,
             result: test_exec.previous_result?.status ?? null,
             executed_by: test_exec.previous_result?.submitted_by.display_name ?? null,
             executed_on: submitted_on,
