@@ -26,9 +26,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 use Psr\Log\NullLogger;
 use TimePeriodWithoutWeekEnd;
 use Tracker;
-use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -40,11 +40,6 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 
 final class TimeframeValueRetrieverTest extends TestCase
 {
-    private RetrieveUserStub $retrieve_user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */
@@ -59,21 +54,10 @@ final class TimeframeValueRetrieverTest extends TestCase
     private $semantic_timeframe_builder;
     private TimeboxIdentifier $artifact_identifier;
     private UserIdentifier $user_identifier;
-    private TimeframeValueRetriever $timeframe_value_retriever;
-
 
     protected function setUp(): void
     {
-        $this->artifact_factory           = $this->createStub(Tracker_ArtifactFactory::class);
-        $this->retrieve_user              = RetrieveUserStub::withGenericUser();
         $this->semantic_timeframe_builder = $this->createStub(SemanticTimeframeBuilder::class);
-
-        $this->timeframe_value_retriever = new TimeframeValueRetriever(
-            $this->artifact_factory,
-            $this->retrieve_user,
-            $this->semantic_timeframe_builder,
-            new NullLogger()
-        );
 
         $this->tracker = $this->createStub(Tracker::class);
 
@@ -84,17 +68,18 @@ final class TimeframeValueRetrieverTest extends TestCase
         $this->user_identifier     = UserIdentifierStub::buildGenericUser();
     }
 
-    public function testItReturnsNullWhenArtifactIsNotFound(): void
+    private function getRetriever(): TimeframeValueRetriever
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-        self::assertNull($this->timeframe_value_retriever->getStartDateValueTimestamp($this->artifact_identifier, $this->user_identifier));
-        self::assertNull($this->timeframe_value_retriever->getEndDateValueTimestamp($this->artifact_identifier, $this->user_identifier));
+        return new TimeframeValueRetriever(
+            RetrieveFullArtifactStub::withArtifact($this->artifact),
+            RetrieveUserStub::withGenericUser(),
+            $this->semantic_timeframe_builder,
+            new NullLogger()
+        );
     }
-
 
     public function testItReturnsValue(): void
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn($this->artifact);
         $timeframe_semantic   = $this->createStub(SemanticTimeframe::class);
         $timeframe_calculator = $this->createStub(TimeframeWithEndDate::class);
         $timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifact')->willReturn(
@@ -104,7 +89,7 @@ final class TimeframeValueRetrieverTest extends TestCase
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
-        self::assertEquals(1635412289, $this->timeframe_value_retriever->getStartDateValueTimestamp($this->artifact_identifier, $this->user_identifier));
-        self::assertEquals(1637835089, $this->timeframe_value_retriever->getEndDateValueTimestamp($this->artifact_identifier, $this->user_identifier));
+        self::assertSame(1635412289, $this->getRetriever()->getStartDateValueTimestamp($this->artifact_identifier, $this->user_identifier));
+        self::assertSame(1637835089, $this->getRetriever()->getEndDateValueTimestamp($this->artifact_identifier, $this->user_identifier));
     }
 }

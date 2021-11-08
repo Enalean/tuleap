@@ -29,44 +29,50 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private FeatureAdditionProcessor $processor;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private const PROGRAM_INCREMENT_ID = 37;
+    private const FEATURE_ID           = 76;
+    private const PROGRAM_ID           = 110;
+    private RetrieveFullArtifactStub $artifact_retriever;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactLinkUpdater
      */
     private $artifact_link_updater;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->artifact_factory      = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->artifact              = ArtifactTestBuilder::anArtifact(self::PROGRAM_INCREMENT_ID)->build();
+        $this->artifact_retriever    = RetrieveFullArtifactStub::withArtifact($this->artifact);
         $this->artifact_link_updater = $this->createMock(ArtifactLinkUpdater::class);
-        $this->processor             = new FeatureAdditionProcessor(
-            $this->artifact_factory,
+    }
+
+    private function getProcessor(): FeatureAdditionProcessor
+    {
+        return new FeatureAdditionProcessor(
+            $this->artifact_retriever,
             $this->artifact_link_updater,
-            RetrieveUserStub::withUser(UserTestBuilder::aUser()->build())
+            RetrieveUserStub::withGenericUser()
         );
     }
 
     public function testItThrowsWhenProgramIncrementArtifactCannotBeFound(): void
     {
-        $feature_addition = $this->buildFeatureAddition();
-        $this->artifact_factory->method('getArtifactById')->with(37)->willReturn(null);
+        $feature_addition         = $this->buildFeatureAddition();
+        $this->artifact_retriever = RetrieveFullArtifactStub::withError();
 
         $this->expectException(ProgramIncrementNotFoundException::class);
-        $this->processor->add($feature_addition);
+        $this->getProcessor()->add($feature_addition);
     }
 
     public function dataProviderExceptions(): array
@@ -82,33 +88,35 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItWrapsExceptions(\Throwable $exception): void
     {
-        $feature_addition           = $this->buildFeatureAddition();
-        $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
-        $this->artifact_factory->method('getArtifactById')->with(37)->willReturn($program_increment_artifact);
+        $feature_addition = $this->buildFeatureAddition();
         $this->artifact_link_updater->method('updateArtifactLinks')->willThrowException($exception);
 
         $this->expectException(AddFeatureException::class);
-        $this->processor->add($feature_addition);
+        $this->getProcessor()->add($feature_addition);
     }
 
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
-        $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
-        $this->artifact_factory->method('getArtifactById')->with(37)->willReturn($program_increment_artifact);
         $this->artifact_link_updater->expects(self::once())
             ->method('updateArtifactLinks')
-            ->with(self::isInstanceOf(\PFUser::class), $program_increment_artifact, [76], [], \Tracker_FormElement_Field_ArtifactLink::NO_NATURE);
+            ->with(
+                self::isInstanceOf(\PFUser::class),
+                $this->artifact,
+                [self::FEATURE_ID],
+                [],
+                \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+            );
 
-        $this->processor->add($this->buildFeatureAddition());
+        $this->getProcessor()->add($this->buildFeatureAddition());
     }
 
     private function buildFeatureAddition(): FeatureAddition
     {
         $user              = UserIdentifierStub::buildGenericUser();
-        $program           = ProgramIdentifierBuilder::buildWithId(110);
-        $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(37, $user);
+        $program           = ProgramIdentifierBuilder::buildWithId(self::PROGRAM_ID);
+        $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(self::PROGRAM_INCREMENT_ID, $user);
 
-        $feature = FeatureIdentifierBuilder::build(76, 110);
+        $feature = FeatureIdentifierBuilder::build(self::FEATURE_ID, self::PROGRAM_ID);
 
         return FeatureAddition::fromFeature(
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),

@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueU
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -46,7 +46,7 @@ final class IterationsRetriever
         private RetrieveTimeframeValueUserCanSee $retrieve_timeframe,
         private RetrieveUri $retrieve_uri,
         private RetrieveCrossRef $retrieve_cross_ref,
-        private RetrieveUserCanUpdate $retrieve_user_can_update,
+        private VerifyUserCanUpdateTimebox $user_can_update_verifier,
     ) {
     }
 
@@ -78,7 +78,7 @@ final class IterationsRetriever
                 $this->retrieve_timeframe,
                 $this->retrieve_uri,
                 $this->retrieve_cross_ref,
-                $this->retrieve_user_can_update,
+                $this->user_can_update_verifier,
                 $user_identifier,
                 $iteration_identifier
             );

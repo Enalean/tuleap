@@ -30,12 +30,12 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -56,30 +56,29 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElementFactory
      */
     private $form_element_factory;
-    private RetrieveBackgroundColorStub $retrieve_background;
     private UserIdentifier $user;
+    private RetrieveFullArtifactStub $artifact_retriever;
 
     protected function setUp(): void
     {
         $this->features_dao         = $this->createMock(SearchPlannableFeatures::class);
-        $build_program              = BuildProgramStub::stubValidProgram();
         $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->retrieve_background  = RetrieveBackgroundColorStub::withDefaults();
-        $pfuser                     = UserTestBuilder::aUser()->build();
-        $retrieve_user              = RetrieveUserStub::withUser($pfuser);
         $this->user                 = UserIdentifierStub::buildGenericUser();
+    }
 
-        $this->retriever = new FeatureElementsRetriever(
-            $build_program,
+    private function getRetriever(): FeatureElementsRetriever
+    {
+        return new FeatureElementsRetriever(
+            BuildProgramStub::stubValidProgram(),
             $this->features_dao,
             new FeatureRepresentationBuilder(
-                $this->artifact_factory,
+                $this->artifact_retriever,
                 $this->form_element_factory,
-                $this->retrieve_background,
+                RetrieveBackgroundColorStub::withDefaults(),
                 VerifyIsVisibleFeatureStub::buildVisibleFeature(),
                 VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
-                $retrieve_user
+                RetrieveUserStub::withGenericUser()
             )
         );
     }
@@ -103,11 +102,7 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_two  = $this->buildTracker(2, 'user stories', $project);
         $artifact_two = $this->buildArtifact(2, $tracker_two);
 
-        $this->artifact_factory->method('getArtifactById')->willReturnMap([
-            [1, $artifact_one],
-            [2, $artifact_two],
-        ]);
-
+        $this->artifact_retriever = RetrieveFullArtifactStub::withSuccessiveArtifacts($artifact_one, $artifact_two);
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
             [$this->user, 1, $artifact_one],
@@ -137,7 +132,7 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        self::assertEquals($collection, $this->retriever->retrieveFeaturesToBePlanned(202, $this->user));
+        self::assertEquals($collection, $this->getRetriever()->retrieveFeaturesToBePlanned(202, $this->user));
     }
 
     private function buildTracker(int $tracker_id, string $name, Project $project): \Tracker

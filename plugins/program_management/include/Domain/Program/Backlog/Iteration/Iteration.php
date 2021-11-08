@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueU
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class Iteration
@@ -47,10 +47,10 @@ final class Iteration
     public static function build(
         RetrieveStatusValueUserCanSee $retrieve_status_value,
         RetrieveTitleValueUserCanSee $retrieve_title_value,
-        RetrieveTimeframeValueUserCanSee $retrive_semantic_value,
+        RetrieveTimeframeValueUserCanSee $retrieve_timeframe_value,
         RetrieveUri $retrieve_uri,
         RetrieveCrossRef $retrieve_cross_ref,
-        RetrieveUserCanUpdate $retrieve_user_can_update,
+        VerifyUserCanUpdateTimebox $user_can_update_verifier,
         UserIdentifier $user_identifier,
         IterationIdentifier $iteration_identifier
     ): ?self {
@@ -59,8 +59,8 @@ final class Iteration
             return null;
         }
         $status     = $retrieve_status_value->getLabel($iteration_identifier, $user_identifier);
-        $start_date = $retrive_semantic_value->getStartDateValueTimestamp($iteration_identifier, $user_identifier);
-        $end_date   = $retrive_semantic_value->getEndDateValueTimestamp($iteration_identifier, $user_identifier);
+        $start_date = $retrieve_timeframe_value->getStartDateValueTimestamp($iteration_identifier, $user_identifier);
+        $end_date   = $retrieve_timeframe_value->getEndDateValueTimestamp($iteration_identifier, $user_identifier);
 
         return new self(
             $iteration_identifier->getId(),
@@ -70,7 +70,7 @@ final class Iteration
             $end_date,
             $retrieve_uri->getUri($iteration_identifier),
             $retrieve_cross_ref->getXRef($iteration_identifier),
-            $retrieve_user_can_update->userCanUpdate($iteration_identifier, $user_identifier)
+            $user_can_update_verifier->canUserUpdate($iteration_identifier, $user_identifier)
         );
     }
 }

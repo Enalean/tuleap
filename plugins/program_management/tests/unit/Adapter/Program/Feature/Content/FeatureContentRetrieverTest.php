@@ -26,12 +26,12 @@ use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
-use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ContentStoreStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -59,21 +59,15 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const BUG_TITLE_FIELD_ID        = 112;
     private const USER_STORY_TITLE_FIELD_ID = 798;
     /**
-     * @var Stub&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
      * @var Stub&\Tracker_FormElementFactory
      */
     private $form_element_factory;
-    private RetrieveBackgroundColor $background_color_retriever;
     private UserIdentifier $user;
+    private RetrieveFullArtifactStub $artifact_retriever;
 
     protected function setUp(): void
     {
-        $this->artifact_factory           = $this->createStub(\Tracker_ArtifactFactory::class);
-        $this->form_element_factory       = $this->createStub(\Tracker_FormElementFactory::class);
-        $this->background_color_retriever = RetrieveBackgroundColorStub::withDefaults();
+        $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
 
         $this->user = UserIdentifierStub::buildGenericUser();
     }
@@ -98,9 +92,9 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ],
             ]),
             new FeatureRepresentationBuilder(
-                $this->artifact_factory,
+                $this->artifact_retriever,
                 $this->form_element_factory,
-                $this->background_color_retriever,
+                RetrieveBackgroundColorStub::withDefaults(),
                 VerifyIsVisibleFeatureStub::buildVisibleFeature(),
                 VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
                 RetrieveUserStub::withUser($pfuser_with_read_all_permission)
@@ -120,13 +114,16 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $bug_tracker        = $this->buildTracker(self::BUG_TRACKER_ID, 'bug', $team_project);
         $user_story_tracker = $this->buildTracker(self::USER_STORY_TRACKER_ID, 'user stories', $team_project);
 
-        $bug_artifact        = $this->buildArtifact(self::BUG_ARTIFACT_ID, self::BUG_TITLE, $bug_tracker);
-        $user_story_artifact = $this->buildArtifact(self::USER_STORY_ID, self::USER_STORT_TITLE, $user_story_tracker);
-        $this->artifact_factory->method('getArtifactById')
-            ->willReturnMap([
-                [self::BUG_ARTIFACT_ID, $bug_artifact],
-                [self::USER_STORY_ID, $user_story_artifact],
-            ]);
+        $bug_artifact             = $this->buildArtifact(self::BUG_ARTIFACT_ID, self::BUG_TITLE, $bug_tracker);
+        $user_story_artifact      = $this->buildArtifact(
+            self::USER_STORY_ID,
+            self::USER_STORT_TITLE,
+            $user_story_tracker
+        );
+        $this->artifact_retriever = RetrieveFullArtifactStub::withSuccessiveArtifacts(
+            $bug_artifact,
+            $user_story_artifact
+        );
 
         $first_title_field  = $this->getStringField(
             self::BUG_TITLE_FIELD_ID,

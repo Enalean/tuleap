@@ -20,15 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
+use Tuleap\Tracker\Artifact\Artifact;
 
-interface RetrieveFieldValuesGatherer
+final class ArtifactFactoryAdapter implements RetrieveFullArtifact
 {
-    /**
-     * @throws PendingArtifactChangesetNotFoundException
-     */
-    public function getFieldValuesGatherer(TimeboxMirroringOrder $order): GatherFieldValues;
+    public function __construct(private \Tracker_ArtifactFactory $artifact_factory)
+    {
+    }
+
+    public function getNonNullArtifact(ArtifactIdentifier $artifact_identifier): Artifact
+    {
+        $artifact = $this->artifact_factory->getArtifactById($artifact_identifier->getId());
+        if (! $artifact) {
+            throw new ArtifactNotFoundException($artifact_identifier);
+        }
+        return $artifact;
+    }
 }

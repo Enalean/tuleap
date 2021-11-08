@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPlannedUserStoryStub;
@@ -45,6 +46,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
@@ -65,7 +67,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     private SearchChildrenOfFeature $search_children_of_feature;
     private VerifyIsLinkedToAnotherMilestone $check_is_linked;
     private \PFUser $user;
-
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
@@ -83,10 +85,11 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     private function getBuilder(): FeatureRepresentationBuilder
     {
-        $retrieve_user = RetrieveUserStub::withUser($this->user);
+        $retrieve_user      = RetrieveUserStub::withUser($this->user);
+        $artifact_retriever = RetrieveFullArtifactStub::withArtifact($this->artifact);
 
         return new FeatureRepresentationBuilder(
-            $this->artifact_factory,
+            $artifact_retriever,
             $this->form_element_factory,
             $this->retrieve_background,
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
@@ -107,6 +110,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $program = ProgramIdentifierBuilder::buildWithId(110);
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 1)->willReturn(null);
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
 
         self::assertNull($this->getBuilder()->buildFeatureRepresentation($this->user_identifier, $program, 1, 101, 'title'));
     }
@@ -115,11 +119,10 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $program = ProgramIdentifierBuilder::buildWithId(110);
 
-        $project  = $this->buildProject(110);
-        $tracker  = $this->buildTracker(14, $project);
-        $artifact = $this->buildArtifact(117, $tracker);
-        $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 1)->willReturn($artifact);
-        $this->artifact_factory->method('getArtifactById')->with(1)->willReturn($artifact);
+        $project        = $this->buildProject(110);
+        $tracker        = $this->buildTracker(14, $project);
+        $this->artifact = $this->buildArtifact(117, $tracker);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 1)->willReturn($this->artifact);
 
         $field = $this->createMock(\Tracker_FormElement_Field_Text::class);
         $this->form_element_factory->method('getFieldById')->with(101)->willReturn($field);
@@ -132,12 +135,11 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $program = ProgramIdentifierBuilder::build();
 
-        $project  = $this->buildProject(101);
-        $tracker  = $this->buildTracker(1, $project);
-        $artifact = $this->buildArtifact(1, $tracker);
-        $this->artifact_factory->method('getArtifactById')->with(1)->willReturn($artifact);
+        $project        = $this->buildProject(101);
+        $tracker        = $this->buildTracker(1, $project);
+        $this->artifact = $this->buildArtifact(1, $tracker);
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
-            [$this->user, 1, $artifact],
+            [$this->user, 1, $this->artifact],
             [$this->user, 2, null],
             [$this->user, 3, $this->createMock(Artifact::class)],
         ]);
@@ -198,8 +200,6 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     private function buildArtifact(int $artifact_id, \Tracker $tracker): Artifact
     {
-        $artifact = new Artifact($artifact_id, $tracker->getId(), 110, 1234567890, false);
-        $artifact->setTracker($tracker);
-        return $artifact;
+        return ArtifactTestBuilder::anArtifact($artifact_id)->inTracker($tracker)->build();
     }
 }

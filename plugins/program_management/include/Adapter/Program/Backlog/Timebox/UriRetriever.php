@@ -23,25 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\TimeboxNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 
 final class UriRetriever implements RetrieveUri
 {
-
-    public function __construct(private \Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
     }
 
     public function getUri(TimeboxIdentifier $timebox_identifier): string
     {
-        $artifact = $this->artifact_factory->getArtifactById($timebox_identifier->getId());
-        if (! $artifact) {
-            throw new TimeboxNotFoundException($timebox_identifier);
-        }
-
-
+        $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         return $artifact->getUri();
     }
 }

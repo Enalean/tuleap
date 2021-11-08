@@ -23,41 +23,34 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class TitleValueRetrieverTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private const ARTIFACT_ID = 1;
     private TimeboxIdentifier $artifact_identifier;
-    private TitleValueRetriever $title_value_retriever;
-
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->artifact_factory      = $this->createStub(Tracker_ArtifactFactory::class);
-        $this->title_value_retriever = new TitleValueRetriever($this->artifact_factory);
-        $this->artifact_identifier   = TimeboxIdentifierStub::withId(1);
+        $this->artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
+        $this->artifact            = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
     }
 
-    public function testItReturnsNullWhenArtifactIsNotFound(): void
+    private function getRetriever(): TitleValueRetriever
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-        self::assertNull($this->title_value_retriever->getTitle($this->artifact_identifier));
+        return new TitleValueRetriever(RetrieveFullArtifactStub::withArtifact($this->artifact));
     }
 
     public function testItReturnsValue(): void
     {
-        $artifact = $this->createStub(Artifact::class);
-        $artifact->method('getTitle')->willReturn("My artifact");
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+        $this->artifact->setTitle('My artifact');
 
-        self::assertEquals("My artifact", $this->title_value_retriever->getTitle($this->artifact_identifier));
+        self::assertSame('My artifact', $this->getRetriever()->getTitle($this->artifact_identifier));
     }
 }

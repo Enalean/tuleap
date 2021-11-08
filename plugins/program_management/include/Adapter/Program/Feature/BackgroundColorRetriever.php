@@ -25,26 +25,25 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 use Cardwall_Semantic_CardFields;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class BackgroundColorRetriever implements RetrieveBackgroundColor
 {
-    public function __construct(private BackgroundColorBuilder $background_color_builder, private \Tracker_ArtifactFactory $artifact_factory, private RetrieveUser $retrieve_user)
-    {
+    public function __construct(
+        private BackgroundColorBuilder $background_color_builder,
+        private RetrieveFullArtifact $artifact_retriever,
+        private RetrieveUser $retrieve_user
+    ) {
     }
 
     public function retrieveBackgroundColor(ArtifactIdentifier $artifact_identifier, UserIdentifier $user_identifier): BackgroundColor
     {
-        $artifact = $this->artifact_factory->getArtifactById($artifact_identifier->getId());
-        if (! $artifact) {
-            throw new ArtifactNotFoundException($artifact_identifier);
-        }
-
-        $user = $this->retrieve_user->getUserWithId($user_identifier);
+        $artifact = $this->artifact_retriever->getNonNullArtifact($artifact_identifier);
+        $user     = $this->retrieve_user->getUserWithId($user_identifier);
 
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());
         $background_color     = $this->background_color_builder->build(

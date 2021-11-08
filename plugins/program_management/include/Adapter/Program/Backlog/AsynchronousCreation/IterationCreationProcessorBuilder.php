@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\ChangesetRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDateRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DateValueFormatter;
@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -87,6 +88,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
         $artifact_changeset_dao   = new \Tracker_Artifact_ChangesetDao();
         $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
+        $artifact_retriever       = new ArtifactFactoryAdapter($artifact_factory);
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
@@ -165,7 +167,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         );
 
         $changeset_adder = new ChangesetAdder(
-            $artifact_factory,
+            $artifact_retriever,
             $user_retriever,
             $changeset_values_formatter,
             $changeset_creator
@@ -179,15 +181,15 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             $artifact_creator,
             new MirroredTimeboxesDao(),
             $visibility_verifier,
-            new TrackerOfArtifactRetriever($artifact_factory, $tracker_retriever),
+            new TrackerOfArtifactRetriever($artifact_retriever, $tracker_retriever),
             $changeset_adder
         );
 
         return new IterationCreationProcessor(
             $message_logger,
             $synchronized_fields_gatherer,
-            new FieldValuesGathererRetriever($artifact_factory, $form_element_factory),
-            new ChangesetRetriever($artifact_factory),
+            new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
+            new SubmissionDateRetriever($artifact_retriever),
             $program_DAO,
             new ProgramAdapter(
                 $project_manager,

@@ -23,43 +23,30 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\TimeboxNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class UriRetrieverTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private const ARTIFACT_ID = 1;
     private TimeboxIdentifier $artifact_identifier;
-    private UriRetriever $cross_reference_retriever;
-
 
     protected function setUp(): void
     {
-        $this->artifact_factory          = $this->createStub(Tracker_ArtifactFactory::class);
-        $this->cross_reference_retriever = new UriRetriever($this->artifact_factory);
-        $this->artifact_identifier       = TimeboxIdentifierStub::withId(1);
+        $this->artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
     }
 
-    public function testItThrowsWhenArtifactIsNotFound(): void
+    private function getRetriever(): UriRetriever
     {
-        $this->artifact_factory->method('getArtifactById')->willReturn(null);
-        $this->expectException(TimeboxNotFoundException::class);
-        $this->cross_reference_retriever->getUri($this->artifact_identifier);
+        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
+        return new UriRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
     }
 
     public function testItReturnsValue(): void
     {
-        $artifact = $this->createStub(Artifact::class);
-        $artifact->method('getUri')->willReturn('trackers?aid=1');
-        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-
-        self::assertEquals('trackers?aid=1', $this->cross_reference_retriever->getUri($this->artifact_identifier));
+        self::assertSame('/plugins/tracker/?aid=1', $this->getRetriever()->getUri($this->artifact_identifier));
     }
 }

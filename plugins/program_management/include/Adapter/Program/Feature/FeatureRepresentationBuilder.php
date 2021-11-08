@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -36,7 +36,7 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 final class FeatureRepresentationBuilder
 {
     public function __construct(
-        private \Tracker_ArtifactFactory $artifact_factory,
+        private RetrieveFullArtifact $artifact_retriever,
         private \Tracker_FormElementFactory $form_element_factory,
         private RetrieveBackgroundColor $retrieve_background_color,
         private VerifyIsVisibleFeature $feature_verifier,
@@ -58,10 +58,7 @@ final class FeatureRepresentationBuilder
         if (! $feature) {
             return null;
         }
-        $full_artifact = $this->artifact_factory->getArtifactById($artifact_id);
-        if (! $full_artifact) {
-            return null;
-        }
+        $full_artifact = $this->artifact_retriever->getNonNullArtifact($feature);
 
         $title = $this->form_element_factory->getFieldById($title_field_id);
         if (! $title || ! $title->userCanRead($user)) {
@@ -74,10 +71,7 @@ final class FeatureRepresentationBuilder
             $full_artifact->getXRef(),
             $full_artifact->getUri(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
-            $this->retrieve_background_color->retrieveBackgroundColor(
-                ArtifactIdentifierProxy::fromArtifact($full_artifact),
-                $user_identifier
-            ),
+            $this->retrieve_background_color->retrieveBackgroundColor($feature, $user_identifier),
             $this->user_story_verifier->isLinkedToAtLeastOnePlannedUserStory($user_identifier, $feature),
             $this->user_story_verifier->hasStoryLinked($user_identifier, $feature)
         );

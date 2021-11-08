@@ -40,7 +40,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetrieve
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimeboxVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
@@ -57,6 +57,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
@@ -87,63 +88,16 @@ final class ProgramIncrementResource extends AuthenticatedResource
     private const MAX_LIMIT = 50;
     public const  ROUTE     = 'program_increment';
 
-    public FeatureContentRetriever $program_increment_content_retriever;
-    private \UserManager $user_manager;
-    private UserManagerAdapter $user_manager_adapter;
-    private UserStoryLinkedToFeatureVerifier $user_story_linked_verifier;
-
-    public function __construct()
-    {
-        $this->user_manager         = \UserManager::instance();
-        $this->user_manager_adapter = new UserManagerAdapter($this->user_manager);
-        $artifact_factory           = \Tracker_ArtifactFactory::instance();
-        $program_dao                = new ProgramDao();
-
-        $artifacts_linked_to_parent_dao            = new ArtifactsLinkedToParentDao();
-        $this->user_story_linked_verifier          = new UserStoryLinkedToFeatureVerifier(
-            $artifacts_linked_to_parent_dao,
-            new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-            $artifact_factory,
-            $this->user_manager_adapter,
-            $artifacts_linked_to_parent_dao,
-            $artifacts_linked_to_parent_dao
-        );
-        $this->program_increment_content_retriever = new FeatureContentRetriever(
-            new ProgramIncrementsDAO(),
-            new ContentDao(),
-            new FeatureRepresentationBuilder(
-                $artifact_factory,
-                \Tracker_FormElementFactory::instance(),
-                new BackgroundColorRetriever(
-                    new BackgroundColorBuilder(new BindDecoratorRetriever()),
-                    $artifact_factory,
-                    $this->user_manager_adapter
-                ),
-                new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
-                $this->user_story_linked_verifier,
-                $this->user_manager_adapter
-            ),
-            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
-            $program_dao,
-            new ProgramAdapter(
-                ProjectManager::instance(),
-                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
-                $program_dao,
-                $this->user_manager_adapter
-            )
-        );
-    }
-
     /**
      * Get content of a program increment
      *
      * In a program increment get all the elements planned in team and linked to a program increment
      *
-     * @url GET {id}/content
+     * @url    GET {id}/content
      * @access hybrid
      *
-     * @param int $id Id of the program
-     * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
+     * @param int $id     Id of the program
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
      * @return FeatureRepresentation[]
@@ -153,9 +107,50 @@ final class ProgramIncrementResource extends AuthenticatedResource
      */
     public function getBacklog(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $user = $this->user_manager->getCurrentUser();
+        $user_manager       = \UserManager::instance();
+        $user_retriever     = new UserManagerAdapter($user_manager);
+        $artifact_factory   = \Tracker_ArtifactFactory::instance();
+        $program_dao        = new ProgramDao();
+        $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
+
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $user_story_linked_verifier     = new UserStoryLinkedToFeatureVerifier(
+            $artifacts_linked_to_parent_dao,
+            new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+            $artifact_factory,
+            $user_retriever,
+            $artifacts_linked_to_parent_dao,
+            $artifacts_linked_to_parent_dao
+        );
+
+        $program_increment_content_retriever = new FeatureContentRetriever(
+            new ProgramIncrementsDAO(),
+            new ContentDao(),
+            new FeatureRepresentationBuilder(
+                $artifact_retriever,
+                \Tracker_FormElementFactory::instance(),
+                new BackgroundColorRetriever(
+                    new BackgroundColorBuilder(new BindDecoratorRetriever()),
+                    $artifact_retriever,
+                    $user_retriever
+                ),
+                new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
+                $user_story_linked_verifier,
+                $user_retriever
+            ),
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+            $program_dao,
+            new ProgramAdapter(
+                ProjectManager::instance(),
+                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
+                $program_dao,
+                $user_retriever
+            )
+        );
+
+        $user = $user_manager->getCurrentUser();
         try {
-            $elements = $this->program_increment_content_retriever->retrieveProgramIncrementContent(
+            $elements = $program_increment_content_retriever->retrieveProgramIncrementContent(
                 $id,
                 UserProxy::buildFromPFUser($user)
             );
@@ -199,17 +194,30 @@ final class ProgramIncrementResource extends AuthenticatedResource
      */
     public function patchContent(int $id, ProgramIncrementContentPatchRepresentation $patch_representation): void
     {
-        $user = $this->user_manager->getCurrentUser();
-
+        $user_manager           = \UserManager::instance();
+        $user_retriever         = new UserManagerAdapter($user_manager);
         $artifact_factory       = \Tracker_ArtifactFactory::instance();
         $program_increments_dao = new ProgramIncrementsDAO();
-        $artifact_link_updater  = new ArtifactLinkUpdater(
+        $plan_dao               = new PlanDao();
+        $program_dao            = new ProgramDao();
+        $artifact_retriever     = new ArtifactFactoryAdapter($artifact_factory);
+
+        $artifact_link_updater = new ArtifactLinkUpdater(
             \Tracker_Artifact_PriorityManager::build(),
             new ArtifactLinkUpdaterDataFormater()
         );
-        $plan_dao               = new PlanDao();
-        $program_dao            = new ProgramDao();
-        $modifier               = new ContentModifier(
+
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $user_story_linked_verifier     = new UserStoryLinkedToFeatureVerifier(
+            $artifacts_linked_to_parent_dao,
+            new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+            $artifact_factory,
+            $user_retriever,
+            $artifacts_linked_to_parent_dao,
+            $artifacts_linked_to_parent_dao
+        );
+
+        $modifier             = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
                 \ProjectManager::instance(),
                 new ProjectAccessChecker(
@@ -217,35 +225,37 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     \EventManager::instance()
                 ),
                 new CanPrioritizeFeaturesDAO(),
-                $this->user_manager_adapter
+                $user_retriever
             ),
             $program_increments_dao,
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
             $plan_dao,
             new FeaturePlanner(
-                $this->user_story_linked_verifier,
+                $user_story_linked_verifier,
                 new FeatureRemovalProcessor(
                     $program_increments_dao,
                     $artifact_factory,
                     $artifact_link_updater,
-                    $this->user_manager_adapter
+                    $user_retriever
                 ),
                 new ArtifactsExplicitTopBacklogDAO(),
-                new FeatureAdditionProcessor($artifact_factory, $artifact_link_updater, $this->user_manager_adapter)
+                new FeatureAdditionProcessor($artifact_retriever, $artifact_link_updater, $user_retriever)
             ),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             new FeatureDAO(),
-            new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter),
-            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+            new UserCanPlanInProgramIncrementVerifier($artifact_retriever, $user_retriever),
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $program_dao,
             new ProgramAdapter(
                 ProjectManager::instance(),
                 new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
                 $program_dao,
-                $this->user_manager_adapter
+                $user_retriever
             )
         );
-        $transaction_executor   = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
+        $user = $user_manager->getCurrentUser();
 
         try {
             $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
@@ -299,24 +309,28 @@ final class ProgramIncrementResource extends AuthenticatedResource
      */
     public function getIterations(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $artifact_factory    = \Tracker_ArtifactFactory::instance();
+        $user_manager       = \UserManager::instance();
+        $user_retriever     = new UserManagerAdapter($user_manager);
+        $artifact_factory   = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
+
         $iteration_retriever = new IterationsRetriever(
             new ProgramIncrementsDAO(),
-            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             new IterationsLinkedToProgramIncrementDAO(),
-            new StatusValueRetriever($artifact_factory, $this->user_manager_adapter),
-            new TitleValueRetriever($artifact_factory),
+            new StatusValueRetriever($artifact_retriever, $user_retriever),
+            new TitleValueRetriever($artifact_retriever),
             new TimeframeValueRetriever(
-                $artifact_factory,
-                $this->user_manager_adapter,
+                $artifact_retriever,
+                $user_retriever,
                 SemanticTimeframeBuilder::build(),
                 BackendLogger::getDefaultLogger(),
             ),
-            new UriRetriever($artifact_factory),
-            new CrossReferenceRetriever($artifact_factory),
-            new UserCanUpdateRetriever($artifact_factory, $this->user_manager_adapter),
+            new UriRetriever($artifact_retriever),
+            new CrossReferenceRetriever($artifact_retriever),
+            new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever),
         );
-        $user                = $this->user_manager->getCurrentUser();
+        $user                = $user_manager->getCurrentUser();
         try {
             $iterations = $iteration_retriever->retrieveIterations(
                 $id,

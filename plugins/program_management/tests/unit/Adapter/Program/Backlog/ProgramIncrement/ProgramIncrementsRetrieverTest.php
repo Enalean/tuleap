@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveCrossRefStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUriStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserCanUpdateStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeframeValueUserCanSeeStub;
@@ -134,7 +134,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveTimeframeValueUserCanSeeStub::withValues(1633189968, 1635868368),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),
-            RetrieveUserCanUpdateStub::withUpdatePermission(),
+            VerifyUserCanUpdateTimeboxStub::withUpdatePermission(),
             VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
     }

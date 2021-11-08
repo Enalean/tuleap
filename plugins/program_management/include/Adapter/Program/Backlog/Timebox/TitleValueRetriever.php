@@ -23,23 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 
 final class TitleValueRetriever implements RetrieveTitleValueUserCanSee
 {
-    public function __construct(private \Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
     }
 
     public function getTitle(TimeboxIdentifier $timebox_identifier): ?string
     {
-        $artifact = $this->artifact_factory->getArtifactById($timebox_identifier->getId());
-        if (! $artifact) {
-            return null;
-        }
-
-
+        $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         return $artifact->getTitle();
     }
 }

@@ -32,19 +32,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ArtifactLinkChangesetBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredTimeboxChangesetBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
 final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -66,7 +66,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const MIRRORED_PROGRAM_INCREMENT_ID = 86;
     private const MIRRORED_ITERATION_ID         = 33;
 
-    private RetrieveArtifactStub $artifact_retriever;
+    private RetrieveFullArtifactStub $artifact_retriever;
     /**
      * @var MockObject&\Tracker_Artifact_Changeset_NewChangesetCreator
      */
@@ -74,6 +74,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $pfuser;
     private MirroredTimeboxChangeset $changeset;
     private ArtifactLinkChangeset $artifact_link_changeset;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
@@ -116,12 +117,14 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::MIRRORED_ITERATION_ID,
             UserIdentifierStub::withId(self::USER_ID)
         );
+
+        $this->artifact = ArtifactTestBuilder::anArtifact(self::TIMEBOX_ID)->build();
     }
 
     private function getAdder(): ChangesetAdder
     {
         return new ChangesetAdder(
-            $this->artifact_retriever,
+            RetrieveFullArtifactStub::withArtifact($this->artifact),
             RetrieveUserStub::withUser($this->pfuser),
             new ChangesetValuesFormatter(
                 new ArtifactLinkValueFormatter(),
@@ -134,12 +137,10 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesANewChangesetInGivenMirroredTimeboxArtifact(): void
     {
-        $artifact                 = ArtifactTestBuilder::anArtifact(self::TIMEBOX_ID)->build();
-        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact);
         $this->changeset_creator->expects(self::once())
             ->method('create')
             ->with(
-                $artifact,
+                $this->artifact,
                 [
                     self::ARTIFACT_LINK_ID => [
                         'new_values' => '',
@@ -180,9 +181,6 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItWrapsTrackerException(\Throwable $exception): void
     {
-        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
-            ArtifactTestBuilder::anArtifact(self::TIMEBOX_ID)->build()
-        );
         $this->changeset_creator->method('create')->willThrowException($exception);
 
         $this->expectException(NewChangesetCreationException::class);
@@ -191,9 +189,6 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresNoChangeException(): void
     {
-        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
-            ArtifactTestBuilder::anArtifact(self::TIMEBOX_ID)->build()
-        );
         $this->changeset_creator->method('create')->willThrowException(
             new \Tracker_NoChangeException(self::TIMEBOX_ID, sprintf('release #%d', self::TIMEBOX_ID))
         );
@@ -202,22 +197,12 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAdder()->addChangeset($this->changeset);
     }
 
-    public function testItThrowsWhenArtifactCantBeFound(): void
-    {
-        $this->artifact_retriever = RetrieveArtifactStub::withNoArtifact();
-
-        $this->expectException(ArtifactNotFoundException::class);
-        $this->getAdder()->addChangeset($this->changeset);
-    }
-
     public function testItCreatesANewChangesetToAddArtifactLink(): void
     {
-        $artifact                 = ArtifactTestBuilder::anArtifact(self::MIRRORED_PROGRAM_INCREMENT_ID)->build();
-        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact);
         $this->changeset_creator->expects(self::once())
             ->method('create')
             ->with(
-                $artifact,
+                $this->artifact,
                 [
                     self::ARTIFACT_LINK_ID => [
                         'new_values' => (string) self::MIRRORED_ITERATION_ID,
@@ -244,9 +229,6 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItWrapsTrackerExceptionForArtifactLink(\Throwable $exception): void
     {
-        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
-            ArtifactTestBuilder::anArtifact(self::MIRRORED_PROGRAM_INCREMENT_ID)->build()
-        );
         $this->changeset_creator->method('create')->willThrowException($exception);
 
         $this->expectException(AddArtifactLinkChangesetException::class);
@@ -255,22 +237,11 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresNoChangeExceptionForArtifactLink(): void
     {
-        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
-            ArtifactTestBuilder::anArtifact(self::MIRRORED_PROGRAM_INCREMENT_ID)->build()
-        );
         $this->changeset_creator->method('create')->willThrowException(
             new \Tracker_NoChangeException(self::MIRRORED_PROGRAM_INCREMENT_ID, sprintf('release #%d', self::MIRRORED_PROGRAM_INCREMENT_ID))
         );
 
         $this->expectNotToPerformAssertions();
-        $this->getAdder()->addArtifactLinkChangeset($this->artifact_link_changeset);
-    }
-
-    public function testItThrowsWhenArtifactCantBeFoundForArtifactLink(): void
-    {
-        $this->artifact_retriever = RetrieveArtifactStub::withNoArtifact();
-
-        $this->expectException(ArtifactNotFoundException::class);
         $this->getAdder()->addArtifactLinkChangeset($this->artifact_link_changeset);
     }
 }

@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueU
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 
@@ -52,10 +52,10 @@ final class ProgramIncrement
     public static function build(
         RetrieveStatusValueUserCanSee $retrieve_status_value,
         RetrieveTitleValueUserCanSee $retrieve_title_value,
-        RetrieveTimeframeValueUserCanSee $retrive_semantic_value,
+        RetrieveTimeframeValueUserCanSee $retrieve_timeframe_value,
         RetrieveUri $retrieve_uri,
         RetrieveCrossRef $retrieve_cross_ref,
-        RetrieveUserCanUpdate $retrieve_user_can_update,
+        VerifyUserCanUpdateTimebox $verify_user_can_update,
         VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $program_increment_identifier,
@@ -65,15 +65,15 @@ final class ProgramIncrement
             return null;
         }
         $status     = $retrieve_status_value->getLabel($program_increment_identifier, $user_identifier);
-        $start_date = $retrive_semantic_value->getStartDateValueTimestamp($program_increment_identifier, $user_identifier);
-        $end_date   = $retrive_semantic_value->getEndDateValueTimestamp($program_increment_identifier, $user_identifier);
+        $start_date = $retrieve_timeframe_value->getStartDateValueTimestamp($program_increment_identifier, $user_identifier);
+        $end_date   = $retrieve_timeframe_value->getEndDateValueTimestamp($program_increment_identifier, $user_identifier);
 
         return new self(
             $program_increment_identifier->getId(),
             $title,
             $retrieve_uri->getUri($program_increment_identifier),
             $retrieve_cross_ref->getXRef($program_increment_identifier),
-            $retrieve_user_can_update->userCanUpdate($program_increment_identifier, $user_identifier),
+            $verify_user_can_update->canUserUpdate($program_increment_identifier, $user_identifier),
             $can_plan_in_program_increment_verifier->userCanPlan(
                 $program_increment_identifier,
                 $user_identifier

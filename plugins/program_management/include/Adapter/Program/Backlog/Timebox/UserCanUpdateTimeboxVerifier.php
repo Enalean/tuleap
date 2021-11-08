@@ -21,26 +21,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUserCanUpdate;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class RetrieveUserCanUpdateStub implements RetrieveUserCanUpdate
+final class UserCanUpdateTimeboxVerifier implements VerifyUserCanUpdateTimebox
 {
-
-    private function __construct(private bool $user_can_update)
+    public function __construct(private RetrieveFullArtifact $artifact_retriever, private RetrieveUser $retrieve_user)
     {
     }
 
-    public function userCanUpdate(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): bool
+    public function canUserUpdate(TimeboxIdentifier $timebox, UserIdentifier $user): bool
     {
-        return $this->user_can_update;
-    }
-
-    public static function withUpdatePermission(): self
-    {
-        return new self(true);
+        $artifact = $this->artifact_retriever->getNonNullArtifact($timebox);
+        $pfuser   = $this->retrieve_user->getUserWithId($user);
+        return $artifact->userCanUpdate($pfuser);
     }
 }

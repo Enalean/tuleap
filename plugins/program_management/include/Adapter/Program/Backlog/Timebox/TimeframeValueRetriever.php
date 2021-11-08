@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -34,7 +35,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 final class TimeframeValueRetriever implements RetrieveTimeframeValueUserCanSee
 {
     public function __construct(
-        private \Tracker_ArtifactFactory $artifact_factory,
+        private RetrieveFullArtifact $artifact_retriever,
         private RetrieveUser $retrieve_user,
         private SemanticTimeframeBuilder $semantic_timeframe_builder,
         private LoggerInterface $logger,
@@ -55,12 +56,8 @@ final class TimeframeValueRetriever implements RetrieveTimeframeValueUserCanSee
         TimeboxIdentifier $timebox_identifier,
         UserIdentifier $user_identifier
     ): ?TimePeriodWithoutWeekEnd {
-        $artifact = $this->artifact_factory->getArtifactById($timebox_identifier->getId());
-        if (! $artifact) {
-            return null;
-        }
-
-        $user = $this->retrieve_user->getUserWithId($user_identifier);
+        $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
+        $user     = $this->retrieve_user->getUserWithId($user_identifier);
 
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
