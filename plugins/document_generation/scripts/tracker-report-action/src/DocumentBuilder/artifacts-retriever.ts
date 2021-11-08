@@ -574,6 +574,10 @@ export interface TestExecutionResponse {
         description: string;
         description_format: string;
         steps: Array<ArtifactReportResponseStepRepresentation>;
+        requirement: {
+            id: number;
+            title: string | null;
+        } | null;
     };
     steps_results: {
         [key: string]: {

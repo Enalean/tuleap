@@ -128,6 +128,10 @@ describe("API querier", () => {
                             rank: 3,
                         },
                     ],
+                    requirement: {
+                        id: 888,
+                        title: null,
+                    },
                 },
                 steps_results: {
                     "13": {

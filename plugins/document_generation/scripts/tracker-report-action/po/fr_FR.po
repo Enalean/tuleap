@@ -84,6 +84,9 @@ msgstr "Projet"
 msgid "Report URL"
 msgstr "URL du rapport"
 
+msgid "Requirements"
+msgstr "Exigences"
+
 msgid "Results"
 msgstr "Résultats"
 

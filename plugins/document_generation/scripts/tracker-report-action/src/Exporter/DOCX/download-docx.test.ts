@@ -112,6 +112,7 @@ describe("download-docx", () => {
                 ],
                 traceability_matrix: [
                     {
+                        requirement: "Some requirement",
                         result: "passed",
                         campaign: "Some campaigns",
                         test: "Some test",

@@ -255,6 +255,10 @@ describe("artifacts-retriever", () => {
                         rank: 3,
                     },
                 ],
+                requirement: {
+                    id: 888,
+                    title: null,
+                },
             },
             previous_result: null,
             steps_results: {

@@ -43,6 +43,10 @@ describe("create-traceability-matrix", () => {
             },
             definition: {
                 summary: "Some definition summary",
+                requirement: {
+                    id: 888,
+                    title: "Requirement title",
+                },
             },
         } as TestExecutionResponse);
 
@@ -81,6 +85,7 @@ describe("create-traceability-matrix", () => {
 
         expect(matrix).toStrictEqual([
             {
+                requirement: "Requirement title",
                 result: "passed",
                 executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
@@ -197,6 +202,57 @@ describe("create-traceability-matrix", () => {
                             },
                         ],
                         reverse_links: [],
+                    },
+                ],
+                containers: [],
+            },
+        ]);
+
+        expect(matrix).toStrictEqual([]);
+    });
+
+    it("creates an empty matrix when test executions are not linked to a requirement", async () => {
+        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue({
+            previous_result: {
+                status: "passed",
+                submitted_by: {
+                    display_name: "Realname (username)",
+                } as ArtifactReportResponseUserRepresentation,
+                submitted_on: "2021-07-01T00:00:00+02:00",
+            },
+            definition: {
+                summary: "Some definition summary",
+                requirement: null,
+            },
+        } as TestExecutionResponse);
+
+        const matrix = await buildMatrix([
+            {
+                id: 15,
+                title: null,
+                values: [
+                    {
+                        field_id: 1,
+                        type: "ttmstepexec",
+                        label: "Step exec",
+                        value: null,
+                    },
+                    {
+                        field_id: 2,
+                        type: "art_link",
+                        label: "Art links",
+                        links: [
+                            {
+                                id: 700,
+                                type: "_covered_by",
+                            },
+                        ],
+                        reverse_links: [
+                            {
+                                id: 800,
+                                type: null,
+                            },
+                        ],
                     },
                 ],
                 containers: [],
