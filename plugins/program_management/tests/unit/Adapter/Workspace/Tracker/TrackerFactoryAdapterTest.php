@@ -23,56 +23,88 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
+use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const TRACKER_ID = 85;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
+     */
+    private $tracker_factory;
+
+    protected function setUp(): void
+    {
+        $this->tracker_factory = $this->createStub(\TrackerFactory::class);
+    }
+
+    private function getAdapter(): TrackerFactoryAdapter
+    {
+        return new TrackerFactoryAdapter($this->tracker_factory);
+    }
+
     public function testReturnArrayOfTrackerReference(): void
     {
-        $tracker_factory = $this->createStub(\TrackerFactory::class);
-        $tracker_factory->method('getTrackersByGroupId')->willReturn(
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn(
             [
-                TrackerTestBuilder::aTracker()->withId(20)->withName('Sprint')->withProject(new \Project(['group_id' => 102, 'group_name' => 'My project']))->build(),
-                TrackerTestBuilder::aTracker()->withId(30)->withName('Feature')->withProject(new \Project(['group_id' => 102, 'group_name' => 'My project']))->build()
+                TrackerTestBuilder::aTracker()->withId(20)->withName('Sprint')->withProject($project)->build(),
+                TrackerTestBuilder::aTracker()->withId(30)->withName('Feature')->withProject($project)->build()
             ]
         );
 
-        $adapter            = new TrackerFactoryAdapter($tracker_factory);
-        $trackers_reference = $adapter->searchAllTrackersOfProgram(
+        $trackers_references = $this->getAdapter()->searchAllTrackersOfProgram(
             ProgramForAdministrationIdentifierBuilder::build()
         );
 
-        self::assertCount(2, $trackers_reference);
-        self::assertSame(20, $trackers_reference[0]->getId());
-        self::assertSame('Sprint', $trackers_reference[0]->getLabel());
-        self::assertSame(30, $trackers_reference[1]->getId());
-        self::assertSame('Feature', $trackers_reference[1]->getLabel());
+        self::assertCount(2, $trackers_references);
+        [$first_tracker, $second_tracker] = $trackers_references;
+        self::assertSame(20, $first_tracker->getId());
+        self::assertSame('Sprint', $first_tracker->getLabel());
+        self::assertSame(30, $second_tracker->getId());
+        self::assertSame('Feature', $second_tracker->getLabel());
     }
 
     public function testReturnNullWhenNoTracker(): void
     {
-        $tracker_factory = $this->createStub(\TrackerFactory::class);
-        $tracker_factory->method('getTrackerById')->willReturn(null);
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
-        $adapter = new TrackerFactoryAdapter($tracker_factory);
-
-        self::assertNull($adapter->getTrackerById(85));
+        self::assertNull($this->getAdapter()->getTrackerById(404));
     }
 
     public function testItReturnsTracker(): void
     {
-        $tracker_factory = $this->createStub(\TrackerFactory::class);
-        $tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(85)
-                                                 ->withProject(new \Project(['group_id' => 101, 'group_name' => "A project"]))
-                                                 ->build());
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->tracker_factory->method('getTrackerById')->willReturn(
+            TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->withProject($project)->build()
+        );
 
-        $adapter = new TrackerFactoryAdapter($tracker_factory);
-
-        $tracker = $adapter->getTrackerById(85);
+        $tracker = $this->getAdapter()->getTrackerById(self::TRACKER_ID);
 
         self::assertInstanceOf(TrackerReference::class, $tracker);
         self::assertSame(85, $tracker->getId());
+    }
+
+    public function testItReturnsTrackerFromIdentifier(): void
+    {
+        $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+
+        $result = $this->getAdapter()->getNonNullTracker(TrackerIdentifierStub::withId(self::TRACKER_ID));
+
+        self::assertSame($tracker, $result);
+    }
+
+    public function testItThrowsWhenIdentifierDoesNotMatchAnyTracker(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
+
+        $this->expectException(TrackerNotFoundException::class);
+        $this->getAdapter()->getNonNullTracker(TrackerIdentifierStub::withId(404));
     }
 }

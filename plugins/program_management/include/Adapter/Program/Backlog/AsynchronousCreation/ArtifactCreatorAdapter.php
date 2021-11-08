@@ -25,11 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValuesFormatter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxFirstChangeset;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimeboxIdentifier;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
@@ -38,7 +38,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
 {
     public function __construct(
         private TrackerArtifactCreator $artifact_creator,
-        private \TrackerFactory $tracker_factory,
+        private RetrieveFullTracker $tracker_retriever,
         private RetrieveUser $retrieve_user,
         private ChangesetValuesFormatter $formatter
     ) {
@@ -46,11 +46,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
 
     public function create(MirroredTimeboxFirstChangeset $first_changeset): MirroredTimeboxIdentifier
     {
-        $tracker_id   = $first_changeset->mirrored_timebox_tracker->getId();
-        $full_tracker = $this->tracker_factory->getTrackerById($tracker_id);
-        if (! $full_tracker) {
-            throw new TrackerNotFoundException($tracker_id);
-        }
+        $full_tracker = $this->tracker_retriever->getNonNullTracker($first_changeset->mirrored_timebox_tracker);
 
         $pfuser           = $this->retrieve_user->getUserWithId($first_changeset->user);
         $formatted_values = $this->formatter->formatForTrackerPlugin($first_changeset->values);

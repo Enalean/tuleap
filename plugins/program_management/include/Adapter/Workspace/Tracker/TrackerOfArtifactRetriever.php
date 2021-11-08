@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTrackerOfArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
@@ -33,7 +34,7 @@ final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact
 {
     public function __construct(
         private \Tracker_ArtifactFactory $artifact_factory,
-        private \TrackerFactory $tracker_factory
+        private RetrieveTracker $tracker_retriever
     ) {
     }
 
@@ -44,10 +45,10 @@ final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact
             throw new ArtifactNotFoundException($artifact);
         }
         $tracker_id = $full_artifact->getTrackerId();
-        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
+        $tracker    = $this->tracker_retriever->getTrackerById($tracker_id);
         if (! $tracker) {
             throw new TrackerNotFoundException($tracker_id);
         }
-        return TrackerReferenceProxy::fromTracker($tracker);
+        return $tracker;
     }
 }

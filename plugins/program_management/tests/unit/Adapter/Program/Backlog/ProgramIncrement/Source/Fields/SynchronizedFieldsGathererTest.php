@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementTrackerIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
@@ -42,10 +42,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 37;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
-     */
-    private $tracker_factory;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_TitleFactory
      */
@@ -71,7 +67,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->tracker_factory      = $this->createStub(\TrackerFactory::class);
         $this->title_factory        = $this->createStub(\Tracker_Semantic_TitleFactory::class);
         $this->description_factory  = $this->createStub(\Tracker_Semantic_DescriptionFactory::class);
         $this->status_factory       = $this->createStub(\Tracker_Semantic_StatusFactory::class);
@@ -91,7 +86,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getGatherer(): SynchronizedFieldsGatherer
     {
         return new SynchronizedFieldsGatherer(
-            $this->tracker_factory,
+            RetrieveFullTrackerStub::withTracker($this->tracker),
             $this->title_factory,
             $this->description_factory,
             $this->status_factory,
@@ -100,32 +95,8 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function dataProviderMethodUnderTest(): array
-    {
-        return [
-            'when getting title field'         => ['getTitleField'],
-            'when getting description field'   => ['getDescriptionField'],
-            'when getting status field'        => ['getStatusField'],
-            'when getting start date field'    => ['getStartDateField'],
-            'when getting end period field'    => ['getEndPeriodField'],
-            'when getting artifact link field' => ['getArtifactLinkField'],
-        ];
-    }
-
-    /**
-     * @dataProvider dataProviderMethodUnderTest
-     */
-    public function testItThrowsWhenTrackerCantBeFound(string $method_under_test): void
-    {
-        $this->tracker_factory->method('getTrackerById')->willReturn(null);
-
-        $this->expectException(TrackerNotFoundException::class);
-        call_user_func([$this->getGatherer(), $method_under_test], $this->tracker_identifier, null);
-    }
-
     public function testItThrowsWhenTitleFieldCantBeFound(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $title_semantic = new \Tracker_Semantic_Title($this->tracker);
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
@@ -135,7 +106,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTitleIsNotAString(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getTextField(1, 'Title'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
@@ -145,7 +115,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCollectsErrorWhenTitleIsNotAString(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getTextField(1, 'Title'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
@@ -157,7 +126,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTitleReference(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getStringField(832, 'Semiacquaintance'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
@@ -168,7 +136,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenDescriptionFieldCantBeFound(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $description_semantic = new \Tracker_Semantic_Description($this->tracker);
         $this->description_factory->method('getByTracker')->willReturn($description_semantic);
 
@@ -178,7 +145,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsDescriptionReference(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $description_semantic = new \Tracker_Semantic_Description($this->tracker, $this->getTextField(693, 'Smokish'));
         $this->description_factory->method('getByTracker')->willReturn($description_semantic);
 
@@ -189,7 +155,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenStatusFieldCantBeFound(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $status_semantic = new \Tracker_Semantic_Status($this->tracker);
         $this->status_factory->method('getByTracker')->willReturn($status_semantic);
 
@@ -199,7 +164,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsStatusReference(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $status_semantic = new \Tracker_Semantic_Status($this->tracker, $this->getSelectboxField(525, 'Kettle'));
         $this->status_factory->method('getByTracker')->willReturn($status_semantic);
 
@@ -210,7 +174,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenDateFieldCantBeFound(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $timeframe_semantic = new SemanticTimeframe($this->tracker, new TimeframeNotConfigured());
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
@@ -220,7 +183,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsStartDateReference(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $timeframe_semantic = new SemanticTimeframe(
             $this->tracker,
             new TimeframeWithEndDate($this->getDateField(101, 'hebetate'), $this->getDateField(981, 'polyphore'))
@@ -234,7 +196,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenNeitherEndDateNorDurationFieldCanBeFound(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $timeframe_semantic = new SemanticTimeframe($this->tracker, new TimeframeNotConfigured());
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
@@ -244,7 +205,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsDurationReference(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $timeframe_semantic = new SemanticTimeframe(
             $this->tracker,
             new TimeframeWithDuration($this->getDateField(942, 'micher'), $this->getIntField(429, 'Maclura'))
@@ -259,7 +219,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEndDateReference(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $timeframe_semantic = new SemanticTimeframe(
             $this->tracker,
             new TimeframeWithEndDate($this->getDateField(591, 'privy'), $this->getDateField(754, 'block'))
@@ -274,7 +233,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenArtifactLinkFieldCantBeFound(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([]);
 
         $this->expectException(NoArtifactLinkFieldException::class);
@@ -283,7 +241,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsArtifactLinkReference(): void
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
         $this->form_element_factory->method('getUsedArtifactLinkFields')
             ->willReturn([$this->getArtifactLinkField(623, 'premanifest')]);
 

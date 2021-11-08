@@ -91,7 +91,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -100,20 +99,21 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
-use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
+use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ScrumBlocksServiceVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics;
@@ -142,10 +142,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncreme
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
 use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
 use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
@@ -374,15 +374,12 @@ final class program_managementPlugin extends Plugin
 
     public function routeGetAdminProgramManagement(): DisplayAdminProgramManagementController
     {
-        $project_manager = ProjectManager::instance();
-        $program_dao     = new ProgramDao();
-        $event_manager   = \EventManager::instance();
-
-        $tracker_factory = TrackerFactory::instance();
-
-        $user_manager         = UserManager::instance();
-        $user_manager_adapter = new UserManagerAdapter($user_manager);
-
+        $project_manager               = ProjectManager::instance();
+        $program_dao                   = new ProgramDao();
+        $event_manager                 = \EventManager::instance();
+        $tracker_factory               = TrackerFactory::instance();
+        $user_manager                  = UserManager::instance();
+        $user_manager_adapter          = new UserManagerAdapter($user_manager);
         $form_element_factory          = \Tracker_FormElementFactory::instance();
         $timeframe_dao                 = new SemanticTimeframeDao();
         $semantic_status_factory       = new Tracker_Semantic_StatusFactory();
@@ -391,9 +388,11 @@ final class program_managementPlugin extends Plugin
         $program_increments_dao        = new ProgramIncrementsDAO();
         $iteration_dao                 = new IterationsDAO();
         $retrieve_tracker_from_field   = new TrackerFromFieldRetriever($form_element_factory);
-        $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_factory);
-        $gatherer                      = new SynchronizedFieldsGatherer(
-            $tracker_factory,
+        $tracker_retriever             = new TrackerFactoryAdapter($tracker_factory);
+        $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_retriever);
+
+        $gatherer = new SynchronizedFieldsGatherer(
+            $tracker_retriever,
             new \Tracker_Semantic_TitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             $semantic_status_factory,
@@ -1120,10 +1119,11 @@ final class program_managementPlugin extends Plugin
         $tracker_factory               = \TrackerFactory::instance();
         $iteration_dao                 = new IterationsDAO();
         $retrieve_tracker_from_field   = new TrackerFromFieldRetriever($form_element_factory);
-        $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_factory);
+        $tracker_retriever             = new TrackerFactoryAdapter($tracker_factory);
+        $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_retriever);
 
         $gatherer = new SynchronizedFieldsGatherer(
-            $tracker_factory,
+            $tracker_retriever,
             new \Tracker_Semantic_TitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             $semantic_status_factory,

@@ -20,16 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
-interface RetrieveTitleField
+final class RetrieveFullTrackerStub implements RetrieveFullTracker
 {
-    /**
-     * @throws FieldRetrievalException
-     * @throws TitleFieldHasIncorrectTypeException
-     */
-    public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference;
+    private function __construct(private \Tracker $tracker)
+    {
+    }
+
+    public static function withTracker(\Tracker $tracker): self
+    {
+        return new self($tracker);
+    }
+
+    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tracker
+    {
+        return $this->tracker;
+    }
 }

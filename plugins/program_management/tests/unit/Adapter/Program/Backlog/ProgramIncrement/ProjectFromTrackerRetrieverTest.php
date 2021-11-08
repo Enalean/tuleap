@@ -22,47 +22,43 @@
 declare(strict_types=1);
 
 
-namespace unit\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var Stub&\TrackerFactory
-     */
-    private $tracker_factory;
-    private ProjectFromTrackerRetriever $retriever;
+    private const TRACKER_ID    = 219;
+    private const PROJECT_ID    = 288;
+    private const PROJECT_LABEL = 'My project';
     private TrackerReference $tracker_reference;
 
     protected function setUp(): void
     {
-        $this->tracker_factory   = $this->createStub(\TrackerFactory::class);
-        $this->retriever         = new ProjectFromTrackerRetriever($this->tracker_factory);
-        $this->tracker_reference = TrackerReferenceStub::withDefaults();
+        $this->tracker_reference = TrackerReferenceStub::withId(self::TRACKER_ID);
     }
 
-    public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
+    private function getRetriever(): ProjectFromTrackerRetriever
     {
-        $this->tracker_factory->method('getTrackerById')->willReturn(null);
-
-        $this->expectException(TrackerNotFoundException::class);
-        $this->retriever->fromTrackerReference($this->tracker_reference);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withPublicName(self::PROJECT_LABEL)
+            ->build();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::TRACKER_ID)
+            ->withProject($project)
+            ->build();
+        return new ProjectFromTrackerRetriever(RetrieveFullTrackerStub::withTracker($tracker));
     }
 
     public function testItRetrievesProjectReference(): void
     {
-        $project = new \Project(['group_id' => 101, 'group_name' => "My project", "unix_group_name" => "project", 'icon_codepoint' => '']);
-        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
-        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
-
-        $project_reference = $this->retriever->fromTrackerReference($this->tracker_reference);
-        self::assertEquals($project->getID(), $project_reference->getId());
-        self::assertEquals($project->getPublicName(), $project_reference->getProjectLabel());
+        $project_reference = $this->getRetriever()->fromTrackerReference($this->tracker_reference);
+        self::assertSame(self::PROJECT_ID, $project_reference->getId());
+        self::assertSame(self::PROJECT_LABEL, $project_reference->getProjectLabel());
     }
 }
