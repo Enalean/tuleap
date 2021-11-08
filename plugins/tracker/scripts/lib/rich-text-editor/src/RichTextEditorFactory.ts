@@ -20,7 +20,7 @@
 import french_translations from "../po/fr_FR.po";
 import { initGettextSync } from "@tuleap/gettext";
 import TurndownService from "turndown";
-import marked from "marked";
+import { parse } from "marked";
 import { FlamingParrotDocumentAdapter } from "./format-selector/FlamingParrotDocumentAdapter";
 import type {
     HTMLToMarkdownConverterInterface,
@@ -50,7 +50,7 @@ export class RichTextEditorFactory {
             convert: (html: string): string => turndown_service.turndown(html),
         };
         this.markdown_renderer = {
-            render: (markdown: string): string => marked(markdown),
+            render: (markdown: string): string => parse(markdown),
         };
     }
 

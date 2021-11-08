@@ -6,11 +6,11 @@ specifiers:
   '@types/bootstrap': ^3.4.0
   '@types/ckeditor': ^4.9.10
   '@types/dompurify': ^2.2.2
-  '@types/marked': ^3.0.1
+  '@types/marked': ^3.0.2
   '@types/turndown': ^5.0.0
   dompurify: ^2.2.9
   lit: ^2.0.2
-  marked: ^3.0.4
+  marked: ^4.0.0
   turndown: ^7.0.0
 
 dependencies:
@@ -18,14 +18,14 @@ dependencies:
   '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   dompurify: 2.3.1
   lit: 2.0.2
-  marked: 3.0.4
+  marked: 4.0.0
   turndown: 7.1.1
 
 devDependencies:
   '@types/bootstrap': 3.4.0
   '@types/ckeditor': 4.9.10
   '@types/dompurify': 2.2.2
-  '@types/marked': 3.0.1
+  '@types/marked': 3.0.2
   '@types/turndown': 5.0.1
 
 packages:
@@ -56,8 +56,8 @@ packages:
       '@types/sizzle': 2.3.2
     dev: true
 
-  /@types/marked/3.0.1:
-    resolution: {integrity: sha512-jry/WUAC511P2NBCeiCkfTRCN2VXobeeQa8p8gImOYsRfnuIVfeEsqOJ1pk+CzCwfMCdv3dkTQRCYaNkkFGtxw==}
+  /@types/marked/3.0.2:
+    resolution: {integrity: sha512-mGYI9qFs+i5eYaytWKBbtEMbIkrXGKuhsDpDcj70ogKS2gk1NmgEy9Z3VEKz922Lfms6eITXXqv5idlX7C/irw==}
     dev: true
 
   /@types/sizzle/2.3.2:
@@ -105,8 +105,8 @@ packages:
       lit-html: 2.0.1
     dev: false
 
-  /marked/3.0.4:
-    resolution: {integrity: sha512-jBo8AOayNaEcvBhNobg6/BLhdsK3NvnKWJg33MAAPbvTWiG4QBn9gpW1+7RssrKu4K1dKlN+0goVQwV41xEfOA==}
+  /marked/4.0.0:
+    resolution: {integrity: sha512-K3C1JvtiXuXVLoxDQEJP4NMLBuThlTkthgUOCzqLghIpHfis1DIZZfPI3o4UgfFpQ0d+JvTql2h+szR9jQ1p1w==}
     engines: {node: '>= 12'}
     hasBin: true
     dev: false
