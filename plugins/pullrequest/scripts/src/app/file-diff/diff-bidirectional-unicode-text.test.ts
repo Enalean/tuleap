@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText } from "./diff-bidirectional-unicode-text";
+import {
+    doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText,
+    getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible,
+} from "./diff-bidirectional-unicode-text";
 
 describe("diff-bidirectional-unicode-text", () => {
     it("detects text with potentially dangerous unicode bidirectional characters", () => {
@@ -48,5 +51,17 @@ describe("diff-bidirectional-unicode-text", () => {
             });
 
         expect(is_potentially_dangerous).toBe(false);
+    });
+
+    it("makes CodeMirror highlights potentially dangerous BiDi characters", () => {
+        const codemirror_options =
+            getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible({
+                specialChars: /a/,
+            });
+
+        expect(codemirror_options.specialChars).toBeDefined();
+        expect((codemirror_options.specialChars as RegExp).test("\u202a")).toBe(true);
+        expect((codemirror_options.specialChars as RegExp).test("a")).toBe(true);
+        expect((codemirror_options.specialChars as RegExp).test("b")).toBe(false);
     });
 });

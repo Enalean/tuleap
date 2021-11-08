@@ -23,6 +23,7 @@ import { getCollapsibleCodeSections } from "../../code-collapse/code-collapse-se
 
 import "./modes.js";
 import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
+import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
@@ -60,12 +61,13 @@ function controller(
 
     function init() {
         const codemirror_area = $element[0].querySelector(".pull-request-unidiff");
-        const unidiff_options = {
-            readOnly: true,
-            lineWrapping: true,
-            gutters: [GUTTER_OLDLINES, GUTTER_NEWLINES],
-            mode: self.diff.mime_type,
-        };
+        const unidiff_options =
+            getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible({
+                readOnly: true,
+                lineWrapping: true,
+                gutters: [GUTTER_OLDLINES, GUTTER_NEWLINES],
+                mode: self.diff.mime_type,
+            });
 
         const unidiff_codemirror = CodeMirror(codemirror_area, unidiff_options);
         $scope.$broadcast("code_mirror_initialized");

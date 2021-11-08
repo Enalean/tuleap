@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/angular-tlp': file:../../src/scripts/lib/angular-tlp
   '@tuleap/tooltip': file:../../src/scripts/lib/tooltip
+  '@types/codemirror': ^5.60.1
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
   angular-gettext: ^2.4.2
@@ -31,10 +32,27 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@types/codemirror': 5.60.5
   angular-mocks: 1.8.2
   jquery: 3.6.0
 
 packages:
+
+  /@types/codemirror/5.60.5:
+    resolution: {integrity: sha512-TiECZmm8St5YxjFUp64LK0c8WU5bxMDt9YaAek1UqUb9swrSCoJhh92fWu1p3mTEqlHjhB5sY7OFBhWroJXZVg==}
+    dependencies:
+      '@types/tern': 0.23.4
+    dev: true
+
+  /@types/estree/0.0.50:
+    resolution: {integrity: sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw==}
+    dev: true
+
+  /@types/tern/0.23.4:
+    resolution: {integrity: sha512-JAUw1iXGO1qaWwEOzxTKJZ/5JxVeON9kvGZ/osgZaJImBnyjyn0cjovPsf6FNLmyGY8Vw9DoXZCMlfMkMwHRWg==}
+    dependencies:
+      '@types/estree': 0.0.50
+    dev: true
 
   /@uirouter/angularjs/1.0.29_angular@1.8.2:
     resolution: {integrity: sha512-RImWnBarNixkMto0o8stEaGwZmvhv5cnuOLXyMU2pY8MP2rgEF74ZNJTLeJCW14LR7XDUxVH8Mk8bPI6lxedmQ==}
