@@ -29,7 +29,7 @@ import type {
     ReportCriterionValue,
 } from "../../type";
 import type { TraceabilityMatrixElement } from "../../type";
-import type { XmlComponent } from "docx";
+import type { XmlComponent, ITableCellOptions, IShadingAttributesProperties } from "docx";
 import {
     AlignmentType,
     Bookmark,
@@ -66,6 +66,7 @@ import { transformLargeContentIntoParagraphs } from "./TextContent/transform-lar
 import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
 import type { ReadonlyArrayWithAtLeastOneElement } from "./TextContent/transform-html-into-paragraphs";
 import { getInternationalizedTestStatus } from "../internationalize-test-status";
+import type { ArtifactFieldValueStatus } from "../../type";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -1024,8 +1025,8 @@ function buildTraceabilityMatrix(
             shading: TABLE_LABEL_SHADING,
         });
 
-    const buildCellContent = (content: TextRun | ExternalHyperlink): TableCell =>
-        new TableCell({
+    const buildCellContentOptions = (content: TextRun | ExternalHyperlink): ITableCellOptions => {
+        return {
             children: [
                 new Paragraph({
                     children: [content],
@@ -1033,7 +1034,43 @@ function buildTraceabilityMatrix(
                 }),
             ],
             margins: TABLE_MARGINS,
-        });
+        };
+    };
+
+    const buildCellContent = (content: TextRun | ExternalHyperlink): TableCell =>
+        new TableCell(buildCellContentOptions(content));
+
+    const buildCellContentResult = (result: ArtifactFieldValueStatus): TableCell => {
+        const table_cell_options = buildCellContentOptions(
+            new TextRun(getInternationalizedTestStatus(gettext_provider, result))
+        );
+
+        const additional_cell_options: { shading?: IShadingAttributesProperties } = {};
+        switch (result) {
+            case "passed":
+                additional_cell_options.shading = {
+                    fill: "1aa350",
+                };
+                break;
+            case "blocked":
+                additional_cell_options.shading = {
+                    fill: "1aacd8",
+                };
+                break;
+            case "failed":
+                additional_cell_options.shading = {
+                    fill: "e04b4b",
+                };
+                break;
+            default:
+                additional_cell_options.shading = {
+                    fill: "717171",
+                };
+                break;
+        }
+
+        return new TableCell({ ...table_cell_options, ...additional_cell_options });
+    };
 
     const table = new Table({
         width: {
@@ -1060,11 +1097,7 @@ function buildTraceabilityMatrix(
                             buildCellContent(new TextRun(element.requirement)),
                             buildCellContent(new TextRun(element.test)),
                             buildCellContent(new TextRun(element.campaign)),
-                            buildCellContent(
-                                new TextRun(
-                                    getInternationalizedTestStatus(gettext_provider, element.result)
-                                )
-                            ),
+                            buildCellContentResult(element.result),
                             buildCellContent(new TextRun(element.executed_by || "")),
                             buildCellContent(new TextRun(element.executed_on || "")),
                         ],
