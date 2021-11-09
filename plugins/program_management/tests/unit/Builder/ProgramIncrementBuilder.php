@@ -28,9 +28,9 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeframeValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUriStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserCanUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 
 final class ProgramIncrementBuilder
 {
@@ -43,7 +43,7 @@ final class ProgramIncrementBuilder
             RetrieveTimeframeValueUserCanSeeStub::withValues(1632812856, 1635412056),
             RetrieveUriStub::withDefault(),
             RetrieveCrossRefStub::withDefault(),
-            RetrieveUserCanUpdateStub::withUpdatePermission(),
+            VerifyUserCanUpdateTimeboxStub::withUpdatePermission(),
             VerifyUserCanPlanInProgramIncrementStub::buildCanPlan(),
             $user_identifier,
             ProgramIncrementIdentifierBuilder::buildWithIdAndUser($program_increment_id, $user_identifier)
