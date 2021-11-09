@@ -67,7 +67,10 @@ interface RawMatrixElement {
     result: ArtifactFieldValueStatus;
     executed_by: string | null;
     executed_on: string | null;
-    test: string;
+    test: {
+        id: number;
+        title: string;
+    };
     campaigns: ReadonlyArray<number>;
 }
 
@@ -131,7 +134,10 @@ async function getMatrixElements(
             result: test_exec.previous_result?.status ?? null,
             executed_by: test_exec.previous_result?.submitted_by.display_name ?? null,
             executed_on: submitted_on,
-            test: test_exec.definition.summary,
+            test: {
+                id: artifact.id,
+                title: test_exec.definition.summary,
+            },
             campaigns: campaigns.map((campaign) => campaign.id),
         });
     }

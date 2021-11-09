@@ -115,7 +115,10 @@ describe("download-docx", () => {
                         requirement: "Some requirement",
                         result: "passed",
                         campaign: "Some campaigns",
-                        test: "Some test",
+                        test: {
+                            id: 369,
+                            title: "Some test",
+                        },
                         executed_on: "2021-07-01T00:00:00+02:00",
                         executed_by: "Realname (shortname)",
                     },

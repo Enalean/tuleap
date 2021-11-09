@@ -41,6 +41,7 @@ import {
     Footer,
     Header,
     HeadingLevel,
+    InternalHyperlink,
     LevelFormat,
     Packer,
     PageBreak,
@@ -1052,7 +1053,7 @@ function buildTraceabilityMatrix(
             shading: TABLE_LABEL_SHADING,
         });
 
-    const buildCellContentOptions = (content: TextRun | ExternalHyperlink): ITableCellOptions => {
+    const buildCellContentOptions = (content: TextRun | InternalHyperlink): ITableCellOptions => {
         return {
             children: [
                 new Paragraph({
@@ -1064,7 +1065,7 @@ function buildTraceabilityMatrix(
         };
     };
 
-    const buildCellContent = (content: TextRun | ExternalHyperlink): TableCell =>
+    const buildCellContent = (content: TextRun | InternalHyperlink): TableCell =>
         new TableCell(buildCellContentOptions(content));
 
     const buildCellContentResult = (result: ArtifactFieldValueStatus): TableCell => {
@@ -1122,7 +1123,12 @@ function buildTraceabilityMatrix(
                     new TableRow({
                         children: [
                             buildCellContent(new TextRun(element.requirement)),
-                            buildCellContent(new TextRun(element.test)),
+                            buildCellContent(
+                                new InternalHyperlink({
+                                    children: [new TextRun(element.test.title)],
+                                    anchor: getAnchorToArtifactContent(element.test),
+                                })
+                            ),
                             buildCellContent(new TextRun(element.campaign)),
                             buildCellContentResult(element.result),
                             buildCellContent(new TextRun(element.executed_by || "")),

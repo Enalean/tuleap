@@ -96,7 +96,10 @@ describe("create-traceability-matrix", () => {
                 result: "passed",
                 executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
-                test: "Some definition summary",
+                test: {
+                    id: 10,
+                    title: "Some definition summary",
+                },
                 campaign: "Campaign title",
             },
         ]);
@@ -348,7 +351,10 @@ describe("create-traceability-matrix", () => {
                 result: "passed",
                 executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
-                test: "Some definition summary",
+                test: {
+                    id: 10,
+                    title: "Some definition summary",
+                },
                 campaign: "#800",
             },
         ]);

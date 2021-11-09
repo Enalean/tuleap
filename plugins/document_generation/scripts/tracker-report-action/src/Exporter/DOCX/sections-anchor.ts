@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FormattedArtifact } from "../../type";
-
-export function getAnchorToArtifactContent(artifact: FormattedArtifact): string {
+export function getAnchorToArtifactContent(artifact: { id: number }): string {
     return "artifact-" + artifact.id;
 }
