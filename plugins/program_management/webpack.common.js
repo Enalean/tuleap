@@ -25,6 +25,8 @@ const entry_points = {
     artifact_additional_action: "./scripts/artifact-additional-action/src/index.ts",
     program_management_admin: "./scripts/admin/src/index.ts",
     "program-management-style": "./themes/program_management.scss",
+    "planned-iterations": "./scripts/planned-iterations/index.ts",
+    "planned-iterations-style": "./themes/planned-iterations.scss",
 };
 
 module.exports = [

@@ -27,6 +27,8 @@ use HTTPRequest;
 use program_managementPlugin;
 use Project;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementInfo;
@@ -84,8 +86,6 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
-        $this->includeHeaderAndNavigationBar($layout, $project);
-
         $user            = $request->getCurrentUser();
         $user_identifier = UserProxy::buildFromPFUser($user);
 
@@ -111,6 +111,12 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
             throw new ForbiddenException($e->getI18NExceptionMessage());
         }
 
+        $assets = $this->getAssets();
+
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'planned-iterations-style'));
+        $layout->includeFooterJavascriptFile($assets->getFileURL('planned-iterations.js'));
+        $this->includeHeaderAndNavigationBar($layout, $project);
+
         $this->template_renderer->renderToPage(
             'plan-iterations',
             DisplayPlanIterationsPresenter::fromPlannedIterations($planned_iterations)
@@ -130,6 +136,14 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 'main_classes'                   => [],
                 'without-project-in-breadcrumbs' => true,
             ]
+        );
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/program_management',
+            '/assets/program_management'
         );
     }
 }
