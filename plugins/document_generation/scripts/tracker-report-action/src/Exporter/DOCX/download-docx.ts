@@ -21,15 +21,16 @@ import type {
     ArtifactContainer,
     ArtifactFieldShortValue,
     ArtifactFieldValue,
+    ArtifactFieldValueStatus,
     ArtifactFieldValueStepDefinition,
     DateReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
     ReportCriterionValue,
+    TraceabilityMatrixElement,
 } from "../../type";
-import type { TraceabilityMatrixElement } from "../../type";
-import type { XmlComponent, ITableCellOptions, IShadingAttributesProperties } from "docx";
+import type { IShadingAttributesProperties, ITableCellOptions, XmlComponent } from "docx";
 import {
     AlignmentType,
     Bookmark,
@@ -44,6 +45,7 @@ import {
     Packer,
     PageBreak,
     PageNumber,
+    PageOrientation,
     Paragraph,
     ShadingType,
     StyleLevel,
@@ -66,7 +68,6 @@ import { transformLargeContentIntoParagraphs } from "./TextContent/transform-lar
 import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
 import type { ReadonlyArrayWithAtLeastOneElement } from "./TextContent/transform-html-into-paragraphs";
 import { getInternationalizedTestStatus } from "../internationalize-test-status";
-import type { ArtifactFieldValueStatus } from "../../type";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -218,6 +219,26 @@ export async function downloadDocx(
 
     report_criteria_data.push(report_criteria_content);
 
+    const traceability_matrix_children = buildTraceabilityMatrix(
+        document.traceability_matrix,
+        gettext_provider
+    );
+    const traceability_matrix_sections = [];
+    if (traceability_matrix_children.length > 0) {
+        traceability_matrix_sections.push({
+            headers,
+            children: [...traceability_matrix_children],
+            footers,
+            properties: {
+                page: {
+                    size: {
+                        orientation: PageOrientation.LANDSCAPE,
+                    },
+                },
+            },
+        });
+    }
+
     const file = new File({
         features: {
             updateFields: true,
@@ -348,6 +369,9 @@ export async function downloadDocx(
                         exported_formatted_date
                     )),
                 ],
+                properties: {
+                    titlePage: true,
+                },
             },
             {
                 headers,
@@ -355,10 +379,13 @@ export async function downloadDocx(
             },
             {
                 headers,
+                children: [...report_criteria_data],
+                footers,
+            },
+            ...traceability_matrix_sections,
+            {
+                headers,
                 children: [
-                    ...report_criteria_data,
-                    new Paragraph({ children: [new PageBreak()] }),
-                    ...buildTraceabilityMatrix(document.traceability_matrix, gettext_provider),
                     new Paragraph({
                         text: gettext_provider.gettext("Artifacts"),
                         heading: HEADER_LEVEL_SECTION,
