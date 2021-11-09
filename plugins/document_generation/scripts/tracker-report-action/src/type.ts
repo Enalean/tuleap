@@ -168,7 +168,10 @@ export interface DateTimeLocaleInformation {
 
 export interface TraceabilityMatrixElement {
     readonly requirement: string;
-    readonly test: string;
+    readonly test: {
+        id: number;
+        title: string;
+    };
     readonly campaign: string;
     readonly result: ArtifactFieldValueStatus;
     readonly executed_by: string | null;
