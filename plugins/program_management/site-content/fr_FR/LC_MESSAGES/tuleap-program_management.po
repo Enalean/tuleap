@@ -244,9 +244,6 @@ msgstr ""
 msgid "No project have been aggregated yet."
 msgstr "Aucun projet n'a encore été regroupé."
 
-msgid "Nothing to see here for the moment"
-msgstr "Rien à voir ici pour le moment"
-
 msgid "Permission"
 msgstr "Permission"
 
