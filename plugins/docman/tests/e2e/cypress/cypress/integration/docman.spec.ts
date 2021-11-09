@@ -113,7 +113,7 @@ describe("Docman", function () {
                     // the message bellow is only thrown by ckeditor, if any other js exception is thrown
                     // the test will fail
                     expect(err.message).to.include(
-                        "Cannot read property 'compatMode' of undefined"
+                        "Cannot read properties of undefined (reading 'compatMode')"
                     );
                     return false;
                 });

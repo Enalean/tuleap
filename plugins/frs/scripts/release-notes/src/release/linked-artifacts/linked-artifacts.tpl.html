@@ -14,9 +14,9 @@
                 There was an error while getting the list of linked artifacts: {{ $ctrl.getError().rest_error }}
             </p>
 
-            <div class="frs-artifact-links-table" ng-repeat="link_nature in $ctrl.natures" data-test="frs-artifact-links">
+            <div class="frs-artifact-links-table" ng-repeat="link_nature in $ctrl.natures">
                 <h2>{{ link_nature.label }}</h2>
-                <table class="tlp-table">
+                <table class="tlp-table" data-test="frs-artifact-links-{{link_nature.shortname}}-{{link_nature.direction}}">
                     <thead>
                     <tr>
                         <th></th>
@@ -42,7 +42,7 @@
                         </td>
                         <td class="subon-column">{{ artifact.submitted_on | date: 'yyyy-MM-dd HH:mm' }}</td>
                     </tr>
-                    <tr ng-if="link_nature.loading">
+                    <tr ng-if="link_nature.loading" data-test="artifact-link-loading">
                         <td colspan="7" class="frs-artifact-links-loading-links"></td>
                     </tr>
                     </tbody>

@@ -21,7 +21,7 @@ function disableSpecificErrorThrownByCkeditor(): void {
     cy.on("uncaught:exception", (err) => {
         // the message bellow is only thrown by ckeditor, if any other js exception is thrown
         // the test will fail
-        if (err.message.includes("Cannot read property 'compatMode' of undefined")) {
+        if (err.message.includes("Cannot read properties of undefined (reading 'compatMode')")) {
             return false;
         }
     });
