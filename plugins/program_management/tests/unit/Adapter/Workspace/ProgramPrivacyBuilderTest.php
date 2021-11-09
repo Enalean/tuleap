@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -40,10 +41,9 @@ final class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(\Project::ACCESS_PUBLIC)
             ->build();
 
-        $project_manager = $this->createStub(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturn($project);
+        $retrieve_full_project = RetrieveFullProjectStub::withProject($project);
 
-        $builder = new ProgramPrivacyBuilder($project_manager);
+        $builder = new ProgramPrivacyBuilder($retrieve_full_project);
 
         $program_privacy = $builder->build(
             ProgramIdentifierBuilder::build()

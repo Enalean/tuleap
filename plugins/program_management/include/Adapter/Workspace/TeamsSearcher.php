@@ -30,7 +30,7 @@ final class TeamsSearcher implements SearchLinkedProjects
 {
     public function __construct(
         private SearchTeamsOfProgram $team_ids_searcher,
-        private \ProjectManager $project_manager
+        private RetrieveFullProject $retrieve_full_project
     ) {
     }
 
@@ -42,7 +42,7 @@ final class TeamsSearcher implements SearchLinkedProjects
         $team_ids      = $this->team_ids_searcher->searchTeamIdsOfProgram((int) $source_project->getID());
         $team_projects = [];
         foreach ($team_ids as $team_id) {
-            $team_projects[] = $this->project_manager->getProject($team_id);
+            $team_projects[] = $this->retrieve_full_project->getProject($team_id);
         }
         return $team_projects;
     }

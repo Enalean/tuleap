@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
@@ -36,25 +37,18 @@ use Tuleap\REST\ProjectAuthorization;
 
 final class TeamAdapter implements BuildTeam
 {
-    private \ProjectManager $project_manager;
-    private VerifyIsProgram $program_verifier;
-    private ExplicitBacklogDao $explicit_backlog_dao;
-
     public function __construct(
-        \ProjectManager $project_manager,
-        VerifyIsProgram $program_verifier,
-        ExplicitBacklogDao $explicit_backlog_dao,
+        private RetrieveFullProject $retrieve_full_project,
+        private VerifyIsProgram $program_verifier,
+        private ExplicitBacklogDao $explicit_backlog_dao,
         private RetrieveUser $retrieve_user
     ) {
-        $this->project_manager      = $project_manager;
-        $this->program_verifier     = $program_verifier;
-        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     public function checkProjectIsATeam(int $team_id, UserIdentifier $user_identifier): void
     {
         $user    = $this->retrieve_user->getUserWithId($user_identifier);
-        $project = $this->project_manager->getProject($team_id);
+        $project = $this->retrieve_full_project->getProject($team_id);
         try {
             ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
         } catch (RestException $exception) {
@@ -66,7 +60,7 @@ final class TeamAdapter implements BuildTeam
 
     public function checkProjectIsATeamForRestTestInitialization(int $team_id): void
     {
-        $project = $this->project_manager->getProject($team_id);
+        $project = $this->retrieve_full_project->getProject($team_id);
 
         $this->checkProject($project);
     }

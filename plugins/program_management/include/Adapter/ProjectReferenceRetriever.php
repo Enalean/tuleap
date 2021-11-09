@@ -23,18 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 final class ProjectReferenceRetriever implements RetrieveProjectReference
 {
-    public function __construct(private \ProjectManager $project_manager)
+    public function __construct(private RetrieveFullProject $retrieve_full_project)
     {
     }
 
     public function buildFromId(int $id): ProjectReference
     {
-        $team_project = $this->project_manager->getProject($id);
+        $team_project = $this->retrieve_full_project->getProject($id);
 
         return ProjectProxy::buildFromProject($team_project);
     }

@@ -353,7 +353,10 @@ final class program_managementPlugin extends Plugin
                     '/admin/{project_name:[A-z0-9-]+}[/]',
                     $this->getRouteHandler('routeGetAdminProgramManagement')
                 );
-                $r->get('/{project_name:[A-z0-9-]+}/increments/{increment_id:\d+}/plan[\]', $this->getRouteHandler('routeGetPlanIterations'));
+                $r->get(
+                    '/{project_name:[A-z0-9-]+}/increments/{increment_id:\d+}/plan[\]',
+                    $this->getRouteHandler('routeGetPlanIterations')
+                );
                 $r->get('/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetProgramManagement'));
             }
         );
@@ -363,9 +366,10 @@ final class program_managementPlugin extends Plugin
     {
         $program_increments_dao = new ProgramIncrementsDAO();
 
-        $user_manager    = UserManager::instance();
-        $retrieve_user   = new UserManagerAdapter($user_manager);
-        $project_manager = ProjectManager::instance();
+        $user_manager            = UserManager::instance();
+        $retrieve_user           = new UserManagerAdapter($user_manager);
+        $project_manager         = ProjectManager::instance();
+        $project_manager_adapter = new ProjectManagerAdapter($project_manager, $retrieve_user);
 
         return new DisplayProgramBacklogController(
             $project_manager,
@@ -376,7 +380,7 @@ final class program_managementPlugin extends Plugin
             $program_increments_dao,
             new TeamDao(),
             new PrioritizeFeaturesPermissionVerifier(
-                $project_manager,
+                $project_manager_adapter,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -440,7 +444,11 @@ final class program_managementPlugin extends Plugin
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
-                new StatusIsAlignedVerifier(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
+                new StatusIsAlignedVerifier(
+                    new Tracker_Semantic_StatusDao(),
+                    $semantic_status_factory,
+                    $tracker_factory
+                ),
             ),
             new RequiredFieldVerifier($tracker_factory),
             new WorkflowVerifier(
@@ -454,15 +462,17 @@ final class program_managementPlugin extends Plugin
             new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory)
         );
 
+        $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
+
         return new DisplayAdminProgramManagementController(
             new ProjectManagerAdapter($project_manager, $user_manager_adapter),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             new ProgramManagementBreadCrumbsBuilder(),
             $program_dao,
-            new ProjectReferenceRetriever($project_manager),
+            new ProjectReferenceRetriever($project_manager_adapter),
             new TeamDao(),
             new ProgramAdapter(
-                $project_manager,
+                $project_manager_adapter,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     $event_manager
@@ -474,7 +484,7 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
             new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
-                new UGroupManagerAdapter($project_manager, new UGroupManager()),
+                new UGroupManagerAdapter($project_manager_adapter, new UGroupManager()),
                 new CanPrioritizeFeaturesDAO(),
                 new UGroupRepresentationBuilder()
             ),
@@ -502,7 +512,7 @@ final class program_managementPlugin extends Plugin
                         $logger_message
                     ),
                     new ProgramDao(),
-                    new ProjectReferenceRetriever($project_manager)
+                    new ProjectReferenceRetriever($project_manager_adapter)
                 ),
                 new PlanDao(),
                 new TrackerSemantics($tracker_factory),
@@ -515,7 +525,6 @@ final class program_managementPlugin extends Plugin
     public function routeGetPlanIterations(): DisplayPlanIterationsController
     {
         $user_retriever           = new UserManagerAdapter(\UserManager::instance());
-        $project_manager          = ProjectManager::instance();
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
         $visibility_verifier      = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
         $artifact_retriever       = new ArtifactFactoryAdapter($tracker_artifact_factory);
@@ -525,12 +534,13 @@ final class program_managementPlugin extends Plugin
         $field_retriever          = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $program_increments_DAO   = new ProgramIncrementsDAO();
         $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
+        $project_manager_adapter  = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             new ProgramAdapter(
-                $project_manager,
+                $project_manager_adapter,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
@@ -540,11 +550,11 @@ final class program_managementPlugin extends Plugin
             ),
             new ProgramFlagsBuilder(
                 new \Tuleap\Project\Flags\ProjectFlagsBuilder(new ProjectFlagsDao()),
-                $project_manager
+                $project_manager_adapter
             ),
-            new ProgramPrivacyBuilder($project_manager),
+            new ProgramPrivacyBuilder($project_manager_adapter),
             new ProgramBaseInfoBuilder(
-                new ProjectReferenceRetriever($project_manager)
+                new ProjectReferenceRetriever($project_manager_adapter)
             ),
             new ProgramIncrementInfoBuilder(
                 new ProgramIncrementRetriever(
@@ -755,7 +765,7 @@ final class program_managementPlugin extends Plugin
         if ((new PlanDao())->isPartOfAPlan(TrackerReferenceProxy::fromTracker($params['tracker']))) {
             $params['result'] = [
                 'can_be_deleted' => false,
-                'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName()
+                'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
             ];
         }
     }
@@ -777,7 +787,10 @@ final class program_managementPlugin extends Plugin
         $project_manager = ProjectManager::instance();
 
         try {
-            $project_reference = $source_analyser->retrieveProjectOfMirroredArtifact(ArtifactIdentifierProxy::fromArtifact($artifact), UserProxy::buildFromPFUser($user));
+            $project_reference = $source_analyser->retrieveProjectOfMirroredArtifact(
+                ArtifactIdentifierProxy::fromArtifact($artifact),
+                UserProxy::buildFromPFUser($user)
+            );
 
 
             $project = $project_manager->getProject($project_reference->getId());
@@ -823,25 +836,26 @@ final class program_managementPlugin extends Plugin
 
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
-        $project_manager        = ProjectManager::instance();
-        $project_access_checker = new ProjectAccessChecker(
+        $project_manager         = ProjectManager::instance();
+        $project_access_checker  = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
-        $assets                 = new IncludeAssets(
+        $assets                  = new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/program_management',
             '/assets/program_management'
         );
-        $user_manager_adapter   = new UserManagerAdapter(UserManager::instance());
-        $action_builder         = new ArtifactTopBacklogActionBuilder(
+        $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
+        $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
+        $action_builder          = new ArtifactTopBacklogActionBuilder(
             new ProgramAdapter(
-                $project_manager,
+                $project_manager_adapter,
                 $project_access_checker,
                 new ProgramDao(),
                 $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
-                $project_manager,
+                $project_manager_adapter,
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
                 $user_manager_adapter
@@ -872,21 +886,22 @@ final class program_managementPlugin extends Plugin
 
     public function trackerMasschangeGetExternalActionsEvent(TrackerMasschangeGetExternalActionsEvent $event): void
     {
-        $project_manager        = ProjectManager::instance();
-        $project_access_checker = new ProjectAccessChecker(
+        $project_manager         = ProjectManager::instance();
+        $project_access_checker  = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
-        $user_manager_adapter   = new UserManagerAdapter(UserManager::instance());
-        $action_builder         = new MassChangeTopBacklogActionBuilder(
+        $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
+        $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
+        $action_builder          = new MassChangeTopBacklogActionBuilder(
             new ProgramAdapter(
-                $project_manager,
+                $project_manager_adapter,
                 $project_access_checker,
                 new ProgramDao(),
                 $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
-                $project_manager,
+                $project_manager_adapter,
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
                 $user_manager_adapter
@@ -954,9 +969,11 @@ final class program_managementPlugin extends Plugin
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
 
+        $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter);
+
         return new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
-                ProjectManager::instance(),
+                $project_manager_adapter,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -1088,13 +1105,18 @@ final class program_managementPlugin extends Plugin
             $team_dao,
         );
 
+        $project_manager_adapter = new ProjectManagerAdapter(
+            $project_manager,
+            new UserManagerAdapter(UserManager::instance())
+        );
+
         $event_proxy = CollectLinkedProjectsProxy::fromCollectLinkedProjects(
-            new TeamsSearcher($program_dao, $project_manager),
+            new TeamsSearcher($program_dao, $project_manager_adapter),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
-            new ProgramsSearcher($team_dao, $project_manager),
+            new ProgramsSearcher($team_dao, $project_manager_adapter),
             $event
         );
         $handler->handle($event_proxy);
@@ -1152,14 +1174,17 @@ final class program_managementPlugin extends Plugin
 
     private function getProgramAdapter(): ProgramAdapter
     {
+        $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
+        $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter);
+
         return new ProgramAdapter(
-            ProjectManager::instance(),
+            $project_manager_adapter,
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
             new ProgramDao(),
-            new UserManagerAdapter(UserManager::instance())
+            $user_manager_adapter
         );
     }
 
@@ -1212,7 +1237,11 @@ final class program_managementPlugin extends Plugin
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
-                new StatusIsAlignedVerifier(new Tracker_Semantic_StatusDao(), $semantic_status_factory, $tracker_factory),
+                new StatusIsAlignedVerifier(
+                    new Tracker_Semantic_StatusDao(),
+                    $semantic_status_factory,
+                    $tracker_factory
+                ),
             ),
             new RequiredFieldVerifier($tracker_factory),
             new WorkflowVerifier(
@@ -1244,7 +1273,7 @@ final class program_managementPlugin extends Plugin
                     $logger_message
                 ),
                 new ProgramDao(),
-                new ProjectReferenceRetriever(ProjectManager::instance()),
+                new ProjectReferenceRetriever(new ProjectManagerAdapter(ProjectManager::instance(), $retrieve_user)),
             )
         );
     }
@@ -1318,8 +1347,10 @@ final class program_managementPlugin extends Plugin
 
     public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
-        $retrieve_user = new UserManagerAdapter(UserManager::instance());
-        $importer      = new ProgramManagementConfigXMLImporter(
+        $retrieve_user           = new UserManagerAdapter(UserManager::instance());
+        $project_manager         = ProjectManager::instance();
+        $project_manager_adapter = new ProjectManagerAdapter($project_manager, $retrieve_user);
+        $importer                = new ProgramManagementConfigXMLImporter(
             new PlanCreator(
                 new TrackerFactoryAdapter(\TrackerFactory::instance()),
                 new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
@@ -1330,7 +1361,7 @@ final class program_managementPlugin extends Plugin
             ),
             new ProgramManagementXMLConfigParser(),
             new ProgramManagementXMLConfigExtractor(
-                new UGroupManagerAdapter(ProjectManager::instance(), new UGroupManager())
+                new UGroupManagerAdapter($project_manager_adapter, new UGroupManager())
             ),
             $event->getLogger()
         );
@@ -1351,13 +1382,17 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactPossibleParentSelector(PossibleParentSelector $possible_parent_selector): void
     {
-        $project_manager        = ProjectManager::instance();
-        $project_access_checker = new ProjectAccessChecker(
+        $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
+
+        $project_manager         = ProjectManager::instance();
+        $project_manager_adapter = new ProjectManagerAdapter(
+            $project_manager,
+            $user_manager_adapter
+        );
+        $project_access_checker  = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
-
-        $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
 
         $features_dao = new FeaturesDao();
         (new PossibleParentHandler(
@@ -1366,7 +1401,7 @@ final class program_managementPlugin extends Plugin
                 $user_manager_adapter
             ),
             new ProgramAdapter(
-                $project_manager,
+                $project_manager_adapter,
                 $project_access_checker,
                 new ProgramDao(),
                 $user_manager_adapter

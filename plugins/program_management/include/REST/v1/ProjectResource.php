@@ -132,13 +132,14 @@ final class ProjectResource extends AuthenticatedResource
         $tracker_retriever           = new TrackerFactoryAdapter($tracker_factory);
         $form_element_factory        = \Tracker_FormElementFactory::instance();
         $field_retriever             = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $project_manager_adapter     = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
         $this->build_program    = new ProgramAdapter(
-            $project_manager,
+            $project_manager_adapter,
             $project_access_checker,
             $program_dao,
             $this->user_manager_adapter
@@ -154,7 +155,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $team_adapter       = new TeamAdapter(
-            $project_manager,
+            $project_manager_adapter,
             $program_dao,
             $explicit_backlog_dao,
             $this->user_manager_adapter
@@ -193,7 +194,7 @@ final class ProjectResource extends AuthenticatedResource
             )
         );
         $this->features_permission_verifier = new PrioritizeFeaturesPermissionVerifier(
-            $project_manager,
+            $project_manager_adapter,
             $project_access_checker,
             new CanPrioritizeFeaturesDAO(),
             $this->user_manager_adapter

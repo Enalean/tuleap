@@ -57,6 +57,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
@@ -144,7 +145,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $program_dao,
             new ProgramAdapter(
-                ProjectManager::instance(),
+                new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever),
                 new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
                 $program_dao,
                 $user_retriever
@@ -224,9 +225,10 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $artifacts_linked_to_parent_dao
         );
 
-        $modifier             = new ContentModifier(
+        $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
+        $modifier                = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
-                \ProjectManager::instance(),
+                $project_manager_adapter,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -258,13 +260,13 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $program_dao,
             new ProgramAdapter(
-                ProjectManager::instance(),
+                $project_manager_adapter,
                 new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
                 $program_dao,
                 $user_retriever
             )
         );
-        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $transaction_executor    = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         $user = $user_manager->getCurrentUser();
 

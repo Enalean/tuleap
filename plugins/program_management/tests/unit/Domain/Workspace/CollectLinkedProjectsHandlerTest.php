@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
@@ -98,20 +99,18 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
 
     private function buildEventForProgram(): CollectLinkedProjectsProxy
     {
-        $red_team        = ProjectTestBuilder::aProject()->build();
-        $blue_team       = ProjectTestBuilder::aProject()->build();
-        $project_manager = $this->createStub(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturnOnConsecutiveCalls($red_team, $blue_team);
-        $teams_searcher = new TeamsSearcher(
+        $red_team              = ProjectTestBuilder::aProject()->build();
+        $blue_team             = ProjectTestBuilder::aProject()->build();
+        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_team, $blue_team);
+        $teams_searcher        = new TeamsSearcher(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            $project_manager
+            $retrieve_full_project
         );
 
-        $project_manager = $this->createStub(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturn(null);
-        $programs_searcher = new ProgramsSearcher(
+        $retrieve_full_project = RetrieveFullProjectStub::withoutProject();
+        $programs_searcher     = new ProgramsSearcher(
             SearchProgramsOfTeamStub::withNoPrograms(),
-            $project_manager
+            $retrieve_full_project
         );
 
         return CollectLinkedProjectsProxy::fromCollectLinkedProjects(
@@ -127,19 +126,17 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
         $red_program  = ProjectTestBuilder::aProject()->build();
         $blue_program = ProjectTestBuilder::aProject()->build();
 
-        $project_manager = $this->createStub(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturn(null);
-        $teams_searcher = new TeamsSearcher(
+        $retrieve_full_project = RetrieveFullProjectStub::withoutProject();
+        $teams_searcher        = new TeamsSearcher(
             SearchTeamsOfProgramStub::withNoTeams(),
-            $project_manager
+            $retrieve_full_project
         );
 
-        $project_manager = $this->createStub(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturnOnConsecutiveCalls($red_program, $blue_program);
+        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_program, $blue_program);
 
         $programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms(110, 111),
-            $project_manager
+            $retrieve_full_project
         );
 
         return CollectLinkedProjectsProxy::fromCollectLinkedProjects(

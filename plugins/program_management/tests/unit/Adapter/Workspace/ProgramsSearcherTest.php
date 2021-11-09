@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Team\SearchProgramsOfTeam;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -31,20 +32,17 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class ProgramsSearcherTest extends TestCase
 {
     private SearchProgramsOfTeam $program_ids_searcher;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\ProjectManager
-     */
-    private $project_manager;
+    private RetrieveFullProject $retrieve_full_project;
 
     protected function setUp(): void
     {
-        $this->program_ids_searcher = SearchProgramsOfTeamStub::buildPrograms(110, 111);
-        $this->project_manager      = $this->createStub(\ProjectManager::class);
+        $this->program_ids_searcher  = SearchProgramsOfTeamStub::buildPrograms(110, 111);
+        $this->retrieve_full_project = RetrieveFullProjectStub::withoutProject();
     }
 
     private function getSearcher(): ProgramsSearcher
     {
-        return new ProgramsSearcher($this->program_ids_searcher, $this->project_manager);
+        return new ProgramsSearcher($this->program_ids_searcher, $this->retrieve_full_project);
     }
 
     public function testItReturnsTheProgramProjectsOfATeam(): void
@@ -52,7 +50,7 @@ final class ProgramsSearcherTest extends TestCase
         $program_red  = ProjectTestBuilder::aProject()->withId(110)->build();
         $program_blue = ProjectTestBuilder::aProject()->withId(111)->build();
 
-        $this->project_manager->method('getProject')->willReturnOnConsecutiveCalls($program_red, $program_blue);
+        $this->retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($program_red, $program_blue);
 
         $team     = ProjectTestBuilder::aProject()->withId(123)->build();
         $programs = $this->getSearcher()->searchLinkedProjects($team);

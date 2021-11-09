@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use ProjectManager;
 use Tuleap\ProgramManagement\Adapter\Events\CanSubmitNewArtifactEventProxy;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -46,7 +46,6 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
     {
         $program_increment_creator_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
         $iteration_creator_checker         = $this->createStub(IterationCreatorChecker::class);
-        $project_manager                   = $this->createMock(ProjectManager::class);
         $program_builder                   = BuildProgramStub::stubValidProgram();
         $user                              = UserTestBuilder::aUser()->build();
         $project                           = ProjectTestBuilder::aProject()->withId(101)->build();
@@ -54,7 +53,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
             ->withProject($project)
             ->build();
 
-        $project_manager->method('getProject')->willReturn($project);
+        $retrieve_full_project = RetrieveFullProjectStub::withProject($project);
         $program_increment_creator_checker->method('canCreateAProgramIncrement');
         $iteration_creator_checker->method('canCreateAnIteration');
 
@@ -64,7 +63,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
                 $program_increment_creator_checker,
                 $iteration_creator_checker,
                 SearchTeamsOfProgramStub::buildTeams(104),
-                new ProjectReferenceRetriever($project_manager),
+                new ProjectReferenceRetriever($retrieve_full_project),
             )
         );
 

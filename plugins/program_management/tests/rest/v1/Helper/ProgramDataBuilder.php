@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramInc
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -74,7 +75,12 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $this->program_increment_DAO  = new ProgramIncrementsDAO();
         $project_permissions_verifier = new ProjectPermissionVerifier(RetrieveUserStub::withGenericUser());
 
-        $team_builder = new TeamAdapter($this->project_manager, $program_dao, new ExplicitBacklogDao(), $user_adapter);
+        $team_builder = new TeamAdapter(
+            new ProjectManagerAdapter($this->project_manager, $user_adapter),
+            $program_dao,
+            new ExplicitBacklogDao(),
+            $user_adapter
+        );
 
         $null_logger               = new NullLogger();
         $this->creation_dispatcher = new ProgramIncrementCreationDispatcher(

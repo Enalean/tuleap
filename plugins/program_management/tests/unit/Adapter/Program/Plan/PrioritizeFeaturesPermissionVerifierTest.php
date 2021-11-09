@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
-use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -39,27 +40,23 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
     private UserIdentifier $user_identifier;
     private CheckProjectAccessStub $access_checker;
     private RetrieveUserStub $user_retriever;
-    /**
-     * @var Stub&\ProjectManager
-     */
-    private $project_manager;
+    private RetrieveFullProject $retrieve_full_project;
 
     protected function setUp(): void
     {
         $user = $this->createMock(\PFUser::class);
         $user->method('getId')->willReturn('101');
-        $this->user_retriever     = RetrieveUserStub::buildMockedMemberOfUGroupUser($user);
-        $this->access_checker     = CheckProjectAccessStub::withValidAccess();
-        $this->user_identifier    = UserIdentifierStub::buildGenericUser();
-        $this->program_identifier = ProgramIdentifierBuilder::buildWithId(102);
-        $this->project_manager    = $this->createStub(\ProjectManager::class);
-        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->user_retriever        = RetrieveUserStub::buildMockedMemberOfUGroupUser($user);
+        $this->access_checker        = CheckProjectAccessStub::withValidAccess();
+        $this->user_identifier       = UserIdentifierStub::buildGenericUser();
+        $this->program_identifier    = ProgramIdentifierBuilder::buildWithId(102);
+        $this->retrieve_full_project = RetrieveFullProjectStub::withProject(ProjectTestBuilder::aProject()->build());
     }
 
     private function getVerifier(): PrioritizeFeaturesPermissionVerifier
     {
         return new PrioritizeFeaturesPermissionVerifier(
-            $this->project_manager,
+            $this->retrieve_full_project,
             $this->access_checker,
             RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4),
             $this->user_retriever

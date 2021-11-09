@@ -23,27 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Team\SearchProgramsOfTeam;
-use Tuleap\Project\Sidebar\SearchLinkedProjects;
-
-final class ProgramsSearcher implements SearchLinkedProjects
+interface RetrieveFullProject
 {
-    public function __construct(
-        private SearchProgramsOfTeam $program_ids_searcher,
-        private RetrieveFullProject $retrieve_full_project
-    ) {
-    }
-
-    /**
-     * @return \Project[]
-     */
-    public function searchLinkedProjects(\Project $source_project): array
-    {
-        $program_ids      = $this->program_ids_searcher->searchProgramIdsOfTeam((int) $source_project->getID());
-        $program_projects = [];
-        foreach ($program_ids as $program_id) {
-            $program_projects[] = $this->retrieve_full_project->getProject($program_id);
-        }
-        return $program_projects;
-    }
+    public function getProject(int $project_id): \Project;
 }
