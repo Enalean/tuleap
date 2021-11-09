@@ -29,6 +29,7 @@ class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use \Tuleap\ForgeConfigSandbox;
 
     /**
      * @var UserStatusChecker

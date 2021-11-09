@@ -18,16 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     public function testItBuildsProgramPrivacy(): void
     {
+        \ForgeConfig::set(\ForgeAccess::CONFIG, \ForgeAccess::REGULAR);
+
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
             ->withAccess(\Project::ACCESS_PUBLIC)
