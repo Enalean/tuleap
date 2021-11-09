@@ -22,15 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
+use Tracker;
 use Tracker_ArtifactFactory;
+use TrackerFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
-use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
@@ -45,10 +46,16 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    private UserStoryRepresentationBuilder $builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
+     */
+    private $tracker_factory;
     private SearchChildrenOfFeature $search_children_of_feature;
     private UserIdentifier $user;
     private RetrieveBackgroundColor $retrieve_background;
+    private VerifyIsPlannable $plan_store;
+    private Tracker $tracker;
+
 
     protected function setUp(): void
     {
@@ -56,48 +63,30 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             [['children_id' => 125], ['children_id' => 126], ['children_id' => 666]]
         );
         $this->artifact_factory           = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->tracker_factory            = $this->createMock(TrackerFactory::class);
         $this->user                       = UserIdentifierStub::buildGenericUser();
         $this->retrieve_background        = RetrieveBackgroundColorStub::withDefaults();
 
-        $plan_store = new class () implements PlanStore {
-            public function isPlannable(int $plannable_tracker_id): bool
-            {
-                assert($plannable_tracker_id === 56 || $plannable_tracker_id === 666);
+        $this->plan_store = VerifyIsPlannableStub::buildPlannableElement();
 
-                if ($plannable_tracker_id === 56) {
-                    return true;
-                }
+        $this->tracker = TrackerTestBuilder::aTracker()
+                                           ->withProject(
+                                               ProjectTestBuilder::aProject()
+                                                                 ->withId(100)
+                                                                 ->withPublicName("Project")
+                                                                 ->build()
+                                           )->build();
+    }
 
-                return false;
-            }
-
-            public function save(Plan $plan): void
-            {
-                throw new \LogicException("Not implemented");
-            }
-
-            public function isPartOfAPlan(TrackerReference $tracker): bool
-            {
-                throw new \LogicException("Not implemented");
-            }
-
-            public function getProgramIncrementTrackerId(int $project_id): ?int
-            {
-                throw new \LogicException("Not implemented");
-            }
-
-            public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array
-            {
-                throw new \LogicException("Not implemented");
-            }
-        };
-
-        $this->builder = new UserStoryRepresentationBuilder(
+    protected function getBuilder(): UserStoryRepresentationBuilder
+    {
+        return new UserStoryRepresentationBuilder(
             $this->search_children_of_feature,
             $this->artifact_factory,
-            $plan_store,
+            $this->plan_store,
             $this->retrieve_background,
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withGenericUser(),
+            $this->tracker_factory
         );
     }
 
@@ -112,8 +101,9 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $artifact_125,
             $artifact_126,
         );
+        $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
 
-        $children = $this->builder->buildFeatureStories(10, $this->user);
+        $children = $this->getBuilder()->buildFeatureStories(10, $this->user);
 
         self::assertCount(2, $children);
 
@@ -149,7 +139,7 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->willReturn(null);
 
         $this->expectException(FeatureNotAccessException::class);
-        $this->builder->buildFeatureStories(10, $this->user);
+        $this->getBuilder()->buildFeatureStories(10, $this->user);
     }
 
     public function testThrowErrorIfFeatureTrackerIsNotPlannable(): void
@@ -160,8 +150,10 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->with(self::isInstanceOf(\PFUser::class), 10)
             ->willReturn($this->createConfiguredMock(Artifact::class, ['getTrackerId' => 666]));
 
+        $this->plan_store = VerifyIsPlannableStub::buildNotPlannableElement();
+
         $this->expectException(FeatureIsNotPlannableException::class);
-        $this->builder->buildFeatureStories(10, $this->user);
+        $this->getBuilder()->buildFeatureStories(10, $this->user);
     }
 
     /**
@@ -175,17 +167,8 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $artifact->expects(self::once())->method('getXRef')->willReturn('story #' . $id);
         $artifact->expects(self::once())->method('getTitle')->willReturn("Title");
         $artifact->expects(self::once())->method('isOpen')->willReturn(true);
-        $artifact->expects(self::exactly(2))->method('getTracker')
-                 ->willReturn(
-                     TrackerTestBuilder::aTracker()
-                                       ->withProject(
-                                           ProjectTestBuilder::aProject()
-                                                             ->withId(100)
-                                                             ->withPublicName("Project")
-                                                             ->build()
-                                       )
-                                       ->build()
-                 );
+        $artifact->expects(self::once())->method('getTracker')
+                 ->willReturn($this->tracker);
 
         return $artifact;
     }

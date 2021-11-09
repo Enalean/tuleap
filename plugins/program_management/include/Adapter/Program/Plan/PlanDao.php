@@ -27,9 +27,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Ver
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, RetrievePlannableTrackers
+final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, RetrievePlannableTrackers, VerifyIsPlannable
 {
     /**
      * @throws \Throwable

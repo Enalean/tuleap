@@ -64,18 +64,20 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
     {
         $user_manager       = \UserManager::instance();
         $user_retriever     = new UserManagerAdapter($user_manager);
-        $artifact_retriever = new ArtifactFactoryAdapter(\Tracker_ArtifactFactory::instance());
+        $artifact_factory   = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
 
         $user_story_representation_builder = new UserStoryRepresentationBuilder(
             new ArtifactsLinkedToParentDao(),
-            \Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             new PlanDao(),
             new BackgroundColorRetriever(
                 new BackgroundColorBuilder(new BindDecoratorRetriever()),
                 $artifact_retriever,
                 $user_retriever
             ),
-            $user_retriever
+            $user_retriever,
+            \TrackerFactory::instance()
         );
 
         $user = $user_manager->getCurrentUser();
