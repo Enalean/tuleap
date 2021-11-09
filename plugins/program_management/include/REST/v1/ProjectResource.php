@@ -30,8 +30,8 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
@@ -67,7 +67,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementsSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -107,7 +107,7 @@ final class ProjectResource extends AuthenticatedResource
     private CreateTeam $team_creator;
     private CreatePlan $plan_creator;
     private \UserManager $user_manager;
-    private ProgramIncrementBuilder $program_increments_builder;
+    private ProgramIncrementsSearcher $program_increments_builder;
     private BuildProgram $build_program;
     private UserManagerAdapter $user_manager_adapter;
     private PrioritizeFeaturesPermissionVerifier $features_permission_verifier;
@@ -161,6 +161,7 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao
         );
 
+        $artifact_factory                   = \Tracker_ArtifactFactory::instance();
         $form_element_factory               = \Tracker_FormElementFactory::instance();
         $artifacts_linked_to_parent_dao     = new ArtifactsLinkedToParentDao();
         $this->user_story_linked_verifier   = new UserStoryLinkedToFeatureVerifier(
@@ -194,14 +195,12 @@ final class ProjectResource extends AuthenticatedResource
             $this->user_manager_adapter
         );
         $program_increments_dao             = new ProgramIncrementsDAO();
-        $this->program_increments_builder   = new ProgramIncrementBuilder(
+        $this->program_increments_builder   = new ProgramIncrementsSearcher(
             $this->build_program,
-            new ProgramIncrementsRetriever(
-                $program_increments_dao,
-                $artifact_factory,
-                $this->user_manager_adapter,
-                $program_increments_dao,
-                new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+            $program_increments_dao,
+            $program_increments_dao,
+            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
+            new ProgramIncrementRetriever(
                 new StatusValueRetriever($artifact_retriever, $this->user_manager_adapter),
                 new TitleValueRetriever($artifact_retriever),
                 new TimeframeValueRetriever(
@@ -510,7 +509,7 @@ final class ProjectResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $program_increments = $this->program_increments_builder->buildOpenProgramIncrements(
+            $program_increments = $this->program_increments_builder->searchOpenProgramIncrements(
                 $id,
                 UserProxy::buildFromPFUser($user)
             );

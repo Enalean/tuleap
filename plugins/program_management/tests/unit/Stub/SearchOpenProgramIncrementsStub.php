@@ -20,17 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace unit\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-interface RetrieveProgramIncrements
+final class SearchOpenProgramIncrementsStub implements SearchOpenProgramIncrements
 {
-    /**
-     * @return ProgramIncrement[]
-     */
-    public function retrieveOpenProgramIncrements(ProgramIdentifier $program, UserIdentifier $user_identifier): array;
+    private function __construct(private array $program_increments)
+    {
+    }
 
-    public function retrieveProgramIncrementById(UserIdentifier $user_identifier, ProgramIncrementIdentifier $increment_identifier): ?ProgramIncrement;
+    /**
+     * @no-named-arguments
+     */
+    public static function withProgramIncrements(ProgramIncrement $first_pi, ProgramIncrement ...$other_pis): self
+    {
+        return new self([$first_pi, ...$other_pis]);
+    }
+
+    public function searchOpenProgramIncrements(int $potential_program_id, UserIdentifier $user): array
+    {
+        return $this->program_increments;
+    }
 }

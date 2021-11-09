@@ -65,7 +65,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedT
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
@@ -536,12 +536,7 @@ final class program_managementPlugin extends Plugin
                 new ProjectReferenceRetriever($project_manager)
             ),
             new ProgramIncrementInfoBuilder(
-                new ProgramIncrementsRetriever(
-                    $program_increment_verifier,
-                    $tracker_artifact_factory,
-                    $user_manager_adapter,
-                    $program_increment_verifier,
-                    $visibility_verifier,
+                new ProgramIncrementRetriever(
                     new StatusValueRetriever($artifact_retriever, $user_manager_adapter),
                     new TitleValueRetriever($artifact_retriever),
                     new TimeframeValueRetriever(

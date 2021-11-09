@@ -48,11 +48,7 @@ final class ProgramIncrementBuilder
             $user_identifier,
             ProgramIncrementIdentifierBuilder::buildWithIdAndUser($program_increment_id, $user_identifier)
         );
-
-        if ($increment === null) {
-            throw new \LogicException('Freshly built ProgramIncrement is null');
-        }
-
+        assert($increment !== null);
         return $increment;
     }
 }
