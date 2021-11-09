@@ -34,18 +34,12 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
      * @var \PHPUnit\Framework\MockObject\MockObject&TopBacklogChangeProcessor
      */
     private $top_backlog_change_processor;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker
-     */
-    private $tracker;
     private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->top_backlog_change_processor = $this->createMock(TopBacklogChangeProcessor::class);
-        $this->tracker                      = $this->createMock(\Tracker::class);
-        $this->tracker->method('getGroupId')->willReturn('102');
-        $this->user = UserTestBuilder::buildWithDefaults();
+        $this->user                         = UserTestBuilder::buildWithDefaults();
     }
 
     public function testCanProcessMassAdditionToTheTopBacklog(): void

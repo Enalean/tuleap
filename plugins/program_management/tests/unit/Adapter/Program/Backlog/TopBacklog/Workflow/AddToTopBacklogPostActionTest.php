@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tuleap\GlobalLanguageMock;
@@ -30,6 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeP
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -75,9 +76,8 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact  = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn(999);
         $changeset->method('getArtifact')->willReturn($artifact);
-        $tracker = $this->createMock(Tracker::class);
+        $tracker = TrackerTestBuilder::aTracker()->withId(10)->withProject(new \Project(['group_id' => 102]))->build();
         $artifact->method('getTracker')->willReturn($tracker);
-        $tracker->method('getGroupId')->willReturn('102');
 
         $this->top_backlog_change_processor->expects(self::once())->method('processTopBacklogChangeForAProgram');
 
@@ -87,11 +87,9 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesNothingIfSomeReasonWeTryToProcessAnArtifactThatIsNotPartOfAProgram(): void
     {
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
-        $artifact  = $this->createMock(Artifact::class);
+        $tracker   = TrackerTestBuilder::aTracker()->withId(10)->withProject(new \Project(['group_id' => 103]))->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
         $changeset->method('getArtifact')->willReturn($artifact);
-        $tracker = $this->createMock(Tracker::class);
-        $artifact->method('getTracker')->willReturn($tracker);
-        $tracker->method('getGroupId')->willReturn('103');
         $this->build_program = BuildProgramStub::stubInvalidProgram();
 
         $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');

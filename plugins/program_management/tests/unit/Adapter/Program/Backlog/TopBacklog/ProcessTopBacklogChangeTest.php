@@ -38,17 +38,15 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchProgramIncrementLinkedToFeatureStu
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $user;
+    private \PFUser $user;
     private RetrieveUserStub $retrieve_user;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
@@ -73,19 +71,16 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_updater = $this->createMock(ArtifactLinkUpdater::class);
         $this->program_increment_dao = SearchProgramIncrementLinkedToFeatureStub::withoutLink();
         $this->feature_orderer       = OrderFeatureRankStub::withCount();
-        $this->user                  = $this->createMock(\PFUser::class);
-        $this->user->method('isSuperUser')->willReturn(true);
-        $this->user->method('isAdmin')->willReturn(true);
-        $this->user->method('getId')->willReturn(101);
-        $this->retrieve_user   = RetrieveUserStub::withUser($this->user);
-        $this->user_identifier = UserIdentifierStub::withId(101);
+        $this->user                  = UserTestBuilder::buildWithDefaults();
+        $this->retrieve_user         = RetrieveUserStub::withUser($this->user);
+        $this->user_identifier       = UserIdentifierStub::withId(101);
     }
 
     public function testAddAThrowExceptionWhenFeatureCannotBeViewByUser(): void
     {
         $tracker      = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
-        $artifact_741 = $this->mockAnArtifact(741, "My 741", $tracker);
-        $artifact_742 = $this->mockAnArtifact(742, "My 742", $tracker);
+        $artifact_741 = ArtifactTestBuilder::anArtifact(741)->withTitle("My 741")->inTracker($tracker)->build();
+        $artifact_742 = ArtifactTestBuilder::anArtifact(742)->withTitle("My 742")->inTracker($tracker)->build();
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
             [$this->user, 741, $artifact_741],
@@ -106,7 +101,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRemoveWhenFeatureCannotBeViewByUserThenNothingHappens(): void
     {
         $tracker      = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
-        $artifact_741 = $this->mockAnArtifact(741, "My 741", $tracker);
+        $artifact_741 = ArtifactTestBuilder::anArtifact(741)->withTitle("My 741")->inTracker($tracker)->build();
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
             [$this->user, 741, $artifact_741],
@@ -126,7 +121,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddAndRemoveThrowExceptionWhenFeatureThatAreNotPartOfTheRequestedProgram(): void
     {
         $tracker  = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 666, 'group_name' => "My project"]))->build();
-        $artifact = $this->mockAnArtifact(964, "My 964", $tracker);
+        $artifact = ArtifactTestBuilder::anArtifact(964)->withTitle("My 964")->inTracker($tracker)->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
         $this->dao->expects(self::never())->method('removeArtifactsFromExplicitTopBacklog');
@@ -142,10 +137,10 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddFeatureInTopBacklogAndRemoveLinkToProgramIncrement(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
-        $feature = $this->mockAnArtifact(964, "My 964", $tracker);
+        $feature = ArtifactTestBuilder::anArtifact(964)->withTitle("My 964")->inTracker($tracker)->build();
         $this->artifact_factory->expects(self::once())->method('getArtifactByIdUserCanView')->with($this->user, 964)->willReturn($feature);
         $this->program_increment_dao = SearchProgramIncrementLinkedToFeatureStub::with([["id" => 63]]);
-        $program_increment           = $this->createMock(Artifact::class);
+        $program_increment           = ArtifactTestBuilder::anArtifact(63)->build();
         $this->artifact_factory->expects(self::once())->method('getArtifactById')->with(63)->willReturn($program_increment);
 
         $this->dao->expects(self::once())->method('addArtifactsToTheExplicitTopBacklog');
@@ -172,7 +167,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $tracker = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
-        $feature = $this->mockAnArtifact(964, "My 964", $tracker);
+        $feature = ArtifactTestBuilder::anArtifact(964)->withTitle("My 964")->inTracker($tracker)->build();
         $this->artifact_factory->expects(self::once())->method('getArtifactByIdUserCanView')->with($this->user, 964)->willReturn($feature);
 
         $this->artifact_factory->expects(self::never())->method('getArtifactById');
@@ -192,10 +187,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserThatCannotPrioritizeFeaturesCannotAskForATopBacklogChange(): void
     {
-        $user = $this->createMock(\PFUser::class);
-        $user->method('isSuperUser')->willReturn(false);
-        $user->method('isAdmin')->willReturn(false);
-        $user->method('getId')->willReturn(101);
         $retrieve_user              = RetrieveUserStub::withUser($this->user);
         $process_top_backlog_change = new ProcessTopBacklogChange(
             VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize(),
@@ -219,10 +210,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserCanReorderTheBacklog(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-        $tracker  = $this->createMock(\Tracker::class);
-        $tracker->method('getGroupId')->willReturn(666);
-        $artifact->method('getTracker')->willReturn($tracker);
+        $tracker  = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 666, 'group_name' => "My project"]))->build();
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
         $this->dao->expects(self::never())->method('removeArtifactsFromExplicitTopBacklog');
@@ -241,19 +230,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEquals(1, $this->feature_orderer->getCallCount());
-    }
-
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&Artifact
-     */
-    private function mockAnArtifact(int $id, string $title, \Tracker $tracker)
-    {
-        $artifact = $this->createMock(Artifact::class);
-        $artifact->method('getTracker')->willReturn($tracker);
-        $artifact->method('getId')->willReturn($id);
-        $artifact->method('getTitle')->willReturn($title);
-
-        return $artifact;
     }
 
     private function getProcessor(): ProcessTopBacklogChange

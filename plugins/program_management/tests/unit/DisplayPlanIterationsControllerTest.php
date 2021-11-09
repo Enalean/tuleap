@@ -62,9 +62,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
         $this->project_manager->method('getProjectByUnixName')->willReturn(null);
 
         $variables = ['project_name' => 'unknown-project-unix-name'];
-        $project   = $this->createMock(\Project::class);
 
-        $project->method('getID')->willReturn(0);
         $this->expectException(NotFoundException::class);
 
         $this->getController(BuildProgramStub::stubInvalidProgram())

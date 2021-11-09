@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsLinkedToAnotherMilestoneStub;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -138,7 +139,7 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
             ->expects(self::once())
             ->method('getArtifactByIdUserCanView')
             ->with(self::isInstanceOf(\PFUser::class), 236)
-            ->willReturn($this->createMock(\Artifact::class));
+            ->willReturn(ArtifactTestBuilder::anArtifact(964)->build());
 
         self::assertTrue(
             $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
