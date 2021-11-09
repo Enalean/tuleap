@@ -17,10 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "planned-iterations/project-header-background";
-@use "planned-iterations/backlog";
+.planned-iterations {
+    flex: 1 1 50%;
+}
 
-.planned-iterations-title-header {
-    margin: 0;
-    padding: var(--tlp-medium-spacing);
+.iterations-backlog {
+    display: flex;
+    padding: 0 var(--tlp-medium-spacing);
+}
+
+.planned-iterations-section-title {
+    color: var(--tlp-typo-default-text-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.875rem;
+}
+
+.planned-iterations-empty-state-svg {
+    margin: 0 0 var(--tlp-x-large-spacing) 0;
 }

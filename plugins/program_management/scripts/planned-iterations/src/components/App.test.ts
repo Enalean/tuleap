@@ -23,6 +23,9 @@ import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createPlanIterationsLocalVue } from "../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import IterationsToBePlannedSection from "./IterationsToBePlannedSection.vue";
+import PlannedIterationsSection from "./PlannedIterationsSection.vue";
+import Breadcrumb from "./Breadcrumb.vue";
 
 describe("App", () => {
     async function createWrapper(): Promise<Wrapper<App>> {
@@ -41,12 +44,15 @@ describe("App", () => {
         });
     }
 
-    it("Displays nothing for the moment but the breadcrumbs, the increment title and an empty state", async () => {
+    it("Displays the app header and main sections", async () => {
         const wrapper = await createWrapper();
         const header_title = wrapper.find("[data-test=app-header-title]");
-        expect(wrapper.find("[data-test=app-breadcrumbs]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=app-tmp-empty-state]").exists()).toBe(true);
+
         expect(header_title.exists()).toBe(true);
         expect(header_title.text()).toBe("Mating");
+
+        expect(wrapper.findComponent(Breadcrumb).exists()).toBe(true);
+        expect(wrapper.findComponent(IterationsToBePlannedSection).exists()).toBe(true);
+        expect(wrapper.findComponent(PlannedIterationsSection).exists()).toBe(true);
     });
 });
