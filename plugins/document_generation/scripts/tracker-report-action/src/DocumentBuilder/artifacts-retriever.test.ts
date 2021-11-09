@@ -272,11 +272,10 @@ describe("artifacts-retriever", () => {
                 },
             },
         };
-        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue(
-            testmanagement_execution_response
-        );
+        const get_test_exec = (): Promise<TestExecutionResponse> =>
+            Promise.resolve(testmanagement_execution_response);
 
-        const artifacts = await retrieveReportArtifacts(123, 852, false);
+        const artifacts = await retrieveReportArtifacts(123, 852, false, get_test_exec);
         expect(artifacts).toStrictEqual([
             {
                 id: 74,

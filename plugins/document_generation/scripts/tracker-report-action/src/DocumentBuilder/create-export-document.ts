@@ -31,6 +31,8 @@ import type {
     ArtifactFieldValueStepDefinition,
 } from "../type";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
+import { memoize } from "./memoize";
+import { getTestManagementExecution } from "./rest-querier";
 
 export async function createExportDocument(
     report_id: number,
@@ -41,15 +43,19 @@ export async function createExportDocument(
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string
 ): Promise<ExportDocument> {
+    const get_test_execution = memoize(getTestManagementExecution);
+
     const report_artifacts = await retrieveReportArtifacts(
         tracker_id,
         report_id,
-        report_has_changed
+        report_has_changed,
+        get_test_execution
     );
 
     const traceability_matrix = createTraceabilityMatrix(
         report_artifacts,
-        datetime_locale_information
+        datetime_locale_information,
+        get_test_execution
     );
 
     const artifact_data: FormattedArtifact[] = [];

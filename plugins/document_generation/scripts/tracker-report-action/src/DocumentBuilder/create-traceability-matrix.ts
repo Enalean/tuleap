@@ -28,16 +28,19 @@ import type {
     ArtifactReportFieldValue,
     ArtifactResponse,
 } from "./artifacts-retriever";
-import { getArtifacts, getTestManagementExecution } from "./rest-querier";
+import type { getTestManagementExecution } from "./rest-querier";
+import { getArtifacts } from "./rest-querier";
 
 export async function createTraceabilityMatrix(
     artifacts: ReadonlyArray<ArtifactFromReport>,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
+    get_test_execution: typeof getTestManagementExecution
 ): Promise<ReadonlyArray<TraceabilityMatrixElement>> {
-    if (!isFeatureExplicitlyEnabled()) {
-        return [];
-    }
-    const elements = await getMatrixElements(artifacts, datetime_locale_information);
+    const elements = await getMatrixElements(
+        artifacts,
+        datetime_locale_information,
+        get_test_execution
+    );
     const campaigns = await getCampaignsFromRawElements(elements);
 
     return elements.flatMap((element) => {
@@ -70,7 +73,8 @@ interface RawMatrixElement {
 
 async function getMatrixElements(
     artifacts: ReadonlyArray<ArtifactFromReport>,
-    datetime_locale_information: DateTimeLocaleInformation
+    datetime_locale_information: DateTimeLocaleInformation,
+    get_test_execution: typeof getTestManagementExecution
 ): Promise<ReadonlyArray<Readonly<RawMatrixElement>>> {
     const possible_elements = [];
     for (const artifact of artifacts) {
@@ -100,7 +104,7 @@ async function getMatrixElements(
 
         let test_exec = null;
         try {
-            test_exec = await getTestManagementExecution(artifact.id);
+            test_exec = await get_test_execution(artifact.id);
         } catch (e) {
             continue;
         }
@@ -161,8 +165,4 @@ async function getCampaignsFromRawElements(
     } catch (e) {
         return new Map();
     }
-}
-
-function isFeatureExplicitlyEnabled(): boolean {
-    return window.location.hash.includes("matrix");
 }
