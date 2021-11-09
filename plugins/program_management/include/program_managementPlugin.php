@@ -78,7 +78,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetrieve
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TimeframeValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UriRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimeboxVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TimeboxArtifactLinkPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
@@ -100,8 +100,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -116,6 +114,8 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
@@ -513,6 +513,7 @@ final class program_managementPlugin extends Plugin
         $tracker_artifact_factory   = Tracker_ArtifactFactory::instance();
         $program_increment_verifier = new ProgramIncrementsDAO();
         $visibility_verifier        = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_manager_adapter);
+        $artifact_retriever         = new ArtifactFactoryAdapter($tracker_artifact_factory);
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
@@ -541,18 +542,18 @@ final class program_managementPlugin extends Plugin
                     $user_manager_adapter,
                     $program_increment_verifier,
                     $visibility_verifier,
-                    new StatusValueRetriever($tracker_artifact_factory, $user_manager_adapter),
-                    new TitleValueRetriever($tracker_artifact_factory),
+                    new StatusValueRetriever($artifact_retriever, $user_manager_adapter),
+                    new TitleValueRetriever($artifact_retriever),
                     new TimeframeValueRetriever(
-                        $tracker_artifact_factory,
+                        $artifact_retriever,
                         $user_manager_adapter,
                         SemanticTimeframeBuilder::build(),
                         BackendLogger::getDefaultLogger()
                     ),
-                    new UriRetriever($tracker_artifact_factory),
-                    new CrossReferenceRetriever($tracker_artifact_factory),
-                    new UserCanUpdateRetriever($tracker_artifact_factory, $user_manager_adapter),
-                    new UserCanPlanInProgramIncrementVerifier($tracker_artifact_factory, $user_manager_adapter)
+                    new UriRetriever($artifact_retriever),
+                    new CrossReferenceRetriever($artifact_retriever),
+                    new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_manager_adapter),
+                    new UserCanPlanInProgramIncrementVerifier($artifact_retriever, $user_manager_adapter)
                 )
             ),
             $program_increment_verifier,
