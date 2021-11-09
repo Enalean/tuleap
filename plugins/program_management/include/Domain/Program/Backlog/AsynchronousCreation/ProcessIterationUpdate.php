@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,11 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationUpdate;
 
-
-interface LogMessage
+interface ProcessIterationUpdate
 {
-    public function debug(string $message, array $context = []): void;
-
-    public function error(string $message, array $context = []): void;
-
-    public function info(string $message, array $context = []): void;
+    public function processUpdate(IterationUpdate $update): void;
 }

@@ -51,6 +51,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationEr
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationProcessorBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationUpdateDispatcher;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationUpdateProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
@@ -64,8 +66,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementInfoBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
@@ -113,12 +115,12 @@ use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramUserPrivilegesRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramUserPrivilegesRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
@@ -661,6 +663,7 @@ final class program_managementPlugin extends Plugin
         $iterations_linked_dao          = new IterationsLinkedToProgramIncrementDAO();
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $program_increments_DAO         = new ProgramIncrementsDAO();
+        $iterations_DAO                 = new IterationsDAO();
         $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
 
@@ -668,6 +671,7 @@ final class program_managementPlugin extends Plugin
 
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
+            $iterations_DAO,
             new UserStoriesInMirroredProgramIncrementsPlanner(
                 $transaction_executor,
                 $artifacts_linked_to_parent_dao,
@@ -694,7 +698,8 @@ final class program_managementPlugin extends Plugin
                 new QueueFactory($logger),
                 new ProgramIncrementUpdateProcessorBuilder(),
                 new IterationCreationProcessorBuilder()
-            )
+            ),
+            new IterationUpdateDispatcher($logger, new IterationUpdateProcessorBuilder())
         );
 
         $event_proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);

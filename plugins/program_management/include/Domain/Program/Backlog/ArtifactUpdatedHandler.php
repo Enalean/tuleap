@@ -27,6 +27,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Dispatc
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\DispatchIterationUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationUpdate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
@@ -35,10 +38,12 @@ final class ArtifactUpdatedHandler
 {
     public function __construct(
         private VerifyIsProgramIncrementTracker $program_increment_verifier,
+        private VerifyIsIterationTracker $iteration_tracker_verifier,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         private RemovePlannedFeaturesFromTopBacklog $feature_remover,
         private IterationCreationDetector $iteration_creation_detector,
-        private DispatchProgramIncrementUpdate $update_dispatcher
+        private DispatchProgramIncrementUpdate $update_dispatcher,
+        private DispatchIterationUpdate $iteration_update_dispatcher,
     ) {
     }
 
@@ -53,6 +58,11 @@ final class ArtifactUpdatedHandler
             $this->dispatchUpdate($program_increment_update);
         }
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event);
+
+        $iteration_update = IterationUpdate::fromArtifactUpdateEvent($this->iteration_tracker_verifier, $event);
+        if ($iteration_update) {
+            $this->iteration_update_dispatcher->dispatchUpdate($iteration_update);
+        }
     }
 
     private function planArtifactIfNeeded(ProgramIncrementUpdate $program_increment_update): void

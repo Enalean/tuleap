@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
+use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
@@ -72,6 +73,16 @@ final class IterationIdentifier implements TimeboxIdentifier
             static fn(int $iteration_id): self => new self($iteration_id),
             array_values($visible_ids)
         );
+    }
+
+    public static function fromArtifactUpdateEvent(
+        VerifyIsIterationTracker $iteration_tracker_verifier,
+        ArtifactUpdatedEvent $event
+    ): ?self {
+        if (! $iteration_tracker_verifier->isIterationTracker($event->getTracker()->getId())) {
+            return null;
+        }
+        return new self($event->getArtifact()->getId());
     }
 
     public function getId(): int
