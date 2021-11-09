@@ -22,6 +22,7 @@
 namespace Tuleap\Git\GitPHP;
 
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
+use Tuleap\Git\Unicode\DangerousUnicodeText;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 
@@ -146,6 +147,10 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
 
         $detector = new LanguageDetectorForPrismJS();
         $this->tpl->assign('language', $detector->getLanguage($blob->GetName()));
+        $this->tpl->assign(
+            'potentially_dangerous_bidirectional_text_warning',
+            DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning($blob->GetData())
+        );
         $this->tpl->assign('bloblines', $blob->GetData(true));
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));

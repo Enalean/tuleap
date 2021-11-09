@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import CodeMirror from "codemirror";
+import potentially_dangerous_bidirectional_characters from "../../../../../git/include/Unicode/potentially-dangerous-bidirectional-characters.json";
 
 interface Diff {
     charset: string;
@@ -36,20 +38,8 @@ export function doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeT
     );
 }
 
-const UNICODE_POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS = [
-    "\u202a",
-    "\u202b",
-    "\u202d",
-    "\u202e",
-    "\u2066",
-    "\u2067",
-    "\u2068",
-    "\u202c",
-    "\u2069",
-];
-
 function doesTextContentPotentiallyDangerousBidirectionalUnicodeText(text: string): boolean {
-    return UNICODE_POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.some((character) =>
+    return potentially_dangerous_bidirectional_characters.some((character) =>
         text.includes(character)
     );
 }
@@ -59,7 +49,7 @@ export function getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectiona
 ): CodeMirror.EditorConfiguration {
     const special_chars_current: RegExp = config.specialChars || CodeMirror.defaults.specialChars;
     const regex_potentially_dangerous_bidirectional_characters = new RegExp(
-        "[" + UNICODE_POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.join("") + "]"
+        "[" + potentially_dangerous_bidirectional_characters.join("") + "]"
     );
 
     return {

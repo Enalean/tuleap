@@ -1440,6 +1440,17 @@ msgstr ""
 msgid "There is no logged pushes in the last %1$s week(s)"
 msgstr "Pas de push pour la/les dernière(s) %1$s semaine(s)"
 
+msgid ""
+"This file contains bidirectional Unicode text. It may be interpreted "
+"differently than what is shown. This might be used to inject malicious code "
+"that looks safe. You should review the file in an editor that reveals hidden "
+"Unicode characters."
+msgstr ""
+"Ce fichier contient du texte Unicode bidirectionnel. Il peut être interprété "
+"différement de ce qui est affiché. Cela peut être utilisé pour injecter du code "
+"malveillant qui semble sûr. Vous devriez examiner le fichier dans un éditeur qui "
+"révèle les caractères Unicode cachés."
+
 msgid "This mirror is used by repositories, you shall not delete it."
 msgstr "Le miroir est utilisé par des dépôts, vous ne pouvez pas le supprimer."
 
