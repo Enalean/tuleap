@@ -21,6 +21,7 @@
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
+use Tuleap\ProgramManagement\Tests\Builder\IterationsLabelsBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
@@ -44,6 +45,7 @@ class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ProgramIdentifierBuilder::build(),
                 UserIdentifierStub::withId(666),
                 ProgramIncrementIdentifierBuilder::buildWithId(1260),
+                IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle')
             )
         );
 
@@ -55,6 +57,7 @@ class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals('{"program_label":"Guinea Pig","program_shortname":"guinea-pig","program_icon":"\ud83d\udc39"}', $presenter->program);
         self::assertEquals('{"id":1260,"title":"Program increment #1260"}', $presenter->program_increment);
+        self::assertEquals('{"label":"Cycles","sub_label":"cycle"}', $presenter->iterations_labels);
         self::assertTrue($presenter->is_user_admin);
     }
 }

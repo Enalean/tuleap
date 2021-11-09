@@ -28,7 +28,10 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserPrivilegesStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Request\ForbiddenException;
@@ -156,7 +159,9 @@ final class DisplayPlanIterationsControllerTest extends TestCase
             BuildProgramIncrementInfoStub::withId(self::PROGRAM_INCREMENT_ID),
             VerifyIsProgramIncrementStub::withValidProgramIncrement(),
             VerifyIsVisibleArtifactStub::withVisibleIds(self::PROGRAM_INCREMENT_ID),
-            RetrieveProgramUserPrivilegesStub::withProgramAdminUser()
+            RetrieveProgramUserPrivilegesStub::withProgramAdminUser(),
+            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(224)),
+            RetrieveIterationLabelsStub::buildLabels('Cycles', 'cycle')
         );
     }
 

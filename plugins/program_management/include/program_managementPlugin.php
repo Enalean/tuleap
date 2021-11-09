@@ -554,7 +554,9 @@ final class program_managementPlugin extends Plugin
             ),
             $program_increment_verifier,
             $visibility_verifier,
-            new ProgramUserPrivilegesRetriever($user_manager_adapter)
+            new ProgramUserPrivilegesRetriever($user_manager_adapter),
+            $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
+            new IterationsDAO()
         );
     }
 

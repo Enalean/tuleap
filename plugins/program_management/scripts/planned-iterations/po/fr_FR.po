@@ -24,6 +24,9 @@ msgstr "Rien à voir ici pour le moment"
 msgid "Program"
 msgstr "Programme"
 
+msgid "There is no %s yet."
+msgstr "Il n'y a pas encore de %s."
+
 msgid "There is no iteration yet."
 msgstr "Il n'y a pas encore d'itérations."
 

@@ -23,6 +23,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
+use Tuleap\ProgramManagement\Tests\Builder\IterationsLabelsBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
@@ -44,7 +45,8 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveProgramUserPrivilegesStub::withProgramAdminUser(),
             ProgramIdentifierBuilder::build(),
             UserIdentifierStub::withId(666),
-            ProgramIncrementIdentifierBuilder::buildWithId(1260)
+            ProgramIncrementIdentifierBuilder::buildWithId(1260),
+            IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle')
         );
 
         self::assertEquals([
@@ -74,6 +76,7 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             $planned_iterations->getProgramBaseInfo()
         );
         self::assertEquals(ProgramIncrementInfo::fromIncrementInfo(1260, 'Program increment #1260'), $planned_iterations->getProgramIncrementInfo());
+        self::assertEquals(IterationsLabelsBuilder::buildWithLabels("Cycles", "cycle"), $planned_iterations->getIterationLabels());
         self::assertTrue($planned_iterations->isUserAdmin());
     }
 }
