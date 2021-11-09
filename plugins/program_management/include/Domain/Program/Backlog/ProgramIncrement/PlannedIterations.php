@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProgramUserPrivileges;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class PlannedIterations
@@ -40,7 +41,8 @@ final class PlannedIterations
         private array $program_flags,
         private ProgramPrivacy $program_privacy,
         private ProgramBaseInfo $program_base_info,
-        private ProgramIncrementInfo $program_increment_info
+        private ProgramIncrementInfo $program_increment_info,
+        private bool $is_user_admin
     ) {
     }
 
@@ -52,6 +54,7 @@ final class PlannedIterations
         BuildProgramPrivacy $build_program_privacy,
         BuildProgramBaseInfo $build_program_base_info,
         BuildProgramIncrementInfo $build_program_increment_info,
+        RetrieveProgramUserPrivileges $retrieve_program_user_privileges,
         ProgramIdentifier $program_identifier,
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier
@@ -60,8 +63,9 @@ final class PlannedIterations
         $program_privacy   = $build_program_privacy->build($program_identifier);
         $program_base_info = $build_program_base_info->build($program_identifier);
         $program_increment = $build_program_increment_info->build($user_identifier, $increment_identifier);
+        $is_user_admin     = $retrieve_program_user_privileges->isUserProgramAdmin($user_identifier, $program_identifier);
 
-        return new self($program_flags, $program_privacy, $program_base_info, $program_increment);
+        return new self($program_flags, $program_privacy, $program_base_info, $program_increment, $is_user_admin);
     }
 
     /**
@@ -85,5 +89,10 @@ final class PlannedIterations
     public function getProgramIncrementInfo(): ProgramIncrementInfo
     {
         return $this->program_increment_info;
+    }
+
+    public function isUserAdmin(): bool
+    {
+        return $this->is_user_admin;
     }
 }
