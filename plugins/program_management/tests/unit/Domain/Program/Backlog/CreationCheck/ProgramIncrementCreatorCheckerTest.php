@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgram
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TimeboxCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
@@ -43,10 +44,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
 final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TimeboxCreatorChecker
-     */
-    private $timebox_creator_checker;
+    private TimeboxCreatorChecker $timebox_creator_checker;
     private TrackerReference $tracker;
     private ProgramIdentifier $program;
     private VerifyIsProgramIncrementTracker $program_verifier;
@@ -57,7 +55,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     protected function setUp(): void
     {
-        $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
+        $this->timebox_creator_checker = TimeboxCreatorCheckerBuilder::buildValid();
         $this->program_verifier        = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
 
         $this->tracker = TrackerReferenceStub::withDefaults();
@@ -93,7 +91,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDisallowArtifactCreationWhenItIsAProgramIncrementTrackerAndOtherChecksDoNotPass(): void
     {
-        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(false);
+        $this->timebox_creator_checker = TimeboxCreatorCheckerBuilder::buildInvalid();
 
         self::assertFalse(
             $this->getChecker()->canCreateAProgramIncrement(
@@ -108,7 +106,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAllowArtifactCreationWhenTrackerIsNotProgramIncrement(): void
     {
-        $this->timebox_creator_checker->expects(self::never())->method('canTimeboxBeCreated');
         $this->program_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
 
         self::assertTrue(
@@ -124,8 +121,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAllowArtifactCreationWhenOtherChecksPass(): void
     {
-        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(true);
-
         self::assertTrue(
             $this->getChecker()->canCreateAProgramIncrement(
                 $this->tracker,
@@ -139,8 +134,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAllowArtifactCreationWhenAProjectHasNoTeamProjects(): void
     {
-        $this->timebox_creator_checker->expects(self::never())->method('canTimeboxBeCreated');
-
         self::assertTrue(
             $this->getChecker()->canCreateAProgramIncrement(
                 $this->tracker,
