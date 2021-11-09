@@ -26,30 +26,27 @@ import type {
 import type { TraceabilityMatrixElement } from "../type";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
 import * as rest_querier from "./rest-querier";
+import type { getTestManagementExecution } from "./rest-querier";
 
 describe("create-traceability-matrix", () => {
-    beforeEach(() => {
-        // Enable feature so we can test it
-        window.location.hash = "matrix";
-    });
-
     it("creates a row in the matrix when a test execution with all the information is encountered", async () => {
-        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue({
-            previous_result: {
-                status: "passed",
-                submitted_by: {
-                    display_name: "Realname (username)",
-                } as ArtifactReportResponseUserRepresentation,
-                submitted_on: "2021-07-01T00:00:00+02:00",
-            },
-            definition: {
-                summary: "Some definition summary",
-                requirement: {
-                    id: 888,
-                    title: "Requirement title",
+        const get_test_exec = (): Promise<TestExecutionResponse> =>
+            Promise.resolve({
+                previous_result: {
+                    status: "passed",
+                    submitted_by: {
+                        display_name: "Realname (username)",
+                    } as ArtifactReportResponseUserRepresentation,
+                    submitted_on: "2021-07-01T00:00:00+02:00",
                 },
-            },
-        } as TestExecutionResponse);
+                definition: {
+                    summary: "Some definition summary",
+                    requirement: {
+                        id: 888,
+                        title: "Requirement title",
+                    },
+                },
+            } as TestExecutionResponse);
 
         jest.spyOn(rest_querier, "getArtifacts").mockResolvedValue(
             new Map<number, ArtifactResponse>([
@@ -57,38 +54,41 @@ describe("create-traceability-matrix", () => {
             ])
         );
 
-        const matrix = await buildMatrix([
-            {
-                id: 10,
-                title: null,
-                values: [
-                    {
-                        field_id: 1,
-                        type: "ttmstepexec",
-                        label: "Step exec",
-                        value: null,
-                    },
-                    {
-                        field_id: 2,
-                        type: "art_link",
-                        label: "Art links",
-                        links: [
-                            {
-                                id: 700,
-                                type: "_covered_by",
-                            },
-                        ],
-                        reverse_links: [
-                            {
-                                id: 800,
-                                type: null,
-                            },
-                        ],
-                    },
-                ],
-                containers: [],
-            },
-        ]);
+        const matrix = await buildMatrix(
+            [
+                {
+                    id: 10,
+                    title: null,
+                    values: [
+                        {
+                            field_id: 1,
+                            type: "ttmstepexec",
+                            label: "Step exec",
+                            value: null,
+                        },
+                        {
+                            field_id: 2,
+                            type: "art_link",
+                            label: "Art links",
+                            links: [
+                                {
+                                    id: 700,
+                                    type: "_covered_by",
+                                },
+                            ],
+                            reverse_links: [
+                                {
+                                    id: 800,
+                                    type: null,
+                                },
+                            ],
+                        },
+                    ],
+                    containers: [],
+                },
+            ],
+            get_test_exec
+        );
 
         expect(matrix).toStrictEqual([
             {
@@ -103,224 +103,244 @@ describe("create-traceability-matrix", () => {
     });
 
     it("creates an empty matrix when artifacts do not have a step exec field", async () => {
-        const matrix = await buildMatrix([
-            {
-                id: 11,
-                title: null,
-                values: [],
-                containers: [],
-            },
-        ]);
+        const matrix = await buildMatrix(
+            [
+                {
+                    id: 11,
+                    title: null,
+                    values: [],
+                    containers: [],
+                },
+            ],
+            jest.fn()
+        );
 
         expect(matrix).toStrictEqual([]);
     });
 
     it("creates an empty matrix when test executions cannot be retrieved", async () => {
-        jest.spyOn(rest_querier, "getTestManagementExecution").mockRejectedValue(
-            new Error("Something bad")
-        );
+        const get_test_exec = (): Promise<TestExecutionResponse> =>
+            Promise.reject(new Error("Something bad"));
 
-        const matrix = await buildMatrix([
-            {
-                id: 400,
-                title: null,
-                values: [
-                    {
-                        field_id: 1,
-                        type: "ttmstepexec",
-                        label: "Step exec",
-                        value: null,
-                    },
-                    {
-                        field_id: 2,
-                        type: "art_link",
-                        label: "Art links",
-                        links: [
-                            {
-                                id: 7400,
-                                type: "_covered_by",
-                            },
-                        ],
-                        reverse_links: [
-                            {
-                                id: 8400,
-                                type: null,
-                            },
-                        ],
-                    },
-                ],
-                containers: [],
-            },
-        ]);
+        const matrix = await buildMatrix(
+            [
+                {
+                    id: 400,
+                    title: null,
+                    values: [
+                        {
+                            field_id: 1,
+                            type: "ttmstepexec",
+                            label: "Step exec",
+                            value: null,
+                        },
+                        {
+                            field_id: 2,
+                            type: "art_link",
+                            label: "Art links",
+                            links: [
+                                {
+                                    id: 7400,
+                                    type: "_covered_by",
+                                },
+                            ],
+                            reverse_links: [
+                                {
+                                    id: 8400,
+                                    type: null,
+                                },
+                            ],
+                        },
+                    ],
+                    containers: [],
+                },
+            ],
+            get_test_exec
+        );
 
         expect(matrix).toStrictEqual([]);
     });
 
     it("creates an empty matrix when artifacts do not have an artifact link field", async () => {
-        const matrix = await buildMatrix([
-            {
-                id: 14,
-                title: null,
-                values: [
-                    {
-                        field_id: 1,
-                        type: "ttmstepexec",
-                        label: "Step exec",
-                        value: null,
-                    },
-                ],
-                containers: [],
-            },
-        ]);
+        const matrix = await buildMatrix(
+            [
+                {
+                    id: 14,
+                    title: null,
+                    values: [
+                        {
+                            field_id: 1,
+                            type: "ttmstepexec",
+                            label: "Step exec",
+                            value: null,
+                        },
+                    ],
+                    containers: [],
+                },
+            ],
+            jest.fn()
+        );
 
         expect(matrix).toStrictEqual([]);
     });
 
     it("does not add a row to the matrix when the campaign cannot be identified", async () => {
-        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue({
-            previous_result: {
-                status: "passed",
-                submitted_by: {
-                    display_name: "Realname (username)",
-                } as ArtifactReportResponseUserRepresentation,
-                submitted_on: "2021-07-01T00:00:00+02:00",
-            },
-        } as TestExecutionResponse);
+        const get_test_exec = (): Promise<TestExecutionResponse> =>
+            Promise.resolve({
+                previous_result: {
+                    status: "passed",
+                    submitted_by: {
+                        display_name: "Realname (username)",
+                    } as ArtifactReportResponseUserRepresentation,
+                    submitted_on: "2021-07-01T00:00:00+02:00",
+                },
+            } as TestExecutionResponse);
 
-        const matrix = await buildMatrix([
-            {
-                id: 13,
-                title: null,
-                values: [
-                    {
-                        field_id: 1,
-                        type: "ttmstepexec",
-                        label: "Step exec",
-                        value: null,
-                    },
-                    {
-                        field_id: 2,
-                        type: "art_link",
-                        label: "Art links",
-                        links: [
-                            {
-                                id: 702,
-                                type: "_covered_by",
-                            },
-                        ],
-                        reverse_links: [],
-                    },
-                ],
-                containers: [],
-            },
-        ]);
+        const matrix = await buildMatrix(
+            [
+                {
+                    id: 13,
+                    title: null,
+                    values: [
+                        {
+                            field_id: 1,
+                            type: "ttmstepexec",
+                            label: "Step exec",
+                            value: null,
+                        },
+                        {
+                            field_id: 2,
+                            type: "art_link",
+                            label: "Art links",
+                            links: [
+                                {
+                                    id: 702,
+                                    type: "_covered_by",
+                                },
+                            ],
+                            reverse_links: [],
+                        },
+                    ],
+                    containers: [],
+                },
+            ],
+            get_test_exec
+        );
 
         expect(matrix).toStrictEqual([]);
     });
 
     it("creates an empty matrix when test executions are not linked to a requirement", async () => {
-        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue({
-            previous_result: {
-                status: "passed",
-                submitted_by: {
-                    display_name: "Realname (username)",
-                } as ArtifactReportResponseUserRepresentation,
-                submitted_on: "2021-07-01T00:00:00+02:00",
-            },
-            definition: {
-                summary: "Some definition summary",
-                requirement: null,
-            },
-        } as TestExecutionResponse);
+        const get_test_exec = (): Promise<TestExecutionResponse> =>
+            Promise.resolve({
+                previous_result: {
+                    status: "passed",
+                    submitted_by: {
+                        display_name: "Realname (username)",
+                    } as ArtifactReportResponseUserRepresentation,
+                    submitted_on: "2021-07-01T00:00:00+02:00",
+                },
+                definition: {
+                    summary: "Some definition summary",
+                    requirement: null,
+                },
+            } as TestExecutionResponse);
 
-        const matrix = await buildMatrix([
-            {
-                id: 15,
-                title: null,
-                values: [
-                    {
-                        field_id: 1,
-                        type: "ttmstepexec",
-                        label: "Step exec",
-                        value: null,
-                    },
-                    {
-                        field_id: 2,
-                        type: "art_link",
-                        label: "Art links",
-                        links: [
-                            {
-                                id: 700,
-                                type: "_covered_by",
-                            },
-                        ],
-                        reverse_links: [
-                            {
-                                id: 800,
-                                type: null,
-                            },
-                        ],
-                    },
-                ],
-                containers: [],
-            },
-        ]);
+        const matrix = await buildMatrix(
+            [
+                {
+                    id: 15,
+                    title: null,
+                    values: [
+                        {
+                            field_id: 1,
+                            type: "ttmstepexec",
+                            label: "Step exec",
+                            value: null,
+                        },
+                        {
+                            field_id: 2,
+                            type: "art_link",
+                            label: "Art links",
+                            links: [
+                                {
+                                    id: 700,
+                                    type: "_covered_by",
+                                },
+                            ],
+                            reverse_links: [
+                                {
+                                    id: 800,
+                                    type: null,
+                                },
+                            ],
+                        },
+                    ],
+                    containers: [],
+                },
+            ],
+            get_test_exec
+        );
 
         expect(matrix).toStrictEqual([]);
     });
 
     it("fallbacks on default title with the ID if the campaigns cannot be retrieved for some reasons", async () => {
-        jest.spyOn(rest_querier, "getTestManagementExecution").mockResolvedValue({
-            previous_result: {
-                status: "passed",
-                submitted_by: {
-                    display_name: "Realname (username)",
-                } as ArtifactReportResponseUserRepresentation,
-                submitted_on: "2021-07-01T00:00:00+02:00",
-            },
-            definition: {
-                summary: "Some definition summary",
-                requirement: {
-                    id: 888,
-                    title: "Requirement title",
+        const get_test_exec = (): Promise<TestExecutionResponse> =>
+            Promise.resolve({
+                previous_result: {
+                    status: "passed",
+                    submitted_by: {
+                        display_name: "Realname (username)",
+                    } as ArtifactReportResponseUserRepresentation,
+                    submitted_on: "2021-07-01T00:00:00+02:00",
                 },
-            },
-        } as TestExecutionResponse);
+                definition: {
+                    summary: "Some definition summary",
+                    requirement: {
+                        id: 888,
+                        title: "Requirement title",
+                    },
+                },
+            } as TestExecutionResponse);
 
         jest.spyOn(rest_querier, "getArtifacts").mockRejectedValue(new Error());
 
-        const matrix = await buildMatrix([
-            {
-                id: 10,
-                title: null,
-                values: [
-                    {
-                        field_id: 1,
-                        type: "ttmstepexec",
-                        label: "Step exec",
-                        value: null,
-                    },
-                    {
-                        field_id: 2,
-                        type: "art_link",
-                        label: "Art links",
-                        links: [
-                            {
-                                id: 700,
-                                type: "_covered_by",
-                            },
-                        ],
-                        reverse_links: [
-                            {
-                                id: 800,
-                                type: null,
-                            },
-                        ],
-                    },
-                ],
-                containers: [],
-            },
-        ]);
+        const matrix = await buildMatrix(
+            [
+                {
+                    id: 10,
+                    title: null,
+                    values: [
+                        {
+                            field_id: 1,
+                            type: "ttmstepexec",
+                            label: "Step exec",
+                            value: null,
+                        },
+                        {
+                            field_id: 2,
+                            type: "art_link",
+                            label: "Art links",
+                            links: [
+                                {
+                                    id: 700,
+                                    type: "_covered_by",
+                                },
+                            ],
+                            reverse_links: [
+                                {
+                                    id: 800,
+                                    type: null,
+                                },
+                            ],
+                        },
+                    ],
+                    containers: [],
+                },
+            ],
+            get_test_exec
+        );
 
         expect(matrix).toStrictEqual([
             {
@@ -333,17 +353,11 @@ describe("create-traceability-matrix", () => {
             },
         ]);
     });
-
-    it("does nothing when the feature is not enabled by a specific hash", async () => {
-        window.location.hash = "";
-        const matrix = await buildMatrix([]);
-
-        expect(matrix).toStrictEqual([]);
-    });
 });
 
 function buildMatrix(
-    artifacts: ReadonlyArray<ArtifactFromReport>
+    artifacts: ReadonlyArray<ArtifactFromReport>,
+    get_test_exec: typeof getTestManagementExecution
 ): Promise<ReadonlyArray<TraceabilityMatrixElement>> {
-    return createTraceabilityMatrix(artifacts, { locale: "en-US", timezone: "UTC" });
+    return createTraceabilityMatrix(artifacts, { locale: "en-US", timezone: "UTC" }, get_test_exec);
 }

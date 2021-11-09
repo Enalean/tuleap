@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    getReportArtifacts,
-    getTestManagementExecution,
-    getTrackerDefinition,
-} from "./rest-querier";
+import type { getTestManagementExecution } from "./rest-querier";
+import { getReportArtifacts, getTrackerDefinition } from "./rest-querier";
 
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 
@@ -35,7 +32,8 @@ export interface ArtifactFromReport {
 export async function retrieveReportArtifacts(
     tracker_id: number,
     report_id: number,
-    report_has_changed: boolean
+    report_has_changed: boolean,
+    get_test_execution: typeof getTestManagementExecution
 ): Promise<ReadonlyArray<ArtifactFromReport>> {
     const tracker_structure_promise = retrieveTrackerStructure(tracker_id);
     const report_artifacts: ArtifactResponse[] = await getReportArtifacts(
@@ -59,7 +57,8 @@ export async function retrieveReportArtifacts(
                     report_artifact.id,
                     tracker_structure.disposition,
                     values_by_field_id,
-                    tracker_structure.fields
+                    tracker_structure.fields,
+                    get_test_execution
                 )),
             };
         }
@@ -72,7 +71,8 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
     artifact_id: number,
     structure_elements: ReadonlyArray<StructureFormat>,
     field_values: ReadonlyMap<number, ArtifactReportResponseFieldValue>,
-    fields_structure: ReadonlyMap<number, FieldsStructure>
+    fields_structure: ReadonlyMap<number, FieldsStructure>,
+    get_test_execution: typeof getTestManagementExecution
 ): Promise<Omit<ArtifactReportContainer, "name">> {
     const values_with_additional_information: ArtifactReportFieldValue[] = [];
     const containers: ArtifactReportContainer[] = [];
@@ -80,7 +80,11 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
         if (structure_element.content === null) {
             const field = fields_structure.get(structure_element.id);
             if (field && field.type === "ttmstepexec") {
-                const test_execution_value = await getStepExecutionsFieldValue(artifact_id, field);
+                const test_execution_value = await getStepExecutionsFieldValue(
+                    artifact_id,
+                    field,
+                    get_test_execution
+                );
                 values_with_additional_information.push(test_execution_value);
                 continue;
             }
@@ -103,7 +107,8 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                     artifact_id,
                     structure_element.content,
                     field_values,
-                    fields_structure
+                    fields_structure,
+                    get_test_execution
                 )),
             });
             continue;
@@ -114,7 +119,8 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                 artifact_id,
                 structure_element.content,
                 field_values,
-                fields_structure
+                fields_structure,
+                get_test_execution
             );
         values_with_additional_information.push(...children_structured_information.values);
         containers.push(...children_structured_information.containers);
@@ -128,10 +134,11 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
 
 async function getStepExecutionsFieldValue(
     artifact_id: number,
-    field: StepExecutionFieldStructure
+    field: StepExecutionFieldStructure,
+    get_test_execution: typeof getTestManagementExecution
 ): Promise<ArtifactStepExecutionFieldValue> {
     try {
-        const test_execution: TestExecutionResponse = await getTestManagementExecution(artifact_id);
+        const test_execution: TestExecutionResponse = await get_test_execution(artifact_id);
 
         const test_execution_status: Array<TestExecStatus | null> = [];
         const test_executions: Array<ArtifactReportResponseStepRepresentationEnhanced> = [];
