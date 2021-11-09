@@ -27,7 +27,7 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            dgettext('tuleap-document_generation', 'Document generation'),
+            'DocGen',
             false,
             dgettext('tuleap-document_generation', 'Export Tuleap tracker reports as documents.')
         );
