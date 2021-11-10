@@ -1,3 +1,9 @@
+{assign var=potentially_dangerous_bidirectional_text_warning value=$filediff->getPotentiallyDangerousBidirectionalUnicodeTextWarning()}
+{if $potentially_dangerous_bidirectional_text_warning}
+<section class="tlp-pane-section"><div class="tlp-alert-warning">
+    {$potentially_dangerous_bidirectional_text_warning}
+</div></section>
+{/if}
 <div class="git-repository-diff-side-by-side">
     {if $filediff->GetStatus() == 'D'}
         {assign var=delblob value=$filediff->GetFromBlob()}

@@ -52,6 +52,11 @@
                 </div>
                 {/if}
                 {if isset($bloblines)}
+                    {if isset($potentially_dangerous_bidirectional_text_warning) }
+                        <section class="tlp-pane-section"><div class="tlp-alert-warning">
+                            {$potentially_dangerous_bidirectional_text_warning}
+                        </div></section>
+                    {/if}
                 <div id="git-repository-blob-file">
                     <div class="git-repository-blob-file-linenumbers">{foreach from=$bloblines item=line name=bloblines}
 <a href="#L{$smarty.foreach.bloblines.iteration}"

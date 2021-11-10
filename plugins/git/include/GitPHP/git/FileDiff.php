@@ -22,6 +22,7 @@
 namespace Tuleap\Git\GitPHP;
 
 use Tuleap\Git\BinaryDetector;
+use Tuleap\Git\Unicode\DangerousUnicodeText;
 
 /**
  * Commit class
@@ -894,5 +895,24 @@ class FileDiff
     public function SetCommit($commit) // @codingStandardsIgnoreLine
     {
         $this->commit = $commit;
+    }
+
+    public function getPotentiallyDangerousBidirectionalUnicodeTextWarning(): ?string
+    {
+        $warning   = null;
+        $from_blob = $this->GetFromBlob();
+        if ($from_blob !== null) {
+            $warning = DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning($from_blob->GetData());
+            if ($warning !== null) {
+                return $warning;
+            }
+        }
+
+        $to_blob = $this->GetToBlob();
+        if ($to_blob !== null) {
+            $warning = DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning($to_blob->GetData());
+        }
+
+        return $warning;
     }
 }

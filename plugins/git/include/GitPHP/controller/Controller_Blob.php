@@ -27,6 +27,7 @@ use Tuleap\Git\CommonMarkExtension\LinkToGitFileBlobFinder;
 use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
+use Tuleap\Git\Unicode\DangerousUnicodeText;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Markdown\CommonMarkInterpreter;
@@ -257,6 +258,10 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                 $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'mermaid.js'));
             }
         } else {
+            $this->tpl->assign(
+                'potentially_dangerous_bidirectional_text_warning',
+                DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning($blob->GetData())
+            );
             $this->tpl->assign('bloblines', $blob->GetData(true));
         }
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));

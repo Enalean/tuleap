@@ -23,6 +23,11 @@
         {include file='tuleap/blob-header.tpl'}
 
         <section class="git-repository-blob-body">
+            {if isset($potentially_dangerous_bidirectional_text_warning) }
+                <section class="tlp-pane-section"><div class="tlp-alert-warning">
+                    {$potentially_dangerous_bidirectional_text_warning}
+                </div></section>
+            {/if}
             <table id="git-repository-blame-file">
                 <tbody>
                     <tr>
