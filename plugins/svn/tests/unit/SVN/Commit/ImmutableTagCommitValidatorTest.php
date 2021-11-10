@@ -30,25 +30,122 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class ImmutableTagCommitValidatorTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&ImmutableTagFactory
-     */
-    private $immutable_tag_factory;
-    private ImmutableTagCommitValidator $immutable_tag_validator;
-
-    protected function setUp(): void
-    {
-        $this->immutable_tag_factory   = $this->createStub(ImmutableTagFactory::class);
-        $this->immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $this->immutable_tag_factory);
-    }
-
     public function testImmutableTagWithAPercentCharacterInPathIsCorrectlyProcessed(): void
     {
         $repository = $this->createStub(Repository::class);
-        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn(new ImmutableTag($repository, 'foo%bar', 'something%else'));
+
+        $immutable_tag_factory = $this->createStub(ImmutableTagFactory::class);
+        $immutable_tag_factory
+            ->method('getByRepositoryId')
+            ->willReturn(new ImmutableTag($repository, 'foo%bar', 'something%else'));
+
+
+        $immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $immutable_tag_factory);
 
         $this->expectNotToPerformAssertions();
 
-        $this->immutable_tag_validator->assertPathIsValid($repository, 'txn', 'my/path');
+        $immutable_tag_validator->assertPathIsValid($repository, 'txn', 'my/path');
+    }
+
+    public function testPathIsValidIfNoImmutableTag(): void
+    {
+        $repository = $this->createStub(Repository::class);
+
+        $immutable_tag_factory = $this->createStub(ImmutableTagFactory::class);
+        $immutable_tag_factory
+            ->method('getByRepositoryId')
+            ->willReturn(ImmutableTag::buildEmptyImmutableTag($repository));
+
+
+        $immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $immutable_tag_factory);
+
+        $this->expectNotToPerformAssertions();
+
+        $immutable_tag_validator->assertPathIsValid($repository, 'txn', 'my/path');
+    }
+
+    public function testItPreventsUpdateOfContentInImmutableTag(): void
+    {
+        $repository = $this->createStub(Repository::class);
+
+        $immutable_tag_factory = $this->createStub(ImmutableTagFactory::class);
+        $immutable_tag_factory
+            ->method('getByRepositoryId')
+            ->willReturn(new ImmutableTag($repository, 'tags/moduleA', ''));
+
+
+        $immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $immutable_tag_factory);
+
+        $this->expectException(\SVN_CommitToTagDeniedException::class);
+
+        $immutable_tag_validator->assertPathIsValid($repository, 'txn', 'U  tags/moduleA/v1/somecontent');
+    }
+
+    public function testItPreventsDeletionOfContentInImmutableTag(): void
+    {
+        $repository = $this->createStub(Repository::class);
+
+        $immutable_tag_factory = $this->createStub(ImmutableTagFactory::class);
+        $immutable_tag_factory
+            ->method('getByRepositoryId')
+            ->willReturn(new ImmutableTag($repository, 'tags/moduleA', ''));
+
+
+        $immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $immutable_tag_factory);
+
+        $this->expectException(\SVN_CommitToTagDeniedException::class);
+
+        $immutable_tag_validator->assertPathIsValid($repository, 'txn', 'D  tags/moduleA/v1/somecontent');
+    }
+
+    public function testItAllowsCreationOfImmutableTag(): void
+    {
+        $repository = $this->createStub(Repository::class);
+
+        $immutable_tag_factory = $this->createStub(ImmutableTagFactory::class);
+        $immutable_tag_factory
+            ->method('getByRepositoryId')
+            ->willReturn(new ImmutableTag($repository, 'tags/moduleA', ''));
+
+
+        $immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $immutable_tag_factory);
+
+        $this->expectNotToPerformAssertions();
+
+        $immutable_tag_validator->assertPathIsValid($repository, 'txn', 'A  tags/moduleA/v2');
+    }
+
+    public function testAdditionInWhitelistedPathIsAllowed(): void
+    {
+        $repository = $this->createStub(Repository::class);
+
+        $immutable_tag_factory = $this->createStub(ImmutableTagFactory::class);
+        $immutable_tag_factory
+            ->method('getByRepositoryId')
+            ->willReturn(new ImmutableTag($repository, 'tags/moduleA', 'tags/moduleA/itsok'));
+
+
+        $immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $immutable_tag_factory);
+
+        $this->expectNotToPerformAssertions();
+
+        $immutable_tag_validator->assertPathIsValid($repository, 'txn', 'A  tags/moduleA/itsok/v1/');
+    }
+
+    public function testAdditionOfSubElementsInWhitelistedPathIsNotAllowed(): void
+    {
+        $repository = $this->createStub(Repository::class);
+
+        $immutable_tag_factory = $this->createStub(ImmutableTagFactory::class);
+        $immutable_tag_factory
+            ->method('getByRepositoryId')
+            ->willReturn(new ImmutableTag($repository, 'tags/moduleA', 'tags/moduleA/itsok'));
+
+
+        $immutable_tag_validator = new ImmutableTagCommitValidator(new NullLogger(), $immutable_tag_factory);
+
+        $this->expectException(\SVN_CommitToTagDeniedException::class);
+
+        $immutable_tag_validator->assertPathIsValid($repository, 'txn', 'A  tags/moduleA/itsok/v1/somecontent');
     }
 }

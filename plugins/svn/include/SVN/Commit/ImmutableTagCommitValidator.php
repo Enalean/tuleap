@@ -104,15 +104,19 @@ final class ImmutableTagCommitValidator implements PathValidator
             $whitelist_regexp[] = $this->getWellFormedRegexImmutablePath($whitelist_path);
         }
 
-        $allowed_tags = implode('|', $whitelist_regexp);
+        foreach ($whitelist_regexp as $allowed_tag) {
+            $pattern = "%^
+                A\s+(?:$allowed_tag)/[^/]+/?$  # A  tags/moduleA/v1/     (allowed)
+                                               # A  tags/moduleA/toto    (allowed)
+                                               # A  tags/moduleA/v1/toto (forbidden)
+                %x";
 
-        $pattern = "%^
-            A\s+(?:$allowed_tags)/[^/]+/?$  # A  tags/moduleA/v1/   (allowed)
-                                            # A  tags/moduleA/toto  (allowed)
-                                            # A  tags/moduleA/v1/toto (forbidden)
-            %x";
+            if (preg_match($pattern, $path) === 1) {
+                return true;
+            }
+        }
 
-        return preg_match($pattern, $path) === 1;
+        return false;
     }
 
     private function getWellFormedRegexImmutablePath(string $immutable_path): string
