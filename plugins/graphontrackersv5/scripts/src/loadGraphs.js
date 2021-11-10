@@ -41,7 +41,7 @@ const TYPE_PIE = "pie";
 const TYPE_CUMULATIVE_FLOW_CHART = "cumulativeflow";
 
 async function buildGraph(graph_node) {
-    const { graphId, rendererId, reportId, doesNotUseD3 } = graph_node.dataset;
+    const { graphId, rendererId, reportId, doesNotUseD3, inDashboard } = graph_node.dataset;
 
     if (doesNotUseD3 === "true") {
         return;
@@ -49,7 +49,7 @@ async function buildGraph(graph_node) {
 
     const spinner_node = showSpinner(graph_node);
     try {
-        const graph_data = await getChartData(reportId, rendererId, graphId);
+        const graph_data = await getChartData(reportId, rendererId, graphId, inDashboard);
         graphFactory(graphId, graph_data);
     } catch (e) {
         if (!Object.prototype.hasOwnProperty.call(e, "response")) {
