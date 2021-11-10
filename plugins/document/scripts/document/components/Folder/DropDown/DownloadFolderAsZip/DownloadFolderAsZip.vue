@@ -76,9 +76,10 @@ export default {
         async checkFolderSize() {
             this.is_retrieving_folder_size = true;
 
-            const folder_properties = await this.$store.dispatch("metadata/getFolderProperties", [
-                this.item,
-            ]);
+            const folder_properties = await this.$store.dispatch(
+                "metadata/getFolderProperties",
+                this.item
+            );
             this.is_retrieving_folder_size = false;
 
             if (folder_properties === null) {

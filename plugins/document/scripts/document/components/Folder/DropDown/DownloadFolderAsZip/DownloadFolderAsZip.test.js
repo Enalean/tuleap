@@ -65,9 +65,10 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
-            { id: 10, type: "folder" },
-        ]);
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+            id: 10,
+            type: "folder",
+        });
         expect(event_bus_emit).toHaveBeenCalledWith(
             "show-max-archive-size-threshold-exceeded-modal",
             {
@@ -91,9 +92,10 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
-            { id: 10, type: "folder" },
-        ]);
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+            id: 10,
+            type: "folder",
+        });
         expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
@@ -127,9 +129,10 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
-            { id: 10, type: "folder" },
-        ]);
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+            id: 10,
+            type: "folder",
+        });
         expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: four_GB,
@@ -164,9 +167,10 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
-            { id: 10, type: "folder" },
-        ]);
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+            id: 10,
+            type: "folder",
+        });
         expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
@@ -189,9 +193,10 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.vm.checkFolderSize();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
-            { id: 10, type: "folder" },
-        ]);
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+            id: 10,
+            type: "folder",
+        });
         expect(eventBusEmit).not.toHaveBeenCalled();
         expect(redirect).toHaveBeenCalledWith(
             "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip"
