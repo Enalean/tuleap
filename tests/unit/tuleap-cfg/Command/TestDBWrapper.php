@@ -28,8 +28,8 @@ use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
 final class TestDBWrapper implements DBWrapperInterface
 {
-
-    public $statements = [];
+    private array $prepared_run = [];
+    public array $statements    = [];
 
     public function assertContains(string $needle)
     {
@@ -39,6 +39,11 @@ final class TestDBWrapper implements DBWrapperInterface
     public function assertNoStatments()
     {
         Assert::assertEmpty($this->statements);
+    }
+
+    public function setRunReturn(string $statement, mixed $value): void
+    {
+        $this->prepared_run[$statement] = $value;
     }
 
     public function escapeIdentifier(string $identifier, bool $quote = true): string
@@ -57,6 +62,7 @@ final class TestDBWrapper implements DBWrapperInterface
     public function run(string $statement, ...$params)
     {
         $this->statements[] = $statement;
+        return $this->prepared_run[$statement] ?? null;
     }
 
     public function row(string $statement)

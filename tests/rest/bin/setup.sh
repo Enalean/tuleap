@@ -55,14 +55,9 @@ setup_database() {
         --admin-password=welcome0 \
         --db-name="$MYSQL_DBNAME" \
         --app-user="$MYSQL_USER" \
-        --app-password="$MYSQL_PASSWORD"
-
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php  setup:mysql \
-        --host="$DB_HOST" \
-        --dbname="$MYSQL_DBNAME" \
-        --password="$MYSQL_PASSWORD" \
-        "$MYSQL_PASSWORD" \
-        "localhost.localdomain"
+        --app-password="$MYSQL_PASSWORD" \
+        --tuleap-fqdn="localhost.localdomain" \
+        --site-admin-password="$MYSQL_PASSWORD"
 
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-group-list' INTO TABLE wiki_group_list CHARACTER SET ascii"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-page' INTO TABLE wiki_page CHARACTER SET ascii"

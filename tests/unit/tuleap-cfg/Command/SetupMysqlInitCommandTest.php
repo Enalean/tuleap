@@ -26,21 +26,13 @@ namespace TuleapCfg\Command;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
+use function PHPUnit\Framework\assertStringContainsString;
 
 final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var string
-     */
-    private $base_dir;
-    /**
-     * @var CommandTester
-     */
-    private $command_tester;
-    /**
-     * @var TestDBWrapper
-     */
-    private $db_wrapper;
+    private string $base_dir;
+    private CommandTester $command_tester;
+    private TestDBWrapper $db_wrapper;
 
     protected function setUp(): void
     {
@@ -272,5 +264,21 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(0, $this->command_tester->getStatusCode());
 
         $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON 'tuleap'.* TO 'tuleap'@'192.0.2.1'");
+    }
+
+    public function testItFeedsTheDatabaseWithInitValues(): void
+    {
+        $this->db_wrapper->setRunReturn('SHOW TABLES', []);
+
+        $this->command_tester->execute([
+            '--admin-password' => 'welcome0',
+            '--app-password'   => 'a complex password',
+            '--app-user'       => 'tuleap',
+            '--grant-hostname' => '192.0.2.1',
+            '--tuleap-fqdn'    => 'tuleap.example.com',
+            '--site-admin-password' => 'welcome1',
+        ]);
+
+        assertStringContainsString('CREATE TABLE `groups` (', implode("\n", $this->db_wrapper->statements));
     }
 }

@@ -44,15 +44,9 @@ setup_database() {
         --admin-password=welcome0 \
         --db-name="$MYSQL_DBNAME" \
         --app-user="$MYSQL_USER" \
-        --app-password="$MYSQL_PASSWORD"
-
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql \
-        --host="$DB_HOST" \
-        --user="$MYSQL_USER" \
-        --dbname="$MYSQL_DBNAME" \
-        --password="$MYSQL_PASSWORD" \
-        welcome0 \
-        localhost
+        --app-password="$MYSQL_PASSWORD" \
+        --tuleap-fqdn="localhost" \
+        --site-admin-password="welcome0"
 
     # Allow all privileges on DB starting with 'testdb_' so we can create and drop database during the tests
     $MYSQL_CLI -h"$DB_HOST" -uroot -pwelcome0 -e 'GRANT ALL PRIVILEGES ON `testdb_%` . * TO "'$MYSQL_USER'"@"%";'
