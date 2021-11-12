@@ -809,6 +809,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new Git_Backend_Gitolite(
             $this->getGitoliteDriver(),
             new GitoliteAccessURLGenerator($this->getPluginInfo()),
+            new DefaultBranchUpdateExecutorAsGitoliteUser(),
             $this->getLogger()
         );
     }

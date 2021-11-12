@@ -60,6 +60,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function __construct(
         Git_GitoliteDriver $driver,
         GitoliteAccessURLGenerator $gitolite_access_URL_generator,
+        private \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor $default_branch_update_executor,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->driver                        = $driver;
@@ -443,8 +444,12 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
         $this->getDriver()->fork($name, $old_namespace, $new_namespace);
         $this->updateRepoConf($new);
-    }
 
+        $default_branch = Git_Exec::buildFromRepository($old)->getDefaultBranch();
+        if ($default_branch !== null) {
+            $this->default_branch_update_executor->setDefaultBranch(Git_Exec::buildFromRepository($new), $default_branch);
+        }
+    }
 
     public function clonePermissions(GitRepository $old, GitRepository $new)
     {

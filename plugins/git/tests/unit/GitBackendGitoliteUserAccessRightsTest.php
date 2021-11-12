@@ -21,6 +21,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 require_once __DIR__ . '/bootstrap.php';
@@ -39,7 +40,7 @@ class GitBackendGitoliteUserAccessRightsTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         parent::setUp();
         $driver        = \Mockery::spy(\Git_GitoliteDriver::class);
-        $this->backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $this->backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateTestExecutor(), \Mockery::spy(\Psr\Log\LoggerInterface::class));
 
         $this->user       = \Mockery::spy(\PFUser::class);
         $this->repository = \Mockery::spy(\GitRepository::class);
