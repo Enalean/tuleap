@@ -1,9 +1,7 @@
 <tr>
     <td class="tlp-table-cell-filterable project-admin-ugroups-list-table-ugroup-name"
         title="{{ name }}"
-    >
-        {{ name }}
-    </td>
+    >{{ name }}</td>
     <td class="tlp-table-cell-filterable project-admin-ugroups-list-table-ugroup-description">
         {{ description }}
     </td>
@@ -15,6 +13,7 @@
             tlp-button-small
             tlp-button-primary
             tlp-button-outline"
+           data-test="ugroup-{{ id }}-details"
            href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}"
         >
             <i class="fa fa-users tlp-button-icon"></i> {{# gettext }}Details{{/ gettext }}
