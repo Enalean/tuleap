@@ -154,6 +154,15 @@ import "prismjs/components/prism-hcl";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-cmake";
 
+import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectional-unicode-text";
+
+Prism.hooks.add("before-insert", (env): void => {
+    if (env.highlightedCode === undefined) {
+        return;
+    }
+    env.highlightedCode = markPotentiallyDangerousBidirectionalUnicodeText(env.highlightedCode);
+});
+
 export function syntaxHighlightElement(element: Element): void {
     Prism.highlightElement(element);
 }

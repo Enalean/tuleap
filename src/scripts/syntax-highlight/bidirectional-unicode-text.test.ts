@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "prismjs/themes/prism";
+import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectional-unicode-text";
 
-code[class*="language-"],
-pre[class*="language-"] {
-    font-family: var(--tlp-font-family-mono);
-}
+describe("bidirectional-unicode-text", () => {
+    it("marks potentially dangerous bidirectional characters", () => {
+        const result = markPotentiallyDangerousBidirectionalUnicodeText("A\u202aB\u202b");
 
-.syntax-highlight-invisible-char {
-    color: transparent;
-    font-size: 0;
-
-    &::before {
-        content: "＜" attr(title) "＞";
-        display: inline;
-        background: var(--tlp-warning-color-lighter-90);
-        color: var(--tlp-dimmed-color);
-        font-size: 0.875rem;
-    }
-}
+        expect(result).toStrictEqual(
+            'A<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202a">\u202a</span>B<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202b">\u202b</span>'
+        );
+    });
+});

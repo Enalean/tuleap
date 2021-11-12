@@ -44,7 +44,7 @@ final class DangerousUnicodeText
     private static function doesCodeContainsPotentiallyDangerousBidirectionalUnicodeText(string $code): bool
     {
         $potentially_dangerous_bidirectional_characters = json_decode(
-            file_get_contents(__DIR__ . '/potentially-dangerous-bidirectional-characters.json'),
+            file_get_contents(__DIR__ . '/../../../../src/common/Code/potentially-dangerous-bidirectional-characters.json'),
             true,
             512,
             JSON_THROW_ON_ERROR

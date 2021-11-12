@@ -18,7 +18,7 @@
  */
 
 import CodeMirror from "codemirror";
-import potentially_dangerous_bidirectional_characters from "../../../../../git/include/Unicode/potentially-dangerous-bidirectional-characters.json";
+import potentially_dangerous_bidirectional_characters from "../../../../../../src/common/Code/potentially-dangerous-bidirectional-characters.json";
 
 interface Diff {
     charset: string;
