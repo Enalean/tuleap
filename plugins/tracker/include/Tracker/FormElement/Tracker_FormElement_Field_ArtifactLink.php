@@ -33,7 +33,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\HTMLOutput
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\ValueFormatter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer;
@@ -49,6 +48,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public const CREATE_NEW_PARENT_VALUE = -1;
     public const NEW_VALUES_KEY          = 'new_values';
     public const NATURE_IS_CHILD         = '_is_child';
+    public const FAKE_TYPE_IS_PARENT     = '_is_parent';
     public const NO_NATURE               = '';
     public const FIELDS_DATA_PARENT_KEY  = 'parent';
 
@@ -322,7 +322,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $current_user   = $this->getCurrentUser();
         $can_create     = false;
 
-        return $this->fetchParentSelector($prefill_parent, $name, $current_user, $can_create);
+        return $this->renderParentSelector($prefill_parent, $name, $this->getPossibleParentSelector($current_user, $can_create));
     }
 
     public function fetchSubmitForOverlay(array $submitted_values)
@@ -341,7 +341,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             return '';
         }
 
-        return $this->fetchParentSelector($prefill_parent, $name, $current_user, $can_create);
+        return $this->renderParentSelector($prefill_parent, $name, $this->getPossibleParentSelector($current_user, $can_create));
     }
 
     private function getArtifactLinkIdsOfLastChangeset(?Artifact $artifact = null)
@@ -456,22 +456,28 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return new Tracker_Report_Criteria_ArtifactLink_ValueDao();
     }
 
-    private function fetchParentSelector(
+    private function renderParentSelector(
         string $prefill_parent,
         string $name,
+        \Tuleap\Tracker\Artifact\PossibleParentSelector $possible_parents_selector
+    ): string {
+        $renderer = PossibleParentSelectorRenderer::buildWithDefaultTemplateRenderer();
+        return $renderer->render($name, $prefill_parent, $possible_parents_selector);
+    }
+
+    private function getPossibleParentSelector(
         PFUser $user,
         bool $can_create
-    ): string {
-        $possible_parents_getr     = new PossibleParentsRetriever($this->getArtifactFactory(), EventManager::instance());
-        $possible_parents_selector = $possible_parents_getr->getPossibleArtifactParents(
+    ): \Tuleap\Tracker\Artifact\PossibleParentSelector {
+        $retriever = new PossibleParentsRetriever($this->getArtifactFactory(), EventManager::instance());
+
+        return $retriever->getPossibleArtifactParents(
             $this->getTracker(),
             $user,
             0,
             0,
             $can_create,
         );
-        $renderer                  = PossibleParentSelectorRenderer::buildWithDefaultTemplateRenderer();
-        return $renderer->render($name, $prefill_parent, $possible_parents_selector);
     }
 
     /**
@@ -550,27 +556,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                              data-preview-label="' . $hp->purify(dgettext('tuleap-tracker', 'Preview')) . '"
                              value="' .  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  . '"
                              title="' . dgettext('tuleap-tracker', 'Enter artifact ids separated with a comma') . '" />';
+
+            $possible_parents_selector = null;
+            if ($artifact->getParentWithoutPermissionChecking() === null) {
+                $can_create                = $artifact->getId() === -1;
+                $possible_parents_selector = $this->getPossibleParentSelector($current_user, $can_create);
+            }
+
             if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                $natures           = $this->getNaturePresenterFactory()->getAllUsableTypesInProject($artifact->getTracker()->getProject());
-                $natures_presenter = [];
-                foreach ($natures as $nature) {
-                    $natures_presenter[] = [
-                        'shortname'     => $nature->shortname,
-                        'forward_label' => $nature->forward_label,
-                        'is_selected'   => ($nature->shortname == $prefill_nature)
-                    ];
-                }
-                $html .= $this->getTemplateRenderer()->renderToString(
-                    'artifactlink-nature-selector',
-                    new NatureSelectorPresenter($natures_presenter, $name . '[nature]', 'tracker-form-element-artifactlink-new nature-selector')
+                $renderer = new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\TypeSelectorRenderer(
+                    $this->getNaturePresenterFactory(),
+                    $this->getTemplateRenderer(),
                 );
+                $html    .= $renderer->renderToString($artifact, $prefill_nature, $name, $possible_parents_selector);
             }
             $html .= '</span>';
             $html .= '</div>';
 
-            if ($artifact->getParentWithoutPermissionChecking() === null) {
-                $can_create = $artifact->getId() == -1;
-                $html      .= $this->fetchParentSelector($prefill_parent, $name, $current_user, $can_create);
+            if ($possible_parents_selector) {
+                $html .= $this->renderParentSelector($prefill_parent, $name, $possible_parents_selector);
             }
             $html .= '</div>';
             $html .= '</section>'; // end of tracker_formelement_read_and_edit_edition_section

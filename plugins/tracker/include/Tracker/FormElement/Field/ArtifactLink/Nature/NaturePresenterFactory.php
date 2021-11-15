@@ -26,7 +26,7 @@ use Project;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
-class NaturePresenterFactory implements AllNaturesRetriever
+class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableTypesInProject
 {
     /**
      * Add new artifact link natures
@@ -80,7 +80,7 @@ class NaturePresenterFactory implements AllNaturesRetriever
     }
 
     /** @return NaturePresenter[] */
-    public function getAllUsableTypesInProject(Project $project)
+    public function getAllUsableTypesInProject(Project $project): array
     {
         $types = $this->getAllTypesEditableInProject($project);
         foreach ($types as $key => $type) {
