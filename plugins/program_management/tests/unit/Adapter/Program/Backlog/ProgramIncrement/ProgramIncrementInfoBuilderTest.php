@@ -41,6 +41,14 @@ final class ProgramIncrementInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ProgramIncrementIdentifierBuilder::buildWithId(1260)
         );
 
-        self::assertEquals(ProgramIncrementInfo::fromIncrementInfo(1260, 'Increment 1'), $increment_info);
+        self::assertEquals(
+            ProgramIncrementInfo::fromIncrementInfo(
+                1260,
+                'Increment 1',
+                'Sep 28',
+                'Oct 28'
+            ),
+            $increment_info
+        );
     }
 }

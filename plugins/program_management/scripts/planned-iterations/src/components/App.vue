@@ -22,6 +22,9 @@
         <breadcrumb />
         <h1 class="planned-iterations-title-header" data-test="app-header-title">
             {{ program_increment.title }}
+            <small class="planned-iterations-title-header-dates" v-if="are_dates_displayed">
+                {{ program_increment.start_date }} – {{ program_increment.end_date }}
+            </small>
         </h1>
         <div class="iterations-backlog">
             <iterations-to-be-planned-section />
@@ -50,5 +53,12 @@ import PlannedIterationsSection from "./PlannedIterationsSection.vue";
 export default class App extends Vue {
     @State
     readonly program_increment!: ProgramIncrement;
+
+    get are_dates_displayed(): boolean {
+        return (
+            this.program_increment.start_date.length > 0 &&
+            this.program_increment.end_date.length > 0
+        );
+    }
 }
 </script>

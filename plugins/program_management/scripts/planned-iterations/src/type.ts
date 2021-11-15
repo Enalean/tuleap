@@ -28,6 +28,8 @@ export interface Program {
 export interface ProgramIncrement {
     id: number;
     title: string;
+    start_date: string;
+    end_date: string;
 }
 
 export interface State {

@@ -217,6 +217,9 @@ msgstr ""
 msgid "Iterations"
 msgstr "Itérations"
 
+msgid "M d"
+msgstr "j M"
+
 msgid "Milestones"
 msgstr "Jalons"
 

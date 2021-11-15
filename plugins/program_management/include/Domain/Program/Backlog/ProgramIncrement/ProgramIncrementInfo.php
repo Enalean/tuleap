@@ -26,12 +26,19 @@ final class ProgramIncrementInfo
 {
     private function __construct(
         public int $id,
-        public string $title
+        public string $title,
+        public string $start_date,
+        public string $end_date
     ) {
     }
 
-    public static function fromIncrementInfo(int $id, string $title): self
+    public static function fromIncrementInfo(int $id, string $title, string $start_date, string $end_date): self
     {
-        return new self($id, $title);
+        return new self(
+            $id,
+            $title,
+            $start_date,
+            $end_date
+        );
     }
 }
