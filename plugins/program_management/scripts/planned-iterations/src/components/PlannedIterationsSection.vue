@@ -18,37 +18,26 @@
   -->
 
 <template>
-    <div>
-        <breadcrumb />
-        <h1 class="planned-iterations-title-header" data-test="app-header-title">
-            {{ program_increment.title }}
-        </h1>
-        <div class="iterations-backlog">
-            <iterations-to-be-planned-section />
-            <planned-iterations-section />
+    <div class="planned-iterations">
+        <h2 class="planned-iterations-section-title" v-translate>Iterations</h2>
+        <div class="empty-state-page" data-test="app-tmp-empty-state">
+            <svg-planned-iterations-empty-state />
+            <p class="empty-state-text planned-iterations-empty-state-text" v-translate>
+                There is no iteration yet.
+            </p>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import type { ProgramIncrement } from "../type";
-
 import Vue from "vue";
-import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import Breadcrumb from "./Breadcrumb.vue";
-import IterationsToBePlannedSection from "./IterationsToBePlannedSection.vue";
-import PlannedIterationsSection from "./PlannedIterationsSection.vue";
+import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
 
 @Component({
     components: {
-        Breadcrumb,
-        IterationsToBePlannedSection,
-        PlannedIterationsSection,
+        SvgPlannedIterationsEmptyState,
     },
 })
-export default class App extends Vue {
-    @State
-    readonly program_increment!: ProgramIncrement;
-}
+export default class PlannedIterationsSection extends Vue {}
 </script>

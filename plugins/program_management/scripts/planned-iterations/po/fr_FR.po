@@ -15,8 +15,17 @@ msgstr ""
 msgid "Administration"
 msgstr "Administration"
 
+msgid "Iterations"
+msgstr "Itérations"
+
 msgid "Nothing to see here for the moment"
 msgstr "Rien à voir ici pour le moment"
 
 msgid "Program"
 msgstr "Programme"
+
+msgid "There is no iteration yet."
+msgstr "Il n'y a pas encore d'itérations."
+
+msgid "To be planned by the Teams"
+msgstr "À plannifier par les équipes"
