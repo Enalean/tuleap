@@ -7,7 +7,7 @@
   "dependencies": {
     "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
     "@tuleap/plugin-tracker": "file:../tracker",
-    "extendable-error": "^0.1.5",
+    "extendable-error": "^0.1.7",
     "moment": "^2.29.1",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12",
