@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,8 +45,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $verify_is_visible_artifact  = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $search_iterations           = SearchIterationsStub::withIterationIds(456);
         $tracker_factory             = $this->createStub(\Tracker_ArtifactFactory::class);
-        $artifact                    = $this->createStub(Artifact::class);
-        $artifact->method('getId')->willReturn(456);
+        $artifact                    = ArtifactTestBuilder::anArtifact(456)->build();
 
         $tracker_factory->method('getArtifactById')->willReturn($artifact);
 

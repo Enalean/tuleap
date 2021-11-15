@@ -141,7 +141,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnMap([
             [$this->user, 1, $this->artifact],
             [$this->user, 2, null],
-            [$this->user, 3, $this->createMock(Artifact::class)],
+            [$this->user, 3, ArtifactTestBuilder::anArtifact(964)->build()],
         ]);
 
 

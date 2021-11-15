@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
 use Psr\Log\NullLogger;
 use TimePeriodWithoutWeekEnd;
-use Tracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
@@ -37,17 +36,12 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeframeValueRetrieverTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
-     */
-    private $artifact;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker
-     */
-    private $tracker;
+    private Artifact $artifact;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&SemanticTimeframeBuilder
      */
@@ -59,10 +53,8 @@ final class TimeframeValueRetrieverTest extends TestCase
     {
         $this->semantic_timeframe_builder = $this->createStub(SemanticTimeframeBuilder::class);
 
-        $this->tracker = $this->createStub(Tracker::class);
-
-        $this->artifact = $this->createStub(Artifact::class);
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $tracker        = TrackerTestBuilder::aTracker()->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(100)->inTracker($tracker)->build();
 
         $this->artifact_identifier = TimeboxIdentifierStub::withId(1);
         $this->user_identifier     = UserIdentifierStub::buildGenericUser();
