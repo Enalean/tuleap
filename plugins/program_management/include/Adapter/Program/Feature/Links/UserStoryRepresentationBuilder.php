@@ -24,12 +24,18 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 
@@ -41,7 +47,9 @@ final class UserStoryRepresentationBuilder
         private VerifyIsPlannable $verify_is_plannable,
         private RetrieveBackgroundColor $retrieve_background_color,
         private RetrieveUser $retrieve_user,
-        private \TrackerFactory $tracker_factory
+        private \TrackerFactory $tracker_factory,
+        private VerifyIsVisibleFeature $verify_is_visible_feature,
+        private BuildProgram $build_program
     ) {
     }
 
@@ -52,15 +60,36 @@ final class UserStoryRepresentationBuilder
      */
     public function buildFeatureStories(int $feature_id, UserIdentifier $user_identifier): array
     {
-        $user    = $this->retrieve_user->getUserWithId($user_identifier);
-        $feature = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
+        $user          = $this->retrieve_user->getUserWithId($user_identifier);
+        $full_artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
+        if (! $full_artifact) {
+            throw new FeatureNotAccessException();
+        }
+
+        try {
+            $program = ProgramIdentifier::fromId(
+                $this->build_program,
+                (int) $full_artifact->getTracker()->getGroupId(),
+                $user_identifier,
+                null
+            );
+        } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
+            throw new FeatureNotAccessException();
+        }
+        $feature = FeatureIdentifier::fromId(
+            $this->verify_is_visible_feature,
+            $feature_id,
+            $user_identifier,
+            $program,
+            null
+        );
         if (! $feature) {
             throw new FeatureNotAccessException();
         }
-        $feature_tracker_is_plannable = $this->verify_is_plannable->isPlannable($feature->getTrackerId());
+        $feature_tracker_is_plannable = $this->verify_is_plannable->isPlannable($full_artifact->getTrackerId());
 
         if (! $feature_tracker_is_plannable) {
-            throw new FeatureIsNotPlannableException($feature->getTrackerId());
+            throw new FeatureIsNotPlannableException($full_artifact->getTrackerId());
         }
 
         $linked_children  = [];
