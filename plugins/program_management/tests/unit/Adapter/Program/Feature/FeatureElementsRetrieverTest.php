@@ -43,7 +43,6 @@ use Tuleap\Tracker\TrackerColor;
 
 final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private FeatureElementsRetriever $retriever;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&SearchPlannableFeatures
      */

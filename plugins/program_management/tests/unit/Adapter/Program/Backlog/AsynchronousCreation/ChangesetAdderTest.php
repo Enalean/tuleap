@@ -66,7 +66,6 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const MIRRORED_PROGRAM_INCREMENT_ID = 86;
     private const MIRRORED_ITERATION_ID         = 33;
 
-    private RetrieveFullArtifactStub $artifact_retriever;
     /**
      * @var MockObject&\Tracker_Artifact_Changeset_NewChangesetCreator
      */
