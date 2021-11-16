@@ -9,6 +9,7 @@ This log lists the architectural decisions for Program Management plugin.
 * [ADR-0001](0001-mirror-milestones.md) - Create Mirror Artifacts to filter what Teams can view
 * [ADR-0002](0002-hexagonal-architecture.md) - Hexagonal Architecture in Program Management plugin
 * [ADR-0003](0003-static-factory-method.md) - Static factory method
+* [ADR-0004](0004-mock-free-tests.md) - Writing unit-tests without mocks
 
 <!-- adrlogstop -->
 

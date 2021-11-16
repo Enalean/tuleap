@@ -33,13 +33,7 @@ For example, if you want to verify something in the database, you must add an in
 
 ### Stubs
 
-Having our Domain code depend on interfaces for all side effects, like UI, Database and other plugins is really handy for unit tests. Our usual approach has been to rely heavily on Mocks. Mocks make it harder to do refactorings, because when you change a class, you also must update the dozens of unit tests mocking this class. Sometimes they are also subtly incorrect, for example they return an int when the production code returns a string.
-
-Hexagonal Architecture forces us to depend on interfaces. We can provide fake implementations of those interfaces for tests. At first, we wrote anonymous classes, but since we reuse those interfaces over and over, we created `Stubs` (see our [glossary][1]). Stubs are also a kind of Adapter used only for tests. They implement the interfaces in a really basic way and can be prepared to always return the same value.
-
-Using Stubs allows us to stop mocking DAOs and Factories. We create the right stub for the situation (for example, a Stub that always returns true), and we inject it in our class under test. This lets us create _Overlapping Sociable Tests_ (see [James Shore's blog post][4]) that are kind of Integration tests. We can still use Mocks in Adapter unit tests, but in all other cases Stubs must be preferred.
-
-Tests are also much less tied to implementation: we have been surprised more than once by making a refactoring, running the tests and the tests would pass without having to change anything but the Stub.
+Having our Domain code depend on interfaces for all side effects, like UI, Database and other plugins is really handy for unit tests. See [ADR-0004 Writing unit-tests without mocks][6] for details.
 
 ### Value-object interfaces and Proxies
 
@@ -86,6 +80,7 @@ Keep in mind that we have adopted these rules and recommendations gradually, so 
 * Program Management [epic][0]
 * Definition of terms: [glossary][1]
 * Testing Without Mocks: A Pattern Language [blog post][4]
+* [ADR-0004 Writing unit-tests without mocks][6]
 
 [0]: https://tuleap.net/plugins/tracker/?aid=16683
 [1]: <./glossary.md>
@@ -93,3 +88,4 @@ Keep in mind that we have adopted these rules and recommendations gradually, so 
 [3]: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
 [4]: https://www.jamesshore.com/v2/blog/2018/testing-without-mocks
 [5]: https://martinfowler.com/bliki/DataClump.html
+[6]: <./0004-mock-free-tests.md>
