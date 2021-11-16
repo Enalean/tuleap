@@ -28,8 +28,9 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 
-class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -64,5 +65,60 @@ class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_logger->shouldReceive('log')->twice();
 
         $webhook_emitter->emit($payload, $webhook_1, $webhook_2);
+    }
+
+    public function testLogsNetworkException(): void
+    {
+        $http_client   = new Client();
+        $status_logger = new class implements StatusLogger {
+            public bool $does_something_has_been_logged = false;
+            public function log(Webhook $webhook, $status): void
+            {
+                $this->does_something_has_been_logged = true;
+            }
+        };
+
+        $http_client->addException(
+            new class extends \RuntimeException implements \Http\Client\Exception, \Psr\Http\Client\NetworkExceptionInterface {
+                public function getRequest(): RequestInterface
+                {
+                    return HTTPFactoryBuilder::requestFactory()->createRequest('POST', 'https://example.com/some_url');
+                }
+            }
+        );
+
+        $webhook_emitter = new Emitter(HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory(), $http_client, $status_logger);
+
+        $webhook_emitter->emit(
+            self::buildPayload(),
+            self::buildWebhook()
+        );
+
+        self::assertCount(1, $http_client->getRequests());
+    }
+
+    private static function buildPayload(): Payload
+    {
+        return new class implements Payload {
+            public function getPayload(): array
+            {
+                return [];
+            }
+        };
+    }
+
+    private static function buildWebhook(): Webhook
+    {
+        return new class implements Webhook {
+            public function getId(): int
+            {
+                return 1;
+            }
+
+            public function getUrl(): string
+            {
+                return 'https://example.com/some_url';
+            }
+        };
     }
 }

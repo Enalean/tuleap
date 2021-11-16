@@ -21,6 +21,7 @@
 namespace Tuleap\Webhook;
 
 use Http\Client\HttpAsyncClient;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -69,7 +70,7 @@ class Emitter
                 $this->logger->log($webhook, $response->getStatusCode() . ' ' . $response->getReasonPhrase());
 
                 return $response;
-            }, function (\Psr\Http\Client\RequestExceptionInterface $http_client_exception) use ($webhook) {
+            }, function (ClientExceptionInterface $http_client_exception) use ($webhook) {
                 $error_message = $http_client_exception->getMessage();
                 if ($http_client_exception->getCode() !== 0) {
                     $error_message = $http_client_exception->getCode() . ' ' . $error_message;
