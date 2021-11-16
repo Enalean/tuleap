@@ -61,35 +61,50 @@ export class RichTextEditorsCreator {
      */
     public createTextFieldEditors(): void {
         const text_field_textareas = this.doc.querySelectorAll(TEXT_FIELDS_SELECTOR);
+        const observer = new IntersectionObserver(
+            (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+                for (const entry of entries) {
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+                    observer.unobserve(entry.target);
+                    this.createTextFieldEditor(entry.target);
+                }
+            }
+        );
         for (const text_field_textarea of text_field_textareas) {
-            if (!(text_field_textarea instanceof HTMLTextAreaElement)) {
-                continue;
-            }
-
-            const match = text_field_textarea.id.match(/_(\d+)$/);
-            if (!match) {
-                throw new Error(
-                    `Text field textarea's id must finish by an underscore and the field ID. Got ${text_field_textarea.id} instead`
-                );
-            }
-            const field_id = match[1];
-            const format_name = `artifact[${field_id}][format]`;
-            const format_value = this.getTextFieldFormatOrDefault(field_id);
-
-            const help_block = this.image_upload_factory.createHelpBlock(text_field_textarea);
-            const options: RichTextEditorOptions = {
-                format_selectbox_id: text_field_textarea.id,
-                format_selectbox_name: format_name,
-                format_selectbox_value: format_value,
-                getAdditionalOptions: getUploadImageOptions,
-                onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
-                onEditorInit: (ckeditor, textarea) => {
-                    this.image_upload_factory.initiateImageUpload(ckeditor, textarea);
-                },
-                onEditorDataReady: initMentionsOnEditorDataReady,
-            };
-            this.editor_factory.createRichTextEditor(text_field_textarea, options);
+            observer.observe(text_field_textarea);
         }
+    }
+
+    private createTextFieldEditor(text_field_textarea: Element): void {
+        if (!(text_field_textarea instanceof HTMLTextAreaElement)) {
+            return;
+        }
+
+        const match = text_field_textarea.id.match(/_(\d+)$/);
+        if (!match) {
+            throw new Error(
+                `Text field textarea's id must finish by an underscore and the field ID. Got ${text_field_textarea.id} instead`
+            );
+        }
+        const field_id = match[1];
+        const format_name = `artifact[${field_id}][format]`;
+        const format_value = this.getTextFieldFormatOrDefault(field_id);
+
+        const help_block = this.image_upload_factory.createHelpBlock(text_field_textarea);
+        const options: RichTextEditorOptions = {
+            format_selectbox_id: text_field_textarea.id,
+            format_selectbox_name: format_name,
+            format_selectbox_value: format_value,
+            getAdditionalOptions: getUploadImageOptions,
+            onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
+            onEditorInit: (ckeditor, textarea) => {
+                this.image_upload_factory.initiateImageUpload(ckeditor, textarea);
+            },
+            onEditorDataReady: initMentionsOnEditorDataReady,
+        };
+        this.editor_factory.createRichTextEditor(text_field_textarea, options);
     }
 
     private getTextFieldFormatOrDefault(field_id: string): TextFieldFormat {
