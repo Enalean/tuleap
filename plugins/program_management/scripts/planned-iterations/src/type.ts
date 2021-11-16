@@ -36,4 +36,10 @@ export interface State {
     readonly program_flags: Array<ProjectFlag>;
     readonly is_program_admin: boolean;
     readonly program_increment: ProgramIncrement;
+    readonly iterations_labels: IterationLabels;
+}
+
+export interface IterationLabels {
+    label: string;
+    sub_label: string;
 }

@@ -52,6 +52,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             program_increment: JSON.parse(
                 getDatasetPropertyValue(vue_mount_point, "programIncrement")
             ),
+            iterations_labels: JSON.parse(
+                getDatasetPropertyValue(vue_mount_point, "iterationsLabels")
+            ),
         }),
     }).$mount(vue_mount_point);
 });

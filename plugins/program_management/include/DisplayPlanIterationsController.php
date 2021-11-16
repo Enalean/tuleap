@@ -31,6 +31,9 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementInfo;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
@@ -60,7 +63,9 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private BuildProgramIncrementInfo $build_program_increment_info,
         private VerifyIsProgramIncrement $verify_is_program_increment,
         private VerifyIsVisibleArtifact $verify_is_visible_artifact,
-        private RetrieveProgramUserPrivileges $retrieve_program_user_privileges
+        private RetrieveProgramUserPrivileges $retrieve_program_user_privileges,
+        private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
+        private RetrieveIterationLabels $retrieve_iteration_labels
     ) {
     }
 
@@ -90,22 +95,31 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         $user_identifier = UserProxy::buildFromPFUser($user);
 
         try {
+            $program_identifier = ProgramIdentifier::fromId($this->program_adapter, (int) $project->getID(), $user_identifier, null);
             $planned_iterations = PlannedIterations::build(
                 $this->build_program_flags,
                 $this->build_program_privacy,
                 $this->build_program_base_info,
                 $this->build_program_increment_info,
                 $this->retrieve_program_user_privileges,
-                ProgramIdentifier::fromId($this->program_adapter, (int) $project->getID(), $user_identifier, null),
+                $program_identifier,
                 $user_identifier,
                 ProgramIncrementIdentifier::fromId(
                     $this->verify_is_program_increment,
                     $this->verify_is_visible_artifact,
                     (int) $variables['increment_id'],
                     $user_identifier
+                ),
+                IterationLabels::fromIterationTracker(
+                    $this->retrieve_iteration_labels,
+                    $this->retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker($program_identifier, $user_identifier)
                 )
             );
-        } catch (Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException | Domain\Program\Plan\ProjectIsNotAProgramException $e) {
+        } catch (
+            Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException |
+            Domain\Program\Plan\ProjectIsNotAProgramException |
+            Domain\Program\ProgramTrackerNotFoundException $e
+        ) {
             throw new NotFoundException($e->getI18NExceptionMessage());
         } catch (Domain\Program\Plan\ProgramAccessException $e) {
             throw new ForbiddenException($e->getI18NExceptionMessage());

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -42,12 +43,14 @@ final class PlannedIterations
         private ProgramPrivacy $program_privacy,
         private ProgramBaseInfo $program_base_info,
         private ProgramIncrementInfo $program_increment_info,
-        private bool $is_user_admin
+        private bool $is_user_admin,
+        private IterationLabels $iteration_labels
     ) {
     }
 
     /**
      * @throws ProgramIncrementNotFoundException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException
      */
     public static function build(
         BuildProgramFlags $build_program_flags,
@@ -57,7 +60,8 @@ final class PlannedIterations
         RetrieveProgramUserPrivileges $retrieve_program_user_privileges,
         ProgramIdentifier $program_identifier,
         UserIdentifier $user_identifier,
-        ProgramIncrementIdentifier $increment_identifier
+        ProgramIncrementIdentifier $increment_identifier,
+        IterationLabels $iterations_labels
     ): self {
         $program_flags     = $build_program_flags->build($program_identifier);
         $program_privacy   = $build_program_privacy->build($program_identifier);
@@ -65,7 +69,7 @@ final class PlannedIterations
         $program_increment = $build_program_increment_info->build($user_identifier, $increment_identifier);
         $is_user_admin     = $retrieve_program_user_privileges->isUserProgramAdmin($user_identifier, $program_identifier);
 
-        return new self($program_flags, $program_privacy, $program_base_info, $program_increment, $is_user_admin);
+        return new self($program_flags, $program_privacy, $program_base_info, $program_increment, $is_user_admin, $iterations_labels);
     }
 
     /**
@@ -94,5 +98,10 @@ final class PlannedIterations
     public function isUserAdmin(): bool
     {
         return $this->is_user_admin;
+    }
+
+    public function getIterationLabels(): IterationLabels
+    {
+        return $this->iteration_labels;
     }
 }
