@@ -54,8 +54,6 @@ abstract class MVC2_PluginController extends MVC2_Controller
         if (! $user->isAdmin($project->getID()) && ! $user->isSuperUser()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
             $this->redirect(['group_id' => $this->group_id]);
-            // the below is only run by tests (redirect should exit but is mocked)
-            throw new Exception($GLOBALS['Language']->getText('global', 'perm_denied'));
         }
     }
 }

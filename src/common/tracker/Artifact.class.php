@@ -1093,7 +1093,6 @@ class Artifact
 
         if (! $res_upd) {
             exit_error($Language->getText('tracker_common_artifact', 'upd_fail') . ': ' . ($sql ?? ''), $Language->getText('tracker_common_artifact', 'upd_fail'));
-            return false;
         } else {
             if (! $request->exist('change_permissions') || $request->get('change_permissions')) {
                 $this->setPermissions($request->get('use_artifact_permissions_name'), $request->get('ugroups'));

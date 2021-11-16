@@ -64,7 +64,6 @@ final class LegacySendMessageController implements DispatchableWithRequest
                 $messageToAdmin = $request->get('msg_docman_access');
             } else {
                 exit_error(dgettext('tuleap-docman', 'Error'), dgettext('tuleap-docman', 'Your message is not valid, you can not send the default message or an empty one.'));
-                return;
             }
             $sendMail->processMail($messageToAdmin);
         }

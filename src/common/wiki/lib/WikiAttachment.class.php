@@ -367,7 +367,6 @@ class WikiAttachment /* implements UGroupPermission */
                 ),
                 E_USER_ERROR
             );
-            return false;
         } else {
             return true;
         }
@@ -380,7 +379,6 @@ class WikiAttachment /* implements UGroupPermission */
             $res = mkdir($this->basedir, 0700);
             if (! $res) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
-                return false;
             }
         }
 
@@ -389,7 +387,6 @@ class WikiAttachment /* implements UGroupPermission */
             $res = mkdir($this->basedir . '/' . $this->getFilesystemName(), 0700);
             if (! $res) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
-                return false;
             }
         }
 
@@ -404,7 +401,6 @@ class WikiAttachment /* implements UGroupPermission */
 
             if ($dar->rowCount() > 1) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
-                return -1;
             } else {
                 $row      = $dar->getRow();
                 $this->id = $row['id'];

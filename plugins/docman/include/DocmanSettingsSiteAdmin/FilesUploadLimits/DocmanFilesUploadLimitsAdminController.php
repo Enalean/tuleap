@@ -64,8 +64,6 @@ class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest,
                 dgettext('tuleap-docman', 'You should be site administrator to access this page')
             );
             $layout->redirect('/');
-
-            return;
         }
 
         $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));

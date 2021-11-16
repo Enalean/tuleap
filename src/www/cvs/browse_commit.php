@@ -38,7 +38,6 @@ if (! ($service instanceof ServiceCVS)) {
         $GLOBALS['Language']->getText('global', 'error'),
         _('This Project Has Turned CVS Off')
     );
-    return;
 }
 
 $service->displayCVSRepositoryHeader(

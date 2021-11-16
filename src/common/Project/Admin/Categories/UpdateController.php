@@ -82,7 +82,6 @@ class UpdateController implements DispatchableWithRequest
         if (! is_array($categories)) {
             $layout->addFeedback(Feedback::ERROR, gettext("Your request is invalid"));
             $layout->redirect($redirect_url);
-            return;
         }
 
         $csrf                 = new \CSRFSynchronizerToken($redirect_url);

@@ -129,6 +129,5 @@ final class UnlinkController implements DispatchableWithRequest
             $message
         );
         $layout->redirect(OIDCProvidersController::URL);
-        exit();
     }
 }

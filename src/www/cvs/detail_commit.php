@@ -89,7 +89,6 @@ if (db_numrows($result) > 0) {
             $GLOBALS['Language']->getText('global', 'error'),
             _('This Project Has Turned CVS Off')
         );
-        return;
     }
 
     $service->displayCVSRepositoryHeader(

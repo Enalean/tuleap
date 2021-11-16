@@ -779,7 +779,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     echo json_encode(['head' => $head, 'rows' => $rows]);
                 }
                 exit();
-                break;
             case 'fetch-aggregates':
                 $read_only              = false;
                 $prefill_removed_values = [];
@@ -824,7 +823,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 header('Content-type: application/json');
                 echo json_encode($json);
                 exit();
-                break;
             case 'artifactlink-renderer-async':
                 session_write_close();
                 if (! $request->isAjax()) {

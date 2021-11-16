@@ -194,7 +194,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
     }
 
-    public function testItDoesntRemoveProjectAdminsFromUserGroupAndProject()
+    public function testItDoesntRemoveProjectAdminsFromUserGroupAndProject(): void
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever->shouldReceive('getProjectFromId')
@@ -217,8 +217,10 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_member_remover->shouldNotReceive('removeUserFromProject');
 
         $this->layout->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any());
-        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->andThrow($exception_stop_exec_redirect);
 
+        $this->expectExceptionObject($exception_stop_exec_redirect);
         $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
     }
 }

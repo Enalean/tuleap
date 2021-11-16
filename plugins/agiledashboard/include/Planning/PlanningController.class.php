@@ -627,7 +627,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->redirect(
                 ['group_id' => $this->group_id, 'planning_id' => $updated_planning_id, 'action' => 'edit']
             );
-            return;
         }
         $event = new RootPlanningEditionEvent($this->project, $original_planning);
         $this->event_manager->dispatch($event);

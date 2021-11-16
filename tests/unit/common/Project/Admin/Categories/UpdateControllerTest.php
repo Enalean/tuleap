@@ -103,8 +103,10 @@ final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive('get')->with('categories')->andReturn('string');
 
         $this->layout->shouldReceive('addFeedback')->with(Feedback::ERROR, Mockery::any());
-        $this->layout->shouldReceive('redirect')->with('/project/42/admin/categories');
+        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $this->layout->shouldReceive('redirect')->with('/project/42/admin/categories')->andThrow($exception_stop_exec_redirect);
 
+        $this->expectExceptionObject($exception_stop_exec_redirect);
         $this->controller->process($this->request, $this->layout, ['id' => '42']);
     }
 }

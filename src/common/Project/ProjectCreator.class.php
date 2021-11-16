@@ -492,7 +492,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', [ForgeConfig::get('sys_email_admin'), db_error()]));
-            return false;
         } else {
             $group_id = db_insertid($result);
             return $group_id;

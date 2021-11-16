@@ -794,7 +794,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $children = $this->getChildPresenterCollection($current_user);
                 $GLOBALS['Response']->sendJSON($children);
                 exit;
-                break;
             case 'update-comment':
                 if ((int) $request->get('changeset_id') && $request->exist('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {

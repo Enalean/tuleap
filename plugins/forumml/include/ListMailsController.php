@@ -113,7 +113,6 @@ class ListMailsController implements DispatchableWithRequest
                 $GLOBALS["Language"]->getText('global', 'error'),
                 dgettext('tuleap-forumml', 'You must specify the mailing-list id.')
             );
-            exit();
         } else {
             $list_id = $request->get('list');
             $project = ProjectManager::instance()->getProject($group_id);
