@@ -31,11 +31,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildren
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -86,7 +88,9 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $this->plan_store,
             $this->retrieve_background,
             RetrieveUserStub::withGenericUser(),
-            $this->tracker_factory
+            $this->tracker_factory,
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            BuildProgramStub::stubValidProgram()
         );
     }
 
@@ -96,7 +100,7 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $artifact_126 = $this->buildArtifact(126);
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnOnConsecutiveCalls(
-            $this->createConfiguredMock(Artifact::class, ['getTrackerId' => 56]),
+            $this->createConfiguredMock(Artifact::class, ['getTracker' => TrackerTestBuilder::aTracker()->withId(56)->build(), 'getTrackerId' => 56]),
             null,
             $artifact_125,
             $artifact_126,
@@ -148,7 +152,7 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->expects(self::once())
             ->method('getArtifactByIdUserCanView')
             ->with(self::isInstanceOf(\PFUser::class), 10)
-            ->willReturn($this->createConfiguredMock(Artifact::class, ['getTrackerId' => 666]));
+            ->willReturn($this->createConfiguredMock(Artifact::class, ['getTracker' => TrackerTestBuilder::aTracker()->withId(666)->build(), 'getTrackerId' => 666]));
 
         $this->plan_store = VerifyIsPlannableStub::buildNotPlannableElement();
 
