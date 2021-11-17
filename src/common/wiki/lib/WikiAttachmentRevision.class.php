@@ -99,7 +99,6 @@ class WikiAttachmentRevision
                 ),
                 E_USER_ERROR
             );
-            return false;
         } else {
             $this->setFromRow($dar->getRow());
         }
@@ -124,7 +123,6 @@ class WikiAttachmentRevision
                 ),
                 E_USER_ERROR
             );
-            return false;
         }
 
         chmod($file_dir . '/' . $this->revision, 0600);
@@ -156,7 +154,6 @@ class WikiAttachmentRevision
                 ),
                 E_USER_ERROR
             );
-            return false;
         } else {
             return true;
         }
@@ -247,7 +244,6 @@ class WikiAttachmentRevision
                 ),
                 E_USER_ERROR
             );
-            return false;
         }
 
         $this->size = (int) $s;

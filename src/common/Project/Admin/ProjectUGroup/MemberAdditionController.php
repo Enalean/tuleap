@@ -116,19 +116,16 @@ class MemberAdditionController implements DispatchableWithRequest
         $is_update_allowed = ! $ugroup->isBound();
         if (! $is_update_allowed) {
             $layout->redirect(UGroupRouter::getUGroupUrl($ugroup));
-            return;
         }
 
         $add_user_name = $request->get('add_user_name');
         if (! $add_user_name) {
             $layout->redirect(UGroupRouter::getUGroupUrl($ugroup));
-            return;
         }
         $user = $this->user_manager->findUser($add_user_name);
         if (! $user) {
             $layout->addFeedback(Feedback::ERROR, _('User does not exist'));
             $layout->redirect(UGroupRouter::getUGroupUrl($ugroup));
-            return;
         }
 
         try {

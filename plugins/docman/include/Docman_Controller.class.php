@@ -1544,7 +1544,6 @@ class Docman_Controller extends Controler
             default:
                 $purifier = Codendi_HTMLPurifier::instance();
                 die($purifier->purify($view) . ' is not supported');
-            break;
         }
     }
 

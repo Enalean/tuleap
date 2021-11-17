@@ -161,7 +161,6 @@ class MemberRemovalController implements DispatchableWithRequest
                 if ($user->isAdmin($ugroup->getProjectId())) {
                     $layout->addFeedback(Feedback::ERROR, _('Cannot remove project admin from project. Must be removed from project administration first'));
                     $layout->redirect(UGroupRouter::getUGroupUrl($ugroup));
-                    return;
                 }
                 $this->project_member_remover->removeUserFromProject($ugroup->getProjectId(), $user->getId());
             } else {

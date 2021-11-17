@@ -16,7 +16,6 @@ if ($request->valid($vGroupId)) {
         $group_id = $request->get('form_grp');
     } else {
         exit_no_group();
-        exit();
     }
 }
 

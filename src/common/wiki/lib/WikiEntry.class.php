@@ -203,7 +203,6 @@ class WikiEntry
                 ),
                 E_USER_ERROR
             );
-            return false;
         } else {
             return true;
         }
@@ -224,7 +223,6 @@ class WikiEntry
                 ),
                 E_USER_ERROR
             );
-              return false;
         } else {
             return true;
         }
@@ -254,7 +252,6 @@ class WikiEntry
                 ),
                 E_USER_ERROR
             );
-            return false;
         } else {
             if (db_affected_rows($res) === 0) {
                    $feedback .= $GLOBALS['Language']->getText(

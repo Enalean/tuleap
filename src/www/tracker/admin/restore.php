@@ -63,8 +63,6 @@ switch ($func) {
             // Then delete all the fields informations
             if (! $art_field_fact->deleteFields($atid)) {
                 exit_error($GLOBALS['Language']->getText('global', 'error'), $art_field_fact->getErrorMessage());
-
-                return false;
             }
 
             // Then delete all the reports informations
@@ -73,8 +71,6 @@ switch ($func) {
 
             if (! $art_report_fact->deleteReports($atid)) {
                 exit_error($GLOBALS['Language']->getText('global', 'error'), $art_report_fact->getErrorMessage());
-
-                return false;
             }
 
             // Delete the artifact type itself

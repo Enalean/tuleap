@@ -139,8 +139,6 @@ class Router
                     break;
                 default:
                     $this->redirectToTuleapHomepage();
-
-                    break;
             }
         } catch (TimeTrackingMissingTimeException $e) {
             $GLOBALS['Response']->addFeedback(

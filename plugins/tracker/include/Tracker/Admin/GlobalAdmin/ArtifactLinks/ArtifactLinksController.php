@@ -106,7 +106,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
             case 'edit-artifact-links':
                 $this->updateGlobalAdministration($layout, $project);
                 $layout->redirect(self::getURL($project));
-                break;
+                // The redirection prevent the fall-through to the next case
             case 'use-artifact-link-type':
                 $type_shortname = (string) $request->get('type-shortname');
                 $this->updateArtifactLinkUsage($project, $type_shortname);

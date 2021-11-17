@@ -129,7 +129,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
     }
 
-    public function testItDoesntAddInBoundGroups()
+    public function testItDoesntAddInBoundGroups(): void
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever->shouldReceive('getProjectFromId')
@@ -142,12 +142,14 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202, 'isBound' => true]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
-        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->once();
+        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->once()->andThrow($exception_stop_exec_redirect);
 
+        $this->expectExceptionObject($exception_stop_exec_redirect);
         $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
     }
 
-    public function testItDoesntAddInvalidUser()
+    public function testItDoesntAddInvalidUser(): void
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever->shouldReceive('getProjectFromId')
@@ -164,8 +166,10 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('findUser')->with('danton')->andReturnNull();
 
         $this->layout->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any())->once();
-        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->once();
+        $exception_stop_exec_redirect = new \Exception("Redirect");
+        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->once()->andThrow($exception_stop_exec_redirect);
 
+        $this->expectExceptionObject($exception_stop_exec_redirect);
         $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
     }
 }

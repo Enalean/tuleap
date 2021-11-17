@@ -60,7 +60,6 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
                 dgettext('tuleap-gitlfs', 'You should be site administrator to access this page')
             );
             $layout->redirect('/');
-            return;
         }
 
         $config_should_be_displayed = \ForgeConfig::get(\gitlfsPlugin::DISPLAY_CONFIG_KEY, true);
@@ -70,7 +69,6 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
                 dgettext('tuleap-gitlfs', 'The configuration page is not available.')
             );
             $layout->redirect('/');
-            return;
         }
 
         $csrf_token            = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));

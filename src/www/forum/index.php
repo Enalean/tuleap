@@ -28,7 +28,6 @@ $valid_project_id = new Valid_GroupId();
 $valid_project_id->required();
 if (! $request->valid($valid_project_id)) {
     exit_no_group();
-    exit();
 } else {
     $group_id = $request->get('group_id');
 }

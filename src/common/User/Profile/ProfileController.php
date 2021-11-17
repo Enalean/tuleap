@@ -67,8 +67,6 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
 
         if ($current_user->isAnonymous()) {
             $layout->redirect('/account/login.php');
-
-            return;
         }
 
         $layout->header(
