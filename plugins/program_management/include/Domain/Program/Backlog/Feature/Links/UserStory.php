@@ -25,13 +25,12 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerId;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -45,7 +44,7 @@ final class UserStory
         public string $cross_ref,
         public ?string $title,
         public bool $is_open,
-        public TrackerIdentifier $tracker_identifier,
+        public UserStoryTrackerIdentifier $tracker_identifier,
         public BackgroundColor $background_color
     ) {
     }
@@ -56,7 +55,7 @@ final class UserStory
         RetrieveUserStoryCrossRef $retrieve_cross_ref,
         VerifyIsOpen $retrieve_is_open,
         RetrieveBackgroundColor $retrieve_background_color,
-        RetrieveTrackerId $retrieve_tracker_id,
+        RetrieveTrackerFromUserStory $retrieve_tracker_id,
         UserStoryIdentifier $user_story_identifier,
         UserIdentifier $user_identifier
     ): self {
@@ -66,7 +65,7 @@ final class UserStory
             $retrieve_cross_ref->getUserStoryCrossRef($user_story_identifier),
             $retrieve_title_value->getUserStoryTitle($user_story_identifier),
             $retrieve_is_open->isOpen($user_story_identifier),
-            $retrieve_tracker_id->getTracker($user_story_identifier),
+            UserStoryTrackerIdentifier::fromUserStory($retrieve_tracker_id, $user_story_identifier),
             $retrieve_background_color->retrieveBackgroundColor($user_story_identifier, $user_identifier),
         );
     }

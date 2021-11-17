@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildren
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerId;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
@@ -60,7 +60,7 @@ final class UserStoryRepresentationBuilder
         private RetrieveUserStoryURI $retrieve_uri,
         private RetrieveUserStoryCrossRef $retrieve_cross_ref,
         private VerifyIsOpen $retrieve_is_open,
-        private RetrieveTrackerId $retrieve_tracker_id,
+        private RetrieveTrackerFromUserStory $retrieve_tracker_id,
         private VerifyIsVisibleArtifact $verify_is_visible_artifact
     ) {
     }

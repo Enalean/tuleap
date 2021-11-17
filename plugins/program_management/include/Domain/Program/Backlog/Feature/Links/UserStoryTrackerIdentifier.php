@@ -21,24 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerId;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
-final class RetrieveTrackerIdStub implements RetrieveTrackerId
+/**
+ * I am the ID (identifier) of a User Story Tracker.
+ * @psalm-immutable
+ */
+final class UserStoryTrackerIdentifier implements TrackerIdentifier
 {
-    private function __construct(private TrackerIdentifier $tracker_id)
+    private function __construct(private TrackerIdentifier $tracker_identifier)
     {
-    }
-    public static function withDefault(): self
-    {
-        return new self(TrackerIdentifierStub::withId(1));
     }
 
-    public function getTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
+    public function getId(): int
     {
-        return $this->tracker_id;
+        return $this->tracker_identifier->getId();
+    }
+
+    public static function fromUserStory(RetrieveTrackerFromUserStory $tracker_retriever, UserStoryIdentifier $user_story): self
+    {
+        return new self($tracker_retriever->getTracker($user_story));
     }
 }
