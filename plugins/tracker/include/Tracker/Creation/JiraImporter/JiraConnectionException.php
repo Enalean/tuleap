@@ -33,9 +33,9 @@ class JiraConnectionException extends \Exception
      */
     private $i18n_message;
 
-    private function __construct(string $message, string $i18n_message)
+    private function __construct(string $message, string $i18n_message, int $code = 0)
     {
-        parent::__construct($message);
+        parent::__construct($message, $code);
         $this->i18n_message = $i18n_message;
     }
 
@@ -99,7 +99,8 @@ class JiraConnectionException extends \Exception
             );
             return new self(
                 $message,
-                $message
+                $message,
+                $response->getStatusCode(),
             );
         }
         $message = sprintf(
@@ -113,7 +114,8 @@ class JiraConnectionException extends \Exception
         );
         return new self(
             $message,
-            $message
+            $message,
+            $response->getStatusCode(),
         );
     }
 

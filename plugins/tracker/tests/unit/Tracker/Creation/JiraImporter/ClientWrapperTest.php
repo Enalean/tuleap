@@ -75,14 +75,15 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $response = \Mockery::mock(ResponseInterface::class);
 
-        $response->shouldReceive('getStatusCode')->andReturn(403)->twice();
+        $response->shouldReceive('getStatusCode')->andReturn(403);
         $response->shouldReceive('getBody')->andReturn('');
-        $response->shouldReceive('getReasonPhrase')->andReturn("Forbidden")->once();
+        $response->shouldReceive('getReasonPhrase')->andReturn("Forbidden");
         $this->factory->shouldReceive('createRequest')
             ->withArgs(['GET', "https://example.com/rest/api/3/project"])->once()->andReturn(\Mockery::spy(RequestInterface::class));
         $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
 
         $this->expectException(JiraConnectionException::class);
+        $this->expectExceptionCode(403);
         $this->wrapper->getUrl("/rest/api/3/project");
     }
 }

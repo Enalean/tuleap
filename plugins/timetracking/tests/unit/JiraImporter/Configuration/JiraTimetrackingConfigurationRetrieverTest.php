@@ -23,19 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\JiraImporter\Configuration;
 
 use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 
 class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var JiraTimetrackingConfigurationRetriever
-     */
-    private $retriever;
+    private JiraTimetrackingConfigurationRetriever $retriever;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
@@ -98,5 +95,26 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
         $this->assertNull($configuration);
+    }
+
+    public function testItReturnsNullIfTimetrackingIsNotFoundOnServer(): void
+    {
+        $request  = HTTPFactoryBuilder::requestFactory()->createRequest('GET', '/rest/api/2/configuration/timetracking');
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(404);
+
+        $jira_server_client = new class ($request, $response) extends JiraServerClientStub {
+            public function __construct(private $request, private $response)
+            {
+            }
+
+            public function getUrl(string $url): ?array
+            {
+                throw JiraConnectionException::responseIsNotOk($this->request, $this->response, null);
+            }
+        };
+
+        $retriever = new JiraTimetrackingConfigurationRetriever($jira_server_client, new NullLogger());
+
+        $this->assertNull($retriever->getJiraTimetrackingConfiguration());
     }
 }

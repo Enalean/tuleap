@@ -26,26 +26,15 @@ namespace Tuleap\Timetracking\JiraImporter\Configuration;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class JiraTimetrackingConfigurationRetriever
 {
     public const CONFIGURATION_KEY = 'jira_timetracking';
     public const EXPECTED_VALUE    = 'JIRA';
 
-    /**
-     * @var JiraClient
-     */
-    private $jira_client;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(JiraClient $jira_client, LoggerInterface $logger)
+    public function __construct(private JiraClient $jira_client, private LoggerInterface $logger)
     {
-        $this->jira_client = $jira_client;
-        $this->logger      = $logger;
     }
 
     public function getJiraTimetrackingConfiguration(): ?string
@@ -55,17 +44,25 @@ class JiraTimetrackingConfigurationRetriever
         $timetracking_configuration_url = ClientWrapper::JIRA_CORE_BASE_URL . '/configuration/timetracking';
         $this->logger->debug("  GET " . $timetracking_configuration_url);
 
-        $configration_data = $this->jira_client->getUrl($timetracking_configuration_url);
-        if ($configration_data === null) {
+        try {
+            $configuration_data = $this->jira_client->getUrl($timetracking_configuration_url);
+        } catch (JiraConnectionException $exception) {
+            if ($exception->getCode() === 404) {
+                return null;
+            }
+            throw $exception;
+        }
+
+        if ($configuration_data === null) {
             return null;
         }
 
-        assert(is_array($configration_data));
-        if (! array_key_exists('key', $configration_data)) {
+        assert(is_array($configuration_data));
+        if (! array_key_exists('key', $configuration_data)) {
             return null;
         }
 
-        if ($configration_data['key'] === self::EXPECTED_VALUE) {
+        if ($configuration_data['key'] === self::EXPECTED_VALUE) {
             return self::CONFIGURATION_KEY;
         }
 
