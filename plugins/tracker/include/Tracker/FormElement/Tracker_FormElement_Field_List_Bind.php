@@ -29,7 +29,7 @@ use Tuleap\Tracker\REST\FieldValueRepresentation;
 /**
  * @template ListValueBinding of Tracker_FormElement_Field_List_Value
  */
-abstract class Tracker_FormElement_Field_List_Bind implements
+abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
     Tracker_FormElement_Field_Shareable,
     Tracker_IProvideJsonFormatOfMyself,
     BindVisitable
@@ -69,7 +69,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public function getDefaultValues()
     {
-        return $this->default_values;
+        return $this->checkDefaultValueValidity($this->default_values);
     }
 
     public function getDefaultRESTValues()
@@ -478,7 +478,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
     protected function filterDefaultValues(array $bind_default): array
     {
-        return $bind_default;
+        return array_intersect($bind_default, array_keys($this->getAllVisibleValues()));
     }
 
     /**
@@ -724,5 +724,14 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         }
 
         return false;
+    }
+
+    private function checkDefaultValueValidity(array $default_values): array
+    {
+        if (empty($default_values)) {
+            return $default_values;
+        }
+
+        return array_intersect_key($default_values, $this->getAllVisibleValues());
     }
 }

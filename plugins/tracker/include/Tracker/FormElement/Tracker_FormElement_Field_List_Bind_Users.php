@@ -28,7 +28,7 @@ use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 
-class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind
+class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public const TYPE = 'users';
@@ -709,8 +709,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     protected function filterDefaultValues(array $bind_default): array
     {
-        if (! $this->field instanceof Tracker_FormElement_Field_OpenList || ! isset($bind_default[0])) {
+        if (empty($bind_default)) {
             return $bind_default;
+        }
+
+        if (! $this->field instanceof Tracker_FormElement_Field_OpenList) {
+            return parent::filterDefaultValues($bind_default);
         }
 
         $bind_default = explode(',', $bind_default[0]);
@@ -718,7 +722,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             $bind_default[$key] = str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', $value);
         }
 
-        return $bind_default;
+        return parent::filterDefaultValues($bind_default);
     }
 
     /**
