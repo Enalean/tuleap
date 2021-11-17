@@ -57,6 +57,7 @@ class LDAP
         'sys_ldap_grp_search_scope',
         'sys_ldap_grp_cn',
         'sys_ldap_grp_member',
+        'sys_ldap_grp_uid',
         'sys_ldap_grp_oc',
         'sys_ldap_user_oc',
         'sys_ldap_grp_display_name',
