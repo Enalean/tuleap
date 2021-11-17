@@ -73,9 +73,11 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_factory
         );
 
-        $this->artifact        = Mockery::mock(Artifact::class)->shouldReceive('getId')->andReturn(101)->getMock();
-        $this->parent_artifact = Mockery::mock(Artifact::class);
-        $this->user            = Mockery::mock(PFUser::class);
+        $this->artifact = Mockery::mock(Artifact::class)->shouldReceive('getId')->andReturn(101)->getMock();
+
+        $this->parent_artifact         = Mockery::mock(Artifact::class);
+        $this->another_parent_artifact = Mockery::mock(Artifact::class);
+        $this->user                    = Mockery::mock(PFUser::class);
 
         $this->artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class)
             ->shouldReceive('getId')
@@ -83,11 +85,11 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
     }
 
-    public function testItReturnsTrueIfLinkIsDone(): void
+    public function testItReturnsTrueIfAtLeastOneLinkIsDone(): void
     {
         $fields_data = [
             587 => [
-                'parent' => '1011'
+                'parent' => ['1011', '1012']
             ]
         ];
 
@@ -101,12 +103,64 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1011)
             ->andReturn($this->parent_artifact);
 
+        $this->artifact_factory->shouldReceive('getArtifactById')
+            ->once()
+            ->with(1012)
+            ->andReturn($this->another_parent_artifact);
+
         $this->parent_artifact->shouldReceive('linkArtifact')
             ->once()
             ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
             ->andReturnTrue();
 
+        $this->another_parent_artifact->shouldReceive('linkArtifact')
+            ->once()
+            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+            ->andReturnFalse();
+
         $this->assertTrue(
+            $this->action->linkParent(
+                $this->artifact,
+                $this->user,
+                $fields_data
+            )
+        );
+    }
+
+    public function testItReturnsFalseIfNoLinkCouldBeDone(): void
+    {
+        $fields_data = [
+            587 => [
+                'parent' => ['1011', '1012']
+            ]
+        ];
+
+        $this->artifact->shouldReceive('getAnArtifactLinkField')
+            ->once()
+            ->with($this->user)
+            ->andReturn($this->artifact_link_field);
+
+        $this->artifact_factory->shouldReceive('getArtifactById')
+            ->once()
+            ->with(1011)
+            ->andReturn($this->parent_artifact);
+
+        $this->artifact_factory->shouldReceive('getArtifactById')
+            ->once()
+            ->with(1012)
+            ->andReturn($this->another_parent_artifact);
+
+        $this->parent_artifact->shouldReceive('linkArtifact')
+            ->once()
+            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+            ->andReturnFalse();
+
+        $this->another_parent_artifact->shouldReceive('linkArtifact')
+            ->once()
+            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+            ->andReturnFalse();
+
+        $this->assertFalse(
             $this->action->linkParent(
                 $this->artifact,
                 $this->user,
@@ -162,7 +216,7 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $fields_data = [
-            'parent' => '1011'
+            'parent' => ['1011']
         ];
 
         $this->assertFalse(
@@ -178,7 +232,7 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [
             587 => [
-                'parent' => '1011'
+                'parent' => ['1011']
             ]
         ];
 

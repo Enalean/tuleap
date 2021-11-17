@@ -89,7 +89,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -108,7 +108,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
 
         $this->field->augmentDataFromRequest($fields_data);
 
@@ -126,7 +126,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -163,5 +163,29 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
         $this->assertEmpty($fields_data);
+    }
+
+    public function testWhenUserWantsSomeArtifactsToBeParentsThenTheyArePutInTheSpecialKeyParentSoThatTheLinkIsDoneTheRightWay(): void
+    {
+        $fields_data = [
+            $this->art_link_id => [
+                'new_values' => '356,357',
+                'nature'     => '_is_parent'
+            ]
+        ];
+
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent');
+
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
+
+        $this->assertEquals(
+            [
+                'new_values' => '',
+                'nature'     => '',
+                'parent'     => [356, 357]
+            ],
+            $fields_data[$this->art_link_id]
+        );
     }
 }

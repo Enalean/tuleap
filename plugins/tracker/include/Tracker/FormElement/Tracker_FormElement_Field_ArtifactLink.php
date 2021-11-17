@@ -262,7 +262,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         }
 
         if (array_key_exists('parent', $value) && isset($value[self::FIELDS_DATA_PARENT_KEY]['id'])) {
-            $fields_data[self::FIELDS_DATA_PARENT_KEY] = $value[self::FIELDS_DATA_PARENT_KEY]['id'];
+            $fields_data[self::FIELDS_DATA_PARENT_KEY] = [$value[self::FIELDS_DATA_PARENT_KEY]['id']];
         }
 
         return $fields_data;

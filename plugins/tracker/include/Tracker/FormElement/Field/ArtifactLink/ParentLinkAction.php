@@ -58,16 +58,24 @@ class ParentLinkAction
             return false;
         }
 
-        $parent_artifact_id = (int) $fields_data[$artifact_link_field_id][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY];
-        $parent_artifact    = $this->artifact_factory->getArtifactById($parent_artifact_id);
-        if ($parent_artifact === null) {
-            return false;
+        $nb_parent_linked = 0;
+        foreach ($fields_data[$artifact_link_field_id][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY] as $parent_artifact_id) {
+            $parent_artifact = $this->artifact_factory->getArtifactById((int) $parent_artifact_id);
+            if ($parent_artifact === null) {
+                continue;
+            }
+
+            if (
+                $parent_artifact->linkArtifact(
+                    $artifact->getId(),
+                    $submitter,
+                    Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                )
+            ) {
+                $nb_parent_linked++;
+            }
         }
 
-        return $parent_artifact->linkArtifact(
-            $artifact->getId(),
-            $submitter,
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
-        );
+        return $nb_parent_linked > 0;
     }
 }
