@@ -36,6 +36,8 @@ describe("App", () => {
                         program_increment: {
                             id: 666,
                             title: "Mating",
+                            start_date: "Oct 01",
+                            end_date: "Oct 31",
                         },
                     },
                 }),
@@ -49,7 +51,8 @@ describe("App", () => {
         const header_title = wrapper.find("[data-test=app-header-title]");
 
         expect(header_title.exists()).toBe(true);
-        expect(header_title.text()).toBe("Mating");
+        expect(header_title.text().includes("Mating")).toBe(true);
+        expect(header_title.text().includes("Oct 01 – Oct 31")).toBe(true);
 
         expect(wrapper.findComponent(Breadcrumb).exists()).toBe(true);
         expect(wrapper.findComponent(IterationsToBePlannedSection).exists()).toBe(true);

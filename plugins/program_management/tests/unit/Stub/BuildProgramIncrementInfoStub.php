@@ -38,7 +38,9 @@ final class BuildProgramIncrementInfoStub implements BuildProgramIncrementInfo
         return new self(
             ProgramIncrementInfo::fromIncrementInfo(
                 $id,
-                "Program increment #$id"
+                "Program increment #$id",
+                'Oct 01',
+                'Oct 31'
             )
         );
     }

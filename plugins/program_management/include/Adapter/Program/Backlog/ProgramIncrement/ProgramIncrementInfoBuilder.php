@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementInfo;
@@ -44,9 +43,19 @@ final class ProgramIncrementInfoBuilder implements BuildProgramIncrementInfo
             throw new ProgramIncrementNotFoundException($increment_identifier->getId());
         }
 
+        $formatted_start_date = ($increment->start_date)
+            ? date(dgettext('tuleap-program_management', 'M d'), $increment->start_date)
+            : "";
+
+        $formatted_end_date = ($increment->end_date)
+            ? date(dgettext('tuleap-program_management', 'M d'), $increment->end_date)
+            : "";
+
         return ProgramIncrementInfo::fromIncrementInfo(
             $increment->id,
-            $increment->title
+            $increment->title,
+            $formatted_start_date,
+            $formatted_end_date
         );
     }
 }

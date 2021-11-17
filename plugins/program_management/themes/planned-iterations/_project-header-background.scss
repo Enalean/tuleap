@@ -21,7 +21,8 @@
 @use "../../src/themes/BurningParrot/css/includes/global-variables";
 
 .project-with-background {
-    .planned-iterations-title-header {
+    .planned-iterations-title-header,
+    .planned-iterations-title-header-dates {
         @include background.project-background-title-header-typography();
         margin: 0 0 var(--tlp-medium-spacing);
     }

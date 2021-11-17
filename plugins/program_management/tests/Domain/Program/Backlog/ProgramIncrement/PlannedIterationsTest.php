@@ -75,7 +75,15 @@ class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             $planned_iterations->getProgramBaseInfo()
         );
-        self::assertEquals(ProgramIncrementInfo::fromIncrementInfo(1260, 'Program increment #1260'), $planned_iterations->getProgramIncrementInfo());
+        self::assertEquals(
+            ProgramIncrementInfo::fromIncrementInfo(
+                1260,
+                'Program increment #1260',
+                'Oct 01',
+                'Oct 31'
+            ),
+            $planned_iterations->getProgramIncrementInfo()
+        );
         self::assertEquals(IterationsLabelsBuilder::buildWithLabels("Cycles", "cycle"), $planned_iterations->getIterationLabels());
         self::assertTrue($planned_iterations->isUserAdmin());
     }
