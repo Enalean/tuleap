@@ -24,18 +24,18 @@ namespace Tuleap\ProgramManagement\Adapter;
 
 use Project;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 
 final class ProgramManagementProjectAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProjectData(): void
     {
-        $project         = new Project(['group_id' => 101, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1', 'icon_codepoint' => ""]);
-        $project_manager = $this->createMock(\ProjectManager::class);
-        $project_manager->expects(self::once())->method('getProject')->with(101)->willReturn($project);
+        $project               = new Project(['group_id' => 101, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1', 'icon_codepoint' => ""]);
+        $retrieve_full_project = RetrieveFullProjectStub::withProject($project);
 
         $project_data = ProjectProxy::buildFromProject($project);
 
-        $adapter = new ProjectReferenceRetriever($project_manager);
+        $adapter = new ProjectReferenceRetriever($retrieve_full_project);
         $this->assertEquals($project_data, $adapter->buildFromId(101));
     }
 }

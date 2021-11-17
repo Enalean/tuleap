@@ -27,10 +27,15 @@ use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class ProjectManagerAdapter implements RetrieveProject, SearchProjectsUserIsAdmin
+final class ProjectManagerAdapter implements RetrieveProject, SearchProjectsUserIsAdmin, RetrieveFullProject
 {
     public function __construct(private \ProjectManager $project_manager, private RetrieveUser $retrieve_user)
     {
+    }
+
+    public function getProject(int $project_id): \Project
+    {
+        return $this->project_manager->getProject($project_id);
     }
 
     public function getProjectWithId(int $project_id): ProjectIdentifier

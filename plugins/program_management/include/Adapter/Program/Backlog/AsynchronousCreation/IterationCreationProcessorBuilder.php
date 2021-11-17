@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
@@ -91,6 +92,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
         $artifact_retriever       = new ArtifactFactoryAdapter($artifact_factory);
         $field_retriever          = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $project_manager_adapter  = new ProjectManagerAdapter($project_manager, $user_retriever);
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
@@ -194,7 +196,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             new SubmissionDateRetriever($artifact_retriever),
             $program_DAO,
             new ProgramAdapter(
-                $project_manager,
+                $project_manager_adapter,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     $event_manager
@@ -203,7 +205,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                 $user_retriever
             ),
             $program_DAO,
-            new ProjectReferenceRetriever($project_manager),
+            new ProjectReferenceRetriever($project_manager_adapter),
             $mirrors_creator
         );
     }

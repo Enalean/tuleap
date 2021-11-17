@@ -22,10 +22,11 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ProgramFlagsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramFlagsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProgramFlagsList(): void
     {
@@ -36,12 +37,11 @@ class ProgramFlagsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectFlagPresenter('Flag 3', 'Description of Flag 3'),
         ]);
 
-        $project_manager = $this->createStub(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $retrieve_full_project = RetrieveFullProjectStub::withProject(ProjectTestBuilder::aProject()->build());
 
         $flags = (new ProgramFlagsBuilder(
             $external_flags_builder,
-            $project_manager
+            $retrieve_full_project
         ))->build(ProgramIdentifierBuilder::build());
 
         self::assertCount(3, $flags);

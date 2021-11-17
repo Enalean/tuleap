@@ -31,7 +31,7 @@ final class ProgramFlagsBuilder implements BuildProgramFlags
 {
     public function __construct(
         private \Tuleap\Project\Flags\ProjectFlagsBuilder $project_flags_builder,
-        private \ProjectManager $project_manager
+        private RetrieveFullProject $retrieve_full_project
     ) {
     }
 
@@ -40,7 +40,7 @@ final class ProgramFlagsBuilder implements BuildProgramFlags
      */
     public function build(ProgramIdentifier $program_identifier): array
     {
-        $project = $this->project_manager->getProject($program_identifier->getId());
+        $project = $this->retrieve_full_project->getProject($program_identifier->getId());
 
         return array_map(
             static fn(ProjectFlagPresenter $flag_presenter) => ProgramFlag::fromLabelAndDescription($flag_presenter->label, $flag_presenter->description),

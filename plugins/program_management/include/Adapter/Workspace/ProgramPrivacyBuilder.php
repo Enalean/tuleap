@@ -29,13 +29,13 @@ use Tuleap\Project\ProjectPrivacyPresenter;
 
 final class ProgramPrivacyBuilder implements BuildProgramPrivacy
 {
-    public function __construct(private \ProjectManager $project_manager)
+    public function __construct(private RetrieveFullProject $retrieve_full_project)
     {
     }
 
     public function build(ProgramIdentifier $program_identifier): ProgramPrivacy
     {
-        $project         = $this->project_manager->getProject($program_identifier->getId());
+        $project         = $this->retrieve_full_project->getProject($program_identifier->getId());
         $project_privacy = ProjectPrivacyPresenter::fromProject($project);
 
         return ProgramPrivacy::fromPrivacy(

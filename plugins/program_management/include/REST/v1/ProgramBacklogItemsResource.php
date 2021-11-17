@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapt
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -91,7 +92,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
             \TrackerFactory::instance(),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
             new ProgramAdapter(
-                \ProjectManager::instance(),
+                new ProjectManagerAdapter(\ProjectManager::instance(), $user_retriever),
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()

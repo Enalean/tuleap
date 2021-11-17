@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
@@ -46,17 +47,15 @@ final class CollectLinkedProjectsProxyTest extends TestCase
         $this->source_project = ProjectTestBuilder::aProject()->withId(101)->build();
         $linked_project       = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $project_manager = $this->createMock(\ProjectManager::class);
-        $project_manager->method('getProject')->with($this->source_project->getId())->willReturn($this->source_project);
-        $project_manager->method('getProject')->with($linked_project->getId())->willReturn($linked_project);
+        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($this->source_project, $linked_project);
 
         $this->teams_searcher    = new TeamsSearcher(
             SearchTeamsOfProgramStub::buildTeams((int) $linked_project->getID()),
-            $project_manager
+            $retrieve_full_project
         );
         $this->programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms((int) $this->source_project->getID()),
-            $project_manager
+            $retrieve_full_project
         );
         $this->access_checker    = CheckProjectAccessStub::withValidAccess();
 
@@ -68,7 +67,12 @@ final class CollectLinkedProjectsProxyTest extends TestCase
         $this->setProgramContext();
         $original_event = new CollectLinkedProjects($this->source_project, $this->user);
 
-        $proxy = CollectLinkedProjectsProxy::fromCollectLinkedProjects($this->teams_searcher, $this->access_checker, $this->programs_searcher, $original_event);
+        $proxy = CollectLinkedProjectsProxy::fromCollectLinkedProjects(
+            $this->teams_searcher,
+            $this->access_checker,
+            $this->programs_searcher,
+            $original_event
+        );
         $proxy->addTeams();
 
         $collection = $original_event->getChildrenProjects();
@@ -80,7 +84,12 @@ final class CollectLinkedProjectsProxyTest extends TestCase
     {
         $this->setTeamContext();
         $original_event = new CollectLinkedProjects($this->source_project, $this->user);
-        $proxy          = CollectLinkedProjectsProxy::fromCollectLinkedProjects($this->teams_searcher, $this->access_checker, $this->programs_searcher, $original_event);
+        $proxy          = CollectLinkedProjectsProxy::fromCollectLinkedProjects(
+            $this->teams_searcher,
+            $this->access_checker,
+            $this->programs_searcher,
+            $original_event
+        );
         $proxy->addPrograms();
 
         $collection = $original_event->getParentProjects();
@@ -90,25 +99,23 @@ final class CollectLinkedProjectsProxyTest extends TestCase
 
     private function setProgramContext(): void
     {
-        $red_team        = ProjectTestBuilder::aProject()->build();
-        $blue_team       = ProjectTestBuilder::aProject()->build();
-        $project_manager = $this->createMock(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturnOnConsecutiveCalls($red_team, $blue_team);
-        $this->teams_searcher = new TeamsSearcher(
+        $red_team              = ProjectTestBuilder::aProject()->build();
+        $blue_team             = ProjectTestBuilder::aProject()->build();
+        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_team, $blue_team);
+        $this->teams_searcher  = new TeamsSearcher(
             SearchTeamsOfProgramStub::buildTeams(103, 104),
-            $project_manager
+            $retrieve_full_project
         );
     }
 
     private function setTeamContext(): void
     {
-        $red_program     = ProjectTestBuilder::aProject()->build();
-        $blue_program    = ProjectTestBuilder::aProject()->build();
-        $project_manager = $this->createMock(\ProjectManager::class);
-        $project_manager->method('getProject')->willReturnOnConsecutiveCalls($red_program, $blue_program);
+        $red_program             = ProjectTestBuilder::aProject()->build();
+        $blue_program            = ProjectTestBuilder::aProject()->build();
+        $retrieve_full_project   = RetrieveFullProjectStub::withSuccessiveProjects($red_program, $blue_program);
         $this->programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms(110, 111),
-            $project_manager
+            $retrieve_full_project
         );
     }
 }

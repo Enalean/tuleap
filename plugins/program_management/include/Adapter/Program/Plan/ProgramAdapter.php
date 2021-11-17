@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
@@ -36,7 +37,7 @@ use Tuleap\Project\ProjectAccessChecker;
 final class ProgramAdapter implements BuildProgram
 {
     public function __construct(
-        private \ProjectManager $project_manager,
+        private RetrieveFullProject $retrieve_full_project,
         private ProjectAccessChecker $project_access_checker,
         private VerifyIsProgram $program_verifier,
         private RetrieveUser $user_manager_adapter
@@ -60,7 +61,7 @@ final class ProgramAdapter implements BuildProgram
             return;
         }
 
-        $project = $this->project_manager->getProject($id);
+        $project = $this->retrieve_full_project->getProject($id);
         $pfuser  = $this->user_manager_adapter->getUserWithId($user);
         try {
             $this->project_access_checker->checkUserCanAccessProject($pfuser, $project);

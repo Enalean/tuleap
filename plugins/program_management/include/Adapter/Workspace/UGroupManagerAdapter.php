@@ -30,13 +30,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserGroupAttributes;
 
 final class UGroupManagerAdapter implements RetrieveUGroups
 {
-    private \ProjectManager $project_manager;
-    private \UGroupManager $group_manager;
-
-    public function __construct(\ProjectManager $project_manager, \UGroupManager $group_manager)
+    public function __construct(private RetrieveFullProject $retrieve_full_project, private \UGroupManager $group_manager)
     {
-        $this->project_manager = $project_manager;
-        $this->group_manager   = $group_manager;
     }
 
     /**
@@ -44,7 +39,7 @@ final class UGroupManagerAdapter implements RetrieveUGroups
      */
     public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program_identifier): array
     {
-        $project = $this->project_manager->getProject($program_identifier->id);
+        $project = $this->retrieve_full_project->getProject($program_identifier->id);
 
         $list = [];
         foreach ($this->group_manager->getUGroups($project, ProjectUGroup::SYSTEM_USER_GROUPS) as $ugroup) {
@@ -56,7 +51,7 @@ final class UGroupManagerAdapter implements RetrieveUGroups
 
     public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program_identifier, string $ugroup_name): ?UserGroupAttributes
     {
-        $project = $this->project_manager->getProject($program_identifier->id);
+        $project = $this->retrieve_full_project->getProject($program_identifier->id);
         $ugroup  = $this->group_manager->getUGroupByName($project, $ugroup_name);
 
         if (! $ugroup) {

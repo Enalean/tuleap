@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
@@ -35,7 +36,7 @@ use Tuleap\Project\CheckProjectAccess;
 final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
 {
     public function __construct(
-        private \ProjectManager $project_manager,
+        private RetrieveFullProject $retrieve_full_project,
         private CheckProjectAccess $project_access_checker,
         private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao,
         private RetrieveUser $user_manager
@@ -57,7 +58,7 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
             return true;
         }
 
-        $project = $this->project_manager->getProject($program_id);
+        $project = $this->retrieve_full_project->getProject($program_id);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {
