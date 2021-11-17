@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fie
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
@@ -79,6 +80,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
         $visibility_verifier      = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
         $artifact_retriever       = new ArtifactFactoryAdapter($artifact_factory);
+        $field_retriever          = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -138,7 +140,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
                     $artifact_factory
                 )
             ),
-            $form_element_factory
+            $field_retriever
         );
         return new IterationUpdateProcessor(
             MessageLog::buildFromLogger($logger),
