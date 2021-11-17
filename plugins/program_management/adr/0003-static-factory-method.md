@@ -120,7 +120,7 @@ It is conventional to always pass the interface parameters first and then the ot
 
 By convention, we name static factory methods that return arrays `buildCollectionFrom<Something>()`. The `buildCollection` prefix makes it more obvious that we expect this method to return an array (that could be empty) instead of a single result.
 
-For `Stubs` (see [ADR-0002 Hexagonal Architecture][4]), they also have static methods to build them. By convention, their static method is named `with<Something>()`. They are usually built to always return the same result, so the method "builds" a stub "with" a result. Again, since the method returns `self`, we can omit the `build` prefix as it should be obvious from the signature.
+For `Stubs` (see [ADR-0004 Writing unit-tests without mocks][5]), they also have static methods to build them. By convention, their static method is named `with<Something>()`. They are usually built to always return the same result, so the method "builds" a stub "with" a result. Again, since the method returns `self`, we can omit the `build` prefix as it should be obvious from the signature.
 
 ### Tests
 
@@ -165,9 +165,11 @@ We repeat instantiation of some of our classes so many times in Tests that we ha
 * [ADR-0002 Hexagonal Architecture][4]
 * DataClump (primitive obsession) [bliki][2]
 * Named Constructors in PHP [blog post][3]
+* [ADR-0004 Writing unit-tests without mocks][5]
 
 [0]: https://tuleap.net/plugins/tracker/?aid=16683
 [1]: <./glossary.md>
 [2]: https://martinfowler.com/bliki/DataClump.html
 [3]: https://verraes.net/2014/06/named-constructors-in-php/
 [4]: <./0002-hexagonal-architecture.md>
+[5]: <./0004-mock-free-tests.md>
