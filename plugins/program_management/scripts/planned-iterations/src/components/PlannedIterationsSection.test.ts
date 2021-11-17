@@ -87,6 +87,28 @@ describe("PlannedIterationsSection", () => {
                 "There is no iteration yet."
             );
         });
+
+        it.each([
+            [
+                { label: "Guinea Pigs", sub_label: "g-pig" },
+                "The retrieval of Guinea Pigs has failed",
+            ],
+            [{ label: "", sub_label: "" }, "The retrieval of iterations has failed"],
+        ])(
+            "should use the custom iteration label in its error message when there are defined",
+            async (iterations_labels: IterationLabels, expected_message: string) => {
+                jest.spyOn(retriever, "getIncrementIterations").mockRejectedValue("nope");
+
+                const wrapper = await getWrapper(iterations_labels);
+
+                await Vue.nextTick();
+                await Vue.nextTick();
+
+                expect(wrapper.find("[data-test=iteration-fetch-error]").text()).toEqual(
+                    expected_message
+                );
+            }
+        );
     });
 
     describe("Iterations display", () => {
@@ -102,6 +124,7 @@ describe("PlannedIterationsSection", () => {
 
             expect(wrapper.find("[data-test=planned-iterations-empty-state]").exists()).toBe(true);
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=iteration-fetch-error]").exists()).toBe(false);
         });
 
         it("should fetch iterations and display them", async () => {
@@ -125,6 +148,27 @@ describe("PlannedIterationsSection", () => {
             expect(retriever.getIncrementIterations).toHaveBeenCalledWith(666);
             expect(wrapper.find("[data-test=planned-iterations-empty-state]").exists()).toBe(false);
             expect(wrapper.findComponent(IterationCard).exists()).toBe(true);
+            expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=iteration-fetch-error]").exists()).toBe(false);
+        });
+
+        it("should display an error message when the retrieval of the iterations has failed", async () => {
+            jest.spyOn(retriever, "getIncrementIterations").mockRejectedValue("nope");
+
+            const wrapper = await getWrapper({
+                label: "Guinea Pigs",
+                sub_label: "g-pig",
+            });
+
+            await Vue.nextTick();
+            await Vue.nextTick();
+
+            const displayed_error = wrapper.find("[data-test=iteration-fetch-error]");
+            expect(displayed_error.exists()).toBe(true);
+            expect(displayed_error.text()).toEqual("The retrieval of Guinea Pigs has failed");
+
+            expect(wrapper.find("[data-test=planned-iterations-empty-state]").exists()).toBe(false);
+            expect(wrapper.findComponent(IterationCard).exists()).toBe(false);
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
         });
     });

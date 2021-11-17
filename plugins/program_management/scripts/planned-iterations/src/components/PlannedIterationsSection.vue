@@ -23,7 +23,7 @@
             {{ iterations_section_title }}
         </h2>
         <backlog-element-skeleton v-if="is_loading" />
-        <template v-else>
+        <template v-if="!is_loading && !has_error">
             <div
                 class="empty-state-page"
                 data-test="planned-iterations-empty-state"
@@ -44,6 +44,13 @@
                 v-bind:iteration="iteration"
             />
         </template>
+        <div
+            class="tlp-alert-danger iteration-fetch-error"
+            v-if="has_error"
+            data-test="iteration-fetch-error"
+        >
+            {{ error_message }}
+        </div>
     </div>
 </template>
 
@@ -74,12 +81,31 @@ export default class PlannedIterationsSection extends Vue {
     readonly program_increment!: ProgramIncrement;
 
     private iterations: Array<Iteration> = [];
+    private error_message = "";
+    private has_error = false;
     private is_loading = false;
 
     async mounted(): Promise<void> {
-        this.is_loading = true;
-        this.iterations = await getIncrementIterations(this.program_increment.id);
-        this.is_loading = false;
+        try {
+            this.is_loading = true;
+            this.iterations = await getIncrementIterations(this.program_increment.id);
+        } catch (e) {
+            this.has_error = true;
+            this.error_message = this.buildErrorMessage();
+        } finally {
+            this.is_loading = false;
+        }
+    }
+
+    buildErrorMessage(): string {
+        if (this.iterations_labels.label.length === 0) {
+            return this.$gettext("The retrieval of iterations has failed");
+        }
+
+        return sprintf(
+            this.$gettext("The retrieval of %s has failed"),
+            this.iterations_labels.label
+        );
     }
 
     get iterations_section_title(): string {

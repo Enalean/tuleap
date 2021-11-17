@@ -24,6 +24,12 @@ msgstr "Rien à voir ici pour le moment"
 msgid "Program"
 msgstr "Programme"
 
+msgid "The retrieval of %s has failed"
+msgstr "La récupération de %s a échoué"
+
+msgid "The retrieval of iterations has failed"
+msgstr "La récupération des itérations a échoué"
+
 msgid "There is no %s yet."
 msgstr "Il n'y a pas encore de %s."
 
