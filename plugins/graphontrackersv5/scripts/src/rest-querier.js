@@ -19,9 +19,14 @@
 
 import { get } from "@tuleap/tlp-fetch";
 
-export async function getChartData(report_id, renderer_id, chart_id) {
+export async function getChartData(report_id, renderer_id, chart_id, in_dashboard) {
     const response = await get(
-        `/plugins/graphontrackersv5/report/${report_id}/renderer/${renderer_id}/chart/${chart_id}`
+        `/plugins/graphontrackersv5/report/${report_id}/renderer/${renderer_id}/chart/${chart_id}`,
+        {
+            params: {
+                in_dashboard: in_dashboard,
+            },
+        }
     );
 
     return response.json();

@@ -196,19 +196,11 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
                      'renderer_plugin_graphontrackersv5[stroke]' => $this->getId()]);
     }
 
-    /**
-     * Display both <img /> and <map /> tags to embed the chart in a html page
-     */
-    public function display()
-    {
-        echo $this->fetch();
-    }
-
-    public function fetch($store_in_session = true)
+    public function fetch(bool $store_in_session = true)
     {
         $html = '';
         if ($this->userCanVisualize()) {
-            $e = $this->buildGraph();
+            $e = $this->buildGraph(! $store_in_session);
             if ($e) {
                 $html  = $this->getHTMLImageMapWithoutInterruptingExecutionFlow($e, 'map' . $this->getId());
                 $html .= $this->fetchImgTag($store_in_session);
@@ -234,7 +226,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return $html;
     }
 
-    private function fetchGraphAnchor($content)
+    private function fetchGraphAnchor($content, bool $in_dashboard)
     {
         $renderer_id = $this->renderer->getId();
         $report_id   = $this->renderer->report->getId();
@@ -242,6 +234,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
                      data-graph-id="' . $this->getId() . '"
                      data-renderer-id="' . $renderer_id . '"
                      data-report-id="' . $report_id . '"
+                     data-in-dashboard="' . $in_dashboard . '"
                 >' . $content . '</div>';
     }
 
@@ -262,7 +255,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/report');
     }
 
-    public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true)
+    public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, bool $in_dashboard, $store_in_session = true)
     {
         if ($this->isGraphDrawnByD3()) {
             $content   = '';
@@ -282,7 +275,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $html .= '</div>';
         $html .= '</div>';
         $html .= '<div class="widget_content">';
-        $html .= $this->fetchGraphAnchor($content);
+        $html .= $this->fetchGraphAnchor($content, $in_dashboard);
         $html .= '</div>'; // content
         $html .= '</div>'; // widget
 
@@ -367,9 +360,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     /**
      * Fetch chart data as an array
      */
-    public function fetchAsArray()
+    public function fetchAsArray(bool $use_data_from_db)
     {
-        $engine = $this->getEngineWithData();
+        $engine = $this->getEngineWithData($use_data_from_db);
         if (! $this->userCanVisualize() || ! $engine) {
             return [];
         }
@@ -393,9 +386,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
      * Stroke the chart.
      * Build the image and send it to the client
      */
-    public function stroke()
+    public function stroke(bool $use_data_from_db)
     {
-        $e = $this->buildGraph();
+        $e = $this->buildGraph($use_data_from_db);
         if ($e && is_object($e->graph)) {
             $e->graph->StrokeCSIM();
         }
@@ -405,9 +398,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
      * Prepare the building of the graph
      * @return GraphOnTracker_Chart_Engine
      */
-    protected function buildGraph()
+    protected function buildGraph(bool $use_data_from_db)
     {
-        $e = $this->getEngineWithData();
+        $e = $this->getEngineWithData($use_data_from_db);
         if ($e) {
             //build the chart
             $e->buildGraph();
@@ -421,7 +414,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     /**
      * @return GraphOnTrackersV5_Engine|false
      */
-    protected function getEngineWithData()
+    protected function getEngineWithData(bool $use_data_from_db)
     {
         if (! $this->engine) {
             //Get the chart engine
@@ -429,7 +422,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         }
 
         //Define the artifacts which must be added to the chart
-        $artifacts = $this->renderer->report->getMatchingIds();
+        $artifacts = $this->renderer->report->getMatchingIds(null, $use_data_from_db);
 
         //Get the ChartDataBuilder for this chart
         $pcdb = $this->getChartDataBuilder($artifacts);
@@ -612,13 +605,13 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
      */
     abstract protected function getDao();
 
-    public function getContent()
+    public function getContent(bool $in_dashboard)
     {
         $content          = '';
         $store_in_session = false;
 
         if ($this->isGraphDrawnByD3()) {
-            $content .= $this->fetchContentD3Graph();
+            $content .= $this->fetchContentD3Graph($in_dashboard);
         } else {
             $content .= $this->fetchContentJPGraph($store_in_session);
         }
@@ -629,7 +622,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     public function getWidgetContent()
     {
         $content  = $this->fetchAdditionnalButton();
-        $content .= $this->getContent();
+        $content .= $this->getContent(true);
         $content .= $this->renderer->fetchWidgetGoToReport();
 
         return $content;
@@ -641,7 +634,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return $this->accept($d3_visitor);
     }
 
-    private function fetchContentJPGraph($store_in_session)
+    private function fetchContentJPGraph(bool $store_in_session)
     {
         $content  = $this->fetch($store_in_session);
         $content .= '<br />';
@@ -649,9 +642,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return $content;
     }
 
-    private function fetchContentD3Graph()
+    private function fetchContentD3Graph(bool $in_dashboard)
     {
-        return $this->fetchGraphAnchor('');
+        return $this->fetchGraphAnchor('', $in_dashboard);
     }
 
     private function getAvailableDashboardsForUser(PFUser $user)

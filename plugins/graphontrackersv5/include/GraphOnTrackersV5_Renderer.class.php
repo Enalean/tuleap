@@ -184,7 +184,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         }
 
         $report_charts = $this->getChartFactory()->getCharts($this);
-        $matching_ids  = $this->report->getMatchingIds();
+        $matching_ids  = $this->report->getMatchingIds(null, $in_dashboard);
         assert(is_array($matching_ids));
 
         if ($this->widgetMustDisplayEmptyState($in_dashboard, $report_charts, $matching_ids)) {
@@ -198,7 +198,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
         foreach ($report_charts as $chart) {
             $html .= '<div class="widget_report_graph">';
-            $html .= $chart->fetchOnReport($this, $current_user, $readonly, $store_in_session);
+            $html .= $chart->fetchOnReport($this, $current_user, $readonly, $in_dashboard, $store_in_session);
             $html .= '</div>';
         }
 
@@ -301,7 +301,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
                     $chart = $this->getChartFactory()
                                   ->getChart($this, $renderer_parameters['stroke'], $store_in_session)
                 ) {
-                    $chart->stroke();
+                    $chart->stroke(! $store_in_session);
                     exit;
                 }
             }
