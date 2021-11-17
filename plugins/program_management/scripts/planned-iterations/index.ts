@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    Vue.config.language = getDatasetPropertyValue(document.body, "userLocale");
+    const user_locale = getDatasetPropertyValue(document.body, "userLocale");
+    Vue.config.language = user_locale;
 
     await initVueGettext(
         Vue,
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             iterations_labels: JSON.parse(
                 getDatasetPropertyValue(vue_mount_point, "iterationsLabels")
             ),
+            user_locale: user_locale.replace("_", "-"),
         }),
     }).$mount(vue_mount_point);
 });

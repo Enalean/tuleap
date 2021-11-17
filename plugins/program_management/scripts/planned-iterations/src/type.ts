@@ -32,6 +32,14 @@ export interface ProgramIncrement {
     end_date: string;
 }
 
+export interface Iteration {
+    id: number;
+    title: string;
+    start_date: string;
+    end_date: string;
+    status: string;
+}
+
 export interface State {
     readonly program: Program;
     readonly program_privacy: ProjectPrivacy;
@@ -39,6 +47,7 @@ export interface State {
     readonly is_program_admin: boolean;
     readonly program_increment: ProgramIncrement;
     readonly iterations_labels: IterationLabels;
+    readonly user_locale: string;
 }
 
 export interface IterationLabels {

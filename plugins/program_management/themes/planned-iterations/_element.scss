@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "planned-iterations/project-header-background";
-@use "planned-iterations/backlog";
-@use "planned-iterations/iterations";
-@use "planned-iterations/element";
-
-.planned-iterations-title-header {
-    margin: 0;
-    padding: var(--tlp-medium-spacing);
+#element-skeleton {
+    display: flex;
+    flex-direction: column;
+    margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing);
 }
 
-.planned-iterations-title-header-dates {
-    padding: 0 0 0 var(--tlp-medium-spacing);
+.element-skeleton-xref {
+    width: 70px;
+    margin: 0 10px var(--tlp-small-spacing) 0;
+}
+
+.element-skeleton-title {
+    width: 300px;
 }
