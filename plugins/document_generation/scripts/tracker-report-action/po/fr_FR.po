@@ -17,8 +17,17 @@ msgstr "Après le"
 msgid "After %s and before %s"
 msgstr "Après le %S et avant le %s"
 
+msgid "Artifact ID"
+msgstr "Artéfact ID"
+
 msgid "Artifacts"
 msgstr "Artéfacts"
+
+msgid "Artifacts referenced by"
+msgstr "Les artéfacts qui sont référencés par"
+
+msgid "Artifacts that reference"
+msgstr "Les artéfacts qui référencent"
 
 msgid "As of %s"
 msgstr "Le %s"
@@ -55,6 +64,9 @@ msgstr "Exporté le %s par %s"
 
 msgid "Failed"
 msgstr "Échoué"
+
+msgid "Link type"
+msgstr "Type de lien"
 
 msgid ""
 "No filter has been applied to this report because no TQL query has been set"

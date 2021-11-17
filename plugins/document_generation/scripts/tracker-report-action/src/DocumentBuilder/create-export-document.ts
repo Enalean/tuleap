@@ -20,6 +20,7 @@
 import type {
     ArtifactContainer,
     ArtifactFieldValueStepDefinitionEnhanced,
+    ArtifactFieldValueArtifactLink,
     DateTimeLocaleInformation,
     ExportDocument,
 } from "../type";
@@ -241,6 +242,31 @@ function formatFieldValue(
             field_value: references_content,
             content_length: "short",
             value_type: "links",
+        };
+    } else if (value.type === "art_link") {
+        const links: ArtifactFieldValueArtifactLink[] = [];
+        const reverse_links: ArtifactFieldValueArtifactLink[] = [];
+
+        for (const link of value.links) {
+            links.push({
+                artifact_id: link.id,
+                type: link.type ?? "",
+            });
+        }
+
+        for (const reverse_link of value.reverse_links) {
+            reverse_links.push({
+                artifact_id: reverse_link.id,
+                type: reverse_link.type ?? "",
+            });
+        }
+
+        return {
+            field_name: value.label,
+            content_length: "artlinktable",
+            value_type: "string",
+            links: links,
+            reverse_links: reverse_links,
         };
     } else {
         return null;
