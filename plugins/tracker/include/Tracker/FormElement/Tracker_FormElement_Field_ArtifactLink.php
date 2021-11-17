@@ -509,13 +509,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $current_user = $this->getCurrentUser();
         $html         = '';
         if (! $read_only) {
-            $html = '<div class="tracker_formelement_read_and_edit">';
+            $html = '<div class="tracker_formelement_read_and_edit" data-test="artifact-link-section">';
         }
 
         if ($reverse_artifact_links) {
             $html .= '<div class="artifact-link-value-reverse">';
-            $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse">' . dgettext('tuleap-tracker', 'Display reverse artifact links') . '</a>';
-            $html .= '<div id="tracker-form-element-artifactlink-reverse" style="display: none">';
+            $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse" data-test="display-reverse-links">' . dgettext('tuleap-tracker', 'Display reverse artifact links') . '</a>';
+            $html .= '<div id="tracker-form-element-artifactlink-reverse" data-test="reverse-link-section" style="display: none">';
         } else {
             $html .= '<div class="artifact-link-value">';
         }
@@ -580,7 +580,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html .= '</section>'; // end of tracker_formelement_read_and_edit_edition_section
         }
 
-        $html .= '<div class="tracker-form-element-artifactlink-list ' . $read_only_class . '">';
+        $html .= '<div class="tracker-form-element-artifactlink-list ' . $read_only_class . '" data-test="artifact-link-section">';
         if ($artifact_links_to_render->hasArtifactLinksToDisplay()) {
             $this_project_id = $this->getTracker()->getProject()->getGroupId();
             foreach ($artifact_links_to_render->getArtifactLinksForPerTrackerDisplay() as $artifact_links_per_tracker) {
