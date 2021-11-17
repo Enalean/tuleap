@@ -26,7 +26,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactLinkFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
@@ -42,6 +44,11 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
      * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */
     private $artifact;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElement_Field_ArtifactLink
+     */
+    private $field;
+    private RetrieveFullArtifactLinkFieldStub $field_retriever;
 
     protected function setUp(): void
     {
@@ -57,22 +64,25 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
             $this->user
         );
         $this->artifact            = $this->createStub(Artifact::class);
+
+        $this->field           = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->field_retriever = RetrieveFullArtifactLinkFieldStub::withField($this->field);
     }
 
     private function getVerifier(): UserCanPlanInProgramIncrementVerifier
     {
         return new UserCanPlanInProgramIncrementVerifier(
             RetrieveFullArtifactStub::withArtifact($this->artifact),
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withGenericUser(),
+            RetrieveProgramIncrementTrackerStub::withValidTracker(16),
+            $this->field_retriever
         );
     }
 
     public function testUserCanPlan(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(true);
-        $artifact_link_field = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link_field->method('userCanUpdate')->willReturn(true);
-        $this->artifact->method('getAnArtifactLinkField')->willReturn($artifact_link_field);
+        $this->field->method('userCanUpdate')->willReturn(true);
 
         self::assertTrue($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
@@ -87,7 +97,7 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     public function testUserCannotPlanWhenProgramIncrementTrackerHasNoArtifactLinkField(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->artifact->method('getAnArtifactLinkField')->willReturn(null);
+        $this->field_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
 
         self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
@@ -95,9 +105,7 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     public function testUserCannotPlanWhenUserCannotUpdateArtifactLinkOfProgramIncrement(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(true);
-        $artifact_link_field = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link_field->method('userCanUpdate')->willReturn(false);
-        $this->artifact->method('getAnArtifactLinkField')->willReturn($artifact_link_field);
+        $this->field->method('userCanUpdate')->willReturn(false);
 
         self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
@@ -105,9 +113,7 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     public function testUserCanPlanAndPrioritize(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(true);
-        $artifact_link_field = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link_field->method('userCanUpdate')->willReturn(true);
-        $this->artifact->method('getAnArtifactLinkField')->willReturn($artifact_link_field);
+        $this->field->method('userCanUpdate')->willReturn(true);
 
         self::assertTrue($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
     }
@@ -122,7 +128,7 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     public function testUserCannotPlanAndPrioritizeWhenProgramIncrementTrackerHasNoArtifactLinkField(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(true);
-        $this->artifact->method('getAnArtifactLinkField')->willReturn(null);
+        $this->field_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
 
         self::assertFalse($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
     }
@@ -130,9 +136,7 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     public function testUserCannotPlanAndPrioritizeWhenUserCannotUpdateArtifactLinkOfProgramIncrement(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(true);
-        $artifact_link_field = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link_field->method('userCanUpdate')->willReturn(false);
-        $this->artifact->method('getAnArtifactLinkField')->willReturn($artifact_link_field);
+        $this->field->method('userCanUpdate')->willReturn(false);
 
         self::assertFalse($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
     }

@@ -44,6 +44,7 @@ use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
@@ -73,6 +74,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $tracker_retriever              = new TrackerFactoryAdapter($tracker_factory);
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
+        $field_retriever                = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -117,7 +119,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                     $artifact_factory
                 )
             ),
-            $form_element_factory
+            $field_retriever
         );
 
         $mirror_creator = new ProgramIncrementsCreator(
@@ -126,7 +128,6 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $artifact_creator,
             $synchronized_fields_gatherer
         );
-
 
         return new ProgramIncrementCreationProcessor(
             new PlanningAdapter(\PlanningFactory::build(), $user_retriever),

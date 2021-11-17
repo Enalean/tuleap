@@ -64,8 +64,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementInfoBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProjectFromTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\FieldPermissionsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
@@ -113,12 +113,12 @@ use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramUserPrivilegesRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramUserPrivilegesRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
@@ -126,6 +126,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ScrumBlocksServiceVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics;
@@ -402,6 +403,7 @@ final class program_managementPlugin extends Plugin
         $retrieve_tracker_from_field   = new TrackerFromFieldRetriever($form_element_factory);
         $tracker_retriever             = new TrackerFactoryAdapter($tracker_factory);
         $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_retriever);
+        $field_retriever               = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
 
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
@@ -417,7 +419,7 @@ final class program_managementPlugin extends Plugin
                     Tracker_ArtifactFactory::instance()
                 )
             ),
-            $form_element_factory
+            $field_retriever
         );
 
         $logger_message              = MessageLog::buildFromLogger($logger);
@@ -509,12 +511,17 @@ final class program_managementPlugin extends Plugin
 
     public function routeGetPlanIterations(): DisplayPlanIterationsController
     {
-        $user_manager_adapter       = new UserManagerAdapter(\UserManager::instance());
+        $user_retriever             = new UserManagerAdapter(\UserManager::instance());
         $project_manager            = ProjectManager::instance();
         $tracker_artifact_factory   = Tracker_ArtifactFactory::instance();
         $program_increment_verifier = new ProgramIncrementsDAO();
-        $visibility_verifier        = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_manager_adapter);
+        $visibility_verifier        = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
         $artifact_retriever         = new ArtifactFactoryAdapter($tracker_artifact_factory);
+        $tracker_factory            = \TrackerFactory::instance();
+        $tracker_retriever          = new TrackerFactoryAdapter($tracker_factory);
+        $form_element_factory       = \Tracker_FormElementFactory::instance();
+        $field_retriever            = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $program_increments_DAO     = new ProgramIncrementsDAO();
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
@@ -526,7 +533,7 @@ final class program_managementPlugin extends Plugin
                     EventManager::instance()
                 ),
                 new ProgramDao(),
-                $user_manager_adapter,
+                $user_retriever,
             ),
             new ProgramFlagsBuilder(
                 new \Tuleap\Project\Flags\ProjectFlagsBuilder(new ProjectFlagsDao()),
@@ -538,24 +545,29 @@ final class program_managementPlugin extends Plugin
             ),
             new ProgramIncrementInfoBuilder(
                 new ProgramIncrementRetriever(
-                    new StatusValueRetriever($artifact_retriever, $user_manager_adapter),
+                    new StatusValueRetriever($artifact_retriever, $user_retriever),
                     new TitleValueRetriever($artifact_retriever),
                     new TimeframeValueRetriever(
                         $artifact_retriever,
-                        $user_manager_adapter,
+                        $user_retriever,
                         SemanticTimeframeBuilder::build(),
                         BackendLogger::getDefaultLogger()
                     ),
                     new UriRetriever($artifact_retriever),
                     new CrossReferenceRetriever($artifact_retriever),
-                    new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_manager_adapter),
-                    new UserCanPlanInProgramIncrementVerifier($artifact_retriever, $user_manager_adapter)
+                    new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever),
+                    new UserCanPlanInProgramIncrementVerifier(
+                        $artifact_retriever,
+                        $user_retriever,
+                        $program_increments_DAO,
+                        $field_retriever
+                    )
                 )
             ),
             $program_increment_verifier,
             $visibility_verifier,
-            new ProgramUserPrivilegesRetriever($user_manager_adapter),
-            $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
+            new ProgramUserPrivilegesRetriever($user_retriever),
+            $this->getVisibleIterationTrackerRetriever($user_retriever),
             new IterationsDAO()
         );
     }
@@ -1161,6 +1173,7 @@ final class program_managementPlugin extends Plugin
         $retrieve_tracker_from_field   = new TrackerFromFieldRetriever($form_element_factory);
         $tracker_retriever             = new TrackerFactoryAdapter($tracker_factory);
         $retrieve_project_from_tracker = new ProjectFromTrackerRetriever($tracker_retriever);
+        $field_retriever               = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
 
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
@@ -1176,7 +1189,7 @@ final class program_managementPlugin extends Plugin
                     Tracker_ArtifactFactory::instance()
                 )
             ),
-            $form_element_factory
+            $field_retriever
         );
 
         $logger_message              = MessageLog::buildFromLogger($logger);
@@ -1207,7 +1220,6 @@ final class program_managementPlugin extends Plugin
             $retrieve_project_from_tracker,
             new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory)
         );
-
 
         return new CanSubmitNewArtifactHandler(
             new ConfigurationErrorsGatherer(
@@ -1240,7 +1252,6 @@ final class program_managementPlugin extends Plugin
             $retrieve_user
         );
     }
-
 
     private function getVisibleIterationTrackerRetriever(UserManagerAdapter $retrieve_user): VisibleIterationTrackerRetriever
     {

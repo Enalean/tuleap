@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\RetrieveFullArtifactLinkField;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
@@ -47,7 +48,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         private \Tracker_Semantic_DescriptionFactory $description_factory,
         private \Tracker_Semantic_StatusFactory $status_factory,
         private SemanticTimeframeBuilder $timeframe_builder,
-        private \Tracker_FormElementFactory $form_element_factory
+        private RetrieveFullArtifactLinkField $artifact_link_retriever
     ) {
     }
 
@@ -118,16 +119,16 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 
     public function getArtifactLinkField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): ArtifactLinkFieldReference
     {
-        $full_tracker         = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
-        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($full_tracker);
-        if (count($artifact_link_fields) > 0) {
-            return ArtifactLinkFieldReferenceProxy::fromTrackerField(($artifact_link_fields[0]));
+        $full_tracker        = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
+        $artifact_link_field = $this->artifact_link_retriever->getArtifactLinkField($tracker_identifier);
+        if (! $artifact_link_field) {
+            $errors_collector?->addMissingFieldArtifactLink(
+                "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-formElements",
+                $full_tracker->getName(),
+                $full_tracker->getProject()->getPublicName(),
+            );
+            throw new NoArtifactLinkFieldException($tracker_identifier);
         }
-        $errors_collector?->addMissingFieldArtifactLink(
-            "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-formElements",
-            $full_tracker->getName(),
-            $full_tracker->getProject()->getPublicName(),
-        );
-        throw new NoArtifactLinkFieldException($tracker_identifier);
+        return ArtifactLinkFieldReferenceProxy::fromTrackerField($artifact_link_field);
     }
 }
