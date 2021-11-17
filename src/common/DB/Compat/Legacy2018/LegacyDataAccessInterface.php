@@ -177,6 +177,7 @@ interface LegacyDataAccessInterface
      * @param type $result
      *
      * @return type
+     * @psalm-taint-source ldap
      */
     public function fetchArray($result);
 
