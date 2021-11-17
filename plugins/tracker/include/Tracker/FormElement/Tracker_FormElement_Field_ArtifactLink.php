@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
@@ -88,6 +89,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
+
+    private ?ChangesetValueArtifactLinkDao $cached_changeset_value_dao = null;
 
     /**
      * Display the html form in the admin ui
@@ -1339,23 +1342,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         if (! isset($this->artifact_links_by_changeset[$changeset_id])) {
             $this->artifact_links_by_changeset[$changeset_id] = [];
 
-            $da           = CodendiDataAccess::instance();
-            $field_id     = $da->escapeInt($this->id);
-            $changeset_id = $da->escapeInt($changeset_id);
-            $sql          = "SELECT cv.changeset_id, cv.has_changed, val.*, a.tracker_id, a.last_changeset_id
-                    FROM tracker_changeset_value_artifactlink AS val
-                         INNER JOIN tracker_artifact AS a ON(a.id = val.artifact_id)
-                         INNER JOIN tracker AS t ON(t.id = a.tracker_id AND t.deletion_date IS NULL)
-                         INNER JOIN `groups` ON (t.group_id = `groups`.group_id)
-                         INNER JOIN tracker_changeset_value AS cv
-                         ON ( val.changeset_value_id = cv.id
-                          AND cv.field_id = $field_id
-                          AND cv.changeset_id = $changeset_id
-                         )
-                    WHERE `groups`.status = 'A'
-                    ORDER BY val.artifact_id";
-            $dao          = new DataAccessObject();
-            foreach ($dao->retrieve($sql) as $row) {
+            $dao = $this->getChangesetValueArtifactLinkDao();
+            foreach ($dao->searchChangesetValues($this->id, $changeset_id) as $row) {
                 $artifact_link_info = new Tracker_ArtifactLinkInfo(
                     $row['artifact_id'],
                     $row['keyword'],
@@ -1373,6 +1361,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             }
         }
         return $this->artifact_links_by_changeset[$changeset_id];
+    }
+
+    private function getChangesetValueArtifactLinkDao(): ChangesetValueArtifactLinkDao
+    {
+        if (! $this->cached_changeset_value_dao) {
+            $this->cached_changeset_value_dao = new ChangesetValueArtifactLinkDao();
+        }
+
+        return $this->cached_changeset_value_dao;
+    }
+
+    /**
+     * For testing purpose
+     */
+    public function setChangesetValueArtifactLinkDao(ChangesetValueArtifactLinkDao $dao): void
+    {
+        $this->cached_changeset_value_dao = $dao;
     }
 
     /**

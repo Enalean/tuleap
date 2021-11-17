@@ -39,6 +39,12 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $this->changeset->shouldReceive('getArtifact')->andReturn(Mockery::spy(Artifact::class));
     }
 
+    protected function tearDown(): void
+    {
+        UserManager::clearInstance();
+        Tracker_ArtifactFactory::clearInstance();
+    }
+
     public function testNoDefaultValue(): void
     {
         $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -410,6 +416,165 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $value = 'some_value';
 
         $field->getFieldDataFromRESTValueByField($value);
+    }
+
+    /**
+     * @dataProvider getInvalidRESTValue
+     */
+    public function testGetFieldDataFromRESTValueThrowsExceptionIfFormatIsNotValid($invalid_value): void
+    {
+        $field = $this->buildField();
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+
+        $field->getFieldDataFromRESTValue($invalid_value, null);
+    }
+
+    public function getInvalidRESTValue(): array
+    {
+        return [
+            [
+                []
+            ],
+            [
+                ["links" => 123]
+            ],
+        ];
+    }
+
+    public function testGetFieldDataFromRESTValueExtractsLinksFromRESTValue(): void
+    {
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager
+            ->method('getCurrentUser')
+            ->willReturn(\Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build());
+        UserManager::setInstance($user_manager);
+
+        $field = $this->buildField();
+
+        self::assertEquals(
+            [
+                'new_values'     => '123,234',
+                'removed_values' => [],
+                'natures'        => [
+                    234 => '_is_child'
+                ],
+            ],
+            $field->getFieldDataFromRESTValue([
+                "links" => [
+                    ["id" => 123],
+                    ["id" => 234, "type" => "_is_child"]
+                ]
+            ], null),
+        );
+    }
+
+    public function testGetFieldDataFromRESTValueExtractsParentFromRESTValue(): void
+    {
+        $field = $this->buildField();
+
+        self::assertEquals(
+            [
+                "parent" => 123,
+            ],
+            $field->getFieldDataFromRESTValue(["parent" => ["id" => 123]], null),
+        );
+    }
+
+    public function testGetFieldDataFromRESTValueExtractsBothParentAndLinksFromRESTValue(): void
+    {
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager
+            ->method('getCurrentUser')
+            ->willReturn(\Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build());
+        UserManager::setInstance($user_manager);
+
+        $field = $this->buildField();
+
+        self::assertEquals(
+            [
+                "parent" => 123,
+                'new_values'     => '124,234',
+                'removed_values' => [],
+                'natures'        => [
+                    234 => '_is_child'
+                ],
+            ],
+            $field->getFieldDataFromRESTValue([
+                "parent" => ["id" => 123],
+                "links" => [
+                    ["id" => 124],
+                    ["id" => 234, "type" => "_is_child"]
+                ],
+            ], null),
+        );
+    }
+
+    public function testGetFieldDataFromRESTValueRemovesExistingLinksIfTheyAreNotProvided(): void
+    {
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager
+            ->method('getCurrentUser')
+            ->willReturn(\Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build());
+        UserManager::setInstance($user_manager);
+
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset
+            ->method("getId")
+            ->willReturn(1001);
+
+        $artifact = $this->createMock(Artifact::class);
+        $artifact
+            ->method("getLastChangeset")
+            ->willReturn($changeset);
+
+        $dao = $this->createMock(\Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao::class);
+        $dao
+            ->method("searchChangesetValues")
+            ->willReturn(
+                [
+                    [
+                        "changeset_id"      => 1001,
+                        "artifact_id"       => 666,
+                        "keyword"           => "art",
+                        "group_id"          => 101,
+                        "tracker_id"        => 102,
+                        "last_changeset_id" => 1000,
+                        "nature"            => "",
+                    ],
+                ]
+            );
+
+        $existing_link = $this->createMock(Artifact::class);
+        $existing_link
+            ->method("userCanView")
+            ->willReturn(true);
+        $existing_link
+            ->method("getId")
+            ->willReturn(666);
+
+        Tracker_ArtifactFactory::setInstance($this->givenAnArtifactFactory([$existing_link]));
+
+        $field = $this->buildField();
+        $field->setChangesetValueArtifactLinkDao($dao);
+
+        self::assertEquals(
+            [
+                "parent" => 123,
+                'new_values'     => '124,234',
+                'removed_values' => [666 => [666]],
+                'natures'        => [
+                    234 => '_is_child'
+                ],
+            ],
+            $field->getFieldDataFromRESTValue([
+                "parent" => ["id" => 123],
+                "links" => [
+                    ["id" => 124],
+                    ["id" => 234, "type" => "_is_child"]
+                ],
+            ], $artifact),
+        );
     }
 
     private function buildField(): Tracker_FormElement_Field_ArtifactLink
