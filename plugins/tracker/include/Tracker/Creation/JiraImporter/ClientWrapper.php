@@ -42,6 +42,9 @@ abstract class ClientWrapper implements JiraClient
     #[ConfigKey('Jira importer will record all request being made and all responses sent back by the client in this directory')]
     public const CONFIG_KEY_DEBUG_DIRECTORY = 'tracker_jira_debug_directory';
 
+    #[ConfigKey('Jira importer will always use basic auth with given credentials')]
+    public const CONFIG_KEY_FORCE_BASIC_AUTH = 'tracker_jira_force_basic_auth';
+
     /**
      * According to [1] the v3 API is only available on Jira Cloud with no forseen implementation on Jira Server (on prem)
      * So we stick to v2 because this code should run against on prem instances.
@@ -98,13 +101,8 @@ abstract class ClientWrapper implements JiraClient
         $server_info = json_decode($server_info_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         if (isset($server_info['deploymentType']) && $server_info['deploymentType'] === self::DEPLOYMENT_TYPE_CLOUD) {
             $logger->info("Instantiate JiraCloudClient");
-            $authentication = new BasicAuth($jira_credentials->getJiraUsername(), $jira_credentials->getJiraToken()->getString());
             return new JiraCloudClient(
-                HttpClientFactory::createClient(
-                    new AuthenticationPlugin(
-                        $authentication
-                    )
-                ),
+                self::getClientWithBasicAuth($jira_credentials),
                 $request_factory,
                 $jira_credentials->getJiraUrl(),
             );
@@ -112,13 +110,33 @@ abstract class ClientWrapper implements JiraClient
 
         $logger->info("Instantiate JiraServerClient");
         return new JiraServerClient(
-            HttpClientFactory::createClient(
-                new AuthenticationPlugin(
-                    new Bearer($jira_credentials->getJiraToken()->getString())
-                )
-            ),
+            self::getClientWithBearerAuth($jira_credentials),
             $request_factory,
             $jira_credentials->getJiraUrl(),
+        );
+    }
+
+    private static function getClientWithBearerAuth(JiraCredentials $jira_credentials): ClientInterface
+    {
+        if (\ForgeConfig::get(self::CONFIG_KEY_FORCE_BASIC_AUTH) === '1') {
+            return self::getClientWithBasicAuth($jira_credentials);
+        }
+        return HttpClientFactory::createClient(
+            new AuthenticationPlugin(
+                new Bearer($jira_credentials->getJiraToken()->getString())
+            )
+        );
+    }
+
+    private static function getClientWithBasicAuth(JiraCredentials $jira_credentials): ClientInterface
+    {
+        return HttpClientFactory::createClient(
+            new AuthenticationPlugin(
+                new BasicAuth(
+                    $jira_credentials->getJiraUsername(),
+                    $jira_credentials->getJiraToken()->getString()
+                )
+            )
         );
     }
 
