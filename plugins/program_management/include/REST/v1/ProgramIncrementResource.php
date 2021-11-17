@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedT
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureAdditionProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanLinkToProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
@@ -71,6 +71,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Con
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeaturePlanner;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -250,10 +251,9 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             new FeatureDAO(),
             new UserCanPlanInProgramIncrementVerifier(
-                $artifact_retriever,
-                $user_retriever,
+                new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever),
                 $program_increments_dao,
-                $field_retriever
+                new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever)
             ),
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $program_dao,

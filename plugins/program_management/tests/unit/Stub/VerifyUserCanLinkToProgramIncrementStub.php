@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,26 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class VerifyUserCanUpdateTimeboxStub implements VerifyUserCanUpdateTimebox
+final class VerifyUserCanLinkToProgramIncrementStub implements \Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyUserCanLinkToProgramIncrement
 {
-    private function __construct(private bool $user_can_update)
+    private function __construct(private bool $can_link)
     {
-    }
-
-    public function canUserUpdate(TimeboxIdentifier $timebox, UserIdentifier $user): bool
-    {
-        return $this->user_can_update;
     }
 
     public static function withAllowed(): self
@@ -46,5 +39,12 @@ final class VerifyUserCanUpdateTimeboxStub implements VerifyUserCanUpdateTimebox
     public static function withDenied(): self
     {
         return new self(false);
+    }
+
+    public function canUserLinkToProgramIncrement(
+        ProgramIncrementTrackerIdentifier $program_increment_tracker,
+        UserIdentifier $user
+    ): bool {
+        return $this->can_link;
     }
 }

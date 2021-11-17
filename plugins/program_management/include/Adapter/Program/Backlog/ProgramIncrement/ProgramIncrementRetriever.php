@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveStatusValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
@@ -32,7 +33,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUs
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 
 final class ProgramIncrementRetriever implements RetrieveProgramIncrement
 {
@@ -43,7 +43,7 @@ final class ProgramIncrementRetriever implements RetrieveProgramIncrement
         private RetrieveUri $retrieve_uri,
         private RetrieveCrossRef $retrieve_cross_ref,
         private VerifyUserCanUpdateTimebox $verify_user_can_update,
-        private VerifyUserCanPlanInProgramIncrement $user_can_plan,
+        private UserCanPlanInProgramIncrementVerifier $user_can_plan_verifier,
     ) {
     }
 
@@ -58,7 +58,7 @@ final class ProgramIncrementRetriever implements RetrieveProgramIncrement
             $this->retrieve_uri,
             $this->retrieve_cross_ref,
             $this->verify_user_can_update,
-            $this->user_can_plan,
+            $this->user_can_plan_verifier,
             $user_identifier,
             $increment_identifier,
         );

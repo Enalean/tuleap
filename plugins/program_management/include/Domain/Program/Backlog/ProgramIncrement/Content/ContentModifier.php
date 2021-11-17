@@ -28,9 +28,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\FeaturesToReorder;
@@ -43,7 +44,6 @@ use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 
 final class ContentModifier implements ModifyContent
 {
@@ -55,7 +55,7 @@ final class ContentModifier implements ModifyContent
         private FeaturePlanner $feature_planner,
         private OrderFeatureRank $features_rank_orderer,
         private VerifyFeatureIsPlannedInProgramIncrement $feature_is_planned_verifier,
-        private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
+        private UserCanPlanInProgramIncrementVerifier $can_plan_in_program_increment_verifier,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveProgramOfProgramIncrement $program_retriever,
         private BuildProgram $program_builder

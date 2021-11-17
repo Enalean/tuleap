@@ -71,7 +71,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fie
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\TrackerFromFieldRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanLinkToProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\StatusValueRetriever;
@@ -155,6 +155,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncreme
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
@@ -511,17 +512,17 @@ final class program_managementPlugin extends Plugin
 
     public function routeGetPlanIterations(): DisplayPlanIterationsController
     {
-        $user_retriever             = new UserManagerAdapter(\UserManager::instance());
-        $project_manager            = ProjectManager::instance();
-        $tracker_artifact_factory   = Tracker_ArtifactFactory::instance();
-        $program_increment_verifier = new ProgramIncrementsDAO();
-        $visibility_verifier        = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
-        $artifact_retriever         = new ArtifactFactoryAdapter($tracker_artifact_factory);
-        $tracker_factory            = \TrackerFactory::instance();
-        $tracker_retriever          = new TrackerFactoryAdapter($tracker_factory);
-        $form_element_factory       = \Tracker_FormElementFactory::instance();
-        $field_retriever            = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
-        $program_increments_DAO     = new ProgramIncrementsDAO();
+        $user_retriever           = new UserManagerAdapter(\UserManager::instance());
+        $project_manager          = ProjectManager::instance();
+        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+        $visibility_verifier      = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
+        $artifact_retriever       = new ArtifactFactoryAdapter($tracker_artifact_factory);
+        $tracker_factory          = \TrackerFactory::instance();
+        $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
+        $form_element_factory     = \Tracker_FormElementFactory::instance();
+        $field_retriever          = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $program_increments_DAO   = new ProgramIncrementsDAO();
+        $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
@@ -555,16 +556,15 @@ final class program_managementPlugin extends Plugin
                     ),
                     new UriRetriever($artifact_retriever),
                     new CrossReferenceRetriever($artifact_retriever),
-                    new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever),
+                    $update_verifier,
                     new UserCanPlanInProgramIncrementVerifier(
-                        $artifact_retriever,
-                        $user_retriever,
+                        $update_verifier,
                         $program_increments_DAO,
-                        $field_retriever
-                    )
+                        new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever)
+                    ),
                 )
             ),
-            $program_increment_verifier,
+            $program_increments_DAO,
             $visibility_verifier,
             new ProgramUserPrivilegesRetriever($user_retriever),
             $this->getVisibleIterationTrackerRetriever($user_retriever),
