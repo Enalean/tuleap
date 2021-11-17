@@ -76,7 +76,7 @@ class LDAP_DirectorySynchronization
 
     public function ldapSync($row, $users_are_suspendable = true)
     {
-        $ldap_query = $this->ldap->getLDAPParam('eduid') . '=' . $row['ldap_id'];
+        $ldap_query = $this->ldap->getLDAPParam('eduid') . '=' . ldap_escape($row['ldap_id'], '', LDAP_ESCAPE_FILTER);
         $userSync   = $this->getLdapUserSync();
         $attributes = $userSync->getSyncAttributes($this->ldap);
 
