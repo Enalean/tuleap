@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -32,21 +32,22 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 final class UriRetrieverTest extends TestCase
 {
     private const ARTIFACT_ID = 1;
-    private TimeboxIdentifier $artifact_identifier;
 
-    protected function setUp(): void
-    {
-        $this->artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
-    }
-
-    private function getRetriever(): UriRetriever
+    private function getRetriever(): URIRetriever
     {
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
-        return new UriRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
+        return new URIRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
     }
 
     public function testItReturnsValue(): void
     {
-        self::assertSame('/plugins/tracker/?aid=1', $this->getRetriever()->getUri($this->artifact_identifier));
+        $artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
+        self::assertSame('/plugins/tracker/?aid=1', $this->getRetriever()->getUri($artifact_identifier));
+    }
+
+    public function testItReturnsUserStoryValue(): void
+    {
+        $artifact_identifier = UserStoryIdentifierBuilder::withId(self::ARTIFACT_ID);
+        self::assertSame('/plugins/tracker/?aid=1', $this->getRetriever()->getUserStoryURI($artifact_identifier));
     }
 }

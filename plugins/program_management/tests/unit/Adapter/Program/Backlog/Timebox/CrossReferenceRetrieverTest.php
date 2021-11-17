@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -34,12 +34,6 @@ final class CrossReferenceRetrieverTest extends TestCase
 {
     private const TRACKER_SHORT_NAME = 'art';
     private const ARTIFACT_ID        = 1;
-    private TimeboxIdentifier $artifact_identifier;
-
-    protected function setUp(): void
-    {
-        $this->artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
-    }
 
     private function getRetriever(): CrossReferenceRetriever
     {
@@ -48,9 +42,17 @@ final class CrossReferenceRetrieverTest extends TestCase
         return new CrossReferenceRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
     }
 
-    public function testItReturnsValue(): void
+    public function testItReturnsValueForTimebox(): void
     {
-        $expected_cross_ref = self::TRACKER_SHORT_NAME . ' #' . self::ARTIFACT_ID;
-        self::assertSame($expected_cross_ref, $this->getRetriever()->getXRef($this->artifact_identifier));
+        $expected_cross_ref  = self::TRACKER_SHORT_NAME . ' #' . self::ARTIFACT_ID;
+        $artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
+        self::assertSame($expected_cross_ref, $this->getRetriever()->getXRef($artifact_identifier));
+    }
+
+    public function testItReturnsValueForUserStory(): void
+    {
+        $expected_cross_ref  = self::TRACKER_SHORT_NAME . ' #' . self::ARTIFACT_ID;
+        $artifact_identifier = UserStoryIdentifierBuilder::withId(self::ARTIFACT_ID);
+        self::assertSame($expected_cross_ref, $this->getRetriever()->getUserStoryCrossRef($artifact_identifier));
     }
 }

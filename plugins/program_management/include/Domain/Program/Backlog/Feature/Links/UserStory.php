@@ -21,16 +21,53 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerId;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
  */
 final class UserStory
 {
-    public function __construct(public int $id, public string $uri, public string $cross_ref, public ?string $title, public bool $is_open, public int $tracker_id, public string $background_color)
-    {
+    private function __construct(
+        public UserStoryIdentifier $user_story_identifier,
+        public string $uri,
+        public string $cross_ref,
+        public ?string $title,
+        public bool $is_open,
+        public TrackerIdentifier $tracker_identifier,
+        public BackgroundColor $background_color
+    ) {
+    }
+
+    public static function build(
+        RetrieveUserStoryTitle $retrieve_title_value,
+        RetrieveUserStoryURI $retrieve_uri,
+        RetrieveUserStoryCrossRef $retrieve_cross_ref,
+        VerifyIsOpen $retrieve_is_open,
+        RetrieveBackgroundColor $retrieve_background_color,
+        RetrieveTrackerId $retrieve_tracker_id,
+        UserStoryIdentifier $user_story_identifier,
+        UserIdentifier $user_identifier
+    ): self {
+        return new self(
+            $user_story_identifier,
+            $retrieve_uri->getUserStoryURI($user_story_identifier),
+            $retrieve_cross_ref->getUserStoryCrossRef($user_story_identifier),
+            $retrieve_title_value->getUserStoryTitle($user_story_identifier),
+            $retrieve_is_open->isOpen($user_story_identifier),
+            $retrieve_tracker_id->getTracker($user_story_identifier),
+            $retrieve_background_color->retrieveBackgroundColor($user_story_identifier, $user_identifier),
+        );
     }
 }

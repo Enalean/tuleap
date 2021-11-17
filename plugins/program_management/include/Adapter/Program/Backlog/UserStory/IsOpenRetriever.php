@@ -21,29 +21,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 
-final class RetrieveCrossRefStub implements RetrieveCrossRef
+final class IsOpenRetriever implements VerifyIsOpen
 {
-    private function __construct(private string $cross_reference)
+    public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
     }
 
-    public static function withDefault(): self
+    public function isOpen(UserStoryIdentifier $user_story_identifier): bool
     {
-        return new self("art #1");
-    }
-
-    public static function withValues(string $tracker_shortname, int $id): self
-    {
-        return new self($tracker_shortname . " #" . $id);
-    }
-
-    public function getXRef(TimeboxIdentifier $timebox_identifier): string
-    {
-        return $this->cross_reference;
+        $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
+        return $artifact->isOpen();
     }
 }

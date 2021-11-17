@@ -23,27 +23,22 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 
-final class RetrieveCrossRefStub implements RetrieveCrossRef
+final class RetrieveUserStoryURIStub implements RetrieveUserStoryURI
 {
-    private function __construct(private string $cross_reference)
+    private function __construct(private string $uri)
     {
     }
 
-    public static function withDefault(): self
+    public static function withId(int $id): self
     {
-        return new self("art #1");
+        return new self("/plugins/tracker/?aid=" . $id);
     }
 
-    public static function withValues(string $tracker_shortname, int $id): self
+    public function getUserStoryURI(UserStoryIdentifier $user_story_identifier): string
     {
-        return new self($tracker_shortname . " #" . $id);
-    }
-
-    public function getXRef(TimeboxIdentifier $timebox_identifier): string
-    {
-        return $this->cross_reference;
+        return $this->uri;
     }
 }

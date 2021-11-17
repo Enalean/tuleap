@@ -21,29 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
-
-final class RetrieveCrossRefStub implements RetrieveCrossRef
+interface RetrieveUserStoryTitle
 {
-    private function __construct(private string $cross_reference)
-    {
-    }
-
-    public static function withDefault(): self
-    {
-        return new self("art #1");
-    }
-
-    public static function withValues(string $tracker_shortname, int $id): self
-    {
-        return new self($tracker_shortname . " #" . $id);
-    }
-
-    public function getXRef(TimeboxIdentifier $timebox_identifier): string
-    {
-        return $this->cross_reference;
-    }
+    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier): ?string;
 }
