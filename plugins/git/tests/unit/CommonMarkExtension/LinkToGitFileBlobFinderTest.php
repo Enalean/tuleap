@@ -71,6 +71,7 @@ final class LinkToGitFileBlobFinderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'Top folder implicit relative path'                => ['README.md', 'image.jpg','image.jpg'],
+            'Top folder implicit relative path with spaces'    => ['README.md', 'some%20space.jpg','some space.jpg'],
             'Top folder explicit relative path'                => ['README.md', './image.jpg','image.jpg'],
             'Top folder relative path outside top folder'      => ['README.md', '../image.jpg','image.jpg'],
             'Top folder with link to sub folder file'          => ['README.md', 'sub/image.jpg','sub/image.jpg'],

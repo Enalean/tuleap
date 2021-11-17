@@ -44,14 +44,15 @@ class LinkToGitFileBlobFinder
 
     public function findBlob(string $url): ?BlobPointedByURL
     {
-        if (strpos($url, '/') !== 0) {
+        $decoded_url = rawurldecode($url);
+        if (! str_starts_with($decoded_url, '/')) {
             $current_dir_full_path = dirname('/' . $this->current_path);
-            $url                   = $current_dir_full_path . '/' . $url;
+            $decoded_url           = $current_dir_full_path . '/' . $decoded_url;
         }
-        $url = URIModifier::removeDotSegments($url);
+        $decoded_url = URIModifier::removeDotSegments($decoded_url);
 
         $project      = $this->current_commit->GetProject();
-        $path_in_repo = ltrim($url, '/');
+        $path_in_repo = ltrim($decoded_url, '/');
 
         $blob = $project->GetBlob($this->current_commit->PathToHash($path_in_repo));
         if ($blob === null) {
