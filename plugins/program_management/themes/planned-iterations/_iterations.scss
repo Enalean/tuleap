@@ -1,0 +1,63 @@
+/**
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.planned-iteration-display {
+    margin: 0 0 var(--tlp-medium-spacing);
+    border: 1px hidden;
+    border-radius: var(--tlp-large-radius);
+    box-shadow: var(--tlp-pane-shadow);
+}
+
+.planned-iteration-header {
+    display: flex;
+    position: sticky;
+    z-index: 2;
+    top: 44px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 100ms ease-in-out;
+    border: 1px solid var(--tlp-neutral-normal-color);
+    border-radius: var(--tlp-large-radius);
+    background: var(--tlp-white-color);
+    cursor: pointer;
+    gap: var(--tlp-small-spacing);
+
+    &:hover {
+        transition: background 100ms ease-in-out;
+        background: var(--tlp-white-color-darker-02);
+    }
+
+    &:not(:last-child) {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-color: var(--tlp-neutral-light-color);
+    }
+}
+
+.planned-iteration-header-label {
+    flex: 0 0 auto;
+    color: var(--tlp-dimmed-color);
+}
+
+.planned-iteration-header-dates {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+    color: var(--tlp-dimmed-color);
+    font-size: 12px;
+}

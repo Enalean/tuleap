@@ -22,35 +22,65 @@
         <h2 class="planned-iterations-section-title" data-test="planned-iterations-section-title">
             {{ iterations_section_title }}
         </h2>
-        <div class="empty-state-page" data-test="app-tmp-empty-state">
-            <svg-planned-iterations-empty-state />
-            <p
-                class="empty-state-text planned-iterations-empty-state-text"
-                data-test="planned-iterations-empty-state-text"
+        <backlog-element-skeleton v-if="is_loading" />
+        <template v-else>
+            <div
+                class="empty-state-page"
+                data-test="planned-iterations-empty-state"
+                v-if="has_iterations === false"
             >
-                {{ planned_iterations_empty_state_text }}
-            </p>
-        </div>
+                <svg-planned-iterations-empty-state />
+                <p
+                    class="empty-state-text planned-iterations-empty-state-text"
+                    data-test="planned-iterations-empty-state-text"
+                >
+                    {{ planned_iterations_empty_state_text }}
+                </p>
+            </div>
+            <iteration-card
+                v-else
+                v-for="iteration in iterations"
+                v-bind:key="iteration.id"
+                v-bind:iteration="iteration"
+            />
+        </template>
     </div>
 </template>
 
 <script lang="ts">
-import type { IterationLabels } from "../type";
+import type { Iteration, IterationLabels, ProgramIncrement } from "../type";
 
 import Vue from "vue";
 import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { sprintf } from "sprintf-js";
+import { getIncrementIterations } from "../helpers/increment-iterations-retriever";
 import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
+import IterationCard from "./IterationCard.vue";
+import BacklogElementSkeleton from "./BacklogElementSkeleton.vue";
 
 @Component({
     components: {
         SvgPlannedIterationsEmptyState,
+        IterationCard,
+        BacklogElementSkeleton,
     },
 })
 export default class PlannedIterationsSection extends Vue {
     @State
     readonly iterations_labels!: IterationLabels;
+
+    @State
+    readonly program_increment!: ProgramIncrement;
+
+    private iterations: Array<Iteration> = [];
+    private is_loading = false;
+
+    async mounted(): Promise<void> {
+        this.is_loading = true;
+        this.iterations = await getIncrementIterations(this.program_increment.id);
+        this.is_loading = false;
+    }
 
     get iterations_section_title(): string {
         return this.iterations_labels.label.length === 0
@@ -64,6 +94,10 @@ export default class PlannedIterationsSection extends Vue {
         }
 
         return sprintf(this.$gettext("There is no %s yet."), this.iterations_labels.sub_label);
+    }
+
+    get has_iterations(): boolean {
+        return this.iterations.length > 0;
     }
 }
 </script>

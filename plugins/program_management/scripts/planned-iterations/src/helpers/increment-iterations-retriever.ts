@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "planned-iterations/project-header-background";
-@use "planned-iterations/backlog";
-@use "planned-iterations/iterations";
-@use "planned-iterations/element";
+import { recursiveGet } from "tlp";
+import type { Iteration } from "../type";
 
-.planned-iterations-title-header {
-    margin: 0;
-    padding: var(--tlp-medium-spacing);
-}
-
-.planned-iterations-title-header-dates {
-    padding: 0 0 0 var(--tlp-medium-spacing);
+export function getIncrementIterations(increment_id: number): Promise<Iteration[]> {
+    return recursiveGet(
+        `/api/v1/program_increment/${encodeURIComponent(increment_id)}/iterations`,
+        {
+            params: {
+                limit: 50,
+                offset: 0,
+            },
+        }
+    );
 }
