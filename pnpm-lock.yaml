@@ -4,7 +4,7 @@ specifiers:
   '@tuleap/date-helper': file:../../src/scripts/lib/date-helper
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': file:../../src/scripts/lib/vue-breadcrumb-privacy
-  '@vue/test-utils': ^1.2.1
+  '@vue/test-utils': ^1.3.0
   moment: ^2.29.1
   moment-timezone: ^0.5.33
   node-htmldiff: ^0.9.3
@@ -31,13 +31,13 @@ dependencies:
 
 devDependencies:
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  '@vue/test-utils': 1.2.1_vue@2.6.14
+  '@vue/test-utils': 1.3.0_vue@2.6.14
   vuex-mock-store: 0.0.8
 
 packages:
 
-  /@vue/test-utils/1.2.1_vue@2.6.14:
-    resolution: {integrity: sha512-WBRdWNJwWTodJlV9mjunTrhgfsTPI5tMuxsCxqSmQs+vyB3ccZIYixnBrkxpKRsXyah/RtEv6+kUPZhnLd9smA==}
+  /@vue/test-utils/1.3.0_vue@2.6.14:
+    resolution: {integrity: sha512-Xk2Xiyj2k5dFb8eYUKkcN9PzqZSppTlx7LaQWBbdA8tqh3jHr/KHX2/YLhNFc/xwDrgeLybqd+4ZCPJSGPIqeA==}
     peerDependencies:
       vue: 2.x
       vue-template-compiler: ^2.x
