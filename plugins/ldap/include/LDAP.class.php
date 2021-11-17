@@ -371,9 +371,13 @@ class LDAP
                     return new LDAPResultIterator($entries, $this->ldapParams);
                 }
             } else {
-                $this->logger->warning('LDAP search error: ' . $baseDn . ' ' . $filter . ' ' . $this->ldapParams['server'] .
+                $exception = new RuntimeException('LDAP search error');
+                $this->logger->warning(
+                    'LDAP search error: ' . $baseDn . ' ' . $filter . ' ' . $this->ldapParams['server'] .
                     ' ***ERROR:' . ldap_error($this->ds) .
-                    ' ***ERROR no:' . $this->getErrno());
+                    ' ***ERROR no:' . $this->getErrno(),
+                    ['exception' => $exception]
+                );
             }
         }
 
