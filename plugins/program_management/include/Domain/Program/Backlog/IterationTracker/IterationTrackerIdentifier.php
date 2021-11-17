@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 /**
@@ -33,6 +34,16 @@ final class IterationTrackerIdentifier implements TrackerIdentifier
 {
     private function __construct(private int $id)
     {
+    }
+
+    public static function fromTrackerIdentifier(
+        VerifyIsIterationTracker $verify_is_iteration_tracker,
+        TrackerIdentifier $tracker
+    ): ?self {
+        if (! $verify_is_iteration_tracker->isIterationTracker($tracker->getId())) {
+            return null;
+        }
+        return new self($tracker->getId());
     }
 
     public static function fromIteration(

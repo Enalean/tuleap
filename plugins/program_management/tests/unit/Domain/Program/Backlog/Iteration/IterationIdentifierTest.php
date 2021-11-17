@@ -24,9 +24,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -105,5 +107,24 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNotContains(self::SECOND_NOT_VISIBLE_ARTIFACT_ID, $ids);
         self::assertContains(self::FIRST_VISIBLE_ARTIFACT_ID, $ids);
         self::assertContains(self::SECOND_VISIBLE_ARTIFACT_ID, $ids);
+    }
+
+    public function testItReturnsNullIfTheUpdatedArtifactIsNotFromAnIterationTracker(): void
+    {
+        $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildNotIteration();
+        $event                      = ArtifactUpdatedEventStub::withIds(10, 93, $this->user->getId(), 4208);
+
+        self::assertNull(IterationIdentifier::fromArtifactUpdateEvent($iteration_tracker_verifier, $event));
+    }
+
+    public function testItReturnsAnIterationFromAnUpdateEvent(): void
+    {
+        $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
+        $iteration_id               = 87;
+        $event                      = ArtifactUpdatedEventStub::withIds($iteration_id, 93, $this->user->getId(), 4208);
+
+        $iteration = IterationIdentifier::fromArtifactUpdateEvent($iteration_tracker_verifier, $event);
+        self::assertNotNull($iteration);
+        self::assertSame($iteration_id, $iteration->getId());
     }
 }

@@ -27,12 +27,14 @@ use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\DispatchIterationUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementUpdateStub;
 use Tuleap\ProgramManagement\Tests\Stub\PlanUserStoriesInMirroredProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
@@ -45,22 +47,27 @@ final class ArtifactUpdatedHandlerTest extends TestCase
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
     private PlanUserStoriesInMirroredProgramIncrementsStub $user_stories_planner;
     private RemovePlannedFeaturesFromTopBacklogStub $feature_remover;
-    private DispatchProgramIncrementUpdateStub $update_dispatcher;
+    private DispatchProgramIncrementUpdateStub $program_increment_update_dispatcher;
+    private DispatchIterationUpdateStub $iteration_update_dispatcher;
+    private VerifyIsIterationTrackerStub $iteration_verifier;
 
     protected function setUp(): void
     {
         $this->event = ArtifactUpdatedEventStub::withIds(87, 93, 194, 4208);
 
-        $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
-        $this->user_stories_planner       = PlanUserStoriesInMirroredProgramIncrementsStub::withCount();
-        $this->feature_remover            = RemovePlannedFeaturesFromTopBacklogStub::withCount();
-        $this->update_dispatcher          = DispatchProgramIncrementUpdateStub::withCount();
+        $this->program_increment_verifier          = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
+        $this->iteration_verifier                  = VerifyIsIterationTrackerStub::buildNotIteration();
+        $this->user_stories_planner                = PlanUserStoriesInMirroredProgramIncrementsStub::withCount();
+        $this->feature_remover                     = RemovePlannedFeaturesFromTopBacklogStub::withCount();
+        $this->program_increment_update_dispatcher = DispatchProgramIncrementUpdateStub::withCount();
+        $this->iteration_update_dispatcher         = DispatchIterationUpdateStub::withCount();
     }
 
     private function getHandler(): ArtifactUpdatedHandler
     {
         return new ArtifactUpdatedHandler(
             $this->program_increment_verifier,
+            $this->iteration_verifier,
             $this->user_stories_planner,
             $this->feature_remover,
             new IterationCreationDetector(
@@ -72,7 +79,8 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                 RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
                 RetrieveIterationTrackerStub::withValidTracker(100)
             ),
-            $this->update_dispatcher
+            $this->program_increment_update_dispatcher,
+            $this->iteration_update_dispatcher
         );
     }
 
@@ -82,7 +90,8 @@ final class ArtifactUpdatedHandlerTest extends TestCase
 
         self::assertSame(1, $this->user_stories_planner->getCallCount());
         self::assertSame(1, $this->feature_remover->getCallCount());
-        self::assertSame(1, $this->update_dispatcher->getCallCount());
+        self::assertSame(1, $this->program_increment_update_dispatcher->getCallCount());
+        self::assertSame(0, $this->iteration_update_dispatcher->getCallCount());
     }
 
     public function testItOnlyCleansUpTopBacklogWhenArtifactIsNotAProgramIncrement(): void
@@ -93,6 +102,20 @@ final class ArtifactUpdatedHandlerTest extends TestCase
 
         self::assertSame(1, $this->feature_remover->getCallCount());
         self::assertSame(0, $this->user_stories_planner->getCallCount());
-        self::assertSame(0, $this->update_dispatcher->getCallCount());
+        self::assertSame(0, $this->program_increment_update_dispatcher->getCallCount());
+        self::assertSame(0, $this->iteration_update_dispatcher->getCallCount());
+    }
+
+    public function testItDispatchesIterationUpdateIfTheArtifactIsFromAnIterationTracker(): void
+    {
+        $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
+        $this->iteration_verifier         = VerifyIsIterationTrackerStub::buildValidIteration();
+
+        $this->getHandler()->handle($this->event);
+
+        self::assertSame(1, $this->feature_remover->getCallCount());
+        self::assertSame(0, $this->user_stories_planner->getCallCount());
+        self::assertSame(0, $this->program_increment_update_dispatcher->getCallCount());
+        self::assertSame(1, $this->iteration_update_dispatcher->getCallCount());
     }
 }

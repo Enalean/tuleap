@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
 use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 
 final class IterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,5 +39,32 @@ final class IterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $iteration
         );
         self::assertSame(self::ITERATION_TRACKER_ID, $iteration_tracker->getId());
+    }
+
+    public function testItReturnsNullIfTheGivenTrackerIsNotAnIterationTracker(): void
+    {
+        $tracker                    = TrackerIdentifierStub::buildWithDefault();
+        $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildNotIteration();
+
+        $iteration = IterationTrackerIdentifier::fromTrackerIdentifier(
+            $iteration_tracker_verifier,
+            $tracker
+        );
+
+        self::assertNull($iteration);
+    }
+
+    public function testItReturnsTheIdentifierIfTheGivenTrackerIsAnIterationTracker(): void
+    {
+        $tracker                    = TrackerIdentifierStub::withId(self::ITERATION_TRACKER_ID);
+        $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
+
+        $iteration = IterationTrackerIdentifier::fromTrackerIdentifier(
+            $iteration_tracker_verifier,
+            $tracker
+        );
+
+        self::assertNotNull($iteration);
+        self::assertSame(self::ITERATION_TRACKER_ID, $iteration->getId());
     }
 }
