@@ -42,6 +42,7 @@ class RequestDataAugmentor
         array &$fields_data
     ): void {
         if ($artifact_link_field->getTracker()->isProjectAllowedToUseNature()) {
+            $this->invertParentRelationship($artifact_link_field, $fields_data);
             $this->addNewValuesInNaturesArray($artifact_link_field, $fields_data);
         }
 
@@ -52,6 +53,26 @@ class RequestDataAugmentor
                 'field'       => $artifact_link_field
             ]
         );
+    }
+
+    private function invertParentRelationship(
+        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        array &$fields_data
+    ): void {
+        if (! isset($fields_data[$artifact_link_field->getId()]['new_values'])) {
+            return;
+        }
+
+        if (! isset($fields_data[$artifact_link_field->getId()]['nature'])) {
+            return;
+        }
+
+        if ($fields_data[$artifact_link_field->getId()]['nature'] === Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT) {
+            $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY] = explode(',', $fields_data[$artifact_link_field->getId()]['new_values']);
+
+            $fields_data[$artifact_link_field->getId()]['new_values'] = '';
+            $fields_data[$artifact_link_field->getId()]['nature']     = '';
+        }
     }
 
     private function addNewValuesInNaturesArray(

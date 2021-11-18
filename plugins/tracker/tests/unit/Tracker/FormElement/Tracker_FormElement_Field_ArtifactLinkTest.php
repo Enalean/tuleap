@@ -475,7 +475,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         self::assertEquals(
             [
-                "parent" => 123,
+                "parent" => [123],
             ],
             $field->getFieldDataFromRESTValue(["parent" => ["id" => 123]], null),
         );
@@ -493,7 +493,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         self::assertEquals(
             [
-                "parent" => 123,
+                "parent" => [123],
                 'new_values'     => '124,234',
                 'removed_values' => [],
                 'natures'        => [
@@ -560,7 +560,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         self::assertEquals(
             [
-                "parent" => 123,
+                "parent" => [123],
                 'new_values'     => '124,234',
                 'removed_values' => [666 => [666]],
                 'natures'        => [
