@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProgramUserPrivileges;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class RetrieveProgramUserPrivilegesStub implements RetrieveProgramUserPrivileges
+final class VerifyUserIsProgramAdminStub implements VerifyUserIsProgramAdmin
 {
     private function __construct(private bool $is_user_program_admin)
     {
@@ -35,6 +35,11 @@ final class RetrieveProgramUserPrivilegesStub implements RetrieveProgramUserPriv
     public static function withProgramAdminUser(): self
     {
         return new self(true);
+    }
+
+    public static function withNotAdmin(): self
+    {
+        return new self(false);
     }
 
     public function isUserProgramAdmin(UserIdentifier $user_identifier, ProgramIdentifier $program_identifier): bool

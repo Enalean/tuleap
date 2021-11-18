@@ -120,7 +120,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProgramUserPrivilegesRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
@@ -386,7 +386,8 @@ final class program_managementPlugin extends Plugin
                     \EventManager::instance()
                 ),
                 new CanPrioritizeFeaturesDAO(),
-                $retrieve_user
+                $retrieve_user,
+                new UserIsProgramAdminVerifier($retrieve_user)
             ),
             new UserCanSubmitInTrackerVerifier($user_manager, TrackerFactory::instance())
         );
@@ -578,7 +579,7 @@ final class program_managementPlugin extends Plugin
             ),
             $program_increments_DAO,
             $visibility_verifier,
-            new ProgramUserPrivilegesRetriever($user_retriever),
+            new UserIsProgramAdminVerifier($user_retriever),
             $this->getVisibleIterationTrackerRetriever($user_retriever),
             new IterationsDAO()
         );
@@ -858,7 +859,8 @@ final class program_managementPlugin extends Plugin
                 $project_manager_adapter,
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
-                $user_manager_adapter
+                $user_manager_adapter,
+                new UserIsProgramAdminVerifier($user_manager_adapter)
             ),
             new PlanDao(),
             new ArtifactsExplicitTopBacklogDAO(),
@@ -904,7 +906,8 @@ final class program_managementPlugin extends Plugin
                 $project_manager_adapter,
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
-                $user_manager_adapter
+                $user_manager_adapter,
+                new UserIsProgramAdminVerifier($user_manager_adapter)
             ),
             new PlanDao(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
@@ -979,7 +982,8 @@ final class program_managementPlugin extends Plugin
                     \EventManager::instance()
                 ),
                 new CanPrioritizeFeaturesDAO(),
-                $user_manager_adapter
+                $user_manager_adapter,
+                new UserIsProgramAdminVerifier($user_manager_adapter)
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),

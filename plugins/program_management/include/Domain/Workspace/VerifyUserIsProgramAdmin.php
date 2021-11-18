@@ -18,24 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProgramUserPrivileges;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class ProgramUserPrivilegesRetriever implements RetrieveProgramUserPrivileges
+interface VerifyUserIsProgramAdmin
 {
-    public function __construct(private RetrieveUser $retrieve_user)
-    {
-    }
-
-    public function isUserProgramAdmin(UserIdentifier $user_identifier, ProgramIdentifier $program_identifier): bool
-    {
-        $user = $this->retrieve_user->getUserWithId($user_identifier);
-
-        return $user->isAdmin($program_identifier->getId());
-    }
+    public function isUserProgramAdmin(UserIdentifier $user_identifier, ProgramIdentifier $program_identifier): bool;
 }

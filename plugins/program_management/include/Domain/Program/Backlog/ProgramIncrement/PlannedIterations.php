@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProgramUserPrivileges;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class PlannedIterations
@@ -57,7 +57,7 @@ final class PlannedIterations
         BuildProgramPrivacy $build_program_privacy,
         BuildProgramBaseInfo $build_program_base_info,
         BuildProgramIncrementInfo $build_program_increment_info,
-        RetrieveProgramUserPrivileges $retrieve_program_user_privileges,
+        VerifyUserIsProgramAdmin $verify_user_is_program_admin,
         ProgramIdentifier $program_identifier,
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier,
@@ -67,7 +67,7 @@ final class PlannedIterations
         $program_privacy   = $build_program_privacy->build($program_identifier);
         $program_base_info = $build_program_base_info->build($program_identifier);
         $program_increment = $build_program_increment_info->build($user_identifier, $increment_identifier);
-        $is_user_admin     = $retrieve_program_user_privileges->isUserProgramAdmin($user_identifier, $program_identifier);
+        $is_user_admin     = $verify_user_is_program_admin->isUserProgramAdmin($user_identifier, $program_identifier);
 
         return new self($program_flags, $program_privacy, $program_base_info, $program_increment, $is_user_admin, $iterations_labels);
     }

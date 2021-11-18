@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserPrivilegesStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -41,7 +41,7 @@ class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
                 BuildProgramPrivacyStub::withPrivateAccess(),
                 BuildProgramBaseInfoStub::withDefault(),
                 BuildProgramIncrementInfoStub::withId(1260),
-                RetrieveProgramUserPrivilegesStub::withProgramAdminUser(),
+                VerifyUserIsProgramAdminStub::withProgramAdminUser(),
                 ProgramIdentifierBuilder::build(),
                 UserIdentifierStub::withId(666),
                 ProgramIncrementIdentifierBuilder::buildWithId(1260),
