@@ -25,6 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 use Tuleap\ProgramManagement\Adapter\Events\CanSubmitNewArtifactEventProxy;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Tests\Builder\IterationCreatorCheckerBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
@@ -44,8 +46,8 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $program_increment_creator_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
-        $iteration_creator_checker         = $this->createStub(IterationCreatorChecker::class);
+        $program_increment_creator_checker = ProgramIncrementCreatorCheckerBuilder::build();
+        $iteration_creator_checker         = IterationCreatorCheckerBuilder::build();
         $program_builder                   = BuildProgramStub::stubValidProgram();
         $user                              = UserTestBuilder::aUser()->build();
         $project                           = ProjectTestBuilder::aProject()->withId(101)->build();
@@ -54,8 +56,6 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
             ->build();
 
         $retrieve_full_project = RetrieveFullProjectStub::withProject($project);
-        $program_increment_creator_checker->method('canCreateAProgramIncrement');
-        $iteration_creator_checker->method('canCreateAnIteration');
 
         $this->handler = new CanSubmitNewArtifactHandler(
             new ConfigurationErrorsGatherer(
@@ -75,7 +75,6 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
     {
         $error_collector = new ConfigurationErrorsCollector(true);
         $error_collector->addWorkflowDependencyError(TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
-
 
         $this->handler->handle($this->proxy, $error_collector);
         self::assertFalse($this->event->canSubmitNewArtifact());

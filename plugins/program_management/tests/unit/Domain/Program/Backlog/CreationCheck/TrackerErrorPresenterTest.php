@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Tests\Builder\IterationCreatorCheckerBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
@@ -44,15 +44,12 @@ final class TrackerErrorPresenterTest extends TestCase
 
     protected function setUp(): void
     {
-        $program_increment_checker = $this->createMock(ProgramIncrementCreatorChecker::class);
-        $iteration_checker         = $this->createMock(IterationCreatorChecker::class);
+        $program_increment_checker = ProgramIncrementCreatorCheckerBuilder::build();
+        $iteration_checker         = IterationCreatorCheckerBuilder::build();
         $build_program             = BuildProgramStub::stubValidProgram();
         $teams_searcher            = SearchTeamsOfProgramStub::withTeamIds(101);
         $this->tracker             = TrackerReferenceStub::withDefaults();
         $this->user_identifier     = UserReferenceStub::withDefaults();
-
-        $program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
-        $iteration_checker->expects(self::once())->method('canCreateAnIteration');
 
         $this->gatherer =  new ConfigurationErrorsGatherer(
             $build_program,

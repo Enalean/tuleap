@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 
-class TrackerNotFoundException extends \RuntimeException implements TrackerRetrievalException
+final class TrackerNotFoundException extends \RuntimeException implements TrackerRetrievalException
 {
     public function __construct(int $tracker_id)
     {

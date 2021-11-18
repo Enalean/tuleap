@@ -26,7 +26,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
 
-class ProgramTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

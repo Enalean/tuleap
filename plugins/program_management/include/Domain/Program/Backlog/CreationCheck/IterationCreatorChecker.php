@@ -35,7 +35,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
-class IterationCreatorChecker
+final class IterationCreatorChecker
 {
     public function __construct(
         private RetrieveMirroredIterationTracker $milestone_retriever,

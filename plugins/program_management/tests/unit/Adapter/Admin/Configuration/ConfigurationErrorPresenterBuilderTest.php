@@ -25,12 +25,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
+use Tuleap\ProgramManagement\Tests\Builder\IterationCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
@@ -43,15 +43,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProgramIncrementCreatorChecker
-     */
-    private $program_increment_checker;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
-     */
-    private $iteration_checker;
     private TrackerReference $program_tracker;
     private ProgramIdentifier $program_identifier;
     private UserReference $user_identifier;
@@ -64,14 +55,12 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     protected function setUp(): void
     {
-        $this->program_increment_checker = $this->createMock(ProgramIncrementCreatorChecker::class);
-        $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
-        $this->tracker_factory           = $this->createStub(\TrackerFactory::class);
-        $this->program_identifier        = ProgramIdentifierBuilder::build();
-        $this->user_identifier           = UserReferenceStub::withDefaults();
-        $this->program_tracker           = TrackerReferenceStub::withDefaults();
-        $this->verify_tracker_semantics  = VerifyTrackerSemanticsStub::withAllSemantics();
-        $this->tracker                   = TrackerTestBuilder::aTracker()
+        $this->tracker_factory          = $this->createStub(\TrackerFactory::class);
+        $this->program_identifier       = ProgramIdentifierBuilder::build();
+        $this->user_identifier          = UserReferenceStub::withDefaults();
+        $this->program_tracker          = TrackerReferenceStub::withDefaults();
+        $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withAllSemantics();
+        $this->tracker                  = TrackerTestBuilder::aTracker()
             ->withId(1)
             ->withName('Tracker')
             ->withProject(new \Project(['group_id' => 101, 'group_name' => 'A project']))
@@ -83,8 +72,8 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         return new ConfigurationErrorPresenterBuilder(
             new ConfigurationErrorsGatherer(
                 BuildProgramStub::stubValidProgram(),
-                $this->program_increment_checker,
-                $this->iteration_checker,
+                ProgramIncrementCreatorCheckerBuilder::build(),
+                IterationCreatorCheckerBuilder::build(),
                 SearchTeamsOfProgramStub::withTeamIds(162),
                 RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(162))
             ),
@@ -96,8 +85,6 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItBuildsProgramIncrementErrorPresenter(): void
     {
-        $this->program_increment_checker->expects(self::once())->method('canCreateAProgramIncrement');
-
         $error_collector = new ConfigurationErrorsCollector(false);
         $error_collector->addWorkflowDependencyError(
             $this->program_tracker,
@@ -128,9 +115,6 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItBuildsIterationErrorPresenter(): void
     {
-        $this->program_increment_checker->method('canCreateAProgramIncrement');
-        $this->iteration_checker->method('canCreateAnIteration');
-
         $error_collector = new ConfigurationErrorsCollector(true);
         $error_collector->addWorkflowDependencyError(
             $this->program_tracker,
