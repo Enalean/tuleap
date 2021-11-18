@@ -49,7 +49,7 @@ class RequestDataAugmentor
             Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST,
             [
                 'fields_data' => &$fields_data,
-                'field'       => $this
+                'field'       => $artifact_link_field
             ]
         );
     }
