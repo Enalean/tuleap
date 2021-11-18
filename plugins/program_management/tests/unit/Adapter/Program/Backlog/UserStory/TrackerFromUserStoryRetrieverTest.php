@@ -31,9 +31,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerIdRetrieverTest extends TestCase
+final class TrackerFromUserStoryRetrieverTest extends TestCase
 {
-    private TrackerIdRetriever $tracker_id_retriever;
+    private TrackerFromUserStoryRetriever $tracker_id_retriever;
     private UserStoryIdentifier $user_story_identifier;
     private Artifact $artifact;
     private RetrieveFullArtifactStub $artifact_factory;
@@ -43,7 +43,7 @@ final class TrackerIdRetrieverTest extends TestCase
         $this->artifact              = ArtifactTestBuilder::anArtifact(1)
                                                           ->inTracker(TrackerTestBuilder::aTracker()->withId(10)->build())->build();
         $this->artifact_factory      = RetrieveFullArtifactStub::withArtifact($this->artifact);
-        $this->tracker_id_retriever  = new TrackerIdRetriever($this->artifact_factory);
+        $this->tracker_id_retriever  = new TrackerFromUserStoryRetriever($this->artifact_factory);
         $this->user_story_identifier = UserStoryIdentifierBuilder::withId(2);
     }
 

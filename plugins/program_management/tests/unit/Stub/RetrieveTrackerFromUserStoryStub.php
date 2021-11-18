@@ -21,23 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerIdentifierProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerId;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
-final class TrackerIdRetriever implements RetrieveTrackerId
+final class RetrieveTrackerFromUserStoryStub implements RetrieveTrackerFromUserStory
 {
-    public function __construct(private RetrieveFullArtifact $artifact_retriever)
+    private function __construct(private TrackerIdentifier $tracker_id)
     {
+    }
+    public static function withDefault(): self
+    {
+        return new self(TrackerIdentifierStub::buildWithDefault());
+    }
+
+    public static function withId(int $id): self
+    {
+        return new self(TrackerIdentifierStub::withId($id));
     }
 
     public function getTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
     {
-        $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
-        return TrackerIdentifierProxy::fromTracker($artifact->getTracker());
+        return $this->tracker_id;
     }
 }

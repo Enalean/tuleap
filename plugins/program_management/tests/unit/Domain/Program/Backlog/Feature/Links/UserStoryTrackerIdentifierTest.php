@@ -21,11 +21,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
+use Tuleap\Test\PHPUnit\TestCase;
 
-interface RetrieveTrackerId
+final class UserStoryTrackerIdentifierTest extends TestCase
 {
-    public function getTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier;
+    private const TRACKER__ID = 100;
+    public function testItBuildsIdentifier(): void
+    {
+        $tracker_retriever = RetrieveTrackerFromUserStoryStub::withId(self::TRACKER__ID);
+        $user_story        = UserStoryIdentifierBuilder::withId(1);
+
+        self::assertSame(self::TRACKER__ID, UserStoryTrackerIdentifier::fromUserStory($tracker_retriever, $user_story)->getId());
+    }
 }

@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerIdStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -103,7 +103,7 @@ final class UserStoryRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             RetrieveUserStoryURIStub::withId(125),
             RetrieveUserStoryCrossRefStub::withValues("story", 125),
             VerifyIsOpenStub::withOpen(),
-            RetrieveTrackerIdStub::withDefault(),
+            RetrieveTrackerFromUserStoryStub::withDefault(),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
         );
     }
