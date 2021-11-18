@@ -115,4 +115,18 @@ final class BarChartDataBuilderTest extends TestCase
 
         self::assertEquals($ordered_data, $builder->buildGroupedBarChartData($engine));
     }
+
+    public function testBuildsChartDataWithNoneValues(): void
+    {
+        $engine        = new GraphOnTrackersV5_Engine_Bar();
+        $engine->xaxis = [
+            '' => 'None'
+        ];
+        $engine->data  = [
+            377 => ['' => 1]
+        ];
+
+        $builder = new BarChartDataBuilder();
+        self::assertEquals([['label' => 'None', 'values' => []]], $builder->buildGroupedBarChartData($engine));
+    }
 }
