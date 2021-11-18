@@ -56,8 +56,6 @@
                 ></span>
             </a>
         </div>
-
-        <div ng-if="details.user_has_accessibility_mode" class="card-accessibility {{ details.backlog_item.background_color_name }}"></div>
     </div>
 
     <div class="backlog-item-details-metadata-container">
@@ -97,6 +95,8 @@
 ></span>
 
 <card-fields item="details.backlog_item" filter-terms="details.backlog_filter.terms"></card-fields>
+
+<div ng-if="details.user_has_accessibility_mode" class="card-accessibility {{ details.backlog_item.background_color_name }}"></div>
 
 <div class="backlog-item-details-moves" data-nodrag="true">
     <span class="tlp-button-primary backlog-item-details-move"
