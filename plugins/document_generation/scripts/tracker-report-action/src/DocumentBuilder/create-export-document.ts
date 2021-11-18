@@ -23,8 +23,13 @@ import type {
     ArtifactFieldValueArtifactLink,
     DateTimeLocaleInformation,
     ExportDocument,
+    ArtifactLinkType,
 } from "../type";
-import type { ArtifactReportContainer, ArtifactReportFieldValue } from "./artifacts-retriever";
+import type {
+    ArtifactReportContainer,
+    ArtifactReportFieldValue,
+    ArtifactLink,
+} from "./artifacts-retriever";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
 import type {
     ArtifactFieldValue,
@@ -42,7 +47,8 @@ export async function createExportDocument(
     tracker_id: number,
     tracker_shortname: string,
     datetime_locale_information: DateTimeLocaleInformation,
-    base_url: string
+    base_url: string,
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>
 ): Promise<ExportDocument> {
     const get_test_execution = memoize(getTestManagementExecution);
 
@@ -71,11 +77,17 @@ export async function createExportDocument(
         artifact_data.push({
             id: artifact_id,
             title: formatted_title,
-            fields: formatFieldValues(artifact.values, datetime_locale_information, base_url),
+            fields: formatFieldValues(
+                artifact.values,
+                datetime_locale_information,
+                base_url,
+                artifact_links_types
+            ),
             containers: formatContainers(
                 artifact.containers,
                 datetime_locale_information,
-                base_url
+                base_url,
+                artifact_links_types
             ),
         });
     }
@@ -90,13 +102,15 @@ export async function createExportDocument(
 function formatFieldValues(
     values: ReadonlyArray<ArtifactReportFieldValue>,
     datetime_locale_information: DateTimeLocaleInformation,
-    base_url: string
+    base_url: string,
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>
 ): ReadonlyArray<ArtifactFieldValue> {
     return values.flatMap((value) => {
         const formatted_field_value = formatFieldValue(
             value,
             datetime_locale_information,
-            base_url
+            base_url,
+            artifact_links_types
         );
         if (formatted_field_value === null) {
             return [];
@@ -108,7 +122,8 @@ function formatFieldValues(
 function formatFieldValue(
     value: ArtifactReportFieldValue,
     datetime_locale_information: DateTimeLocaleInformation,
-    base_url: string
+    base_url: string,
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>
 ): ArtifactFieldValue | null {
     if (value.type === "text") {
         return {
@@ -250,14 +265,14 @@ function formatFieldValue(
         for (const link of value.links) {
             links.push({
                 artifact_id: link.id,
-                type: link.type ?? "",
+                type: getArtifactLinkLabel(link, artifact_links_types),
             });
         }
 
         for (const reverse_link of value.reverse_links) {
             reverse_links.push({
                 artifact_id: reverse_link.id,
-                type: reverse_link.type ?? "",
+                type: getArtifactLinkReverseLabel(reverse_link, artifact_links_types),
             });
         }
 
@@ -280,19 +295,60 @@ function formatFieldValue(
     };
 }
 
+function getArtifactLinkLabel(
+    link: ArtifactLink,
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>
+): string {
+    if (link.type === null) {
+        return "";
+    }
+
+    for (const artifact_link_type of artifact_links_types) {
+        if (artifact_link_type.shortname === link.type) {
+            return artifact_link_type.forward_label;
+        }
+    }
+
+    return "";
+}
+
+function getArtifactLinkReverseLabel(
+    reverse_link: ArtifactLink,
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>
+): string {
+    if (reverse_link.type === null) {
+        return "";
+    }
+
+    for (const artifact_link_type of artifact_links_types) {
+        if (artifact_link_type.shortname === reverse_link.type) {
+            return artifact_link_type.reverse_label;
+        }
+    }
+
+    return "";
+}
+
 function formatContainers(
     containers: ReadonlyArray<ArtifactReportContainer>,
     datetime_locale_information: DateTimeLocaleInformation,
-    base_url: string
+    base_url: string,
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>
 ): ReadonlyArray<ArtifactContainer> {
     return containers.map((container) => {
         return {
             name: container.name,
-            fields: formatFieldValues(container.values, datetime_locale_information, base_url),
+            fields: formatFieldValues(
+                container.values,
+                datetime_locale_information,
+                base_url,
+                artifact_links_types
+            ),
             containers: formatContainers(
                 container.containers,
                 datetime_locale_information,
-                base_url
+                base_url,
+                artifact_links_types
             ),
         };
     });

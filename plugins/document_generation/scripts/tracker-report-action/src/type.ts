@@ -32,6 +32,15 @@ export interface GlobalExportProperties {
     readonly report_url: string;
     readonly report_criteria: ReportCriteria;
     readonly base_url: string;
+    readonly artifact_links_types: ReadonlyArray<ArtifactLinkType>;
+}
+
+export interface ArtifactLinkType {
+    readonly reverse_label: string;
+    readonly forward_label: string;
+    readonly shortname: string;
+    readonly is_system: boolean;
+    readonly is_visible: boolean;
 }
 
 export type ReportCriteria = ExportReportCriteria | ClassicReportCriteria;

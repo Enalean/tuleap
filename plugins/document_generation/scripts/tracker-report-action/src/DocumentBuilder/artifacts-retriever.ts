@@ -464,7 +464,7 @@ export interface ArtifactReportResponseStepDefinitionFieldValue {
     value: Array<ArtifactReportResponseStepRepresentation>;
 }
 
-interface ArtifactLink {
+export interface ArtifactLink {
     type: string | null;
     id: number;
 }
