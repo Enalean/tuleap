@@ -685,7 +685,16 @@ describe("Create ArtifactValues Collection", () => {
             123,
             "tracker_shortname",
             { locale: "en-US", timezone: "UTC" },
-            "https://example.com/"
+            "https://example.com/",
+            [
+                {
+                    reverse_label: "Parent",
+                    forward_label: "Enfant",
+                    shortname: "_is_child",
+                    is_system: true,
+                    is_visible: true,
+                },
+            ]
         );
 
         expect(report.name).toEqual("tracker_shortname - report_name");
@@ -915,7 +924,7 @@ describe("Create ArtifactValues Collection", () => {
                         links: [
                             {
                                 artifact_id: 359,
-                                type: "_is_child",
+                                type: "Enfant",
                             },
                         ],
                         reverse_links: [

@@ -143,6 +143,7 @@ describe("download-docx", () => {
                     query: "field01 = value01",
                 },
                 base_url: "https://example.com",
+                artifact_links_types: [],
             },
             {
                 locale: "en-US",

@@ -23,6 +23,9 @@ declare(strict_types=1);
 use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -100,7 +103,8 @@ class document_generationPlugin extends Plugin
                             "user_timezone" => \Tuleap\TimezoneRetriever::getUserTimezone($current_user),
                             "report_url" => \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id),
                             "report_criteria" => $report_criteria_json,
-                            "base_url" => \Tuleap\ServerHostname::HTTPSUrl()
+                            "base_url" => \Tuleap\ServerHostname::HTTPSUrl(),
+                            "artifact_links_types" => (new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()))->getAllUsableTypesInProject($tracker->getProject())
                         ],
                         JSON_THROW_ON_ERROR
                     )
