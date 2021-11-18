@@ -32,19 +32,16 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\TrackerFromUserStoryRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
-use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStoryRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -79,45 +76,46 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
         $artifact_factory   = \Tracker_ArtifactFactory::instance();
         $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
 
-        $user_story_representation_builder = new UserStoryRepresentationBuilder(
+        $tracker_factory                   = \TrackerFactory::instance();
+        $user_story_representation_builder = new UserStoryRetriever(
             new ArtifactsLinkedToParentDao(),
-            $artifact_factory,
             new PlanDao(),
             new BackgroundColorRetriever(
                 new BackgroundColorBuilder(new BindDecoratorRetriever()),
                 $artifact_retriever,
                 $user_retriever
             ),
-            $user_retriever,
-            \TrackerFactory::instance(),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
-            new ProgramAdapter(
-                new ProjectManagerAdapter(\ProjectManager::instance(), $user_retriever),
-                new ProjectAccessChecker(
-                    new RestrictedUserCanAccessProjectVerifier(),
-                    \EventManager::instance()
-                ),
-                new ProgramDao(),
-                $user_retriever
-            ),
             new TitleValueRetriever($artifact_retriever),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),
             new TrackerFromUserStoryRetriever($artifact_retriever),
-            new ArtifactVisibleVerifier($artifact_factory, $user_retriever)
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+            new TrackerOfArtifactRetriever($artifact_retriever, new TrackerFactoryAdapter($tracker_factory))
         );
 
         $user = $user_manager->getCurrentUser();
         try {
-            $children = $user_story_representation_builder->buildFeatureStories(
+            $user_stories = $user_story_representation_builder->retrieveStories(
                 $id,
                 UserProxy::buildFromPFUser($user)
             );
 
-            Header::sendPaginationHeaders($limit, $offset, count($children), self::MAX_LIMIT);
+            $linked_children = [];
+            foreach ($user_stories as $user_story) {
+                $user_story_representation = UserStoryRepresentation::build(
+                    $tracker_factory,
+                    $user_story
+                );
+                if ($user_story_representation) {
+                    $linked_children[] = $user_story_representation;
+                }
+            }
 
-            return array_slice($children, $offset, $limit);
+            Header::sendPaginationHeaders($limit, $offset, count($linked_children), self::MAX_LIMIT);
+
+            return array_slice($linked_children, $offset, $limit);
         } catch (FeatureIsNotPlannableException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (FeatureNotAccessException $e) {

@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -39,7 +39,7 @@ final class FeatureRepresentationBuilder
         private RetrieveFullArtifact $artifact_retriever,
         private \Tracker_FormElementFactory $form_element_factory,
         private RetrieveBackgroundColor $retrieve_background_color,
-        private VerifyIsVisibleFeature $feature_verifier,
+        private VerifyFeatureIsVisibleByProgram $feature_verifier,
         private VerifyLinkedUserStoryIsNotPlanned $user_story_verifier,
         private RetrieveUser $retrieve_user
     ) {
@@ -54,7 +54,7 @@ final class FeatureRepresentationBuilder
     ): ?FeatureRepresentation {
         $user = $this->retrieve_user->getUserWithId($user_identifier);
 
-        $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user_identifier, $program, null);
+        $feature = FeatureIdentifier::fromIdAndProgram($this->feature_verifier, $artifact_id, $user_identifier, $program, null);
         if (! $feature) {
             return null;
         }

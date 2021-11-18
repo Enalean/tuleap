@@ -79,7 +79,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
         );
     }
 
-    public function testReturnsTrue(): void
+    public function testReturnsTrueWhenFeatureIsVisible(): void
     {
         $artifact = $this->buildFeatureArtifact();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
@@ -134,6 +134,25 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
                 $program,
                 new WorkflowUserPermissionBypass()
             )
+        );
+    }
+
+    public function testReturnsFalseWhenUserCanNotViewFeature(): void
+    {
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
+
+        self::assertFalse(
+            $this->getVerifier()->isVisible(self::FEATURE_ID, $this->user_identifier)
+        );
+    }
+
+    public function testReturnsTrueWhenUserCanViewFeature(): void
+    {
+        $artifact = $this->buildFeatureArtifact();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
+
+        self::assertTrue(
+            $this->getVerifier()->isVisible(self::FEATURE_ID, $this->user_identifier)
         );
     }
 

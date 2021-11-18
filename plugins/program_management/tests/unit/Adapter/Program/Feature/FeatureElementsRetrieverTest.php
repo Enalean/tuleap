@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -75,7 +75,7 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->artifact_retriever,
                 $this->form_element_factory,
                 RetrieveBackgroundColorStub::withDefaults(),
-                VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+                VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
                 VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
                 RetrieveUserStub::withGenericUser()
             )

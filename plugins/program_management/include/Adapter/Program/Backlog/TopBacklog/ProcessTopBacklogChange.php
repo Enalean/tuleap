@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Verify
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
@@ -50,7 +50,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     private DBTransactionExecutor $db_transaction_executor;
     private OrderFeatureRank $features_rank_orderer;
     private VerifyLinkedUserStoryIsNotPlanned $story_verifier;
-    private VerifyIsVisibleFeature $visible_feature_verifier;
+    private VerifyFeatureIsVisibleByProgram $visible_feature_verifier;
     private FeatureRemovalProcessor $feature_removal_processor;
 
     public function __construct(
@@ -59,7 +59,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         DBTransactionExecutor $db_transaction_executor,
         OrderFeatureRank $features_rank_orderer,
         VerifyLinkedUserStoryIsNotPlanned $story_verifier,
-        VerifyIsVisibleFeature $visible_feature_verifier,
+        VerifyFeatureIsVisibleByProgram $visible_feature_verifier,
         FeatureRemovalProcessor $feature_removal_processor
     ) {
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
@@ -161,7 +161,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
-            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user, $program, $bypass);
+            $feature = FeatureIdentifier::fromIdAndProgram($this->visible_feature_verifier, $feature_id, $user, $program, $bypass);
             if (! $feature) {
                 if ($ignore_feature_cannot_be_retrieved) {
                     continue;
