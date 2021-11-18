@@ -82,7 +82,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $commit = $this->createMock(Commit::class);
         $commit->method('GetComment')->willReturn(["Change the Merlin name"]);
-        $commit->method('getPGPSignature')->willReturn('m3rl1n');
+        $commit->method('getSignature')->willReturn('m3rl1n');
         $commit->method('GetHash')->willReturn('jh4sh');
         $commit->method('GetTitle')->willReturn('kamelot');
         $commit->method('GetAuthorName')->willReturn('Arthur');
@@ -124,7 +124,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $commit = $this->createMock(Commit::class);
         $commit->method('GetComment')->willReturn(["Change the Merlin name"]);
-        $commit->method('getPGPSignature')->willReturn('m3rl1n');
+        $commit->method('getSignature')->willReturn('m3rl1n');
         $commit->method('GetHash')->willReturn('jh4sh');
         $commit->method('GetTitle')->willReturn('kamelot');
         $commit->method('GetAuthorName')->willReturn('Arthur');
@@ -168,7 +168,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $commit = $this->createMock(Commit::class);
         $commit->method('GetComment')->willReturn(["Change the Merlin name"]);
-        $commit->method('getPGPSignature')->willReturn('m3rl1n');
+        $commit->method('getSignature')->willReturn('m3rl1n');
         $commit->method('GetHash')->willReturn('jh4sh');
         $commit->method('GetTitle')->willReturn('kamelot');
         $commit->method('GetAuthorName')->willReturn('Arthur');

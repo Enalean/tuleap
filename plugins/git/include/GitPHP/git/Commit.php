@@ -27,7 +27,7 @@ namespace Tuleap\Git\GitPHP;
  */
 class Commit extends GitObject
 {
-    public const HEADER_PGP = 'gpgsig';
+    private const HEADER_SIGNATURE_SECTION = 'gpgsig';
 
     /**
      * dataRead
@@ -131,7 +131,7 @@ class Commit extends GitObject
     /**
      * @var null|string
      */
-    private $pgp_signature;
+    private $signature;
 
     /**
      * readTree
@@ -522,15 +522,12 @@ class Commit extends GitObject
         return $this->comment;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getPGPSignature()
+    public function getSignature(): ?string
     {
         if (! $this->dataRead) {
             $this->ReadData();
         }
-        return $this->pgp_signature;
+        return $this->signature;
     }
 
     /**
@@ -644,17 +641,17 @@ class Commit extends GitObject
 
         $lines = explode("\n", $data);
 
-        $header                   = true;
-        $is_parsing_pgp_signature = false;
+        $header               = true;
+        $is_parsing_signature = false;
 
         foreach ($lines as $i => $line) {
-            if ($is_parsing_pgp_signature) {
+            if ($is_parsing_signature) {
                 if (strlen($line) > 0 && $line[0] === ' ') {
-                    $this->pgp_signature .= ltrim($line, ' ') . "\n";
+                    $this->signature .= ltrim($line, ' ') . "\n";
                     continue;
                 }
-                $this->pgp_signature      = rtrim($this->pgp_signature);
-                $is_parsing_pgp_signature = false;
+                $this->signature      = rtrim($this->signature ?? '');
+                $is_parsing_signature = false;
             }
             if ($header && preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
                 /* Tree */
@@ -682,9 +679,9 @@ class Commit extends GitObject
                 $this->committer         = $regs[1];
                 $this->committerEpoch    = $regs[2];
                 $this->committerTimezone = $regs[3];
-            } elseif ($header && strpos($line, self::HEADER_PGP . ' ') === 0) {
-                $this->pgp_signature      = substr($line, strlen(self::HEADER_PGP . ' ')) . "\n";
-                $is_parsing_pgp_signature = true;
+            } elseif ($header && str_starts_with($line, self::HEADER_SIGNATURE_SECTION . ' ')) {
+                $this->signature      = substr($line, strlen(self::HEADER_SIGNATURE_SECTION . ' ')) . "\n";
+                $is_parsing_signature = true;
             } else {
                 /* commit comment */
                 $header  = false;
