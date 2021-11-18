@@ -120,6 +120,19 @@ interface ArtifactFieldValueStepExecutionContent {
     readonly steps_values: ReadonlyArray<ArtifactFieldValueStatus>;
 }
 
+interface ArtifactFieldValueArtifactLinkContent {
+    readonly field_name: string;
+    readonly content_length: "artlinktable";
+    readonly value_type: "string";
+    readonly links: ReadonlyArray<ArtifactFieldValueArtifactLink>;
+    readonly reverse_links: ReadonlyArray<ArtifactFieldValueArtifactLink>;
+}
+
+export interface ArtifactFieldValueArtifactLink {
+    readonly artifact_id: number;
+    readonly type: string;
+}
+
 export interface ArtifactFieldValueStepDefinition {
     readonly description: string;
     readonly description_format: "plaintext" | "html";
@@ -136,7 +149,8 @@ export type ArtifactFieldValue =
     | (ArtifactFieldValueContent & (ArtifactFieldValueShort | ArtifactFieldValueLong))
     | ArtifactFieldValueLinksContent
     | ArtifactFieldValueStepDefinitionContent
-    | ArtifactFieldValueStepExecutionContent;
+    | ArtifactFieldValueStepExecutionContent
+    | ArtifactFieldValueArtifactLinkContent;
 
 export type ArtifactFieldShortValue =
     | (ArtifactFieldValueContent & ArtifactFieldValueShort)

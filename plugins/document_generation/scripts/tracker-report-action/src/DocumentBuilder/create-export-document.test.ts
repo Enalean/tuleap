@@ -361,6 +361,23 @@ describe("Create ArtifactValues Collection", () => {
                             steps_values: ["passed", null, "blocked"],
                         },
                     },
+                    {
+                        field_id: 26,
+                        type: "art_link",
+                        label: "Links",
+                        links: [
+                            {
+                                type: "_is_child",
+                                id: 359,
+                            },
+                        ],
+                        reverse_links: [
+                            {
+                                type: null,
+                                id: 3,
+                            },
+                        ],
+                    },
                 ],
                 containers: [
                     {
@@ -627,6 +644,13 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Test Execution",
                         value: null,
                     },
+                    {
+                        field_id: 26,
+                        type: "art_link",
+                        label: "Links",
+                        links: [],
+                        reverse_links: [],
+                    },
                 ],
                 containers: [
                     {
@@ -884,6 +908,23 @@ describe("Create ArtifactValues Collection", () => {
                         ],
                         steps_values: ["passed", null, "blocked"],
                     },
+                    {
+                        content_length: "artlinktable",
+                        field_name: "Links",
+                        value_type: "string",
+                        links: [
+                            {
+                                artifact_id: 359,
+                                type: "_is_child",
+                            },
+                        ],
+                        reverse_links: [
+                            {
+                                artifact_id: 3,
+                                type: "",
+                            },
+                        ],
+                    },
                 ],
                 containers: [
                     {
@@ -1042,6 +1083,13 @@ describe("Create ArtifactValues Collection", () => {
                         field_name: "Step Definition",
                         value_type: "string",
                         steps: [],
+                    },
+                    {
+                        content_length: "artlinktable",
+                        field_name: "Links",
+                        value_type: "string",
+                        links: [],
+                        reverse_links: [],
                     },
                 ],
                 containers: [

@@ -841,6 +841,84 @@ async function buildFieldValuesDisplayZone(
                 }
                 break;
             }
+            case "artlinktable": {
+                if (!window.location.hash.includes("artlinks")) {
+                    break;
+                }
+
+                display_zone_long_fields.push(
+                    new Paragraph({
+                        heading: HeadingLevel.HEADING_4,
+                        children: [new TextRun(field.field_name)],
+                    })
+                );
+
+                if (field.links.length > 0) {
+                    display_zone_long_fields.push(
+                        new Paragraph({
+                            heading: HeadingLevel.HEADING_5,
+                            children: [
+                                new TextRun(gettext_provider.gettext("Artifacts referenced by")),
+                            ],
+                        })
+                    );
+                    const links_table_rows: TableRow[] = [
+                        new TableRow({
+                            children: [
+                                buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
+                            ],
+                            tableHeader: true,
+                        }),
+                    ];
+                    for (const link of field.links) {
+                        links_table_rows.push(
+                            new TableRow({
+                                children: [
+                                    buildTableCellContent(new TextRun(link.artifact_id.toString())),
+                                    buildTableCellContent(new TextRun(link.type)),
+                                ],
+                            })
+                        );
+                    }
+                    display_zone_long_fields.push(buildTable(links_table_rows));
+                }
+
+                if (field.reverse_links.length > 0) {
+                    display_zone_long_fields.push(
+                        new Paragraph({
+                            heading: HeadingLevel.HEADING_5,
+                            children: [
+                                new TextRun(gettext_provider.gettext("Artifacts that reference")),
+                            ],
+                        })
+                    );
+                    const reverse_links_table_rows: TableRow[] = [
+                        new TableRow({
+                            children: [
+                                buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
+                            ],
+                            tableHeader: true,
+                        }),
+                    ];
+                    for (const reverse_link of field.reverse_links) {
+                        reverse_links_table_rows.push(
+                            new TableRow({
+                                children: [
+                                    buildTableCellContent(
+                                        new TextRun(reverse_link.artifact_id.toString())
+                                    ),
+                                    buildTableCellContent(new TextRun(reverse_link.type)),
+                                ],
+                            })
+                        );
+                    }
+                    display_zone_long_fields.push(buildTable(reverse_links_table_rows));
+                }
+
+                break;
+            }
             default:
                 ((value: never): never => {
                     throw new Error("Should never happen, all fields must be handled " + value);
