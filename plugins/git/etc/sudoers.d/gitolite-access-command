@@ -1,3 +1,4 @@
 Defaults:codendiadm !requiretty
 Defaults:codendiadm !env_reset
+Defaults:codendiadm always_set_home
 codendiadm ALL= (gitolite) SETENV: NOPASSWD: /usr/bin/gitolite access -q *
