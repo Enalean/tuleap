@@ -81,6 +81,25 @@ describe("download-docx", () => {
                                 ],
                                 value_type: "links",
                             },
+                            {
+                                field_name: "Artifact links",
+                                content_length: "artlinktable",
+                                value_type: "string",
+                                links: [
+                                    {
+                                        artifact_id: 123,
+                                        title: "Linked artifact",
+                                        type: "",
+                                    },
+                                ],
+                                reverse_links: [
+                                    {
+                                        artifact_id: 124,
+                                        title: "Reverse linked artifact",
+                                        type: "",
+                                    },
+                                ],
+                            },
                         ],
                         containers: [
                             {

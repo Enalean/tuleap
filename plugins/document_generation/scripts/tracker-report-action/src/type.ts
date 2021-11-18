@@ -139,6 +139,7 @@ interface ArtifactFieldValueArtifactLinkContent {
 
 export interface ArtifactFieldValueArtifactLink {
     readonly artifact_id: number;
+    readonly title: string;
     readonly type: string;
 }
 

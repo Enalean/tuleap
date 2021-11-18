@@ -73,12 +73,14 @@ describe("create-traceability-matrix", () => {
                             links: [
                                 {
                                     id: 700,
+                                    title: "",
                                     type: "_covered_by",
                                 },
                             ],
                             reverse_links: [
                                 {
                                     id: 800,
+                                    title: "",
                                     type: null,
                                 },
                             ],
@@ -144,12 +146,14 @@ describe("create-traceability-matrix", () => {
                             links: [
                                 {
                                     id: 7400,
+                                    title: "",
                                     type: "_covered_by",
                                 },
                             ],
                             reverse_links: [
                                 {
                                     id: 8400,
+                                    title: "",
                                     type: null,
                                 },
                             ],
@@ -218,6 +222,7 @@ describe("create-traceability-matrix", () => {
                             links: [
                                 {
                                     id: 702,
+                                    title: "",
                                     type: "_covered_by",
                                 },
                             ],
@@ -268,12 +273,14 @@ describe("create-traceability-matrix", () => {
                             links: [
                                 {
                                     id: 700,
+                                    title: "",
                                     type: "_covered_by",
                                 },
                             ],
                             reverse_links: [
                                 {
                                     id: 800,
+                                    title: "",
                                     type: null,
                                 },
                             ],
@@ -328,12 +335,14 @@ describe("create-traceability-matrix", () => {
                             links: [
                                 {
                                     id: 700,
+                                    title: "",
                                     type: "_covered_by",
                                 },
                             ],
                             reverse_links: [
                                 {
                                     id: 800,
+                                    title: "",
                                     type: null,
                                 },
                             ],

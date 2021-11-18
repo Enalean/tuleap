@@ -161,10 +161,34 @@ describe("artifacts-retriever", () => {
                         granted_groups: ["membres_projet", "newgroup"],
                         granted_groups_ids: ["101_3", "105"],
                     },
+                    {
+                        field_id: 12,
+                        type: "art_link",
+                        label: "Links",
+                        links: [
+                            {
+                                type: "_is_child",
+                                id: 359,
+                            },
+                        ],
+                        reverse_links: [
+                            {
+                                type: null,
+                                id: 3,
+                            },
+                        ],
+                    },
                 ],
             },
         ];
         get_report_artifacts_spy.mockResolvedValue(artifacts_report_response);
+
+        jest.spyOn(rest_querier, "getArtifacts").mockResolvedValue(
+            new Map([
+                [359, { id: 359, title: "Linked artifact", values: [] }],
+                [3, { id: 3, title: "Reverse linked artifact", values: [] }],
+            ])
+        );
 
         const tracker_definition_response: TrackerDefinition = {
             fields: [
@@ -201,6 +225,7 @@ describe("artifacts-retriever", () => {
                     },
                 },
                 { field_id: 11, type: "ttmstepexec", label: "Test Execution" },
+                { field_id: 12, type: "art_link", label: "Artifact link" },
             ],
             structure: [
                 { id: 3, content: null },
@@ -218,6 +243,7 @@ describe("artifacts-retriever", () => {
                         { id: 1, content: null },
                     ],
                 },
+                { id: 12, content: null },
             ],
         };
         jest.spyOn(rest_querier, "getTrackerDefinition").mockResolvedValue(
@@ -276,6 +302,7 @@ describe("artifacts-retriever", () => {
             Promise.resolve(testmanagement_execution_response);
 
         const artifacts = await retrieveReportArtifacts(123, 852, false, get_test_exec);
+
         expect(artifacts).toStrictEqual([
             {
                 id: 74,
@@ -439,6 +466,25 @@ describe("artifacts-retriever", () => {
                             ],
                             steps_values: ["passed", null, "blocked"],
                         },
+                    },
+                    {
+                        field_id: 12,
+                        label: "Links",
+                        links: [
+                            {
+                                id: 359,
+                                title: "Linked artifact",
+                                type: "_is_child",
+                            },
+                        ],
+                        reverse_links: [
+                            {
+                                id: 3,
+                                title: "Reverse linked artifact",
+                                type: null,
+                            },
+                        ],
+                        type: "art_link",
                     },
                 ],
                 containers: [
