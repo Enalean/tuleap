@@ -106,19 +106,20 @@ final class BarChartDataBuilder
 
     /**
      * $engine->xaxis  = [
-     *      100 => '27-28 April',
-     *      101 => '3-4 May',
-     *      102 => '1-2 June',
-     *      103 => '18-19 July'
+     *      ''    => 'None',
+     *      '100' => '27-28 April',
+     *      '101' => '3-4 May',
+     *      '102' => '1-2 June',
+     *      '103' => '18-19 July'
      *];
      */
-    private function getXaxisKeyFromLabel(GraphOnTrackersV5_Engine_Bar $engine, string $source_key): int
+    private function getXaxisKeyFromLabel(GraphOnTrackersV5_Engine_Bar $engine, string $source_key): string
     {
         $key = array_search($engine->xaxis[$source_key], $engine->xaxis);
-        if (! $key) {
+        if ($key === false) {
             throw new \LogicException("Try to access to an unknown key " . $source_key);
         }
-        return (int) $key;
+        return (string) $key;
     }
 
     private function reorderKeyRespectingXaxisOrder(GraphOnTrackersV5_Engine_Bar $engine, array $values): array
