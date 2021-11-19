@@ -368,12 +368,14 @@ describe("Create ArtifactValues Collection", () => {
                         links: [
                             {
                                 type: "_is_child",
+                                title: "Linked artifact",
                                 id: 359,
                             },
                         ],
                         reverse_links: [
                             {
                                 type: null,
+                                title: "Reverse linked artifact",
                                 id: 3,
                             },
                         ],
@@ -924,12 +926,14 @@ describe("Create ArtifactValues Collection", () => {
                         links: [
                             {
                                 artifact_id: 359,
+                                title: "Linked artifact",
                                 type: "Enfant",
                             },
                         ],
                         reverse_links: [
                             {
                                 artifact_id: 3,
+                                title: "Reverse linked artifact",
                                 type: "",
                             },
                         ],

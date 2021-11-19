@@ -182,5 +182,12 @@ describe("API querier", () => {
             const artifacts = await getArtifacts(new Set([...Array(20).keys()]));
             expect([...artifacts.values()]).toStrictEqual(expected_artifacts);
         });
+
+        it("sends no queries when no artifacts needs to be retrieved", async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
+            const artifacts = await getArtifacts(new Set());
+            expect(artifacts.size).toStrictEqual(0);
+            expect(tlpGet).not.toBeCalled();
+        });
     });
 });

@@ -265,6 +265,7 @@ function formatFieldValue(
         for (const link of value.links) {
             links.push({
                 artifact_id: link.id,
+                title: link.title,
                 type: getArtifactLinkLabel(link, artifact_links_types),
             });
         }
@@ -272,6 +273,7 @@ function formatFieldValue(
         for (const reverse_link of value.reverse_links) {
             reverse_links.push({
                 artifact_id: reverse_link.id,
+                title: reverse_link.title,
                 type: getArtifactLinkReverseLabel(reverse_link, artifact_links_types),
             });
         }

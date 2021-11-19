@@ -866,6 +866,7 @@ async function buildFieldValuesDisplayZone(
                         new TableRow({
                             children: [
                                 buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Title")),
                                 buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
                             ],
                             tableHeader: true,
@@ -876,6 +877,7 @@ async function buildFieldValuesDisplayZone(
                             new TableRow({
                                 children: [
                                     buildTableCellContent(new TextRun(link.artifact_id.toString())),
+                                    buildTableCellContent(new TextRun(link.title)),
                                     buildTableCellContent(new TextRun(link.type)),
                                 ],
                             })
@@ -897,6 +899,7 @@ async function buildFieldValuesDisplayZone(
                         new TableRow({
                             children: [
                                 buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Title")),
                                 buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
                             ],
                             tableHeader: true,
@@ -909,6 +912,7 @@ async function buildFieldValuesDisplayZone(
                                     buildTableCellContent(
                                         new TextRun(reverse_link.artifact_id.toString())
                                     ),
+                                    buildTableCellContent(new TextRun(reverse_link.title)),
                                     buildTableCellContent(new TextRun(reverse_link.type)),
                                 ],
                             })

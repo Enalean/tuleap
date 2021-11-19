@@ -18,7 +18,7 @@
  */
 
 import type { getTestManagementExecution } from "./rest-querier";
-import { getReportArtifacts, getTrackerDefinition } from "./rest-querier";
+import { getArtifacts, getReportArtifacts, getTrackerDefinition } from "./rest-querier";
 
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 
@@ -42,11 +42,14 @@ export async function retrieveReportArtifacts(
     );
 
     const tracker_structure = await tracker_structure_promise;
+    const all_linked_artifacts_ids: Set<number> = new Set();
+    const already_retrieved_artifacts: Map<number, ArtifactResponse> = new Map();
 
     const report_artifacts_with_additional_info: ArtifactFromReport[] = await limitConcurrencyPool(
         5,
         report_artifacts,
         async (report_artifact: ArtifactResponse): Promise<ArtifactFromReport> => {
+            already_retrieved_artifacts.set(report_artifact.id, report_artifact);
             const values_by_field_id = new Map(
                 report_artifact.values.map((value) => [value.field_id, value])
             );
@@ -58,13 +61,71 @@ export async function retrieveReportArtifacts(
                     tracker_structure.disposition,
                     values_by_field_id,
                     tracker_structure.fields,
-                    get_test_execution
+                    get_test_execution,
+                    all_linked_artifacts_ids
                 )),
             };
         }
     );
 
-    return report_artifacts_with_additional_info;
+    const missing_artifacts_ids = new Set(
+        [...all_linked_artifacts_ids].filter((id) => already_retrieved_artifacts.has(id) === false)
+    );
+    (await getArtifacts(missing_artifacts_ids)).forEach((artifact) =>
+        already_retrieved_artifacts.set(artifact.id, artifact)
+    );
+
+    return report_artifacts_with_additional_info.map((report_artifact) => {
+        return {
+            ...report_artifact,
+            values: injectLinkTitleInValues(report_artifact.values, already_retrieved_artifacts),
+            containers: injectLinkTitleInContainers(
+                report_artifact.containers,
+                already_retrieved_artifacts
+            ),
+        };
+    });
+}
+
+function injectLinkTitleInValues(
+    values: ReadonlyArray<ArtifactReportFieldValue>,
+    all_artifacts: Map<number, ArtifactResponse>
+): ReadonlyArray<ArtifactReportFieldValue> {
+    return values.map((value) => {
+        if (value.type === "art_link") {
+            return {
+                ...value,
+                links: injectLinkTitle(value.links, all_artifacts),
+                reverse_links: injectLinkTitle(value.reverse_links, all_artifacts),
+            };
+        }
+        return value;
+    });
+}
+
+function injectLinkTitle(
+    links: ReadonlyArray<ArtifactLinkWithTitle>,
+    all_artifacts: Map<number, ArtifactResponse>
+): ReadonlyArray<ArtifactLinkWithTitle> {
+    return links.map((link) => {
+        return {
+            ...link,
+            title: all_artifacts.get(link.id)?.title ?? "",
+        };
+    });
+}
+
+function injectLinkTitleInContainers(
+    containers: ReadonlyArray<ArtifactReportContainer>,
+    all_artifacts: Map<number, ArtifactResponse>
+): ReadonlyArray<ArtifactReportContainer> {
+    return containers.map((container) => {
+        return {
+            ...container,
+            values: injectLinkTitleInValues(container.values, all_artifacts),
+            containers: injectLinkTitleInContainers(container.containers, all_artifacts),
+        };
+    });
 }
 
 async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
@@ -72,7 +133,8 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
     structure_elements: ReadonlyArray<StructureFormat>,
     field_values: ReadonlyMap<number, ArtifactReportResponseFieldValue>,
     fields_structure: ReadonlyMap<number, FieldsStructure>,
-    get_test_execution: typeof getTestManagementExecution
+    get_test_execution: typeof getTestManagementExecution,
+    all_linked_artifacts_ids: Set<number>
 ): Promise<Omit<ArtifactReportContainer, "name">> {
     const values_with_additional_information: ArtifactReportFieldValue[] = [];
     const containers: ArtifactReportContainer[] = [];
@@ -94,7 +156,11 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                 continue;
             }
             values_with_additional_information.push(
-                getFieldValueWithAdditionalInformation(field_value, fields_structure)
+                getFieldValueWithAdditionalInformation(
+                    field_value,
+                    fields_structure,
+                    all_linked_artifacts_ids
+                )
             );
             continue;
         }
@@ -108,7 +174,8 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                     structure_element.content,
                     field_values,
                     fields_structure,
-                    get_test_execution
+                    get_test_execution,
+                    all_linked_artifacts_ids
                 )),
             });
             continue;
@@ -120,7 +187,8 @@ async function extractFieldValuesWithAdditionalInfoInStructuredContainers(
                 structure_element.content,
                 field_values,
                 fields_structure,
-                get_test_execution
+                get_test_execution,
+                all_linked_artifacts_ids
             );
         values_with_additional_information.push(...children_structured_information.values);
         containers.push(...children_structured_information.containers);
@@ -182,7 +250,8 @@ async function getStepExecutionsFieldValue(
 
 function getFieldValueWithAdditionalInformation(
     value: ArtifactReportResponseFieldValue,
-    fields_structure: ReadonlyMap<number, FieldsStructure>
+    fields_structure: ReadonlyMap<number, FieldsStructure>,
+    all_linked_artifacts_ids: Set<number>
 ): ArtifactReportFieldValue {
     const field_structure = fields_structure.get(value.field_id);
     switch (value.type) {
@@ -233,6 +302,21 @@ function getFieldValueWithAdditionalInformation(
                 }
             }
             return { ...value, formatted_granted_ugroups: formatted_granted_ugroups };
+        }
+        case "art_link": {
+            [...value.links, ...value.reverse_links].forEach((link) =>
+                all_linked_artifacts_ids.add(link.id)
+            );
+
+            return {
+                ...value,
+                links: value.links.map((link) => {
+                    return { ...link, title: "" };
+                }),
+                reverse_links: value.reverse_links.map((link) => {
+                    return { ...link, title: "" };
+                }),
+            };
         }
         default:
             return value;
@@ -301,7 +385,7 @@ export type ArtifactReportFieldValue =
     | ArtifactReportResponseCrossReferencesFieldValue
     | ArtifactReportResponseStepDefinitionFieldValue
     | ArtifactStepExecutionFieldValue
-    | ArtifactReportResponseArtifactLinksFieldValue;
+    | ArtifactReportArtifactLinksFieldValue;
 
 type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
@@ -469,12 +553,24 @@ export interface ArtifactLink {
     id: number;
 }
 
+export interface ArtifactLinkWithTitle extends ArtifactLink {
+    title: string;
+}
+
 interface ArtifactReportResponseArtifactLinksFieldValue {
     field_id: number;
     type: "art_link";
     label: string;
     links: ArtifactLink[];
     reverse_links: ArtifactLink[];
+}
+
+interface ArtifactReportArtifactLinksFieldValue {
+    field_id: number;
+    type: "art_link";
+    label: string;
+    links: ReadonlyArray<ArtifactLinkWithTitle>;
+    reverse_links: ReadonlyArray<ArtifactLinkWithTitle>;
 }
 
 interface ArtifactReportResponseStepRepresentation {
@@ -528,7 +624,8 @@ type FieldsStructure =
     | ContainerFieldStructure
     | ListFieldStructure
     | PermissionsOnArtifactFieldStructure
-    | StepExecutionFieldStructure;
+    | StepExecutionFieldStructure
+    | ArtifactLinkFieldStructure;
 
 interface BaseFieldStructure {
     field_id: number;
@@ -563,6 +660,11 @@ interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
         is_used_by_default: boolean;
         ugroup_representations: Array<ArtifactReportResponseUserGroupRepresentation>;
     };
+}
+
+interface ArtifactLinkFieldStructure extends BaseFieldStructure {
+    type: "art_link";
+    label: string;
 }
 
 interface StructureFormat {
