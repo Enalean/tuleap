@@ -99,6 +99,36 @@ describe(`RichTextEditorsCreator`, () => {
     });
 
     describe(`createTextFieldEditors()`, () => {
+        beforeEach(() => {
+            class FakeIntersectionObserver implements IntersectionObserver {
+                constructor(private callback: IntersectionObserverCallback) {}
+                readonly root: Element | null = null;
+                readonly rootMargin: string = "";
+                readonly thresholds: ReadonlyArray<number> = [0];
+                disconnect(): void {
+                    // Fake implementation, no need to do something
+                }
+                observe(target: Element): void {
+                    this.callback(
+                        [
+                            {
+                                target,
+                                isIntersecting: true,
+                            } as IntersectionObserverEntry,
+                        ],
+                        this
+                    );
+                }
+                takeRecords(): IntersectionObserverEntry[] {
+                    return [];
+                }
+                unobserve(): void {
+                    // Fake implementation, no need to do something
+                }
+            }
+            window.IntersectionObserver = FakeIntersectionObserver;
+        });
+
         it(`when there is no text field textarea, it does nothing`, () => {
             creator.createTextFieldEditors();
 
