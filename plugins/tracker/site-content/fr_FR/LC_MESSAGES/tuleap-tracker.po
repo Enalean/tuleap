@@ -552,7 +552,7 @@ msgstr "Une erreur est survenue, le workflow ne peut pas être modifié."
 
 #, php-format
 msgid "An error occured while creating a copy of the artifact #%1$s."
-msgstr "Une erreur est survenue empechant la copie de l'artefact #%1$s"
+msgstr "Une erreur est survenue empêchant la copie de l'artefact #%1$s."
 
 msgid "An error occured while creating the tracker."
 msgstr "Une erreur est survenue lors de la création de l'outil de suivi."
@@ -2934,12 +2934,6 @@ msgstr ""
 "L'artefact n'a pas de champ de type lien vers artefact ou alors vous n'avez "
 "pas la permission de le modifier, merci de reconfigurer l'outil de suivi"
 
-msgid ""
-"The artifact has more than one parent. Cannot display rest of hierarchy."
-msgstr ""
-"L'artéfact a plus d'un parent. Impossible d'afficher le reste de la "
-"hiérarchie."
-
 #, php-format
 msgid "The artifact has too many children (limit is set to %1$s)."
 msgstr "L'artefact a trop d'enfants (la limite est de %1$s)."
@@ -4227,6 +4221,11 @@ msgstr "Webhooks"
 
 msgid "When"
 msgstr "Quand"
+
+msgid "When more than one parent, we cannot display rest of hierarchy."
+msgstr ""
+"Quand il y a plus d'un parent, nous ne pouvons afficher le reste de la "
+"hiérarchie."
 
 msgid "Workflow"
 msgstr "Workflow"
