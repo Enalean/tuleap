@@ -33,12 +33,12 @@ final class AnonymousJiraUser implements JiraUser
         return '';
     }
 
-    public function getJiraAccountId(): string
+    public function getEmailAddress(): string
     {
         return '';
     }
 
-    public function getEmailAddress(): string
+    public function getUniqueIdentifier(): string
     {
         return '';
     }

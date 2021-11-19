@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraCloudUser;
 
 /**
  * @psalm-immutable
@@ -43,12 +43,12 @@ class Comment
     private $rendered_value;
 
     /**
-     * @var JiraUser
+     * @var JiraCloudUser
      */
     private $update_author;
 
     public function __construct(
-        JiraUser $update_author,
+        JiraCloudUser $update_author,
         DateTimeImmutable $date,
         string $rendered_value
     ) {
@@ -68,7 +68,7 @@ class Comment
         }
 
         return new self(
-            new ActiveJiraUser($comment_response['updateAuthor']),
+            new ActiveJiraCloudUser($comment_response['updateAuthor']),
             new DateTimeImmutable($comment_response['updated']),
             (string) $comment_response['renderedBody']
         );
@@ -84,7 +84,7 @@ class Comment
         return $this->rendered_value;
     }
 
-    public function getUpdateAuthor(): JiraUser
+    public function getUpdateAuthor(): JiraCloudUser
     {
         return $this->update_author;
     }

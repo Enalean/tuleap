@@ -25,20 +25,11 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 /**
  * @psalm-immutable
  */
-final class ActiveJiraUser implements JiraUser
+final class ActiveJiraCloudUser implements JiraCloudUser
 {
-    /**
-     * @var string
-     */
-    private $display_name;
-    /**
-     * @var string
-     */
-    private $jira_account_id;
-    /**
-     * @var string
-     */
-    private $email_address;
+    private string $display_name;
+    private string $jira_account_id;
+    private string $email_address;
 
     public function __construct(array $update_author)
     {
@@ -60,5 +51,10 @@ final class ActiveJiraUser implements JiraUser
     public function getEmailAddress(): string
     {
         return $this->email_address;
+    }
+
+    public function getUniqueIdentifier(): string
+    {
+        return $this->getJiraAccountId();
     }
 }

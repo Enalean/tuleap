@@ -29,6 +29,11 @@ final class JiraCollectionBuilder
 {
     private const PARAM_START_AT = 'startAt';
 
+    /**
+     * @throws UnexpectedFormatException
+     * @throws JiraConnectionException
+     * @throws \JsonException
+     */
     public static function iterateUntilTotal(JiraClient $client, LoggerInterface $logger, string $base_url, string $key): \Generator
     {
         $fetched_items_counter = 0;
@@ -46,6 +51,11 @@ final class JiraCollectionBuilder
         } while ($json['total'] !== $fetched_items_counter);
     }
 
+    /**
+     * @throws UnexpectedFormatException
+     * @throws JiraConnectionException
+     * @throws \JsonException
+     */
     public static function iterateUntilIsLast(JiraClient $client, LoggerInterface $logger, string $base_url, string $key): \Generator
     {
         $start_at = 0;

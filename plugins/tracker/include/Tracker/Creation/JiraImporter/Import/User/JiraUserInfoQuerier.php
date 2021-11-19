@@ -38,7 +38,7 @@ class JiraUserInfoQuerier
     /**
      * @throws JiraConnectionException
      */
-    public function retrieveUserFromJiraAPI(string $account_id): JiraUser
+    public function retrieveUserFromJiraAPI(string $account_id): JiraCloudUser
     {
         $this->logger->debug("User with account id $account_id is unknown, querying /user?accountId=$account_id ...");
         $user_response = $this->wrapper->getUrl(
@@ -49,7 +49,7 @@ class JiraUserInfoQuerier
             throw JiraConnectionException::canNotRetrieveUserInfoException($account_id);
         }
 
-        $jira_user = new ActiveJiraUser($user_response);
+        $jira_user = new ActiveJiraCloudUser($user_response);
 
         $this->logger->debug('Information of user ' . $jira_user->getDisplayName() . ' have been retrieved.');
 

@@ -25,40 +25,28 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 class JiraUserOnTuleapCache
 {
     /**
-     * @var array
+     * @var array<string, \PFUser>
      */
-    private $user_cache = [];
+    private array $user_cache = [];
 
-    /**
-     * @var JiraTuleapUsersMapping
-     */
-    private $jira_tuleap_users_mapping;
-
-    /**
-     * @var \PFUser
-     */
-    private $forge_user;
-
-    public function __construct(JiraTuleapUsersMapping $jira_tuleap_users_mapping, \PFUser $forge_user)
+    public function __construct(private JiraTuleapUsersMapping $jira_tuleap_users_mapping, private \PFUser $forge_user)
     {
-        $this->jira_tuleap_users_mapping = $jira_tuleap_users_mapping;
-        $this->forge_user                = $forge_user;
     }
 
     public function cacheUser(\PFUser $tuleap_user, JiraUser $jira_user): void
     {
-        $this->user_cache[$jira_user->getJiraAccountId()] = $tuleap_user;
+        $this->user_cache[$jira_user->getUniqueIdentifier()] = $tuleap_user;
         $this->jira_tuleap_users_mapping->addUserMapping($jira_user, $tuleap_user);
     }
 
     public function isUserCached(JiraUser $jira_user): bool
     {
-        return $this->hasUserWithAccountId($jira_user->getJiraAccountId());
+        return $this->hasUserWithUniqueIdentifier($jira_user->getUniqueIdentifier());
     }
 
     public function getUserFromCache(JiraUser $jira_user): \PFUser
     {
-        return $this->getUserFromCacheByJiraAccountId($jira_user->getJiraAccountId());
+        return $this->getUserFromCacheByJiraUniqueIdentifier($jira_user->getUniqueIdentifier());
     }
 
     public function getJiraTuleapUsersMapping(): JiraTuleapUsersMapping
@@ -66,17 +54,17 @@ class JiraUserOnTuleapCache
         return $this->jira_tuleap_users_mapping;
     }
 
-    public function getUserFromCacheByJiraAccountId(string $jira_account_id): \PFUser
+    public function getUserFromCacheByJiraUniqueIdentifier(string $unique_identifier): \PFUser
     {
-        if (! $this->hasUserWithAccountId($jira_account_id)) {
+        if (! $this->hasUserWithUniqueIdentifier($unique_identifier)) {
             return $this->forge_user;
         }
 
-        return $this->user_cache[$jira_account_id];
+        return $this->user_cache[$unique_identifier];
     }
 
-    public function hasUserWithAccountId(string $jira_account_id): bool
+    public function hasUserWithUniqueIdentifier(string $unique_identifier): bool
     {
-        return isset($this->user_cache[$jira_account_id]);
+        return isset($this->user_cache[$unique_identifier]);
     }
 }
