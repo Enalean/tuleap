@@ -19,6 +19,9 @@
 
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
+$accessibility-pattern-width: 20px;
+$accessibility-pattern-right-margin: 6px;
+
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .element-card-#{$color-name} {
         --card-color: #{map-get($colors, "primary")};
@@ -37,6 +40,10 @@
         --border-color: #{map-get($colors, "border")};
         --text-color: #{map-get($colors, "text")};
         --accessibility-pattern: url("#{map-get($colors, 'pattern')}");
+
+        .element-card-xref {
+            color: var(--text-color);
+        }
     }
 }
 
@@ -67,7 +74,7 @@
 
     &.element-card-with-accessibility {
         &[class*="element-card-background-"] {
-            padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
+            padding: var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + #{$accessibility-pattern-width} + #{$accessibility-pattern-right-margin}) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
 
             > .element-card-accessibility {
                 opacity: 0.5;
@@ -88,8 +95,8 @@
     .element-card-accessibility {
         position: absolute;
         top: 0;
-        right: 0;
-        width: var(--tlp-medium-spacing);
+        right: $accessibility-pattern-right-margin;
+        width: $accessibility-pattern-width;
         height: 100%;
     }
 
@@ -141,10 +148,10 @@
     width: max-content;
     margin: 0 0 calc(var(--tlp-small-spacing) / 2);
     font-size: 0.625rem;
-    line-height: 0.75rem;
+    line-height: 0.8125rem;
 
     &:hover {
-        text-decoration: none;
+        text-decoration: underline;
     }
 }
 
@@ -154,8 +161,8 @@
 }
 
 .element-card-label {
-    font-size: 0.8125rem;
-    line-height: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
 }
 
 #element-skeleton {

@@ -30,6 +30,7 @@ $accessibility-pattern-right-margin: 6px;
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.backlog-item-color-#{$color-name} {
             --item-type-color: #{map-get($colors, "primary")};
+            --text-color: #{map-get($colors, "text")};
         }
 
         &.tlp-swatch-#{$color-name} {
@@ -50,6 +51,11 @@ $accessibility-pattern-right-margin: 6px;
 
             + .backlog-item-show-children > .backlog-item-show-children-handle {
                 --children-handle-border-top: transparent;
+            }
+
+            .backlog-item-details-shortname-content,
+            .extra-card-field-title {
+                --text-color: #{map-get($colors, "text")};
             }
         }
     }
