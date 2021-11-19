@@ -131,7 +131,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
 
         $this->logger->debug("Calculating burndown for artifact #" . $artifact_id);
         if ($burndown_informations) {
-            if (empty($burndown_informations['duration'])) {
+            if (! isset($burndown_informations['duration'])) {
                 $burndown = TimePeriodWithoutWeekEnd::buildFromEndDate(
                     $burndown_informations['start_date'],
                     $burndown_informations['end_date'],
