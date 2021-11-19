@@ -63,6 +63,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
      * @var Artifact[]
      */
     private $hierarchy;
+    private ?ParentOfArtifactCollection $cached_parent_hierarchy = null;
 
     public function __construct(
         EventManager $event_manager,
@@ -100,18 +101,22 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $html = parent::fetchFormContent($request, $current_user);
 
         if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
-            $parents = $this->retriever->getParentsHierarchy($this->artifact);
-            if ($parents->isGraph()) {
-                $html .= "<div class='alert alert-warning'>" .
-                dgettext('tuleap-tracker', 'The artifact has more than one parent. Cannot display rest of hierarchy.') . "</div>";
-            }
-            $html .= $this->fetchTitleIsGraph($parents);
+            $html .= $this->fetchTitleIsGraph();
         } else {
             $html .= $this->fetchTitleInHierarchy($this->hierarchy);
         }
 
         $html .= $this->fetchView($request, $current_user);
         return $html;
+    }
+
+    private function getParentHierarchy(): ParentOfArtifactCollection
+    {
+        if ($this->cached_parent_hierarchy === null) {
+            $this->cached_parent_hierarchy = $this->retriever->getParentsHierarchy($this->artifact);
+        }
+
+        return $this->cached_parent_hierarchy;
     }
 
     protected function enhanceRedirect(Codendi_Request $request)
@@ -125,6 +130,11 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayHeader()
     {
+        $parents = $this->getParentHierarchy();
+        if ($parents->isGraph()) {
+            $GLOBALS['HTML']->addFeedback(Feedback::WARN, dgettext('tuleap-tracker', 'When more than one parent, we cannot display rest of hierarchy.'));
+        }
+
         $title       = sprintf(
             '%s - %s #%d',
             mb_substr($this->artifact->getTitle() ?? '', 0, 64),
@@ -206,11 +216,11 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $this->artifact->fetchTitle();
     }
 
-    private function fetchTitleIsGraph(ParentOfArtifactCollection $parents)
+    private function fetchTitleIsGraph(): string
     {
         $html  = '';
         $html .= $this->artifact->fetchHiddenTrackerId();
-        $html .= $this->fetchMultipleParentsTitle($this->artifact, $parents);
+        $html .= $this->fetchMultipleParentsTitle($this->artifact);
 
         return $html;
     }
@@ -228,8 +238,9 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $html;
     }
 
-    private function fetchMultipleParentsTitle(Artifact $artifact, ParentOfArtifactCollection $hierarchy)
+    private function fetchMultipleParentsTitle(Artifact $artifact): string
     {
+        $hierarchy = $this->getParentHierarchy();
         $tab_level = 0;
         $html      = '';
         $html     .= '<ul class="tracker-hierarchy">';
