@@ -13,20 +13,20 @@
 
 <nav class="tlp-tabs">
     <a
-        href="javascript:;"
         class="tlp-tab"
         ui-sref="files"
         ui-sref-active="tlp-tab-active"
+        role="link"
         translate
     >
         Release Note &amp; Files
     </a>
     <a
-        href="javascript:;"
         class="tlp-tab"
         ng-if="! $ctrl.error_no_release_artifact"
         ui-sref="linked-artifacts"
         ui-sref-active="tlp-tab-active"
+        role="link"
         translate
         data-test="linked-artifacts"
     >
