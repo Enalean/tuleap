@@ -200,6 +200,10 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         $where  = " WHERE a.id IN (" . $this->getArtifactIds() . ")
                       AND c.id IN (" . $this->getArtifactsLastChangesetIds() . ") ";
 
-        return $select . $from . $where . ' GROUP BY ' . $source_field->getQueryGroupBy() . $group_group . ' ORDER BY ' . $order_by;
+        $query = $select . $from . $where . ' GROUP BY ' . $source_field->getQueryGroupBy() . $group_group;
+        if (trim($order_by) !== '') {
+            $query .= ' ORDER BY ' . $order_by;
+        }
+        return $query;
     }
 }
