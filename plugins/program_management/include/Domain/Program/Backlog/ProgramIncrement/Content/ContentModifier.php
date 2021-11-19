@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRanke
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
@@ -50,7 +50,7 @@ final class ContentModifier implements ModifyContent
     public function __construct(
         private VerifyPrioritizeFeaturesPermission $permission_verifier,
         private VerifyIsProgramIncrement $program_increment_verifier,
-        private VerifyIsVisibleFeature $visible_verifier,
+        private VerifyFeatureIsVisibleByProgram $visible_verifier,
         private VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
         private FeaturePlanner $feature_planner,
         private OrderFeatureRank $features_rank_orderer,
@@ -113,7 +113,7 @@ final class ContentModifier implements ModifyContent
         UserCanPrioritize $user,
         ProgramIdentifier $program
     ): void {
-        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user, $program, null);
+        $feature = FeatureIdentifier::fromIdAndProgram($this->visible_verifier, $potential_feature_id_to_add, $user, $program, null);
         if ($feature === null) {
             throw new FeatureNotFoundException($potential_feature_id_to_add);
         }

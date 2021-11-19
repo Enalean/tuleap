@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveOpenFeatureCountStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveRootPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchOpenFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -93,7 +93,7 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_artifact
         );
         $possible_parent          = new PossibleParentHandler(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -128,7 +128,7 @@ final class PossibleParentHandlerTest extends TestCase
         );
         $this->retrieve_open_feature_count = RetrieveOpenFeatureCountStub::withValue(200);
         $possible_parent                   = new PossibleParentHandler(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -155,7 +155,7 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_artifact
         );
         $possible_parent          = new PossibleParentHandler(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -180,7 +180,7 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_artifact
         );
         $possible_parent          = new PossibleParentHandler(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(),
             $this->search_open_features,
@@ -203,7 +203,7 @@ final class PossibleParentHandlerTest extends TestCase
         );
 
         $possible_parent = new PossibleParentHandler(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -228,7 +228,7 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_artifact
         );
         $possible_parent          = new PossibleParentHandler(
-            VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -253,7 +253,7 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_artifact
         );
         $possible_parent          = new PossibleParentHandler(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1, self::PROGRAM_ID_2),
             $this->search_open_features,

@@ -27,14 +27,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureCount;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchOpenFeatures;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class PossibleParentHandler
 {
     public function __construct(
-        private VerifyIsVisibleFeature $visible_verifier,
+        private VerifyFeatureIsVisibleByProgram $visible_verifier,
         private BuildProgram $program_builder,
         private SearchProgramsOfTeam $programs_searcher,
         private SearchOpenFeatures $search_open_features,
@@ -65,7 +65,7 @@ final class PossibleParentHandler
 
         $features = [];
         foreach ($this->search_open_features->searchOpenFeatures($possible_parent_selector->getOffset(), $possible_parent_selector->getLimit(), ...$programs) as $feature) {
-            $feature_identifier = FeatureIdentifier::fromId(
+            $feature_identifier = FeatureIdentifier::fromIdAndProgram(
                 $this->visible_verifier,
                 $feature['artifact_id'],
                 $possible_parent_selector->getUser(),

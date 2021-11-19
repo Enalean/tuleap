@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlannableFeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\PlannableFeatureBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -38,7 +38,7 @@ final class UserStoryIdentifierTest extends TestCase
     private const USER_STORY_ID = 666;
     private SearchChildrenOfFeature $user_story_searcher;
     private VerifyIsVisibleArtifact $verify_is_visible;
-    private FeatureIdentifier $feature_identifier;
+    private PlannableFeatureIdentifier $feature_identifier;
     private UserIdentifier $user_identifier;
 
     private array $visible_user_story;
@@ -51,7 +51,7 @@ final class UserStoryIdentifierTest extends TestCase
 
         $this->verify_is_visible = VerifyIsVisibleArtifactStub::withVisibleIds(self::USER_STORY_ID);
 
-        $this->feature_identifier = FeatureIdentifierBuilder::build(1, 101);
+        $this->feature_identifier = PlannableFeatureBuilder::build(1);
         $this->user_identifier    = UserIdentifierStub::buildGenericUser();
     }
 

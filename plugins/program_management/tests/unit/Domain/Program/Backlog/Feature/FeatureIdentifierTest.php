@@ -26,7 +26,8 @@ use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 
 final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -39,11 +40,11 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program = ProgramIdentifierBuilder::build();
     }
 
-    public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
+    public function testItReturnsNullWhenProgramFeatureIsNotVisibleByUser(): void
     {
         self::assertNull(
-            FeatureIdentifier::fromId(
-                VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
+            FeatureIdentifier::fromIdAndProgram(
+                VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature(),
                 404,
                 $this->user,
                 $this->program,
@@ -52,10 +53,10 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItBuildsAValidFeature(): void
+    public function testItBuildsAFeatureVisibleByProgram(): void
     {
-        $feature = FeatureIdentifier::fromId(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+        $feature = FeatureIdentifier::fromIdAndProgram(
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             87,
             $this->user,
             $this->program,
@@ -66,10 +67,10 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(87, $feature->getId());
     }
 
-    public function testItBuildsAValidFeatureWithPermissionBypass(): void
+    public function testItBuildsAValidProgramFeatureWithPermissionBypass(): void
     {
-        $feature = FeatureIdentifier::fromId(
-            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+        $feature = FeatureIdentifier::fromIdAndProgram(
+            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             5,
             $this->user,
             $this->program,
@@ -78,5 +79,27 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNotNull($feature);
         self::assertSame(5, $feature->id);
         self::assertSame(5, $feature->getId());
+    }
+
+    public function testItBuildsAVisibleFeature(): void
+    {
+        $feature = FeatureIdentifier::fromId(
+            VerifyFeatureIsVisibleStub::buildVisibleFeature(),
+            5,
+            $this->user
+        );
+        self::assertNotNull($feature);
+        self::assertSame(5, $feature->id);
+        self::assertSame(5, $feature->getId());
+    }
+
+    public function testItReturnsNullWhenFeatureIsNotVisible(): void
+    {
+        $feature = FeatureIdentifier::fromId(
+            VerifyFeatureIsVisibleStub::withNotVisibleFeature(),
+            5,
+            $this->user
+        );
+        self::assertNull($feature);
     }
 }

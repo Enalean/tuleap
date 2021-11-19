@@ -21,22 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Builder;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class UserStoryIdentifierBuilder
+interface VerifyFeatureIsVisible
 {
-    public static function withId(int $id): UserStoryIdentifier
-    {
-        return UserStoryIdentifier::buildCollectionFromFeature(
-            SearchChildrenOfFeatureStub::withChildren([['children_id' => $id]]),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            PlannableFeatureBuilder::build(1),
-            UserIdentifierStub::buildGenericUser()
-        )[0];
-    }
+    public function isVisible(
+        int $feature_id,
+        UserIdentifier $user_identifier
+    ): bool;
 }

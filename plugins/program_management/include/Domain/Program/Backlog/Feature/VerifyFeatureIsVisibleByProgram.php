@@ -24,48 +24,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-/**
- * I identify a Feature, I'm its ID property
- * @psalm-immutable
- */
-final class FeatureIdentifier implements ArtifactIdentifier
+interface VerifyFeatureIsVisibleByProgram
 {
-    public int $id;
-
-    private function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public static function fromIdAndProgram(
-        VerifyFeatureIsVisibleByProgram $feature_verifier,
+    public function isVisibleFeature(
         int $feature_id,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
         ?PermissionBypass $bypass
-    ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier, $program, $bypass)) {
-            return null;
-        }
-        return new self($feature_id);
-    }
-
-    public static function fromId(
-        VerifyFeatureIsVisible $feature_verifier,
-        int $feature_id,
-        UserIdentifier $user_identifier
-    ): ?self {
-        if (! $feature_verifier->isVisible($feature_id, $user_identifier)) {
-            return null;
-        }
-        return new self($feature_id);
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
+    ): bool;
 }

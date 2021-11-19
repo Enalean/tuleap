@@ -24,26 +24,28 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlannableFeatureIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 
-final class FeatureIdentifierBuilder
+final class PlannableFeatureBuilder
 {
-    public static function build(int $feature_id, int $program_id): FeatureIdentifier
+    public static function build(int $feature_id): PlannableFeatureIdentifier
     {
         $user_identifier = UserIdentifierStub::buildGenericUser();
-        $program         = ProgramIdentifierBuilder::buildWithId($program_id);
-        $feature         = FeatureIdentifier::fromIdAndProgram(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
+        $feature         = FeatureIdentifier::fromId(
+            VerifyFeatureIsVisibleStub::buildVisibleFeature(),
             $feature_id,
-            $user_identifier,
-            $program,
-            null
+            $user_identifier
         );
-        if (! $feature) {
-            throw new \LogicException("Feature is not defined");
-        }
+        assert($feature instanceof FeatureIdentifier);
 
-        return $feature;
+        return PlannableFeatureIdentifier::build(
+            VerifyIsPlannableStub::buildPlannableElement(),
+            RetrieveTrackerOfArtifactStub::withIds(1),
+            $feature
+        );
     }
 }

@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlannableFeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -44,7 +44,7 @@ final class UserStoryIdentifier implements ArtifactIdentifier
     public static function buildCollectionFromFeature(
         SearchChildrenOfFeature $user_stories_searcher,
         VerifyIsVisibleArtifact $visibility_verifier,
-        FeatureIdentifier $feature,
+        PlannableFeatureIdentifier $feature,
         UserIdentifier $user_identifier
     ): array {
         $rows         = $user_stories_searcher->getChildrenOfFeatureInTeamProjects($feature->getId());

@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsPlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use function PHPUnit\Framework\assertTrue;
@@ -51,7 +51,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROGRAM_ID = 128;
     private UserIdentifier $user;
     private VerifyPrioritizeFeaturesPermissionStub $prioritize_permission_verifier;
-    private VerifyIsVisibleFeatureStub $visible_feature_verifier;
+    private VerifyFeatureIsVisibleByProgramStub $visible_feature_verifier;
     private VerifyCanBePlannedInProgramIncrementStub $can_be_planned_verifier;
     private OrderFeatureRank $feature_reorderer;
     private VerifyFeatureIsPlannedInProgramIncrementStub $feature_is_planned_verifier;
@@ -60,7 +60,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user                           = UserIdentifierStub::buildGenericUser();
         $this->prioritize_permission_verifier = VerifyPrioritizeFeaturesPermissionStub::canPrioritize();
-        $this->visible_feature_verifier       = VerifyIsVisibleFeatureStub::buildVisibleFeature();
+        $this->visible_feature_verifier       = VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature();
         $this->can_be_planned_verifier        = VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier();
         $this->feature_is_planned_verifier    = VerifyFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature();
         $this->feature_reorderer              = $this->getStubOrderFeature();
@@ -102,7 +102,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenUserCannotSeeFeatureToAdd(): void
     {
-        $this->visible_feature_verifier = VerifyIsVisibleFeatureStub::withNotVisibleFeature();
+        $this->visible_feature_verifier = VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature();
 
         $this->expectException(FeatureNotFoundException::class);
         $this->getModifier()->modifyContent(
