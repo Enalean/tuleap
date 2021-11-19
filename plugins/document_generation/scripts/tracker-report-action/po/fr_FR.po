@@ -23,11 +23,11 @@ msgstr "Artéfact ID"
 msgid "Artifacts"
 msgstr "Artéfacts"
 
-msgid "Artifacts referenced by"
-msgstr "Les artéfacts qui sont référencés par"
+msgid "Artifacts referenced by “%s”"
+msgstr "Les artéfacts qui sont référencés par “%s”"
 
-msgid "Artifacts that reference"
-msgstr "Les artéfacts qui référencent"
+msgid "Artifacts that reference “%s”"
+msgstr "Les artéfacts qui référencent “%s”"
 
 msgid "As of %s"
 msgstr "Le %s"

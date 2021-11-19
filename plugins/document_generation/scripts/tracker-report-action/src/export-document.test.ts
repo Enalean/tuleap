@@ -28,7 +28,9 @@ describe("export-document", () => {
         const export_creator = jest.spyOn(document_export_creator, "createExportDocument");
         export_creator.mockResolvedValue({
             name: "name",
-            artifacts: [{ id: 1, title: "title", fields: [], containers: [] }],
+            artifacts: [
+                { id: 1, title: "title", short_title: "title", fields: [], containers: [] },
+            ],
             traceability_matrix: [],
         });
 

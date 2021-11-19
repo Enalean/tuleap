@@ -404,7 +404,7 @@ describe("Create ArtifactValues Collection", () => {
             },
             {
                 id: 1002,
-                title: "title02",
+                title: "",
                 values: [
                     {
                         field_id: 1,
@@ -416,7 +416,7 @@ describe("Create ArtifactValues Collection", () => {
                         field_id: 3,
                         type: "string",
                         label: "Title",
-                        value: "title02",
+                        value: "",
                     },
                     {
                         field_id: 4,
@@ -707,6 +707,7 @@ describe("Create ArtifactValues Collection", () => {
             {
                 id: 1001,
                 title: "tracker_shortname #1001 - title01",
+                short_title: "title01",
                 fields: [
                     {
                         content_length: "short",
@@ -962,7 +963,8 @@ describe("Create ArtifactValues Collection", () => {
             },
             {
                 id: 1002,
-                title: "tracker_shortname #1002 - title02",
+                title: "tracker_shortname #1002",
+                short_title: "tracker_shortname #1002",
                 fields: [
                     {
                         content_length: "short",
@@ -973,7 +975,7 @@ describe("Create ArtifactValues Collection", () => {
                     {
                         content_length: "short",
                         field_name: "Title",
-                        field_value: "title02",
+                        field_value: "",
                         value_type: "string",
                     },
                     {

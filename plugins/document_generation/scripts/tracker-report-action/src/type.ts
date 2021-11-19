@@ -181,6 +181,7 @@ export interface ArtifactContainer {
 export interface FormattedArtifact {
     readonly id: number;
     readonly title: string;
+    readonly short_title: string;
     readonly fields: ReadonlyArray<ArtifactFieldValue>;
     readonly containers: ReadonlyArray<ArtifactContainer>;
 }
