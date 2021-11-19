@@ -50,6 +50,7 @@ use SimpleXMLElement;
 use SiteCache;
 use System_Command;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\TemporaryTestDirectory;
@@ -228,7 +229,7 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->user_finder    = \Mockery::spy(XMLImportHelper::class);
 
-        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, \Mockery::spy(GitoliteAccessURLGenerator::class), $this->logger);
+        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateTestExecutor(), $this->logger);
         $this->importer = new GitXmlImporter(
             $this->logger,
             $this->git_manager,

@@ -19,6 +19,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 require_once 'bootstrap.php';
@@ -59,6 +60,7 @@ class GitRepositoryImplTest extends \Tuleap\Test\PHPUnit\TestCase
         return new Git_Backend_Gitolite(
             \Mockery::spy(\Git_GitoliteDriver::class),
             Mockery::mock(GitoliteAccessURLGenerator::class),
+            new DefaultBranchUpdateTestExecutor(),
             \Mockery::spy(\Psr\Log\LoggerInterface::class)
         );
     }

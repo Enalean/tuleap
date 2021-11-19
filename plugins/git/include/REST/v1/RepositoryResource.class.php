@@ -306,6 +306,7 @@ class RepositoryResource extends AuthenticatedResource
                     new VersionDetector()
                 ),
                 new GitoliteAccessURLGenerator($git_plugin->getPluginInfo()),
+                new DefaultBranchUpdateExecutorAsGitoliteUser(),
                 \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
             ),
             $mirror_data_mapper,
