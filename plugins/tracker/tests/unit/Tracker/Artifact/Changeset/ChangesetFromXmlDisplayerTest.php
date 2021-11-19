@@ -59,6 +59,8 @@ final class ChangesetFromXmlDisplayerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->renderer
         );
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItReturnsAnEmptyStringIfChangesetDoesNotComeFromXmlImport(): void

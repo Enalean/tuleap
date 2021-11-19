@@ -155,17 +155,15 @@ class DateHelper
      * @param BaseLanguage $lang The user's language
      * @param int          $date The timestamp to transform
      * @param bool         $day_only True if display only the date, false if you want the time also
-     *
-     * @return string
      */
-    public static function formatForLanguage(BaseLanguage $lang, $date, $day_only = false)
+    public static function formatForLanguage(BaseLanguage $lang, $date, $day_only = false): string
     {
         if ($day_only) {
-            $user_date = format_date($lang->getText('system', 'datefmt_short'), $date, null);
+            $user_date = format_date($lang->getText('system', 'datefmt_short'), $date, '');
         } else {
-            $user_date = format_date($lang->getText('system', 'datefmt'), $date, null);
+            $user_date = format_date($lang->getText('system', 'datefmt'), $date, '');
         }
-        return (string) $user_date;
+        return $user_date;
     }
 
     /**

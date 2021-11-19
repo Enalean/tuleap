@@ -23,13 +23,15 @@ require_once('session.php');
 
 // This function returns a string of the date $value with the format $format and
 // if this date is not set, return the default value $default_value
-function format_date($format, $value, $default_value = '-')
+function format_date(string $format, mixed $value, string $default_value = '-'): string
 {
     if ($value == 0) {
         return $default_value;
-    } else {
-        return date($format, $value);
     }
+    if (! is_numeric($value)) {
+        return $default_value;
+    }
+    return date($format, (int) $value);
 }
 
 function util_get_user_preferences_export_datefmt()

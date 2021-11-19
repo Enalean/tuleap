@@ -79,13 +79,16 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             M::mock(CSRFSynchronizerToken::class)
         );
 
+        $language = $this->createStub(\BaseLanguage::class);
+        $language->method('getText')->willReturn('');
+
         $this->user = UserTestBuilder::aUser()
             ->withId(110)
             ->withUserName('alice')
             ->withRealName('Alice FooBar')
             ->withEmail('alice@example.com')
             ->withAddDate((new \DateTimeImmutable())->getTimestamp())
-            ->withLanguage(M::spy(\BaseLanguage::class))
+            ->withLanguage($language)
             ->withAvatarUrl("/path/to/avatar.png")
             ->build();
     }

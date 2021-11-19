@@ -52,6 +52,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
 
         $this->user_manager = Mockery::mock(\UserManager::class);
         $this->user_manager->shouldReceive('getUserById')->withArgs([101])->andReturn($user);
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItExportsToXMLWithoutPrivateUGroupsIfNoUGroup(): void

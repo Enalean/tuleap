@@ -138,6 +138,8 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->shouldReceive('isError')->andReturnFalse();
         $this->project->shouldReceive('getID')->andReturn(101);
         $this->project->shouldReceive('getUnixName')->andReturn('project01');
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     protected function tearDown(): void

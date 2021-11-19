@@ -217,31 +217,38 @@ class Docman_Actions extends Actions
         }
 
         if ($uploadSucceded) {
-            $userId = $user->getId();
+            $userId        = $user->getId();
+            $versionAuthor = $userId;
             if ($request->exist('author') && ($request->get('author') != $userId)) {
-                $versionAuthor = $request->get('author');
+                $possible_version_author = $request->get('author');
+                $author                  = $this->_getUserManagerInstance()->getUserById($possible_version_author);
 
-                $eArray = ['group_id'  => $item->getGroupId(),
-                                'item'      => &$item,
-                                'new_value' => $this->_getUserManagerInstance()->getUserById($versionAuthor)->getName(),
-                                'user'      => &$user];
-
-                $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
-            } else {
-                $versionAuthor = $userId;
+                if ($author !== null) {
+                    $versionAuthor = $author->getId();
+                    $eArray        = [
+                        'group_id'  => $item->getGroupId(),
+                        'item'      => &$item,
+                        'new_value' => $author->getName(),
+                        'user'      => &$user
+                    ];
+                    $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
+                }
             }
 
             $date = '';
             if ($request->exist('date')) {
-                $date = $request->get('date');
+                $possible_date = $request->get('date');
 
-                $eArray = ['group_id'  => $item->getGroupId(),
-                                'item'      => &$item,
-                                'old_value' => null,
-                                'new_value' => $date,
-                                'user'      => &$user];
+                if (is_int($possible_date)) {
+                    $date   = $possible_date;
+                    $eArray = ['group_id'  => $item->getGroupId(),
+                               'item'      => &$item,
+                               'old_value' => null,
+                               'new_value' => $date,
+                               'user'      => &$user];
 
-                $this->event_manager->processEvent('plugin_docman_event_set_version_date', $eArray);
+                    $this->event_manager->processEvent('plugin_docman_event_set_version_date', $eArray);
+                }
             }
 
             $vArray = ['item_id'   => $item->getId(),
