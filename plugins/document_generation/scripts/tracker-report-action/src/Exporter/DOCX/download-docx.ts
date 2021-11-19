@@ -26,6 +26,7 @@ import type {
     DateReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
+    FormattedArtifact,
     GlobalExportProperties,
     ReportCriterionValue,
     TraceabilityMatrixElement,
@@ -150,8 +151,8 @@ export async function downloadDocx(
                     }),
                 ],
             }),
-            ...(await buildFieldValuesDisplayZone(artifact.fields, gettext_provider)),
-            ...(await buildContainersDisplayZone(artifact.containers, gettext_provider)),
+            ...(await buildFieldValuesDisplayZone(artifact, artifact.fields, gettext_provider)),
+            ...(await buildContainersDisplayZone(artifact, artifact.containers, gettext_provider)),
             new Paragraph({ children: [new PageBreak()] })
         );
     }
@@ -554,17 +555,19 @@ function buildCoverTableRow(label: string, value: TextRun | ExternalHyperlink): 
 }
 
 async function buildContainersDisplayZone(
+    artifact: FormattedArtifact,
     containers: ReadonlyArray<ArtifactContainer>,
     gettext_provider: GetText
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
         const sub_containers_display_zones = await buildContainersDisplayZone(
+            artifact,
             container.containers,
             gettext_provider
         );
         const field_values_display_zone: XmlComponent[] = [];
         field_values_display_zone.push(
-            ...(await buildFieldValuesDisplayZone(container.fields, gettext_provider))
+            ...(await buildFieldValuesDisplayZone(artifact, container.fields, gettext_provider))
         );
 
         if (sub_containers_display_zones.length === 0 && field_values_display_zone.length === 0) {
@@ -724,6 +727,7 @@ function buildDateReportCriterionValue(
 }
 
 async function buildFieldValuesDisplayZone(
+    artifact: FormattedArtifact,
     artifact_values: ReadonlyArray<ArtifactFieldValue>,
     gettext_provider: GetText
 ): Promise<XmlComponent[]> {
@@ -842,10 +846,6 @@ async function buildFieldValuesDisplayZone(
                 break;
             }
             case "artlinktable": {
-                if (!window.location.hash.includes("artlinks")) {
-                    break;
-                }
-
                 display_zone_long_fields.push(
                     new Paragraph({
                         heading: HeadingLevel.HEADING_4,
@@ -858,7 +858,12 @@ async function buildFieldValuesDisplayZone(
                         new Paragraph({
                             heading: HeadingLevel.HEADING_5,
                             children: [
-                                new TextRun(gettext_provider.gettext("Artifacts referenced by")),
+                                new TextRun(
+                                    sprintf(
+                                        gettext_provider.gettext("Artifacts referenced by “%s”"),
+                                        artifact.short_title
+                                    )
+                                ),
                             ],
                         })
                     );
@@ -891,7 +896,12 @@ async function buildFieldValuesDisplayZone(
                         new Paragraph({
                             heading: HeadingLevel.HEADING_5,
                             children: [
-                                new TextRun(gettext_provider.gettext("Artifacts that reference")),
+                                new TextRun(
+                                    sprintf(
+                                        gettext_provider.gettext("Artifacts that reference “%s”"),
+                                        artifact.short_title
+                                    )
+                                ),
                             ],
                         })
                     );

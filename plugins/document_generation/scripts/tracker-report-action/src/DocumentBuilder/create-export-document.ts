@@ -70,13 +70,17 @@ export async function createExportDocument(
         const artifact_id = artifact.id;
         const artifact_title = artifact.title;
 
-        let formatted_title = tracker_shortname + " #" + artifact.id;
-        if (artifact_title !== null) {
+        const xref = tracker_shortname + " #" + artifact.id;
+        let formatted_title = xref;
+        if (artifact_title) {
             formatted_title += " - " + artifact_title;
         }
+        const short_title = artifact_title ? artifact_title : xref;
+
         artifact_data.push({
             id: artifact_id,
             title: formatted_title,
+            short_title,
             fields: formatFieldValues(
                 artifact.values,
                 datetime_locale_information,

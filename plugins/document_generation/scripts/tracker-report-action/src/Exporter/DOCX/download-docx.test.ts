@@ -52,6 +52,7 @@ describe("download-docx", () => {
                     {
                         id: 741,
                         title: "Art title 741",
+                        short_title: "Art title 741",
                         fields: [
                             {
                                 content_length: "short",
