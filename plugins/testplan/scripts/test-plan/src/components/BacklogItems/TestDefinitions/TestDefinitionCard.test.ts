@@ -43,38 +43,6 @@ describe("TestDefinitionCard", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Display an icon for automated tests", () => {
-        const wrapper = shallowMount(TestDefinitionCard, {
-            propsData: {
-                test_definition: {
-                    id: 123,
-                    short_type: "test_def",
-                    summary: "Test definition summary",
-                    automated_tests: "Automated test name",
-                } as TestDefinition,
-                backlog_item: { id: 456 } as BacklogItem,
-            },
-        });
-
-        expect(wrapper.find("[data-test=automated-test-icon]").exists()).toBe(true);
-    });
-
-    it("does not display a category when none is set for the test", () => {
-        const wrapper = shallowMount(TestDefinitionCard, {
-            propsData: {
-                test_definition: {
-                    id: 125,
-                    short_type: "test_def",
-                    summary: "Test definition summary",
-                    category: null,
-                } as TestDefinition,
-                backlog_item: { id: 456 } as BacklogItem,
-            },
-        });
-
-        expect(wrapper.find("[data-test=test-category]").exists()).toBe(false);
-    });
-
     it("Marks the test as just refreshed", () => {
         const $store = createStoreMock({
             state: {

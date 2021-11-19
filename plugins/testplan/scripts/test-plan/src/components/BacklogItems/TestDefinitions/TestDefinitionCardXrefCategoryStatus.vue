@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="test-plan-test-definition-xref-title">
+    <div class="test-plan-test-definition-metadata">
         <div class="tlp-dropdown">
             <a
                 v-bind:href="go_to_test_def_link"
@@ -27,13 +27,15 @@
                 v-on:click.prevent
                 ref="dropdownTrigger"
             >
-                {{ test_definition.short_type }} #{{ test_definition.id }}
-                <i class="fa fa-caret-down"></i>
+                <span class="test-plan-test-definition-xref-text">
+                    {{ test_definition.short_type }} #{{ test_definition.id }}
+                </span>
+                <i class="fa fa-caret-down test-plan-test-definition-xref-icon"></i>
             </a>
 
             <div class="tlp-dropdown-menu tlp-dropdown-menu-left" role="menu" ref="dropdownMenu">
                 <a v-bind:href="go_to_test_def_link" class="tlp-dropdown-menu-item" role="menuitem">
-                    <i class="fas fa-fw fa-pencil-alt"></i>
+                    <i class="fas fa-fw tlp-dropdown-menu-item-icon fa-pencil-alt"></i>
                     <translate
                         v-bind:translate-params="{
                             item_type: test_definition.short_type,
@@ -55,14 +57,33 @@
                     v-if="go_to_last_test_exec_link !== null"
                     data-test="go-to-last-test-exec"
                 >
-                    <i class="fas fa-fw fa-long-arrow-alt-right"></i>
+                    <i class="fas fa-fw tlp-dropdown-menu-item-icon fa-long-arrow-alt-right"></i>
                     <translate v-bind:translate-params="{ release_name: milestone_title }">
                         Go to the last execution in release %{ release_name }
                     </translate>
                 </a>
             </div>
         </div>
-        {{ test_definition.summary }}
+
+        <div class="test-plan-test-definition-card-category-status">
+            <span
+                class="tlp-badge-secondary tlp-badge-outline test-plan-test-definition-category"
+                v-if="test_definition.category !== null"
+                data-test="test-category"
+            >
+                {{ test_definition.category }}
+            </span>
+            <div class="test-plan-test-definition-icons">
+                <i
+                    class="fa test-plan-test-definition-icon-automated-tests"
+                    v-bind:class="automated_icon_status"
+                    aria-hidden="true"
+                    v-if="test_definition.automated_tests"
+                    data-test="automated-test-icon"
+                ></i>
+                <test-definition-card-status v-bind:test_definition="test_definition" />
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -71,13 +92,16 @@ import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { createDropdown } from "tlp";
 import type { BacklogItem, TestDefinition } from "../../../type";
+import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
 import {
     buildEditTestDefinitionItemLink,
     buildGoToTestExecutionLink,
 } from "../../../helpers/BacklogItems/url-builder";
 
-@Component
-export default class TestDefinitionCardXrefTitle extends Vue {
+@Component({
+    components: { TestDefinitionCardStatus },
+})
+export default class TestDefinitionCardXrefCategoryStatus extends Vue {
     @State
     readonly project_id!: number;
 
@@ -112,6 +136,21 @@ export default class TestDefinitionCardXrefTitle extends Vue {
 
     get go_to_last_test_exec_link(): string | null {
         return buildGoToTestExecutionLink(this.project_id, this.milestone_id, this.test_definition);
+    }
+
+    get automated_icon_status(): string {
+        switch (this.test_definition.test_status) {
+            case "passed":
+                return "fa-tlp-robot-happy test-plan-test-definition-icon-status-passed";
+            case "failed":
+                return "fa-tlp-robot-unhappy test-plan-test-definition-icon-status-failed";
+            case "blocked":
+                return "fa-tlp-robot test-plan-test-definition-icon-status-blocked";
+            case "notrun":
+                return "fa-tlp-robot test-plan-test-definition-icon-status-notrun";
+            default:
+                return "fa-tlp-robot";
+        }
     }
 }
 </script>

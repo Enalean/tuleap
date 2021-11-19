@@ -58,13 +58,15 @@
 
 .test-plan-test-definition-card {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+    flex-direction: column;
     width: 100%;
     margin: 0 0 var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing);
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+    border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
+    background: var(--secondary-color, var(--tlp-white-color));
+    box-shadow: var(--tlp-card-shadow);
 
     &:last-of-type {
         margin: 0;
@@ -77,60 +79,73 @@
     }
 }
 
-.test-plan-test-definition-xref-title {
-    font-size: 14px;
-    line-height: 20px;
+.test-plan-test-definition-metadata {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.test-plan-test-definition-title {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
 }
 
 .test-plan-test-definition-xref {
-    margin: 0 4px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
     color: var(--tlp-dimmed-color);
-    font-size: 12px;
+    font-size: 0.625rem;
+    line-height: 0.8125rem;
 
-    &:hover {
-        opacity: 0.7;
+    &:hover,
+    &:focus,
+    &:active {
         text-decoration: none;
+
+        > .test-plan-test-definition-xref-text {
+            text-decoration: underline;
+        }
     }
+}
+
+.test-plan-test-definition-xref-icon {
+    font-size: 0.8em;
+}
+
+.test-plan-test-definition-category {
+    font-size: 0.625rem;
 }
 
 .test-plan-test-definition-card-category-status {
     display: flex;
-}
-
-.test-plan-test-definition-category {
-    align-self: center;
-    padding: 1px 6px;
-    border-radius: var(--tlp-small-radius);
-    background: var(--tlp-main-color-hover-background);
-    color: var(--tlp-main-color);
-    font-size: 12px;
-    line-height: 18px;
-    text-align: center;
+    align-items: center;
+    gap: var(--tlp-small-spacing);
 }
 
 .test-plan-test-definition-icons {
+    display: flex;
+    gap: 2px;
     flex: 0 0 auto;
-    min-width: 43px;
-    margin: 2px 0 0 var(--tlp-small-spacing);
-    text-align: end;
+    justify-content: flex-end;
+    width: 44px; // magic value so the size is kept even without automated test icon
+    height: 1.075em;
 }
 
-.test-plan-test-definition-icon-automated-tests:last-child {
-    margin: 0 26px 0 0;
+.test-plan-test-definition-icon-automated-tests {
+    width: 1.25em;
+    font-size: 1.075em;
+    text-align: center;
+
+    &:last-child {
+        margin: 0 26px 0 0;
+    }
 }
 
 .test-plan-test-definition-icon-automated-tests.test-plan-test-definition-icon-status-notrun,
 .test-plan-test-definition-icon-automated-tests:last-child {
     opacity: 0.5;
     color: var(--tlp-dimmed-color);
-}
-
-.test-plan-test-definition-icon-status-passed,
-.test-plan-test-definition-icon-status-failed,
-.test-plan-test-definition-icon-status-blocked,
-.test-plan-test-definition-icon-status-notrun,
-.test-plan-test-definition-icon-status-notplanned {
-    margin: 0 0 0 2px;
 }
 
 .test-plan-test-definition-icon-status-passed {

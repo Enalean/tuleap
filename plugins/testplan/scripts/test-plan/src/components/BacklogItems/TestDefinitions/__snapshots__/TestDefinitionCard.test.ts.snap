@@ -2,34 +2,17 @@
 
 exports[`TestDefinitionCard Display a test definition as a card 1`] = `
 <div
-  class="tlp-card test-plan-test-definition-card"
+  class="test-plan-test-definition-card"
 >
-  <test-definition-card-xref-title-stub
+  <test-definition-card-xref-category-status-stub
     backlog_item="[object Object]"
     test_definition="[object Object]"
   />
    
-  <div
-    class="test-plan-test-definition-card-category-status"
+  <p
+    class="test-plan-test-definition-title"
   >
-    <div
-      class="test-plan-test-definition-category"
-      data-test="test-category"
-    >
-      
-            Some category
-        
-    </div>
-     
-    <div
-      class="test-plan-test-definition-icons"
-    >
-      <!---->
-       
-      <test-definition-card-status-stub
-        test_definition="[object Object]"
-      />
-    </div>
-  </div>
+    Test definition summary
+  </p>
 </div>
 `;
