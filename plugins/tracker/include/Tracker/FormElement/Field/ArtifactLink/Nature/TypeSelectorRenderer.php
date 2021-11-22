@@ -22,15 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
 
 final class TypeSelectorRenderer
 {
-    #[FeatureFlagConfigKey("Feature flag to have Parent artifact link type which is a work in progress")]
-    public const FEATURE_FLAG_KEY = 'parent_artlink_type_wip';
-
     public function __construct(
         private IRetrieveAllUsableTypesInProject $types_retriever,
         private \TemplateRenderer $renderer
@@ -58,10 +54,6 @@ final class TypeSelectorRenderer
             ];
 
             if ($is_parent_selector_displayed) {
-                continue;
-            }
-
-            if (\ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY) !== '1') {
                 continue;
             }
 

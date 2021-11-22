@@ -188,4 +188,113 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             $fields_data[$this->art_link_id]
         );
     }
+
+    public function testWhenUserWantsExistingLinksToBeParentsThenTheyArePutInTheSpecialKeyParentSoThatTheLinkIsDoneTheRightWay(): void
+    {
+        $fields_data = [
+            $this->art_link_id => [
+                'new_values' => '',
+                'nature'     => '',
+                'natures' => [
+                    '123' => 'depends_on',
+                    '234' => '_is_child',
+                    '345' => '_is_parent',
+                    '456' => '_is_parent',
+                ]
+            ]
+        ];
+
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent');
+
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
+
+        $this->assertEquals(
+            [
+                'new_values' => '',
+                'nature'     => '',
+                'natures'    => [
+                    '123' => 'depends_on',
+                    '234' => '_is_child',
+                ],
+                'parent'     => [345, 456],
+                'removed_values' => [
+                    '345' => [345],
+                    '456' => [456],
+                ]
+            ],
+            $fields_data[$this->art_link_id]
+        );
+    }
+
+    public function testUserCanBothSetNewLinksAndExistingLinksAsParent(): void
+    {
+        $fields_data = [
+            $this->art_link_id => [
+                'new_values' => '356,357',
+                'nature'     => '_is_parent',
+                'natures' => [
+                    '123' => 'depends_on',
+                    '234' => '_is_child',
+                    '345' => '_is_parent',
+                    '456' => '_is_parent',
+                ]
+            ]
+        ];
+
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent');
+
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
+
+        $this->assertEquals(
+            [
+                'new_values' => '',
+                'nature'     => '',
+                'natures'    => [
+                    '123' => 'depends_on',
+                    '234' => '_is_child',
+                ],
+                'parent'     => [356, 357, 345, 456],
+                'removed_values' => [
+                    '345' => [345],
+                    '456' => [456],
+                ]
+            ],
+            $fields_data[$this->art_link_id]
+        );
+    }
+
+    public function testRemovedExistingLinksCannotBeBothRemovedAndChangedToParent(): void
+    {
+        $fields_data = [
+            $this->art_link_id => [
+                'new_values' => '',
+                'nature'     => '',
+                'natures' => [
+                    '456' => '_is_parent',
+                ],
+                'removed_values' => [
+                    '456' => ['456']
+                ]
+            ]
+        ];
+
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent');
+
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
+
+        $this->assertEquals(
+            [
+                'new_values' => '',
+                'nature'     => '',
+                'natures' => [],
+                'removed_values' => [
+                    '456' => ['456']
+                ]
+            ],
+            $fields_data[$this->art_link_id]
+        );
+    }
 }
