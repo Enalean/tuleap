@@ -18,42 +18,42 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
 import LockProperty from "./LockProperty.vue";
+import type { Item, LockInfo, User } from "../../../type";
+import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("LockProperty", () => {
-    let lock_property;
-    beforeEach(() => {
-        lock_property = (item = {}) => {
-            return shallowMount(LockProperty, {
-                localVue,
-                propsData: {
-                    item: { ...item },
-                },
-            });
-        };
-    });
+    async function instantiateComponent(item: Item): Promise<Wrapper<LockProperty>> {
+        return shallowMount(LockProperty, {
+            localVue: await createDocumentLocalVue(),
+            propsData: {
+                item: { ...item },
+            },
+        });
+    }
+
     describe("The displayed label", () => {
-        it("displays the 'Lock new version' label on update if the document does not have lock", () => {
-            const item = { id: 1, title: "Item", lock_info: null };
-            const wrapper = lock_property(item);
+        it("displays the 'Lock new version' label on update if the document does not have lock", async () => {
+            const item = { id: 1, title: "Item", lock_info: null } as Item;
+            const wrapper = await instantiateComponent(item);
 
             const label_element = wrapper.get("[data-test='lock-property-label']");
 
             expect(label_element.element.textContent).toMatch("Lock new version");
         });
 
-        it("displays the 'Keep lock?' label on update if the document does have a lock", () => {
+        it("displays the 'Keep lock?' label on update if the document does have a lock", async () => {
             const item = {
                 id: 1,
                 title: "Item",
                 lock_info: {
-                    locked_date: "2019-04-25T16:32:59+02:00",
-                    lock_by: "peraltaj",
-                },
-            };
-            const wrapper = lock_property(item);
+                    lock_by: { id: 1 } as User,
+                    lock_date: "2019-04-25T16:32:59+02:00",
+                } as LockInfo,
+            } as Item;
+            const wrapper = await instantiateComponent(item);
 
             const label_element = wrapper.get("[data-test='lock-property-label']");
 

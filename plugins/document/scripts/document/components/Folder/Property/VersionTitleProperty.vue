@@ -27,25 +27,26 @@
             class="tlp-input"
             id="document-update-version-title"
             name="version_title"
-            v-bind:placeholder="placeholder"
+            v-bind:placeholder="`${$gettext('My new version name')}`"
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
             ref="input"
         />
     </div>
 </template>
-<script>
-export default {
-    props: {
-        value: String,
-    },
-    computed: {
-        placeholder() {
-            return this.$gettext("My new version name");
-        },
-    },
-    mounted() {
-        this.$refs.input.focus();
-    },
-};
+
+<script lang="ts">
+import { Component, Prop, Ref, Vue } from "vue-property-decorator";
+
+@Component
+export default class WikiProperties extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
+
+    @Ref() readonly input!: HTMLElement;
+
+    mounted(): void {
+        this.input.focus();
+    }
+}
 </script>

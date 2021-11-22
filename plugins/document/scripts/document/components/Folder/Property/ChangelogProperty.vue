@@ -24,21 +24,19 @@
             class="tlp-textarea"
             id="document-update-changelog"
             name="changelog"
-            v-bind:placeholder="placeholder"
+            v-bind:placeholder="`${$gettext(
+                'Please describe the changes of the new version here'
+            )}`"
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
         ></textarea>
     </div>
 </template>
-<script>
-export default {
-    props: {
-        value: String,
-    },
-    computed: {
-        placeholder() {
-            return this.$gettext("Please describe the changes of the new version here");
-        },
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+@Component
+export default class WikiProperties extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
+}
 </script>

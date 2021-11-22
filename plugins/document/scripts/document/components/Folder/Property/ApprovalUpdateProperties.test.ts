@@ -17,53 +17,67 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../helpers/local-vue.js";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
+import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("ApprovalUpdateProperties", () => {
-    let approval_update_factory;
-    beforeEach(() => {
-        approval_update_factory = () => {
-            return shallowMount(ApprovalUpdateProperties, {
-                localVue,
-            });
-        };
-    });
+    async function instantiateComponent(): Promise<Wrapper<ApprovalUpdateProperties>> {
+        return shallowMount(ApprovalUpdateProperties, {
+            localVue: await createDocumentLocalVue(),
+        });
+    }
+
     it(`Given the copy action of an approval table
         When the user updating an item
-        Then it raise the 'action' event with the value 'copy'`, () => {
-        const wrapper = approval_update_factory();
+        Then it raise the 'action' event with the value 'copy'`, async () => {
+        const wrapper = await instantiateComponent();
 
         const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-copy"]'
         );
         radio_input.setChecked();
 
-        expect(wrapper.emitted()["approval-table-action-change"][0]).toEqual(["copy"]);
+        const emitted = wrapper.emitted()["approval-table-action-change"];
+        if (!emitted) {
+            throw new Error("Event has not been emitted");
+        }
+
+        expect(emitted[0]).toEqual(["copy"]);
     });
     it(`Given the reset action of an approval table
         When the user updating an item
-        Then it raise the 'action' event with the value 'reset'`, () => {
-        const wrapper = approval_update_factory();
+        Then it raise the 'action' event with the value 'reset'`, async () => {
+        const wrapper = await instantiateComponent();
 
         const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-reset"]'
         );
         radio_input.setChecked();
 
-        expect(wrapper.emitted()["approval-table-action-change"][0]).toEqual(["reset"]);
+        const emitted = wrapper.emitted()["approval-table-action-change"];
+        if (!emitted) {
+            throw new Error("Event has not been emitted");
+        }
+
+        expect(emitted[0]).toEqual(["reset"]);
     });
     it(`Given the empty action of an approval table
         When the user updating an item
-        Then it raise the 'action' event with the value 'empty'`, () => {
-        const wrapper = approval_update_factory();
+        Then it raise the 'action' event with the value 'empty'`, async () => {
+        const wrapper = await instantiateComponent();
 
         const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-empty"]'
         );
         radio_input.setChecked();
 
-        expect(wrapper.emitted()["approval-table-action-change"][0]).toEqual(["empty"]);
+        const emitted = wrapper.emitted()["approval-table-action-change"];
+        if (!emitted) {
+            throw new Error("Event has not been emitted");
+        }
+
+        expect(emitted[0]).toEqual(["empty"]);
     });
 });
