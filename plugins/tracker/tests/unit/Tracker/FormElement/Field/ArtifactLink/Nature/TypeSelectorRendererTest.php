@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;

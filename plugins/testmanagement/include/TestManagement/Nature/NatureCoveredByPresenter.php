@@ -21,7 +21,7 @@
 
 namespace Tuleap\TestManagement\Nature;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 class NatureCoveredByPresenter extends NaturePresenter
 {

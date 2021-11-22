@@ -39,8 +39,8 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 
 class ArtifactLinksController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {

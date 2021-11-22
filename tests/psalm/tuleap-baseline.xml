@@ -36731,7 +36731,7 @@
       <code>getDataLikeWebUI</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/ArtifactInNatureTablePresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ArtifactInNatureTablePresenter.php">
     <MissingParamType occurrences="2">
       <code>$html_classes</code>
       <code>$value</code>
@@ -36754,7 +36754,7 @@
       <code>userCanReadSubmitter</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/CustomColumn/CSVOutputStrategy.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/CSVOutputStrategy.php">
     <InvalidReturnStatement occurrences="1">
       <code>$artifact_link_info-&gt;getArtifactId()</code>
     </InvalidReturnStatement>
@@ -36765,7 +36765,7 @@
       <code>$formatted_value</code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/CustomColumn/HTMLOutputStrategy.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/HTMLOutputStrategy.php">
     <MissingParamType occurrences="2">
       <code>$formatted_value</code>
       <code>$warning</code>
@@ -36774,12 +36774,12 @@
       <code>getDefaultFormatWithWarning</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/CustomColumn/OutputStrategy.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/OutputStrategy.php">
     <MissingParamType occurrences="1">
       <code>$formatted_value</code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/CustomColumn/ReplaceValueVisitor.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/ReplaceValueVisitor.php">
     <MissingReturnType occurrences="25">
       <code>getReplacement</code>
       <code>visitArtifactId</code>
@@ -36814,7 +36814,7 @@
       <code>getText</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/CustomColumn/ValueFormatter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/ValueFormatter.php">
     <MissingParamType occurrences="4">
       <code>$format</code>
       <code>$format</code>
@@ -36830,7 +36830,7 @@
       <code>getLastChangeset</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureConfigController.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureConfigController.php">
     <MissingParamType occurrences="1">
       <code>$title</code>
     </MissingParamType>
@@ -36850,7 +36850,7 @@
       <code>redirect</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureConfigPresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureConfigPresenter.php">
     <MissingParamType occurrences="1">
       <code>$title</code>
     </MissingParamType>
@@ -36888,7 +36888,7 @@
       <code>$this-&gt;no_natures</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureDao.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureDao.php">
     <MissingParamType occurrences="25">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -36938,7 +36938,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureDeletor.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureDeletor.php">
     <MissingParamType occurrences="1">
       <code>$shortname</code>
     </MissingParamType>
@@ -36946,7 +36946,7 @@
       <code>delete</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureEditor.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureEditor.php">
     <MissingParamType occurrences="3">
       <code>$forward_label</code>
       <code>$reverse_label</code>
@@ -36956,7 +36956,7 @@
       <code>edit</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureIsChildLinkRetriever.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureIsChildLinkRetriever.php">
     <InvalidReturnStatement occurrences="1">
       <code>$parents</code>
     </InvalidReturnStatement>
@@ -36967,7 +36967,7 @@
       <code>addParentsOfArtifactToCollection</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NaturePresenterFactory.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NaturePresenterFactory.php">
     <MissingParamType occurrences="3">
       <code>$row</code>
       <code>$shortname</code>
@@ -36983,7 +36983,7 @@
       <code>instantiateFromRow</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureSelectorPresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureSelectorPresenter.php">
     <MissingParamType occurrences="2">
       <code>$select_classes</code>
       <code>$select_name</code>
@@ -36993,7 +36993,7 @@
       <code>$select_name</code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureTablePresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureTablePresenter.php">
     <MissingParamType occurrences="3">
       <code>$is_reverse_artifact_links</code>
       <code>$is_reverse_artifact_links</code>
@@ -37023,7 +37023,7 @@
       <code>$artifact</code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureUsagePresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureUsagePresenter.php">
     <MissingParamType occurrences="2">
       <code>$is_or_has_been_used</code>
       <code>$is_used</code>
@@ -37033,7 +37033,7 @@
       <code>setIsUsed</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureValidator.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureValidator.php">
     <MissingParamType occurrences="4">
       <code>$forward_label</code>
       <code>$reverse_label</code>
@@ -37047,7 +37047,7 @@
       <code>checkShortname</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/ParentOfArtifactCollection.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ParentOfArtifactCollection.php">
     <MissingParamType occurrences="2">
       <code>$artifacts</code>
       <code>$is_graph</code>

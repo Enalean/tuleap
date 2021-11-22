@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\Widget;
 
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 
 class RoadmapWidgetPresenterBuilder
 {

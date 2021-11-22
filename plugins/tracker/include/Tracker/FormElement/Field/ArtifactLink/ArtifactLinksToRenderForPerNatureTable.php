@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker_ArtifactLinkInfo;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 class ArtifactLinksToRenderForPerNatureTable
 {

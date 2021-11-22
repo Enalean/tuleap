@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker;
 use Tracker_ArtifactLinkInfo;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 
 class ArtifactLinksToRender
 {
@@ -224,7 +224,7 @@ class ArtifactLinksToRender
     }
 
     /**
-     * @return null|Nature\NaturePresenter
+     * @return null|Type\NaturePresenter
      */
     private function getNaturePresenterFromShortnameWithCache(NaturePresenterFactory $nature_presenter_factory, $shortname)
     {

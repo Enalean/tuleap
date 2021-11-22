@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
@@ -162,7 +162,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger,
             false,
             \Mockery::spy(\Tracker_ArtifactFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao::class),
             Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
             Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
             Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
@@ -193,7 +193,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->logger,
                 false,
                 \Mockery::spy(\Tracker_ArtifactFactory::class),
-                \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
+                \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao::class),
                 Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
                 Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
                 Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),

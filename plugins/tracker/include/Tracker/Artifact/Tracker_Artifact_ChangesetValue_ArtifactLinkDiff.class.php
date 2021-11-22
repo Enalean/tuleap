@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RemovedLinkCollection;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddedLinkByNatureCollection;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\UpdatedNatureLinkCollection;

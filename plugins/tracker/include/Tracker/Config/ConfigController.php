@@ -26,7 +26,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureConfigController;
 use CSRFSynchronizerToken;
 use Response;
 use PFUser;

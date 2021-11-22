@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Events;
 
 use Project;
 use Tuleap\Event\Dispatchable;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 class GetEditableTypesInProject implements Dispatchable
 {

@@ -19,7 +19,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -46,7 +46,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
      */
     private $trigger_rules_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory
      */
     private $nature_factory;
 
@@ -74,7 +74,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
         $this->user                  = new PFUser(['language_id' => 'en']);
 
         $this->nature_factory = \Mockery::spy(
-            \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory::class
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory::class
         );
         $this->nature_factory->shouldReceive('getFromShortname')->andReturns(
             new NaturePresenter('', '', '', true)

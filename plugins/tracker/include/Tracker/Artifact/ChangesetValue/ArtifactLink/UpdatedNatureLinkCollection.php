@@ -18,7 +18,7 @@
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 use Tracker_ArtifactLinkInfo;
 use PFUser;
 

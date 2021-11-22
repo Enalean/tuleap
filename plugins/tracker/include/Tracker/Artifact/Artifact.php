@@ -120,7 +120,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
@@ -2306,8 +2306,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         return new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $this->getArtifactFactory(),
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
-                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao(),
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory(
+                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao(),
                 $usage_dao
             ),
             $usage_dao

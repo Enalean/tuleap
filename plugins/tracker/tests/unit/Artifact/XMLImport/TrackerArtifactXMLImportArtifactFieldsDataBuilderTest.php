@@ -34,7 +34,7 @@ use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
 class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

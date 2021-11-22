@@ -25,9 +25,9 @@ namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllNaturesRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreatorInterface;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllNaturesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreatorInterface;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 final class ArtifactLinkTypeImporter
 {
@@ -49,8 +49,8 @@ final class ArtifactLinkTypeImporter
     }
 
     /**
-     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\InvalidNatureParameterException
-     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\UnableToCreateNatureException
+     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidNatureParameterException
+     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\UnableToCreateNatureException
      */
     public function import(JiraClient $jira_client): void
     {
