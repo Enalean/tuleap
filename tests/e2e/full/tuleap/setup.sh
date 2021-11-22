@@ -2,8 +2,6 @@
 
 set -euxo pipefail
 
-DB_HOST="mysql57"
-
 setup_lhs() {
     touch /etc/aliases.codendi
 

@@ -8,12 +8,22 @@ set -ex
 
 MAX_TEST_EXECUTION_TIME='30m'
 TIMEOUT="$(command -v gtimeout || echo timeout)"
-DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG:-dev}"
+
+case "${1:-}" in
+    "mysql57")
+    export DB_HOST="mysql57"
+    ;;
+    echo "A database type must be provided as parameter. Allowed values are:"
+    echo "* mysql57"
+    exit 1
+esac
 
 test_results_folder='./test_results_distlp'
-if [ -n "$1" ]; then
-    test_results_folder="$1"
+if [ -n "$2" ]; then
+    test_results_folder="$2"
 fi
+
+DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG:-dev}"
 
 cypress_version="$(python3 -c 'import json,sys;print(json.load(sys.stdin)["version"], end="")' < ./node_modules/cypress/package.json)"
 

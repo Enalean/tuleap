@@ -171,14 +171,22 @@ tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests_cypress: ## Run Cypress tests
-	@tests/e2e/full/wrap.sh
+tests-e2e: ## Run E2E tests. DB to select the database to use (mysql57, mysql80).
+	$(eval DB ?= mysql57)
+	@tests/e2e/full/wrap.sh "$(DB)"
 
-tests_cypress_dev: ## Start cypress container to launch tests manually
-	@tests/e2e/full/wrap_for_dev_context.sh
+tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql57, mysql80).
+	$(eval DB ?= mysql57)
+	@tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
+
+tests_cypress:
+	@$(MAKE) --no-print-directory tests-e2e
+
+tests_cypress_dev:
+	@$(MAKE) --no-print-directory tests-e2e-dev
 
 tests_cypress_distlp: ## Run Cypress distlp tests
-	@tests/e2e/distlp/wrap.sh
+	@tests/e2e/distlp/wrap.sh mysql57
 
 ifeq ($(COVERAGE_ENABLED),1)
 COVERAGE_PARAMS_PHPUNIT=--coverage-html=/tmp/results/coverage/
