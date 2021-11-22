@@ -37,7 +37,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->search_teams    = SearchTeamsOfProgramStub::buildTeams(103, 125);
+        $this->search_teams    = SearchTeamsOfProgramStub::withTeamIds(103, 125);
         $this->project_builder = RetrieveProjectReferenceStub::withProjects(
             ProjectReferenceStub::withId(103),
             ProjectReferenceStub::withId(125),
@@ -73,7 +73,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIsEmptyReturnsTrue(): void
     {
         $collection = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(),
+            SearchTeamsOfProgramStub::withNoTeams(),
             $this->project_builder,
             $this->program
         );

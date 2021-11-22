@@ -26,10 +26,10 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox, RetrieveMirroredProgramIncrementFromTeam
 {
@@ -72,7 +72,7 @@ final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirro
         return $timebox_id;
     }
 
-    public function getMirrorId(ProgramIncrementIdentifier $program_increment, ProjectReference $team): ?int
+    public function getMirrorId(ProgramIncrementIdentifier $program_increment, TeamIdentifier $team): ?int
     {
         $sql = <<< SQL
         SELECT parent_art.id AS id

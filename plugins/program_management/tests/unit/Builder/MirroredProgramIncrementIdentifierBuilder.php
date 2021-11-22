@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -36,14 +35,10 @@ final class MirroredProgramIncrementIdentifierBuilder
             RetrieveMirroredProgramIncrementFromTeamStub::withIds($id),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             ProgramIncrementIdentifierBuilder::buildWithId(48),
-            ProjectReferenceStub::buildGeneric(),
+            TeamIdentifierBuilder::build(),
             UserIdentifierStub::buildGenericUser()
         );
-
-        if (! $mirrored_id) {
-            throw new \LogicException("Mirrored Program Increment identifier have not been created");
-        }
-
+        assert($mirrored_id !== null);
         return $mirrored_id;
     }
 }

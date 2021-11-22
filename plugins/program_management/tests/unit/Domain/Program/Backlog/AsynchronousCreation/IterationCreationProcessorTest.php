@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeam
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -49,6 +49,8 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIRST_TEAM_ID                                            = 122;
+    private const SECOND_TEAM_ID                                           = 127;
     private const ITERATION_ID                                             = 20;
     private const FIRST_MIRRORED_ITERATION_ID                              = 21;
     private const SECOND_MIRRORED_ITERATION_ID                             = 22;
@@ -85,6 +87,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private GatherSynchronizedFieldsStub $fields_gatherer;
     private CreateArtifactStub $artifact_creator;
     private AddArtifactLinkChangesetStub $link_adder;
+    private SearchVisibleTeamsOfProgramStub $teams_searcher;
 
     protected function setUp(): void
     {
@@ -121,6 +124,8 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::SECOND_MIRRORED_PROGRAM_INCREMENT_ARTIFACT_LINK_FIELD_ID
             ),
         );
+
+        $this->teams_searcher = SearchVisibleTeamsOfProgramStub::withTeamIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID);
     }
 
     private function getProcessor(): IterationCreationProcessor
@@ -142,11 +147,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveChangesetSubmissionDateStub::withDate(self::SUBMISSION_DATE),
             RetrieveProgramOfIterationStub::withProgram(154),
             BuildProgramStub::stubValidProgram(),
-            SearchTeamsOfProgramStub::buildTeams(122, 127),
-            RetrieveProjectReferenceStub::withProjects(
-                ProjectReferenceStub::withId(122),
-                ProjectReferenceStub::withId(127),
-            ),
+            $this->teams_searcher,
             new IterationsCreator(
                 new DBTransactionExecutorPassthrough(),
                 RetrieveMirroredIterationTrackerStub::withValidTrackers(
@@ -165,7 +166,11 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
                 VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                 RetrieveTrackerOfArtifactStub::withIds(84, 97),
-                $this->link_adder
+                $this->link_adder,
+                RetrieveProjectReferenceStub::withProjects(
+                    ProjectReferenceStub::withId(self::FIRST_TEAM_ID),
+                    ProjectReferenceStub::withId(self::SECOND_TEAM_ID),
+                )
             )
         );
     }
@@ -259,6 +264,26 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             (string) $second_link->artifact_link_value->type
         );
         self::assertSame(self::USER_ID, $second_link->user->getId());
+    }
+
+    public function testItStopsExecutionIfProgramHasNoTeams(): void
+    {
+        $this->teams_searcher = SearchVisibleTeamsOfProgramStub::withNoTeam();
+
+        $this->getProcessor()->processCreation($this->creation);
+
+        self::assertSame(0, $this->artifact_creator->getCallCount());
+        self::assertTrue($this->logger->hasErrorRecords());
+    }
+
+    public function testItStopsExecutionIfUserCannotSeeOneTeam(): void
+    {
+        $this->teams_searcher = SearchVisibleTeamsOfProgramStub::withNotVisibleTeam();
+
+        $this->getProcessor()->processCreation($this->creation);
+
+        self::assertSame(0, $this->artifact_creator->getCallCount());
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     public function testItStopsExecutionIfThereIsAnIssueInTheSourceIteration(): void

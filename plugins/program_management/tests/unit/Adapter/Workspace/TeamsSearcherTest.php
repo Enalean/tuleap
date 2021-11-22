@@ -36,7 +36,7 @@ final class TeamsSearcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->team_ids_searcher     = SearchTeamsOfProgramStub::buildTeams(102, 103);
+        $this->team_ids_searcher     = SearchTeamsOfProgramStub::withTeamIds(102, 103);
         $this->retrieve_full_project = RetrieveFullProjectStub::withoutProject();
     }
 

@@ -85,7 +85,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
                 BuildProgramStub::stubValidProgram(),
                 $this->program_increment_checker,
                 $this->iteration_checker,
-                SearchTeamsOfProgramStub::buildTeams(162),
+                SearchTeamsOfProgramStub::withTeamIds(162),
                 RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(162))
             ),
             RetrievePlannableTrackersStub::buildIds(1),

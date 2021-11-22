@@ -22,7 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -40,9 +41,11 @@ final class MirroredIterationTrackerIdentifier implements TrackerIdentifier
 
     public static function fromTeam(
         RetrieveMirroredIterationTracker $tracker_retriever,
-        ProjectReference $team_project,
+        RetrieveProjectReference $project_retriever,
+        TeamIdentifier $team,
         UserIdentifier $user
     ): ?self {
+        $team_project               = $project_retriever->buildFromId($team->getId());
         $mirrored_iteration_tracker = $tracker_retriever->retrieveSecondPlanningMilestoneTracker(
             $team_project,
             $user,

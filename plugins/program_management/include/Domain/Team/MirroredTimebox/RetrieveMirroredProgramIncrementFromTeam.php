@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 interface RetrieveMirroredProgramIncrementFromTeam
 {
-    public function getMirrorId(ProgramIncrementIdentifier $program_increment, ProjectReference $team): ?int;
+    public function getMirrorId(ProgramIncrementIdentifier $program_increment, TeamIdentifier $team): ?int;
 }

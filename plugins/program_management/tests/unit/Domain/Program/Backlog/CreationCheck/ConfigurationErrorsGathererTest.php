@@ -59,7 +59,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
         $this->program_increment_checker = $this->createMock(ProgramIncrementCreatorChecker::class);
         $this->iteration_checker         = $this->createMock(IterationCreatorChecker::class);
         $this->build_program             = BuildProgramStub::stubValidProgram();
-        $this->teams_searcher            = SearchTeamsOfProgramStub::buildTeams(101);
+        $this->teams_searcher            = SearchTeamsOfProgramStub::withTeamIds(101);
         $this->project_builder           = RetrieveProjectReferenceStub::withProjects(ProjectReferenceStub::withId(101));
         $this->tracker                   = TrackerReferenceStub::withDefaults();
         $this->user_identifier           = UserReferenceStub::withDefaults();

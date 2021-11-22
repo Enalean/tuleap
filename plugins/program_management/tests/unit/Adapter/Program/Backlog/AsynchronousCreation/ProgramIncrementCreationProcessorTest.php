@@ -129,7 +129,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
             ),
             MessageLog::buildFromLogger($this->logger),
             $this->user_stories_planner,
-            SearchTeamsOfProgramStub::buildTeams(102, 149),
+            SearchTeamsOfProgramStub::withTeamIds(102, 149),
             RetrieveProjectReferenceStub::withProjects(
                 ProjectReferenceStub::withId(102),
                 ProjectReferenceStub::withId(149),

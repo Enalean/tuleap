@@ -38,14 +38,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredIterationTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTrackerOfArtifact;
 
@@ -60,7 +61,8 @@ final class IterationsCreator implements CreateIterations
         private RetrieveMirroredProgramIncrementFromTeam $mirrored_program_increment_retriever,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveTrackerOfArtifact $tracker_retriever,
-        private AddArtifactLinkChangeset $link_adder
+        private AddArtifactLinkChangeset $link_adder,
+        private RetrieveProjectReference $project_retriever
     ) {
     }
 
@@ -73,7 +75,7 @@ final class IterationsCreator implements CreateIterations
      */
     public function createIterations(
         SourceTimeboxChangesetValues $values,
-        TeamProjectsCollection $teams,
+        TeamIdentifierCollection $teams,
         IterationCreation $creation
     ): void {
         $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
@@ -82,7 +84,7 @@ final class IterationsCreator implements CreateIterations
         );
         $this->transaction_executor->execute(
             function () use ($values, $artifact_link_value, $teams, $creation) {
-                foreach ($teams->getTeamProjects() as $team) {
+                foreach ($teams->getTeams() as $team) {
                     $this->createOneIteration($team, $values, $artifact_link_value, $creation);
                 }
             }
@@ -97,13 +99,14 @@ final class IterationsCreator implements CreateIterations
      * @throws TeamHasNoMirroredIterationTrackerException
      */
     private function createOneIteration(
-        ProjectReference $team,
+        TeamIdentifier $team,
         SourceTimeboxChangesetValues $values,
         ArtifactLinkValue $artifact_link_value,
         IterationCreation $creation
     ): void {
         $mirrored_iteration_tracker = MirroredIterationTrackerIdentifier::fromTeam(
             $this->milestone_retriever,
+            $this->project_retriever,
             $team,
             $creation->getUser()
         );
