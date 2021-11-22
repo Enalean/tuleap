@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.12.0@e42bc4a23f67acba28a23bb09c348e2ff38a1d87">
+<files psalm-version="4.13.0@cd489407a0219b93cadd04d5aff9845a942f7e5d">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -21938,7 +21938,7 @@
     <InvalidReturnType occurrences="1">
       <code>GraphOnTracker_Chart_Engine</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="37">
+    <MissingParamType occurrences="35">
       <code>$artifacts</code>
       <code>$content</code>
       <code>$description</code>
@@ -21989,9 +21989,8 @@
       <code>$title</code>
       <code>$width</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="46">
+    <MissingReturnType occurrences="45">
       <code>delete</code>
-      <code>display</code>
       <code>duplicate</code>
       <code>exportToXml</code>
       <code>fetch</code>
@@ -34773,16 +34772,14 @@
     <MissingPropertyType occurrences="1">
       <code>$retriever</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="10">
+    <MissingReturnType occurrences="8">
       <code>displayANumberOfBlankTab</code>
       <code>displayFooter</code>
       <code>displayHeader</code>
       <code>enhanceRedirect</code>
       <code>fetchFormContent</code>
-      <code>fetchMultipleParentsTitle</code>
       <code>fetchTitle</code>
       <code>fetchTitleInHierarchy</code>
-      <code>fetchTitleIsGraph</code>
       <code>fetchView</code>
     </MissingReturnType>
   </file>
@@ -38568,9 +38565,6 @@
       <code>$value</code>
       <code>$value</code>
     </MoreSpecificImplementedParamType>
-    <PossiblyFalseIterator occurrences="1">
-      <code>$dao-&gt;retrieve($sql)</code>
-    </PossiblyFalseIterator>
     <PossiblyNullArgument occurrences="1">
       <code>$nature_presenter</code>
     </PossiblyNullArgument>

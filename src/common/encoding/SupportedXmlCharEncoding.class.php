@@ -83,6 +83,6 @@ class Encoding_SupportedXmlCharEncoding
             return $string;
         }
 
-        return mb_convert_encoding($string, 'UTF-8', $encoding);
+        return (string) mb_convert_encoding($string, 'UTF-8', $encoding);
     }
 }
