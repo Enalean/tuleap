@@ -67,13 +67,13 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
     public function retrieveRootPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector
     ): ?TrackerReference {
         try {
             $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
             return $root_planning->getPlanningTracker();
         } catch (TopPlanningNotFoundInProjectException $exception) {
-            $errors_collector->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
+            $errors_collector?->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
         }
 
         return null;

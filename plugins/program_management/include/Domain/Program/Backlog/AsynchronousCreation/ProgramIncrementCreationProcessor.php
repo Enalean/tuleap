@@ -22,38 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementTrackerIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
+use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class ProgramIncrementCreationProcessor implements ProcessProgramIncrementCreation
 {
     public function __construct(
-        private RetrieveMirroredProgramIncrementTracker $root_milestone_retriever,
+        private RetrieveMirroredProgramIncrementTracker $mirrored_tracker_retriever,
         private CreateProgramIncrements $program_increment_creator,
         private LogMessage $logger,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
-        private SearchTeamsOfProgram $teams_searcher,
-        private RetrieveProjectReference $project_builder,
+        private SearchVisibleTeamsOfProgram $teams_searcher,
+        private RetrieveProjectReference $project_retriever,
         private GatherSynchronizedFields $fields_gatherer,
         private RetrieveFieldValuesGatherer $values_retriever,
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
@@ -74,23 +73,24 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
         try {
             $this->create($creation);
         } catch (
-            TrackerRetrievalException
+            FieldSynchronizationException
             | MirroredTimeboxReplicationException
-            | FieldSynchronizationException
             | ProgramAccessException
-            | ProjectIsNotAProgramException $exception
+            | ProjectIsNotAProgramException
+            | ProgramHasNoTeamException
+            | TeamIsNotVisibleException $exception
         ) {
             $this->logger->error('Error during creation of mirror program increments ', ['exception' => $exception]);
         }
     }
 
     /**
-     * @throws MirroredTimeboxReplicationException
-     * @throws TrackerRetrievalException
-     * @throws FieldRetrievalException
      * @throws FieldSynchronizationException
+     * @throws MirroredTimeboxReplicationException
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
+     * @throws ProgramHasNoTeamException
+     * @throws TeamIsNotVisibleException
      */
     private function create(ProgramIncrementCreation $creation): void
     {
@@ -109,22 +109,22 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
             $user
         );
 
-        $team_projects = TeamProjectsCollection::fromProgramIdentifier(
+        $teams = TeamIdentifierCollection::fromProgram(
             $this->teams_searcher,
-            $this->project_builder,
-            $program
+            $program,
+            $user
         );
 
-        $root_planning_tracker_team = TrackerCollection::buildRootPlanningMilestoneTrackers(
-            $this->root_milestone_retriever,
-            $team_projects,
-            $user,
-            new ConfigurationErrorsCollector(false)
+        $mirrored_trackers = MirroredProgramIncrementTrackerIdentifierCollection::fromTeams(
+            $this->mirrored_tracker_retriever,
+            $this->project_retriever,
+            $teams,
+            $user
         );
 
         $this->program_increment_creator->createProgramIncrements(
             $source_values,
-            $root_planning_tracker_team,
+            $mirrored_trackers,
             $user
         );
 
