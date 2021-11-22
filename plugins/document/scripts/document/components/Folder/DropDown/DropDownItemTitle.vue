@@ -22,9 +22,3 @@
         {{ props.item.title }}
     </span>
 </template>
-
-<script>
-export default {
-    name: "DropDownItemTitle",
-};
-</script>
