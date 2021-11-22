@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -37,7 +37,7 @@ final class NatureValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class);
+        $this->dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao::class);
 
         $this->validator = new NatureValidator($this->dao);
     }

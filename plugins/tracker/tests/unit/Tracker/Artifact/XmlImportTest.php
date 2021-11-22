@@ -48,7 +48,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPr
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use UserManager;

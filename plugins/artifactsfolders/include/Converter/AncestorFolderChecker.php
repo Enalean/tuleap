@@ -22,7 +22,7 @@ namespace Tuleap\ArtifactsFolders\Converter;
 
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
 
 class AncestorFolderChecker
 {

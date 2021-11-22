@@ -55,8 +55,8 @@ use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
@@ -3386,7 +3386,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
         return new ArtifactLinkValidator(
             \Tracker_ArtifactFactory::instance(),
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory(
                 new NatureDao(),
                 $artifact_links_usage_dao
             ),

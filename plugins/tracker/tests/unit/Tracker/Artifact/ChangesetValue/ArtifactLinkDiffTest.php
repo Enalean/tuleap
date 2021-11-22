@@ -29,8 +29,8 @@ use PFUser;
 use Tracker;
 use Tracker_Artifact_ChangesetValue_ArtifactLinkDiff;
 use Tracker_ArtifactLinkInfo;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 
 class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {

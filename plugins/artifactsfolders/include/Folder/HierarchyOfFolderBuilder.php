@@ -22,7 +22,7 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
 
 class HierarchyOfFolderBuilder
 {

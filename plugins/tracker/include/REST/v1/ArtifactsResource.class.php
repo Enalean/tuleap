@@ -88,7 +88,7 @@ use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;

@@ -28,8 +28,8 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPriva
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 use Tuleap\Tracker\Masschange\MasschangeUpdater;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;

@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -44,7 +44,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
         $nature_dao              = new NatureDao();
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $artifact_factory,
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory(
                 $nature_dao,
                 $artifact_link_usage_dao,
             ),

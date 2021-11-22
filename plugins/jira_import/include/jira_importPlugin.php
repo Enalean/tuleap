@@ -32,10 +32,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetr
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureValidator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';

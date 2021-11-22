@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 /**
  * @psalm-immutable

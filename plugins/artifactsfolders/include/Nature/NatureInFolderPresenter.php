@@ -21,7 +21,7 @@
 
 namespace Tuleap\ArtifactsFolders\Nature;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 class NatureInFolderPresenter extends NaturePresenter
 {

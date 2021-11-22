@@ -25,8 +25,8 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
 
 class ArtifactPresenterBuilder
 {

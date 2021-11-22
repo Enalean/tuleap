@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllNaturesRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreatorInterface;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllNaturesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreatorInterface;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
 
 final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {

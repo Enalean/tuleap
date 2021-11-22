@@ -53,7 +53,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;

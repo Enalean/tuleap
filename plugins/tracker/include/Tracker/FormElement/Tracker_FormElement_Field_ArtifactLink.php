@@ -28,13 +28,13 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ArtifactInNatureTablePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\CSVOutputStrategy;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\HTMLOutputStrategy;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\ValueFormatter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactInNatureTablePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\CSVOutputStrategy;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\HTMLOutputStrategy;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\ValueFormatter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
@@ -567,7 +567,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             }
 
             if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                $renderer = new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\TypeSelectorRenderer(
+                $renderer = new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeSelectorRenderer(
                     $this->getNaturePresenterFactory(),
                     $this->getTemplateRenderer(),
                 );

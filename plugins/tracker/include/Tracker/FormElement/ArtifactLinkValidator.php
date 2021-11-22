@@ -24,7 +24,7 @@ use Feedback;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ArtifactLinkValidationContext;
 
 class ArtifactLinkValidator

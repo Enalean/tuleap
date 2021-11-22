@@ -25,8 +25,8 @@ namespace Tuleap\Roadmap\Widget;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 
 class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

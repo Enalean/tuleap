@@ -40,7 +40,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
     /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink */
     private $artlink_strategy;
 
-    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao */
+    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao */
     private $nature_dao;
 
     /** @var  Artifact */
@@ -52,7 +52,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->submitted_by     = \Mockery::spy(\PFUser::class);
         $this->logger           = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->nature_dao       = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class);
+        $this->nature_dao       = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao::class);
         $this->artifact         = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTrackerId')->andReturns(888);
 

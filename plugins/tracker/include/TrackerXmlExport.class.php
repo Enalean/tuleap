@@ -21,8 +21,8 @@
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 
 class TrackerXmlExport
