@@ -163,6 +163,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $value === null ||
                $value === '' ||
                $value === '100' ||
+               $value === self::NONE_VALUE ||
                $value === [] ||
                (is_array($value) && $this->arrayContainsNone($value));
     }

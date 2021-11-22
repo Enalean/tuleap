@@ -66,7 +66,7 @@
                   <label><![CDATA[Slogan]]></label>
                   <properties size="30"/>
                 </formElement>
-                <formElement type="sb" ID="F222369" rank="1" required="1">
+                <formElement type="sb" ID="F222369" rank="1" required="0">
                   <name>status</name>
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
