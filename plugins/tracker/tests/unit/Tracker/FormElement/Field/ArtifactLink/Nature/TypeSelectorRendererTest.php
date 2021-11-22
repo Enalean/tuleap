@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
@@ -34,11 +33,9 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 class TypeSelectorRendererTest extends TestCase
 {
     use TemporaryTestDirectory;
-    use ForgeConfigSandbox;
 
     public function testItAddsParentOptionWhenThereIsNoParentSelectorAtAll(): void
     {
-        \ForgeConfig::setFeatureFlag(TypeSelectorRenderer::FEATURE_FLAG_KEY, '1');
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return NaturePresenter[] */
@@ -76,7 +73,6 @@ class TypeSelectorRendererTest extends TestCase
 
     public function testItAddsParentOptionWhenTheParentSelectorIsNotDisplayed(): void
     {
-        \ForgeConfig::setFeatureFlag(TypeSelectorRenderer::FEATURE_FLAG_KEY, '1');
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return NaturePresenter[] */
@@ -120,7 +116,6 @@ class TypeSelectorRendererTest extends TestCase
 
     public function testItDoesNotAddParentOptionWhenThereIsADisplayedParentSelector(): void
     {
-        \ForgeConfig::setFeatureFlag(TypeSelectorRenderer::FEATURE_FLAG_KEY, '1');
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return NaturePresenter[] */
@@ -161,47 +156,8 @@ class TypeSelectorRendererTest extends TestCase
         self::assertStringContainsString('<option  value="fixed_by">', $html);
     }
 
-    public function testItDoesNotAddParentOptionWhenFeatureFlagIsOff(): void
-    {
-        \ForgeConfig::setFeatureFlag(TypeSelectorRenderer::FEATURE_FLAG_KEY, '0');
-        $renderer = new TypeSelectorRenderer(
-            new class implements IRetrieveAllUsableTypesInProject {
-                /** @return NaturePresenter[] */
-                public function getAllUsableTypesInProject(\Project $project): array
-                {
-                    return [
-                        new NatureIsChildPresenter(),
-                        NaturePresenter::buildVisibleNature('fixed_by', 'Fixed by', 'Fix'),
-                    ];
-                }
-            },
-            TemplateRendererFactoryBuilder::get()
-                ->withPath($this->getTmpDir())
-                ->build()
-                ->getRenderer(TRACKER_TEMPLATE_DIR)
-        );
-
-        $artifact = ArtifactTestBuilder::anArtifact(101)
-            ->inProject(ProjectTestBuilder::aProject()->build())
-            ->build();
-
-        $parent_selector = null;
-
-        $html = $renderer->renderToString(
-            $artifact,
-            '_is_child',
-            'artifact',
-            $parent_selector
-        );
-
-        self::assertStringContainsString('<option selected value="_is_child">', $html);
-        self::assertStringNotContainsString('<option  value="_is_parent">', $html);
-        self::assertStringContainsString('<option  value="fixed_by">', $html);
-    }
-
     public function testItDoesNotAddParentOptionWhenIsChildIsNotPresent(): void
     {
-        \ForgeConfig::setFeatureFlag(TypeSelectorRenderer::FEATURE_FLAG_KEY, '1');
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return NaturePresenter[] */

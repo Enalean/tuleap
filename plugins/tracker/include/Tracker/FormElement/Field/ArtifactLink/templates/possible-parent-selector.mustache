@@ -2,7 +2,7 @@
     <label for="link-with-parent-select">
     {{# dgettext }} tuleap-tracker | Select a parent {{/ dgettext }}
     </label>
-    <select id="link-with-parent-select" name="{{ form_name_prefix }}[parent]">
+    <select id="link-with-parent-select" name="{{ form_name_prefix }}[parent][]">
         <option value=""></option>
         {{# can_create }}
             <optgroup label="{{# dgettext }} tuleap-tracker | Creation {{/ dgettext}}">

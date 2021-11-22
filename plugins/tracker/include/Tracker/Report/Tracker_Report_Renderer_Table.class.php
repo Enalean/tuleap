@@ -25,6 +25,7 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
@@ -1126,6 +1127,26 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
             // test if first result is valid (if yes, we consider that others are valid too)
             if (! empty($results[0])) {
+                $current_user                 = UserManager::instance()->getCurrentUser();
+                $artifact_factory             = Tracker_ArtifactFactory::instance();
+                $is_parent_selector_displayed = false;
+                if ($from_aid) {
+                    $artifact = $artifact_factory->getArtifactById((int) $from_aid);
+                    if ($artifact && $artifact->getParentWithoutPermissionChecking() === null) {
+                        $retriever = new PossibleParentsRetriever($artifact_factory, EventManager::instance());
+
+                        $possible_parents_selector = $retriever->getPossibleArtifactParents(
+                            $artifact->getTracker(),
+                            $current_user,
+                            0,
+                            0,
+                            false,
+                        );
+
+                        $is_parent_selector_displayed = $possible_parents_selector->isSelectorDisplayed();
+                    }
+                }
+
                 $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
                 $purifier = Codendi_HTMLPurifier::instance();
                 //extract the first results
@@ -1141,8 +1162,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $row = array_merge($row, $result->getRow());
                         //row == id, f1, f2, f3, f4...
                     }
-                    $html        .= '<tr class="' . $additional_classname . '" data-test="tracker-report-table-results-artifact">';
-                    $current_user = UserManager::instance()->getCurrentUser();
+                    $html .= '<tr class="' . $additional_classname . '" data-test="tracker-report-table-results-artifact">';
                     if ($extracolumn) {
                         $display_extracolumn = true;
                         $checked             = '';
@@ -1225,23 +1245,37 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $project           = $this->report->getTracker()->getProject();
                             $natures           = $this->getAllUsableTypesInProjectWithCache($project);
                             $natures_presenter = [];
-                            $selected_nature   = $nature->shortname;
+                            $selected_type     = $nature->shortname;
                             if (isset($prefill_natures[$artifact_id])) {
-                                $selected_nature = $prefill_natures[$artifact_id];
+                                $selected_type = $prefill_natures[$artifact_id];
                             }
                             $is_a_usable_type_selected = false;
-                            foreach ($natures as $nature_i) {
-                                $should_select_current_nature = $selected_nature === $nature_i->shortname;
-                                $is_a_usable_type_selected    = $is_a_usable_type_selected || $should_select_current_nature;
-                                $natures_presenter[]          = [
-                                    'shortname'     => $nature_i->shortname,
-                                    'forward_label' => $nature_i->forward_label,
-                                    'is_selected'   => $should_select_current_nature
+                            foreach ($natures as $type) {
+                                $should_select_current_type = $selected_type === $type->shortname;
+                                $is_a_usable_type_selected  = $is_a_usable_type_selected || $should_select_current_type;
+                                $natures_presenter[]        = [
+                                    'shortname'     => $type->shortname,
+                                    'forward_label' => $type->forward_label,
+                                    'is_selected'   => $should_select_current_type
                                 ];
+
+                                if ($is_parent_selector_displayed) {
+                                    continue;
+                                }
+
+                                if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+                                    $should_select_current_type = \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $selected_type;
+                                    $is_a_usable_type_selected  = $is_a_usable_type_selected || $should_select_current_type;
+                                    $natures_presenter[]        = [
+                                        'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
+                                        'forward_label' => $type->reverse_label,
+                                        'is_selected'   => $should_select_current_type
+                                    ];
+                                }
                             }
 
                             if (! $is_a_usable_type_selected) {
-                                $type = $this->getNaturePresenterFactory()->getTypeEnabledInProjectFromShortname($project, $selected_nature);
+                                $type = $this->getNaturePresenterFactory()->getTypeEnabledInProjectFromShortname($project, $selected_type);
                                 if ($type !== null) {
                                     $natures_presenter[] = [
                                         'shortname'     => $type->shortname,
