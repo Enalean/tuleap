@@ -30,12 +30,15 @@ use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /**
      * @var Tracker_FormElement_Field_Selectbox
@@ -170,5 +173,33 @@ final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit
         $value = ['some_value'];
 
         $field->getFieldDataFromRESTValueByField($value);
+    }
+    /**
+     * @testWith [100]
+     *  ["100"]
+     *  [""]
+     *  [null]
+     *  [100]
+     *  [["100"]]
+     *  [[100]]
+     */
+    public function testItIsInvalidWhenIsRequiredAndEmpty($value): void
+    {
+        $artifact = $this->createStub(Artifact::class);
+        $field    = new Tracker_FormElement_Field_Selectbox(
+            1,
+            101,
+            null,
+            'field_sb',
+            'Field SB',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, $value));
     }
 }
