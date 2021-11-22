@@ -22,16 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\DelayExecution;
 
-use InvalidArgumentException;
-
 final class ExecutionDelayerRandomizedSleepTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testNegativeDelayIsRejected(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        new ExecutionDelayerRandomizedSleep(-10);
-    }
-
     public function testCanBeExecuted(): void
     {
         $this->expectNotToPerformAssertions();

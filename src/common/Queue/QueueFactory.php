@@ -50,7 +50,9 @@ class QueueFactory
                 new BackOffDelayFailedMessage(
                     $this->logger,
                     static function (int $time_to_sleep): void {
-                        sleep($time_to_sleep);
+                        if ($time_to_sleep > 0) {
+                            sleep($time_to_sleep);
+                        }
                     }
                 ),
                 $queue_name

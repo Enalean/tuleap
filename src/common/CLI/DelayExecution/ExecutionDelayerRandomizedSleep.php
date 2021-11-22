@@ -22,25 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\DelayExecution;
 
-use InvalidArgumentException;
-
 final class ExecutionDelayerRandomizedSleep implements ExecutionDelayer
 {
     /**
-     * @var int
+     * @psalm-var positive-int|0
      */
-    private $max_randomization_delay;
+    private int $max_randomization_delay;
 
+    /**
+     * @psalm-param positive-int|0 $max_randomization_delay
+     */
     public function __construct(int $max_randomization_delay)
     {
-        if ($max_randomization_delay < 0) {
-            throw new InvalidArgumentException('max_randomization_delay must be positive');
-        }
         $this->max_randomization_delay = $max_randomization_delay;
     }
 
     public function delay(): void
     {
-        sleep(random_int(0, $this->max_randomization_delay));
+        $sleep_time = random_int(0, $this->max_randomization_delay);
+        if ($sleep_time <= 0) {
+            return;
+        }
+        sleep($sleep_time);
     }
 }
