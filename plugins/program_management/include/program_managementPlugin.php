@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\CanSubmitNewArtifactEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
+use Tuleap\ProgramManagement\Adapter\Events\IterationUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
@@ -148,6 +149,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationUpdateEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
@@ -634,7 +636,7 @@ final class program_managementPlugin extends Plugin
         $changeset_verifier     = new ChangesetDAO();
         $iterations_DAO         = new IterationsDAO();
 
-        $creation_handler = new ProgramIncrementCreationEventHandler(
+        $program_increment_creation_handler = new ProgramIncrementCreationEventHandler(
             MessageLog::buildFromLogger($logger),
             $program_increments_DAO,
             $visibility_verifier,
@@ -642,15 +644,17 @@ final class program_managementPlugin extends Plugin
             $program_increments_DAO,
             new ProgramIncrementCreationProcessorBuilder()
         );
-        $creation_handler->handle(ProgramIncrementCreationEventProxy::fromWorkerEvent($logger, $user_manager, $event));
+        $program_increment_creation_handler->handle(
+            ProgramIncrementCreationEventProxy::fromWorkerEvent($logger, $user_manager, $event)
+        );
 
-        $update_handler = new ProgramIncrementUpdateEventHandler(
+        $program_increment_update_handler = new ProgramIncrementUpdateEventHandler(
             $program_increments_DAO,
             $iterations_DAO,
             new ProgramIncrementUpdateProcessorBuilder(),
             new IterationCreationProcessorBuilder()
         );
-        $update_handler->handle(
+        $program_increment_update_handler->handle(
             ProgramIncrementUpdateEventProxy::fromWorkerEvent(
                 $logger,
                 $user_retriever,
@@ -658,6 +662,22 @@ final class program_managementPlugin extends Plugin
                 $visibility_verifier,
                 $iterations_DAO,
                 $changeset_verifier,
+                $event
+            )
+        );
+
+        $iteration_update_handler = new IterationUpdateEventHandler(
+            $iterations_DAO,
+            new IterationUpdateProcessorBuilder()
+        );
+
+        $iteration_update_handler->handle(
+            IterationUpdateEventProxy::fromWorkerEvent(
+                $logger,
+                $user_retriever,
+                $iterations_DAO,
+                $changeset_verifier,
+                $visibility_verifier,
                 $event
             )
         );
@@ -693,6 +713,8 @@ final class program_managementPlugin extends Plugin
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
+        $queue_factory = new QueueFactory($logger);
+
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
             $iterations_DAO,
@@ -715,15 +737,15 @@ final class program_managementPlugin extends Plugin
                 $iterations_linked_dao,
                 MessageLog::buildFromLogger($logger),
                 new LastChangesetRetriever($artifact_retriever, Tracker_Artifact_ChangesetFactoryBuilder::build()),
-                new IterationsDAO()
+                $iterations_DAO
             ),
             new ProgramIncrementUpdateDispatcher(
                 $logger,
-                new QueueFactory($logger),
+                $queue_factory,
                 new ProgramIncrementUpdateProcessorBuilder(),
                 new IterationCreationProcessorBuilder()
             ),
-            new IterationUpdateDispatcher($logger, new IterationUpdateProcessorBuilder())
+            new IterationUpdateDispatcher($logger, new IterationUpdateProcessorBuilder(), $queue_factory)
         );
 
         $event_proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);

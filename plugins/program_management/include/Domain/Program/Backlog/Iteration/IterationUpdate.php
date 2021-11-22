@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
+use Tuleap\ProgramManagement\Domain\Events\IterationUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -55,12 +57,26 @@ final class IterationUpdate implements TimeboxMirroringOrder
             return null;
         }
 
-        $iteration_tracker = IterationTrackerIdentifier::fromTrackerIdentifier($iteration_tracker_verifier, $event->getTracker());
+        $iteration_tracker = IterationTrackerIdentifier::fromTrackerIdentifier(
+            $iteration_tracker_verifier,
+            $event->getTracker()
+        );
         if (! $iteration_tracker) {
             return null;
         }
 
         return new self($iteration, $iteration_tracker, $event->getChangeset(), $event->getUser());
+    }
+
+    public static function fromIterationUpdateEvent(
+        RetrieveIterationTracker $iteration_tracker_retriever,
+        IterationUpdateEvent $event
+    ): self {
+        $iteration_tracker = IterationTrackerIdentifier::fromIteration(
+            $iteration_tracker_retriever,
+            $event->getIteration()
+        );
+        return new self($event->getIteration(), $iteration_tracker, $event->getChangeset(), $event->getUser());
     }
 
 

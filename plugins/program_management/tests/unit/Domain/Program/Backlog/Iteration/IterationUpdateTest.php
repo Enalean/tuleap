@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactUpdatedEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\IterationUpdateEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 
 final class IterationUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -62,6 +64,27 @@ final class IterationUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration_update = IterationUpdate::fromArtifactUpdateEvent($iteration_tracker_verifier, $this->event);
 
         self::assertNotNull($iteration_update);
+        self::assertSame(self::ITERATION_ID, $iteration_update->getTimebox()->getId());
+        self::assertSame(self::ITERATION_ID, $iteration_update->getIteration()->getId());
+        self::assertSame(self::ITERATION_TRACKER_ID, $iteration_update->getTracker()->getId());
+        self::assertSame(self::USER_ID, $iteration_update->getUser()->getId());
+        self::assertSame(self::CHANGESET_ID, $iteration_update->getChangeset()->getId());
+    }
+
+    public function testItBuildsFromIterationUpdateEvent(): void
+    {
+        $iteration_update_event      = IterationUpdateEventStub::withDefinedValues(
+            self::ITERATION_ID,
+            self::USER_ID,
+            self::CHANGESET_ID
+        );
+        $iteration_tracker_retriever = RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID);
+
+        $iteration_update = IterationUpdate::fromIterationUpdateEvent(
+            $iteration_tracker_retriever,
+            $iteration_update_event
+        );
+
         self::assertSame(self::ITERATION_ID, $iteration_update->getTimebox()->getId());
         self::assertSame(self::ITERATION_ID, $iteration_update->getIteration()->getId());
         self::assertSame(self::ITERATION_TRACKER_ID, $iteration_update->getTracker()->getId());
