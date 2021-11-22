@@ -1476,10 +1476,10 @@ msgstr "Déclencheurs existants"
 
 #, php-format
 msgid ""
-"Expected date format is <strong>%1$s</strong>. <a href=\"/account/\">Change "
-"import/export date format</a>"
+"Expected date format is <strong>%1$s</strong>. <a href=\"/account/edition"
+"\">Change import/export date format</a>"
 msgstr ""
-"Format de date attendu : <strong>%1$s</strong>. <a href=\"/account/"
+"Format de date attendu : <strong>%1$s</strong>. <a href=\"/account/edition"
 "\">Changer le format de date pour l'import/export</a>"
 
 msgid "Expert mode"

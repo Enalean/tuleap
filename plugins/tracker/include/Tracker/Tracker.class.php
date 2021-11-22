@@ -2356,7 +2356,13 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 $expected_format = 'DD/MM/YYYY';
                             }
 
-                            echo sprintf(dgettext('tuleap-tracker', 'Expected date format is <strong>%1$s</strong>. <a href="/account/">Change import/export date format</a>'), $expected_format);
+                            echo sprintf(
+                                dgettext(
+                                    'tuleap-tracker',
+                                    'Expected date format is <strong>%1$s</strong>. <a href="/account/edition">Change import/export date format</a>'
+                                ),
+                                $purifier->purify($expected_format)
+                            );
                             echo '</p>';
 
                             if ($is_valid) {
