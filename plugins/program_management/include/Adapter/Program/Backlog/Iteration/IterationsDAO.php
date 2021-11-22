@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
@@ -54,7 +55,7 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
                     WHERE tracker.group_id = ?';
 
         $tracker_id = $this->getDB()->cell($sql, $project_id);
-        if (! $tracker_id) {
+        if ($tracker_id === false) {
             return null;
         }
 
@@ -68,7 +69,13 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
             JOIN tracker_artifact ON tracker_artifact.tracker_id = program.iteration_tracker_id
             WHERE tracker_artifact.id = ?
         SQL;
-        return $this->getDB()->cell($sql, $iteration->getId());
+
+        $iteration_tracker_id = $this->getDB()->cell($sql, $iteration->getId());
+        if ($iteration_tracker_id === false) {
+            throw new IterationTrackerNotFoundException($iteration);
+        }
+
+        return $iteration_tracker_id;
     }
 
     /**
