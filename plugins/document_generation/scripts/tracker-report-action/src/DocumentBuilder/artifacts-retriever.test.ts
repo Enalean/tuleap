@@ -33,6 +33,7 @@ describe("artifacts-retriever", () => {
             {
                 id: 74,
                 title: null,
+                html_url: "/plugins/tracker/?aid=74",
                 values: [
                     {
                         field_id: 1,
@@ -185,8 +186,24 @@ describe("artifacts-retriever", () => {
 
         jest.spyOn(rest_querier, "getArtifacts").mockResolvedValue(
             new Map([
-                [359, { id: 359, title: "Linked artifact", values: [] }],
-                [3, { id: 3, title: "Reverse linked artifact", values: [] }],
+                [
+                    359,
+                    {
+                        id: 359,
+                        html_url: "/plugins/tracker/?aid=359",
+                        title: "Linked artifact",
+                        values: [],
+                    },
+                ],
+                [
+                    3,
+                    {
+                        id: 3,
+                        html_url: "/plugins/tracker/?aid=3",
+                        title: "Reverse linked artifact",
+                        values: [],
+                    },
+                ],
             ])
         );
 
@@ -307,6 +324,7 @@ describe("artifacts-retriever", () => {
             {
                 id: 74,
                 title: null,
+                html_url: "/plugins/tracker/?aid=74",
                 values: [
                     {
                         field_id: 3,
@@ -473,15 +491,19 @@ describe("artifacts-retriever", () => {
                         links: [
                             {
                                 id: 359,
+                                html_url: "/plugins/tracker/?aid=359",
                                 title: "Linked artifact",
                                 type: "_is_child",
+                                is_linked_artifact_part_of_document: false,
                             },
                         ],
                         reverse_links: [
                             {
                                 id: 3,
+                                html_url: "/plugins/tracker/?aid=3",
                                 title: "Reverse linked artifact",
                                 type: null,
+                                is_linked_artifact_part_of_document: false,
                             },
                         ],
                         type: "art_link",

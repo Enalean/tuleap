@@ -271,6 +271,11 @@ function formatFieldValue(
                 artifact_id: link.id,
                 title: link.title,
                 type: getArtifactLinkLabel(link, artifact_links_types),
+                is_linked_artifact_part_of_document:
+                    link?.is_linked_artifact_part_of_document || false,
+                html_url: link.html_url
+                    ? new URL(base_url.replace(/\/$/, "") + link.html_url)
+                    : null,
             });
         }
 
@@ -279,6 +284,11 @@ function formatFieldValue(
                 artifact_id: reverse_link.id,
                 title: reverse_link.title,
                 type: getArtifactLinkReverseLabel(reverse_link, artifact_links_types),
+                is_linked_artifact_part_of_document:
+                    reverse_link?.is_linked_artifact_part_of_document || false,
+                html_url: reverse_link.html_url
+                    ? new URL(base_url.replace(/\/$/, "") + reverse_link.html_url)
+                    : null,
             });
         }
 

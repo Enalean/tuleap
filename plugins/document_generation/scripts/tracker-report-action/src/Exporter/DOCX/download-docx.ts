@@ -881,8 +881,31 @@ async function buildFieldValuesDisplayZone(
                         links_table_rows.push(
                             new TableRow({
                                 children: [
-                                    buildTableCellContent(new TextRun(link.artifact_id.toString())),
-                                    buildTableCellContent(new TextRun(link.title)),
+                                    buildTableCellContent(
+                                        link.is_linked_artifact_part_of_document
+                                            ? new InternalHyperlink({
+                                                  children: [
+                                                      new TextRun(link.artifact_id.toString()),
+                                                  ],
+                                                  anchor: getAnchorToArtifactContent({
+                                                      id: link.artifact_id,
+                                                  }),
+                                              })
+                                            : new TextRun(link.artifact_id.toString())
+                                    ),
+                                    buildTableCellContent(
+                                        link.html_url
+                                            ? new ExternalHyperlink({
+                                                  children: [
+                                                      new TextRun({
+                                                          text: link.title,
+                                                          style: "Hyperlink",
+                                                      }),
+                                                  ],
+                                                  link: link.html_url.toString(),
+                                              })
+                                            : new TextRun(link.title)
+                                    ),
                                     buildTableCellContent(new TextRun(link.type)),
                                 ],
                             })
@@ -920,9 +943,32 @@ async function buildFieldValuesDisplayZone(
                             new TableRow({
                                 children: [
                                     buildTableCellContent(
-                                        new TextRun(reverse_link.artifact_id.toString())
+                                        reverse_link.is_linked_artifact_part_of_document
+                                            ? new InternalHyperlink({
+                                                  children: [
+                                                      new TextRun(
+                                                          reverse_link.artifact_id.toString()
+                                                      ),
+                                                  ],
+                                                  anchor: getAnchorToArtifactContent({
+                                                      id: reverse_link.artifact_id,
+                                                  }),
+                                              })
+                                            : new TextRun(reverse_link.artifact_id.toString())
                                     ),
-                                    buildTableCellContent(new TextRun(reverse_link.title)),
+                                    buildTableCellContent(
+                                        reverse_link.html_url
+                                            ? new ExternalHyperlink({
+                                                  children: [
+                                                      new TextRun({
+                                                          text: reverse_link.title,
+                                                          style: "Hyperlink",
+                                                      }),
+                                                  ],
+                                                  link: reverse_link.html_url.toString(),
+                                              })
+                                            : new TextRun(reverse_link.title)
+                                    ),
                                     buildTableCellContent(new TextRun(reverse_link.type)),
                                 ],
                             })
@@ -1054,7 +1100,9 @@ function buildTableCellLabel(name: string): TableCell {
     });
 }
 
-function buildTableCellContent(content: TextRun | ExternalHyperlink): TableCell {
+function buildTableCellContent(
+    content: TextRun | ExternalHyperlink | InternalHyperlink
+): TableCell {
     return new TableCell({
         children: [
             new Paragraph({
