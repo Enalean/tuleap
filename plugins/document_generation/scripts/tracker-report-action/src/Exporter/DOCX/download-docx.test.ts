@@ -89,6 +89,8 @@ describe("download-docx", () => {
                                 links: [
                                     {
                                         artifact_id: 123,
+                                        html_url: new URL("https://example.com/path/to/123"),
+                                        is_linked_artifact_part_of_document: true,
                                         title: "Linked artifact",
                                         type: "",
                                     },
@@ -96,6 +98,8 @@ describe("download-docx", () => {
                                 reverse_links: [
                                     {
                                         artifact_id: 124,
+                                        html_url: new URL("https://example.com/path/to/124"),
+                                        is_linked_artifact_part_of_document: true,
                                         title: "Reverse linked artifact",
                                         type: "",
                                     },

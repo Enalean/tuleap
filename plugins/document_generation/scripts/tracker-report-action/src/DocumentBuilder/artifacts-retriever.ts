@@ -43,13 +43,13 @@ export async function retrieveReportArtifacts(
 
     const tracker_structure = await tracker_structure_promise;
     const all_linked_artifacts_ids: Set<number> = new Set();
-    const already_retrieved_artifacts: Map<number, ArtifactResponse> = new Map();
+    const exported_artifacts: Map<number, ArtifactResponse> = new Map();
 
     const report_artifacts_with_additional_info: ArtifactFromReport[] = await limitConcurrencyPool(
         5,
         report_artifacts,
         async (report_artifact: ArtifactResponse): Promise<ArtifactFromReport> => {
-            already_retrieved_artifacts.set(report_artifact.id, report_artifact);
+            exported_artifacts.set(report_artifact.id, report_artifact);
             const values_by_field_id = new Map(
                 report_artifact.values.map((value) => [value.field_id, value])
             );
@@ -68,6 +68,8 @@ export async function retrieveReportArtifacts(
         }
     );
 
+    const already_retrieved_artifacts = new Map([...exported_artifacts]);
+
     const missing_artifacts_ids = new Set(
         [...all_linked_artifacts_ids].filter((id) => already_retrieved_artifacts.has(id) === false)
     );
@@ -78,52 +80,74 @@ export async function retrieveReportArtifacts(
     return report_artifacts_with_additional_info.map((report_artifact) => {
         return {
             ...report_artifact,
-            values: injectLinkTitleInValues(report_artifact.values, already_retrieved_artifacts),
-            containers: injectLinkTitleInContainers(
+            values: injectLinkInformationInValues(
+                report_artifact.values,
+                already_retrieved_artifacts,
+                exported_artifacts
+            ),
+            containers: injectLinkInformationInContainers(
                 report_artifact.containers,
-                already_retrieved_artifacts
+                already_retrieved_artifacts,
+                exported_artifacts
             ),
         };
     });
 }
 
-function injectLinkTitleInValues(
+function injectLinkInformationInValues(
     values: ReadonlyArray<ArtifactReportFieldValue>,
-    all_artifacts: Map<number, ArtifactResponse>
+    all_artifacts: Map<number, ArtifactResponse>,
+    exported_artifacts: Map<number, ArtifactResponse>
 ): ReadonlyArray<ArtifactReportFieldValue> {
     return values.map((value) => {
         if (value.type === "art_link") {
             return {
                 ...value,
-                links: injectLinkTitle(value.links, all_artifacts),
-                reverse_links: injectLinkTitle(value.reverse_links, all_artifacts),
+                links: injectLinkInformation(value.links, all_artifacts, exported_artifacts),
+                reverse_links: injectLinkInformation(
+                    value.reverse_links,
+                    all_artifacts,
+                    exported_artifacts
+                ),
             };
         }
         return value;
     });
 }
 
-function injectLinkTitle(
+function injectLinkInformation(
     links: ReadonlyArray<ArtifactLinkWithTitle>,
-    all_artifacts: Map<number, ArtifactResponse>
+    all_artifacts: Map<number, ArtifactResponse>,
+    exported_artifacts: Map<number, ArtifactResponse>
 ): ReadonlyArray<ArtifactLinkWithTitle> {
     return links.map((link) => {
         return {
             ...link,
             title: all_artifacts.get(link.id)?.title ?? "",
+            html_url: all_artifacts.get(link.id)?.html_url ?? "",
+            is_linked_artifact_part_of_document: exported_artifacts.has(link.id),
         };
     });
 }
 
-function injectLinkTitleInContainers(
+function injectLinkInformationInContainers(
     containers: ReadonlyArray<ArtifactReportContainer>,
-    all_artifacts: Map<number, ArtifactResponse>
+    all_artifacts: Map<number, ArtifactResponse>,
+    exported_artifacts: Map<number, ArtifactResponse>
 ): ReadonlyArray<ArtifactReportContainer> {
     return containers.map((container) => {
         return {
             ...container,
-            values: injectLinkTitleInValues(container.values, all_artifacts),
-            containers: injectLinkTitleInContainers(container.containers, all_artifacts),
+            values: injectLinkInformationInValues(
+                container.values,
+                all_artifacts,
+                exported_artifacts
+            ),
+            containers: injectLinkInformationInContainers(
+                container.containers,
+                all_artifacts,
+                exported_artifacts
+            ),
         };
     });
 }
@@ -311,10 +335,20 @@ function getFieldValueWithAdditionalInformation(
             return {
                 ...value,
                 links: value.links.map((link) => {
-                    return { ...link, title: "" };
+                    return {
+                        ...link,
+                        title: "",
+                        html_url: "",
+                        is_linked_artifact_part_of_document: false,
+                    };
                 }),
                 reverse_links: value.reverse_links.map((link) => {
-                    return { ...link, title: "" };
+                    return {
+                        ...link,
+                        title: "",
+                        html_url: "",
+                        is_linked_artifact_part_of_document: false,
+                    };
                 }),
             };
         }
@@ -358,6 +392,7 @@ async function retrieveTrackerStructure(tracker_id: number): Promise<TrackerStru
 export interface ArtifactResponse {
     readonly id: number;
     readonly title: string | null;
+    readonly html_url: string;
     readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
 }
 
@@ -555,6 +590,8 @@ export interface ArtifactLink {
 
 export interface ArtifactLinkWithTitle extends ArtifactLink {
     title: string;
+    is_linked_artifact_part_of_document?: boolean;
+    html_url?: string;
 }
 
 interface ArtifactReportResponseArtifactLinksFieldValue {

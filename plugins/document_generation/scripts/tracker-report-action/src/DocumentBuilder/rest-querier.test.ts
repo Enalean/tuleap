@@ -70,6 +70,7 @@ describe("API querier", () => {
                 {
                     id: 74,
                     title: null,
+                    html_url: "/plugins/tracker/?aid=74",
                     values: [
                         {
                             field_id: 2,

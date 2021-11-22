@@ -370,6 +370,8 @@ describe("Create ArtifactValues Collection", () => {
                                 type: "_is_child",
                                 title: "Linked artifact",
                                 id: 359,
+                                is_linked_artifact_part_of_document: true,
+                                html_url: "/path/to/26",
                             },
                         ],
                         reverse_links: [
@@ -377,6 +379,8 @@ describe("Create ArtifactValues Collection", () => {
                                 type: null,
                                 title: "Reverse linked artifact",
                                 id: 3,
+                                is_linked_artifact_part_of_document: false,
+                                html_url: "/path/to/3",
                             },
                         ],
                     },
@@ -927,6 +931,8 @@ describe("Create ArtifactValues Collection", () => {
                         links: [
                             {
                                 artifact_id: 359,
+                                html_url: new URL("https://example.com/path/to/26"),
+                                is_linked_artifact_part_of_document: true,
                                 title: "Linked artifact",
                                 type: "Enfant",
                             },
@@ -934,6 +940,8 @@ describe("Create ArtifactValues Collection", () => {
                         reverse_links: [
                             {
                                 artifact_id: 3,
+                                html_url: new URL("https://example.com/path/to/3"),
+                                is_linked_artifact_part_of_document: false,
                                 title: "Reverse linked artifact",
                                 type: "",
                             },

@@ -141,6 +141,8 @@ export interface ArtifactFieldValueArtifactLink {
     readonly artifact_id: number;
     readonly title: string;
     readonly type: string;
+    readonly is_linked_artifact_part_of_document: boolean;
+    readonly html_url: URL | null;
 }
 
 export interface ArtifactFieldValueStepDefinition {
