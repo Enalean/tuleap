@@ -57,6 +57,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
@@ -234,7 +235,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     \EventManager::instance()
                 ),
                 new CanPrioritizeFeaturesDAO(),
-                $user_retriever
+                $user_retriever,
+                new UserIsProgramAdminVerifier($user_retriever)
             ),
             $program_increments_dao,
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),

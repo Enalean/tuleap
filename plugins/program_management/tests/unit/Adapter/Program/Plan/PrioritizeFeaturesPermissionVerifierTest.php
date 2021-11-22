@@ -25,9 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -41,16 +43,18 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
     private CheckProjectAccessStub $access_checker;
     private RetrieveUserStub $user_retriever;
     private RetrieveFullProject $retrieve_full_project;
+    private VerifyUserIsProgramAdmin $verify_user_is_program_admin;
 
     protected function setUp(): void
     {
-        $user = $this->createMock(\PFUser::class);
-        $user->method('getId')->willReturn('101');
-        $this->user_retriever        = RetrieveUserStub::buildMockedMemberOfUGroupUser($user);
-        $this->access_checker        = CheckProjectAccessStub::withValidAccess();
-        $this->user_identifier       = UserIdentifierStub::buildGenericUser();
-        $this->program_identifier    = ProgramIdentifierBuilder::buildWithId(102);
-        $this->retrieve_full_project = RetrieveFullProjectStub::withProject(ProjectTestBuilder::aProject()->build());
+        $this->user_retriever               = RetrieveUserStub::withGenericUser();
+        $this->access_checker               = CheckProjectAccessStub::withValidAccess();
+        $this->user_identifier              = UserIdentifierStub::buildGenericUser();
+        $this->program_identifier           = ProgramIdentifierBuilder::buildWithId(102);
+        $this->retrieve_full_project        = RetrieveFullProjectStub::withProject(
+            ProjectTestBuilder::aProject()->build()
+        );
+        $this->verify_user_is_program_admin = VerifyUserIsProgramAdminStub::withNotAdmin();
     }
 
     private function getVerifier(): PrioritizeFeaturesPermissionVerifier
@@ -59,12 +63,15 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
             $this->retrieve_full_project,
             $this->access_checker,
             RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4),
-            $this->user_retriever
+            $this->user_retriever,
+            $this->verify_user_is_program_admin
         );
     }
 
     public function testReturnsTrueWhenUserIsInTheAppropriateUserGroup(): void
     {
+        $user                 = $this->createMock(\PFUser::class);
+        $this->user_retriever = RetrieveUserStub::buildMockedMemberOfUGroupUser($user);
         self::assertTrue(
             $this->getVerifier()->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier, null)
         );
@@ -72,8 +79,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
 
     public function testReturnsTrueWhenUserIsProjectAdmin(): void
     {
-        $user                 = $this->createMock(\PFUser::class);
-        $this->user_retriever = RetrieveUserStub::buildMockedAdminUser($user);
+        $this->verify_user_is_program_admin = VerifyUserIsProgramAdminStub::withProgramAdminUser();
         self::assertTrue(
             $this->getVerifier()->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier, null)
         );

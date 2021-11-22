@@ -59,6 +59,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
@@ -197,7 +198,8 @@ final class ProjectResource extends AuthenticatedResource
             $project_manager_adapter,
             $project_access_checker,
             new CanPrioritizeFeaturesDAO(),
-            $this->user_manager_adapter
+            $this->user_manager_adapter,
+            new UserIsProgramAdminVerifier($this->user_manager_adapter)
         );
 
         $program_increments_dao = new ProgramIncrementsDAO();

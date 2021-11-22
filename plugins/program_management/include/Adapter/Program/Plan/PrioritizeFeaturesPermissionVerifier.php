@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Ret
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\CheckProjectAccess;
 
@@ -39,7 +40,8 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
         private RetrieveFullProject $retrieve_full_project,
         private CheckProjectAccess $project_access_checker,
         private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao,
-        private RetrieveUser $user_manager
+        private RetrieveUser $user_manager,
+        private VerifyUserIsProgramAdmin $verify_user_is_program_admin
     ) {
     }
 
@@ -52,13 +54,13 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
             return true;
         }
 
-        $user       = $this->user_manager->getUserWithId($user_identifier);
-        $program_id = $program->getId();
-        if ($user->isAdmin($program_id)) {
+        if ($this->verify_user_is_program_admin->isUserProgramAdmin($user_identifier, $program)) {
             return true;
         }
 
-        $project = $this->retrieve_full_project->getProject($program_id);
+        $user       = $this->user_manager->getUserWithId($user_identifier);
+        $program_id = $program->getId();
+        $project    = $this->retrieve_full_project->getProject($program_id);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {

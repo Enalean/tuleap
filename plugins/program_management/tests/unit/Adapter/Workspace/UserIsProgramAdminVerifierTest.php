@@ -24,11 +24,11 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
-class ProgramUserPrivilegesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserIsProgramAdminVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueWhenUserIsProgramAdmin(): void
     {
-        $privileges_retriever = new ProgramUserPrivilegesRetriever(
+        $privileges_retriever = new UserIsProgramAdminVerifier(
             RetrieveUserStub::buildMockedAdminUser($this->createMock(\PFUser::class))
         );
 
@@ -42,7 +42,7 @@ class ProgramUserPrivilegesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenUserIsNotProgramAdmin(): void
     {
-        $privileges_retriever = new ProgramUserPrivilegesRetriever(
+        $privileges_retriever = new UserIsProgramAdminVerifier(
             RetrieveUserStub::buildMockedRegularUser($this->createMock(\PFUser::class))
         );
 
