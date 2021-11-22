@@ -141,7 +141,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDeletor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureEditor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureUsagePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureValidator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
@@ -1092,7 +1092,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $user_xml_exporter,
             EventManager::instance(),
-            new NaturePresenterFactory(new NatureDao(), $artifact_link_usage_dao),
+            new TypePresenterFactory(new NatureDao(), $artifact_link_usage_dao),
             $artifact_link_usage_dao,
             $external_field_extractor
         );
@@ -1910,7 +1910,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     $nature_dao,
                     $nature_validator
                 ),
-                new NaturePresenterFactory(
+                new TypePresenterFactory(
                     $nature_dao,
                     $artifact_link_usage_dao
                 ),
@@ -2087,7 +2087,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $dao                     = new ArtifactLinksUsageDao();
         $updater                 = new ArtifactLinksUsageUpdater($dao);
-        $types_presenter_factory = new NaturePresenterFactory(new NatureDao(), $dao);
+        $types_presenter_factory = new TypePresenterFactory(new NatureDao(), $dao);
         $event_manager           = EventManager::instance();
 
         return new ArtifactLinksController(

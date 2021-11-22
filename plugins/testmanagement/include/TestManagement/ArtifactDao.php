@@ -24,7 +24,7 @@ namespace Tuleap\TestManagement;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
+use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
 
 class ArtifactDao extends DataAccessObject
 {
@@ -216,6 +216,6 @@ class ArtifactDao extends DataAccessObject
                 ORDER BY a.id ASC
                 LIMIT 1";
 
-        return $this->getDB()->row($sql, $test_definition_id, NatureCoveredByPresenter::NATURE_COVERED_BY, $test_exec_tracker_id);
+        return $this->getDB()->row($sql, $test_definition_id, TypeCoveredByPresenter::NATURE_COVERED_BY, $test_exec_tracker_id);
     }
 }

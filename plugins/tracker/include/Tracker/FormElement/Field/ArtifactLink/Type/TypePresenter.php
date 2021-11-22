@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-class NaturePresenter
+class TypePresenter
 {
 
     public const FORWARD_LABEL = 'forward';
@@ -56,7 +56,7 @@ class NaturePresenter
         $this->is_visible    = $is_visible;
     }
 
-    public static function buildVisibleNature(string $shortname, string $forward_label, string $reverse_label): self
+    public static function buildVisibleType(string $shortname, string $forward_label, string $reverse_label): self
     {
         return new self($shortname, $forward_label, $reverse_label, true);
     }

@@ -24,7 +24,7 @@ use Feedback;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ArtifactLinkValidationContext;
 
 class ArtifactLinkValidator
@@ -34,7 +34,7 @@ class ArtifactLinkValidator
      */
     private $artifact_factory;
     /**
-     * @var NaturePresenterFactory
+     * @var TypePresenterFactory
      */
     private $nature_presenter_factory;
     /**
@@ -44,7 +44,7 @@ class ArtifactLinkValidator
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
-        NaturePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $nature_presenter_factory,
         ArtifactLinksUsageDao $dao
     ) {
         $this->artifact_factory         = $artifact_factory;

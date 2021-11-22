@@ -18,7 +18,7 @@
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tracker_ArtifactLinkInfo;
 use PFUser;
 
@@ -29,12 +29,12 @@ class UpdatedNatureLinkCollection implements ICollectChangeOfLinksBetweenTwoChan
 {
 
     /**
-     * @var NaturePresenter
+     * @var TypePresenter
      */
     private $target_nature;
 
     /**
-     * @var NaturePresenter
+     * @var TypePresenter
      */
     private $source_nature;
 
@@ -49,8 +49,8 @@ class UpdatedNatureLinkCollection implements ICollectChangeOfLinksBetweenTwoChan
     private $changed = [];
 
     public function __construct(
-        NaturePresenter $source_nature,
-        NaturePresenter $target_nature,
+        TypePresenter $source_nature,
+        TypePresenter $target_nature,
         CollectionOfLinksFormatter $formatter
     ) {
         $this->source_nature = $source_nature;

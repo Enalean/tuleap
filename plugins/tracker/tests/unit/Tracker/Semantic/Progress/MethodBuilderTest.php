@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,7 +51,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|NaturePresenterFactory
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TypePresenterFactory
      */
     private $natures_factory;
 
@@ -59,7 +59,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao                  = \Mockery::mock(SemanticProgressDao::class);
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->natures_factory      = \Mockery::mock(NaturePresenterFactory::class);
+        $this->natures_factory      = \Mockery::mock(TypePresenterFactory::class);
         $this->method_builder       = new MethodBuilder(
             $this->form_element_factory,
             $this->dao,
@@ -172,7 +172,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, '_is_child')
             ->once()
             ->andReturn(
-                new NaturePresenter('_is_child', 'Parent', 'Child', true)
+                new TypePresenter('_is_child', 'Parent', 'Child', true)
             );
 
         $method = $this->method_builder->buildMethodFromRequest(
@@ -257,7 +257,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, '_is_child')
             ->once()
             ->andReturn(
-                new NaturePresenter('_is_child', 'Parent', 'Child', true)
+                new TypePresenter('_is_child', 'Parent', 'Child', true)
             );
 
         $method = $this->method_builder->buildMethodBasedOnChildCount(

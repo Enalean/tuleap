@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Events;
 
 use Project;
 use Tuleap\Event\Dispatchable;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 class ArtifactLinkTypeCanBeUnused implements Dispatchable
 {
@@ -35,7 +35,7 @@ class ArtifactLinkTypeCanBeUnused implements Dispatchable
     private $project;
 
     /**
-     * @var NaturePresenter
+     * @var TypePresenter
      */
     private $type;
 
@@ -49,7 +49,7 @@ class ArtifactLinkTypeCanBeUnused implements Dispatchable
      */
     private $is_type_checked_by_plugin = false;
 
-    public function __construct(Project $project, NaturePresenter $type)
+    public function __construct(Project $project, TypePresenter $type)
     {
         $this->project = $project;
         $this->type    = $type;
@@ -60,7 +60,7 @@ class ArtifactLinkTypeCanBeUnused implements Dispatchable
         return $this->project;
     }
 
-    public function getType(): NaturePresenter
+    public function getType(): TypePresenter
     {
         return $this->type;
     }

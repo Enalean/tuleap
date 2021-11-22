@@ -44,7 +44,7 @@ class NatureTablePresenter
     public const TABLE_ID_PREFIX = "tracker_report_table_nature_";
 
     public function __construct(
-        NaturePresenter $nature,
+        TypePresenter $nature,
         array $artifact_links,
         $is_reverse_artifact_links,
         Tracker_FormElement_Field_ArtifactLink $field
@@ -75,7 +75,7 @@ class NatureTablePresenter
         $this->mass_unlink_title = dgettext('tuleap-tracker', 'Mark all links to be removed');
     }
 
-    public static function buildForHeader(NaturePresenter $nature_presenter, Tracker_FormElement_Field_ArtifactLink $field)
+    public static function buildForHeader(TypePresenter $nature_presenter, Tracker_FormElement_Field_ArtifactLink $field)
     {
         return new NatureTablePresenter(
             $nature_presenter,

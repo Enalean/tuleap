@@ -30,7 +30,7 @@ use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
 use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Router;
-use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -40,7 +40,7 @@ use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\XML\PHPCast;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -59,7 +59,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     public function getHooksAndCallbacks()
     {
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
+            $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook('javascript_file');
             $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
@@ -67,7 +67,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_IS_NATURE_VALID);
             $this->addHook('cssfile');
             $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
-            $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
+            $this->addHook(TypePresenterFactory::EVENT_GET_NATURE_PRESENTER);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST);
@@ -129,7 +129,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
     public function event_get_artifactlink_natures($params)// phpcs:ignore
     {
-        $params['natures'][] = new NatureInFolderPresenter();
+        $params['types'][] = new TypeInFolderPresenter();
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
@@ -164,7 +164,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         $linked_artifacts_ids = $dao->getReverseLinkedArtifactIds(
             $artifact->getId(),
-            NatureInFolderPresenter::NATURE_IN_FOLDER,
+            TypeInFolderPresenter::NATURE_IN_FOLDER,
             PHP_INT_MAX,
             0
         );
@@ -247,13 +247,13 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
     public function hide_artifact($params) // phpcs:ignore
     {
-        $params['hide_artifact'] = $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER;
+        $params['hide_artifact'] = $params['nature'] === TypeInFolderPresenter::NATURE_IN_FOLDER;
     }
 
     public function event_get_nature_presenter($params) // phpcs:ignore
     {
-        if ($params['shortname'] === NatureInFolderPresenter::NATURE_IN_FOLDER) {
-            $params['presenter'] = new NatureInFolderPresenter();
+        if ($params['shortname'] === TypeInFolderPresenter::NATURE_IN_FOLDER) {
+            $params['presenter'] = new TypeInFolderPresenter();
         }
     }
 
@@ -274,14 +274,14 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
     public function tracker_add_system_natures($params) // phpcs:ignore
     {
-        $params['natures'][] = NatureInFolderPresenter::NATURE_IN_FOLDER;
+        $params['natures'][] = TypeInFolderPresenter::NATURE_IN_FOLDER;
     }
 
     public function tracker_is_nature_valid($params) // phpcs:ignore
     {
         if (
             $this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
-            && $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER
+            && $params['nature'] === TypeInFolderPresenter::NATURE_IN_FOLDER
         ) {
             $params['error'] = "Link between " . $params['artifact']->getId() . " and " . $params['children_id'] . " is inconsistent because tracker " .
                 $params['tracker_id'] . " is not defined as a Folder. Artifact " . $params['artifact']->getId() . " added without nature.";
@@ -384,7 +384,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         $project = $event->getProject();
 
         if ($this->isAllowed($project->getId()) && $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($project)) {
-            $event->addType(new NatureInFolderPresenter());
+            $event->addType(new TypeInFolderPresenter());
         }
     }
 
@@ -392,14 +392,14 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         $type = $event->getType();
 
-        if ($type->shortname === NatureInFolderPresenter::NATURE_IN_FOLDER) {
+        if ($type->shortname === TypeInFolderPresenter::NATURE_IN_FOLDER) {
             $event->setTypeIsCheckedByPlugin();
         }
     }
 
     public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event) // phpcs:ignore
     {
-        if ($event->getTypeName() !== NatureInFolderPresenter::NATURE_IN_FOLDER) {
+        if ($event->getTypeName() !== TypeInFolderPresenter::NATURE_IN_FOLDER) {
             return;
         }
 
@@ -408,7 +408,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($event->getProject())) {
             $event->setTypeIsUnusable();
         } else {
-            $event->setMessage(NatureInFolderPresenter::NATURE_IN_FOLDER . " type is forced because a tracker folder is defined.");
+            $event->setMessage(TypeInFolderPresenter::NATURE_IN_FOLDER . " type is forced because a tracker folder is defined.");
         }
     }
 }

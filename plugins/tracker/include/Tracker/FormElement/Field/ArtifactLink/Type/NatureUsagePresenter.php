@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 class NatureUsagePresenter
 {
     /**
-     * @var NaturePresenter
+     * @var TypePresenter
      */
     public $nature;
 
@@ -38,7 +38,7 @@ class NatureUsagePresenter
      */
     public $can_be_deleted;
 
-    public function __construct(NaturePresenter $nature, $is_or_has_been_used)
+    public function __construct(TypePresenter $nature, $is_or_has_been_used)
     {
         $this->nature              = $nature;
         $this->is_or_has_been_used = $is_or_has_been_used;

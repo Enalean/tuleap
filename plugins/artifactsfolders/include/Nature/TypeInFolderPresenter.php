@@ -21,9 +21,9 @@
 
 namespace Tuleap\ArtifactsFolders\Nature;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
-class NatureInFolderPresenter extends NaturePresenter
+class TypeInFolderPresenter extends TypePresenter
 {
     public const NATURE_IN_FOLDER = '_in_folder';
 

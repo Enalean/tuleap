@@ -79,7 +79,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
                     $backlog_item,
                     [$artifact->getId()],
                     [],
-                    \Tuleap\TestManagement\Nature\NatureCoveredByPresenter::NATURE_COVERED_BY
+                    \Tuleap\TestManagement\Nature\TypeCoveredByPresenter::NATURE_COVERED_BY
                 );
             } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
                 $GLOBALS['Response']->addFeedback(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,19 +19,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
+namespace Tuleap\TestManagement\Nature;
 
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
-class NatureIsChildPresenter extends NaturePresenter
+class TypeCoveredByPresenter extends TypePresenter
 {
+    public const NATURE_COVERED_BY = '_covered_by';
 
     public function __construct()
     {
         parent::__construct(
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
-            dgettext('tuleap-tracker', 'Child'),
-            dgettext('tuleap-tracker', 'Parent'),
+            self::NATURE_COVERED_BY,
+            dgettext('tuleap-testmanagement', 'Covered by'),
+            dgettext('tuleap-testmanagement', 'Covers'),
             true
         );
 

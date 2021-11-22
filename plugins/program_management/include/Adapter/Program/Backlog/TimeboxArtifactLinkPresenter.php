@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
-final class TimeboxArtifactLinkPresenter extends NaturePresenter
+final class TimeboxArtifactLinkPresenter extends TypePresenter
 {
     /**
      * @psalm-readonly

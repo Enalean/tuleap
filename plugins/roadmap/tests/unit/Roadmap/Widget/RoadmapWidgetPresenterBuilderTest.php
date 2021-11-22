@@ -22,21 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildPresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAPresenterThatExcludesIsChildFromVisibleNatures(): void
     {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([
-            new NatureInFolderPresenter(),
-            new NatureIsChildPresenter(),
-            new NatureCoveredByPresenter(),
+        $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
+        $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([
+            new TypeInFolderPresenter(),
+            new TypeIsChildPresenter(),
+            new TypeCoveredByPresenter(),
         ]);
 
         $user = UserTestBuilder::aUser()->build();
@@ -51,14 +51,14 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $natures = \json_decode($presenter->visible_natures, true);
         self::assertCount(2, $natures);
-        self::assertEquals(NatureInFolderPresenter::NATURE_IN_FOLDER, $natures[0]['shortname']);
-        self::assertEquals(NatureCoveredByPresenter::NATURE_COVERED_BY, $natures[1]['shortname']);
+        self::assertEquals(TypeInFolderPresenter::NATURE_IN_FOLDER, $natures[0]['shortname']);
+        self::assertEquals(TypeCoveredByPresenter::NATURE_COVERED_BY, $natures[1]['shortname']);
     }
 
     public function testItInformsThatIterationsAtLevel1ShouldBeLoaded(): void
     {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
+        $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
+        $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);
 
         $user = UserTestBuilder::aUser()->build();
 
@@ -82,8 +82,8 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItInformsThatIterationsAtLevel2ShouldBeLoaded(): void
     {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
+        $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
+        $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);
 
         $user = UserTestBuilder::aUser()->build();
 
@@ -113,8 +113,8 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id
     ): void {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
+        $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
+        $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);
 
         $user = UserTestBuilder::aUser()->build();
 
@@ -140,8 +140,8 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id
     ): void {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
+        $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
+        $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);
 
         $user = UserTestBuilder::aUser()->build();
 
@@ -170,8 +170,8 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id
     ): void {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
+        $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
+        $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);
 
         $user = UserTestBuilder::aUser()->build();
 

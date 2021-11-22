@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Events;
 
 use Project;
 use Tuleap\Event\Dispatchable;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 class GetEditableTypesInProject implements Dispatchable
 {
@@ -60,7 +60,7 @@ class GetEditableTypesInProject implements Dispatchable
         return $this->types;
     }
 
-    public function addType(NaturePresenter $type)
+    public function addType(TypePresenter $type)
     {
         $this->types[] = $type;
     }

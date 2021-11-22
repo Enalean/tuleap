@@ -31,7 +31,7 @@ use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
@@ -97,7 +97,7 @@ class RoadmapPlugin extends Plugin
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
                 new RoadmapWidgetPresenterBuilder(
-                    new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
+                    new TypePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
                     TrackerFactory::instance(),
                 ),
                 TrackerFactory::instance()

@@ -21,12 +21,12 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker_ArtifactLinkInfo;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 class ArtifactLinksToRenderForPerNatureTable
 {
     /**
-     * @var NaturePresenter
+     * @var TypePresenter
      */
     private $nature_presenter;
     /**
@@ -34,14 +34,14 @@ class ArtifactLinksToRenderForPerNatureTable
      */
     private $artifact_links;
 
-    public function __construct(NaturePresenter $nature_presenter, Tracker_ArtifactLinkInfo ...$artifact_links)
+    public function __construct(TypePresenter $nature_presenter, Tracker_ArtifactLinkInfo ...$artifact_links)
     {
         $this->nature_presenter = $nature_presenter;
         $this->artifact_links   = $artifact_links;
     }
 
     /**
-     * @return NaturePresenter
+     * @return TypePresenter
      */
     public function getNaturePresenter()
     {

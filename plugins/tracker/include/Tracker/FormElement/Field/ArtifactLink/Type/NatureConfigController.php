@@ -38,7 +38,7 @@ class NatureConfigController
     /** @var NatureCreator */
     private $nature_creator;
 
-    /** @var NaturePresenterFactory */
+    /** @var TypePresenterFactory */
     private $nature_presenter_factory;
 
     /** @var NatureEditor */
@@ -57,7 +57,7 @@ class NatureConfigController
         NatureCreator $nature_creator,
         NatureEditor $nature_editor,
         NatureDeletor $nature_deletor,
-        NaturePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $nature_presenter_factory,
         NatureUsagePresenterFactory $nature_usage_presenter_factory,
         AdminPageRenderer $admin_page_rendered
     ) {
@@ -152,9 +152,9 @@ class NatureConfigController
     /** @return NatureConfigPresenter */
     private function getNatureConfigPresenter($title, CSRFSynchronizerToken $csrf)
     {
-        $natures = $this->nature_presenter_factory->getAllNatures();
+        $types = $this->nature_presenter_factory->getAllTypes();
 
-        $natures_usage = $this->nature_usage_presenter_factory->getNaturesUsagePresenters($natures);
+        $natures_usage = $this->nature_usage_presenter_factory->getNaturesUsagePresenters($types);
 
         return new NatureConfigPresenter($title, $natures_usage, $csrf);
     }

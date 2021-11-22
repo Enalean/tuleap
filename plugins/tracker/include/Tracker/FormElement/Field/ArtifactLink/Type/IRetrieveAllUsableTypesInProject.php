@@ -24,6 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 interface IRetrieveAllUsableTypesInProject
 {
-    /** @return NaturePresenter[] */
+    /** @return TypePresenter[] */
     public function getAllUsableTypesInProject(\Project $project): array;
 }

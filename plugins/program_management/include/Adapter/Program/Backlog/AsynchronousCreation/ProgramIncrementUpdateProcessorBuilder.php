@@ -52,7 +52,7 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -87,7 +87,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
                 $form_element_factory,
                 new ArtifactLinkValidator(
                     $artifact_factory,
-                    new NaturePresenterFactory(
+                    new TypePresenterFactory(
                         new NatureDao(),
                         $artifact_links_usage_dao
                     ),

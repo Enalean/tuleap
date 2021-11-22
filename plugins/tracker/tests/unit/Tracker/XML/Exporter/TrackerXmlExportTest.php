@@ -31,8 +31,8 @@ use TrackerXmlExport;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,7 +43,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
     private $xml_export;
 
     /**
-     * @var  Mockery\LegacyMockInterface|Mockery\MockInterface|NaturePresenterFactory
+     * @var  Mockery\LegacyMockInterface|Mockery\MockInterface|TypePresenterFactory
      */
     private $nature_presenter_factory;
     /**
@@ -71,7 +71,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn([$this->tracker1, $this->tracker2]);
         $tracker_factory->shouldReceive('getTrackerById')->withArgs([456])->andReturn($this->tracker1);
 
-        $this->nature_presenter_factory = Mockery::mock(NaturePresenterFactory::class);
+        $this->nature_presenter_factory = Mockery::mock(TypePresenterFactory::class);
 
         $this->artifact_link_dao = Mockery::mock(ArtifactLinksUsageDao::class);
         $this->artifact_link_dao->shouldReceive('isTypeDisabledInProject');
@@ -116,7 +116,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->twice();
 
-        $type = new NaturePresenter('fixed_in', '', '', true);
+        $type = new TypePresenter('fixed_in', '', '', true);
 
         $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
@@ -144,7 +144,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->once();
 
-        $type = new NaturePresenter('fixed_in', '', '', true);
+        $type = new TypePresenter('fixed_in', '', '', true);
 
         $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 

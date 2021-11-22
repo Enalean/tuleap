@@ -39,8 +39,8 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class ArtifactLinksController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
@@ -57,7 +57,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
     private $updater;
 
     /**
-     * @var NaturePresenterFactory
+     * @var TypePresenterFactory
      */
     private $types_presenter_factory;
 
@@ -84,7 +84,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         GlobalAdminPermissionsChecker $permissions_checker,
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
-        NaturePresenterFactory $types_presenter_factory,
+        TypePresenterFactory $types_presenter_factory,
         EventManager $event_manager
     ) {
         $this->dao                     = $dao;
@@ -255,12 +255,12 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         return false;
     }
 
-    private function isTypeDisabledInProject(Project $project, NaturePresenter $type): bool
+    private function isTypeDisabledInProject(Project $project, TypePresenter $type): bool
     {
         return $this->dao->isTypeDisabledInProject((int) $project->getID(), $type->shortname);
     }
 
-    private function artifactLinkTypeCanBeUnused(Project $project, NaturePresenter $type): bool
+    private function artifactLinkTypeCanBeUnused(Project $project, TypePresenter $type): bool
     {
         if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
             return false;

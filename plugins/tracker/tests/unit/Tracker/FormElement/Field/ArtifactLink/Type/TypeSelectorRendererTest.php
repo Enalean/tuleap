@@ -38,12 +38,12 @@ class TypeSelectorRendererTest extends TestCase
     {
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
-                /** @return NaturePresenter[] */
+                /** @return TypePresenter[] */
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [
-                        new NatureIsChildPresenter(),
-                        NaturePresenter::buildVisibleNature('fixed_by', 'Fixed by', 'Fix'),
+                        new TypeIsChildPresenter(),
+                        TypePresenter::buildVisibleType('fixed_by', 'Fixed by', 'Fix'),
                     ];
                 }
             },
@@ -75,12 +75,12 @@ class TypeSelectorRendererTest extends TestCase
     {
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
-                /** @return NaturePresenter[] */
+                /** @return TypePresenter[] */
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [
-                        new NatureIsChildPresenter(),
-                        NaturePresenter::buildVisibleNature('fixed_by', 'Fixed by', 'Fix'),
+                        new TypeIsChildPresenter(),
+                        TypePresenter::buildVisibleType('fixed_by', 'Fixed by', 'Fix'),
                     ];
                 }
             },
@@ -118,12 +118,12 @@ class TypeSelectorRendererTest extends TestCase
     {
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
-                /** @return NaturePresenter[] */
+                /** @return TypePresenter[] */
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [
-                        new NatureIsChildPresenter(),
-                        NaturePresenter::buildVisibleNature('fixed_by', 'Fixed by', 'Fix'),
+                        new TypeIsChildPresenter(),
+                        TypePresenter::buildVisibleType('fixed_by', 'Fixed by', 'Fix'),
                     ];
                 }
             },
@@ -160,11 +160,11 @@ class TypeSelectorRendererTest extends TestCase
     {
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
-                /** @return NaturePresenter[] */
+                /** @return TypePresenter[] */
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [
-                        NaturePresenter::buildVisibleNature('fixed_by', 'Fixed by', 'Fix'),
+                        TypePresenter::buildVisibleType('fixed_by', 'Fixed by', 'Fix'),
                     ];
                 }
             },

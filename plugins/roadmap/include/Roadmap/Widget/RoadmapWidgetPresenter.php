@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 /**
  * @psalm-immutable
@@ -36,7 +36,7 @@ final class RoadmapWidgetPresenter
     public string $default_timescale;
 
     /**
-     * @param NaturePresenter[] $visible_natures
+     * @param TypePresenter[] $visible_natures
      */
     public function __construct(
         int $roadmap_id,

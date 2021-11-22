@@ -34,7 +34,7 @@ class NatureUsagePresenterFactory
     }
 
     /**
-     * @param NaturePresenter[] $natures
+     * @param TypePresenter[] $natures
      *
      * @return NatureUsagePresenter[]
      */

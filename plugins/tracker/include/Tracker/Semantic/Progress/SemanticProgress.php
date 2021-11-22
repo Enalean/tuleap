@@ -32,7 +32,7 @@ use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenterBuilder;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
@@ -200,7 +200,7 @@ class SemanticProgress extends \Tracker_Semantic
         $method_builder = new MethodBuilder(
             \Tracker_FormElementFactory::instance(),
             new SemanticProgressDao(),
-            new NaturePresenterFactory(
+            new TypePresenterFactory(
                 new NatureDao(),
                 new ArtifactLinksUsageDao()
             )
