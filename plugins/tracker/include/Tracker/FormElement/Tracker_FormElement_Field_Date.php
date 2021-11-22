@@ -991,18 +991,27 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         if (strpos($value, '/') !== false) {
             // Assume the format is either dd/mm/YYYY or mm/dd/YYYY depending on the user preferences.
             return $this->getFieldDataForCSVPreview($value);
-        } elseif (strpos($value, '-') !== false) {
+        }
+
+        if (strpos($value, '-') !== false) {
             // Assume the format is YYYY-mm-dd
             $date_array = explode('-', $value);
             if (count($date_array) == 3 && checkdate($date_array[1], $date_array[2], $date_array[0]) && $this->_nbDigits($date_array[0])) {
                 return $value;
-            } else {
-                return null;
             }
-        } elseif (intval($value) == $value) {
+
+            return null;
+        }
+
+        if ((int) $value == $value) {
             // Assume it's a timestamp
             return $this->getFormatter()->formatDate((int) $value);
         }
+
+        if (trim($value) === '') {
+            return '';
+        }
+
         return null;
     }
 

@@ -174,6 +174,20 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertNull($field->getFieldData('1.5'));
     }
 
+    public function testGetEmptyFieldData(): void
+    {
+        $field = $this->getDateField();
+
+        self::assertEquals('', $field->getFieldData(''));
+    }
+
+    public function testGetFieldDataReturnsNullWhenInvalidInputIsProvided(): void
+    {
+        $field = $this->getDateField();
+
+        self::assertNull($field->getFieldData('foo'));
+    }
+
     public function testGetFieldDataForCSVPreview(): void
     {
         $field = $this->getDateField();
