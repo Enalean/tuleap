@@ -285,6 +285,8 @@ class BindStaticValueDao extends DataAccessObject
                     FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
                         INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id)
+                        INNER JOIN tracker_changeset ON (tracker_changeset.id = cv.changeset_id)
+                        INNER JOIN tracker_artifact ON (tracker_changeset.artifact_id = tracker_artifact.id)
                     WHERE v.field_id = $field_id
                     UNION
                     SELECT v.id AS id
@@ -294,6 +296,8 @@ class BindStaticValueDao extends DataAccessObject
                             cv.id = cvl.changeset_value_id
                             AND cv.field_id = v.field_id
                         )
+                        INNER JOIN tracker_changeset ON (tracker_changeset.id = cv.changeset_id)
+                        INNER JOIN tracker_artifact ON (tracker_changeset.artifact_id = tracker_artifact.id)
                     WHERE cv.field_id = $field_id
                     UNION
                     SELECT tracker_workflow_trigger_rule_static_value.value_id
