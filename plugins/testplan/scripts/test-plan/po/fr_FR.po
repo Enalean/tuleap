@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "%{ nb } blocked"
@@ -94,6 +94,9 @@ msgstr "Éditer %{ item_type } #%{ item_id }"
 
 msgid "Export"
 msgstr "Exporter"
+
+msgid "Export as spreadsheet"
+msgstr "Exporter en tant que feuille de calcul"
 
 msgid "Failed"
 msgstr "Échoué"
