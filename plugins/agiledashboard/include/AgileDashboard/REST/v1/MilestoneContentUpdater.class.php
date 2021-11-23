@@ -59,7 +59,7 @@ class MilestoneContentUpdater
                 $this->artifact_factory,
                 $milestone
             ),
-            Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+            Tracker_FormElement_Field_ArtifactLink::NO_TYPE
         );
     }
 

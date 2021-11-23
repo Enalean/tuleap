@@ -244,7 +244,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertSame(self::FIRST_MIRRORED_ITERATION_ID, $first_link->artifact_link_value->linked_artifact->getId());
         self::assertSame(
-            \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
             (string) $first_link->artifact_link_value->type
         );
         self::assertSame(self::USER_ID, $first_link->user->getId());
@@ -260,7 +260,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             $second_link->artifact_link_value->linked_artifact->getId()
         );
         self::assertSame(
-            \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
             (string) $second_link->artifact_link_value->type
         );
         self::assertSame(self::USER_ID, $second_link->user->getId());

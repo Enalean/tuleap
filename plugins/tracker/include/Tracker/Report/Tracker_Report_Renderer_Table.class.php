@@ -1263,7 +1263,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     continue;
                                 }
 
-                                if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+                                if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
                                     $should_select_current_type = \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $selected_type;
                                     $is_a_usable_type_selected  = $is_a_usable_type_selected || $should_select_current_type;
                                     $natures_presenter[]        = [

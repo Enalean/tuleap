@@ -206,7 +206,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                     self::ARTIFACT_LINK_ID => [
                         'new_values' => (string) self::MIRRORED_ITERATION_ID,
                         'natures'    => [
-                            (string) self::MIRRORED_ITERATION_ID => \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                            (string) self::MIRRORED_ITERATION_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
                         ]
                     ],
                 ],

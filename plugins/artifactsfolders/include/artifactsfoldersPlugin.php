@@ -59,15 +59,15 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     public function getHooksAndCallbacks()
     {
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
+            $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook('javascript_file');
             $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
-            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_IS_NATURE_VALID);
             $this->addHook('cssfile');
             $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
-            $this->addHook(TypePresenterFactory::EVENT_GET_NATURE_PRESENTER);
+            $this->addHook(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST);
@@ -127,7 +127,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         );
     }
 
-    public function event_get_artifactlink_natures($params)// phpcs:ignore
+    public function event_get_artifactlink_types($params)// phpcs:ignore
     {
         $params['types'][] = new TypeInFolderPresenter();
     }
@@ -250,7 +250,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         $params['hide_artifact'] = $params['nature'] === TypeInFolderPresenter::NATURE_IN_FOLDER;
     }
 
-    public function event_get_nature_presenter($params) // phpcs:ignore
+    public function event_get_type_presenter($params) // phpcs:ignore
     {
         if ($params['shortname'] === TypeInFolderPresenter::NATURE_IN_FOLDER) {
             $params['presenter'] = new TypeInFolderPresenter();
@@ -272,9 +272,9 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         $router->route(HTTPRequest::instance());
     }
 
-    public function tracker_add_system_natures($params) // phpcs:ignore
+    public function tracker_add_system_types($params) // phpcs:ignore
     {
-        $params['natures'][] = TypeInFolderPresenter::NATURE_IN_FOLDER;
+        $params['types'][] = TypeInFolderPresenter::NATURE_IN_FOLDER;
     }
 
     public function tracker_is_nature_valid($params) // phpcs:ignore

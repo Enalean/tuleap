@@ -47,7 +47,7 @@ class RoadmapWidgetPresenterBuilder
         $visible_natures = array_filter(
             $this->nature_presenter_factory->getOnlyVisibleTypes(),
             static function (TypePresenter $nature) {
-                return $nature->shortname !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+                return $nature->shortname !== Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
             }
         );
 

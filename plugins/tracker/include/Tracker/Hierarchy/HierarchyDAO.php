@@ -101,7 +101,7 @@ class HierarchyDAO extends DataAccessObject
                             ON (hierarchy.parent_id = parent_art.tracker_id
                                 AND hierarchy.child_id = child_art.tracker_id)
                         SET nature = ?",
-            array_merge($child_tracker_ids_in_condition->values(), [$parent_id, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD])
+            array_merge($child_tracker_ids_in_condition->values(), [$parent_id, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD])
         );
     }
 
@@ -153,7 +153,7 @@ class HierarchyDAO extends DataAccessObject
 
     private function removeIsChildNatureForArtifactsThatWasManuallySetAsChildren(int $parent_id, array $child_ids): void
     {
-        $where_condition = EasyStatement::open()->with('nature = ?', Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $where_condition = EasyStatement::open()->with('nature = ?', Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
         if (! empty($child_ids)) {
             $where_condition->andIn('child_art.tracker_id NOT IN (?*)', $child_ids);
         }

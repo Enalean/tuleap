@@ -110,12 +110,12 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
             ->andReturnTrue();
 
         $this->another_parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
             ->andReturnFalse();
 
         $this->assertTrue(
@@ -152,12 +152,12 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
             ->andReturnFalse();
 
         $this->another_parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
             ->andReturnFalse();
 
         $this->assertFalse(

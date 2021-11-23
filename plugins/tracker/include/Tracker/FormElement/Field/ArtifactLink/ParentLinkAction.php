@@ -69,7 +69,7 @@ class ParentLinkAction
                 $parent_artifact->linkArtifact(
                     $artifact->getId(),
                     $submitter,
-                    Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                    Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
                 )
             ) {
                 $nb_parent_linked++;

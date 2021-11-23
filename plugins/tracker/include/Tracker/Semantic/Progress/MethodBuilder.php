@@ -111,7 +111,7 @@ class MethodBuilder
             );
         }
 
-        if ($link_type !== \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+        if ($link_type !== \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
             return new InvalidMethod(
                 dgettext(
                     'tuleap-tracker',
@@ -153,7 +153,7 @@ class MethodBuilder
             case MethodBasedOnLinksCount::getMethodName():
                 return $this->buildMethodBasedOnChildCount(
                     $tracker,
-                    \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                    \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
                 );
             default:
                 return new InvalidMethod(

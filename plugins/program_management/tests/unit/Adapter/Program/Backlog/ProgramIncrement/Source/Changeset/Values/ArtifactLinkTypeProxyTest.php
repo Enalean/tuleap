@@ -35,6 +35,6 @@ final class ArtifactLinkTypeProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsIsChildType(): void
     {
         $type = ArtifactLinkTypeProxy::fromIsChildType();
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD, (string) $type);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, (string) $type);
     }
 }

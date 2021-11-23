@@ -262,7 +262,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
     private function artifactLinkTypeCanBeUnused(Project $project, TypePresenter $type): bool
     {
-        if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+        if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
             return false;
         }
 

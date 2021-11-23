@@ -55,7 +55,7 @@ class MonoMilestoneBacklogItemDao extends DataAccessObject
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
         $limit               = $this->da->escapeInt($limit);
         $offset              = $this->da->escapeInt($offset);
-        $type_is_child       = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $type_is_child       = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
                 FROM tracker_artifact AS art_1

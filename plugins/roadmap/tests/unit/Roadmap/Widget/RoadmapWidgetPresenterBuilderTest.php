@@ -24,7 +24,7 @@ namespace Tuleap\Roadmap\Widget;
 
 use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
+use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
@@ -52,7 +52,7 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $natures = \json_decode($presenter->visible_natures, true);
         self::assertCount(2, $natures);
         self::assertEquals(TypeInFolderPresenter::NATURE_IN_FOLDER, $natures[0]['shortname']);
-        self::assertEquals(TypeCoveredByPresenter::NATURE_COVERED_BY, $natures[1]['shortname']);
+        self::assertEquals(TypeCoveredByPresenter::TYPE_COVERED_BY, $natures[1]['shortname']);
     }
 
     public function testItInformsThatIterationsAtLevel1ShouldBeLoaded(): void

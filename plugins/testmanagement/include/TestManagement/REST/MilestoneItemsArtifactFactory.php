@@ -26,7 +26,7 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\TestManagement\Event\GetItemsFromMilestone;
-use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
+use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 
 class MilestoneItemsArtifactFactory
 {
@@ -63,31 +63,37 @@ class MilestoneItemsArtifactFactory
         $event = new GetItemsFromMilestone($user, $milestone_id);
         $this->event_manager->processEvent($event);
 
-        $this->appendArtifactsByNatures(
+        $this->appendArtifactsByTypes(
             $user,
             $test_definitions,
             $event,
             $project,
-            [TypeCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
+            [TypeCoveredByPresenter::TYPE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD],
         );
 
         return $test_definitions;
     }
 
     /**
-     * @param string[] $natures
-     * @psalm-param non-empty-array<string> $natures
+     * @param string[] $types
+     *
+     * @psalm-param non-empty-array<string> $types
      */
-    private function appendArtifactsByNatures(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project, array $natures): void
-    {
+    private function appendArtifactsByTypes(
+        PFUser $user,
+        array &$test_definitions,
+        GetItemsFromMilestone $event,
+        Project $project,
+        array $types
+    ): void {
         $artifacts_ids = $event->getItemsIds();
         if (empty($artifacts_ids)) {
             return;
         }
 
-        $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
+        $results = $this->dao->searchPaginatedLinkedArtifactsByLinkTypeAndTrackerId(
             $artifacts_ids,
-            $natures,
+            $types,
             $this->config->getTestDefinitionTrackerId($project),
             PHP_INT_MAX,
             0

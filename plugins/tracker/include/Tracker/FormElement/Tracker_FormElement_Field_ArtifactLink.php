@@ -48,9 +48,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public const TYPE                    = 'art_link';
     public const CREATE_NEW_PARENT_VALUE = -1;
     public const NEW_VALUES_KEY          = 'new_values';
-    public const NATURE_IS_CHILD         = '_is_child';
+    public const TYPE_IS_CHILD           = '_is_child';
     public const FAKE_TYPE_IS_PARENT     = '_is_parent';
-    public const NO_NATURE               = '';
+    public const NO_TYPE                 = '';
     public const FIELDS_DATA_PARENT_KEY  = 'parent';
 
     /**

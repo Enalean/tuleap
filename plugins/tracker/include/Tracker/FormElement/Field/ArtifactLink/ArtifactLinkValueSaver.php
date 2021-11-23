@@ -139,7 +139,7 @@ class ArtifactLinkValueSaver
         if ($linked_artifact === null) {
             return null;
         }
-        $nature_by_plugin = $this->getNatureDefinedByPlugin(
+        $nature_by_plugin = $this->getTypeDefinedByPlugin(
             $artifactlinkinfo,
             $from_artifact,
             $linked_artifact,
@@ -174,7 +174,7 @@ class ArtifactLinkValueSaver
 
         if ($this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $from_tracker->getProject()->getID())) {
             if (
-                ($is_child && $existing_nature !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) ||
+                ($is_child && $existing_nature !== Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) ||
                 $is_parent
             ) {
                 $GLOBALS['Response']->addFeedback(
@@ -190,7 +190,7 @@ class ArtifactLinkValueSaver
 
             if (
                 ! $is_child &&
-                $existing_nature === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD &&
+                $existing_nature === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD &&
                 $this->rules_manager->getForTargetTracker($from_tracker)->count() > 0
             ) {
                 $GLOBALS['Response']->addFeedback(
@@ -206,15 +206,15 @@ class ArtifactLinkValueSaver
         }
 
         if ($is_child) {
-            return Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+            return Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
         }
 
         if (
             $from_tracker->getChildren()
             && ! $is_child
-            && $existing_nature === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            && $existing_nature === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
         ) {
-            return Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+            return Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
         }
 
         return null;
@@ -231,42 +231,42 @@ class ArtifactLinkValueSaver
         return false;
     }
 
-    private function getNatureDefinedByPlugin(
+    private function getTypeDefinedByPlugin(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Artifact $from_artifact,
         Artifact $to_artifact,
-        $existing_nature,
+        $existing_type,
         array $submitted_value
     ) {
-        $nature_by_plugin = null;
-        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED, [
+        $type_by_plugin = null;
+        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED, [
             'project_id'      => $artifactlinkinfo->getGroupId(),
             'to_artifact'     => $to_artifact,
             'submitted_value' => $submitted_value,
-            'nature'          => &$nature_by_plugin
+            'type'            => &$type_by_plugin
         ]);
 
-        if (! empty($nature_by_plugin) && $existing_nature !== $nature_by_plugin) {
-            $this->warnOverrideOfExistingNature(
+        if (! empty($type_by_plugin) && $existing_type !== $type_by_plugin) {
+            $this->warnOverrideOfExistingType(
                 $artifactlinkinfo,
                 $from_artifact->getTracker(),
-                $existing_nature,
-                $nature_by_plugin
+                $existing_type,
+                $type_by_plugin
             );
         }
-        return $nature_by_plugin;
+        return $type_by_plugin;
     }
 
-    private function warnOverrideOfExistingNature(
+    private function warnOverrideOfExistingType(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
-        $existing_nature,
-        $nature_by_plugin
+        $existing_type,
+        $type_by_plugin
     ) {
         if ($from_tracker->isProjectAllowedToUseNature()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                sprintf(dgettext('tuleap-tracker', 'Override link type "%2$s" to artifact #%1$s with type "%3$s" returned by another service'), $artifactlinkinfo->getArtifactId(), $existing_nature, $nature_by_plugin)
+                sprintf(dgettext('tuleap-tracker', 'Override link type "%2$s" to artifact #%1$s with type "%3$s" returned by another service'), $artifactlinkinfo->getArtifactId(), $existing_type, $type_by_plugin)
             );
         }
     }

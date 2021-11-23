@@ -51,7 +51,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
             'submilestones'
         );
 
-        $nature = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $nature = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
                 FROM tracker_artifact AS parent
@@ -206,7 +206,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
     ) {
         $built_sql            = $this->getPaginationAndStatusStatements($request);
         $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
-        $nature               = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $nature               = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.id  AS submilestone_id, submilestones.*
                 FROM tracker_artifact AS submilestones
@@ -281,7 +281,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
     public function searchSubMilestones(int $milestone_artifact_id)
     {
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
-        $nature                = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $nature                = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
                 FROM tracker_artifact AS parent

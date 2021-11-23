@@ -3817,8 +3817,8 @@
       <code>checkRequestConcernsArtifactFoldersWithSetParameters</code>
       <code>cssfile</code>
       <code>display_copy_of_artifact</code>
-      <code>event_get_artifactlink_natures</code>
-      <code>event_get_nature_presenter</code>
+      <code>event_get_artifactlink_types</code>
+      <code>event_get_type_presenter</code>
       <code>getDao</code>
       <code>getHierarchyOfFolderBuilder</code>
       <code>getHooksAndCallbacks</code>
@@ -3829,7 +3829,7 @@
       <code>isViewAddableForArtifact</code>
       <code>prepend_artifactlink_information</code>
       <code>setFolderProperty</code>
-      <code>tracker_add_system_natures</code>
+      <code>tracker_add_system_types</code>
       <code>tracker_artifact_editrenderer_add_view_in_collection</code>
       <code>tracker_artifact_link_can_be_unused</code>
       <code>tracker_get_editable_type_in_project</code>
@@ -35602,7 +35602,7 @@
       <code>getNatureFromMappedArtifact</code>
       <code>isLinkValid</code>
       <code>removeValuesIfDontExistInLastChangeset</code>
-      <code>retrieveSystemNatures</code>
+      <code>retrieveSystemTypes</code>
     </MissingReturnType>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$params</code>
@@ -36663,9 +36663,9 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinkValueSaver.php">
     <MissingParamType occurrences="5">
-      <code>$existing_nature</code>
-      <code>$existing_nature</code>
-      <code>$nature_by_plugin</code>
+      <code>$existing_type</code>
+      <code>$existing_type</code>
+      <code>$type_by_plugin</code>
       <code>$target_artifact_id</code>
       <code>$target_artifact_id</code>
     </MissingParamType>
@@ -36674,12 +36674,12 @@
       <code>getAddedArtifactIds</code>
       <code>getArtifactIdsToLink</code>
       <code>getNature</code>
-      <code>getNatureDefinedByPlugin</code>
+      <code>getTypeDefinedByPlugin</code>
       <code>getRemovedArtifactIds</code>
       <code>insertCrossReference</code>
       <code>removeCrossReference</code>
       <code>saveValue</code>
-      <code>warnOverrideOfExistingNature</code>
+      <code>warnOverrideOfExistingType</code>
     </MissingReturnType>
     <PossiblyNullArgument occurrences="2">
       <code>$this-&gt;artifact_factory-&gt;getArtifactById($target_artifact_id)</code>
@@ -48606,7 +48606,6 @@
       <code>$t-&gt;name</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="80">
-      <code>addCustomNatures</code>
       <code>agiledashboard_event_rest_get_burndown</code>
       <code>agiledashboard_event_rest_get_milestone</code>
       <code>agiledashboard_event_rest_options_burndown</code>

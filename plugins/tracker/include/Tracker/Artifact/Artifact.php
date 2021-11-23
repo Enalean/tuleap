@@ -1710,7 +1710,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function linkArtifact(
         $linked_artifact_id,
         PFUser $current_user,
-        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE
     ): bool {
         $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
         if (count($artlink_fields)) {

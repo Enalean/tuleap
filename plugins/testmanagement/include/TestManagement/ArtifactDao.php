@@ -24,7 +24,7 @@ namespace Tuleap\TestManagement;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
+use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 
 class ArtifactDao extends DataAccessObject
 {
@@ -104,20 +104,22 @@ class ArtifactDao extends DataAccessObject
     }
 
     /**
-     * @param string[] $natures
-     * @psalm-param non-empty-array<string> $natures
-     * @psalm-param non-empty-array $artifacts_ids
-     * @param false|int $target_tracker_id
+     * @param string[]                      $types
+     *
+     * @psalm-param non-empty-array<string> $types
+     * @psalm-param non-empty-array         $artifacts_ids
+     *
+     * @param false|int                     $target_tracker_id
      */
-    public function searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
+    public function searchPaginatedLinkedArtifactsByLinkTypeAndTrackerId(
         array $artifacts_ids,
-        array $natures,
+        array $types,
         $target_tracker_id,
         int $limit,
         int $offset
     ): array {
         $where_statement = EasyStatement::open()->in('parent_art.id IN (?*)', $artifacts_ids)
-            ->andIn('IFNULL(artlink.nature, "") IN (?*)', $natures);
+            ->andIn('IFNULL(artlink.nature, "") IN (?*)', $types);
 
         $sql = "SELECT DISTINCT SQL_CALC_FOUND_ROWS linked_art.*
                 FROM tracker_artifact parent_art
@@ -216,6 +218,6 @@ class ArtifactDao extends DataAccessObject
                 ORDER BY a.id ASC
                 LIMIT 1";
 
-        return $this->getDB()->row($sql, $test_definition_id, TypeCoveredByPresenter::NATURE_COVERED_BY, $test_exec_tracker_id);
+        return $this->getDB()->row($sql, $test_definition_id, TypeCoveredByPresenter::TYPE_COVERED_BY, $test_exec_tracker_id);
     }
 }
