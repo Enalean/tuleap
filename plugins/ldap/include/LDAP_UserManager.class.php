@@ -505,7 +505,7 @@ class LDAP_UserManager
      */
     public function isUserDeletedFromLdap($row)
     {
-        $ldap_query = $this->ldap->getLDAPParam('eduid') . '=' . $row['ldap_id'];
+        $ldap_query = $this->ldap->getLDAPParam('eduid') . '=' . ldap_escape($row['ldap_id'], '', LDAP_ESCAPE_FILTER);
         $attributes = $this->user_sync->getSyncAttributes($this->ldap);
         $ldapSearch = false;
 
