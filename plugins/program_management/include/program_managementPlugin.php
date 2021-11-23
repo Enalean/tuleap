@@ -171,10 +171,11 @@ use Tuleap\ProgramManagement\Domain\Team\PossibleParentHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
-use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
+use Tuleap\ProgramManagement\RedirectToProgramIncrementAppHandler;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\RedirectParameterInjector;
+use Tuleap\ProgramManagement\RedirectToProgramManagementAppManager;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\ProgramManagement\Templates\ProgramTemplate;
 use Tuleap\ProgramManagement\Templates\TeamTemplate;
@@ -834,21 +835,24 @@ final class program_managementPlugin extends Plugin
 
     public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
-        $processor = new EventRedirectAfterArtifactCreationOrUpdateHandler();
-        $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());
+        (new RedirectToProgramIncrementAppHandler())->process(
+            RedirectToProgramManagementAppManager::buildFromCodendiRequest($event->getRequest()),
+            $event->getRedirect(),
+            $event->getArtifact()->getTracker()->getProject()
+        );
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $redirect_program_increment_value = $event->getRequest()->get('program_increment');
-        $redirect_in_service              = $redirect_program_increment_value && ($redirect_program_increment_value === "create" || $redirect_program_increment_value === "update");
-        if (! $redirect_in_service) {
+        $program_management_redirect_manager = RedirectToProgramManagementAppManager::buildFromCodendiRequest($event->getRequest());
+
+        if (! $program_management_redirect_manager->isRedirectionNeeded()) {
             return;
         }
 
         $redirect = new RedirectParameterInjector();
 
-        if ($redirect_program_increment_value === "update") {
+        if ($program_management_redirect_manager->needsRedirectionAfterUpdate()) {
             $redirect->injectAndInformUserAboutUpdatingProgramItem($event->getRedirect(), $GLOBALS['Response']);
 
             return;
