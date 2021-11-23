@@ -28,13 +28,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationHasNoProg
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 
-final class ProgramDao extends DataAccessObject implements ProgramStore, RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher, RetrieveProgramOfIteration
+final class ProgramDao extends DataAccessObject implements RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher, RetrieveProgramOfIteration
 {
     public function isAProgram(int $project_id): bool
     {
@@ -65,12 +64,6 @@ final class ProgramDao extends DataAccessObject implements ProgramStore, Retriev
 
         $rows = $this->getDB()->q($sql, $project_id);
         return array_map(static fn(array $row): int => $row['team_project_id'], $rows);
-    }
-
-    public function saveProgram(int $program_project_id, int $team_project_id): void
-    {
-        $sql = ['program_project_id' => $program_project_id, 'team_project_id' => $team_project_id];
-        $this->getDB()->insert('plugin_program_management_team_projects', $sql);
     }
 
     public function getProgramOfProgramIncrement(ProgramIncrementIdentifier $program_increment): int
