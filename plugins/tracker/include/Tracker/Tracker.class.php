@@ -3386,7 +3386,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
         return new ArtifactLinkValidator(
             \Tracker_ArtifactFactory::instance(),
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory(
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
                 new NatureDao(),
                 $artifact_links_usage_dao
             ),

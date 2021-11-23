@@ -25,16 +25,16 @@ namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllNaturesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreatorInterface;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeImporter
 {
     private const ISSUE_LINK_TYPE_URL = '/issueLinkType';
 
     /**
-     * @var AllNaturesRetriever
+     * @var AllTypesRetriever
      */
     private $all_natures_retriever;
     /**
@@ -42,7 +42,7 @@ final class ArtifactLinkTypeImporter
      */
     private $creator;
 
-    public function __construct(AllNaturesRetriever $all_natures_retriever, NatureCreatorInterface $creator)
+    public function __construct(AllTypesRetriever $all_natures_retriever, NatureCreatorInterface $creator)
     {
         $this->all_natures_retriever = $all_natures_retriever;
         $this->creator               = $creator;
@@ -55,7 +55,7 @@ final class ArtifactLinkTypeImporter
     public function import(JiraClient $jira_client): void
     {
         $existing_type_names = [];
-        foreach ($this->all_natures_retriever->getAllNatures() as $type) {
+        foreach ($this->all_natures_retriever->getAllTypes() as $type) {
             $existing_type_names[$type->shortname] = true;
         }
 
@@ -68,8 +68,8 @@ final class ArtifactLinkTypeImporter
             if (isset($existing_type_names[$link_type['name']])) {
                 continue;
             }
-            $this->creator->createFromNature(
-                NaturePresenter::buildVisibleNature($link_type['name'], $link_type['outward'], $link_type['inward'])
+            $this->creator->createFromType(
+                TypePresenter::buildVisibleType($link_type['name'], $link_type['outward'], $link_type['inward'])
             );
         }
     }

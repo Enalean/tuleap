@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\REST\v1;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 /**
  * @psalm-immutable
@@ -55,7 +55,7 @@ class ArtifactLinkRepresentation
 
         foreach ($nature_dao->searchForwardNatureShortNamesForGivenArtifact($artifact->getId()) as $nature_row) {
             $nature    = $nature_factory->getFromShortname($nature_row['shortname']);
-            $natures[] = self::formatNature($nature, $artifact, NaturePresenter::FORWARD_LABEL);
+            $natures[] = self::formatNature($nature, $artifact, TypePresenter::FORWARD_LABEL);
         }
 
         return $natures;
@@ -70,26 +70,26 @@ class ArtifactLinkRepresentation
 
         foreach ($nature_dao->searchReverseNatureShortNamesForGivenArtifact($artifact->getId()) as $nature_row) {
             $nature    = $nature_factory->getFromShortname($nature_row['shortname']);
-            $natures[] = self::formatNature($nature, $artifact, NaturePresenter::REVERSE_LABEL);
+            $natures[] = self::formatNature($nature, $artifact, TypePresenter::REVERSE_LABEL);
         }
 
         return $natures;
     }
 
     /**
-     * @return NaturePresenterFactory
+     * @return TypePresenterFactory
      */
     private static function getNaturePresenterFactory()
     {
         $nature_dao              = new NatureDao();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
-        return new NaturePresenterFactory($nature_dao, $artifact_link_usage_dao);
+        return new TypePresenterFactory($nature_dao, $artifact_link_usage_dao);
     }
 
-    private static function formatNature(NaturePresenter $nature, Artifact $artifact, $direction)
+    private static function formatNature(TypePresenter $nature, Artifact $artifact, $direction)
     {
-        $label = $direction === NaturePresenter::FORWARD_LABEL ? $nature->forward_label : $nature->reverse_label;
+        $label = $direction === TypePresenter::FORWARD_LABEL ? $nature->forward_label : $nature->reverse_label;
 
         return [
             "shortname"    => $nature->shortname,

@@ -33,7 +33,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\CSVOutputStr
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\ValueFormatter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer;
@@ -1793,11 +1793,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * @return NaturePresenterFactory
+     * @return TypePresenterFactory
      */
     protected function getNaturePresenterFactory()
     {
-        return new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
+        return new TypePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
     }
 
     private function getTemplateRenderer()

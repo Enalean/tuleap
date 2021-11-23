@@ -2306,7 +2306,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         return new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $this->getArtifactFactory(),
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory(
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
                 new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao(),
                 $usage_dao
             ),

@@ -25,7 +25,7 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -104,7 +104,7 @@ class document_generationPlugin extends Plugin
                             "report_url" => \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id),
                             "report_criteria" => $report_criteria_json,
                             "base_url" => \Tuleap\ServerHostname::HTTPSUrl(),
-                            "artifact_links_types" => (new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()))->getAllUsableTypesInProject($tracker->getProject())
+                            "artifact_links_types" => (new TypePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()))->getAllUsableTypesInProject($tracker->getProject())
                         ],
                         JSON_THROW_ON_ERROR
                     )

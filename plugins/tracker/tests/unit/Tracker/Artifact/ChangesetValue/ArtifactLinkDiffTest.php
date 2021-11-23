@@ -29,8 +29,8 @@ use PFUser;
 use Tracker;
 use Tracker_Artifact_ChangesetValue_ArtifactLinkDiff;
 use Tracker_ArtifactLinkInfo;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -41,7 +41,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker;
     /**
-     * @var M\MockInterface|NaturePresenterFactory
+     * @var M\MockInterface|TypePresenterFactory
      */
     private $factory;
     /**
@@ -53,7 +53,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
         $this->tracker = M::mock(Tracker::class, ['isProjectAllowedToUseNature' => true]);
-        $this->factory = M::mock(NaturePresenterFactory::class);
+        $this->factory = M::mock(TypePresenterFactory::class);
         $this->user    = M::mock(PFUser::class);
     }
 
@@ -79,7 +79,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testHasChangesWithANewArtifact()
     {
-        $this->factory->shouldReceive('getFromShortname')->andReturn(new NaturePresenter('', '', '', true));
+        $this->factory->shouldReceive('getFromShortname')->andReturn(new TypePresenter('', '', '', true));
         $previous           = [];
         $next               = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
@@ -108,7 +108,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFormattedWithAnAddedArtifactWithoutNature()
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
         $previous           = [];
         $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
@@ -119,7 +119,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFormattedWithRemovedAllArtifactsWithoutNature()
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
         $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
         ];
@@ -130,7 +130,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFormattedWithRemovedOneArtifactWithoutNature()
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
         $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', ''),
@@ -144,7 +144,7 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFormattedWithAnAddedArtifactWithRandomNature()
     {
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
         $previous           = [];
         $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'fixed_in'),
@@ -156,8 +156,8 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFormattedWithRemovedOneArtifactWithRandomNature()
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
         $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
@@ -171,9 +171,9 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testChangedArtifactLinkSetType()
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new NaturePresenter('reported_in', 'Reported in', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new TypePresenter('reported_in', 'Reported in', '', true));
         $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
@@ -188,9 +188,9 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testChangedArtifactLinkRemoveType()
     {
-        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
-        $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new NaturePresenter('reported_in', 'Reported in', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new TypePresenter('fixed_in', 'Fixed in', '', true));
+        $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new TypePresenter('reported_in', 'Reported in', '', true));
         $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'reported_in'),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),

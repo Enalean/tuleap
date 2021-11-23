@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
 
@@ -135,7 +135,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     /** @protected for testing purpose */
     protected function getNaturePresenterFactory()
     {
-        return new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
+        return new TypePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
     }
 
 

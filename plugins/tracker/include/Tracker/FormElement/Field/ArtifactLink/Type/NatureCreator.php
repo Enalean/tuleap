@@ -53,8 +53,8 @@ class NatureCreator implements NatureCreatorInterface
         }
     }
 
-    public function createFromNature(NaturePresenter $nature): void
+    public function createFromType(TypePresenter $type): void
     {
-        $this->create($nature->shortname, $nature->forward_label, $nature->reverse_label);
+        $this->create($type->shortname, $type->forward_label, $type->reverse_label);
     }
 }

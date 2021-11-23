@@ -46,7 +46,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
@@ -104,7 +104,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     ),
                     $user_xml_exporter,
                     $event_manager,
-                    new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
+                    new TypePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
                     new ArtifactLinksUsageDao(),
                     $external_field_extractor
                 ),

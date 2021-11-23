@@ -26,7 +26,7 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
@@ -36,7 +36,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalResponseMock;
 
     /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory
+     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory
      */
     private $nature_presenter_factory;
 
@@ -71,17 +71,17 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker;
 
     /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildPresenter
+     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter
      */
     private $nature_is_child;
 
     /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter
+     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter
      */
     private $nature_fixed_in;
 
     /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter
+     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter
      */
     private $nature_no_nature;
     private $project;
@@ -90,7 +90,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function setUp(): void
     {
         $this->artifact_factory         = \Mockery::spy(Tracker_ArtifactFactory::class);
-        $this->nature_presenter_factory = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory::class);
+        $this->nature_presenter_factory = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory::class);
 
         $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn(101);
@@ -116,9 +116,9 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao
         );
 
-        $this->nature_is_child  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildPresenter::class);
-        $this->nature_fixed_in  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter::class);
-        $this->nature_no_nature = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter::class);
+        $this->nature_is_child  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter::class);
+        $this->nature_fixed_in  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
+        $this->nature_no_nature = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
     }
 
     public function testItReturnsTrueWhenNoNewValuesAreSent(): void
@@ -279,8 +279,8 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn(
             [
-                new NaturePresenter('_is_child', 'label', 'reverse_label', true),
-                new NaturePresenter('fixed_in', 'label', 'reverse_label', true),
+                new TypePresenter('_is_child', 'label', 'reverse_label', true),
+                new TypePresenter('fixed_in', 'label', 'reverse_label', true),
             ]
         );
         $this->project->shouldReceive('isActive')->andReturn(true);

@@ -21,14 +21,14 @@
 namespace Tuleap\ArtifactsFolders\Converter;
 
 use DataAccessObject;
-use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
 
 class ConverterDao extends DataAccessObject
 {
     public function searchArtifactsLinkedToFolderInProject($project_id)
     {
         $project_id  = $this->da->escapeInt($project_id);
-        $folder_type = $this->da->quoteSmart(NatureInFolderPresenter::NATURE_IN_FOLDER);
+        $folder_type = $this->da->quoteSmart(TypeInFolderPresenter::NATURE_IN_FOLDER);
 
         $sql = "SELECT
                     A.id AS item_id,

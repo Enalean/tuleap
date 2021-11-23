@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class MethodBuilder
 {
@@ -35,14 +35,14 @@ class MethodBuilder
      */
     private $dao;
     /**
-     * @var NaturePresenterFactory
+     * @var TypePresenterFactory
      */
     private $natures_factory;
 
     public function __construct(
         \Tracker_FormElementFactory $form_element_factory,
         SemanticProgressDao $dao,
-        NaturePresenterFactory $natures_factory
+        TypePresenterFactory $natures_factory
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->dao                  = $dao;

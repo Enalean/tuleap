@@ -19,13 +19,12 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-interface NatureCreatorInterface
+interface AllTypesRetriever
 {
-    /**
-     * @throws InvalidNatureParameterException
-     * @throws UnableToCreateNatureException
-     */
-    public function createFromType(TypePresenter $type): void;
+    /** @return TypePresenter[] */
+    public function getAllTypes(): array;
 }

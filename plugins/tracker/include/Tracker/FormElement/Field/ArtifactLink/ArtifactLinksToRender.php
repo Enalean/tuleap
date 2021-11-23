@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker;
 use Tracker_ArtifactLinkInfo;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class ArtifactLinksToRender
 {
@@ -38,7 +38,7 @@ class ArtifactLinksToRender
         \Tracker_FormElement_Field_ArtifactLink $field,
         \TrackerFactory $tracker_factory,
         \Tracker_ReportFactory $report_factory,
-        NaturePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $nature_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         if (empty($link_infos)) {
@@ -68,7 +68,7 @@ class ArtifactLinksToRender
     private function getMatchingIDs(
         \PFUser $current_user,
         \Tracker_FormElement_Field_ArtifactLink $field,
-        NaturePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $nature_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         $tracker = $field->getTracker();
@@ -160,7 +160,7 @@ class ArtifactLinksToRender
     private function groupPerNatureWithPresenter(
         \Tracker_FormElement_Field_ArtifactLink $field,
         \PFUser $current_user,
-        NaturePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $nature_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         $tracker = $field->getTracker();
@@ -224,9 +224,9 @@ class ArtifactLinksToRender
     }
 
     /**
-     * @return null|Type\NaturePresenter
+     * @return null|Type\TypePresenter
      */
-    private function getNaturePresenterFromShortnameWithCache(NaturePresenterFactory $nature_presenter_factory, $shortname)
+    private function getNaturePresenterFromShortnameWithCache(TypePresenterFactory $nature_presenter_factory, $shortname)
     {
         if (isset($this->nature_presenter_cache[$shortname])) {
             return $this->nature_presenter_cache[$shortname];

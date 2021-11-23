@@ -34,7 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureValidator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -92,7 +92,7 @@ final class jira_importPlugin extends Plugin
                         new XMLImportHelper($user_manager),
                         new JiraTrackerBuilder(),
                         new ArtifactLinkTypeImporter(
-                            new NaturePresenterFactory(
+                            new TypePresenterFactory(
                                 $nature_dao,
                                 $artifact_link_usage_dao,
                             ),

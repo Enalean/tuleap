@@ -27,7 +27,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
+use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class TestPlanLinkedTestDefinitionsRetriever
@@ -70,7 +70,7 @@ class TestPlanLinkedTestDefinitionsRetriever
 
         $rows                             = $this->artifact_dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
             [$artifact->getId()],
-            [NatureCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
+            [TypeCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
             $test_definition_tracker_id,
             $limit,
             $offset,

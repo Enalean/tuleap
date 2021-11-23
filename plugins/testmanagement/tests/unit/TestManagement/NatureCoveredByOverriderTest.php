@@ -83,7 +83,7 @@ class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             $overridingNature,
-            NatureCoveredByPresenter::NATURE_COVERED_BY
+            TypeCoveredByPresenter::NATURE_COVERED_BY
         );
     }
 

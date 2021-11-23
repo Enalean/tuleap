@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 /**
  * I validate fields for initial changeset
@@ -61,7 +61,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
         $artifact_link_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $artifact_factory,
-            new NaturePresenterFactory(
+            new TypePresenterFactory(
                 new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao(),
                 $artifact_link_usage_dao
             ),

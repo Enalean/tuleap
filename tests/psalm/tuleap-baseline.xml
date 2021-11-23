@@ -36927,7 +36927,7 @@
       <code>isOrHasBeenUsed</code>
       <code>purgeDeletedTypeInArtifactLinkTypeUsage</code>
       <code>searchAll</code>
-      <code>searchAllUsedNatureByProject</code>
+      <code>searchAllUsedTypesByProject</code>
       <code>searchForwardNatureShortNamesForGivenArtifact</code>
       <code>searchReverseNatureShortNamesForGivenArtifact</code>
     </MissingReturnType>
@@ -36964,18 +36964,18 @@
       <code>addParentsOfArtifactToCollection</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NaturePresenterFactory.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypePresenterFactory.php">
     <MissingParamType occurrences="3">
       <code>$row</code>
       <code>$shortname</code>
       <code>$shortname</code>
     </MissingParamType>
     <MissingReturnType occurrences="7">
-      <code>getCustomNatures</code>
-      <code>getDefaultNatures</code>
-      <code>getNaturePresenterByShortname</code>
-      <code>getOnlyVisibleNatures</code>
-      <code>getPluginsNatures</code>
+      <code>getCustomTypes</code>
+      <code>getDefaultTypes</code>
+      <code>getTypePresenterByShortname</code>
+      <code>getOnlyVisibleTypes</code>
+      <code>getPluginsTypes</code>
       <code>getPluginsTypesEditableInProject</code>
       <code>instantiateFromRow</code>
     </MissingReturnType>

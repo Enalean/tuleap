@@ -44,7 +44,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
         $nature_dao              = new NatureDao();
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $artifact_factory,
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory(
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
                 $nature_dao,
                 $artifact_link_usage_dao,
             ),

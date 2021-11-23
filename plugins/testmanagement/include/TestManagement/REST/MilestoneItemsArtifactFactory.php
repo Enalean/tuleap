@@ -26,7 +26,7 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\TestManagement\Event\GetItemsFromMilestone;
-use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
+use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
 
 class MilestoneItemsArtifactFactory
 {
@@ -68,7 +68,7 @@ class MilestoneItemsArtifactFactory
             $test_definitions,
             $event,
             $project,
-            [NatureCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
+            [TypeCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
         );
 
         return $test_definitions;

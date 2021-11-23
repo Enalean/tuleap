@@ -23,7 +23,7 @@ namespace Tuleap\ArtifactsFolders\Folder;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
@@ -94,7 +94,7 @@ class ArtifactPresenterBuilder
     {
         $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
             $folder->getId(),
-            NatureInFolderPresenter::NATURE_IN_FOLDER,
+            TypeInFolderPresenter::NATURE_IN_FOLDER,
             PHP_INT_MAX,
             0
         );

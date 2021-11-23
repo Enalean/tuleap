@@ -23,15 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\Widget;
 
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class RoadmapWidgetPresenterBuilder
 {
-    private NaturePresenterFactory $nature_presenter_factory;
+    private TypePresenterFactory $nature_presenter_factory;
     private \TrackerFactory $tracker_factory;
 
-    public function __construct(NaturePresenterFactory $nature_presenter_factory, \TrackerFactory $tracker_factory)
+    public function __construct(TypePresenterFactory $nature_presenter_factory, \TrackerFactory $tracker_factory)
     {
         $this->nature_presenter_factory = $nature_presenter_factory;
         $this->tracker_factory          = $tracker_factory;
@@ -45,8 +45,8 @@ class RoadmapWidgetPresenterBuilder
         \PFUser $user
     ): RoadmapWidgetPresenter {
         $visible_natures = array_filter(
-            $this->nature_presenter_factory->getOnlyVisibleNatures(),
-            static function (NaturePresenter $nature) {
+            $this->nature_presenter_factory->getOnlyVisibleTypes(),
+            static function (TypePresenter $nature) {
                 return $nature->shortname !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
             }
         );

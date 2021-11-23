@@ -125,7 +125,7 @@ class NatureDao extends DataAccessObject
         return $dar && count($dar) !== 0;
     }
 
-    public function searchAllUsedNatureByProject($project_id)
+    public function searchAllUsedTypesByProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
 

@@ -32,7 +32,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
 
@@ -62,7 +62,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
                 $reverse_artifact_links
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
-        $value->shouldReceive('getNaturePresenterFactory')->andReturn(Mockery::mock(NaturePresenterFactory::class));
+        $value->shouldReceive('getNaturePresenterFactory')->andReturn(Mockery::mock(TypePresenterFactory::class));
 
         return $value;
     }

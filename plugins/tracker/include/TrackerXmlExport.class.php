@@ -21,8 +21,8 @@
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 
 class TrackerXmlExport
@@ -47,7 +47,7 @@ class TrackerXmlExport
     /** @var EventManager */
     private $event_manager;
 
-    /** @var  NaturePresenterFactory */
+    /** @var  TypePresenterFactory */
     private $nature_presenter_factory;
 
     /**
@@ -66,7 +66,7 @@ class TrackerXmlExport
         Tracker_Artifact_XMLExport $artifact_xml_export,
         UserXMLExporter $user_xml_exporter,
         EventManager $event_manager,
-        NaturePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $nature_presenter_factory,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
         ExternalFieldsExtractor $external_field_extractor
     ) {
@@ -125,7 +125,7 @@ class TrackerXmlExport
         }
     }
 
-    private function addTypeChild(SimpleXMLElement $natures, NaturePresenter $type, $project_id)
+    private function addTypeChild(SimpleXMLElement $natures, TypePresenter $type, $project_id)
     {
         $cdata      = new XML_SimpleXMLCDATAFactory();
         $type_child = $cdata->insert($natures, 'nature', $type->shortname);

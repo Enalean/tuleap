@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,16 +15,26 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-interface AllNaturesRetriever
+use Tracker_FormElement_Field_ArtifactLink;
+
+class TypeIsChildPresenter extends TypePresenter
 {
-    /** @return NaturePresenter[] */
-    public function getAllNatures(): array;
+
+    public function __construct()
+    {
+        parent::__construct(
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            dgettext('tuleap-tracker', 'Child'),
+            dgettext('tuleap-tracker', 'Parent'),
+            true
+        );
+
+        $this->is_system = true;
+    }
 }

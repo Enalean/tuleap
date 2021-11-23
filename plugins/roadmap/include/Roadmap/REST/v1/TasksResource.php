@@ -27,7 +27,7 @@ use Tuleap\REST\Header;
 use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
@@ -93,7 +93,7 @@ final class TasksResource
                     new MethodBuilder(
                         $form_element_factory,
                         $progress_dao,
-                        new NaturePresenterFactory(
+                        new TypePresenterFactory(
                             new NatureDao(),
                             new ArtifactLinksUsageDao()
                         )

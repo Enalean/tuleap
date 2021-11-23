@@ -27,7 +27,7 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureSelectorPresenter;
 use Tuleap\Tracker\Report\CSVExport\CSVFieldUsageChecker;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
@@ -2161,7 +2161,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if ($this->report->getTracker()->isProjectAllowedToUseNature()) {
             if ($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE) {
                 $head[] = $title;
-                foreach ($this->getNaturePresenterFactory()->getAllUsedNaturesByProject($this->report->getTracker()->getProject()) as $nature) {
+                foreach ($this->getNaturePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $nature) {
                     if (! $nature) {
                         $nature = dgettext('tuleap-tracker', 'No type');
                     }
@@ -2188,7 +2188,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $this->report->getTracker()->isProjectAllowedToUseNature() &&
             $this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE
         ) {
-            foreach ($this->getNaturePresenterFactory()->getAllUsedNaturesByProject($this->report->getTracker()->getProject()) as $nature) {
+            foreach ($this->getNaturePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $nature) {
                 $line[] = $column['field']->fetchCSVChangesetValueWithNature(
                     $row['changeset_id'],
                     $nature,
@@ -2621,14 +2621,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
 
     /**
-     * @return NaturePresenterFactory
+     * @return TypePresenterFactory
      */
     private function getNaturePresenterFactory()
     {
         $nature_dao              = new NatureDao();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
-        return new NaturePresenterFactory($nature_dao, $artifact_link_usage_dao);
+        return new TypePresenterFactory($nature_dao, $artifact_link_usage_dao);
     }
 
     public function getJavascriptDependencies()

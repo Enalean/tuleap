@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
-final class NaturePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -39,16 +39,16 @@ final class NaturePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact_link_usage_dao;
     /**
-     * @var NaturePresenterFactory
+     * @var TypePresenterFactory
      */
-    private $nature_presenter_factory;
+    private $type_presenter_factory;
 
     protected function setUp(): void
     {
         $this->nature_dao              = \Mockery::mock(NatureDao::class);
         $this->artifact_link_usage_dao = \Mockery::mock(ArtifactLinksUsageDao::class);
 
-        $this->nature_presenter_factory = new NaturePresenterFactory($this->nature_dao, $this->artifact_link_usage_dao);
+        $this->type_presenter_factory = new TypePresenterFactory($this->nature_dao, $this->artifact_link_usage_dao);
     }
 
     public function testGetsAnEnabledTypeInAProjectFromItsShortname(): void
@@ -58,16 +58,16 @@ final class NaturePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['shortname' => 'some_shortname', 'forward_label' => 'Label', 'reverse_label' => 'Label R']
         );
 
-        $type = $this->nature_presenter_factory->getTypeEnabledInProjectFromShortname(\Project::buildForTest(), 'some_shortname');
+        $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname(\Project::buildForTest(), 'some_shortname');
 
-        $this->assertEquals(new NaturePresenter('some_shortname', 'Label', 'Label R', true), $type);
+        $this->assertEquals(new TypePresenter('some_shortname', 'Label', 'Label R', true), $type);
     }
 
     public function testGetsNothingWhenSearchingADisabledTypeFromItsShortnameAndOnlyWantingEnabledOnes(): void
     {
         $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->andReturn(true);
 
-        $type = $this->nature_presenter_factory->getTypeEnabledInProjectFromShortname(
+        $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname(
             \Project::buildForTest(),
             'some_disabled_shortname'
         );

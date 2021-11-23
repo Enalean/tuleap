@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllNaturesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreatorInterface;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -40,9 +40,9 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $all_natures = new class implements AllNaturesRetriever
+        $all_natures = new class implements AllTypesRetriever
         {
-            public function getAllNatures(): array
+            public function getAllTypes(): array
             {
                 return [];
             }
@@ -50,7 +50,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $creator = new class implements NatureCreatorInterface
         {
-            public function createFromNature(NaturePresenter $nature): void
+            public function createFromType(TypePresenter $type): void
             {
             }
         };
@@ -80,9 +80,9 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $all_natures = new class implements AllNaturesRetriever
+        $all_natures = new class implements AllTypesRetriever
         {
-            public function getAllNatures(): array
+            public function getAllTypes(): array
             {
                 return [];
             }
@@ -91,9 +91,9 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $creator = new class implements NatureCreatorInterface
         {
             public array $natures = [];
-            public function createFromNature(NaturePresenter $nature): void
+            public function createFromType(TypePresenter $type): void
             {
-                $this->natures[] = $nature;
+                $this->natures[] = $type;
             }
         };
 
@@ -125,20 +125,20 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $all_natures = new class implements AllNaturesRetriever
+        $all_natures = new class implements AllTypesRetriever
         {
-            public function getAllNatures(): array
+            public function getAllTypes(): array
             {
-                return [NaturePresenter::buildVisibleNature('Blocks', '', '')];
+                return [TypePresenter::buildVisibleType('Blocks', '', '')];
             }
         };
 
         $creator = new class implements NatureCreatorInterface
         {
             public array $natures = [];
-            public function createFromNature(NaturePresenter $nature): void
+            public function createFromType(TypePresenter $type): void
             {
-                $this->natures[] = $nature;
+                $this->natures[] = $type;
             }
         };
 

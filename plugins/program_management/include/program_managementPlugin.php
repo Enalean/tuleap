@@ -206,7 +206,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
@@ -244,8 +244,8 @@ final class program_managementPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(RootPlanningEditionEvent::NAME);
-        $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
-        $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
+        $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
+        $this->addHook(TypePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
         $this->addHook(
             Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES,
             'trackerAddSystemNatures'
@@ -594,7 +594,7 @@ final class program_managementPlugin extends Plugin
     }
 
     /**
-     * @see NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES
+     * @see TypePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES
      */
     public function getArtifactLinkNatures(array $params): void
     {
@@ -602,7 +602,7 @@ final class program_managementPlugin extends Plugin
     }
 
     /**
-     * @see NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER
+     * @see TypePresenterFactory::EVENT_GET_NATURE_PRESENTER
      */
     public function getNaturePresenter(array $params): void
     {

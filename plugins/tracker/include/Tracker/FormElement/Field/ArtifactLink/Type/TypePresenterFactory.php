@@ -26,7 +26,7 @@ use Project;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
-class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableTypesInProject
+class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypesInProject
 {
     /**
      * Add new artifact link natures
@@ -59,27 +59,27 @@ class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableT
         $this->artifact_links_usage_dao = $artifact_links_usage_dao;
     }
 
-    /** @return NaturePresenter[] */
-    public function getAllNatures(): array
+    /** @return TypePresenter[] */
+    public function getAllTypes(): array
     {
-        $natures = $this->getDefaultNatures();
-        $natures = array_merge($natures, $this->getPluginsNatures());
-        $natures = array_merge($natures, $this->getCustomNatures());
-
-        return $natures;
-    }
-
-    /** @return NaturePresenter[] */
-    public function getAllTypesEditableInProject(Project $project)
-    {
-        $types = $this->getDefaultNatures();
-        $types = array_merge($types, $this->getPluginsTypesEditableInProject($project));
-        $types = array_merge($types, $this->getCustomNatures());
+        $types = $this->getDefaultTypes();
+        $types = array_merge($types, $this->getPluginsTypes());
+        $types = array_merge($types, $this->getCustomTypes());
 
         return $types;
     }
 
-    /** @return NaturePresenter[] */
+    /** @return TypePresenter[] */
+    public function getAllTypesEditableInProject(Project $project)
+    {
+        $types = $this->getDefaultTypes();
+        $types = array_merge($types, $this->getPluginsTypesEditableInProject($project));
+        $types = array_merge($types, $this->getCustomTypes());
+
+        return $types;
+    }
+
+    /** @return TypePresenter[] */
     public function getAllUsableTypesInProject(Project $project): array
     {
         $types = $this->getAllTypesEditableInProject($project);
@@ -92,27 +92,27 @@ class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableT
         return $types;
     }
 
-    public function getOnlyVisibleNatures()
+    public function getOnlyVisibleTypes()
     {
         return array_filter(
-            $this->getAllNatures(),
-            function (NaturePresenter $nature) {
-                return $nature->is_visible;
+            $this->getAllTypes(),
+            function (TypePresenter $type) {
+                return $type->is_visible;
             }
         );
     }
 
-    private function getDefaultNatures()
+    private function getDefaultTypes()
     {
-        return [new NatureIsChildPresenter()];
+        return [new TypeIsChildPresenter()];
     }
 
-    private function getPluginsNatures()
+    private function getPluginsTypes()
     {
-        $natures = [];
+        $types = [];
 
         $params = [
-            'natures' => &$natures
+            'natures' => &$types
         ];
 
         EventManager::instance()->processEvent(
@@ -120,7 +120,7 @@ class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableT
             $params
         );
 
-        return $natures;
+        return $types;
     }
 
     private function getPluginsTypesEditableInProject(Project $project)
@@ -131,42 +131,42 @@ class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableT
         return $event->getTypes();
     }
 
-    private function getCustomNatures()
+    private function getCustomTypes()
     {
-        $natures = [];
+        $types = [];
 
         foreach ($this->dao->searchAll() as $row) {
-            $natures[] = $this->instantiateFromRow($row);
+            $types[] = $this->instantiateFromRow($row);
         }
 
-        return $natures;
+        return $types;
     }
 
     /** @return string[] */
-    public function getAllUsedNaturesByProject(Project $project): array
+    public function getAllUsedTypesByProject(Project $project): array
     {
-        $natures = [];
+        $types = [];
 
-        foreach ($this->dao->searchAllUsedNatureByProject($project->getGroupId()) as $row) {
-            $natures[] = $row['nature'];
+        foreach ($this->dao->searchAllUsedTypesByProject($project->getGroupId()) as $row) {
+            $types[] = $row['nature'];
         }
 
-        return $natures;
+        return $types;
     }
 
-    public function getFromShortname($shortname): ?NaturePresenter
+    public function getFromShortname($shortname): ?TypePresenter
     {
         if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
-            return new NaturePresenter('', '', '', true);
+            return new TypePresenter('', '', '', true);
         }
 
         if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
-            return new NatureIsChildPresenter();
+            return new TypeIsChildPresenter();
         }
 
-        $nature_presenter = $this->getNaturePresenterByShortname($shortname);
-        if ($nature_presenter) {
-            return $nature_presenter;
+        $type_presenter = $this->getTypePresenterByShortname($shortname);
+        if ($type_presenter) {
+            return $type_presenter;
         }
 
         $row = $this->dao->getFromShortname($shortname);
@@ -176,7 +176,7 @@ class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableT
         return $this->instantiateFromRow($row);
     }
 
-    public function getTypeEnabledInProjectFromShortname(Project $project, string $shortname): ?NaturePresenter
+    public function getTypeEnabledInProjectFromShortname(Project $project, string $shortname): ?TypePresenter
     {
         if ($this->artifact_links_usage_dao->isTypeDisabledInProject((int) $project->getID(), $shortname)) {
             return null;
@@ -185,7 +185,7 @@ class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableT
         return $this->getFromShortname($shortname);
     }
 
-    private function getNaturePresenterByShortname($shortname)
+    private function getTypePresenterByShortname($shortname)
     {
         $presenter = null;
 
@@ -204,7 +204,7 @@ class NaturePresenterFactory implements AllNaturesRetriever, IRetrieveAllUsableT
 
     public function instantiateFromRow($row)
     {
-        return new NaturePresenter(
+        return new TypePresenter(
             $row['shortname'],
             $row['forward_label'],
             $row['reverse_label'],

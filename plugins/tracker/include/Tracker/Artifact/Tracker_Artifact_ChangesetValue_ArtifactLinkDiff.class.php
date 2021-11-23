@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RemovedLinkCollection;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddedLinkByNatureCollection;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\UpdatedNatureLinkCollection;
@@ -60,7 +60,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         array $previous,
         array $next,
         Tracker $tracker,
-        NaturePresenterFactory $nature_factory
+        TypePresenterFactory $nature_factory
     ) {
         $this->previous = $previous;
         $this->next     = $next;
@@ -86,7 +86,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
 
     private function fillAddedByNature(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
-        NaturePresenterFactory $nature_factory,
+        TypePresenterFactory $nature_factory,
         CollectionOfLinksFormatter $formatter
     ) {
         if ($artifactlinkinfo->getNature() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getNature())) {
@@ -118,7 +118,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         Tracker_ArtifactLinkInfo $previous_link,
         Tracker_ArtifactLinkInfo $next_link,
         Tracker $tracker,
-        NaturePresenterFactory $nature_factory,
+        TypePresenterFactory $nature_factory,
         CollectionOfLinksFormatter $formatter
     ) {
         if (! $tracker->isProjectAllowedToUseNature()) {
