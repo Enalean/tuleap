@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class RetrieveIterationTrackerStub implements RetrieveIterationTracker
 {
@@ -31,7 +32,7 @@ final class RetrieveIterationTrackerStub implements RetrieveIterationTracker
     {
     }
 
-    public function getIterationTrackerId(int $project_id): ?int
+    public function getIterationTrackerId(ProgramIdentifier $program_identifier): ?int
     {
         return $this->tracker_id;
     }
