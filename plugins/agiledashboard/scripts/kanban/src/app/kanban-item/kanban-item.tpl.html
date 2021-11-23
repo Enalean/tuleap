@@ -2,33 +2,28 @@
 
 <div
     class="kanban-item-content"
-    ng-class="{'kanban-item-card-with-accessibility': $ctrl.user_has_accessibility_mode }"
+    ng-class="{'kanban-item-card-with-accessibility': $ctrl.user_has_accessibility_mode && item.background_color_name}"
     data-test="kanban-item-content-{{$ctrl.slugifyLabel(item.label)}}"
     data-test-static="kanban-item-content"
 >
-    <div class="kanban-item-content-collapsed">
-        <div class="kanban-item-content-info">
+    <div class="kanban-item-content-info">
+        <div class="kanban-item-content-header">
             <a data-nodrag="true"
-               href="/plugins/tracker/?aid={{ item.id }}"
-               ng-click="kanban.showEditModal($event, item)"
-               class="kanban-item-content-info-link"
-               data-test="edit-link"
+                href="/plugins/tracker/?aid={{ item.id }}"
+                ng-click="kanban.showEditModal($event, item)"
+                class="kanban-item-content-header-link"
+                data-test="edit-link"
             >
                 <span class="kanban-item-content-info-link-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
             </a>
-
-            <div class="kanban-item-content-info-label"
-                 tuleap-simple-field
-                 value="{{ item.label }}"
-                 filter-terms="{{ $ctrl.kanban_filter.terms }}"
-            ></div>
-        </div>
-
-        <div class="kanban-item-content-info-right">
-            <div ng-if="$ctrl.user_has_accessibility_mode" class="kanban-item-card-accessibility {{ item.background_color_name }}"></div>
             <time-info ng-if="! item.updating" item="item"></time-info>
-            <div ng-if="item.updating" class="kanban-item-updating"></div>
         </div>
+
+        <div class="kanban-item-content-info-label"
+                tuleap-simple-field
+                value="{{ item.label }}"
+                filter-terms="{{ $ctrl.kanban_filter.terms }}"
+        ></div>
     </div>
 
     <card-fields
@@ -46,6 +41,8 @@
     >
         <i class="kanban-item-content-expand-collapse-icon fa" ng-class="{ 'fa-angle-down': item.is_collapsed, 'fa-angle-up': ! item.is_collapsed }" data-test="kanban-item-content-expand-collapse-icon"></i>
     </div>
+
+    <div ng-if="$ctrl.user_has_accessibility_mode" class="kanban-item-card-accessibility {{ item.background_color_name }}"></div>
 </div>
 
 <div data-nodrag="true" class="kanban-item-content-moves">

@@ -1,5 +1,6 @@
 import angular from "angular";
 import _ from "lodash";
+import { getAccessibilityMode } from "../user-accessibility-mode.js";
 export default BacklogItemController;
 
 BacklogItemController.$inject = [
@@ -518,6 +519,9 @@ function BacklogItemController(
             backlog_item.multiple ? "multiple" : "",
             backlog_item.hidden ? "hidden" : "",
             backlog_item.shaking ? "shaking" : "",
+            getAccessibilityMode() && backlog_item.background_color_name
+                ? "accessibility-displayed"
+                : "",
         ];
     }
 }

@@ -17,14 +17,16 @@
     >
         <li
             ng-repeat="item in $ctrl.column.filtered_content track by $id(item)"
-            class="kanban-item {{ item.color }}"
+            class="kanban-item kanban-item-{{ item.color }}"
             ng-class="{
                 'compact-view': item.is_collapsed,
+                'updating': item.updating,
+                'card-created': item.created
             }"
             id="item_{{ item.id }}"
             data-test="kanban-item"
         >
-            <kanban-item class="{{ item.background_color_name }}" ng-class="{'card-created': item.created}"></kanban-item>
+            <kanban-item class="tlp-swatch-{{ item.background_color_name }}"></kanban-item>
         </li>
     </ul>
 </div>

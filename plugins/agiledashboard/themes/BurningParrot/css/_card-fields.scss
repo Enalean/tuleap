@@ -24,7 +24,7 @@ card-fields {
 }
 
 .extra-card-fields {
-    margin: 0;
+    margin: 0 var(--extra-padding-right, 0) 0 0;
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
     border-top: 1px solid var(--border-transparent-color, var(--tlp-neutral-light-color));
     font-size: 0.6875rem;

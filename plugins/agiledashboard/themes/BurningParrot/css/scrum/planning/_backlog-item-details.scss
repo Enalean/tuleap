@@ -23,6 +23,9 @@
 @import "../../card-fields";
 @import "backlog-item-moves";
 
+$accessibility-pattern-width: 20px;
+$accessibility-pattern-right-margin: 6px;
+
 .backlog-item-details {
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.backlog-item-color-#{$color-name} {
@@ -39,6 +42,10 @@
                 --border-color: transparent;
                 --box-shadow: var(--tlp-card-shadow);
                 --secondary-color: var(--tlp-background-color);
+            }
+
+            &.accessibility-displayed {
+                --extra-padding-right: calc(#{$accessibility-pattern-width} + 2 * #{$accessibility-pattern-right-margin} - var(--tlp-small-spacing));
             }
 
             + .backlog-item-show-children > .backlog-item-show-children-handle {
@@ -135,6 +142,13 @@
         background: var(--item-type-color, var(--tlp-white-color));
     }
 
+    &.accessibility-displayed {
+        .backlog-item-details-title,
+        .extra-card-fields {
+            margin-right: var(--extra-padding-right, 0);
+        }
+    }
+
     + .backlog-item-show-children > .backlog-item-show-children-handle {
         border-top-color: var(--children-handle-border-top, var(--tlp-neutral-normal-color));
     }
@@ -172,7 +186,7 @@
     flex: 0 0 auto;
     align-items: center;
     color: var(--text-color, var(--tlp-dimmed-color));
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
     line-height: 0.8125rem;
     white-space: nowrap;
     gap: 4px;
@@ -270,11 +284,13 @@ card-parent-link {
 }
 
 .card-accessibility {
-    position: relative;
-    width: 40px;
-    height: 9px; // magic value
+    position: absolute;
+    z-index: 1;
+    top: 32px;
+    right: $accessibility-pattern-right-margin;
+    width: $accessibility-pattern-width;
+    height: calc(100% - 32px);
     overflow: hidden;
-    border-radius: 5px;
 
     &::after {
         content: "";
@@ -288,12 +304,9 @@ card-parent-link {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            background-color: map-get($colors, "border");
-
-            &::after {
-                background-color: map-get($colors, "text");
-                mask-image: url("#{map-get($colors, 'pattern')}");
-            }
+            opacity: 0.5;
+            background-color: map-get($colors, "text");
+            mask-image: url("#{map-get($colors, 'pattern')}");
         }
     }
 }
