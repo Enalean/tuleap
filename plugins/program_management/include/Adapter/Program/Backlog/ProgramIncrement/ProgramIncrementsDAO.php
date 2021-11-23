@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
@@ -94,7 +95,7 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
                     WHERE tracker.group_id = ?';
 
         $tracker_id = $this->getDB()->cell($sql, $project_id);
-        if (! $tracker_id) {
+        if ($tracker_id === false) {
             return null;
         }
 
@@ -106,7 +107,13 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
         $sql = 'SELECT program_increment_tracker_id FROM plugin_program_management_program AS program
                 JOIN tracker_artifact ON tracker_artifact.tracker_id = program.program_increment_tracker_id
                 WHERE tracker_artifact.id = ?';
-        return $this->getDB()->cell($sql, $program_increment->getId());
+
+        $program_increment_tracker_id = $this->getDB()->cell($sql, $program_increment->getId());
+        if ($program_increment_tracker_id === false) {
+            throw new ProgramIncrementTrackerNotFoundException($program_increment);
+        }
+
+        return $program_increment_tracker_id;
     }
 
     /**
