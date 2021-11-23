@@ -53,7 +53,7 @@ define('TRACKER_EVENT_TRACKERS_DUPLICATED', 'tracker_event_trackers_duplicated')
 define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_association_edited');
 
 /**
- * Request a custom nature from other plugins for a new artifact link
+ * Request a custom type from other plugins for a new artifact link
  *
  * Parameters:
  * 'project_id'      => The id of the target project
@@ -61,9 +61,9 @@ define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_asso
  * 'submitted_value' => Values from the artifact form
  *
  * Expected results:
- * 'nature'          => string the nature proposed by the plugin
+ * 'nature'          => string the type proposed by the plugin
  */
-define('TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED', 'tracker_event_artifact_link_nature_requested');
+define('TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED', 'tracker_event_artifact_link_type_requested');
 
 /**
  * Fetch the semantics used by other plugins

@@ -56,7 +56,7 @@ final class FeatureAdditionProcessor implements AddFeature
                 $program_increment_artifact,
                 [$feature_addition->feature->id],
                 [],
-                \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                \Tracker_FormElement_Field_ArtifactLink::NO_TYPE
             );
         } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
             throw new AddFeatureException(

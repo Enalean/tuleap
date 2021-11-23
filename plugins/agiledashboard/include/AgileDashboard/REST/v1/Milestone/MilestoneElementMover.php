@@ -122,7 +122,7 @@ class MilestoneElementMover
             $milestone->getArtifact(),
             $to_add,
             [],
-            Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+            Tracker_FormElement_Field_ArtifactLink::NO_TYPE
         );
     }
 
@@ -140,7 +140,7 @@ class MilestoneElementMover
                         $milestone->getArtifact(),
                         $this->getFilteredArtifactIdsToAdd($milestone, $to_add),
                         [],
-                        Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                        Tracker_FormElement_Field_ArtifactLink::NO_TYPE
                     );
                     $this->linkToMilestoneParent($milestone, $user, $to_add);
                     $this->removeItemsFromExplicitBacklog($milestone->getProject(), $to_add);

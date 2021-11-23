@@ -598,7 +598,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
         self::assertCount(2, $field_change_node->value);
         self::assertSame('10131', (string) $field_change_node->value[0]);
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD, (string) $field_change_node->value[0]['nature']);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, (string) $field_change_node->value[0]['nature']);
         self::assertSame('10132', (string) $field_change_node->value[1]);
     }
 

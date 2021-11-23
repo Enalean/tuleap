@@ -270,7 +270,7 @@ class MilestoneResource extends AuthenticatedResource
                     $this->milestone_factory,
                     $milestone
                 ),
-                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
             );
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -329,7 +329,7 @@ class MilestoneResource extends AuthenticatedResource
                     $milestone->getArtifact(),
                     $ids_to_add,
                     [],
-                    Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                    Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
                 );
                 $this->resources_patcher->commit();
             }

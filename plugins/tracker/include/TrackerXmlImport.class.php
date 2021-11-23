@@ -337,7 +337,7 @@ class TrackerXmlImport
         if (
             $this->artifact_links_usage_dao->isTypeDisabledInProject(
                 $project->getID(),
-                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
             )
         ) {
             $this->logger->warning('Artifact link type _is_child is disabled, skipping the hierarchy');

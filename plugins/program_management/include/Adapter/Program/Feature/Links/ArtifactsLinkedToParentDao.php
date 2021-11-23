@@ -153,6 +153,6 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
                         INNER JOIN plugin_program_management_team_projects AS team_project       ON (user_story_tracker.group_id = team_project.team_project_id AND team_project.program_project_id = feature_tracker.group_id)
                 WHERE feature.id = ? AND feature_artlink.nature = ?";
 
-        return $this->getDB()->run($sql, $artifact_id, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        return $this->getDB()->run($sql, $artifact_id, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
     }
 }

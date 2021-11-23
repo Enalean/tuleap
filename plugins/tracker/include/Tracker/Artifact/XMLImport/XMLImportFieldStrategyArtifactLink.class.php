@@ -30,7 +30,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
      *  - tracker_id: input int
      *  - error : output string
      */
-    public const TRACKER_ADD_SYSTEM_NATURES = 'tracker_add_system_natures';
+    public const TRACKER_ADD_SYSTEM_TYPES = 'tracker_add_system_types';
 
     /**
      * Check that nature is respects rules
@@ -117,7 +117,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     private function checkNatureExistOnPlateform($linked_nature, $linked_artifact_id)
     {
         $system_nature = [];
-        $this->retrieveSystemNatures($system_nature);
+        $this->retrieveSystemTypes($system_nature);
 
         if ($linked_nature && ! in_array($linked_nature, $system_nature)) {
             $nature = $this->nature_dao->getNatureByShortname($linked_nature);
@@ -145,12 +145,12 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         return $nature;
     }
 
-    private function retrieveSystemNatures(array &$natures)
+    private function retrieveSystemTypes(array &$types)
     {
-        $params['natures']   = &$natures;
-        $params['natures'][] = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        $params['types']   = &$types;
+        $params['types'][] = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
         EventManager::instance()->processEvent(
-            self::TRACKER_ADD_SYSTEM_NATURES,
+            self::TRACKER_ADD_SYSTEM_TYPES,
             $params
         );
     }

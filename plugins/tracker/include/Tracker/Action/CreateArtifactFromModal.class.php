@@ -75,7 +75,7 @@ class Tracker_Action_CreateArtifactFromModal
         $source_artifact->linkArtifact(
             $new_artifact->getId(),
             $current_user,
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
         );
     }
 

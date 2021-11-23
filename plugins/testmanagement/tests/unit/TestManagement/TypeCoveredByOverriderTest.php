@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement\Nature;
+namespace Tuleap\TestManagement\Type;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
+class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -38,7 +38,7 @@ class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var Project */
     private $project;
 
-    /** @var NatureCoveredByOverrider */
+    /** @var TypeCoveredByOverrider */
     private $overrider;
 
     private $artifact_id = 123;
@@ -58,14 +58,14 @@ class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config = \Mockery::spy(\Tuleap\TestManagement\Config::class);
         $this->dao    = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
 
-        $this->overrider = new NatureCoveredByOverrider($this->config, $this->dao);
+        $this->overrider = new TypeCoveredByOverrider($this->config, $this->dao);
 
         $this->config->shouldReceive('getTestDefinitionTrackerId')
             ->with($this->project)
             ->andReturn($this->test_definition_tracker_id);
     }
 
-    public function testItGivesTheCoveredByNatureToNewLinkToTestDefinition()
+    public function testItGivesTheCoveredByTypeToNewLinkToTestDefinition()
     {
         $new_linked_artifact_ids = [$this->artifact_id];
 
@@ -75,15 +75,15 @@ class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, '_covered_by')
             ->andReturn(false);
 
-        $overridingNature = $this->overrider->getOverridingNature(
+        $overriding_type = $this->overrider->getOverridingType(
             $this->project,
             $this->artifact,
             $new_linked_artifact_ids
         );
 
         $this->assertEquals(
-            $overridingNature,
-            TypeCoveredByPresenter::NATURE_COVERED_BY
+            $overriding_type,
+            TypeCoveredByPresenter::TYPE_COVERED_BY
         );
     }
 
@@ -95,13 +95,13 @@ class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, '_covered_by')
             ->andReturn(false);
 
-        $overridingNature = $this->overrider->getOverridingNature(
+        $overriding_type = $this->overrider->getOverridingType(
             $this->project,
             $this->artifact,
             $new_linked_artifact_ids
         );
 
-        $this->assertNull($overridingNature);
+        $this->assertNull($overriding_type);
     }
 
     public function testItReturnsNothingWhenUpdatingLinkToTestDefinition()
@@ -114,13 +114,13 @@ class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, '_covered_by')
             ->andReturn(false);
 
-        $overridingNature = $this->overrider->getOverridingNature(
+        $overriding_type = $this->overrider->getOverridingType(
             $this->project,
             $this->artifact,
             $new_linked_artifact_ids
         );
 
-        $this->assertNull($overridingNature);
+        $this->assertNull($overriding_type);
     }
 
     public function testItReturnsNothingIfCoveredByTypeIsDisabled()
@@ -131,12 +131,12 @@ class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, '_covered_by')
             ->andReturn(true);
 
-        $overridingNature = $this->overrider->getOverridingNature(
+        $overriding_type = $this->overrider->getOverridingType(
             $this->project,
             $this->artifact,
             $new_linked_artifact_ids
         );
 
-        $this->assertNull($overridingNature);
+        $this->assertNull($overriding_type);
     }
 }

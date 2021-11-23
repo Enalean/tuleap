@@ -1144,15 +1144,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             return true;
         }
 
-        $plateform_natures["nature"] = [Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD];
+        $platform_types = [Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD];
         foreach ($this->getNatureDao()->searchAll() as $nature) {
-            $plateform_natures["nature"][] = $nature['shortname'];
+            $platform_types[] = $nature['shortname'];
         }
 
-        $this->addCustomNatures($plateform_natures["nature"]);
+        $this->addCustomTypes($platform_types);
 
         foreach ($xml->natures->nature as $nature) {
-            if (! in_array((string) $nature, $plateform_natures['nature'])) {
+            if (! in_array((string) $nature, $platform_types, true)) {
                 return false;
             }
         }
@@ -1160,11 +1160,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return true;
     }
 
-    private function addCustomNatures(array &$natures)
+    private function addCustomTypes(array &$types): void
     {
-        $params['natures'] = &$natures;
+        $params['types'] = &$types;
         EventManager::instance()->processEvent(
-            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES,
+            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES,
             $params
         );
     }

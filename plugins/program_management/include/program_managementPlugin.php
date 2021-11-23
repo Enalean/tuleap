@@ -244,11 +244,11 @@ final class program_managementPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(RootPlanningEditionEvent::NAME);
-        $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
-        $this->addHook(TypePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
+        $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES, 'getArtifactLinkTypes');
+        $this->addHook(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER, 'getTypePresenter');
         $this->addHook(
-            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES,
-            'trackerAddSystemNatures'
+            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES,
+            'trackerAddSystemTypes'
         );
         $this->addHook(CanSubmitNewArtifact::NAME);
         $this->addHook(ArtifactCreated::NAME);
@@ -594,17 +594,17 @@ final class program_managementPlugin extends Plugin
     }
 
     /**
-     * @see TypePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES
+     * @see TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES
      */
-    public function getArtifactLinkNatures(array $params): void
+    public function getArtifactLinkTypes(array $params): void
     {
-        $params['natures'][] = new TimeboxArtifactLinkPresenter();
+        $params['types'][] = new TimeboxArtifactLinkPresenter();
     }
 
     /**
-     * @see TypePresenterFactory::EVENT_GET_NATURE_PRESENTER
+     * @see TypePresenterFactory::EVENT_GET_TYPE_PRESENTER
      */
-    public function getNaturePresenter(array $params): void
+    public function getTypePresenter(array $params): void
     {
         if ($params['shortname'] === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
             $params['presenter'] = new TimeboxArtifactLinkPresenter();
@@ -612,11 +612,11 @@ final class program_managementPlugin extends Plugin
     }
 
     /**
-     * @see Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES
+     * @see Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES
      */
-    public function trackerAddSystemNatures(array $params): void
+    public function trackerAddSystemTypes(array $params): void
     {
-        $params['natures'][] = TimeboxArtifactLinkType::ART_LINK_SHORT_NAME;
+        $params['types'][] = TimeboxArtifactLinkType::ART_LINK_SHORT_NAME;
     }
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void

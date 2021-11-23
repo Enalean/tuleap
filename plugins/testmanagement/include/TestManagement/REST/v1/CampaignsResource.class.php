@@ -549,7 +549,7 @@ class CampaignsResource
             $artifact,
             $new_execution_ids,
             $execution_ids_to_remove,
-            \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+            \Tracker_FormElement_Field_ArtifactLink::NO_TYPE
         );
 
         foreach ($executions_to_remove as $execution) {

@@ -555,7 +555,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function getChildren(int $artifact_id)
     {
         $escaped_id         = $this->da->escapeInt($artifact_id);
-        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT child_art.*, parent_art.id as parent_id
                 FROM tracker_artifact parent_art
@@ -581,7 +581,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function getChildrenCount(array $artifact_ids): array
     {
-        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT parent_art.id, count(*) AS nb
                 FROM tracker_artifact parent_art
@@ -609,7 +609,7 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     public function getChildrenCountInSameProjectOfParent(int $artifact_id): int
     {
-        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT count(*) AS nb
                 FROM tracker_artifact parent_art
@@ -656,7 +656,7 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     private function getSortedFromStatementForChildrenOfArtifacts(string $artifact_ids): string
     {
-        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         return " FROM tracker_artifact parent_art
                      INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
@@ -674,7 +674,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function getParents(array $artifact_ids)
     {
         $artifact_ids       = $this->da->escapeIntImplode($artifact_ids);
-        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT child_art.id child_id, parent_art.*
                 FROM tracker_artifact parent_art

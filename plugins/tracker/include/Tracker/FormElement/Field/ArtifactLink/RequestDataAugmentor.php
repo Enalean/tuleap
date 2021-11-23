@@ -136,7 +136,7 @@ class RequestDataAugmentor
         $new_values = $fields_data[$artifact_link_field->getId()]['new_values'];
 
         if (! isset($fields_data[$artifact_link_field->getId()]['nature'])) {
-            $fields_data[$artifact_link_field->getId()]['nature'] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+            $fields_data[$artifact_link_field->getId()]['nature'] = Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
         }
 
         if (trim($new_values) != '') {

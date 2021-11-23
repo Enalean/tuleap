@@ -19,18 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\TestManagement\Nature;
+namespace Tuleap\TestManagement\Type;
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 class TypeCoveredByPresenter extends TypePresenter
 {
-    public const NATURE_COVERED_BY = '_covered_by';
+    public const TYPE_COVERED_BY = '_covered_by';
 
     public function __construct()
     {
         parent::__construct(
-            self::NATURE_COVERED_BY,
+            self::TYPE_COVERED_BY,
             dgettext('tuleap-testmanagement', 'Covered by'),
             dgettext('tuleap-testmanagement', 'Covers'),
             true

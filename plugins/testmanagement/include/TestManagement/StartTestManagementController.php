@@ -85,7 +85,7 @@ class StartTestManagementController
                     $this->config_creator->createConfigForProjectFromXML($project);
                 }
             );
-            $this->allowProjectToUseNature(
+            $this->allowProjectToUseType(
                 $project,
                 $project
             );
@@ -124,7 +124,7 @@ class StartTestManagementController
         return new NoCrumb();
     }
 
-    private function allowProjectToUseNature(
+    private function allowProjectToUseType(
         Project $template,
         Project $project
     ): void {

@@ -149,7 +149,7 @@ class Tracker_Action_CreateArtifact
                     'tracker'      => (string) $parent_tracker->getId(),
                     'func'         => 'new-artifact',
                     $art_link_key  => (string) $artifact->getId(),
-                    $art_link_type => urlencode(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
+                    $art_link_type => urlencode(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
                 ];
                 $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
                 $redirect->query_parameters = $redirect_params;

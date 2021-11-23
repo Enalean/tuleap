@@ -121,7 +121,7 @@ class ArtifactPresenterBuilder
     {
         $children_ids_for_current_artifact = $this->nature_dao->getForwardLinkedArtifactIds(
             $artifact_id,
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
             PHP_INT_MAX,
             0
         );
@@ -141,7 +141,7 @@ class ArtifactPresenterBuilder
     {
         $linked_artifacts_ids = $this->nature_dao->getForwardLinkedArtifactIds(
             $artifact->getId(),
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
             PHP_INT_MAX,
             0
         );

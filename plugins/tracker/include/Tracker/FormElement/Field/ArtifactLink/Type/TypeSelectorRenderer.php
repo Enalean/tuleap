@@ -57,7 +57,7 @@ final class TypeSelectorRenderer
                 continue;
             }
 
-            if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+            if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
                 $natures_presenter[] = [
                     'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
                     'forward_label' => $type->reverse_label,

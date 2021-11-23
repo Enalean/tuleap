@@ -30,42 +30,42 @@ final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProvidesArtLinkTypes(): void
     {
-        $plugin  = new program_managementPlugin(1);
-        $natures = [];
-        $params  = ['natures' => &$natures];
-        $plugin->getArtifactLinkNatures($params);
+        $plugin = new program_managementPlugin(1);
+        $types  = [];
+        $params = ['types' => &$types];
+        $plugin->getArtifactLinkTypes($params);
 
-        self::assertEquals([new TimeboxArtifactLinkPresenter()], $natures);
+        self::assertEquals([new TimeboxArtifactLinkPresenter()], $types);
     }
 
-    public function testProvidesNaturePresenterWhenTheTypeIsExposedByThePlugin(): void
+    public function testProvidesTypePresenterWhenTheTypeIsExposedByThePlugin(): void
     {
         $plugin    = new program_managementPlugin(1);
         $presenter = null;
         $params    = ['shortname' => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, 'presenter' => &$presenter];
-        $plugin->getNaturePresenter($params);
+        $plugin->getTypePresenter($params);
 
         self::assertEquals(new TimeboxArtifactLinkPresenter(), $presenter);
     }
 
-    public function testDoesNotProvideNaturePresenterWhenTheTypeIsNotExposedByThePlugin(): void
+    public function testDoesNotProvideTypePresenterWhenTheTypeIsNotExposedByThePlugin(): void
     {
         $plugin    = new program_managementPlugin(1);
         $presenter = null;
         $params    = ['shortname' => 'something', 'presenter' => &$presenter];
-        $plugin->getNaturePresenter($params);
+        $plugin->getTypePresenter($params);
 
         self::assertNull($presenter);
     }
 
     public function testExposesSystemArtifactLinkType(): void
     {
-        $plugin  = new program_managementPlugin(1);
-        $natures = [];
-        $params  = ['natures' => &$natures];
-        $plugin->trackerAddSystemNatures($params);
+        $plugin = new program_managementPlugin(1);
+        $types  = [];
+        $params = ['types' => &$types];
+        $plugin->trackerAddSystemTypes($params);
 
-        self::assertEquals([TimeboxArtifactLinkType::ART_LINK_SHORT_NAME], $natures);
+        self::assertEquals([TimeboxArtifactLinkType::ART_LINK_SHORT_NAME], $types);
     }
 
     public function testSetsItsServiceURL(): void

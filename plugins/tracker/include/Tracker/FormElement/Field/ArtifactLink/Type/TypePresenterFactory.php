@@ -34,7 +34,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
      * Parameters:
      *  - natures: List of existing natures
      */
-    public const EVENT_GET_ARTIFACTLINK_NATURES = 'event_get_artifactlink_natures';
+    public const EVENT_GET_ARTIFACTLINK_TYPES = 'event_get_artifactlink_types';
 
     /**
      * Return presenter from nature shortname
@@ -42,7 +42,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
      * Parameters:
      *  - nature: input nature shortname
      */
-    public const EVENT_GET_NATURE_PRESENTER = 'event_get_nature_presenter';
+    public const EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter';
 
     /**
      * @var NatureDao
@@ -116,7 +116,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         ];
 
         EventManager::instance()->processEvent(
-            self::EVENT_GET_ARTIFACTLINK_NATURES,
+            self::EVENT_GET_ARTIFACTLINK_TYPES,
             $params
         );
 
@@ -156,11 +156,11 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
 
     public function getFromShortname($shortname): ?TypePresenter
     {
-        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
+        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_TYPE) {
             return new TypePresenter('', '', '', true);
         }
 
-        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
             return new TypeIsChildPresenter();
         }
 
@@ -195,7 +195,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         ];
 
         EventManager::instance()->processEvent(
-            self::EVENT_GET_NATURE_PRESENTER,
+            self::EVENT_GET_TYPE_PRESENTER,
             $params
         );
 

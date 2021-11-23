@@ -84,7 +84,7 @@ class Dao extends DataAccessObject
     public function searchFoldersInProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
-        $is_child   = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $is_child   = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
 
         $sql = "SELECT A.*, parent.id AS parent_id, CVT.value AS title, CVT.body_format AS title_format
                 FROM tracker_artifact AS A

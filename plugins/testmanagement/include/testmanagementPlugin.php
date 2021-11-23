@@ -48,8 +48,8 @@ use Tuleap\TestManagement\FirstConfigCreator;
 use Tuleap\TestManagement\Heartbeat\HeartbeatArtifactTrackerExcluder;
 use Tuleap\TestManagement\Heartbeat\LatestHeartbeatsCollector;
 use Tuleap\TestManagement\LegacyRoutingController;
-use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
-use Tuleap\TestManagement\Nature\TypeCoveredByPresenter;
+use Tuleap\TestManagement\Type\TypeCoveredByOverrider;
+use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
@@ -115,8 +115,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
-        $this->addHook(TypePresenterFactory::EVENT_GET_NATURE_PRESENTER);
+        $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES);
+        $this->addHook(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ImportValidateExternalFields::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
@@ -131,10 +131,10 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook('javascript_file');
             $this->addHook('cssfile');
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
-            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES);
 
 
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
@@ -218,11 +218,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $template = $event->getTemplateProject();
 
         if ($event->shouldProjectInheritFromTemplate() && $this->isUsedByProject($template)) {
-            $this->allowProjectToUseNature($template, $event->getJustCreatedProject());
+            $this->allowProjectToUseType($template, $event->getJustCreatedProject());
         }
     }
 
-    private function allowProjectToUseNature(Project $template, Project $project): void
+    private function allowProjectToUseType(Project $template, Project $project): void
     {
         if (! $this->getArtifactLinksUsageUpdater()->isProjectAllowedToUseArtifactLinkTypes($template)) {
             $this->getArtifactLinksUsageUpdater()->forceUsageOfArtifactLinkTypes($project);
@@ -237,19 +237,19 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
     }
 
-    public function event_get_artifactlink_natures(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function event_get_artifactlink_types(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['types'][] = new TypeCoveredByPresenter();
     }
 
-    public function event_get_nature_presenter(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function event_get_type_presenter(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
-        if ($params['shortname'] === TypeCoveredByPresenter::NATURE_COVERED_BY) {
+        if ($params['shortname'] === TypeCoveredByPresenter::TYPE_COVERED_BY) {
             $params['presenter'] = new TypeCoveredByPresenter();
         }
     }
 
-    public function tracker_event_artifact_link_nature_requested(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_event_artifact_link_type_requested(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($params['project_id']);
@@ -257,11 +257,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $to_artifact             = $params['to_artifact'];
             $new_linked_artifact_ids = explode(',', $params['submitted_value']['new_values']);
 
-            $overrider        = new NatureCoveredByOverrider($this->getConfig(), new ArtifactLinksUsageDao());
-            $overridingNature = $overrider->getOverridingNature($project, $to_artifact, $new_linked_artifact_ids);
+            $overrider       = new TypeCoveredByOverrider($this->getConfig(), new ArtifactLinksUsageDao());
+            $overriding_type = $overrider->getOverridingType($project, $to_artifact, $new_linked_artifact_ids);
 
-            if (! empty($overridingNature)) {
-                $params['nature'] = $overridingNature;
+            if (! empty($overriding_type)) {
+                $params['type'] = $overriding_type;
             }
         }
     }
@@ -510,9 +510,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
-    public function tracker_add_system_natures(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_add_system_types(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
-        $params['natures'][] = TypeCoveredByPresenter::NATURE_COVERED_BY;
+        $params['types'][] = TypeCoveredByPresenter::TYPE_COVERED_BY;
     }
 
     public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
@@ -541,7 +541,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $type    = $event->getType();
         $project = $event->getProject();
 
-        if ($type->shortname === TypeCoveredByPresenter::NATURE_COVERED_BY) {
+        if ($type->shortname === TypeCoveredByPresenter::TYPE_COVERED_BY) {
             $event->setTypeIsCheckedByPlugin();
 
             if (! $project->usesService($this->getServiceShortname())) {
@@ -609,7 +609,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $dao                          = new ArtifactLinksUsageDao();
         $covered_by_type_is_activated = ! $dao->isTypeDisabledInProject(
             (int) $project->getID(),
-            TypeCoveredByPresenter::NATURE_COVERED_BY
+            TypeCoveredByPresenter::TYPE_COVERED_BY
         );
 
         if ($project->usesService($service_short_name)) {
@@ -629,7 +629,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
                 'Service %s cannot be activated because the artifact link type "%s" is not activated'
             ),
             $service_short_name,
-            TypeCoveredByPresenter::NATURE_COVERED_BY
+            TypeCoveredByPresenter::TYPE_COVERED_BY
         );
 
         $event->setWarningMessage($message);
@@ -637,7 +637,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
-        if ($event->getTypeName() !== TypeCoveredByPresenter::NATURE_COVERED_BY) {
+        if ($event->getTypeName() !== TypeCoveredByPresenter::TYPE_COVERED_BY) {
             return;
         }
 
@@ -647,7 +647,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         if (! $project->usesService($this->getServiceShortname())) {
             $event->setTypeIsUnusable();
         } else {
-            $event->setMessage(TypeCoveredByPresenter::NATURE_COVERED_BY . " type is forced because the service testmanagement is used.");
+            $event->setMessage(TypeCoveredByPresenter::TYPE_COVERED_BY . " type is forced because the service testmanagement is used.");
         }
     }
 

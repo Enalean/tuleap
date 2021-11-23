@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement\Nature;
+namespace Tuleap\TestManagement\Type;
 
 use Project;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class NatureCoveredByOverrider
+class TypeCoveredByOverrider
 {
     /** @var Config */
     private $config;
@@ -43,12 +43,12 @@ class NatureCoveredByOverrider
         $this->dao    = $dao;
     }
 
-    public function getOverridingNature(
+    public function getOverridingType(
         Project $project,
         Artifact $to_artifact,
         array $new_linked_artifact_ids
     ): ?string {
-        if ($this->dao->isTypeDisabledInProject((int) $project->getID(), TypeCoveredByPresenter::NATURE_COVERED_BY)) {
+        if ($this->dao->isTypeDisabledInProject((int) $project->getID(), TypeCoveredByPresenter::TYPE_COVERED_BY)) {
             return null;
         }
 
@@ -58,7 +58,7 @@ class NatureCoveredByOverrider
         $is_new_artifact_link = in_array($to_artifact_id, $new_linked_artifact_ids);
 
         if ($to_tracker_id === $test_def_tracker_id && $is_new_artifact_link) {
-            return TypeCoveredByPresenter::NATURE_COVERED_BY;
+            return TypeCoveredByPresenter::TYPE_COVERED_BY;
         }
 
         return null;
