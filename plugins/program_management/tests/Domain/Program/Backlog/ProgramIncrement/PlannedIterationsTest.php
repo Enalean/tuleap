@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
-class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuilds(): void
     {

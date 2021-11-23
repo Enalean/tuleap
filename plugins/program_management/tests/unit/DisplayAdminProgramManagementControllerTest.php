@@ -28,19 +28,16 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationEr
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Tests\Builder\IterationCreatorCheckerBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildUGroupRepresentationStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
@@ -58,7 +55,6 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -86,14 +82,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     private $tracker_factory;
     private \PFUser $user;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&ProgramIncrementCreatorChecker
-     */
-    private $program_increment_checker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&IterationCreatorChecker
-     */
-    private $iteration_checker;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
     private $project_manager;
@@ -113,12 +101,10 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->team_verifier             = VerifyIsTeamStub::withNotValidTeam();
         $this->permission_verifier       = VerifyProjectPermissionStub::withAdministrator();
         $this->tracker_factory           = $this->createStub(\TrackerFactory::class);
-        $this->program_increment_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
-        $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
         $this->project_manager           = $this->createMock(\ProjectManager::class);
     }
 
-    private function getController(RetrieveProject $retrieve_project): DisplayAdminProgramManagementController
+    private function getController(): DisplayAdminProgramManagementController
     {
         $program_tracker                 = TrackerReferenceStub::withDefaults();
         $pproject_ugroups_can_prioritize = new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
@@ -152,8 +138,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             new ConfigurationErrorPresenterBuilder(
                 new ConfigurationErrorsGatherer(
                     BuildProgramStub::stubValidProgram(),
-                    $this->program_increment_checker,
-                    $this->iteration_checker,
+                    ProgramIncrementCreatorCheckerBuilder::build(),
+                    IterationCreatorCheckerBuilder::build(),
                     $teams_searcher,
                     RetrieveProjectReferenceStub::withProjects(
                         ProjectReferenceStub::withId(self::TEAM_ID),
@@ -172,7 +158,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     {
         $this->project_manager->method('getProjectByUnixName')->willReturn(false);
         $this->expectException(NotFoundException::class);
-        $this->getController(RetrieveProjectStub::withValidProjects())->process(
+        $this->getController()->process(
             $this->request,
             LayoutBuilder::build(),
             $this->variables
@@ -184,7 +170,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $project = $this->mockProject(false);
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
         $this->expectException(NotFoundException::class);
-        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
+        $this->getController()
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -197,7 +183,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
+        $this->getController()
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -210,7 +196,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
+        $this->getController()
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -222,7 +208,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
+        $this->getController()
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
@@ -236,14 +222,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->tracker_factory->method('getTrackerById')->willReturn(
-            TrackerTestBuilder::aTracker()->withProject($project)->withId(1)->withName('Tracker')->build()
-        );
-        $this->program_increment_checker->method('canCreateAProgramIncrement');
-        $this->iteration_checker->method('canCreateAnIteration');
 
-
-        $this->getController(RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::build()))
+        $this->getController()
              ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 

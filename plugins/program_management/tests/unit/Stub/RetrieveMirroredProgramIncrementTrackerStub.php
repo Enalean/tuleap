@@ -54,6 +54,6 @@ final class RetrieveMirroredProgramIncrementTrackerStub implements RetrieveMirro
             return array_shift($this->trackers);
         }
 
-        throw new \LogicException('No milestone tracker configured');
+        return null;
     }
 }

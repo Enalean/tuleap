@@ -79,6 +79,6 @@ final class RetrieveMirroredIterationTrackerStub implements RetrieveMirroredIter
             return array_shift($this->trackers);
         }
 
-        throw new \LogicException('No milestone tracker configured');
+        return null;
     }
 }

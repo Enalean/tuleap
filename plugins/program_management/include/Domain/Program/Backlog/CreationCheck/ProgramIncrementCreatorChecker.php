@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgram
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
-class ProgramIncrementCreatorChecker
+final class ProgramIncrementCreatorChecker
 {
     public function __construct(
         private TimeboxCreatorChecker $timebox_creator_checker,

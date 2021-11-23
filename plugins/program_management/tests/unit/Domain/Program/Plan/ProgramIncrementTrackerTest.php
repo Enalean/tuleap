@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 
-class ProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramForAdministrationIdentifier $program;
 

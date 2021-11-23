@@ -28,7 +28,7 @@ use Tuleap\Project\Registration\Template\CategorisedTemplate;
 use Tuleap\Project\Registration\Template\TemplateCategory;
 use Tuleap\Project\XML\ConsistencyChecker;
 
-class ProgramTemplate implements CategorisedTemplate
+final class ProgramTemplate implements CategorisedTemplate
 {
     public const NAME = 'program_management_program';
 

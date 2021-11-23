@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Templates;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
-class AsciiRegisteredToUnicodeConvertorTest extends TestCase
+final class AsciiRegisteredToUnicodeConvertorTest extends TestCase
 {
     public function testConvertSafeRegisteredBecauseOurGettextExtractionIsClumsy(): void
     {

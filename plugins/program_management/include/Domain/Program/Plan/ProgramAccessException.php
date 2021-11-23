@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
-class ProgramAccessException extends \Exception
+final class ProgramAccessException extends \Exception
 {
     private string $i18n_message;
 

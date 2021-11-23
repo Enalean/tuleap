@@ -29,7 +29,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class TeamTemplateTest extends TestCase
+final class TeamTemplateTest extends TestCase
 {
     use ForgeConfigSandbox;
 

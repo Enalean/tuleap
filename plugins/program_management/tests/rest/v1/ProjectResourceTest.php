@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use REST_TestDataBuilder;
 
-class ProjectResourceTest extends \RestBase
+final class ProjectResourceTest extends \RestBase
 {
     public function testOPTIONS(): void
     {
