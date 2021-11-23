@@ -20,9 +20,3 @@
 <template functional>
     <span class="tlp-dropdown-menu-separator" role="separator"></span>
 </template>
-
-<script>
-export default {
-    name: "DropDownSeparator",
-};
-</script>
