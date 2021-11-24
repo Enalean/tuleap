@@ -21,15 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
-
-final class RetrieveUserStoryURIStub implements RetrieveUserStoryURI
+final class IterationNotFoundException extends \Exception
 {
-    public function getUserStoryURI(UserStoryIdentifier $user_story_identifier): string
+    private string $i18n_message;
+
+    public function __construct(int $iteration_id)
     {
-        return sprintf('/plugins/tracker/?aid=%d', $user_story_identifier->getId());
+        parent::__construct(sprintf('Could not find the iteration #%d', $iteration_id));
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Could not find the iteration #%d'
+            ),
+            $iteration_id
+        );
+    }
+
+    public function getI18nExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

@@ -38,19 +38,20 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID    = 56;
-    private const USER_STORY_ID = 125;
+    private const TRACKER_ID        = 56;
+    private const USER_STORY_ONE_ID = 125;
+    private const USER_STORY_TWO_ID = 126;
 
-    protected function getRetriever(): UserStoryRetriever
+    private function getRetriever(): UserStoryRetriever
     {
         return new UserStoryRetriever(
-            SearchChildrenOfFeatureStub::withChildren([['children_id' => self::USER_STORY_ID]]),
+            SearchChildrenOfFeatureStub::withChildren([['children_id' => self::USER_STORY_ONE_ID], ['children_id' => self::USER_STORY_TWO_ID]]),
             VerifyIsPlannableStub::buildPlannableElement(),
             RetrieveBackgroundColorStub::withDefaults(),
             VerifyFeatureIsVisibleStub::buildVisibleFeature(),
-            RetrieveUserStoryTitleStub::withValue('Title'),
-            RetrieveUserStoryURIStub::withId(self::USER_STORY_ID),
-            RetrieveUserStoryCrossRefStub::withValues('story', self::USER_STORY_ID),
+            RetrieveUserStoryTitleStub::withSuccessiveValues('Title', 'Other title'),
+            new RetrieveUserStoryURIStub(),
+            RetrieveUserStoryCrossRefStub::withShortname('story'),
             VerifyIsOpenStub::withOpen(),
             RetrieveTrackerFromUserStoryStub::withId(self::TRACKER_ID),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
@@ -62,14 +63,23 @@ final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $children = $this->getRetriever()->retrieveStories(10, UserIdentifierStub::buildGenericUser());
 
-        self::assertCount(1, $children);
+        [$first_story, $second_story] = $children;
+        self::assertCount(2, $children);
 
-        self::assertEquals(self::USER_STORY_ID, $children[0]->user_story_identifier->getId());
-        self::assertEquals('Title', $children[0]->title);
-        self::assertEquals('/plugins/tracker/?aid=' . self::USER_STORY_ID, $children[0]->uri);
-        self::assertEquals('story #' . self::USER_STORY_ID, $children[0]->cross_ref);
-        self::assertEquals(true, $children[0]->is_open);
-        self::assertEquals("lake-placid-blue", $children[0]->background_color->getBackgroundColorName());
-        self::assertEquals(self::TRACKER_ID, $children[0]->tracker_identifier->getId());
+        self::assertSame(self::USER_STORY_ONE_ID, $first_story->user_story_identifier->getId());
+        self::assertSame('Title', $first_story->title);
+        self::assertSame('/plugins/tracker/?aid=' . self::USER_STORY_ONE_ID, $first_story->uri);
+        self::assertSame('story #' . self::USER_STORY_ONE_ID, $first_story->cross_ref);
+        self::assertTrue($first_story->is_open);
+        self::assertSame("lake-placid-blue", $first_story->background_color->getBackgroundColorName());
+        self::assertSame(self::TRACKER_ID, $first_story->tracker_identifier->getId());
+
+        self::assertSame(self::USER_STORY_TWO_ID, $second_story->user_story_identifier->getId());
+        self::assertSame('Other title', $second_story->title);
+        self::assertSame('/plugins/tracker/?aid=' . self::USER_STORY_TWO_ID, $second_story->uri);
+        self::assertSame('story #' . self::USER_STORY_TWO_ID, $second_story->cross_ref);
+        self::assertTrue($second_story->is_open);
+        self::assertSame("lake-placid-blue", $second_story->background_color->getBackgroundColorName());
+        self::assertSame(self::TRACKER_ID, $second_story->tracker_identifier->getId());
     }
 }

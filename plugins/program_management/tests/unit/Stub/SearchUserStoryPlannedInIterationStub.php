@@ -23,33 +23,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\SearchUserStoryPlannedInIteration;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifier;
 
-final class RetrieveUserStoryTitleStub implements RetrieveUserStoryTitle
+final class SearchUserStoryPlannedInIterationStub implements SearchUserStoryPlannedInIteration
 {
-    private function __construct(private array $titles)
+    private function __construct(private array $user_story)
     {
     }
-
-    public static function withValue(string $value): self
+    public static function withUserStory(array $user_story): self
     {
-        return new self([$value]);
+        return new self($user_story);
     }
-
-    /**
-     * @no-named-arguments
-     */
-    public static function withSuccessiveValues(string $first_title, string ...$other_titles): self
+    public static function withoutUserStory(): self
     {
-        return new self([$first_title, ...$other_titles]);
+        return new self([]);
     }
-
-    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier): ?string
+    public function searchStoriesOfMirroredIteration(MirroredIterationIdentifier $mirrored_iteration_identifier): array
     {
-        if (count($this->titles) > 0) {
-            return array_shift($this->titles);
-        }
-        return null;
+        return $this->user_story;
     }
 }

@@ -21,15 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifier;
 
-final class RetrieveUserStoryURIStub implements RetrieveUserStoryURI
+interface SearchUserStoryPlannedInIteration
 {
-    public function getUserStoryURI(UserStoryIdentifier $user_story_identifier): string
-    {
-        return sprintf('/plugins/tracker/?aid=%d', $user_story_identifier->getId());
-    }
+    public function searchStoriesOfMirroredIteration(MirroredIterationIdentifier $mirrored_iteration_identifier): array;
 }

@@ -720,6 +720,12 @@
           <description><![CDATA[ Define the title of an artifact ]]></description>
           <field REF="F20515"/>
         </semantic>
+        <semantic type="description">
+          <shortname><![CDATA[ description ]]></shortname>
+          <label><![CDATA[ Description ]]></label>
+          <description><![CDATA[ Define the description of an artifact ]]></description>
+          <field REF="F20515"/>
+        </semantic>
         <semantic type="timeframe">
           <start_date_field REF="F1234"/>
           <end_date_field REF="F1235"/>
