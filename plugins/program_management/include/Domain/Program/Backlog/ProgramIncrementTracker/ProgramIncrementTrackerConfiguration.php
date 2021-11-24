@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -34,21 +37,13 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 final class ProgramIncrementTrackerConfiguration
 {
-    private bool $can_create_program_increment;
-    private int $program_increment_tracker_id;
-    private ProgramIncrementLabels $program_increment_labels;
-    private bool $has_plan_permissions;
-
     private function __construct(
-        int $program_increment_tracker_id,
-        bool $can_create_program_increment,
-        bool $has_plan_permissions,
-        ProgramIncrementLabels $program_increment_labels
+        private int $program_increment_tracker_id,
+        private bool $can_create_program_increment,
+        private bool $has_plan_permissions,
+        private ProgramIncrementLabels $program_increment_labels,
+        private IterationLabels $iteration_labels
     ) {
-        $this->can_create_program_increment = $can_create_program_increment;
-        $this->program_increment_tracker_id = $program_increment_tracker_id;
-        $this->program_increment_labels     = $program_increment_labels;
-        $this->has_plan_permissions         = $has_plan_permissions;
     }
 
     /**
@@ -61,7 +56,9 @@ final class ProgramIncrementTrackerConfiguration
         ProgramIdentifier $program,
         VerifyPrioritizeFeaturesPermission $prioritize_features_permission,
         UserIdentifier $user_identifier,
-        VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
+        VerifyUserCanSubmit $user_can_submit_in_tracker_verifier,
+        RetrieveIterationLabels $label_retriever,
+        RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker
     ): self {
         $program_increment_tracker = $retrieve_tracker->retrieveVisibleProgramIncrementTracker(
             $program,
@@ -76,11 +73,17 @@ final class ProgramIncrementTrackerConfiguration
             $program_increment_tracker
         );
 
+        $iteration_labels = IterationLabels::fromIterationTracker(
+            $label_retriever,
+            $retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker($program, $user_identifier)
+        );
+
         return new self(
             $program_increment_tracker->getId(),
             $can_create_program_increment,
             $has_plan_permissions,
-            $program_increments_labels
+            $program_increments_labels,
+            $iteration_labels
         );
     }
 
@@ -107,5 +110,10 @@ final class ProgramIncrementTrackerConfiguration
     public function hasPlanPermissions(): bool
     {
         return $this->has_plan_permissions;
+    }
+
+    public function getIterationLabel(): ?string
+    {
+        return $this->iteration_labels->label;
     }
 }

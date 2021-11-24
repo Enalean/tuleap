@@ -30,6 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -184,7 +186,9 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
             RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program_increment'),
             $verify_is_team,
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            VerifyUserCanSubmitStub::userCanSubmit()
+            VerifyUserCanSubmitStub::userCanSubmit(),
+            RetrieveIterationLabelsStub::buildLabels("iteration", "iteration"),
+            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withDefaults())
         );
     }
 

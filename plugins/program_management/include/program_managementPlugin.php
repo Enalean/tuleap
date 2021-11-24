@@ -373,6 +373,10 @@ final class program_managementPlugin extends Plugin
         $project_manager         = ProjectManager::instance();
         $project_manager_adapter = new ProjectManagerAdapter($project_manager, $retrieve_user);
 
+        $iterations_DAO = new IterationsDAO();
+
+        $tracker_factory = TrackerFactory::instance();
+
         return new DisplayProgramBacklogController(
             $project_manager,
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
@@ -391,7 +395,9 @@ final class program_managementPlugin extends Plugin
                 $retrieve_user,
                 new UserIsProgramAdminVerifier($retrieve_user)
             ),
-            new UserCanSubmitInTrackerVerifier($user_manager, TrackerFactory::instance())
+            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory),
+            $iterations_DAO,
+            new VisibleIterationTrackerRetriever($iterations_DAO, $tracker_factory, $retrieve_user)
         );
     }
 

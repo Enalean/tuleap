@@ -48,6 +48,7 @@ final class ProgramBacklogPresenter
     public bool $is_configured;
     public bool $has_plan_permissions;
     public string $project_icon;
+    public string $iteration_label;
 
     public function __construct(
         \Project $project,
@@ -77,6 +78,12 @@ final class ProgramBacklogPresenter
 
         if ($backlog_configuration->program_increment_sublabel) {
             $this->program_increment_sub_label = $backlog_configuration->program_increment_sublabel;
+        }
+
+        $this->iteration_label = dgettext('tuleap-program_management', "Iterations");
+
+        if ($backlog_configuration->iteration_label) {
+            $this->iteration_label = $backlog_configuration->iteration_label;
         }
 
         $this->is_program_admin = $is_program_admin;

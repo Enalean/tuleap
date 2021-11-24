@@ -50,8 +50,8 @@ msgstr "Oups, une erreur s'est produite !"
 msgid "Oops, there's an issue"
 msgstr "Oups, il y a eu un problème"
 
-msgid "Plan Iterations"
-msgstr "Plannification des itérations"
+msgid "Plan %s"
+msgstr "Plan %s"
 
 msgid "Program"
 msgstr "Programme"

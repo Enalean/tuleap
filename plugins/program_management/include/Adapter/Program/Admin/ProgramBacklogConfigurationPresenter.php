@@ -32,6 +32,7 @@ final class ProgramBacklogConfigurationPresenter
     public ?string $program_increment_label;
     public ?string $program_increment_sublabel;
     public bool $is_configured;
+    public ?string $iteration_label;
 
     public function __construct(
         bool $can_create_program,
@@ -39,7 +40,8 @@ final class ProgramBacklogConfigurationPresenter
         int $program_increment_tracker_id,
         ?string $program_increment_label,
         ?string $program_increment_sublabel,
-        bool $is_configured
+        bool $is_configured,
+        ?string $iteration_label
     ) {
         $this->can_create_program           = $can_create_program;
         $this->program_increment_tracker_id = $program_increment_tracker_id;
@@ -47,5 +49,6 @@ final class ProgramBacklogConfigurationPresenter
         $this->program_increment_sublabel   = $program_increment_sublabel;
         $this->is_configured                = $is_configured;
         $this->has_plan_permissions         = $has_plan_permissions;
+        $this->iteration_label              = $iteration_label;
     }
 }

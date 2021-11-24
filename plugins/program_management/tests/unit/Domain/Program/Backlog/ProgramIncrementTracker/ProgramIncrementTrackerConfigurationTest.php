@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrementTrack
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -33,7 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 
 final class ProgramIncrementTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItBuildsAProgramIncrementTrackerConfiguration(): void
+    public function testItBuildsATimeboxTrackerConfiguration(): void
     {
         $program_increment_tracker = TrackerReferenceStub::withId(101);
 
@@ -45,11 +47,14 @@ final class ProgramIncrementTrackerConfigurationTest extends \Tuleap\Test\PHPUni
             $program,
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             UserIdentifierStub::buildGenericUser(),
-            VerifyUserCanSubmitStub::userCanNotSubmit()
+            VerifyUserCanSubmitStub::userCanNotSubmit(),
+            RetrieveIterationLabelsStub::buildLabels("My iteration", "my iteration"),
+            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withDefaults())
         );
         self::assertSame(101, $configuration->getProgramIncrementTrackerId());
         self::assertFalse($configuration->canCreateProgramIncrement());
         self::assertSame('Program Increments', $configuration->getProgramIncrementLabel());
         self::assertSame('program increment', $configuration->getProgramIncrementSubLabel());
+        self::assertSame('My iteration', $configuration->getIterationLabel());
     }
 }
