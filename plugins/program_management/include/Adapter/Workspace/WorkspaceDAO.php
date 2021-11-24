@@ -34,7 +34,6 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
                     plugin_program_management_program.*,
                     plugin_program_management_can_prioritize_features.*,
                     plugin_program_management_team_projects.*,
-                    plugin_program_management_pending_mirrors.*,
                     plugin_program_management_explicit_top_backlog.*,
                     plugin_program_management_workflow_action_add_top_backlog.*
                 FROM `groups`
@@ -44,7 +43,6 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
                 LEFT JOIN plugin_program_management_can_prioritize_features ON (plugin_program_management_can_prioritize_features.project_id = plugin_program_management_program.program_project_id)
                 LEFT JOIN plugin_program_management_team_projects ON (plugin_program_management_team_projects.team_project_id = `groups`.group_id OR plugin_program_management_team_projects.program_project_id = `groups`.group_id)
                 LEFT JOIN tracker_artifact ON (tracker_artifact.tracker_id = tracker.id)
-                LEFT JOIN plugin_program_management_pending_mirrors ON (plugin_program_management_pending_mirrors.program_artifact_id = tracker_artifact.id)
                 LEFT JOIN plugin_program_management_explicit_top_backlog ON (plugin_program_management_explicit_top_backlog.artifact_id = tracker_artifact.id)
                 LEFT JOIN tracker_workflow ON (tracker_workflow.tracker_id = tracker.id)
                 LEFT JOIN tracker_workflow_transition ON (tracker_workflow_transition.workflow_id = tracker_workflow.workflow_id)
