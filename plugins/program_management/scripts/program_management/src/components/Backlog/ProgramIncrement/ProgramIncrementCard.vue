@@ -63,7 +63,7 @@
             <a
                 v-bind:href="`/program_management/${short_name}/increments/${increment.id}/plan`"
                 class="program-increment-info-link"
-                v-bind:title="$gettext('Plan Iterations')"
+                v-bind:title="planned_iteration_link"
                 data-not-drag-handle="true"
                 data-test="program-increment-plan-iterations-link"
             >
@@ -71,7 +71,7 @@
                     class="fas fa-sign-in-alt program-increment-info-link-icon"
                     aria-hidden="true"
                 ></i>
-                <span v-translate>Plan Iterations</span>
+                <span>{{ planned_iteration_link }}</span>
             </a>
         </div>
         <section
@@ -91,6 +91,7 @@ import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 import { namespace } from "vuex-class";
+import { sprintf } from "sprintf-js";
 
 const configuration = namespace("configuration");
 
@@ -107,6 +108,9 @@ export default class ProgramIncrementCard extends Vue {
     @configuration.State
     readonly short_name!: string;
 
+    @configuration.State
+    readonly tracker_iteration_label!: string;
+
     private is_open = false;
 
     formatDate(date: string): string {
@@ -115,6 +119,10 @@ export default class ProgramIncrementCard extends Vue {
 
     toggleIsOpen(): void {
         this.is_open = !this.is_open;
+    }
+
+    get planned_iteration_link(): string {
+        return sprintf(this.$gettext("Plan %s"), this.tracker_iteration_label);
     }
 }
 </script>

@@ -32,6 +32,8 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramBacklogConfigurationPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
@@ -61,7 +63,9 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         private RetrieveProgramIncrementLabels $labels_retriever,
         private VerifyIsTeam $verify_is_team,
         private VerifyPrioritizeFeaturesPermission $prioritize_features_permission,
-        private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
+        private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier,
+        private RetrieveIterationLabels $label_retriever,
+        private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker
     ) {
     }
 
@@ -168,7 +172,9 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
             $program,
             $this->prioritize_features_permission,
             $user,
-            $this->user_can_submit_in_tracker_verifier
+            $this->user_can_submit_in_tracker_verifier,
+            $this->label_retriever,
+            $this->retrieve_visible_iteration_tracker
         );
 
         return new ProgramBacklogConfigurationPresenter(
@@ -177,12 +183,13 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
             $plan_configuration->getProgramIncrementTrackerId(),
             $plan_configuration->getProgramIncrementLabel(),
             $plan_configuration->getProgramIncrementSubLabel(),
-            true
+            true,
+            $plan_configuration->getIterationLabel()
         );
     }
 
     private function buildConfigurationForPotentialProgram(): ProgramBacklogConfigurationPresenter
     {
-        return new ProgramBacklogConfigurationPresenter(false, false, 0, "", "", false);
+        return new ProgramBacklogConfigurationPresenter(false, false, 0, "", "", false, "");
     }
 }

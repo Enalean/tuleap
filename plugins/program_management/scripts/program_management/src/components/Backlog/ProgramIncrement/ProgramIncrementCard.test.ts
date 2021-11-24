@@ -37,6 +37,7 @@ describe("ProgramIncrementCard", () => {
                     state: {
                         configuration: {
                             short_name: "guinea-pig",
+                            tracker_iteration_label: "stuff",
                         },
                     },
                 }),
@@ -118,5 +119,8 @@ describe("ProgramIncrementCard", () => {
         expect(
             wrapper.get("[data-test=program-increment-plan-iterations-link]").attributes().href
         ).toEqual("/program_management/guinea-pig/increments/1/plan");
+        expect(wrapper.get("[data-test=program-increment-plan-iterations-link]").text()).toEqual(
+            "Plan stuff"
+        );
     });
 });

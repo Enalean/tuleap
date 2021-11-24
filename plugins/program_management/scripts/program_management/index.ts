@@ -86,6 +86,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const program_increment_sub_label = vue_mount_point.dataset.programIncrementSubLabel;
 
+    if (!vue_mount_point.dataset.iterationLabel) {
+        throw new Error("Missing iteration_label dataset");
+    }
+    const iteration_label = vue_mount_point.dataset.iterationLabel;
+
     const is_program_admin = Boolean(vue_mount_point.dataset.isProgramAdmin);
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
@@ -112,6 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_program_increment_sub_label: program_increment_sub_label,
         is_program_admin,
         is_configured,
+        tracker_iteration_label: iteration_label,
     };
 
     await initVueGettext(
