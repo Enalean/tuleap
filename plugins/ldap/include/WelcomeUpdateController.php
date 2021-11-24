@@ -67,7 +67,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
         include_once __DIR__ . '/../../../src/www/include/account.php';
 
         $current_user = $request->getCurrentUser();
-        $timezone     = $request->get('timezone');
+        $timezone     = (string) $request->get('timezone');
 
         if (! $this->timezones_collection->isValidTimezone($timezone)) {
             $this->welcomeExitError($request, $layout, dgettext('tuleap-ldap', 'User settings update error'), dgettext('tuleap-ldap', 'You must supply a timezone.<br /><br />Click on \'Back\' to return to the previous screen and select a timezone.'));
