@@ -30,8 +30,13 @@ final class TeamIdentifierBuilder
 {
     public static function build(): TeamIdentifier
     {
+        return self::buildWithId(116);
+    }
+
+    public static function buildWithId(int $team_id): TeamIdentifier
+    {
         [$first_team_identifier] = TeamIdentifier::buildCollectionFromProgram(
-            SearchVisibleTeamsOfProgramStub::withTeamIds(116),
+            SearchVisibleTeamsOfProgramStub::withTeamIds($team_id),
             ProgramIdentifierBuilder::build(),
             UserIdentifierStub::buildGenericUser()
         );

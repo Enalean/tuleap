@@ -35,8 +35,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementTrackerIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramIncrementsCreator implements CreateProgramIncrements
@@ -49,13 +49,9 @@ final class ProgramIncrementsCreator implements CreateProgramIncrements
     ) {
     }
 
-    /**
-     * @throws FieldSynchronizationException
-     * @throws ProgramIncrementArtifactCreationException
-     */
     public function createProgramIncrements(
         SourceTimeboxChangesetValues $values,
-        TrackerCollection $mirrored_timeboxes,
+        MirroredProgramIncrementTrackerIdentifierCollection $mirrored_trackers,
         UserIdentifier $user_identifier
     ): void {
         $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
@@ -63,10 +59,10 @@ final class ProgramIncrementsCreator implements CreateProgramIncrements
             ArtifactLinkTypeProxy::fromMirrorTimeboxType()
         );
         $this->transaction_executor->execute(
-            function () use ($values, $artifact_link_value, $mirrored_timeboxes, $user_identifier) {
-                foreach ($mirrored_timeboxes->getTrackers() as $mirrored_timebox_tracker) {
+            function () use ($values, $artifact_link_value, $mirrored_trackers, $user_identifier) {
+                foreach ($mirrored_trackers->getTrackers() as $mirrored_tracker) {
                     $this->createOneProgramIncrement(
-                        $mirrored_timebox_tracker,
+                        $mirrored_tracker,
                         $values,
                         $artifact_link_value,
                         $user_identifier
@@ -81,7 +77,7 @@ final class ProgramIncrementsCreator implements CreateProgramIncrements
      * @throws ProgramIncrementArtifactCreationException
      */
     private function createOneProgramIncrement(
-        TrackerIdentifier $mirrored_timebox_tracker,
+        MirroredProgramIncrementTrackerIdentifier $mirrored_program_increment_tracker,
         SourceTimeboxChangesetValues $values,
         ArtifactLinkValue $artifact_link_value,
         UserIdentifier $user
@@ -89,14 +85,14 @@ final class ProgramIncrementsCreator implements CreateProgramIncrements
         $changeset = MirroredTimeboxFirstChangeset::fromMirroredTimeboxTracker(
             $this->gather_synchronized_fields,
             $this->status_mapper,
-            $mirrored_timebox_tracker,
+            $mirrored_program_increment_tracker,
             $values,
             $artifact_link_value,
             $user
         );
         try {
             $this->artifact_creator->create($changeset);
-        } catch (ArtifactCreationException $e) {
+        } catch (ArtifactCreationException) {
             throw new ProgramIncrementArtifactCreationException($values->getSourceTimebox()->getId());
         }
     }

@@ -42,6 +42,7 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
@@ -128,7 +129,12 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $transaction_executor,
             new StatusValueMapper($form_element_factory),
             $artifact_creator,
-            $synchronized_fields_gatherer
+            $synchronized_fields_gatherer,
+        );
+
+        $project_access_checker = new ProjectAccessChecker(
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
         );
 
         return new ProgramIncrementCreationProcessor(
@@ -136,21 +142,13 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $mirror_creator,
             MessageLog::buildFromLogger($logger),
             $user_stories_planner,
-            $program_dao,
+            new VisibleTeamSearcher($program_dao, $user_retriever, $project_manager_adapter, $project_access_checker),
             new ProjectReferenceRetriever($project_manager_adapter),
             $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
             new SubmissionDateRetriever($artifact_retriever),
             $program_dao,
-            new ProgramAdapter(
-                $project_manager_adapter,
-                new ProjectAccessChecker(
-                    new RestrictedUserCanAccessProjectVerifier(),
-                    \EventManager::instance()
-                ),
-                $program_dao,
-                $user_retriever
-            )
+            new ProgramAdapter($project_manager_adapter, $project_access_checker, $program_dao, $user_retriever),
         );
     }
 }

@@ -34,9 +34,12 @@ final class RetrieveMirroredProgramIncrementTrackerStub implements RetrieveMirro
     {
     }
 
-    public static function withValidTrackers(TrackerReference ...$trackers): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withValidTrackers(TrackerReference $tracker, TrackerReference ...$other_trackers): self
     {
-        return new self(false, $trackers);
+        return new self(false, [$tracker, ...$other_trackers]);
     }
 
     public static function withNoRootPlanning(): self
@@ -44,10 +47,13 @@ final class RetrieveMirroredProgramIncrementTrackerStub implements RetrieveMirro
         return new self(true, []);
     }
 
-    public function retrieveRootPlanningMilestoneTracker(ProjectReference $project, UserIdentifier $user_identifier, ConfigurationErrorsCollector $errors_collector): ?TrackerReference
-    {
+    public function retrieveRootPlanningMilestoneTracker(
+        ProjectReference $project,
+        UserIdentifier $user_identifier,
+        ?ConfigurationErrorsCollector $errors_collector
+    ): ?TrackerReference {
         if ($this->has_no_planning) {
-            $errors_collector->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
+            $errors_collector?->addTeamMilestonePlanningNotFoundOrNotAccessible($project);
             return null;
         }
         if (count($this->trackers) > 0) {

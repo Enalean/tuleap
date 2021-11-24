@@ -21,12 +21,11 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementTrackerIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface CreateProgramIncrements
@@ -37,7 +36,7 @@ interface CreateProgramIncrements
      */
     public function createProgramIncrements(
         SourceTimeboxChangesetValues $values,
-        TrackerCollection $mirrored_timeboxes,
+        MirroredProgramIncrementTrackerIdentifierCollection $mirrored_trackers,
         UserIdentifier $user_identifier
     ): void;
 }

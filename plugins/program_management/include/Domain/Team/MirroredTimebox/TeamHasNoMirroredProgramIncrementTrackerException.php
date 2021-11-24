@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
-interface RetrieveMirroredProgramIncrementTracker
+final class TeamHasNoMirroredProgramIncrementTrackerException extends \Exception implements MirroredTimeboxReplicationException
 {
-    /**
-     * @throws PlanningHasNoMilestoneTrackerException
-     */
-    public function retrieveRootPlanningMilestoneTracker(
-        ProjectReference $project,
-        UserIdentifier $user_identifier,
-        ?ConfigurationErrorsCollector $errors_collector
-    ): ?TrackerReference;
+    public function __construct(TeamIdentifier $team)
+    {
+        parent::__construct(
+            sprintf(
+                "Could not get the root-level planning's milestone tracker for Team #%d",
+                $team->getId()
+            )
+        );
+    }
 }

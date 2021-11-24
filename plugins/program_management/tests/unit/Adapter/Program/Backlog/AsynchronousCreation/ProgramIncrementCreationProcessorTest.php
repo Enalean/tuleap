@@ -40,13 +40,15 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIRST_TEAM_ID                                = 102;
+    private const SECOND_TEAM_ID                               = 149;
     private const PROGRAM_INCREMENT_ID                         = 43;
     private const USER_ID                                      = 119;
     private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 99;
@@ -115,8 +117,8 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
     {
         return new ProgramIncrementCreationProcessor(
             RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
-                TrackerReferenceStub::withId(99),
-                TrackerReferenceStub::withId(34)
+                TrackerReferenceStub::withId(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID),
+                TrackerReferenceStub::withId(self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID)
             ),
             new ProgramIncrementsCreator(
                 new DBTransactionExecutorPassthrough(),
@@ -125,14 +127,14 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
                     self::SECOND_MAPPED_STATUS_BIND_VALUE_ID
                 ),
                 $this->artifact_creator,
-                $this->fields_gatherer
+                $this->fields_gatherer,
             ),
             MessageLog::buildFromLogger($this->logger),
             $this->user_stories_planner,
-            SearchTeamsOfProgramStub::withTeamIds(102, 149),
+            SearchVisibleTeamsOfProgramStub::withTeamIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID),
             RetrieveProjectReferenceStub::withProjects(
-                ProjectReferenceStub::withId(102),
-                ProjectReferenceStub::withId(149),
+                ProjectReferenceStub::withId(self::FIRST_TEAM_ID),
+                ProjectReferenceStub::withId(self::SECOND_TEAM_ID),
             ),
             $this->fields_gatherer,
             RetrieveFieldValuesGathererStub::withGatherer(
@@ -147,7 +149,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
             ),
             RetrieveChangesetSubmissionDateStub::withDate(self::SUBMISSION_DATE),
             RetrieveProgramOfProgramIncrementStub::withProgram(146),
-            BuildProgramStub::stubValidProgram()
+            BuildProgramStub::stubValidProgram(),
         );
     }
 

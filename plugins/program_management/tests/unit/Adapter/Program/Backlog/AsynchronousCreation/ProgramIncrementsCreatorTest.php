@@ -23,20 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementTrackerIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\MirroredProgramIncrementTrackerIdentifierCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceTimeboxChangesetValuesBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -44,7 +40,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CreateArtifactStub $artifact_creator;
     private SourceTimeboxChangesetValues $field_values;
-    private TrackerCollection $mirrored_program_increment_trackers;
+    private MirroredProgramIncrementTrackerIdentifierCollection $mirrored_trackers;
     private UserIdentifier $user_identifier;
 
     protected function setUp(): void
@@ -54,20 +50,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
         $this->field_values    = SourceTimeboxChangesetValuesBuilder::build();
 
-        $teams = TeamProjectsCollectionBuilder::withProjects(
-            ProjectReferenceStub::withId(101),
-            ProjectReferenceStub::withId(102),
-        );
-
-        $this->mirrored_program_increment_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
-            RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
-                TrackerReferenceStub::withId(1024),
-                TrackerReferenceStub::withId(2048),
-            ),
-            $teams,
-            $this->user_identifier,
-            new ConfigurationErrorsCollector(false)
-        );
+        $this->mirrored_trackers = MirroredProgramIncrementTrackerIdentifierCollectionBuilder::buildWithIds(1024, 2048);
     }
 
     private function getCreator(): ProgramIncrementsCreator
@@ -87,7 +70,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->getCreator()->createProgramIncrements(
             $this->field_values,
-            $this->mirrored_program_increment_trackers,
+            $this->mirrored_trackers,
             $this->user_identifier
         );
 
@@ -101,7 +84,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(ProgramIncrementArtifactCreationException::class);
         $this->getCreator()->createProgramIncrements(
             $this->field_values,
-            $this->mirrored_program_increment_trackers,
+            $this->mirrored_trackers,
             $this->user_identifier
         );
     }
