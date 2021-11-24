@@ -26,14 +26,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlannableFeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\SearchUserStoryPlannedInIteration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\MirroredIterationIdentifierCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\PlannableFeatureBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchUserStoryPlannedInIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -50,9 +47,8 @@ final class UserStoryIdentifierTest extends TestCase
 
     private array $visible_user_story;
     private array $invisible_user_story;
-    private SearchMirroredTimeboxes $search_mirrored_timeboxes;
     private SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration;
-    private IterationIdentifier $iteration_identifier;
+
 
     protected function setUp(): void
     {
@@ -60,12 +56,10 @@ final class UserStoryIdentifierTest extends TestCase
         $this->invisible_user_story = ['children_id' => 404,];
 
         $this->verify_is_visible                      = VerifyIsVisibleArtifactStub::withVisibleIds(self::USER_STORY_ID);
-        $this->search_mirrored_timeboxes              = SearchMirroredTimeboxesStub::withIds(self::ITERATION_ID);
         $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withoutUserStory();
 
-        $this->iteration_identifier = IterationIdentifierBuilder::buildWithId(2);
-        $this->feature_identifier   = PlannableFeatureBuilder::build(1);
-        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
+        $this->feature_identifier = PlannableFeatureBuilder::build(1);
+        $this->user_identifier    = UserIdentifierStub::buildGenericUser();
     }
 
     public function testSkipsIfUserCanNotSeeFromFeature(): void
@@ -105,9 +99,8 @@ final class UserStoryIdentifierTest extends TestCase
         self::assertEmpty(
             UserStoryIdentifier::buildCollectionFromIteration(
                 $this->search_user_story_planned_in_iteration,
-                $this->search_mirrored_timeboxes,
+                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
                 $this->verify_is_visible,
-                $this->iteration_identifier,
                 $this->user_identifier
             )
         );
@@ -115,13 +108,11 @@ final class UserStoryIdentifierTest extends TestCase
 
     public function testItBuildsAnEmptyArrayIfNoMirrorIsFound(): void
     {
-        $this->search_mirrored_timeboxes = SearchMirroredTimeboxesStub::withNoMirrors();
         self::assertEmpty(
             UserStoryIdentifier::buildCollectionFromIteration(
                 $this->search_user_story_planned_in_iteration,
-                $this->search_mirrored_timeboxes,
+                MirroredIterationIdentifierCollectionBuilder::withoutIteration(),
                 $this->verify_is_visible,
-                $this->iteration_identifier,
                 $this->user_identifier
             )
         );
@@ -132,9 +123,8 @@ final class UserStoryIdentifierTest extends TestCase
         self::assertEmpty(
             UserStoryIdentifier::buildCollectionFromIteration(
                 $this->search_user_story_planned_in_iteration,
-                $this->search_mirrored_timeboxes,
+                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
                 $this->verify_is_visible,
-                $this->iteration_identifier,
                 $this->user_identifier
             )
         );
@@ -143,13 +133,13 @@ final class UserStoryIdentifierTest extends TestCase
     public function testItBuildsAnEmptyArrayWhenUserCanNotSeeUserStory(): void
     {
         $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withUserStory([self::USER_STORY_ID]);
+        $this->verify_is_visible                      = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
 
         self::assertEmpty(
             UserStoryIdentifier::buildCollectionFromIteration(
                 $this->search_user_story_planned_in_iteration,
-                $this->search_mirrored_timeboxes,
+                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
                 $this->verify_is_visible,
-                $this->iteration_identifier,
                 $this->user_identifier
             )
         );
@@ -164,9 +154,8 @@ final class UserStoryIdentifierTest extends TestCase
             self::USER_STORY_ID,
             UserStoryIdentifier::buildCollectionFromIteration(
                 $this->search_user_story_planned_in_iteration,
-                $this->search_mirrored_timeboxes,
+                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
                 $this->verify_is_visible,
-                $this->iteration_identifier,
                 $this->user_identifier
             )[0]->getId()
         );
