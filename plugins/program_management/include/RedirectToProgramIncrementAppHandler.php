@@ -22,25 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement;
 
-use Codendi_Request;
 use Tracker_Artifact_Redirect;
-use Tuleap\Tracker\Artifact\Artifact;
 
-class EventRedirectAfterArtifactCreationOrUpdateHandler
+class RedirectToProgramIncrementAppHandler
 {
     public function process(
-        Codendi_Request $request,
+        RedirectToProgramManagementAppManager $program_management_redirect_manager,
         Tracker_Artifact_Redirect $redirect,
-        Artifact $artifact
+        \Project $project
     ): void {
-        $program_increment_redirect_value = $request->get('program_increment');
-        $redirect_in_service              = $program_increment_redirect_value && ($program_increment_redirect_value === "create" || $program_increment_redirect_value === "update");
-        if (! $redirect_in_service) {
+        if (! $program_management_redirect_manager->isRedirectionNeeded()) {
             return;
         }
 
         if ($redirect->mode === Tracker_Artifact_Redirect::STATE_CONTINUE) {
-            $redirect->query_parameters['program_increment'] = $program_increment_redirect_value;
+            $redirect->query_parameters[RedirectToProgramManagementAppManager::FLAG] = $program_management_redirect_manager->getRedirectValue();
 
             return;
         }
@@ -49,10 +45,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
             return;
         }
 
-        $project_unixname  = $artifact->getTracker()->getProject()->getUnixNameMixedCase();
-        $redirect_base_url = '/program_management/' . urlencode($project_unixname);
-
-        $redirect->base_url         = $redirect_base_url;
+        $redirect->base_url         = '/program_management/' . urlencode($project->getUnixNameMixedCase());
         $redirect->query_parameters = [];
     }
 }
