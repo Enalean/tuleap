@@ -39,6 +39,7 @@ $accessibility-pattern-right-margin: 4px;
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.kanban-item-#{$color-name} {
             --item-type-color: #{map-get($colors, "primary")};
+            --text-color: #{map-get($colors, "text")};
         }
 
         > .tlp-swatch-#{$color-name} {
