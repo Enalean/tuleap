@@ -19,30 +19,12 @@
   -->
 
 <template>
-    <div class="tlp-card test-plan-test-definition-card" v-bind:class="classname">
-        <test-definition-card-xref-title
+    <div class="test-plan-test-definition-card" v-bind:class="classname">
+        <test-definition-card-xref-category-status
             v-bind:test_definition="test_definition"
             v-bind:backlog_item="backlog_item"
         />
-        <div class="test-plan-test-definition-card-category-status">
-            <div
-                class="test-plan-test-definition-category"
-                v-if="test_definition.category !== null"
-                data-test="test-category"
-            >
-                {{ test_definition.category }}
-            </div>
-            <div class="test-plan-test-definition-icons">
-                <i
-                    class="fa test-plan-test-definition-icon-automated-tests"
-                    v-bind:class="automated_icon_status"
-                    aria-hidden="true"
-                    v-if="test_definition.automated_tests"
-                    data-test="automated-test-icon"
-                ></i>
-                <test-definition-card-status v-bind:test_definition="test_definition" />
-            </div>
-        </div>
+        <p class="test-plan-test-definition-title">{{ test_definition.summary }}</p>
     </div>
 </template>
 
@@ -52,12 +34,11 @@ import { Component, Prop } from "vue-property-decorator";
 import type { BacklogItem, TestDefinition } from "../../../type";
 import type { RemoveIsJustRefreshedFlagOnTestDefinitionPayload } from "../../../store/backlog-item/type";
 import { namespace } from "vuex-class";
-import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
-import TestDefinitionCardXrefTitle from "./TestDefinitionCardXrefTitle.vue";
+import TestDefinitionCardXrefCategoryStatus from "./TestDefinitionCardXrefCategoryStatus.vue";
 
 const backlog_item_store = namespace("backlog_item");
 @Component({
-    components: { TestDefinitionCardXrefTitle, TestDefinitionCardStatus },
+    components: { TestDefinitionCardXrefCategoryStatus },
 })
 export default class TestDefinitionCard extends Vue {
     @Prop({ required: true })
@@ -88,21 +69,6 @@ export default class TestDefinitionCard extends Vue {
         }
 
         return "";
-    }
-
-    get automated_icon_status(): string {
-        switch (this.test_definition.test_status) {
-            case "passed":
-                return "fa-tlp-robot-happy test-plan-test-definition-icon-status-passed";
-            case "failed":
-                return "fa-tlp-robot-unhappy test-plan-test-definition-icon-status-failed";
-            case "blocked":
-                return "fa-tlp-robot test-plan-test-definition-icon-status-blocked";
-            case "notrun":
-                return "fa-tlp-robot test-plan-test-definition-icon-status-notrun";
-            default:
-                return "fa-tlp-robot";
-        }
     }
 }
 </script>
