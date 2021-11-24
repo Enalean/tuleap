@@ -26,6 +26,7 @@ use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagCreator;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Admin\ImmutableTagListTooBigException;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\Repository;
@@ -80,6 +81,9 @@ class RepositoryResourceUpdater
         $this->notification_update_checker = $notification_update_checker;
     }
 
+    /**
+     * @throws ImmutableTagListTooBigException
+     */
     public function update(Repository $repository, Settings $settings)
     {
         $this->hook_config_updator->updateHookConfig($repository, $settings->getCommitRules());

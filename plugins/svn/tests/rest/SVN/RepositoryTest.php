@@ -432,6 +432,31 @@ class RepositoryTest extends TestBase
         );
     }
 
+    public function testPUTRepositoryWithMassiveAllowlistIsRejected(): void
+    {
+        $data = json_encode(
+            [
+                'settings' => [
+                    'commit_rules' => [
+                        'is_reference_mandatory' => true,
+                        'is_commit_message_change_allowed' => false
+                    ],
+                    "access_file" => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags" => [
+                        "paths" => [],
+                        "whitelist" => array_fill(0, 65535, '/a')
+                    ],
+                    "email_notifications" => []
+                ]
+            ],
+            JSON_THROW_ON_ERROR
+        );
+
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'svn/1')->withBody($this->stream_factory->createStream($data)));
+
+        self::assertEquals(400, $response->getStatusCode());
+    }
+
     public function testOPTIONSId()
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'svn/1'));

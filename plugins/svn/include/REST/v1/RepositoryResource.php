@@ -38,6 +38,7 @@ use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\AccessControl\CannotCreateAccessFileHistoryException;
 use Tuleap\SVN\Admin\CannotCreateMailHeaderException;
+use Tuleap\SVN\Admin\ImmutableTagListTooBigException;
 use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Admin\ImmutableTagCreator;
 use Tuleap\SVN\Admin\ImmutableTagDao;
@@ -455,6 +456,8 @@ class RepositoryResource extends AuthenticatedResource
 
         try {
             $this->repository_updater->update($repository, $repository_settings);
+        } catch (ImmutableTagListTooBigException $exception) {
+            throw new RestException(400, $exception->getMessage(), [], $exception);
         } catch (CannotCreateMailHeaderException $exception) {
             throw new RestException(500, 'An error occurred while saving the notifications.');
         }
@@ -682,6 +685,8 @@ class RepositoryResource extends AuthenticatedResource
                 $initial_repository_layout,
                 $copy_from_core
             );
+        } catch (ImmutableTagListTooBigException $exception) {
+            throw new RestException(400, $exception->getMessage(), [], $exception);
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
         } catch (UserIsNotSVNAdministratorException $e) {
