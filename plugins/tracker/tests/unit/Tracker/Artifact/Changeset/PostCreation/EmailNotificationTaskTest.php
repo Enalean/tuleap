@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
+use Tracker_Artifact_MailGateway_Recipient;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
@@ -55,6 +56,9 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->custom_email_sender->shouldReceive('getCustomSender')->andReturns(['format' => '', 'enabled' => 0]);
 
+        $language = $this->createStub(\BaseLanguage::class);
+        $language->method('getText')->willReturn('');
+
         $this->tracker  = \Mockery::spy(\Tracker::class);
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -62,7 +66,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
         $this->changeset->shouldReceive('getSubmitter')->andReturns(
-            UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->build()
+            UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->withLanguage($language)->build()
         );
     }
 
@@ -74,8 +78,9 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             'email@example.com' => true,
             'comment1'          => true,
         ]);
-        $language = \Mockery::spy(\BaseLanguage::class);
-        $user_1   = \Mockery::mock(\PFUser::class);
+        $language = $this->createStub(\BaseLanguage::class);
+        $language->method('getText')->willReturn('');
+        $user_1 = \Mockery::mock(\PFUser::class);
         $user_1->shouldReceive('getEmail')->andReturns('a_user');
         $user_1->shouldReceive('getLanguage')->andReturns($language);
         $user_1->shouldReceive('getPreference')->andReturns('');
@@ -167,7 +172,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testChangesetShouldUseUserLanguageInGetBody()
     {
         $user_language = \Mockery::mock(\BaseLanguage::class);
-        $user_language->shouldReceive('getText')->atLeast(1);
+        $user_language->shouldReceive('getText')->andReturn('')->atLeast(1);
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -191,7 +196,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testChangesetShouldUseUserLanguageInBuildMessage()
     {
         $user_language = \Mockery::mock(\BaseLanguage::class);
-        $user_language->shouldReceive('getText')->atLeast(1);
+        $user_language->shouldReceive('getText')->andReturn('')->atLeast(1);
 
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getPreference')->with('text')->andReturns(['user_tracker_mailformat']);
@@ -219,8 +224,9 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $recipients_manager = \Mockery::mock(RecipientsManager::class);
 
-        $language = \Mockery::spy(\BaseLanguage::class);
-        $user_1   = \Mockery::spy(\PFUser::class);
+        $language = $this->createStub(\BaseLanguage::class);
+        $language->method('getText')->willReturn('');
+        $user_1 = \Mockery::spy(\PFUser::class);
         $user_1->shouldReceive('getLanguage')->andReturns($language);
         $user_1->shouldReceive('getPreference')->with('text')->andReturns(['user_tracker_mailformat']);
         $recipients_manager->shouldReceive('getUserFromRecipientName')->with('user01')->andReturns($user_1);

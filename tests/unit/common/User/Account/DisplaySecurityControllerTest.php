@@ -85,10 +85,12 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             M::mock(PasswordSanityChecker::class, ['getValidators' => []]),
             M::mock(\UserManager::class, ['getUserAccessInfo' => ['last_auth_success' => 1, 'last_auth_failure' => 1, 'nb_auth_failure' => 1, 'prev_auth_success' => 1]])
         );
-        $this->user       = UserTestBuilder::aUser()
+        $language         = $this->createStub(\BaseLanguage::class);
+        $language->method('getText')->willReturn('');
+        $this->user = UserTestBuilder::aUser()
             ->withId(110)
             ->withUserName('alice')
-            ->withLanguage(M::spy(\BaseLanguage::class))
+            ->withLanguage($language)
             ->build();
         $this->user->setUserPw('some_password_hash');
     }

@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-use BaseLanguage;
 use ConfigNotificationAssignedTo;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -116,7 +115,8 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             'comment1' => true,
         ]);
 
-        $language = \Mockery::spy(BaseLanguage::class);
+        $language = $this->createStub(\BaseLanguage::class);
+        $language->method('getText')->willReturn('');
 
         $example = \Mockery::spy(PFUser::class);
         $example->shouldReceive('toRow')->andReturn(

@@ -112,6 +112,8 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user               = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getRealName')->andReturns('user1');
         $this->user_manager->shouldReceive('getUserById')->andReturns($user);
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItCollectsPullRequestsWithTheGivenLabel(): void

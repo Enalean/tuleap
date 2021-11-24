@@ -119,11 +119,14 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->layout = LayoutBuilder::buildWithInspector($this->layout_inspector);
 
+        $language = $this->createStub(\BaseLanguage::class);
+        $language->method('getText')->willReturn('');
+
         $this->user = UserTestBuilder::aUser()
             ->withId(110)
             ->withRealName('Alice FooBar')
             ->withEmail('alice@example.com')
-            ->withLanguage(M::spy(\BaseLanguage::class))
+            ->withLanguage($language)
             ->withAddDate(940000000)
             ->withTimezone('UTC')
             ->withAvatarUrl("/path/to/avatar.png")
