@@ -525,7 +525,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                           $size .
                           $multiple . '>';
         //Any value
-        $selected = count($criteria_value) ? '' : 'selected="selected"';
+        $selected = ($criteria_value !== '' && count($criteria_value)) ? '' : 'selected="selected"';
         $html    .= '<option value="" ' . $selected . '>' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         //None value
         $selected = isset($criteria_value[100]) ? 'selected="selected"' : '';
