@@ -34,6 +34,7 @@ use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tracker_FormElement_Field_List_UnsavedValue;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_String;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
 use Tracker_Report_Criteria;
@@ -129,6 +130,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             $this->buildNotSetListCriterion($report),
             $this->buildNotSetOpenListCriterion($report),
             $this->buildNotSetDateCriterion($report),
+            $this->buildListCriterionWithInvalidValue($report)
         ];
 
         $report->method('getCriteria')->willReturn($criteria);
@@ -407,6 +409,35 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->willReturn("");
 
         return $criterion_open_list_static;
+    }
+
+    private function buildListCriterionWithInvalidValue(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+
+        $criterion_with_invalid_value = new Tracker_Report_Criteria(
+            5,
+            $report,
+            $field,
+            5,
+            0
+        );
+
+        $static_bind = $this->createStub(Tracker_FormElement_Field_List_Bind_Static::class);
+        $static_bind
+            ->method('getValue')
+            ->willThrowException(new Tracker_FormElement_InvalidFieldValueException());
+
+        $field
+            ->method('getBind')
+            ->willReturn($static_bind);
+
+        $field
+            ->method('getCriteriaValue')
+            ->with($criterion_with_invalid_value)
+            ->willReturn(['404']);
+
+        return $criterion_with_invalid_value;
     }
 
     private function buildNotSetDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
