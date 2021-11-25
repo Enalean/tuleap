@@ -69,7 +69,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         $user = $this->retrieve_user->getUserWithId($user_identifier);
         $this->db_transaction_executor->execute(
             function () use ($feature_plan_change, $user, $user_identifier, $program_increment) {
-                $mirrored_program_increments = MirroredProgramIncrementIdentifier::buildCollectionFromProgramIncrement(
+                $mirrored_program_increments = MirroredProgramIncrementIdentifier::buildCollectionOnlyWhenUserCanSee(
                     $this->mirrored_timeboxes_searcher,
                     $this->visibility_verifier,
                     $program_increment,

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
@@ -80,7 +81,12 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
             | ProgramHasNoTeamException
             | TeamIsNotVisibleException $exception
         ) {
-            $this->logger->error('Error during creation of mirror program increments ', ['exception' => $exception]);
+            $this->logger->error('Error during creation of mirror program increments', ['exception' => $exception]);
+        } catch (UserStoryPlanException $exception) {
+            $this->logger->error(
+                'Error during planning of user stories in mirror program increments',
+                ['exception' => $exception]
+            );
         }
     }
 
@@ -91,6 +97,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
      * @throws ProjectIsNotAProgramException
      * @throws ProgramHasNoTeamException
      * @throws TeamIsNotVisibleException
+     * @throws UserStoryPlanException
      */
     private function create(ProgramIncrementCreation $creation): void
     {

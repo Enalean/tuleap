@@ -217,7 +217,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
 
         self::assertSame(0, $this->artifact_creator->getCallCount());
         self::assertSame(0, $this->user_stories_planner->getCallCount());
-        self::assertTrue($this->logger->hasErrorRecords());
+        self::assertTrue($this->logger->hasError('Error during creation of mirror program increments'));
     }
 
     public function testItStopsExecutionIfThereIsAnIssueWhileCreatingAMirroredProgramIncrement(): void
@@ -228,6 +228,15 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
 
         self::assertSame(1, $this->artifact_creator->getCallCount());
         self::assertSame(0, $this->user_stories_planner->getCallCount());
-        self::assertTrue($this->logger->hasErrorRecords());
+        self::assertTrue($this->logger->hasError('Error during creation of mirror program increments'));
+    }
+
+    public function testItLogsErrorWhilePlanningUserStoriesInMirrors(): void
+    {
+        $this->user_stories_planner = PlanUserStoriesInMirroredProgramIncrementsStub::withError();
+
+        $this->getProcessor()->processCreation($this->creation);
+
+        self::assertTrue($this->logger->hasError('Error during planning of user stories in mirror program increments'));
     }
 }

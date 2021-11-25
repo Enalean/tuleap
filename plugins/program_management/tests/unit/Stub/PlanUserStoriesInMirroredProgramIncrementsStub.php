@@ -24,16 +24,24 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIsNotVisibleException;
 
 final class PlanUserStoriesInMirroredProgramIncrementsStub implements PlanUserStoriesInMirroredProgramIncrements
 {
-    private function __construct(private int $call_count)
+    private int $call_count = 0;
+
+    private function __construct(private bool $has_error)
     {
     }
 
     public static function withCount(): self
     {
-        return new self(0);
+        return new self(false);
+    }
+
+    public static function withError(): self
+    {
+        return new self(true);
     }
 
     public function getCallCount(): int
@@ -43,6 +51,12 @@ final class PlanUserStoriesInMirroredProgramIncrementsStub implements PlanUserSt
 
     public function plan(ProgramIncrementChanged $program_increment_changed): void
     {
+        if ($this->has_error) {
+            throw new MirroredProgramIncrementIsNotVisibleException(
+                $program_increment_changed->program_increment,
+                $program_increment_changed->user
+            );
+        }
         $this->call_count++;
     }
 }

@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationDetector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\DispatchIterationUpdate;
@@ -47,6 +48,9 @@ final class ArtifactUpdatedHandler
     ) {
     }
 
+    /**
+     * @throws UserStoryPlanException
+     */
     public function handle(ArtifactUpdatedEvent $event): void
     {
         $program_increment_update = ProgramIncrementUpdate::fromArtifactUpdatedEvent(
@@ -65,6 +69,9 @@ final class ArtifactUpdatedHandler
         }
     }
 
+    /**
+     * @throws UserStoryPlanException
+     */
     private function planArtifactIfNeeded(ProgramIncrementUpdate $program_increment_update): void
     {
         $program_increment_changed = ProgramIncrementChanged::fromUpdate($program_increment_update);

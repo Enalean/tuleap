@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException;
-
-interface PlanUserStoriesInMirroredProgramIncrements
+interface UserStoryPlanException extends \Throwable
 {
-    /**
-     * @throws UserStoryPlanException
-     */
-    public function plan(ProgramIncrementChanged $program_increment_changed): void;
 }

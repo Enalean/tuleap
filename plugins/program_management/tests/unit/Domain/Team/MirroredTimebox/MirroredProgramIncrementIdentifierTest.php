@@ -39,6 +39,7 @@ final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\
     private RetrieveMirroredProgramIncrementFromTeamStub $mirror_retriever;
     private ProgramIncrementIdentifier $program_increment;
     private UserIdentifierStub $user;
+    private \Closure $getId;
 
     protected function setUp(): void
     {
@@ -51,6 +52,8 @@ final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\
 
         $this->user              = UserIdentifierStub::buildGenericUser();
         $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithId(11);
+
+        $this->getId = static fn(MirroredProgramIncrementIdentifier $identifier): int => $identifier->getId();
     }
 
     private function getFromProgramIncrementAndTeam(): ?MirroredProgramIncrementIdentifier
@@ -83,47 +86,71 @@ final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\
         self::assertNull($this->getFromProgramIncrementAndTeam());
     }
 
-    public function testItBuildsCollectionFromProgramIncrement(): void
+    /**
+     * @return MirroredProgramIncrementIdentifier[]
+     */
+    private function getCollection(): array
     {
-        $identifiers = MirroredProgramIncrementIdentifier::buildCollectionFromProgramIncrement(
+        return MirroredProgramIncrementIdentifier::buildCollectionFromProgramIncrement(
             $this->timebox_searcher,
             $this->visibility_verifier,
             $this->program_increment,
             $this->user
         );
-        $ids         = array_map(
-            static fn(MirroredProgramIncrementIdentifier $identifier) => $identifier->getId(),
-            $identifiers
-        );
+    }
+
+    public function testItBuildsCollectionFromProgramIncrement(): void
+    {
+        $ids = array_map($this->getId, $this->getCollection());
         self::assertContains(self::FIRST_MIRROR_ID, $ids);
         self::assertContains(self::SECOND_MIRROR_ID, $ids);
     }
 
     public function testItBuildsEmptyArrayWhenProgramIncrementHasNoMirror(): void
     {
-        self::assertEmpty(
-            MirroredProgramIncrementIdentifier::buildCollectionFromProgramIncrement(
-                SearchMirroredTimeboxesStub::withNoMirrors(),
-                $this->visibility_verifier,
-                $this->program_increment,
-                $this->user
-            )
-        );
+        $this->timebox_searcher = SearchMirroredTimeboxesStub::withNoMirrors();
+        self::assertEmpty($this->getCollection());
     }
 
     public function testItSkipsMirrorsThatAreNotVisible(): void
     {
-        $identifiers = MirroredProgramIncrementIdentifier::buildCollectionFromProgramIncrement(
+        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withVisibleIds(self::SECOND_MIRROR_ID);
+        $ids                       = array_map($this->getId, $this->getCollection());
+        self::assertNotContains(self::FIRST_MIRROR_ID, $ids);
+        self::assertContains(self::SECOND_MIRROR_ID, $ids);
+    }
+
+    /**
+     * @return MirroredProgramIncrementIdentifier[]
+     * @throws MirroredProgramIncrementIsNotVisibleException
+     */
+    private function getCollectionUserCanSee(): array
+    {
+        return MirroredProgramIncrementIdentifier::buildCollectionOnlyWhenUserCanSee(
             $this->timebox_searcher,
-            VerifyIsVisibleArtifactStub::withVisibleIds(self::SECOND_MIRROR_ID),
+            $this->visibility_verifier,
             $this->program_increment,
             $this->user
         );
-        $ids         = array_map(
-            static fn(MirroredProgramIncrementIdentifier $identifier) => $identifier->getId(),
-            $identifiers
-        );
-        self::assertNotContains(self::FIRST_MIRROR_ID, $ids);
+    }
+
+    public function testItBuildsCollectionUserCanSee(): void
+    {
+        $ids = array_map($this->getId, $this->getCollectionUserCanSee());
+        self::assertContains(self::FIRST_MIRROR_ID, $ids);
         self::assertContains(self::SECOND_MIRROR_ID, $ids);
+    }
+
+    public function testItBuildsEmptyArrayForCollectionUserCanSee(): void
+    {
+        $this->timebox_searcher = SearchMirroredTimeboxesStub::withNoMirrors();
+        self::assertEmpty($this->getCollectionUserCanSee());
+    }
+
+    public function testItThrowsWhenUserCannotSeeOneMirroredProgramIncrement(): void
+    {
+        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withVisibleIds(self::SECOND_MIRROR_ID);
+        $this->expectException(MirroredProgramIncrementIsNotVisibleException::class);
+        $this->getCollectionUserCanSee();
     }
 }
