@@ -33,6 +33,7 @@ interface LegacyDataAccessInterface
      *
      * @psalm-taint-sink sql $sql
      * @psalm-taint-sink sql $params
+     * @psalm-taint-source ldap
      */
     public function query($sql, $params = []);
 
@@ -167,6 +168,7 @@ interface LegacyDataAccessInterface
      * @deprecated
      *
      * @return array Returns an associative array of strings that corresponds to the fetched row, or FALSE if there are no more rows.
+     * @psalm-taint-source ldap
      */
     public function fetch($result);
 

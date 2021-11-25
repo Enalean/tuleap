@@ -49,6 +49,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @psalm-taint-sink sql $sql
      * @psalm-taint-sink sql $params
+     * @psalm-taint-source ldap
      */
     public function query($sql, $params = [])
     {
@@ -309,6 +310,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      *
      * @return array Returns an associative array of strings that corresponds to the fetched row, or FALSE if there are no more rows.
+     * @psalm-taint-source ldap
      */
     public function fetch($result)
     {
@@ -330,6 +332,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @param type $result
      *
      * @return type
+     * @psalm-taint-source ldap
      */
     public function fetchArray($result)
     {

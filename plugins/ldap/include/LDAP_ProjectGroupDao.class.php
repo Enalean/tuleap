@@ -148,6 +148,9 @@ class LDAP_ProjectGroupDao extends DataAccessObject
         return count($this->retrieve($sql)) > 0;
     }
 
+    /**
+     * @psalm-taint-escape ldap DN is stored directly in plugin_ldap_project_group.ldap_group_dn, so we are forced to remove the taint
+     */
     public function getSynchronizedProjects()
     {
         $auto_synchronized_value = $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
