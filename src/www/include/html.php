@@ -448,8 +448,6 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
     }
         $disabled = $disabled ? 'disabled="disabled"' : '';
 
-    $checked_count = count($checked_array);
-//      echo '-- '.$checked_count.' --';
     $id     = str_replace('[]', '', $name);
     $return = '
 		<SELECT NAME="' . $hp->purify($name) . '" id="' . $hp->purify($id) . '" MULTIPLE SIZE="' . $hp->purify($size) . '" ' . $disabled . '>';
@@ -467,9 +465,11 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
     if ($show_any) {
         $return .= '
 		<OPTION VALUE="0"';
-        for ($j = 0; $j < $checked_count; $j++) {
-            if ($checked_array[$j] == '0') {
+        if (is_iterable($checked_array)) {
+            foreach ($checked_array as $value) {
+                if ($value == '0') {
                     $return .= ' SELECTED';
+                }
             }
         }
         $return .= '>' . $hp->purify($text_any, $purify_level) . '</OPTION>';
@@ -481,9 +481,11 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
     if ($show_100) {
         $return .= '
 		<OPTION VALUE="100"';
-        for ($j = 0; $j < $checked_count; $j++) {
-            if ($checked_array[$j] == '100') {
+        if (is_iterable($checked_array)) {
+            foreach ($checked_array as $value) {
+                if ($value == '100') {
                     $return .= ' SELECTED';
+                }
             }
         }
         $return .= '>' . $hp->purify($text_100, $purify_level) . '</OPTION>';
@@ -497,9 +499,11 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
             /*
                 Determine if it's checked
             */
-            for ($j = 0; $j < $checked_count; $j++) {
-                if ($val == $checked_array[$j]) {
-                    $return .= ' SELECTED';
+            if (is_iterable($checked_array)) {
+                foreach ($checked_array as $array_value) {
+                    if ($array_value == $val) {
+                        $return .= ' SELECTED';
+                    }
                 }
             }
             $return .= '>' . $hp->purify(($show_value ? $val . '-' : '') . substr($row['text'], 0, 60), $purify_level) . '</OPTION>';
