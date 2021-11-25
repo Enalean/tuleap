@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Action_UpdateArtifact
@@ -49,7 +49,7 @@ class Tracker_Action_UpdateArtifact
         Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         EventManager $event_manager,
-        NatureIsChildLinkRetriever $artifact_retriever,
+        TypeIsChildLinkRetriever $artifact_retriever,
         VisitRecorder $visit_recorder,
         HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {

@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
@@ -43,59 +43,59 @@ class ArtifactLinkRepresentation
 
     public static function build(Artifact $artifact): self
     {
-        return new self(array_merge(self::getForwardNatures($artifact), self::getReverseNatures($artifact)));
+        return new self(array_merge(self::getForwardTypes($artifact), self::getReverseTypes($artifact)));
     }
 
-    private static function getForwardNatures(Artifact $artifact)
+    private static function getForwardTypes(Artifact $artifact)
     {
-        $nature_dao     = new NatureDao();
-        $nature_factory = self::getNaturePresenterFactory();
+        $dao     = new TypeDao();
+        $factory = self::getTypePresenterFactory();
 
-        $natures = [];
+        $types = [];
 
-        foreach ($nature_dao->searchForwardNatureShortNamesForGivenArtifact($artifact->getId()) as $nature_row) {
-            $nature    = $nature_factory->getFromShortname($nature_row['shortname']);
-            $natures[] = self::formatNature($nature, $artifact, TypePresenter::FORWARD_LABEL);
+        foreach ($dao->searchForwardTypeShortNamesForGivenArtifact($artifact->getId()) as $type_row) {
+            $type    = $factory->getFromShortname($type_row['shortname']);
+            $types[] = self::formatType($type, $artifact, TypePresenter::FORWARD_LABEL);
         }
 
-        return $natures;
+        return $types;
     }
 
-    private static function getReverseNatures(Artifact $artifact)
+    private static function getReverseTypes(Artifact $artifact)
     {
-        $nature_dao     = new NatureDao();
-        $nature_factory = self::getNaturePresenterFactory();
+        $dao     = new TypeDao();
+        $factory = self::getTypePresenterFactory();
 
-        $natures = [];
+        $types = [];
 
-        foreach ($nature_dao->searchReverseNatureShortNamesForGivenArtifact($artifact->getId()) as $nature_row) {
-            $nature    = $nature_factory->getFromShortname($nature_row['shortname']);
-            $natures[] = self::formatNature($nature, $artifact, TypePresenter::REVERSE_LABEL);
+        foreach ($dao->searchReverseTypeShortNamesForGivenArtifact($artifact->getId()) as $type_row) {
+            $type    = $factory->getFromShortname($type_row['shortname']);
+            $types[] = self::formatType($type, $artifact, TypePresenter::REVERSE_LABEL);
         }
 
-        return $natures;
+        return $types;
     }
 
     /**
      * @return TypePresenterFactory
      */
-    private static function getNaturePresenterFactory()
+    private static function getTypePresenterFactory()
     {
-        $nature_dao              = new NatureDao();
+        $type_dao                = new TypeDao();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
-        return new TypePresenterFactory($nature_dao, $artifact_link_usage_dao);
+        return new TypePresenterFactory($type_dao, $artifact_link_usage_dao);
     }
 
-    private static function formatNature(TypePresenter $nature, Artifact $artifact, $direction)
+    private static function formatType(TypePresenter $type, Artifact $artifact, $direction)
     {
-        $label = $direction === TypePresenter::FORWARD_LABEL ? $nature->forward_label : $nature->reverse_label;
+        $label = $direction === TypePresenter::FORWARD_LABEL ? $type->forward_label : $type->reverse_label;
 
         return [
-            "shortname"    => $nature->shortname,
+            "shortname"    => $type->shortname,
             "direction"    => $direction,
             "label"        => $label,
-            "uri"          => "artifacts/" . $artifact->getId() . "/linked_artifacts?nature=" . urlencode($nature->shortname) .
+            "uri"          => "artifacts/" . $artifact->getId() . "/linked_artifacts?nature=" . urlencode($type->shortname) .
                               "&direction=" . urlencode($direction)
         ];
     }

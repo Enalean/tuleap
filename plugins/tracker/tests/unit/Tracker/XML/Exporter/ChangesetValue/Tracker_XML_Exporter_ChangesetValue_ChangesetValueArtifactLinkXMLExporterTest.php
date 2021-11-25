@@ -93,7 +93,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
+        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
         $this->exporter->export(
@@ -112,7 +112,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         $this->assertEquals(222, (int) $field_change->value[1]);
     }
 
-    public function testItExportsChildrenNatureMode(): void
+    public function testItExportsChildrenTypeMode(): void
     {
         $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
@@ -121,7 +121,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
+        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
         $this->exporter->export(
@@ -166,7 +166,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
+        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
         $this->exporter->export(
@@ -181,7 +181,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         $this->assertCount(0, $field_change->value);
     }
 
-    public function testItDoesNotExportChildrenUserCannotSeeNatureMode(): void
+    public function testItDoesNotExportChildrenUserCannotSeeTypeMode(): void
     {
         $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCannotView(111, 101, '_is_child'),
@@ -189,7 +189,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
+        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
         $this->exporter->export(
@@ -228,7 +228,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
+        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
         $this->exporter->export(
@@ -241,7 +241,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         $this->assertEquals([111, 222], $this->collector->getAllChildrenIds());
     }
 
-    public function testItCollectsChildrenNatureMode(): void
+    public function testItCollectsChildrenTypeMode(): void
     {
         $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
@@ -250,7 +250,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
+        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
         $this->exporter->export(
@@ -263,17 +263,17 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         $this->assertEquals([111, 222], $this->collector->getAllChildrenIds());
     }
 
-    private function anArtifactLinkInfoUserCanView($artifact_id, $tracker_id, $nature)
+    private function anArtifactLinkInfoUserCanView($artifact_id, $tracker_id, $type)
     {
-        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id, $nature);
+        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id, $type);
         $artifact_link_info->shouldReceive('userCanView')->with($this->user)->andReturns(true);
 
         return $artifact_link_info;
     }
 
-    private function anArtifactLinkInfoUserCannotView($artifact_id, $tracker_id, $nature)
+    private function anArtifactLinkInfoUserCannotView($artifact_id, $tracker_id, $type)
     {
-        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id, $nature);
+        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id, $type);
         $artifact_link_info->shouldReceive('userCanView')->with($this->user)->andReturns(false);
 
         return $artifact_link_info;
@@ -286,7 +286,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             [
                 'getArtifactId' => $artifact_id,
                 'getTracker'    => TrackerFactory::instance()->getTrackerById($tracker_id),
-                'getNature'     => $nature,
+                'getType'     => $nature,
             ]
         );
     }

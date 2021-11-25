@@ -22,7 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,
@@ -62,11 +62,11 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PH
         $tracker           = Mockery::mock(Tracker::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
         $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
-        $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturnFalse();
+        $tracker->shouldReceive('isProjectAllowedToUseType')->andReturnFalse();
 
         $this->dao               = Mockery::mock(HierarchyDAO::class);
         $this->artifact_factory  = Mockery::mock(Tracker_ArtifactFactory::class);
-        $child_link_retriever    = Mockery::mock(NatureIsChildLinkRetriever::class);
+        $child_link_retriever    = Mockery::mock(TypeIsChildLinkRetriever::class);
         $this->hierarchy_factory = new Tracker_HierarchyFactory(
             $this->dao,
             Mockery::mock(TrackerFactory::class),

@@ -99,14 +99,14 @@ class ArtifactLinkValueSaver
         foreach ($artifact_ids_to_link as $artifact_to_be_linked_by_tracker) {
             $tracker = $artifact_to_be_linked_by_tracker['tracker'];
 
-            foreach ($artifact_to_be_linked_by_tracker['natures'] as $nature => $ids) {
-                if (! $nature) {
-                    $nature = null;
+            foreach ($artifact_to_be_linked_by_tracker['types'] as $ype => $ids) {
+                if (! $ype) {
+                    $ype = null;
                 }
 
                 $this->dao->create(
                     $changeset_value_id,
-                    $nature,
+                    $ype,
                     $ids,
                     $tracker->getItemName(),
                     $tracker->getGroupId()
@@ -117,42 +117,42 @@ class ArtifactLinkValueSaver
         return $this->updateCrossReferences($user, $artifact, $submitted_value);
     }
 
-    private function getNature(
+    private function getType(
         Artifact $from_artifact,
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
         Tracker $to_tracker,
         array $submitted_value
     ) {
-        $existing_nature     = $artifactlinkinfo->getNature();
-        $nature_by_hierarchy = $this->getNatureDefinedByHierarchy(
+        $existing_type     = $artifactlinkinfo->getType();
+        $type_by_hierarchy = $this->getTypeDefinedByHierarchy(
             $artifactlinkinfo,
             $from_tracker,
             $to_tracker,
-            $existing_nature
+            $existing_type
         );
-        if ($nature_by_hierarchy !== null) {
-            return $nature_by_hierarchy;
+        if ($type_by_hierarchy !== null) {
+            return $type_by_hierarchy;
         }
 
         $linked_artifact = $artifactlinkinfo->getArtifact();
         if ($linked_artifact === null) {
             return null;
         }
-        $nature_by_plugin = $this->getTypeDefinedByPlugin(
+        $type_by_plugin = $this->getTypeDefinedByPlugin(
             $artifactlinkinfo,
             $from_artifact,
             $linked_artifact,
-            $existing_nature,
+            $existing_type,
             $submitted_value
         );
 
-        if (! empty($nature_by_plugin)) {
-            return $nature_by_plugin;
+        if (! empty($type_by_plugin)) {
+            return $type_by_plugin;
         }
 
-        if (! empty($existing_nature)) {
-            return $existing_nature;
+        if (! empty($existing_type)) {
+            return $existing_type;
         }
 
         return null;
@@ -163,18 +163,18 @@ class ArtifactLinkValueSaver
      * to be automatically set to that when an admin will enable the types everything
      * will be consistent
      */
-    private function getNatureDefinedByHierarchy(
+    private function getTypeDefinedByHierarchy(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
         Tracker $to_tracker,
-        ?string $existing_nature
+        ?string $existing_type
     ): ?string {
         $is_child  = $this->isTrackerChildrenOfTheOtherTracker($to_tracker, $from_tracker);
         $is_parent = $this->isTrackerChildrenOfTheOtherTracker($from_tracker, $to_tracker);
 
         if ($this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $from_tracker->getProject()->getID())) {
             if (
-                ($is_child && $existing_nature !== Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) ||
+                ($is_child && $existing_type !== Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) ||
                 $is_parent
             ) {
                 $GLOBALS['Response']->addFeedback(
@@ -190,7 +190,7 @@ class ArtifactLinkValueSaver
 
             if (
                 ! $is_child &&
-                $existing_nature === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD &&
+                $existing_type === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD &&
                 $this->rules_manager->getForTargetTracker($from_tracker)->count() > 0
             ) {
                 $GLOBALS['Response']->addFeedback(
@@ -212,7 +212,7 @@ class ArtifactLinkValueSaver
         if (
             $from_tracker->getChildren()
             && ! $is_child
-            && $existing_nature === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+            && $existing_type === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
         ) {
             return Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
         }
@@ -263,7 +263,7 @@ class ArtifactLinkValueSaver
         $existing_type,
         $type_by_plugin
     ) {
-        if ($from_tracker->isProjectAllowedToUseNature()) {
+        if ($from_tracker->isProjectAllowedToUseType()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 sprintf(dgettext('tuleap-tracker', 'Override link type "%2$s" to artifact #%1$s with type "%3$s" returned by another service'), $artifactlinkinfo->getArtifactId(), $existing_type, $type_by_plugin)
@@ -344,20 +344,20 @@ class ArtifactLinkValueSaver
             $artifact_to_link = $artifactlinkinfo->getArtifact();
             if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
                 $tracker = $artifact_to_link->getTracker();
-                $nature  = $this->getNature($artifact, $artifactlinkinfo, $from_tracker, $tracker, $submitted_value);
+                $type    = $this->getType($artifact, $artifactlinkinfo, $from_tracker, $tracker, $submitted_value);
 
                 if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
                     $all_artifact_to_be_linked[$tracker->getId()] = [
                         'tracker' => $tracker,
-                        'natures' => []
+                        'types' => []
                     ];
                 }
 
-                if (! isset($all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature])) {
-                    $all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature] = [];
+                if (! isset($all_artifact_to_be_linked[$tracker->getId()]['types'][$type])) {
+                    $all_artifact_to_be_linked[$tracker->getId()]['types'][$type] = [];
                 }
 
-                $all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature][] = $artifact_to_link->getId();
+                $all_artifact_to_be_linked[$tracker->getId()]['types'][$type][] = $artifact_to_link->getId();
             }
         }
 

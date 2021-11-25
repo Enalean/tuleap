@@ -28,13 +28,13 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactInNatureTablePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactInTypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\ValueFormatter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureTablePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
@@ -153,11 +153,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function fetchChangesetValueForNature(
+    public function fetchChangesetValueForType(
         $artifact_id,
         $changeset_id,
         $value,
-        $nature,
+        $type,
         $format,
         $report = null,
         $from_aid = null
@@ -172,7 +172,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $value_formatter->fetchFormattedValue(
             $current_user,
             $this->getChangesetValues($current_user, $changeset_id),
-            $nature,
+            $type,
             $format
         );
     }
@@ -198,7 +198,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return implode(',', $arr);
     }
 
-    public function fetchCSVChangesetValueWithNature($changeset_id, $nature, $format)
+    public function fetchCSVChangesetValueWithType($changeset_id, $type, $format)
     {
         $value_formatter = new ValueFormatter(
             Tracker_FormElementFactory::instance(),
@@ -210,7 +210,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $value_formatter->fetchFormattedValue(
             $current_user,
             $this->getChangesetValues($current_user, $changeset_id),
-            $nature,
+            $type,
             $format
         );
     }
@@ -501,8 +501,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         ArtifactLinksToRender $artifact_links_to_render,
         $prefill_new_values,
         $prefill_removed_values,
-        $prefill_nature,
-        $prefill_edited_natures,
+        $prefill_type,
+        $prefill_edited_types,
         $prefill_parent,
         $read_only,
         array $additional_classes,
@@ -566,12 +566,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $possible_parents_selector = $this->getPossibleParentSelector($current_user, $can_create);
             }
 
-            if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
+            if ($artifact->getTracker()->isProjectAllowedToUseType()) {
                 $renderer = new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeSelectorRenderer(
-                    $this->getNaturePresenterFactory(),
+                    $this->getTypePresenterFactory(),
                     $this->getTemplateRenderer(),
                 );
-                $html    .= $renderer->renderToString($artifact, $prefill_nature, $name, $possible_parents_selector);
+                $html    .= $renderer->renderToString($artifact, $prefill_type, $name, $possible_parents_selector);
             }
             $html .= '</span>';
             $html .= '</div>';
@@ -617,7 +617,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                         'read_only'              => $read_only,
                         'from_aid'               => $from_aid,
                         'prefill_removed_values' => $prefill_removed_values,
-                        'prefill_edited_natures' => $prefill_edited_natures
+                        'prefill_edited_types'   => $prefill_edited_types
                     ]
                 );
 
@@ -627,7 +627,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                         data-renderer-data="' . Codendi_HTMLPurifier::instance()->purify($json_encoded_data) . '"></div></div>';
             }
 
-            $html .= $this->fetchNatureTables($artifact_links_to_render, $reverse_artifact_links);
+            $html .= $this->fetchTypeTables($artifact_links_to_render, $reverse_artifact_links);
         } else {
             $html .= $this->getNoValueLabel();
         }
@@ -648,7 +648,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         ArtifactLinksToRenderForPerTrackerTable $artifact_links_per_tracker,
         $read_only,
         $prefill_removed_values,
-        $prefill_edited_natures,
+        $prefill_edited_types,
         $reverse_artifact_links,
         $from_aid
     ) {
@@ -659,29 +659,29 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         $matching_ids = $artifact_links_per_tracker->getMatchingIDs();
 
-        return $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_natures, $reverse_artifact_links, false, $from_aid);
+        return $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_types, $reverse_artifact_links, false, $from_aid);
     }
 
-    private function fetchNatureTables(ArtifactLinksToRender $artifact_links_to_render, $is_reverse_artifact_links)
+    private function fetchTypeTables(ArtifactLinksToRender $artifact_links_to_render, $is_reverse_artifact_links)
     {
-        static $nature_tables_cache = [];
-        if (isset($nature_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links])) {
-            return $nature_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links];
+        static $type_tables_cache = [];
+        if (isset($type_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links])) {
+            return $type_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links];
         }
         $html              = '';
         $template_renderer = $this->getTemplateRenderer();
-        foreach ($artifact_links_to_render->getArtifactLinksForPerNatureDisplay() as $artifact_links_per_nature) {
+        foreach ($artifact_links_to_render->getArtifactLinksForPerTypeDisplay() as $artifact_links_per_type) {
             $html .= $template_renderer->renderToString(
-                'artifactlink-nature-table',
-                new NatureTablePresenter(
-                    $artifact_links_per_nature->getNaturePresenter(),
-                    $artifact_links_per_nature->getArtifactLinks(),
+                'artifactlink-type-table',
+                new TypeTablePresenter(
+                    $artifact_links_per_type->getTypePresenter(),
+                    $artifact_links_per_type->getArtifactLinks(),
                     $is_reverse_artifact_links,
                     $this
                 )
             );
         }
-        $nature_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links] = $html;
+        $type_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links] = $html;
         return $html;
     }
 
@@ -713,7 +713,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             case 'fetch-artifacts':
                 $read_only              = false;
                 $prefill_removed_values = [];
-                $prefill_edited_natures = [];
+                $prefill_edited_types   = [];
                 $only_rows              = true;
                 $this_project_id        = $this->getTracker()->getProject()->getGroupId();
                 $is_reverse             = false;
@@ -724,9 +724,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = [];
                 $result  = [];
-                if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                    $nature_shortname = $request->get('nature');
-                    $nature_presenter = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
+                if ($this->getTracker()->isProjectAllowedToUseType()) {
+                    $type_shortname = $request->get('type');
+                    $type_presenter = $this->getTypePresenterFactory()->getFromShortname($type_shortname);
                 }
                 //We must retrieve the last changeset ids of each artifact id.
                 $dao = new Tracker_ArtifactDao();
@@ -736,10 +736,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     $project    = $tracker->getProject();
 
                     if ($tracker->userCanView() && ! $tracker->isDeleted()) {
-                        if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                            $matching_ids['nature'] = [];
+                        if ($this->getTracker()->isProjectAllowedToUseType()) {
+                            $matching_ids['type'] = [];
                             foreach (explode(',', $matching_ids['id']) as $id) {
-                                $matching_ids['nature'][$id] = $nature_presenter;
+                                $matching_ids['type'][$id] = $type_presenter;
                             }
                         }
                         $trf    = Tracker_ReportFactory::instance();
@@ -750,7 +750,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                             foreach ($renderers as $renderer) {
                                 if ($renderer->getType() === Tracker_Report_Renderer::TABLE) {
                                     $key          = $this->id . '_' . $report->id . '_' . $renderer->getId();
-                                    $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $is_reverse, $prefill_removed_values, $prefill_edited_natures, $only_rows);
+                                    $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $is_reverse, $prefill_removed_values, $prefill_edited_types, $only_rows);
                                     $head         = '<div class="tracker-form-element-artifactlink-trackerpanel">';
 
                                     $project_name = '';
@@ -774,7 +774,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     }
                 }
 
-                $this->appendNatureTable($request, $result);
+                $this->appendTypeTable($request, $result);
                 if ($result) {
                     $head = [];
                     $rows = [];
@@ -805,8 +805,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project    = $tracker->getProject();
                     if ($tracker->userCanView()) {
-                        if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                            $matching_ids['nature'] = [];
+                        if ($this->getTracker()->isProjectAllowedToUseType()) {
+                            $matching_ids['type'] = [];
                         }
                         $trf    = Tracker_ReportFactory::instance();
                         $report = $trf->getDefaultReportsByTrackerId($tracker->getId());
@@ -874,7 +874,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     $artifact_links_per_tracker,
                     $renderer_data['read_only'],
                     $renderer_data['prefill_removed_values'],
-                    $renderer_data['prefill_edited_natures'],
+                    $renderer_data['prefill_edited_types'],
                     $renderer_data['reverse_artifact_links'],
                     $renderer_data['from_aid']
                 );
@@ -961,14 +961,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_removed_values = $submitted_value['removed_values'];
         }
 
-        $prefill_nature = '';
-        if (isset($submitted_value['nature'])) {
-            $prefill_nature = $submitted_value['nature'];
+        $prefill_type = '';
+        if (isset($submitted_value['type'])) {
+            $prefill_type = $submitted_value['type'];
         }
 
-        $prefill_edited_natures = [];
-        if (isset($submitted_value['natures'])) {
-            $prefill_edited_natures = $submitted_value['natures'];
+        $prefill_edited_types = [];
+        if (isset($submitted_value['types'])) {
+            $prefill_edited_types = $submitted_value['types'];
         }
 
         $read_only      = false;
@@ -982,8 +982,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $artifact_links_to_render,
             $prefill_new_values,
             $prefill_removed_values,
-            $prefill_nature,
-            $prefill_edited_natures,
+            $prefill_type,
+            $prefill_edited_types,
             $prefill_parent,
             $read_only,
             [],
@@ -1002,7 +1002,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $this,
             $this->getTrackerFactory(),
             Tracker_ReportFactory::instance(),
-            $this->getNaturePresenterFactory(),
+            $this->getTypePresenterFactory(),
             ...$artifact_links
         );
     }
@@ -1016,7 +1016,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $this,
             $this->getTrackerFactory(),
             Tracker_ReportFactory::instance(),
-            $this->getNaturePresenterFactory(),
+            $this->getTypePresenterFactory(),
             ...$reverse_links
         );
     }
@@ -1085,8 +1085,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $name                   = '';
         $prefill_new_values     = '';
         $prefill_removed_values = [];
-        $prefill_nature         = '';
-        $prefill_edited_natures = [];
+        $prefill_type           = '';
+        $prefill_edited_types   = [];
         $prefill_parent         = '';
         $from_aid               = $artifact->getId();
 
@@ -1096,8 +1096,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $artifact_links_to_render,
             $prefill_new_values,
             $prefill_removed_values,
-            $prefill_nature,
-            $prefill_edited_natures,
+            $prefill_type,
+            $prefill_edited_types,
             $prefill_parent,
             $read_only,
             [],
@@ -1125,13 +1125,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         if (isset($submitted_values[$this->getId()]['parent'])) {
             $prefill_parent = $submitted_values[$this->getId()]['parent'];
         }
-        $prefill_nature = '';
-        if (isset($submitted_values[$this->getId()]['nature'])) {
-            $prefill_nature = $submitted_values[$this->getId()]['nature'];
+        $prefill_type = '';
+        if (isset($submitted_values[$this->getId()]['type'])) {
+            $prefill_type = $submitted_values[$this->getId()]['type'];
         }
-        $prefill_edited_natures = [];
-        if (isset($submitted_values[$this->getId()]['natures'])) {
-            $prefill_edited_natures = $submitted_values[$this->getId()]['natures'];
+        $prefill_edited_types = [];
+        if (isset($submitted_values[$this->getId()]['types'])) {
+            $prefill_edited_types = $submitted_values[$this->getId()]['types'];
         }
         $read_only              = false;
         $name                   = 'artifact[' . $this->id . ']';
@@ -1147,7 +1147,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $this,
             $this->getTrackerFactory(),
             Tracker_ReportFactory::instance(),
-            $this->getNaturePresenterFactory(),
+            $this->getTypePresenterFactory(),
             ...$artifact_links
         );
 
@@ -1157,8 +1157,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $artifact_links_to_render,
             $prefill_new_values,
             $prefill_removed_values,
-            $prefill_nature,
-            $prefill_edited_natures,
+            $prefill_type,
+            $prefill_edited_types,
             $prefill_parent,
             $read_only,
             ["tracker_formelement_artifact_link_editable_on_submit"]
@@ -1795,9 +1795,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * @return TypePresenterFactory
      */
-    protected function getNaturePresenterFactory()
+    protected function getTypePresenterFactory()
     {
-        return new TypePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
+        return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
     }
 
     private function getTemplateRenderer()
@@ -1805,22 +1805,22 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
     }
 
-    private function appendNatureTable(Codendi_Request $request, array &$result)
+    private function appendTypeTable(Codendi_Request $request, array &$result)
     {
-        if (! $this->getTracker()->isProjectAllowedToUseNature()) {
+        if (! $this->getTracker()->isProjectAllowedToUseType()) {
             return;
         }
 
-        $nature_shortname = $request->get('nature');
-        if (! $nature_shortname) {
+        $type_shortname = $request->get('type');
+        if (! $type_shortname) {
             return;
         }
 
-        $nature_presenter      = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
-        $key                   = "nature_$nature_shortname";
+        $type_presenter        = $this->getTypePresenterFactory()->getFromShortname($type_shortname);
+        $key                   = "type_$type_shortname";
         $art_factory           = $this->getArtifactFactory();
         $artifact_html_classes = 'additional';
-        $nature_html           = '';
+        $type_html             = '';
         $head_html             = '';
         $ids                   = $request->get('ids');
 
@@ -1828,20 +1828,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $artifact = $art_factory->getArtifactById(trim($id));
 
             if (! is_null($artifact) && $artifact->getTracker()->isActive()) {
-                $nature_html .= $this->getTemplateRenderer()->renderToString(
-                    'artifactlink-nature-table-row',
-                    new ArtifactInNatureTablePresenter($artifact, $artifact_html_classes, $this)
+                $type_html .= $this->getTemplateRenderer()->renderToString(
+                    'artifactlink-type-table-row',
+                    new ArtifactInTypeTablePresenter($artifact, $artifact_html_classes, $this)
                 );
             }
         }
 
-        if ($nature_html !== '') {
+        if ($type_html !== '') {
             $head_html = $this->getTemplateRenderer()->renderToString(
-                'artifactlink-nature-table-head',
-                NatureTablePresenter::buildForHeader($nature_presenter, $this)
+                'artifactlink-type-table-head',
+                TypeTablePresenter::buildForHeader($type_presenter, $this)
             );
 
-            $result[$key] = ['head' => $head_html, 'rows' => $nature_html];
+            $result[$key] = ['head' => $head_html, 'rows' => $type_html];
         } else {
             $result[$key] = [];
         }

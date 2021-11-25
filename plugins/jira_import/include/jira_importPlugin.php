@@ -32,10 +32,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetr
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeValidator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
@@ -78,8 +78,8 @@ final class jira_importPlugin extends Plugin
             static function (): CreateProjectFromJiraCommand {
                 $user_manager = UserManager::instance();
 
-                $nature_dao              = new NatureDao();
-                $nature_validator        = new NatureValidator($nature_dao);
+                $nature_dao              = new TypeDao();
+                $nature_validator        = new TypeValidator($nature_dao);
                 $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
                 return new CreateProjectFromJiraCommand(
@@ -96,7 +96,7 @@ final class jira_importPlugin extends Plugin
                                 $nature_dao,
                                 $artifact_link_usage_dao,
                             ),
-                            new NatureCreator(
+                            new TypeCreator(
                                 $nature_dao,
                                 $nature_validator,
                             ),

@@ -51,7 +51,7 @@ document.observe("dom:loaded", function () {
 
     function initExpandCollapseChildrenInArtifactLinkTable() {
         $$(
-            "#tracker_report_table_nature__is_child > tbody > tr > td.tracker-artifact-rollup-view > a.direct-link-to-artifact"
+            "#tracker_report_table_type__is_child > tbody > tr > td.tracker-artifact-rollup-view > a.direct-link-to-artifact"
         ).each(function (link) {
             initRollupViewOfLink(link, 1);
         });

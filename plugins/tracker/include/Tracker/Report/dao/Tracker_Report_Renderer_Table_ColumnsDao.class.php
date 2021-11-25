@@ -32,20 +32,20 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function create($renderer_id, $field_id, $width, $rank, $artlink_nature, $artlink_nature_format)
+    public function create($renderer_id, $field_id, $width, $rank, $artlink_type, $artlink_type_format)
     {
-        $renderer_id           = $this->da->escapeInt($renderer_id);
-        $field_id              = $this->da->escapeInt($field_id);
-        $width                 = $this->da->escapeInt($width);
-        $artlink_nature        = is_null($artlink_nature) ? 'NULL' : $this->da->quoteSmart($artlink_nature);
-        $artlink_nature_format = is_null($artlink_nature_format) ? 'NULL' : $this->da->quoteSmart($artlink_nature_format);
+        $renderer_id         = $this->da->escapeInt($renderer_id);
+        $field_id            = $this->da->escapeInt($field_id);
+        $width               = $this->da->escapeInt($width);
+        $artlink_type        = is_null($artlink_type) ? 'NULL' : $this->da->quoteSmart($artlink_type);
+        $artlink_type_format = is_null($artlink_type_format) ? 'NULL' : $this->da->quoteSmart($artlink_type_format);
         if (! isset($rank)) {
             $rank = (int) $this->prepareRanking('tracker_report_renderer_table_columns', 0, (int) $renderer_id, 'end', 'field_id', 'renderer_id');
         } else {
             $rank = $this->da->escapeInt($rank);
         }
         $sql = "INSERT INTO tracker_report_renderer_table_columns (renderer_id, field_id, `rank`, width, artlink_nature, artlink_nature_format)
-                     VALUES ($renderer_id, $field_id, $rank, $width, $artlink_nature, $artlink_nature_format)";
+                     VALUES ($renderer_id, $field_id, $rank, $width, $artlink_type, $artlink_type_format)";
 
         return $this->update($sql);
     }

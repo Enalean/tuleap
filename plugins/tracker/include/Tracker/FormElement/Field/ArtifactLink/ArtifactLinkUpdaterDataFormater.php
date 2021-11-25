@@ -74,12 +74,12 @@ class ArtifactLinkUpdaterDataFormater
     ): void {
         $tracker = $artifactlink_field->getTracker();
 
-        if (! $tracker->isProjectAllowedToUseNature()) {
+        if (! $tracker->isProjectAllowedToUseType()) {
             return;
         }
 
         foreach ($elements_to_be_linked as $artifact_id) {
-            $field_datas[$artifactlink_field->getId()]['natures'][$artifact_id] = $type;
+            $field_datas[$artifactlink_field->getId()]['types'][$artifact_id] = $type;
         }
     }
 }

@@ -92,7 +92,7 @@ class TrackerXmlExport
 
         $xml_trackers = $xml_content->addChild('trackers');
 
-        $this->addUsedNature($xml_content, $project);
+        $this->addUsedTypes($xml_content, $project);
         foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[$tracker->getXMLId()] = $tracker;
@@ -115,7 +115,7 @@ class TrackerXmlExport
         $this->validateTrackerExport($xml_trackers);
     }
 
-    private function addUsedNature(SimpleXMLElement $xml, Project $project)
+    private function addUsedTypes(SimpleXMLElement $xml, Project $project)
     {
         $natures    = $xml->addChild('natures');
         $used_types = $this->nature_presenter_factory->getAllTypesEditableInProject($project);
@@ -144,7 +144,7 @@ class TrackerXmlExport
 
         $xml_trackers = $xml_content->addChild('trackers');
 
-        $this->addUsedNature($xml_content, $project);
+        $this->addUsedTypes($xml_content, $project);
         foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[$tracker->getXMLId()] = $tracker;
@@ -164,7 +164,7 @@ class TrackerXmlExport
             $child = $xml_trackers->addChild('tracker');
             $tracker->exportToXML($child, $xml_field_mapping);
 
-            if (isset($tracker) && $tracker->isProjectAllowedToUseNature()) {
+            if (isset($tracker) && $tracker->isProjectAllowedToUseType()) {
                 if (! isset($xml_trackers['use-natures'])) {
                     $xml_trackers->addAttribute('use-natures', 'true');
                 }

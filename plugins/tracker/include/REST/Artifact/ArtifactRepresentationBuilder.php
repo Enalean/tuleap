@@ -29,7 +29,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Alphanum;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
@@ -45,7 +45,7 @@ class ArtifactRepresentationBuilder
     private $artifact_factory;
 
     /**
-     * @var NatureDao
+     * @var TypeDao
      */
     private $nature_dao;
 
@@ -60,7 +60,7 @@ class ArtifactRepresentationBuilder
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactFactory $artifact_factory,
-        NatureDao $nature_dao,
+        TypeDao $nature_dao,
         ChangesetRepresentationBuilder $changeset_representation_builder
     ) {
         $this->formelement_factory              = $formelement_factory;

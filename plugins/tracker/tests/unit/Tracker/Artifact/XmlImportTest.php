@@ -48,7 +48,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPr
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use UserManager;
@@ -228,7 +228,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger(),
             false,
             $this->tracker_artifact_factory,
-            Mockery::mock(NatureDao::class),
+            Mockery::mock(TypeDao::class),
             $this->xml_artifact_source_platform_extractor,
             $this->existing_artifact_source_id_extractor,
             $this->artifact_source_id_dao,
@@ -543,7 +543,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger,
             false,
             $this->tracker_artifact_factory,
-            Mockery::mock(NatureDao::class),
+            Mockery::mock(TypeDao::class),
             $this->xml_artifact_source_platform_extractor,
             $this->existing_artifact_source_id_extractor,
             $this->artifact_source_id_dao,

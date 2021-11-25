@@ -34,7 +34,7 @@ use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
 class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -76,7 +76,7 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
         $xml_fields_mapping        = Mockery::mock(TrackerXmlFieldsMapping::class);
         $artifact_id_mapping       = Mockery::mock(Tracker_XML_Importer_ArtifactImportedMapping::class);
         $tracker_artifact_factory  = Mockery::mock(Tracker_ArtifactFactory::class);
-        $nature_dao                = Mockery::mock(NatureDao::class);
+        $nature_dao                = Mockery::mock(TypeDao::class);
 
         $this->tracker->shouldReceive('getId')->andReturn(111);
 

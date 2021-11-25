@@ -36,7 +36,7 @@ class ArtifactLinkValidator
     /**
      * @var TypePresenterFactory
      */
-    private $nature_presenter_factory;
+    private $type_presenter_factory;
     /**
      * @var ArtifactLinksUsageDao
      */
@@ -44,12 +44,12 @@ class ArtifactLinkValidator
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
-        TypePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $type_presenter_factory,
         ArtifactLinksUsageDao $dao
     ) {
-        $this->artifact_factory         = $artifact_factory;
-        $this->nature_presenter_factory = $nature_presenter_factory;
-        $this->dao                      = $dao;
+        $this->artifact_factory       = $artifact_factory;
+        $this->type_presenter_factory = $type_presenter_factory;
+        $this->dao                    = $dao;
     }
 
     /**
@@ -204,7 +204,7 @@ class ArtifactLinkValidator
         Tracker_FormElement_Field_ArtifactLink $field,
         ArtifactLinkValidationContext $context
     ): bool {
-        if ($artifact->getTracker()->isProjectAllowedToUseNature() === false || ! isset($value['natures'])) {
+        if ($artifact->getTracker()->isProjectAllowedToUseType() === false || ! isset($value['types'])) {
             return true;
         }
 
@@ -212,9 +212,9 @@ class ArtifactLinkValidator
         $editable_link_types       = $this->getEditableLinkShortnames($project);
         $used_types_by_artifact_id = $this->getUsedTypeShortnameByArtifactID($artifact, $field);
 
-        foreach ($value['natures'] as $artifact_id => $nature_shortname) {
-            $nature = $this->nature_presenter_factory->getFromShortname($nature_shortname);
-            if (! $nature) {
+        foreach ($value['types'] as $artifact_id => $type_shortname) {
+            $type = $this->type_presenter_factory->getFromShortname($type_shortname);
+            if (! $type) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
                     sprintf(dgettext('tuleap-tracker', 'Type is missing for artifact #%1$s.'), $artifact->getId())
@@ -223,7 +223,7 @@ class ArtifactLinkValidator
                 return false;
             }
 
-            if ($this->dao->isTypeDisabledInProject((int) $artifact->getTracker()->getProject()->getID(), $nature_shortname)) {
+            if ($this->dao->isTypeDisabledInProject((int) $artifact->getTracker()->getProject()->getID(), $type_shortname)) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
                     sprintf(
@@ -231,7 +231,7 @@ class ArtifactLinkValidator
                             'tuleap-tracker',
                             'The artifact link type "%s" is disabled and cannot be used to link artifact #%s'
                         ),
-                        $nature_shortname,
+                        $type_shortname,
                         $artifact_id
                     )
                 );
@@ -239,8 +239,8 @@ class ArtifactLinkValidator
                 return false;
             }
 
-            $is_an_editable_link_type      = $nature_shortname === '' || isset($editable_link_types[$nature_shortname]);
-            $is_an_unchanged_existing_link = isset($used_types_by_artifact_id[(int) $artifact_id]) && $used_types_by_artifact_id[(int) $artifact_id] === $nature_shortname;
+            $is_an_editable_link_type      = $type_shortname === '' || isset($editable_link_types[$type_shortname]);
+            $is_an_unchanged_existing_link = isset($used_types_by_artifact_id[(int) $artifact_id]) && $used_types_by_artifact_id[(int) $artifact_id] === $type_shortname;
             if (! $context->isSystemAction() && ! $is_an_editable_link_type && ! $is_an_unchanged_existing_link) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
@@ -249,7 +249,7 @@ class ArtifactLinkValidator
                             'tuleap-tracker',
                             'The artifact link type "%s" cannot be used to link artifact #%s manually'
                         ),
-                        $nature_shortname,
+                        $type_shortname,
                         $artifact_id
                     )
                 );
@@ -266,7 +266,7 @@ class ArtifactLinkValidator
      */
     private function getEditableLinkShortnames(\Project $project): array
     {
-        $editable_link_types = $this->nature_presenter_factory->getAllTypesEditableInProject($project);
+        $editable_link_types = $this->type_presenter_factory->getAllTypesEditableInProject($project);
 
         $editable_link_types_shortnames = [];
 
@@ -296,7 +296,7 @@ class ArtifactLinkValidator
         $used_types_by_artifact_id = [];
 
         foreach ($all_art_links as $artifact_id => $art_link_info) {
-            $used_types_by_artifact_id[(int) $artifact_id] = $art_link_info->getNature();
+            $used_types_by_artifact_id[(int) $artifact_id] = $art_link_info->getType();
         }
 
         return $used_types_by_artifact_id;

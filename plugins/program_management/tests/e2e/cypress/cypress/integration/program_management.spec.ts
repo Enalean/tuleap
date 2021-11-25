@@ -137,7 +137,7 @@ function planFeatureIntoProgramIncrement(
 
     cy.get("[data-test=edit-field-link]").click();
     cy.get("[data-test=artifact-link-submit]").type(user_story_id);
-    cy.get("[data-test=artifact-link-nature-selector]").select("_is_child");
+    cy.get("[data-test=artifact-link-type-selector]").select("_is_child");
     cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 

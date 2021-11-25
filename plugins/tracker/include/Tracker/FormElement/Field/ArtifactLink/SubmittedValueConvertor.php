@@ -81,7 +81,7 @@ class SubmittedValueConvertor
         if ($previous_changesetvalue != null) {
             $list_of_artifactlinkinfo = $previous_changesetvalue->getValue();
             $this->removeLinksFromSubmittedValue($list_of_artifactlinkinfo, $submitted_value);
-            $this->changeNatureOfExistingLinks($list_of_artifactlinkinfo, $submitted_value);
+            $this->changeTypeOfExistingLinks($list_of_artifactlinkinfo, $submitted_value);
         }
         $this->addLinksFromSubmittedValue($list_of_artifactlinkinfo, $submitted_value);
 
@@ -109,20 +109,20 @@ class SubmittedValueConvertor
      * @param Tracker_ArtifactLinkInfo[] $list_of_artifactlinkinfo
      * @param array $submitted_value
      */
-    private function changeNatureOfExistingLinks(
+    private function changeTypeOfExistingLinks(
         array &$list_of_artifactlinkinfo,
         array $submitted_value
     ) {
-        $natures = $this->extractNaturesFromSubmittedValue($submitted_value);
+        $types = $this->extractTypesFromSubmittedValue($submitted_value);
 
-        if (empty($natures)) {
+        if (empty($types)) {
             return;
         }
 
         foreach ($list_of_artifactlinkinfo as $id => $artifactlinkinfo) {
-            if (isset($natures[$id]) && $artifactlinkinfo->getNature() != $natures[$id]) {
+            if (isset($types[$id]) && $artifactlinkinfo->getType() != $types[$id]) {
                 $list_of_artifactlinkinfo[$id] = clone $artifactlinkinfo;
-                $list_of_artifactlinkinfo[$id]->setNature($natures[$id]);
+                $list_of_artifactlinkinfo[$id]->setType($types[$id]);
             }
         }
     }
@@ -132,7 +132,7 @@ class SubmittedValueConvertor
         $new_values = $this->extractNewValuesFromSubmittedValue($submitted_value);
 
         foreach ($new_values as $new_artifact_id) {
-            $nature = $this->extractNatureFromSubmittedValue($submitted_value, $new_artifact_id);
+            $type = $this->extractTypeFromSubmittedValue($submitted_value, $new_artifact_id);
             if (isset($list_of_artifactlinkinfo[$new_artifact_id])) {
                 continue;
             }
@@ -143,17 +143,17 @@ class SubmittedValueConvertor
             }
             $list_of_artifactlinkinfo[$new_artifact_id] = Tracker_ArtifactLinkInfo::buildFromArtifact(
                 $artifact,
-                $nature
+                $type
             );
         }
     }
 
-    private function extractNatureFromSubmittedValue(array $submitted_value, $artifact_id): string
+    private function extractTypeFromSubmittedValue(array $submitted_value, $artifact_id): string
     {
-        if (isset($submitted_value['natures'])) {
-            $natures = $submitted_value['natures'];
-            if (isset($natures[$artifact_id])) {
-                return $natures[$artifact_id];
+        if (isset($submitted_value['types'])) {
+            $types = $submitted_value['types'];
+            if (isset($types[$artifact_id])) {
+                return $types[$artifact_id];
             }
         }
 
@@ -174,9 +174,9 @@ class SubmittedValueConvertor
         return $this->extractArrayFromSubmittedValue($submitted_value, 'removed_values');
     }
 
-    private function extractNaturesFromSubmittedValue(array $submitted_value)
+    private function extractTypesFromSubmittedValue(array $submitted_value)
     {
-        return $this->extractArrayFromSubmittedValue($submitted_value, 'natures');
+        return $this->extractArrayFromSubmittedValue($submitted_value, 'types');
     }
 
     private function extractArrayFromSubmittedValue(array $submitted_value, $key)

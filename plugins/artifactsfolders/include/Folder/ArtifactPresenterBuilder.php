@@ -23,15 +23,15 @@ namespace Tuleap\ArtifactsFolders\Folder;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
+use Tuleap\ArtifactsFolders\Type\TypeInFolderPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 
 class ArtifactPresenterBuilder
 {
     /**
-     * @var NatureDao
+     * @var TypeDao
      */
     private $nature_dao;
 
@@ -46,14 +46,14 @@ class ArtifactPresenterBuilder
     private $hierarchy_builder;
 
     /**
-     * @var NatureIsChildLinkRetriever
+     * @var TypeIsChildLinkRetriever
      */
     private $child_link_retriever;
 
     public function __construct(
         HierarchyOfFolderBuilder $hierarchy_builder,
-        NatureDao $nature_dao,
-        NatureIsChildLinkRetriever $child_link_retriever,
+        TypeDao $nature_dao,
+        TypeIsChildLinkRetriever $child_link_retriever,
         Tracker_ArtifactFactory $artifact_factory
     ) {
         $this->nature_dao           = $nature_dao;
@@ -94,7 +94,7 @@ class ArtifactPresenterBuilder
     {
         $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
             $folder->getId(),
-            TypeInFolderPresenter::NATURE_IN_FOLDER,
+            TypeInFolderPresenter::TYPE_IN_FOLDER,
             PHP_INT_MAX,
             0
         );

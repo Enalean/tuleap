@@ -89,7 +89,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -108,7 +108,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
 
         $this->field->augmentDataFromRequest($fields_data);
 
@@ -126,7 +126,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -134,30 +134,30 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($new_values, $fields_data[$this->art_link_id]['new_values']);
     }
 
-    public function testAddsLinkWithNature(): void
+    public function testAddsLinkWithType(): void
     {
         $new_values  = '356';
-        $nature      = '_is_child';
+        $type        = '_is_child';
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => $new_values,
-                'nature'     => $nature
+                'type'       => $type
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals(['356' => '_is_child'], $fields_data[$this->art_link_id]['natures']);
+        $this->assertEquals(['356' => '_is_child'], $fields_data[$this->art_link_id]['types']);
     }
 
     public function testDoesNotAddPropertiesIfNoParentAndNoNewValues(): void
     {
         $fields_data = [];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -170,11 +170,11 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => '356,357',
-                'nature'     => '_is_parent'
+                'type'       => '_is_parent'
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -182,7 +182,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 'new_values' => '',
-                'nature'     => '',
+                'type'       => '',
                 'parent'     => [356, 357]
             ],
             $fields_data[$this->art_link_id]
@@ -194,8 +194,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => '',
-                'nature'     => '',
-                'natures' => [
+                'type' => '',
+                'types' => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                     '345' => '_is_parent',
@@ -204,7 +204,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -212,8 +212,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 'new_values' => '',
-                'nature'     => '',
-                'natures'    => [
+                'type'     => '',
+                'types'    => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                 ],
@@ -232,8 +232,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => '356,357',
-                'nature'     => '_is_parent',
-                'natures' => [
+                'type' => '_is_parent',
+                'types' => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                     '345' => '_is_parent',
@@ -242,7 +242,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -250,8 +250,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 'new_values' => '',
-                'nature'     => '',
-                'natures'    => [
+                'type'       => '',
+                'types'      => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                 ],
@@ -270,8 +270,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => '',
-                'nature'     => '',
-                'natures' => [
+                'type' => '',
+                'types' => [
                     '456' => '_is_parent',
                 ],
                 'removed_values' => [
@@ -280,7 +280,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
@@ -288,8 +288,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 'new_values' => '',
-                'nature'     => '',
-                'natures' => [],
+                'type' => '',
+                'types' => [],
                 'removed_values' => [
                     '456' => ['456']
                 ]

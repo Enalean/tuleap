@@ -3822,7 +3822,7 @@
       <code>getDao</code>
       <code>getHierarchyOfFolderBuilder</code>
       <code>getHooksAndCallbacks</code>
-      <code>getNatureIsChildLinkRetriever</code>
+      <code>getTypeIsChildLinkRetriever</code>
       <code>getPresenterBuilder</code>
       <code>get_post_save_new_changeset_queue</code>
       <code>hide_artifact</code>
@@ -3833,7 +3833,7 @@
       <code>tracker_artifact_editrenderer_add_view_in_collection</code>
       <code>tracker_artifact_link_can_be_unused</code>
       <code>tracker_get_editable_type_in_project</code>
-      <code>tracker_is_nature_valid</code>
+      <code>tracker_is_type_valid</code>
       <code>tracker_xml_import_artifact_link_can_be_disabled</code>
     </MissingReturnType>
   </file>
@@ -32989,13 +32989,13 @@
       <code>$direction</code>
     </MissingParamType>
     <MissingReturnType occurrences="3">
-      <code>formatNature</code>
-      <code>getForwardNatures</code>
-      <code>getReverseNatures</code>
+      <code>formatType</code>
+      <code>getForwardTypes</code>
+      <code>getReverseTypes</code>
     </MissingReturnType>
     <PossiblyNullArgument occurrences="2">
-      <code>$nature</code>
-      <code>$nature</code>
+      <code>$type</code>
+      <code>$type</code>
     </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactMatchingReportCollection.php">
@@ -33053,13 +33053,13 @@
       <code>getTrackerById</code>
       <code>options</code>
       <code>optionsArtifactChangesets</code>
-      <code>optionsArtifactLinkNatures</code>
+      <code>optionsArtifactLinkTypes</code>
       <code>optionsId</code>
       <code>optionsLinkedArtifacts</code>
       <code>putId</code>
       <code>sendAllowHeadersForArtifact</code>
       <code>sendAllowHeadersForChangesets</code>
-      <code>sendAllowHeadersForLinkNatures</code>
+      <code>sendAllowHeadersForLinkTypes</code>
       <code>sendAllowHeadersForLinkedArtifacts</code>
       <code>sendETagHeader</code>
       <code>sendLastModifiedHeader</code>
@@ -33776,7 +33776,7 @@
       <code>getEmailDomain</code>
       <code>getErrors</code>
       <code>getLastModifiedBy</code>
-      <code>getNatureIsChildLinkRetriever</code>
+      <code>getTypeIsChildLinkRetriever</code>
       <code>getPriorityHistory</code>
       <code>getProjectId</code>
       <code>getRestUri</code>
@@ -34269,7 +34269,7 @@
       <code>execute</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ChangesetValue/ArtifactLink/AddedLinkByNatureCollection.php">
+  <file src="plugins/tracker/include/Tracker/Artifact/ChangesetValue/ArtifactLink/AddedLinkByTypeCollection.php">
     <MissingParamType occurrences="2">
       <code>$format</code>
       <code>$ignore_perms</code>
@@ -34301,7 +34301,7 @@
       <code>add</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ChangesetValue/ArtifactLink/UpdatedNatureLinkCollection.php">
+  <file src="plugins/tracker/include/Tracker/Artifact/ChangesetValue/ArtifactLink/UpdatedTypeLinkCollection.php">
     <MissingParamType occurrences="2">
       <code>$format</code>
       <code>$ignore_perms</code>
@@ -34856,7 +34856,7 @@
       <code>$tracker-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="2">
-      <code>$nature</code>
+      <code>$type</code>
       <code>$tracker_id</code>
     </MissingParamType>
     <MissingPropertyType occurrences="5">
@@ -34868,7 +34868,7 @@
     </MissingPropertyType>
     <MissingReturnType occurrences="3">
       <code>getUrl</code>
-      <code>setNature</code>
+      <code>setType</code>
       <code>shouldLinkBeHidden</code>
     </MissingReturnType>
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -35033,7 +35033,7 @@
     <MissingReturnType occurrences="4">
       <code>getArtifactIds</code>
       <code>getArtifactLinkDiff</code>
-      <code>getNaturePresenterFactory</code>
+      <code>getTypePresenterFactory</code>
       <code>setCurrentUserIfUserIsNotDefined</code>
     </MissingReturnType>
   </file>
@@ -35045,18 +35045,18 @@
     </MissingParamType>
     <MissingReturnType occurrences="5">
       <code>fetchFormatted</code>
-      <code>fillAddedByNature</code>
-      <code>fillUpdatedByNature</code>
-      <code>getNatureFormChangesets</code>
+      <code>fillAddedByType</code>
+      <code>fillUpdatedByType</code>
+      <code>getTypeFormChangesets</code>
       <code>groupFormattedMessages</code>
     </MissingReturnType>
     <PossiblyNullArgument occurrences="2">
-      <code>$next_nature</code>
-      <code>$previous_nature</code>
+      <code>$next_type</code>
+      <code>$previous_type</code>
     </PossiblyNullArgument>
     <PossiblyNullPropertyFetch occurrences="2">
-      <code>$next_nature-&gt;shortname</code>
-      <code>$previous_nature-&gt;shortname</code>
+      <code>$next_type-&gt;shortname</code>
+      <code>$previous_type-&gt;shortname</code>
     </PossiblyNullPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Date.class.php">
@@ -35591,15 +35591,15 @@
     <MissingParamType occurrences="6">
       <code>$children_id</code>
       <code>$linked_artifact_id</code>
-      <code>$linked_nature</code>
+      <code>$linked_type</code>
       <code>$mapped_artifact_id</code>
-      <code>$nature</code>
+      <code>$type</code>
       <code>$tracker_id</code>
     </MissingParamType>
     <MissingReturnType occurrences="6">
-      <code>checkNatureExistOnPlateform</code>
+      <code>checkTypeExistOnPlateform</code>
       <code>extractArtifactLinkFromXml</code>
-      <code>getNatureFromMappedArtifact</code>
+      <code>getTypeFromMappedArtifact</code>
       <code>isLinkValid</code>
       <code>removeValuesIfDontExistInLastChangeset</code>
       <code>retrieveSystemTypes</code>
@@ -36107,17 +36107,6 @@
       <code>redirect</code>
       <code>revokeProject</code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Config/SectionsPresenter.php">
-    <MissingPropertyType occurrences="7">
-      <code>$artifacts_deletion_url</code>
-      <code>$emailgateway</code>
-      <code>$emailgateway_url</code>
-      <code>$natures</code>
-      <code>$natures_url</code>
-      <code>$report_config_panel</code>
-      <code>$report_config_url</code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/Tracker/ConfigNotificationAssignedTo.php">
     <MissingReturnType occurrences="2">
@@ -36645,7 +36634,7 @@
       <code>$group_id</code>
       <code>$keyword</code>
       <code>$keyword</code>
-      <code>$nature</code>
+      <code>$type</code>
       <code>$oldKeyword</code>
       <code>$to</code>
       <code>$tracker_id</code>
@@ -36673,7 +36662,7 @@
       <code>canLinkArtifacts</code>
       <code>getAddedArtifactIds</code>
       <code>getArtifactIdsToLink</code>
-      <code>getNature</code>
+      <code>getType</code>
       <code>getTypeDefinedByPlugin</code>
       <code>getRemovedArtifactIds</code>
       <code>insertCrossReference</code>
@@ -36696,18 +36685,18 @@
     </MissingParamType>
     <MissingPropertyType occurrences="6">
       <code>$can_user_artifact_link_cache</code>
-      <code>$grouped_by_nature_with_presenter</code>
+      <code>$grouped_by_type_with_presenter</code>
       <code>$grouped_by_project_then_tracker</code>
       <code>$has_artifact_to_display</code>
-      <code>$nature_presenter_cache</code>
-      <code>$this-&gt;nature_presenter_cache</code>
+      <code>$type_presenter_cache</code>
+      <code>$this-&gt;type_presenter_cache</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="6">
-      <code>getArtifactLinksForPerNatureDisplay</code>
+      <code>getArtifactLinksForPerTypeDisplay</code>
       <code>getArtifactLinksForPerTrackerDisplay</code>
       <code>getMatchingIDs</code>
       <code>groupAndEnhanceMatchingIDsPerProject</code>
-      <code>groupPerNatureWithPresenter</code>
+      <code>groupPerTypeWithPresenter</code>
       <code>hasArtifactLinksToDisplay</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset occurrences="2">
@@ -36721,14 +36710,14 @@
     </MissingParamType>
     <MissingReturnType occurrences="6">
       <code>buildFieldDataFromREST</code>
-      <code>formatNaturesLikeWebUI</code>
+      <code>formatTypesLikeWebUI</code>
       <code>formatNewValuesLikeWebUI</code>
       <code>formatRemovedValuesLikeWebUI</code>
       <code>getArrayOfIdsFromString</code>
       <code>getDataLikeWebUI</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ArtifactInNatureTablePresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
     <MissingParamType occurrences="2">
       <code>$html_classes</code>
       <code>$value</code>
@@ -36816,7 +36805,7 @@
       <code>$format</code>
       <code>$format</code>
       <code>$matching_field_names</code>
-      <code>$nature</code>
+      <code>$type</code>
     </MissingParamType>
     <MissingReturnType occurrences="3">
       <code>fetchFormattedValue</code>
@@ -36827,7 +36816,7 @@
       <code>getLastChangeset</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureConfigController.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeConfigController.php">
     <MissingParamType occurrences="1">
       <code>$title</code>
     </MissingParamType>
@@ -36836,9 +36825,9 @@
       <code>$URL</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="4">
-      <code>createNature</code>
-      <code>deleteNature</code>
-      <code>editNature</code>
+      <code>createType</code>
+      <code>deleteType</code>
+      <code>editType</code>
       <code>index</code>
     </MissingReturnType>
     <UndefinedMethod occurrences="3">
@@ -36847,28 +36836,28 @@
       <code>redirect</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureConfigPresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeConfigPresenter.php">
     <MissingParamType occurrences="1">
       <code>$title</code>
     </MissingParamType>
     <MissingPropertyType occurrences="26">
-      <code>$available_natures</code>
+      <code>$available_types</code>
       <code>$btn_close</code>
       <code>$btn_submit</code>
-      <code>$create_new_nature</code>
+      <code>$create_new_type</code>
       <code>$csrf_token</code>
       <code>$delete_modal_content</code>
       <code>$delete_modal_submit</code>
       <code>$delete_modal_title</code>
       <code>$desc</code>
       <code>$edit_icon_label</code>
-      <code>$edit_nature</code>
-      <code>$edit_system_nature_title</code>
+      <code>$edit_type</code>
+      <code>$edit_system_type_title</code>
       <code>$forward_label_help</code>
       <code>$forward_label_label</code>
       <code>$forward_label_placeholder</code>
-      <code>$has_natures</code>
-      <code>$natures_usage</code>
+      <code>$has_types</code>
+      <code>$types_usage</code>
       <code>$reverse_label_help</code>
       <code>$reverse_label_label</code>
       <code>$reverse_label_placeholder</code>
@@ -36882,10 +36871,10 @@
     <UndefinedThisPropertyAssignment occurrences="3">
       <code>$this-&gt;cannot_delete_title</code>
       <code>$this-&gt;delete_icon_label</code>
-      <code>$this-&gt;no_natures</code>
+      <code>$this-&gt;no_types</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureDao.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeDao.php">
     <MissingParamType occurrences="25">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -36896,9 +36885,9 @@
       <code>$forward_label</code>
       <code>$limit</code>
       <code>$limit</code>
-      <code>$nature</code>
-      <code>$nature</code>
-      <code>$nature</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$type</code>
       <code>$offset</code>
       <code>$offset</code>
       <code>$project_id</code>
@@ -36916,26 +36905,26 @@
     <MissingReturnType occurrences="16">
       <code>create</code>
       <code>delete</code>
-      <code>deleteNatureInTableColumns</code>
+      <code>deleteTypeInTableColumns</code>
       <code>edit</code>
       <code>getForwardLinkedArtifactIds</code>
       <code>getFromShortname</code>
-      <code>getNatureByShortname</code>
+      <code>getTypeByShortname</code>
       <code>getReverseLinkedArtifactIds</code>
-      <code>getUsedNatures</code>
+      <code>getUsedTypes</code>
       <code>hasReverseLinkedArtifacts</code>
       <code>isOrHasBeenUsed</code>
       <code>purgeDeletedTypeInArtifactLinkTypeUsage</code>
       <code>searchAll</code>
       <code>searchAllUsedTypesByProject</code>
-      <code>searchForwardNatureShortNamesForGivenArtifact</code>
-      <code>searchReverseNatureShortNamesForGivenArtifact</code>
+      <code>searchForwardTypeShortNamesForGivenArtifact</code>
+      <code>searchReverseTypeShortNamesForGivenArtifact</code>
     </MissingReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureDeletor.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeDeletor.php">
     <MissingParamType occurrences="1">
       <code>$shortname</code>
     </MissingParamType>
@@ -36943,7 +36932,7 @@
       <code>delete</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureEditor.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeEditor.php">
     <MissingParamType occurrences="3">
       <code>$forward_label</code>
       <code>$reverse_label</code>
@@ -36953,7 +36942,7 @@
       <code>edit</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureIsChildLinkRetriever.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeIsChildLinkRetriever.php">
     <InvalidReturnStatement occurrences="1">
       <code>$parents</code>
     </InvalidReturnStatement>
@@ -36980,7 +36969,7 @@
       <code>instantiateFromRow</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureSelectorPresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeSelectorPresenter.php">
     <MissingParamType occurrences="2">
       <code>$select_classes</code>
       <code>$select_name</code>
@@ -36990,11 +36979,11 @@
       <code>$select_name</code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureTablePresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeTablePresenter.php">
     <MissingParamType occurrences="3">
       <code>$is_reverse_artifact_links</code>
       <code>$is_reverse_artifact_links</code>
-      <code>$nature</code>
+      <code>$type</code>
     </MissingParamType>
     <MissingPropertyType occurrences="14">
       <code>$artifact_links</code>
@@ -37002,8 +36991,8 @@
       <code>$id_label</code>
       <code>$last_update_label</code>
       <code>$mass_unlink_title</code>
-      <code>$nature</code>
-      <code>$nature_label</code>
+      <code>$type</code>
+      <code>$type_label</code>
       <code>$project_label</code>
       <code>$status_label</code>
       <code>$submitted_by_label</code>
@@ -37020,7 +37009,7 @@
       <code>$artifact</code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureUsagePresenter.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeUsagePresenter.php">
     <MissingParamType occurrences="2">
       <code>$is_or_has_been_used</code>
       <code>$is_used</code>
@@ -37030,7 +37019,7 @@
       <code>setIsUsed</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/NatureValidator.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeValidator.php">
     <MissingParamType occurrences="4">
       <code>$forward_label</code>
       <code>$reverse_label</code>
@@ -37090,9 +37079,9 @@
     </MissingParamType>
     <MissingReturnType occurrences="7">
       <code>addLinksFromSubmittedValue</code>
-      <code>changeNatureOfExistingLinks</code>
+      <code>changeTypeOfExistingLinks</code>
       <code>extractArrayFromSubmittedValue</code>
-      <code>extractNaturesFromSubmittedValue</code>
+      <code>extractTypesFromSubmittedValue</code>
       <code>extractNewValuesFromSubmittedValue</code>
       <code>extractRemovedValuesFromSubmittedValue</code>
       <code>removeLinksFromSubmittedValue</code>
@@ -38518,11 +38507,11 @@
       <code>$from_aid</code>
       <code>$id</code>
       <code>$is_reverse_artifact_links</code>
-      <code>$nature</code>
-      <code>$nature</code>
-      <code>$prefill_edited_natures</code>
-      <code>$prefill_edited_natures</code>
-      <code>$prefill_nature</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$prefill_edited_types</code>
+      <code>$prefill_edited_types</code>
+      <code>$prefill_type</code>
       <code>$prefill_removed_values</code>
       <code>$read_only</code>
       <code>$report</code>
@@ -38537,16 +38526,16 @@
     </MissingParamType>
     <MissingReturnType occurrences="24">
       <code>accept</code>
-      <code>appendNatureTable</code>
+      <code>appendTypeTable</code>
       <code>buildMatchExpression</code>
       <code>cast</code>
       <code>fetchArtifactForOverlay</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
-      <code>fetchCSVChangesetValueWithNature</code>
-      <code>fetchChangesetValueForNature</code>
+      <code>fetchCSVChangesetValueWithType</code>
+      <code>fetchChangesetValueForType</code>
       <code>fetchLinks</code>
       <code>fetchLinksReadOnly</code>
-      <code>fetchNatureTables</code>
+      <code>fetchTypeTables</code>
       <code>fetchRendererAsArtifactLink</code>
       <code>fetchReverseLinks</code>
       <code>fetchSubmitForOverlay</code>
@@ -38566,13 +38555,13 @@
       <code>$value</code>
     </MoreSpecificImplementedParamType>
     <PossiblyNullArgument occurrences="1">
-      <code>$nature_presenter</code>
+      <code>$type_presenter</code>
     </PossiblyNullArgument>
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
     <PossiblyUndefinedVariable occurrences="1">
-      <code>$nature_presenter</code>
+      <code>$type_presenter</code>
     </PossiblyUndefinedVariable>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $this-&gt;getId()</code>
@@ -44541,7 +44530,7 @@
       <code>$id_suffix</code>
       <code>$is_desc</code>
       <code>$is_first</code>
-      <code>$is_nature_col</code>
+      <code>$is_type_col</code>
       <code>$is_reverse</code>
       <code>$key</code>
       <code>$link_artifact_id</code>
@@ -44556,8 +44545,8 @@
       <code>$only_one_column</code>
       <code>$only_one_column</code>
       <code>$only_rows</code>
-      <code>$prefill_natures</code>
-      <code>$prefill_natures</code>
+      <code>$prefill_types</code>
+      <code>$prefill_types</code>
       <code>$prefill_removed_values</code>
       <code>$read_only</code>
       <code>$read_only</code>
@@ -44633,7 +44622,7 @@
       <code>getExportResultURL</code>
       <code>getField</code>
       <code>getFieldFactory</code>
-      <code>getFieldWhenUsingNatures</code>
+      <code>getFieldWhenUsingTypes</code>
       <code>getJavascriptDependencies</code>
       <code>getPagerButton</code>
       <code>getSortDao</code>
@@ -45065,8 +45054,8 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Renderer_Table_ColumnsDao.class.php">
     <MissingParamType occurrences="19">
-      <code>$artlink_nature</code>
-      <code>$artlink_nature_format</code>
+      <code>$artlink_type</code>
+      <code>$artlink_type_format</code>
       <code>$field_id</code>
       <code>$field_id</code>
       <code>$field_id</code>
@@ -45958,7 +45947,7 @@
       <code>$formElements</code>
       <code>$group_id</code>
       <code>$id</code>
-      <code>$is_project_allowed_to_use_nature</code>
+      <code>$is_project_allowed_to_use_type</code>
       <code>$item_name</code>
       <code>$name</code>
       <code>$notifications_level</code>
@@ -47394,7 +47383,7 @@
     </MissingParamType>
     <MissingReturnType occurrences="12">
       <code>addTypeChild</code>
-      <code>addUsedNature</code>
+      <code>addUsedTypes</code>
       <code>exportMapping</code>
       <code>exportSingleTrackerBunchOfArtifactsToXml</code>
       <code>exportSingleTrackerToXml</code>
@@ -48616,7 +48605,7 @@
       <code>burningParrotCompatiblePage</code>
       <code>burning_parrot_get_stylesheets</code>
       <code>can_user_access_ugroup_info</code>
-      <code>checkNaturesExistsOnPlateform</code>
+      <code>checkTypesExistsOnPlateform</code>
       <code>clearRecentlyVisitedArtifacts</code>
       <code>collectGlyphLocations</code>
       <code>collectRoutesEvent</code>
@@ -48631,7 +48620,7 @@
       <code>getArtifactFactory</code>
       <code>getHistoryEntryCollection</code>
       <code>getHooksAndCallbacks</code>
-      <code>getNatureDao</code>
+      <code>getTypeDao</code>
       <code>getObjectTypeFromPermissions</code>
       <code>getPluginInfo</code>
       <code>getProjectManager</code>
@@ -48691,7 +48680,7 @@
     </PossiblyNullArgument>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$params</code>
-      <code>$plateform_natures</code>
+      <code>$platform_types</code>
     </PossiblyUndefinedVariable>
     <UndefinedMethod occurrences="1">
       <code>getText</code>

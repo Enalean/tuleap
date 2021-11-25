@@ -185,20 +185,20 @@ codendi.tracker.artifact.artifactLink = {
                 })
                 .join(",");
             if (ids) {
-                var nature_select = codendi.tracker.artifact.artifactLinker_currentField.down(
+                var type_select = codendi.tracker.artifact.artifactLinker_currentField.down(
                     "select.tracker-form-element-artifactlink-new"
                 );
-                var nature = "";
-                if (nature_select) {
-                    nature = nature_select.value;
+                var type = "";
+                if (type_select) {
+                    type = type_select.value;
                 }
                 //eslint-disable-next-line @typescript-eslint/no-unused-vars
                 var req = new Ajax.Request(codendi.tracker.base_url + "?", {
                     parameters: {
                         formElement: codendi.tracker.artifact.artifactLinker_currentField_id,
                         func: "fetch-artifacts",
-                        ids: ids,
-                        nature: nature,
+                        ids,
+                        type,
                     },
                     onSuccess: function (transport) {
                         if (transport.responseJSON) {
@@ -227,10 +227,10 @@ codendi.tracker.artifact.artifactLink = {
                                         var current_tab = first_list.down(
                                             "li.tracker-form-element-artifactlink-list-nav-current"
                                         );
-                                        if (pair.key.includes("nature")) {
+                                        if (pair.key.includes("type")) {
                                             codendi.tracker.artifact.artifactLink.tabs[
                                                 tabs_id
-                                            ].loadNatureTab(
+                                            ].loadTypeTab(
                                                 list.childElements().last().down("h2"),
                                                 first_list
                                             );
@@ -379,11 +379,11 @@ codendi.tracker.artifact.artifactLink = {
             if (this.ul) {
                 artifact_link.insert({ top: this.ul });
 
-                this.natureLabel = new Element("li").update(
-                    codendi.getText("tracker_artifact_link", "nature_label") + ":"
+                this.type_label = new Element("li").update(
+                    codendi.getText("tracker_artifact_link", "type_label") + ":"
                 );
-                this.natureLabel.addClassName("tracker-form-element-artifactlink-list-nav-label");
-                this.natureLabel.hide();
+                this.type_label.addClassName("tracker-form-element-artifactlink-list-nav-label");
+                this.type_label.hide();
 
                 this.trackerLabel = new Element("li").update(
                     codendi.getText("tracker_artifact_link", "trackers_label") + ":"
@@ -391,17 +391,17 @@ codendi.tracker.artifact.artifactLink = {
                 this.trackerLabel.addClassName("tracker-form-element-artifactlink-list-nav-label");
                 this.trackerLabel.hide();
 
-                this.ul.appendChild(this.natureLabel);
+                this.ul.appendChild(this.type_label);
                 this.ul.appendChild(this.trackerLabel);
             }
 
-            var natureTabs = artifact_link.select(
-                'h2[class*="tracker-form-element-artifactlink-nature"]'
+            var type_tabs = artifact_link.select(
+                'h2[class*="tracker-form-element-artifactlink-type"]'
             );
-            if (natureTabs.length > 0) {
-                this.natureLabel.show();
-                natureTabs.each(function (obj) {
-                    self.loadNatureTab(obj);
+            if (type_tabs.length > 0) {
+                this.type_label.show();
+                type_tabs.each(function (obj) {
+                    self.loadTypeTab(obj);
                 });
             }
 
@@ -451,11 +451,11 @@ codendi.tracker.artifact.artifactLink = {
             this.trackerLabel.show();
             this.loadTabAfter(h2, tab_list, tab_list.childElements().last());
         },
-        loadNatureTab: function (h2, tab_list) {
+        loadTypeTab: function (h2, tab_list) {
             if (typeof tab_list === "undefined") {
                 tab_list = this.ul;
             }
-            this.natureLabel.show();
+            this.type_label.show();
             this.loadTabAfter(h2, tab_list, this.trackerLabel.previous());
         },
         loadTabAfter: function (h2, tab_list, afterElement) {

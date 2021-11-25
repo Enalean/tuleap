@@ -45,9 +45,9 @@ final class TypeSelectorRenderer
 
         $is_parent_selector_displayed = $possible_parent_selector && $possible_parent_selector->isSelectorDisplayed();
 
-        $natures_presenter = [];
+        $types_presenter = [];
         foreach ($types as $type) {
-            $natures_presenter[] = [
+            $types_presenter[] = [
                 'shortname'     => $type->shortname,
                 'forward_label' => $type->forward_label,
                 'is_selected'   => ($type->shortname === $prefill_type)
@@ -58,7 +58,7 @@ final class TypeSelectorRenderer
             }
 
             if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
-                $natures_presenter[] = [
+                $types_presenter[] = [
                     'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
                     'forward_label' => $type->reverse_label,
                     'is_selected'   => (\Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $prefill_type)
@@ -67,11 +67,11 @@ final class TypeSelectorRenderer
         }
 
         return $this->renderer->renderToString(
-            'artifactlink-nature-selector',
-            new NatureSelectorPresenter(
-                $natures_presenter,
-                $name . '[nature]',
-                'tracker-form-element-artifactlink-new nature-selector'
+            'artifactlink-type-selector',
+            new TypeSelectorPresenter(
+                $types_presenter,
+                $name . '[type]',
+                'tracker-form-element-artifactlink-new type-selector'
             )
         );
     }

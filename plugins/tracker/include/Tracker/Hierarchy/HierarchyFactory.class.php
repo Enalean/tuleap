@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class Tracker_HierarchyFactory
@@ -56,7 +56,7 @@ class Tracker_HierarchyFactory
      */
     private $artifact_factory;
     /**
-     * @var NatureIsChildLinkRetriever
+     * @var TypeIsChildLinkRetriever
      */
     private $child_link_retriever;
 
@@ -64,7 +64,7 @@ class Tracker_HierarchyFactory
         HierarchyDAO $hierarchy_dao,
         TrackerFactory $tracker_factory,
         Tracker_ArtifactFactory $artifact_factory,
-        NatureIsChildLinkRetriever $child_link_retriever
+        TypeIsChildLinkRetriever $child_link_retriever
     ) {
         $this->hierarchy_dao        = $hierarchy_dao;
         $this->tracker_factory      = $tracker_factory;
@@ -88,7 +88,7 @@ class Tracker_HierarchyFactory
                 new HierarchyDAO(),
                 TrackerFactory::instance(),
                 Tracker_ArtifactFactory::instance(),
-                new NatureIsChildLinkRetriever(
+                new TypeIsChildLinkRetriever(
                     Tracker_ArtifactFactory::instance(),
                     new ArtifactLinkFieldValueDao()
                 )
@@ -221,7 +221,7 @@ class Tracker_HierarchyFactory
     public function getParentArtifact(PFUser $user, Artifact $child)
     {
         $parents = [];
-        if ($child->getTracker()->isProjectAllowedToUseNature() === true) {
+        if ($child->getTracker()->isProjectAllowedToUseType() === true) {
             $parents = $this->child_link_retriever->getDirectParents($child);
         } else {
             $rows = $this->hierarchy_dao->getParentsInHierarchy($child->getId());

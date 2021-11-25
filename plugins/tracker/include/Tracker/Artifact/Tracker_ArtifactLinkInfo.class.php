@@ -32,7 +32,7 @@ class Tracker_ArtifactLinkInfo
     /**
      * @var string|null
      */
-    private $nature;
+    private $type;
 
     /**
      * @var Artifact
@@ -45,17 +45,17 @@ class Tracker_ArtifactLinkInfo
      * @param int $group_id
      * @param int $last_changeset_id
      */
-    public function __construct($artifact_id, $keyword, $group_id, $tracker_id, $last_changeset_id, ?string $nature)
+    public function __construct($artifact_id, $keyword, $group_id, $tracker_id, $last_changeset_id, ?string $type)
     {
         $this->artifact_id       = $artifact_id;
         $this->keyword           = $keyword;
         $this->group_id          = $group_id;
         $this->tracker_id        = $tracker_id;
         $this->last_changeset_id = $last_changeset_id;
-        $this->nature            = $nature;
+        $this->type              = $type;
     }
 
-    public static function buildFromArtifact(Artifact $artifact, string $nature): self
+    public static function buildFromArtifact(Artifact $artifact, string $type): self
     {
         $tracker = $artifact->getTracker();
 
@@ -72,7 +72,7 @@ class Tracker_ArtifactLinkInfo
                 $tracker->getGroupId(),
                 $tracker->getId(),
                 $changeset_id,
-                $nature
+                $type
             )
         )->setArtifact($artifact);
     }
@@ -152,14 +152,14 @@ class Tracker_ArtifactLinkInfo
         return $this->getKeyword() . ' #' . $this->getArtifactId();
     }
 
-    public function getNature(): ?string
+    public function getType(): ?string
     {
-        return $this->nature;
+        return $this->type;
     }
 
-    public function setNature(?string $nature)
+    public function setType(?string $type)
     {
-        $this->nature = $nature;
+        $this->type = $type;
     }
 
     /**
@@ -194,11 +194,11 @@ class Tracker_ArtifactLinkInfo
         return $this->getLabel();
     }
 
-    public function shouldLinkBeHidden($nature)
+    public function shouldLinkBeHidden($type)
     {
         $hide_artifact = false;
         $params        = [
-            'nature'        => $nature,
+            'type'        => $type,
             'hide_artifact' => &$hide_artifact
         ];
         EventManager::instance()->processEvent(

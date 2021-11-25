@@ -48,7 +48,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItAddNewValuesInNewValuesEntries(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->once()->andReturnFalse();
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
         $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100, 101], [], "");
@@ -62,7 +62,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItRemoveOldValues(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->once()->andReturnFalse();
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
         $formatted_value = $formater->formatFieldData($this->artifact_link_field, [], [200, 201], "");
@@ -74,12 +74,12 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
         self::assertEquals($expected, $formatted_value);
     }
 
-    public function testItRemovesNatureOfArtifactLinkWhenItsNoLongerAvailableInProject(): void
+    public function testItRemovesTypeOfArtifactLinkWhenItsNoLongerAvailableInProject(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->once()->andReturnFalse();
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
-        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], "legacy_nature");
+        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], "legacy_type");
 
         $expected[$this->artifact_link_field->getId()] = [
             'new_values'     => '100',
@@ -88,18 +88,18 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
         self::assertEquals($expected, $formatted_value);
     }
 
-    public function testItPreserveNature(): void
+    public function testItPreserveType(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->once()->andReturnTrue();
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnTrue();
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
-        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], "used_nature");
+        $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], "used_type");
 
-        $expected[$this->artifact_link_field->getId()]                 = [
+        $expected[$this->artifact_link_field->getId()]               = [
             'new_values'     => '100',
             'removed_values' => []
         ];
-        $expected[$this->artifact_link_field->getId()]['natures'][100] = "used_nature";
+        $expected[$this->artifact_link_field->getId()]['types'][100] = "used_type";
 
         self::assertEquals($expected, $formatted_value);
     }

@@ -26,9 +26,9 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureSelectorPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeSelectorPresenter;
 use Tuleap\Tracker\Report\CSVExport\CSVFieldUsageChecker;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
@@ -465,7 +465,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $field_id,
         $read_only,
         $prefill_removed_values,
-        $prefill_natures,
+        $prefill_types,
         $is_reverse,
         $only_rows = false,
         $from_aid = null
@@ -482,12 +482,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $head             = '';
 
         //Display the head of the table
-        $is_nature_col = isset($matching_ids['nature']);
-        $suffix        = '_' . $field_id . '_' . $this->report->id . '_' . $this->id;
+        $is_type_col = isset($matching_ids['type']);
+        $suffix      = '_' . $field_id . '_' . $this->report->id . '_' . $this->id;
         if ($is_reverse) {
             $suffix .= '_reverse';
         }
-        $head .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $suffix, '', $is_nature_col);
+        $head .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $suffix, '', $is_type_col);
         if (! $only_rows) {
             $html .= $head;
         }
@@ -509,7 +509,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $pagination,
             $field_id,
             $prefill_removed_values,
-            $prefill_natures,
+            $prefill_types,
             $only_rows,
             $read_only,
             $from_aid
@@ -613,7 +613,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $pagination             = true;
         $artifactlink_field_id  = null;
         $prefill_removed_values = null;
-        $prefill_natures        = [];
+        $prefill_types          = [];
         $only_rows              = false;
         $read_only              = true;
         $id_suffix              = '';
@@ -639,7 +639,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $pagination,
             $artifactlink_field_id,
             $prefill_removed_values,
-            $prefill_natures,
+            $prefill_types,
             $only_rows,
             $read_only
         );
@@ -856,7 +856,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public const EXTRACOLUMN_LINK       = 2;
     public const EXTRACOLUMN_UNLINK     = 3;
 
-    private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true, $is_nature_col = false)
+    private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true, $is_type_col = false)
     {
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -929,8 +929,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         $sort_columns = $this->getSort($store_in_session);
 
-        $purifier                 = Codendi_HTMLPurifier::instance();
-        $nature_presenter_factory = $this->getNaturePresenterFactory();
+        $purifier               = Codendi_HTMLPurifier::instance();
+        $type_presenter_factory = $this->getTypePresenterFactory();
         foreach ($columns as $key => $column) {
             if ($column['width']) {
                 $width = 'width="' . $purifier->purify($column['width'] . '%') . '"';
@@ -938,31 +938,31 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $width = '';
             }
             if (! empty($column['field']) && $column['field']->isUsed()) {
-                $data_nature        = '';
-                $data_nature_format = '';
+                $data_type        = '';
+                $data_type_format = '';
                 if (isset($column['artlink_nature'])) {
-                    $data_nature = 'data-field-artlink-nature="' . $purifier->purify($column['artlink_nature']) . '"';
+                    $data_type = 'data-field-artlink-type="' . $purifier->purify($column['artlink_nature']) . '"';
                 }
                 if (isset($column['artlink_nature_format'])) {
-                    $data_nature_format = 'data-field-artlink-nature-format="' . $purifier->purify($column['artlink_nature_format']) . '"';
+                    $data_type_format = 'data-field-artlink-type-format="' . $purifier->purify($column['artlink_nature_format']) . '"';
                 }
                 $html .= '<th class="tracker_report_table_column"
                     id="tracker_report_table_column_' . $purifier->purify($key) . '"
                     data-column-id="' . $purifier->purify($key) . '"
                     data-field-id="' . $purifier->purify($column['field']->id) . '"
-                    ' . $data_nature . '
-                    ' . $data_nature_format . '
+                    ' . $data_type . '
+                    ' . $data_type_format . '
                     ' . $width . '>';
 
                 $field_label = $column['field']->getLabel();
                 if (isset($column['artlink_nature'])) {
-                    $nature = $nature_presenter_factory->getFromShortname($column['artlink_nature']);
-                    if ($nature) {
-                        $nature_label = $nature->forward_label;
-                        if (! $nature_label) {
-                            $nature_label = dgettext('tuleap-tracker', 'No type');
+                    $type = $type_presenter_factory->getFromShortname($column['artlink_nature']);
+                    if ($type) {
+                        $type_label = $type->forward_label;
+                        if (! $type_label) {
+                            $type_label = dgettext('tuleap-tracker', 'No type');
                         }
-                        $field_label .= $purifier->purify(" ($nature_label)");
+                        $field_label .= $purifier->purify(" ($type_label)");
                     }
                 }
                 $label = $purifier->purify($field_label);
@@ -1009,8 +1009,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $column_editor_popover_placement = 'left';
                         }
 
-                        $html .= '<td class="tracker_report_table_column_nature_editor">';
-                        $html .= '<a href="#" class="nature-column-editor" data-placement="' . $column_editor_popover_placement . '"><i class="fa fa-cog"></i></a>';
+                        $html .= '<td class="tracker_report_table_column_type_editor">';
+                        $html .= '<a href="#" class="type-column-editor" data-placement="' . $column_editor_popover_placement . '"><i class="fa fa-cog"></i></a>';
                         $html .= '</td>';
                     }
 
@@ -1021,9 +1021,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $html .= '</th>';
             }
         }
-        if ($is_nature_col) {
-            $nature_label = dgettext('tuleap-tracker', 'Type');
-            $html        .= "<th>$nature_label</th>";
+        if ($is_type_col) {
+            $type_label = dgettext('tuleap-tracker', 'Type');
+            $html      .= "<th>$type_label</th>";
         }
         $html .= '</tr>';
         $html .= '</thead>';
@@ -1102,7 +1102,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $pagination = true,
         $artifactlink_field_id = null,
         $prefill_removed_values = null,
-        $prefill_natures = [],
+        $prefill_types = [],
         $only_rows = false,
         $read_only = false,
         $from_aid = null
@@ -1215,7 +1215,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $html      .= '<td data-column-id="' . $purifier->purify($key) . '">';
 
                             if (isset($column['artlink_nature'])) {
-                                $html .= $column['field']->fetchChangesetValueForNature(
+                                $html .= $column['field']->fetchChangesetValueForType(
                                     $row['id'],
                                     $row['changeset_id'],
                                     $value,
@@ -1237,23 +1237,23 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         }
                     }
                     $artifact_id = $row['id'];
-                    if (isset($matching_ids['nature'][$artifact_id])) {
-                        $nature        = $matching_ids['nature'][$artifact_id];
-                        $forward_label = $purifier->purify($nature->forward_label);
+                    if (isset($matching_ids['type'][$artifact_id])) {
+                        $type          = $matching_ids['type'][$artifact_id];
+                        $forward_label = $purifier->purify($type->forward_label);
                         $html         .= '<td class="tracker_formelement_read_and_edit_read_section">' . $forward_label . '</td>';
                         if (! $read_only) {
-                            $project           = $this->report->getTracker()->getProject();
-                            $natures           = $this->getAllUsableTypesInProjectWithCache($project);
-                            $natures_presenter = [];
-                            $selected_type     = $nature->shortname;
-                            if (isset($prefill_natures[$artifact_id])) {
-                                $selected_type = $prefill_natures[$artifact_id];
+                            $project         = $this->report->getTracker()->getProject();
+                            $types           = $this->getAllUsableTypesInProjectWithCache($project);
+                            $types_presenter = [];
+                            $selected_type   = $type->shortname;
+                            if (isset($prefill_types[$artifact_id])) {
+                                $selected_type = $prefill_types[$artifact_id];
                             }
                             $is_a_usable_type_selected = false;
-                            foreach ($natures as $type) {
+                            foreach ($types as $type) {
                                 $should_select_current_type = $selected_type === $type->shortname;
                                 $is_a_usable_type_selected  = $is_a_usable_type_selected || $should_select_current_type;
-                                $natures_presenter[]        = [
+                                $types_presenter[]          = [
                                     'shortname'     => $type->shortname,
                                     'forward_label' => $type->forward_label,
                                     'is_selected'   => $should_select_current_type
@@ -1266,7 +1266,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
                                     $should_select_current_type = \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $selected_type;
                                     $is_a_usable_type_selected  = $is_a_usable_type_selected || $should_select_current_type;
-                                    $natures_presenter[]        = [
+                                    $types_presenter[]          = [
                                         'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
                                         'forward_label' => $type->reverse_label,
                                         'is_selected'   => $should_select_current_type
@@ -1275,9 +1275,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             }
 
                             if (! $is_a_usable_type_selected) {
-                                $type = $this->getNaturePresenterFactory()->getTypeEnabledInProjectFromShortname($project, $selected_type);
+                                $type = $this->getTypePresenterFactory()->getTypeEnabledInProjectFromShortname($project, $selected_type);
                                 if ($type !== null) {
-                                    $natures_presenter[] = [
+                                    $types_presenter[] = [
                                         'shortname'     => $type->shortname,
                                         'forward_label' => $type->forward_label,
                                         'is_selected'   => true
@@ -1285,11 +1285,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 }
                             }
 
-                            $name  = "artifact[{$artifactlink_field_id}][natures][{$row['id']}]";
+                            $name  = "artifact[{$artifactlink_field_id}][types][{$row['id']}]";
                             $html .= '<td class="tracker_formelement_read_and_edit_edition_section">';
                             $html .= $renderer->renderToString(
-                                'artifactlink-nature-selector',
-                                new NatureSelectorPresenter($natures_presenter, $name, '')
+                                'artifactlink-type-selector',
+                                new TypeSelectorPresenter($types_presenter, $name, '')
                             );
                             $html .= '</td>';
                         }
@@ -1316,14 +1316,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function getAllUsableTypesInProjectWithCache(Project $project)
     {
-        static $all_natures_project_cache = [];
-        if (isset($all_natures_project_cache[$project->getID()])) {
-            return $all_natures_project_cache[$project->getID()];
+        static $all_types_project_cache = [];
+        if (isset($all_types_project_cache[$project->getID()])) {
+            return $all_types_project_cache[$project->getID()];
         }
-        $nature_presenter_factory                     = $this->getNaturePresenterFactory();
-        $all_natures                                  = $nature_presenter_factory->getAllUsableTypesInProject($project);
-        $all_natures_project_cache[$project->getID()] = $all_natures;
-        return $all_natures;
+        $type_presenter_factory                     = $this->getTypePresenterFactory();
+        $all_types                                  = $type_presenter_factory->getAllUsableTypesInProject($project);
+        $all_types_project_cache[$project->getID()] = $all_types;
+        return $all_types;
     }
 
     public function fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only)
@@ -1397,7 +1397,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             $is_first = false;
         }
-        if (isset($matching_ids['nature'])) {
+        if (isset($matching_ids['type'])) {
             $html .= '<td><table><thead><tr><th></th></tr></thead><tbody><tr></tr></tbody></table></td>';
         }
         $html .= '</tr>';
@@ -1930,12 +1930,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if (isset($renderer_parameters['add-column']['field-id'])) {
                 if ($field_id = (int) $renderer_parameters['add-column']['field-id']) {
                     if ($field = $ff->getUsedFormElementById($field_id)) {
-                        $columns        = $this->getColumns();
-                        $key            = $field->getId();
-                        $artlink_nature = null;
-                        if (isset($renderer_parameters['add-column']['artlink-nature'])) {
-                            $artlink_nature = $renderer_parameters['add-column']['artlink-nature'];
-                            $key           .= '_' . $artlink_nature;
+                        $columns      = $this->getColumns();
+                        $key          = $field->getId();
+                        $artlink_type = null;
+                        if (isset($renderer_parameters['add-column']['artlink-type'])) {
+                            $artlink_type = $renderer_parameters['add-column']['artlink-type'];
+                            $key         .= '_' . $artlink_type;
                         }
                         if (! isset($columns[$key])) {
                             $session_table_columns = $this->report_session->get("{$this->id}.columns") ?? [];
@@ -1947,7 +1947,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     'field_id'              => $field_id,
                                     'width'                 => 12,
                                     'rank'                  => $nb_col,
-                                    'artlink_nature'        => $artlink_nature,
+                                    'artlink_nature'        => $artlink_type,
                                     'artlink_nature_format' => null
                                 ]
                             );
@@ -2066,7 +2066,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
     }
 
-    private function getFieldWhenUsingNatures(SimpleXMLElement $node, array $field_info, $xmlMapping)
+    private function getFieldWhenUsingTypes(SimpleXMLElement $node, array $field_info, $xmlMapping)
     {
         $field = null;
 
@@ -2115,7 +2115,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $child = $root->addChild('columns');
         foreach ($this->getColumns() as $key => $col) {
-            $field = $this->getFieldWhenUsingNatures($child, $col, $xmlMapping);
+            $field = $this->getFieldWhenUsingTypes($child, $col, $xmlMapping);
             if (! $field) {
                 $field = $this->getField($child, $key, $xmlMapping);
             }
@@ -2144,11 +2144,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $title = $column['field']->getName();
         if (isset($column['artlink_nature'])) {
-            $nature = $column['artlink_nature'];
-            if (! $nature) {
-                $nature = dgettext('tuleap-tracker', 'No type');
+            $type = $column['artlink_nature'];
+            if (! $type) {
+                $type = dgettext('tuleap-tracker', 'No type');
             }
-            $title .= " (" . $nature . ")";
+            $title .= " (" . $type . ")";
         }
 
         return $title;
@@ -2158,14 +2158,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $head  = [];
         $title = $column['field']->getName();
-        if ($this->report->getTracker()->isProjectAllowedToUseNature()) {
+        if ($this->report->getTracker()->isProjectAllowedToUseType()) {
             if ($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE) {
                 $head[] = $title;
-                foreach ($this->getNaturePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $nature) {
-                    if (! $nature) {
-                        $nature = dgettext('tuleap-tracker', 'No type');
+                foreach ($this->getTypePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $type) {
+                    if (! $type) {
+                        $type = dgettext('tuleap-tracker', 'No type');
                     }
-                    $head[] = $title . " (" . $nature . ")";
+                    $head[] = $title . " (" . $type . ")";
                 }
             } else {
                 $head[] = $title;
@@ -2185,13 +2185,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
 
         if (
-            $this->report->getTracker()->isProjectAllowedToUseNature() &&
+            $this->report->getTracker()->isProjectAllowedToUseType() &&
             $this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE
         ) {
-            foreach ($this->getNaturePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $nature) {
-                $line[] = $column['field']->fetchCSVChangesetValueWithNature(
+            foreach ($this->getTypePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $type) {
+                $line[] = $column['field']->fetchCSVChangesetValueWithType(
                     $row['changeset_id'],
-                    $nature,
+                    $type,
                     ''
                 );
             }
@@ -2206,7 +2206,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         if (isset($column['artlink_nature'])) {
             $format = isset($column['artlink_nature_format']) ? $column['artlink_nature_format'] : '';
-            $line[] = $column['field']->fetchCSVChangesetValueWithNature(
+            $line[] = $column['field']->fetchCSVChangesetValueWithType(
                 $row['changeset_id'],
                 $column['artlink_nature'],
                 $format
@@ -2233,9 +2233,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if ($only_columns) {
             $columns = $this->reorderColumnsByRank($this->getColumns());
         } else {
-            $columns               = [];
-            $fields_without_nature = $this->getFieldFactory()->getUsedFields($this->report->getTracker());
-            foreach ($fields_without_nature as $field) {
+            $columns     = [];
+            $used_fields = $this->getFieldFactory()->getUsedFields($this->report->getTracker());
+            foreach ($used_fields as $field) {
                 $columns[]['field'] = $field;
             }
         }
@@ -2346,16 +2346,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             return;
         }
 
-        $nature_factory = $this->getNaturePresenterFactory();
-        $field_factory  = $this->getFieldFactory();
+        $type_factory  = $this->getTypePresenterFactory();
+        $field_factory = $this->getFieldFactory();
         foreach ($columns as $key => $properties) {
             $field = $field_factory->getUsedFormElementById($properties['field_id']);
             if (! $field) {
                 continue;
             }
 
-            $nature = $properties['artlink_nature'];
-            if (isset($nature) && ! $nature_factory->getFromShortname($nature)) {
+            $type = $properties['artlink_nature'];
+            if (isset($type) && ! $type_factory->getFromShortname($type)) {
                 continue;
             }
 
@@ -2623,12 +2623,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * @return TypePresenterFactory
      */
-    private function getNaturePresenterFactory()
+    private function getTypePresenterFactory()
     {
-        $nature_dao              = new NatureDao();
+        $type_dao                = new TypeDao();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
-        return new TypePresenterFactory($nature_dao, $artifact_link_usage_dao);
+        return new TypePresenterFactory($type_dao, $artifact_link_usage_dao);
     }
 
     public function getJavascriptDependencies()

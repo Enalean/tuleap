@@ -27,19 +27,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 final class ArtifactLinkValueFormatter
 {
     /**
-     * @return array{new_values: string, natures: array<string, string>}
+     * @return array{new_values: string, types: array<string, string>}
      */
     public function formatForTrackerPlugin(?ArtifactLinkValue $value): array
     {
         if (! $value) {
             return [
                 'new_values' => '',
-                'natures'    => []
+                'types'      => []
             ];
         }
         return [
             'new_values' => (string) $value->linked_artifact->getId(),
-            'natures'    => [(string) $value->linked_artifact->getId() => (string) $value->type]
+            'types'      => [(string) $value->linked_artifact->getId() => (string) $value->type]
         ];
     }
 }

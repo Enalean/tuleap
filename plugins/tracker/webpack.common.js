@@ -118,7 +118,7 @@ const config_for_vue_flaming_parrot = {
 
 const config_for_burning_parrot = {
     entry: {
-        "admin-nature": "./scripts/admin-nature.js",
+        "admin-type": "./scripts/admin-type.js",
         "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
         "global-admin-trackers": "./scripts/global-admin/trackers.ts",
         "tracker-creation": "./scripts/tracker-creation/index.ts",
@@ -185,7 +185,7 @@ const config_for_legacy_scripts = {
                 "./scripts/legacy/TrackerSettings.js",
                 "./scripts/legacy/TrackerCollapseFieldset.js",
                 "./scripts/legacy/CopyArtifact.js",
-                "./scripts/legacy/tracker-report-nature-column.js",
+                "./scripts/legacy/tracker-report-type-column.js",
                 "./scripts/legacy/tracker-webhooks.js",
             ],
         }),

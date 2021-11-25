@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 /**
@@ -65,7 +65,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         TrackerXmlFieldsMapping $xml_fields_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         Tracker_ArtifactFactory $tracker_artifact_factory,
-        NatureDao $nature_dao
+        TypeDao $type_dao
     ) {
         $this->formelement_factory = $formelement_factory;
         $this->tracker             = $tracker;
@@ -96,7 +96,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 $artifact_id_mapping,
                 $logger,
                 $tracker_artifact_factory,
-                $nature_dao,
+                $type_dao,
             ),
             self::FIELDTYPE_COMPUTED => new XMLImportFieldStrategyComputed()
         ];

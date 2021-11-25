@@ -26,27 +26,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class MethodBuilder
 {
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var SemanticProgressDao
-     */
-    private $dao;
-    /**
-     * @var TypePresenterFactory
-     */
-    private $natures_factory;
-
     public function __construct(
-        \Tracker_FormElementFactory $form_element_factory,
-        SemanticProgressDao $dao,
-        TypePresenterFactory $natures_factory
+        private \Tracker_FormElementFactory $form_element_factory,
+        private SemanticProgressDao $dao,
+        private TypePresenterFactory $type_presenter_factory
     ) {
-        $this->form_element_factory = $form_element_factory;
-        $this->dao                  = $dao;
-        $this->natures_factory      = $natures_factory;
     }
 
     public function buildMethodBasedOnEffort(
@@ -120,8 +104,8 @@ class MethodBuilder
             );
         }
 
-        $nature = $this->natures_factory->getTypeEnabledInProjectFromShortname($tracker->getProject(), $link_type);
-        if ($nature === null) {
+        $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname($tracker->getProject(), $link_type);
+        if ($type === null) {
             return new InvalidMethod(
                 sprintf(
                     dgettext(

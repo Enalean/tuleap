@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -48,7 +48,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
     protected $old_request_with = null;
 
-    /** @var  NatureIsChildLinkRetriever */
+    /** @var  TypeIsChildLinkRetriever */
     protected $artifact_retriever;
 
     /** @var  Tracker_IDisplayTrackerLayout */
@@ -112,7 +112,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $this->us_computed_field->shouldReceive('fetchCardValue')->with($this->user_story)->andReturns(23);
 
         $this->event_manager             = \Mockery::spy(\EventManager::class);
-        $this->artifact_retriever        = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever::class);
+        $this->artifact_retriever        = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever::class);
         $visit_recorder                  = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
         $this->hidden_fieldsets_detector = \Mockery::spy(HiddenFieldsetsDetector::class);
 

@@ -171,7 +171,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_progress_value, $progression_result->getValue());
     }
 
-    private function buildArtifactLinkInfo(int $artifact_id, string $nature, \Tracker $tracker, bool $is_artifact_open): \Tracker_ArtifactLinkInfo
+    private function buildArtifactLinkInfo(int $artifact_id, string $type, \Tracker $tracker, bool $is_artifact_open): \Tracker_ArtifactLinkInfo
     {
         $artifact = \Mockery::mock(
             Artifact::class,
@@ -183,7 +183,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        return \Tracker_ArtifactLinkInfo::buildFromArtifact($artifact, $nature);
+        return \Tracker_ArtifactLinkInfo::buildFromArtifact($artifact, $type);
     }
 
     public function testItIsConfigured(): void

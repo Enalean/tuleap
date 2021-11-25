@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -39,7 +39,7 @@ final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase /
     {
         $hierarchy_dao        = Mockery::mock(HierarchyDAO::class);
         $tracker_factory      = Mockery::mock(TrackerFactory::class);
-        $child_link_retriever = Mockery::mock(NatureIsChildLinkRetriever::class);
+        $child_link_retriever = Mockery::mock(TypeIsChildLinkRetriever::class);
         $hierarchy_factory    = new Tracker_HierarchyFactory(
             $hierarchy_dao,
             $tracker_factory,
@@ -70,7 +70,7 @@ final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase /
     {
         $hierarchy_dao        = Mockery::mock(HierarchyDAO::class);
         $tracker_factory      = Mockery::mock(TrackerFactory::class);
-        $child_link_retriever = Mockery::mock(NatureIsChildLinkRetriever::class);
+        $child_link_retriever = Mockery::mock(TypeIsChildLinkRetriever::class);
         $hierarchy_factory    = new Tracker_HierarchyFactory(
             $hierarchy_dao,
             $tracker_factory,
@@ -208,7 +208,7 @@ final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase /
             $dao = Mockery::mock(HierarchyDAO::class);
             $dao->shouldReceive('searchTrackerHierarchy')->andReturn([]);
         }
-        $child_link_retriever = Mockery::mock(NatureIsChildLinkRetriever::class);
+        $child_link_retriever = Mockery::mock(TypeIsChildLinkRetriever::class);
 
         return new Tracker_HierarchyFactory(
             $dao,

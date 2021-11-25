@@ -26,7 +26,7 @@ namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreatorInterface;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeImporter
@@ -38,19 +38,19 @@ final class ArtifactLinkTypeImporter
      */
     private $all_natures_retriever;
     /**
-     * @var NatureCreatorInterface
+     * @var TypeCreatorInterface
      */
     private $creator;
 
-    public function __construct(AllTypesRetriever $all_natures_retriever, NatureCreatorInterface $creator)
+    public function __construct(AllTypesRetriever $all_natures_retriever, TypeCreatorInterface $creator)
     {
         $this->all_natures_retriever = $all_natures_retriever;
         $this->creator               = $creator;
     }
 
     /**
-     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidNatureParameterException
-     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\UnableToCreateNatureException
+     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidTypeParameterException
+     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\UnableToCreateTypeException
      */
     public function import(JiraClient $jira_client): void
     {

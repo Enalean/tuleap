@@ -30,8 +30,8 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
 use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
-use Tuleap\Tracker\Artifact\View\Nature;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\Artifact\View\TypeView;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ParentOfArtifactCollection;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
@@ -69,7 +69,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         EventManager $event_manager,
         Artifact $artifact,
         Tracker_IDisplayTrackerLayout $layout,
-        NatureIsChildLinkRetriever $retriever,
+        TypeIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
         HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {
@@ -100,7 +100,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     {
         $html = parent::fetchFormContent($request, $current_user);
 
-        if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
+        if ($this->artifact->getTracker()->isProjectAllowedToUseType()) {
             $html .= $this->fetchTitleIsGraph();
         } else {
             $html .= $this->fetchTitleInHierarchy($this->hierarchy);
@@ -187,10 +187,10 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $view_collection = new Tracker_Artifact_View_ViewCollection();
         $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this));
 
-        if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
+        if ($this->artifact->getTracker()->isProjectAllowedToUseType()) {
             $artifact_links = $this->retriever->getChildren($this->artifact);
             if (count($artifact_links) > 0) {
-                $view_collection->add(new Nature($this->artifact, $request, $user));
+                $view_collection->add(new TypeView($this->artifact, $request, $user));
             }
         } else {
             if ($this->artifact->getTracker()->getChildren()) {

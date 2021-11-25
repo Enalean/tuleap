@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 /**
- * I hold a string representing the type (or nature) of a link to an Artifact.
+ * I hold a string representing the type of a link to an Artifact.
  * For example: "_mirrored_milestone" represents the type of link between a Program Increment and
  * a Mirrored Program Increment.
  * @psalm-immutable

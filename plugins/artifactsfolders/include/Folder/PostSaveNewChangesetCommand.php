@@ -25,7 +25,7 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand;
-use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
+use Tuleap\ArtifactsFolders\Type\TypeInFolderPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class PostSaveNewChangesetCommand implements Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
@@ -69,7 +69,7 @@ class PostSaveNewChangesetCommand implements Tracker_FormElement_Field_ArtifactL
                 $new_changeset->getId(),
                 $this->field->getId(),
                 $new_artifact_folder_id,
-                TypeInFolderPresenter::NATURE_IN_FOLDER
+                TypeInFolderPresenter::TYPE_IN_FOLDER
             );
         } else {
             $this->folder_dao->removeInFolderLink(

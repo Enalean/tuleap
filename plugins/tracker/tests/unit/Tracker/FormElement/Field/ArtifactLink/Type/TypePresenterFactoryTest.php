@@ -31,9 +31,9 @@ final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|NatureDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TypeDao
      */
-    private $nature_dao;
+    private $type_dao;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinksUsageDao
      */
@@ -45,16 +45,16 @@ final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->nature_dao              = \Mockery::mock(NatureDao::class);
+        $this->type_dao                = \Mockery::mock(TypeDao::class);
         $this->artifact_link_usage_dao = \Mockery::mock(ArtifactLinksUsageDao::class);
 
-        $this->type_presenter_factory = new TypePresenterFactory($this->nature_dao, $this->artifact_link_usage_dao);
+        $this->type_presenter_factory = new TypePresenterFactory($this->type_dao, $this->artifact_link_usage_dao);
     }
 
     public function testGetsAnEnabledTypeInAProjectFromItsShortname(): void
     {
         $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->andReturn(false);
-        $this->nature_dao->shouldReceive('getFromShortname')->andReturn(
+        $this->type_dao->shouldReceive('getFromShortname')->andReturn(
             ['shortname' => 'some_shortname', 'forward_label' => 'Label', 'reverse_label' => 'Label R']
         );
 

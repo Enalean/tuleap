@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
 
 /**
@@ -86,7 +86,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
                 return true;
             }
 
-            if ($array_cur_values[$id]->getNature() !== $artifactlinkinfo->getNature()) {
+            if ($array_cur_values[$id]->getType() !== $artifactlinkinfo->getType()) {
                 return true;
             }
         }
@@ -128,14 +128,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             $previous,
             $next,
             $tracker,
-            $this->getNaturePresenterFactory()
+            $this->getTypePresenterFactory()
         );
     }
 
     /** @protected for testing purpose */
-    protected function getNaturePresenterFactory()
+    protected function getTypePresenterFactory()
     {
-        return new TypePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
+        return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
     }
 
 
@@ -217,7 +217,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         }
         return \Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType::buildWithType(
             $artifact,
-            $link_info->getNature()
+            $link_info->getType()
         );
     }
 

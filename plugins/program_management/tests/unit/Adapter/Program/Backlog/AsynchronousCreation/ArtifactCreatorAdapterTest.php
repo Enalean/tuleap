@@ -126,7 +126,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     self::ARTIFACT_LINK_ID => [
                         'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
-                        'natures'    => [self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]
+                        'types'      => [self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]
                     ],
                     self::TITLE_ID         => self::TITLE_VALUE,
                     self::DESCRIPTION_ID   => [

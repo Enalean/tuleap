@@ -134,9 +134,8 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         assert($featureA_artifact_link instanceof \Tracker_FormElement_Field_ArtifactLink);
         $fieldsA_data                                                     = [];
         $fieldsA_data[$featureA_artifact_link->getId()]['new_values']     = (string) $us1->getId();
-        $fieldsA_data[$featureA_artifact_link->getId(
-        )]['nature']                                                      = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
-        $fieldsA_data[$featureA_artifact_link->getId()]['natures']        = [
+        $fieldsA_data[$featureA_artifact_link->getId()]['type']           = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $fieldsA_data[$featureA_artifact_link->getId()]['types']          = [
             $us1->getId() => Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
         ];
         $fieldsA_data[$featureA_artifact_link->getId()]['removed_values'] = [];
@@ -219,8 +218,8 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         assert($pi_artifact_link_field instanceof \Tracker_FormElement_Field_ArtifactLink);
         $data                                                     = [];
         $data[$pi_artifact_link_field->getId()]['new_values']     = (string) $iteration->getId();
-        $data[$pi_artifact_link_field->getId()]['nature']         = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
-        $data[$pi_artifact_link_field->getId()]['natures']        = [
+        $data[$pi_artifact_link_field->getId()]['type']           = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $data[$pi_artifact_link_field->getId()]['types']          = [
             $iteration->getId() => Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
         ];
         $data[$pi_artifact_link_field->getId()]['removed_values'] = [];

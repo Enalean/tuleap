@@ -62,7 +62,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
                 $reverse_artifact_links
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
-        $value->shouldReceive('getNaturePresenterFactory')->andReturn(Mockery::mock(TypePresenterFactory::class));
+        $value->shouldReceive('getTypePresenterFactory')->andReturn(Mockery::mock(TypePresenterFactory::class));
 
         return $value;
     }
@@ -203,11 +203,11 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }
 
-    public function testItHasChangesWhenNatureIsChanged(): void
+    public function testItHasChangesWhenTypeIsChanged(): void
     {
         $old_values = [
-            1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => '_is_child']),
-            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => ''])
+            1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => '_is_child']),
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => ''])
         ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
@@ -220,8 +220,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
         $new_value = [
             'list_of_artifactlinkinfo' => [
-                1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => 'fixed_in']),
-                2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => ''])
+                1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => 'fixed_in']),
+                2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => ''])
             ]
         ];
 
