@@ -70,30 +70,31 @@ describe("ExportButton", () => {
                 has_loading_error: false,
             } as CampaignState
         );
-        const download_button = wrapper.get("[data-test=testplan-export-button]");
+        const export_button = wrapper.get("[data-test=testplan-export-button]");
+        const xslx_button = wrapper.get("[data-test=testplan-export-xlsx-button]");
 
-        expect(download_button.element.hasAttribute("disabled")).toBe(false);
+        expect(export_button.element.hasAttribute("disabled")).toBe(false);
         expect(
-            download_button
+            export_button
                 .get("[data-test=download-export-button-icon]")
                 .element.classList.contains("fa-spin")
         ).toBe(false);
 
         downloadExportDocument.mockImplementation((): void => {
             expect(
-                download_button
+                export_button
                     .get("[data-test=download-export-button-icon]")
                     .element.classList.contains("fa-spin")
             ).toBe(true);
 
             // This is here to make sure the user cannot spam-click the export button
             // Only one report should be generated at a time, subsequent clicks should do nothing
-            download_button.trigger("click");
+            xslx_button.trigger("click");
 
             expect(wrapper.findComponent(ExportError).exists()).toBe(false);
         });
 
-        download_button.trigger("click");
+        xslx_button.trigger("click");
     });
 
     it("Does not allow to download the report when the backlog items are not loaded", async () => {
@@ -180,7 +181,7 @@ describe("ExportButton", () => {
             } as CampaignState
         );
 
-        const download_button = wrapper.get("[data-test=testplan-export-button]");
+        const download_button = wrapper.get("[data-test=testplan-export-xlsx-button]");
 
         await download_button.trigger("click");
 
@@ -196,7 +197,7 @@ describe("ExportButton", () => {
         }
 
         expect(
-            download_button
+            wrapper
                 .get("[data-test=download-export-button-icon]")
                 .element.classList.contains("fa-spin")
         ).toBe(false);

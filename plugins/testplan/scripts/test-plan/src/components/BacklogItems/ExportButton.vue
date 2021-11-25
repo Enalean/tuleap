@@ -20,23 +20,35 @@
 
 <template>
     <div>
-        <button
-            class="
-                tlp-button tlp-button-primary tlp-button-outline tlp-button-small
-                test-plan-export-button
-            "
-            v-bind:disabled="!can_export"
-            v-on:click="exportTestPlan"
-            data-test="testplan-export-button"
-        >
-            <i
-                class="fa tlp-button-icon"
-                v-bind:class="icon_classes"
-                aria-hidden="true"
-                data-test="download-export-button-icon"
-            ></i>
-            <translate>Export</translate>
-        </button>
+        <div class="tlp-dropdown test-plan-export-button">
+            <button
+                type="button"
+                v-bind:disabled="!can_export"
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                data-test="testplan-export-button"
+                ref="trigger"
+            >
+                <i
+                    class="fa tlp-button-icon"
+                    v-bind:class="icon_classes"
+                    aria-hidden="true"
+                    data-test="download-export-button-icon"
+                ></i>
+                <translate>Export</translate>
+                <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+            </button>
+            <div class="tlp-dropdown-menu" role="menu">
+                <a
+                    href="#"
+                    v-on:click.prevent="exportTestPlan"
+                    class="tlp-dropdown-menu-item"
+                    role="menuitem"
+                    data-test="testplan-export-xlsx-button"
+                >
+                    <translate>Export as spreadsheet</translate>
+                </a>
+            </div>
+        </div>
         <export-error v-if="has_encountered_error_during_the_export" />
     </div>
 </template>
@@ -47,6 +59,7 @@ import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import type { BacklogItem, Campaign } from "../../type";
 import ExportError from "./ExportError.vue";
+import { createDropdown } from "tlp";
 
 const backlog_item = namespace("backlog_item");
 const campaign = namespace("campaign");
@@ -86,6 +99,14 @@ export default class ExportButton extends Vue {
     private is_preparing_the_download = false;
 
     private has_encountered_error_during_the_export = false;
+
+    override $refs!: {
+        trigger: HTMLElement;
+    };
+
+    mounted(): void {
+        createDropdown(this.$refs.trigger);
+    }
 
     get can_export(): boolean {
         return (
