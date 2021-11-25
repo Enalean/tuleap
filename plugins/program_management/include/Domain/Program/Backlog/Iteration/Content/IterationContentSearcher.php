@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
@@ -68,11 +69,17 @@ final class IterationContentSearcher
 
         $content = [];
 
-        $planned_user_stories = UserStoryIdentifier::buildCollectionFromIteration(
-            $this->search_user_story_planned_in_iteration,
+        $mirrored_iterations = MirroredIterationIdentifierCollection::fromIteration(
             $this->iteration_searcher,
             $this->is_visible_artifact,
             $iteration_identifier,
+            $user_identifier
+        );
+
+        $planned_user_stories = UserStoryIdentifier::buildCollectionFromIteration(
+            $this->search_user_story_planned_in_iteration,
+            $mirrored_iterations,
+            $this->is_visible_artifact,
             $user_identifier
         );
 
