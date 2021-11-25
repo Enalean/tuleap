@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Cont
 
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
@@ -58,7 +59,11 @@ final class FeatureAdditionProcessor implements AddFeature
                 [],
                 \Tracker_FormElement_Field_ArtifactLink::NO_TYPE
             );
-        } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
+        } catch (
+            \Tracker_NoArtifactLinkFieldException
+            | \Tracker_Exception
+            | UserStoryPlanException $e // It can be thrown by ArtifactUpdatedHandler
+        ) {
             throw new AddFeatureException(
                 $feature_addition->feature->id,
                 $program_increment_id,

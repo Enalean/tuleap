@@ -76,6 +76,37 @@ final class MirroredProgramIncrementIdentifier implements MirroredTimeboxIdentif
         return $valid_identifiers;
     }
 
+    /**
+     * @return self[]
+     * @throws MirroredProgramIncrementIsNotVisibleException
+     */
+    public static function buildCollectionOnlyWhenUserCanSee(
+        SearchMirroredTimeboxes $timebox_searcher,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        ProgramIncrementIdentifier $program_increment,
+        UserIdentifier $user
+    ): array {
+        $ids = $timebox_searcher->searchMirroredTimeboxes($program_increment);
+        self::checkEverythingIsVisible($visibility_verifier, $program_increment, $user, ...$ids);
+        return array_map(static fn(int $id) => new self($id), $ids);
+    }
+
+    /**
+     * @throws MirroredProgramIncrementIsNotVisibleException
+     */
+    private static function checkEverythingIsVisible(
+        VerifyIsVisibleArtifact $visibility_verifier,
+        ProgramIncrementIdentifier $program_increment,
+        UserIdentifier $user,
+        int ...$ids
+    ): void {
+        foreach ($ids as $id) {
+            if (! $visibility_verifier->isVisible($id, $user)) {
+                throw new MirroredProgramIncrementIsNotVisibleException($program_increment, $user);
+            }
+        }
+    }
+
     public function getId(): int
     {
         return $this->id;

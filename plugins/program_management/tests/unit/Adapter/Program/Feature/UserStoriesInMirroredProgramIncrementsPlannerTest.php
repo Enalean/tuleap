@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChang
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIsNotVisibleException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ContentStoreStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
@@ -59,6 +60,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
      * @var MockObject&Artifact
      */
     private $milestone;
+    private VerifyIsVisibleArtifactStub $visibility_verifier;
 
     protected function setUp(): void
     {
@@ -69,6 +71,8 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         $this->program_increment_changed = ProgramIncrementChanged::fromUpdate($update);
 
         $this->milestone = $this->createMock(Artifact::class);
+
+        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
     }
 
 
@@ -79,7 +83,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             $this->search_artifacts_links,
             RetrieveFullArtifactStub::withArtifact($this->milestone),
             SearchMirroredTimeboxesStub::withIds(self::MIRRORED_TIMEBOX_ID),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            $this->visibility_verifier,
             $this->content_dao,
             new NullLogger(),
             RetrieveUserStub::withGenericUser(),
@@ -120,8 +124,12 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     public function testItDoesNothingWhenArtifactLinkIsNotFound(): void
     {
-        $this->content_dao            = ContentStoreStub::withRows([['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]);
-        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks([['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID]]);
+        $this->content_dao            = ContentStoreStub::withRows(
+            [['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]
+        );
+        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks(
+            [['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID]]
+        );
 
         $this->milestone->method('getAnArtifactLinkField')->willReturn(null);
 
@@ -129,10 +137,19 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         $this->getPlanner()->plan($this->program_increment_changed);
     }
 
+    public function testItThrowsWhenUserCannotSeeOneMirroredProgramIncrement(): void
+    {
+        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
+        $this->expectException(MirroredProgramIncrementIsNotVisibleException::class);
+        $this->getPlanner()->plan($this->program_increment_changed);
+    }
+
     public function testItDoesNotAddUserStoryIfUserStoryIsNotInProject(): void
     {
         $other_project_id  = 122;
-        $this->content_dao = ContentStoreStub::withRows([['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]);
+        $this->content_dao = ContentStoreStub::withRows(
+            [['artifact_id' => self::FEATURE_ID, "tracker_name" => 'tracker', "artifact_title" => 'My artifact', "field_title_id" => 1]]
+        );
 
         $raw_link = ['id' => self::USER_STORY_ID, 'project_id' => $other_project_id];
 

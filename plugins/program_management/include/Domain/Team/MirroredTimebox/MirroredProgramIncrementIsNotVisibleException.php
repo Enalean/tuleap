@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-interface PlanUserStoriesInMirroredProgramIncrements
+final class MirroredProgramIncrementIsNotVisibleException extends \Exception implements UserStoryPlanException
 {
-    /**
-     * @throws UserStoryPlanException
-     */
-    public function plan(ProgramIncrementChanged $program_increment_changed): void;
+    public function __construct(ProgramIncrementIdentifier $program_increment, UserIdentifier $user)
+    {
+        parent::__construct(
+            sprintf(
+                'User #%d cannot see one of the mirrors of Program Increment #%d',
+                $program_increment->getId(),
+                $user->getId()
+            )
+        );
+    }
 }
