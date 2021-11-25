@@ -22,42 +22,29 @@ namespace Tuleap\Tracker\Config;
 
 class SectionsPresenter
 {
-    /**
-     * @var string
-     */
-    public $artifact_link_active = '';
-    /**
-     * @var string
-     */
-    public $artifact_deletion_active = '';
-    /**
-     * @var string
-     */
-    public $email_gateway_active = '';
-    /**
-     * @var string
-     */
-    public $report_active = '';
-    public $emailgateway;
-    public $natures;
-    public $report_config_panel;
-    public $emailgateway_url;
-    public $natures_url;
-    public $report_config_url;
-
-    public $artifacts_deletion_url;
+    public string $artifact_link_active     = '';
+    public string $artifact_deletion_active = '';
+    public string $email_gateway_active     = '';
+    public string $report_active            = '';
+    public string $emailgateway;
+    public string $types;
+    public string $report_config_panel;
+    public string $emailgateway_url;
+    public string $types_url;
+    public string $report_config_url;
+    public string $artifacts_deletion_url;
 
     public function __construct()
     {
         $this->emailgateway        = dgettext('tuleap-tracker', 'Email Gateway');
-        $this->natures             = dgettext('tuleap-tracker', 'Artifact Links Types');
+        $this->types               = dgettext('tuleap-tracker', 'Artifact Links Types');
         $this->report_config_panel = dgettext('tuleap-tracker', 'Report');
 
         $this->emailgateway_url  = TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action'   => 'emailgateway'
         ]);
-        $this->natures_url       = TRACKER_BASE_URL . '/config.php?' . http_build_query([
-            'action'   => 'natures'
+        $this->types_url         = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+            'action'   => 'types'
         ]);
         $this->report_config_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action' => 'report-config'

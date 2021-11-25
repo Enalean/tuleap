@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreatorInterface;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -48,7 +48,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $creator = new class implements NatureCreatorInterface
+        $creator = new class implements TypeCreatorInterface
         {
             public function createFromType(TypePresenter $type): void
             {
@@ -88,7 +88,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $creator = new class implements NatureCreatorInterface
+        $creator = new class implements TypeCreatorInterface
         {
             public array $natures = [];
             public function createFromType(TypePresenter $type): void
@@ -133,7 +133,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $creator = new class implements NatureCreatorInterface
+        $creator = new class implements TypeCreatorInterface
         {
             public array $natures = [];
             public function createFromType(TypePresenter $type): void

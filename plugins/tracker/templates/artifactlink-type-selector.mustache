@@ -1,0 +1,6 @@
+<select class="{{ select_classes }}" name="{{ select_name }}" data-test="artifact-link-type-selector">
+    <option value=""></option>
+    {{# types }}
+        <option {{# is_selected }}selected{{/ is_selected }} value="{{ shortname }}">{{ forward_label }}</option>
+    {{/ types }}
+</select>

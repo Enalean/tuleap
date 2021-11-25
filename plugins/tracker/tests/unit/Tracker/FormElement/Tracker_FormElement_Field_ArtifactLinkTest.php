@@ -456,7 +456,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
             [
                 'new_values'     => '123,234',
                 'removed_values' => [],
-                'natures'        => [
+                'types'          => [
                     234 => '_is_child'
                 ],
             ],
@@ -496,7 +496,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 "parent" => [123],
                 'new_values'     => '124,234',
                 'removed_values' => [],
-                'natures'        => [
+                'types'          => [
                     234 => '_is_child'
                 ],
             ],
@@ -563,7 +563,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 "parent" => [123],
                 'new_values'     => '124,234',
                 'removed_values' => [666 => [666]],
-                'natures'        => [
+                'types'          => [
                     234 => '_is_child'
                 ],
             ],

@@ -136,14 +136,14 @@ use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureConfigController;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureCreator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDeletor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureEditor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeConfigController;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDeletor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeEditor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureUsagePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeUsagePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeValidator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
@@ -1092,7 +1092,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $user_xml_exporter,
             EventManager::instance(),
-            new TypePresenterFactory(new NatureDao(), $artifact_link_usage_dao),
+            new TypePresenterFactory(new TypeDao(), $artifact_link_usage_dao),
             $artifact_link_usage_dao,
             $external_field_extractor
         );
@@ -1127,14 +1127,14 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
     {
-        if (! $this->checkNaturesExistsOnPlateform($event->getXmlElement())) {
+        if (! $this->checkTypesExistsOnPlateform($event->getXmlElement())) {
             throw new ImportNotValidException(
                 "Some natures used in trackers are not created on plateform."
             );
         }
     }
 
-    private function checkNaturesExistsOnPlateform(SimpleXMLElement $xml)
+    private function checkTypesExistsOnPlateform(SimpleXMLElement $xml)
     {
         if (! isset($xml->trackers['use-natures'][0]) || ! $xml->trackers['use-natures'][0]) {
             return true;
@@ -1145,14 +1145,14 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
 
         $platform_types = [Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD];
-        foreach ($this->getNatureDao()->searchAll() as $nature) {
+        foreach ($this->getTypeDao()->searchAll() as $nature) {
             $platform_types[] = $nature['shortname'];
         }
 
         $this->addCustomTypes($platform_types);
 
-        foreach ($xml->natures->nature as $nature) {
-            if (! in_array((string) $nature, $platform_types, true)) {
+        foreach ($xml->natures->nature as $type) {
+            if (! in_array((string) $type, $platform_types, true)) {
                 return false;
             }
         }
@@ -1169,9 +1169,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
     }
 
-    private function getNatureDao()
+    private function getTypeDao()
     {
-        return new NatureDao();
+        return new TypeDao();
     }
 
     /**
@@ -1881,8 +1881,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function routeConfig(): ConfigController
     {
-        $nature_dao              = new NatureDao();
-        $nature_validator        = new NatureValidator($nature_dao);
+        $nature_dao              = new TypeDao();
+        $nature_validator        = new TypeValidator($nature_dao);
         $admin_page_renderer     = new AdminPageRenderer();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
         $artifact_deletion_dao   = new ArtifactsDeletionConfigDAO();
@@ -1897,16 +1897,16 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 EventManager::instance(),
                 $admin_page_renderer
             ),
-            new NatureConfigController(
-                new NatureCreator(
+            new TypeConfigController(
+                new TypeCreator(
                     $nature_dao,
                     $nature_validator
                 ),
-                new NatureEditor(
+                new TypeEditor(
                     $nature_dao,
                     $nature_validator
                 ),
-                new NatureDeletor(
+                new TypeDeletor(
                     $nature_dao,
                     $nature_validator
                 ),
@@ -1914,7 +1914,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     $nature_dao,
                     $artifact_link_usage_dao
                 ),
-                new NatureUsagePresenterFactory(
+                new TypeUsagePresenterFactory(
                     $nature_dao
                 ),
                 $admin_page_renderer
@@ -2087,7 +2087,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $dao                     = new ArtifactLinksUsageDao();
         $updater                 = new ArtifactLinksUsageUpdater($dao);
-        $types_presenter_factory = new TypePresenterFactory(new NatureDao(), $dao);
+        $types_presenter_factory = new TypePresenterFactory(new TypeDao(), $dao);
         $event_manager           = EventManager::instance();
 
         return new ArtifactLinksController(

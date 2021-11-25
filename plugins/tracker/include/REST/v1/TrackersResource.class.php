@@ -53,7 +53,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
@@ -473,7 +473,7 @@ class TrackersResource extends AuthenticatedResource
         $builder = new ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->tracker_artifact_factory,
-            new NatureDao(),
+            new TypeDao(),
             new ChangesetRepresentationBuilder(
                 $this->user_manager,
                 $this->formelement_factory,

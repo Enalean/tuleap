@@ -120,7 +120,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
@@ -846,7 +846,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $this,
                     $this->getFormElementFactory(),
                     $this->getEventManager(),
-                    $this->getNatureIsChildLinkRetriever(),
+                    $this->getTypeIsChildLinkRetriever(),
                     $this->getVisitRecorder(),
                     $this->getHiddenFieldsetsDetector()
                 );
@@ -914,7 +914,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $this->getEventManager(),
                     $this,
                     $layout,
-                    $this->getNatureIsChildLinkRetriever(),
+                    $this->getTypeIsChildLinkRetriever(),
                     $this->getVisitRecorder(),
                     $this->getHiddenFieldsetsDetector()
                 );
@@ -946,7 +946,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         $this->getEventManager(),
                         $this,
                         $layout,
-                        $this->getNatureIsChildLinkRetriever(),
+                        $this->getTypeIsChildLinkRetriever(),
                         $this->getVisitRecorder(),
                         $this->getHiddenFieldsetsDetector()
                     );
@@ -956,9 +956,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         }
     }
 
-    private function getNatureIsChildLinkRetriever()
+    private function getTypeIsChildLinkRetriever()
     {
-        return new NatureIsChildLinkRetriever($this->getArtifactFactory(), $this->getArtifactlinkDao());
+        return new TypeIsChildLinkRetriever($this->getArtifactFactory(), $this->getArtifactlinkDao());
     }
 
     private function getArtifactlinkDao()
@@ -1028,7 +1028,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $child,
                 $this,
                 $semantics,
-                $this->getNatureIsChildLinkRetriever()
+                $this->getTypeIsChildLinkRetriever()
             );
         }
 
@@ -1725,8 +1725,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $fields_data                                        = [];
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
-            if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                $fields_data[$artlink_field->getId()]['natures'] = $this->getTypeForLink(
+            if ($this->getTracker()->isProjectAllowedToUseType()) {
+                $fields_data[$artlink_field->getId()]['types'] = $this->getTypeForLink(
                     $linked_artifact_id,
                     $artifact_link_type
                 );
@@ -2307,7 +2307,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $this->getArtifactFactory(),
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
-                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao(),
+                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
                 $usage_dao
             ),
             $usage_dao

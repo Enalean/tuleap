@@ -26,7 +26,7 @@ use Tuleap\ArtifactsFolders\Converter\ArtifactsFoldersToScrumV2Converter;
 use Tuleap\ArtifactsFolders\Converter\ConverterDao;
 use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
 $usage_options      = '';
@@ -95,7 +95,7 @@ try {
 
     $converter_dao                  = new ConverterDao();
     $artifact_factory               = Tracker_ArtifactFactory::instance();
-    $nature_is_child_link_retriever = new NatureIsChildLinkRetriever(
+    $nature_is_child_link_retriever = new TypeIsChildLinkRetriever(
         $artifact_factory,
         new ArtifactLinkFieldValueDao()
     );

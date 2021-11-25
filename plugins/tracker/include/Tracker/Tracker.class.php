@@ -55,8 +55,8 @@ use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
@@ -187,7 +187,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public $semantics = [];
 
-    private $is_project_allowed_to_use_nature;
+    private $is_project_allowed_to_use_type;
 
     /**
      * @var TemplateRenderer
@@ -919,14 +919,14 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * @return bool
      */
-    public function isProjectAllowedToUseNature()
+    public function isProjectAllowedToUseType()
     {
-        if ($this->is_project_allowed_to_use_nature === null) {
+        if ($this->is_project_allowed_to_use_type === null) {
             $artifact_links_usage_updater = new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
 
-            $this->is_project_allowed_to_use_nature = $artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($this->getProject());
+            $this->is_project_allowed_to_use_type = $artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($this->getProject());
         }
-        return $this->is_project_allowed_to_use_nature;
+        return $this->is_project_allowed_to_use_type;
     }
 
     private function getHierarchyController(Codendi_Request $request): HierarchyController
@@ -2522,7 +2522,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $hp                 = Codendi_HTMLPurifier::instance();
 
         $unknown_fields = [];
-        $error_nature   = [];
+        $error_type     = [];
         foreach ($lines as $cpt_line => $line) {
             $data = [];
             foreach ($header_line as $idx => $field_name) {
@@ -2575,7 +2575,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $has_blocking_error = true;
                         }
                     } else {
-                        $error_nature[$column_name] = $column_name;
+                        $error_type[$column_name] = $column_name;
                     }
                 } else {
                     //Field is aid : we check if the artifact id exists
@@ -2616,8 +2616,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         if (count($unknown_fields) > 0) {
             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Unknown field: %1$s'), implode(',', $unknown_fields)));
         }
-        if (count($error_nature) > 0) {
-            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Columns using type will not be taken into account during import : %1$s.'), implode(',', $error_nature)));
+        if (count($error_type) > 0) {
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Columns using type will not be taken into account during import : %1$s.'), implode(',', $error_type)));
         }
 
         return $has_blocking_error;
@@ -3071,7 +3071,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             new HierarchyDAO(),
             $this->getTrackerFactory(),
             $this->getTrackerArtifactFactory(),
-            new NatureIsChildLinkRetriever(
+            new TypeIsChildLinkRetriever(
                 $this->getTrackerArtifactFactory(),
                 new ArtifactLinkFieldValueDao()
             )
@@ -3210,7 +3210,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $logger,
             $send_notifications,
             Tracker_ArtifactFactory::instance(),
-            new NatureDao(),
+            new TypeDao(),
             new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $logger),
             new ExistingArtifactSourceIdFromTrackerExtractor($artifact_source_id_dao),
             $artifact_source_id_dao,
@@ -3387,7 +3387,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return new ArtifactLinkValidator(
             \Tracker_ArtifactFactory::instance(),
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
-                new NatureDao(),
+                new TypeDao(),
                 $artifact_links_usage_dao
             ),
             $artifact_links_usage_dao

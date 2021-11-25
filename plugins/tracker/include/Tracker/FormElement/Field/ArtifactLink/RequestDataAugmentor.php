@@ -41,9 +41,9 @@ class RequestDataAugmentor
         Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
         array &$fields_data
     ): void {
-        if ($artifact_link_field->getTracker()->isProjectAllowedToUseNature()) {
+        if ($artifact_link_field->getTracker()->isProjectAllowedToUseType()) {
             $this->invertParentRelationship($artifact_link_field, $fields_data);
-            $this->addNewValuesInNaturesArray($artifact_link_field, $fields_data);
+            $this->addNewValuesInTypesArray($artifact_link_field, $fields_data);
         }
 
         $this->event_manager->processEvent(
@@ -63,7 +63,7 @@ class RequestDataAugmentor
             return;
         }
 
-        if (! isset($fields_data[$artifact_link_field->getId()]['nature'])) {
+        if (! isset($fields_data[$artifact_link_field->getId()]['type'])) {
             return;
         }
 
@@ -76,11 +76,11 @@ class RequestDataAugmentor
         Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
         array &$fields_data
     ): void {
-        if ($fields_data[$artifact_link_field->getId()]['nature'] === Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT) {
+        if ($fields_data[$artifact_link_field->getId()]['type'] === Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT) {
             $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY] = explode(',', $fields_data[$artifact_link_field->getId()]['new_values']);
 
             $fields_data[$artifact_link_field->getId()]['new_values'] = '';
-            $fields_data[$artifact_link_field->getId()]['nature']     = '';
+            $fields_data[$artifact_link_field->getId()]['type']       = '';
         }
     }
 
@@ -88,17 +88,17 @@ class RequestDataAugmentor
         Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
         array &$fields_data
     ): void {
-        if (! isset($fields_data[$artifact_link_field->getId()]['natures'])) {
+        if (! isset($fields_data[$artifact_link_field->getId()]['types'])) {
             return;
         }
 
-        foreach ($fields_data[$artifact_link_field->getId()]['natures'] as $id => $requested_type) {
+        foreach ($fields_data[$artifact_link_field->getId()]['types'] as $id => $requested_type) {
             if ($requested_type !== Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT) {
                 continue;
             }
 
             if (isset($fields_data[$artifact_link_field->getId()]['removed_values'][$id])) {
-                unset($fields_data[$artifact_link_field->getId()]['natures'][$id]);
+                unset($fields_data[$artifact_link_field->getId()]['types'][$id]);
                 continue;
             }
 
@@ -107,7 +107,7 @@ class RequestDataAugmentor
             }
 
             $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY][] = (int) $id;
-            unset($fields_data[$artifact_link_field->getId()]['natures'][$id]);
+            unset($fields_data[$artifact_link_field->getId()]['types'][$id]);
             $fields_data[$artifact_link_field->getId()]['removed_values'][$id] = [(int) $id];
         }
     }
@@ -125,7 +125,7 @@ class RequestDataAugmentor
         );
     }
 
-    private function addNewValuesInNaturesArray(
+    private function addNewValuesInTypesArray(
         Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
         array &$fields_data
     ): void {
@@ -135,16 +135,16 @@ class RequestDataAugmentor
 
         $new_values = $fields_data[$artifact_link_field->getId()]['new_values'];
 
-        if (! isset($fields_data[$artifact_link_field->getId()]['nature'])) {
-            $fields_data[$artifact_link_field->getId()]['nature'] = Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
+        if (! isset($fields_data[$artifact_link_field->getId()]['type'])) {
+            $fields_data[$artifact_link_field->getId()]['type'] = Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
         }
 
         if (trim($new_values) != '') {
             $art_id_array = explode(',', $new_values);
             foreach ($art_id_array as $artifact_id) {
                 $artifact_id = trim($artifact_id);
-                if (! isset($fields_data[$artifact_link_field->getId()]['natures'][$artifact_id])) {
-                    $fields_data[$artifact_link_field->getId()]['natures'][$artifact_id] = $fields_data[$artifact_link_field->getId()]['nature'];
+                if (! isset($fields_data[$artifact_link_field->getId()]['types'][$artifact_id])) {
+                    $fields_data[$artifact_link_field->getId()]['types'][$artifact_id] = $fields_data[$artifact_link_field->getId()]['type'];
                 }
             }
         }

@@ -91,7 +91,7 @@ final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 self::ARTIFACT_LINK_ID => [
                     'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
-                    'natures'    => [
+                    'types'      => [
                         (string) self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME
                     ]
                 ],
@@ -126,7 +126,7 @@ final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 self::ARTIFACT_LINK_ID => [
                     'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
-                    'natures'    => [
+                    'types'      => [
                         (string) self::SOURCE_PROGRAM_INCREMENT_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
                     ]
                 ]

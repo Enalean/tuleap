@@ -40,10 +40,10 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
     public function __construct(
         SemanticProgressDao $dao,
-        string $artifact_link_nature
+        string $artifact_link_type
     ) {
         $this->dao                = $dao;
-        $this->artifact_link_type = $artifact_link_nature;
+        $this->artifact_link_type = $artifact_link_type;
     }
 
     public static function getMethodName(): string
@@ -92,7 +92,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
         foreach ($linked_artifacts_value->getValue() as $link_info) {
             \assert($link_info instanceof Tracker_ArtifactLinkInfo);
-            if ($link_info->getNature() !== $this->artifact_link_type) {
+            if ($link_info->getType() !== $this->artifact_link_type) {
                 continue;
             }
 

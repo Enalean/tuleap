@@ -27,21 +27,21 @@ class FieldDataBuilder
         return [
             'new_values'     => $this->formatNewValuesLikeWebUI($new_values),
             'removed_values' => $this->formatRemovedValuesLikeWebUI($removed_values),
-            'natures'        => $this->formatNaturesLikeWebUI($submitted_values)
+            'types'          => $this->formatTypesLikeWebUI($submitted_values)
         ];
     }
 
-    private function formatNaturesLikeWebUI(array $new_values)
+    private function formatTypesLikeWebUI(array $new_values)
     {
-        $natures = [];
+        $types = [];
 
         foreach ($new_values as $value) {
             if (is_array($value) && isset($value['type'])) {
-                $natures[$value['id']] = $value['type'];
+                $types[$value['id']] = $value['type'];
             }
         }
 
-        return $natures;
+        return $types;
     }
 
     private function formatNewValuesLikeWebUI(array $new_values)
@@ -87,19 +87,19 @@ class FieldDataBuilder
 
     public function buildFieldDataFromREST(array $link)
     {
-        $id     = null;
-        $nature = null;
+        $id   = null;
+        $type = null;
         if (array_key_exists('id', $link)) {
             $id = $link['id'];
         }
         if (array_key_exists('type', $link)) {
-            $nature = $link['type'];
+            $type = $link['type'];
         }
 
         if ($id) {
             return [
-                "id"     => $id,
-                "nature" => $nature
+                "id"   => $id,
+                "type" => $type
             ];
         }
 

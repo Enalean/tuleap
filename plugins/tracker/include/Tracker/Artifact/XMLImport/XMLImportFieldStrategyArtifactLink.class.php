@@ -19,12 +19,12 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
     /**
-     * Add customs natures to tracker
+     * Add customs types to tracker
      *
      * Parameters:
      *  - tracker_id: input int
@@ -33,7 +33,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     public const TRACKER_ADD_SYSTEM_TYPES = 'tracker_add_system_types';
 
     /**
-     * Check that nature is respects rules
+     * Check that type respects rules
      *
      * Parameters:
      *  - tracker_id: input in
@@ -42,30 +42,14 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
      *  - children_id: input int
      *  - shortname: input string
      */
-    public const TRACKER_IS_NATURE_VALID = 'tracker_is_nature_valid';
-
-    /** @var Tracker_XML_Importer_ArtifactImportedMapping */
-    private $artifact_id_mapping;
-
-    /** @var \Psr\Log\LoggerInterface  */
-    private $logger;
-
-    /** @var Tracker_ArtifactFactory  */
-    private $artifact_factory;
-
-    /** @var NatureDao  */
-    private $nature_dao;
+    public const TRACKER_IS_TYPE_VALID = 'tracker_is_type_valid';
 
     public function __construct(
-        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        \Psr\Log\LoggerInterface $logger,
-        Tracker_ArtifactFactory $artifact_factory,
-        NatureDao $nature_dao
+        private Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
+        private \Psr\Log\LoggerInterface $logger,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private TypeDao $type_dao
     ) {
-        $this->artifact_id_mapping = $artifact_id_mapping;
-        $this->logger              = $logger;
-        $this->artifact_factory    = $artifact_factory;
-        $this->nature_dao          = $nature_dao;
     }
 
     public function getFieldData(
@@ -87,65 +71,65 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         return [
             'new_values'     => $add_values,
             'removed_values' => $removed_values,
-            'natures'        => $new_values['natures']
+            'types'          => $new_values['types']
         ];
     }
 
     private function extractArtifactLinkFromXml(SimpleXMLElement $field_change, Artifact $artifact)
     {
         $artifact_links = [];
-        $natures        = [];
+        $types          = [];
 
         foreach ($field_change->value as $artifact_link) {
             $linked_artifact_id = (int) $artifact_link;
 
             if ($this->artifact_id_mapping->containsSource($linked_artifact_id)) {
                 $link             = $this->artifact_id_mapping->get($linked_artifact_id);
-                $linked_nature    = $this->getNatureFromMappedArtifact($artifact, $artifact_link, $link);
-                $natures[$link]   = $linked_nature;
+                $linked_type      = $this->getTypeFromMappedArtifact($artifact, $artifact_link, $link);
+                $types[$link]     = $linked_type;
                 $artifact_links[] = $link;
 
-                $this->checkNatureExistOnPlateform($linked_nature, $linked_artifact_id);
+                $this->checkTypeExistOnPlateform($linked_type, $linked_artifact_id);
             } else {
                 $this->logger->error("Could not find artifact with id=$linked_artifact_id in xml.");
             }
         }
 
-        return ["new_values" => $artifact_links, "natures" => $natures];
+        return ["new_values" => $artifact_links, "types" => $types];
     }
 
-    private function checkNatureExistOnPlateform($linked_nature, $linked_artifact_id)
+    private function checkTypeExistOnPlateform($linked_type, $linked_artifact_id)
     {
-        $system_nature = [];
-        $this->retrieveSystemTypes($system_nature);
+        $system_types = [];
+        $this->retrieveSystemTypes($system_types);
 
-        if ($linked_nature && ! in_array($linked_nature, $system_nature)) {
-            $nature = $this->nature_dao->getNatureByShortname($linked_nature);
-            if ($nature->count() === 0) {
-                $this->logger->error("Nature $linked_nature not found on plateform. Artifact $linked_artifact_id added without nature.");
+        if ($linked_type && ! in_array($linked_type, $system_types, true)) {
+            $type = $this->type_dao->getTypeByShortname($linked_type);
+            if ($type->count() === 0) {
+                $this->logger->error("Type $linked_type not found on plateform. Artifact $linked_artifact_id added without type.");
             }
         }
     }
 
-    private function getNatureFromMappedArtifact(
+    private function getTypeFromMappedArtifact(
         Artifact $artifact,
         SimpleXMLElement $xml_element,
         $mapped_artifact_id
     ) {
-        $nature       = (string) $xml_element['nature'];
+        $type         = (string) $xml_element['nature'];
         $xml_artifact = $this->artifact_factory->getArtifactById($mapped_artifact_id);
         if ($xml_artifact) {
-            $error_message = $this->isLinkValid($xml_artifact->getTrackerId(), $artifact, $mapped_artifact_id, $nature);
+            $error_message = $this->isLinkValid($xml_artifact->getTrackerId(), $artifact, $mapped_artifact_id, $type);
             if ($error_message !== "") {
                 $this->logger->error($error_message);
                 return "";
             }
         }
 
-        return $nature;
+        return $type;
     }
 
-    private function retrieveSystemTypes(array &$types)
+    private function retrieveSystemTypes(array &$types): void
     {
         $params['types']   = &$types;
         $params['types'][] = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
@@ -173,19 +157,20 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         return $removed_artifacts;
     }
 
-    private function isLinkValid($tracker_id, Artifact $artifact, $children_id, $nature)
+    private function isLinkValid($tracker_id, Artifact $artifact, $children_id, $type): string
     {
-        $error                 = "";
-        $params['error']       = &$error;
-        $params['tracker_id']  = &$tracker_id;
-        $params['artifact']    = $artifact;
-        $params['children_id'] = $children_id;
-        $params['nature']      = $nature;
+        $error = "";
         EventManager::instance()->processEvent(
-            self::TRACKER_IS_NATURE_VALID,
-            $params
+            self::TRACKER_IS_TYPE_VALID,
+            [
+                'error'       => &$error,
+                'tracker_id'  => $tracker_id,
+                'artifact'    => $artifact,
+                'children_id' => $children_id,
+                'type'        => $type,
+            ]
         );
 
-        return $params['error'];
+        return $error;
     }
 }

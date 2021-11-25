@@ -22,7 +22,7 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use Codendi_Request;
 use Tracker_ArtifactFactory;
-use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
+use Tuleap\ArtifactsFolders\Type\TypeInFolderPresenter;
 
 class DataFromRequestAugmentor
 {
@@ -86,6 +86,6 @@ class DataFromRequestAugmentor
             $fields_data['new_values'] .= ',';
         }
         $fields_data['new_values']                      .= $new_artifact_folder_id;
-        $fields_data['natures'][$new_artifact_folder_id] = TypeInFolderPresenter::NATURE_IN_FOLDER;
+        $fields_data['natures'][$new_artifact_folder_id] = TypeInFolderPresenter::TYPE_IN_FOLDER;
     }
 }

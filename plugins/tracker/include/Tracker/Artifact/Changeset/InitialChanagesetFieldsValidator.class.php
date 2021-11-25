@@ -62,7 +62,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $artifact_factory,
             new TypePresenterFactory(
-                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao(),
+                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
                 $artifact_link_usage_dao
             ),
             $artifact_link_usage_dao

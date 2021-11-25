@@ -22,7 +22,7 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use DataAccessObject;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
+use Tuleap\ArtifactsFolders\Type\TypeInFolderPresenter;
 
 class Dao extends DataAccessObject
 {
@@ -62,7 +62,7 @@ class Dao extends DataAccessObject
     public function searchFoldersTheArtifactBelongsTo($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $in_folder   = $this->da->quoteSmart(TypeInFolderPresenter::NATURE_IN_FOLDER);
+        $in_folder   = $this->da->quoteSmart(TypeInFolderPresenter::TYPE_IN_FOLDER);
 
         $sql = "SELECT a.id AS artifact_id, folder.*
                 FROM tracker_artifact AS a

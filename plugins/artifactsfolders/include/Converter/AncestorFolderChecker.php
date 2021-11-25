@@ -22,12 +22,12 @@ namespace Tuleap\ArtifactsFolders\Converter;
 
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 
 class AncestorFolderChecker
 {
     /**
-     * @var NatureIsChildLinkRetriever
+     * @var TypeIsChildLinkRetriever
      */
     private $nature_is_child_retriever;
     /**
@@ -36,7 +36,7 @@ class AncestorFolderChecker
     private $hierarchy_of_folder_builder;
 
     public function __construct(
-        NatureIsChildLinkRetriever $nature_is_child_retriever,
+        TypeIsChildLinkRetriever $nature_is_child_retriever,
         HierarchyOfFolderBuilder $hierarchy_of_folder_builder
     ) {
         $this->nature_is_child_retriever   = $nature_is_child_retriever;

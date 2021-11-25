@@ -20,8 +20,8 @@
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RemovedLinkCollection;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddedLinkByNatureCollection;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\UpdatedNatureLinkCollection;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddedLinkByTypeCollection;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\UpdatedTypeLinkCollection;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfLinksFormatter;
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
@@ -30,7 +30,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
      * Plugin can choose to hide artifacts
      *
      * Parameters:
-     *  - nature        => (input) String
+     *  - type          => (input) String
      *  - hide_artifact => (output) Bool
      *  - artifact      => Tracker_Artifact
      *
@@ -46,11 +46,11 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
     /** @var RemovedLinkCollection */
     private $removed;
 
-    /** @var AddedLinkByNatureCollection[] */
-    private $added_by_nature;
+    /** @var AddedLinkByTypeCollection[] */
+    private $added_by_type;
 
-    /** @var UpdatedNatureLinkCollection[] */
-    private $updated_by_nature;
+    /** @var UpdatedTypeLinkCollection[] */
+    private $updated_by_type;
 
     /**
      * @param Tracker_ArtifactLinkInfo[] $previous
@@ -60,7 +60,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         array $previous,
         array $next,
         Tracker $tracker,
-        TypePresenterFactory $nature_factory
+        TypePresenterFactory $type_factory
     ) {
         $this->previous = $previous;
         $this->next     = $next;
@@ -72,79 +72,79 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
                 $this->removed->add($previous[$key]);
             }
 
-            $this->added_by_nature   = [];
-            $this->updated_by_nature = [];
+            $this->added_by_type   = [];
+            $this->updated_by_type = [];
             foreach ($next as $key => $artifactlinkinfo) {
                 if (! isset($previous[$key])) {
-                    $this->fillAddedByNature($artifactlinkinfo, $nature_factory, $formatter);
-                } elseif ($previous[$key]->getNature() !== $artifactlinkinfo->getNature()) {
-                    $this->fillUpdatedByNature($previous[$key], $artifactlinkinfo, $tracker, $nature_factory, $formatter);
+                    $this->fillAddedByType($artifactlinkinfo, $type_factory, $formatter);
+                } elseif ($previous[$key]->getType() !== $artifactlinkinfo->getType()) {
+                    $this->fillUpdatedByType($previous[$key], $artifactlinkinfo, $tracker, $type_factory, $formatter);
                 }
             }
         }
     }
 
-    private function fillAddedByNature(
+    private function fillAddedByType(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
-        TypePresenterFactory $nature_factory,
+        TypePresenterFactory $type_factory,
         CollectionOfLinksFormatter $formatter
     ) {
-        if ($artifactlinkinfo->getNature() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getNature())) {
+        if ($artifactlinkinfo->getType() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getType())) {
             return;
         }
-        $nature = $nature_factory->getFromShortname($artifactlinkinfo->getNature());
-        if ($nature === null) {
+        $type = $type_factory->getFromShortname($artifactlinkinfo->getType());
+        if ($type === null) {
             return;
         }
-        if (! isset($this->added_by_nature[$nature->shortname])) {
-            $this->added_by_nature[$nature->shortname] = new AddedLinkByNatureCollection($nature, $formatter);
+        if (! isset($this->added_by_type[$type->shortname])) {
+            $this->added_by_type[$type->shortname] = new AddedLinkByTypeCollection($type, $formatter);
         }
-        $this->added_by_nature[$nature->shortname]->add($artifactlinkinfo);
+        $this->added_by_type[$type->shortname]->add($artifactlinkinfo);
     }
 
-    private function getNatureFormChangesets(
+    private function getTypeFormChangesets(
         Tracker_ArtifactLinkInfo $previous_link,
         Tracker_ArtifactLinkInfo $next_link
     ) {
-        $nature = $next_link->getNature();
-        if ($previous_link->getNature()) {
-            $nature = $previous_link->getNature();
+        $type = $next_link->getType();
+        if ($previous_link->getType()) {
+            $type = $previous_link->getType();
         }
 
-        return $nature;
+        return $type;
     }
 
-    private function fillUpdatedByNature(
+    private function fillUpdatedByType(
         Tracker_ArtifactLinkInfo $previous_link,
         Tracker_ArtifactLinkInfo $next_link,
         Tracker $tracker,
-        TypePresenterFactory $nature_factory,
+        TypePresenterFactory $type_factory,
         CollectionOfLinksFormatter $formatter
     ) {
-        if (! $tracker->isProjectAllowedToUseNature()) {
+        if (! $tracker->isProjectAllowedToUseType()) {
             return;
         }
 
-        $nature = $this->getNatureFormChangesets($previous_link, $next_link);
-        if ($nature !== "" && $previous_link->shouldLinkBeHidden($nature)) {
+        $type = $this->getTypeFormChangesets($previous_link, $next_link);
+        if ($type !== "" && $previous_link->shouldLinkBeHidden($type)) {
             return;
         }
 
-        $previous_nature = $nature_factory->getFromShortname($previous_link->getNature());
-        $next_nature     = $nature_factory->getFromShortname($next_link->getNature());
-        if ($previous_nature == $next_nature) {
+        $previous_type = $type_factory->getFromShortname($previous_link->getType());
+        $next_type     = $type_factory->getFromShortname($next_link->getType());
+        if ($previous_type == $next_type) {
             return;
         }
 
-        $key = $previous_nature->shortname . '-' . $next_nature->shortname;
-        if (! isset($this->updated_by_nature[$key])) {
-            $this->updated_by_nature[$key] = new UpdatedNatureLinkCollection(
-                $previous_nature,
-                $next_nature,
+        $key = $previous_type->shortname . '-' . $next_type->shortname;
+        if (! isset($this->updated_by_type[$key])) {
+            $this->updated_by_type[$key] = new UpdatedTypeLinkCollection(
+                $previous_type,
+                $next_type,
                 $formatter
             );
         }
-        $this->updated_by_nature[$key]->add($next_link);
+        $this->updated_by_type[$key]->add($next_link);
     }
 
     /**
@@ -167,10 +167,10 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
 
         $formatted_messages   = [];
         $formatted_messages[] = $this->removed->fetchFormatted($user, $format, $ignore_perms);
-        foreach ($this->added_by_nature as $collection) {
+        foreach ($this->added_by_type as $collection) {
             $formatted_messages[] = $collection->fetchFormatted($user, $format, $ignore_perms);
         }
-        foreach ($this->updated_by_nature as $collection) {
+        foreach ($this->updated_by_type as $collection) {
             $formatted_messages[] = $collection->fetchFormatted($user, $format, $ignore_perms);
         }
 

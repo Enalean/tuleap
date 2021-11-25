@@ -52,7 +52,7 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -90,7 +90,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(
-                        new NatureDao(),
+                        new TypeDao(),
                         $artifact_links_usage_dao
                     ),
                     $artifact_links_usage_dao

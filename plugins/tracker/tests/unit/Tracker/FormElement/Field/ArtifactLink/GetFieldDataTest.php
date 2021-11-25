@@ -74,7 +74,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testOnlyAddsNewValuesWhenNoArtifactGiven(): void
     {
         $this->assertEquals(
-            ['new_values' => '55', 'removed_values' => [], 'natures' => []],
+            ['new_values' => '55', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55')
         );
     }
@@ -85,7 +85,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_without_changeset->setChangesets([]);
 
         $this->assertEquals(
-            ['new_values' => '55,56', 'removed_values' => [], 'natures' => []],
+            ['new_values' => '55,56', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55, 56', $artifact_without_changeset)
         );
     }
@@ -94,7 +94,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->field->shouldReceive('getChangesetValues')->andReturn([]);
         $this->assertEquals(
-            ['new_values' => '55', 'removed_values' => [], 'natures' => []],
+            ['new_values' => '55', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55', $this->artifact)
         );
     }
@@ -103,12 +103,12 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->field->shouldReceive('getChangesetValues')->andReturn([]);
         $this->assertEquals(
-            ['new_values' => '55,66', 'removed_values' => [], 'natures' => []],
+            ['new_values' => '55,66', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55, 66', $this->artifact)
         );
     }
 
-    public function testAddsTwoNewValuesWithNatures(): void
+    public function testAddsTwoNewValuesWithTypes(): void
     {
         $this->field->shouldReceive('getChangesetValues')->andReturn([]);
 
@@ -124,7 +124,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'new_values' => '55,66,77',
                 'removed_values' => [],
-                'natures' => [
+                'types' => [
                     '55' => '_is_child',
                     '66' => 'custom',
                     '77' => '',
@@ -143,7 +143,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertEquals(
-            ['new_values' => '66', 'removed_values' => [], 'natures' => []],
+            ['new_values' => '66', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55, 66', $this->artifact),
         );
     }
@@ -161,7 +161,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'new_values'   => '',
                 'removed_values' => [55 => ['55'], 66 => ['66']],
-                'natures'        => []
+                'types'        => []
             ],
             $this->field->getFieldData('', $this->artifact),
         );
@@ -178,7 +178,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertEquals(
-            ['new_values' => '', 'removed_values' => [55 => ['55']], 'natures' => []],
+            ['new_values' => '', 'removed_values' => [55 => ['55']], 'types' => []],
             $this->field->getFieldData('66,77', $this->artifact),
         );
     }
@@ -194,7 +194,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertEquals(
-            ['new_values' => '', 'removed_values' => [66 => ['66']], 'natures' => []],
+            ['new_values' => '', 'removed_values' => [66 => ['66']], 'types' => []],
             $this->field->getFieldData('55,77', $this->artifact)
         );
     }
@@ -210,7 +210,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertEquals(
-            ['new_values' => '', 'removed_values' => [77 => ['77']], 'natures' => []],
+            ['new_values' => '', 'removed_values' => [77 => ['77']], 'types' => []],
             $this->field->getFieldData('55,66', $this->artifact)
         );
     }
@@ -226,7 +226,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertEquals(
-            ['new_values' => '88', 'removed_values' => [77 => ['77']], 'natures' => []],
+            ['new_values' => '88', 'removed_values' => [77 => ['77']], 'types' => []],
             $this->field->getFieldData('55,66,88', $this->artifact),
         );
     }

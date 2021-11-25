@@ -40,7 +40,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
     /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink */
     private $artlink_strategy;
 
-    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao */
+    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao */
     private $nature_dao;
 
     /** @var  Artifact */
@@ -52,7 +52,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->submitted_by     = \Mockery::spy(\PFUser::class);
         $this->logger           = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->nature_dao       = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao::class);
+        $this->nature_dao       = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao::class);
         $this->artifact         = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTrackerId')->andReturns(888);
 
@@ -77,12 +77,12 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                     <value>100</value>
                   </field_change>');
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar([]));
+        $this->nature_dao->shouldReceive('getTypeByShortname')->andReturns(\TestHelper::arrayToDar([]));
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'natures' => ['1' => '', '2' => '']];
+        $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'types' => ['1' => '', '2' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -104,12 +104,12 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                     <value nature="_in_folder">100</value>
                   </field_change>');
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar([]));
+        $this->nature_dao->shouldReceive('getTypeByShortname')->andReturns(\TestHelper::arrayToDar([]));
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'natures' => ['1' => '_in_folder', '2' => '_is_child']];
+        $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'types' => ['1' => '_in_folder', '2' => '_is_child']];
 
         $this->assertEquals($expected_res, $res);
     }
@@ -135,11 +135,11 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                   </field_change>');
 
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(['titi']));
+        $this->nature_dao->shouldReceive('getTypeByShortname')->andReturns(\TestHelper::arrayToDar(['titi']));
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  ["new_values" => '2,1,3', 'removed_values' => [], 'natures' => ['1' => 'titi', '2' => 'toto', '3' => '']];
+        $expected_res =  ["new_values" => '2,1,3', 'removed_values' => [], 'types' => ['1' => 'titi', '2' => 'toto', '3' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -157,7 +157,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
                     <value>101</value>
                   </field_change>');
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar([]));
+        $this->nature_dao->shouldReceive('getTypeByShortname')->andReturns(\TestHelper::arrayToDar([]));
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
@@ -190,9 +190,9 @@ final class XMLImportFieldStrategyArtifactLinkTest extends \Tuleap\Test\PHPUnit\
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(['toto']));
+        $this->nature_dao->shouldReceive('getTypeByShortname')->andReturns(\TestHelper::arrayToDar(['toto']));
         $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  ["new_values" => '1', 'removed_values' => [2 => 2, 3 => 3], 'natures' => ['1' => 'toto']];
+        $expected_res =  ["new_values" => '1', 'removed_values' => [2 => 2, 3 => 3], 'types' => ['1' => 'toto']];
 
         $this->assertEquals($expected_res, $res);
     }

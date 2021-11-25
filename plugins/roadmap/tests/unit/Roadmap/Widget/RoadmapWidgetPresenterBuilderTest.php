@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
+use Tuleap\ArtifactsFolders\Type\TypeInFolderPresenter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
@@ -51,7 +51,7 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $natures = \json_decode($presenter->visible_natures, true);
         self::assertCount(2, $natures);
-        self::assertEquals(TypeInFolderPresenter::NATURE_IN_FOLDER, $natures[0]['shortname']);
+        self::assertEquals(TypeInFolderPresenter::TYPE_IN_FOLDER, $natures[0]['shortname']);
         self::assertEquals(TypeCoveredByPresenter::TYPE_COVERED_BY, $natures[1]['shortname']);
     }
 

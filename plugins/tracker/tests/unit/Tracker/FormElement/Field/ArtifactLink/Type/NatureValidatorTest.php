@@ -27,45 +27,45 @@ final class NatureValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var NatureValidator
+     * @var TypeValidator
      */
     private $validator;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|NatureDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TypeDao
      */
     private $dao;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao::class);
+        $this->dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao::class);
 
-        $this->validator = new NatureValidator($this->dao);
+        $this->validator = new TypeValidator($this->dao);
     }
 
     public function testItThrowsAnExceptionIfShortnameDoesNotRespectFormat(): void
     {
-        $this->expectException(InvalidNatureParameterException::class);
+        $this->expectException(InvalidTypeParameterException::class);
 
         $this->validator->checkShortname("_fixed_in");
     }
 
     public function testItThrowsAnExceptionIfShortnameIsEmpty(): void
     {
-        $this->expectException(InvalidNatureParameterException::class);
+        $this->expectException(InvalidTypeParameterException::class);
 
         $this->validator->checkShortname("");
     }
 
     public function testItThrowsAnExceptionIfForwardLabelIsEmpty(): void
     {
-        $this->expectException(InvalidNatureParameterException::class);
+        $this->expectException(InvalidTypeParameterException::class);
 
         $this->validator->checkForwardLabel("");
     }
 
     public function testItThrowsAnExceptionIfSReverseLabelIsEmpty(): void
     {
-        $this->expectException(InvalidNatureParameterException::class);
+        $this->expectException(InvalidTypeParameterException::class);
 
         $this->validator->checkReverseLabel("");
     }
@@ -92,7 +92,7 @@ final class NatureValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->shouldReceive('isOrHasBeenUsed')->andReturns(true);
 
-        $this->expectException(UnableToDeleteNatureException::class);
+        $this->expectException(UnableToDeleteTypeException::class);
 
         $this->validator->checkIsNotOrHasNotBeenUsed('_fixed_in');
     }

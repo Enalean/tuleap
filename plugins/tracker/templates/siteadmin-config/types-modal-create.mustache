@@ -1,0 +1,64 @@
+<form action="" id="siteadmin-config-types-modal-create-form" method="POST">
+    <div id="siteadmin-config-types-modal-create" class="tlp-modal" role="dialog" aria-labelledby="siteadmin-config-types-modal-create-label">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="siteadmin-config-types-modal-create-label">
+                <i class="fa fa-plus tlp-modal-title-icon"></i> {{ create_new_type }}
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+                &times;
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="action" value="create-type">
+
+            {{{ csrf_token }}}
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="siteadmin-config-types-modal-create-shortname">{{ shortname_label }} <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                    id="siteadmin-config-types-modal-create-shortname"
+                    name="shortname"
+                    class="tlp-input"
+                    title="{{ shortname_help }}"
+                    placeholder="{{ shortname_placeholder }}"
+                    pattern="{{ shortname_pattern }}"
+                    data-test="artlink-shortname"
+                    required
+                >
+                <p class="tlp-text-info">{{ shortname_help }}</p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="siteadmin-config-types-modal-create-forward">{{ forward_label_label }} <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                    id="siteadmin-config-types-modal-create-forward"
+                    class="tlp-input"
+                    name="forward_label"
+                    placeholder="{{ forward_label_placeholder }}"
+                    data-test="artlink-forward-label"
+                    required
+                >
+                <p class="tlp-text-info">{{ forward_label_help }}</p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="siteadmin-config-types-modal-create-reverse">{{ reverse_label_label }} <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                    id="siteadmin-config-types-modal-create-reverse"
+                    class="tlp-input"
+                    name="reverse_label"
+                    placeholder="{{ reverse_label_placeholder }}"
+                    data-test="artlink-reverse-label"
+                    required
+                >
+                <p class="tlp-text-info">{{ reverse_label_help }}</p>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
+            <button type="submit" form="siteadmin-config-types-modal-create-form" class="tlp-button-primary tlp-modal-action" data-test="artlink-add-button">
+                <i class="fa fa-plus tlp-button-icon"></i> {{ create_new_type }}
+            </button>
+        </div>
+    </div>
+</form>

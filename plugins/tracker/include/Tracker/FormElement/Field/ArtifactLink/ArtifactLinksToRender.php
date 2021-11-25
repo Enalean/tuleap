@@ -27,40 +27,40 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 class ArtifactLinksToRender
 {
     private $has_artifact_to_display;
-    private $grouped_by_project_then_tracker  = [];
-    private $grouped_by_nature_with_presenter = [];
+    private $grouped_by_project_then_tracker = [];
+    private $grouped_by_type_with_presenter  = [];
 
     private $can_user_artifact_link_cache = [];
-    private $nature_presenter_cache       = [];
+    private $type_presenter_cache         = [];
 
     public function __construct(
         \PFUser $current_user,
         \Tracker_FormElement_Field_ArtifactLink $field,
         \TrackerFactory $tracker_factory,
         \Tracker_ReportFactory $report_factory,
-        TypePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $type_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         if (empty($link_infos)) {
             $this->has_artifact_to_display = false;
             return;
         }
-        $this->has_artifact_to_display          = true;
-        $matching_ids                           = $this->getMatchingIDs(
+        $this->has_artifact_to_display         = true;
+        $matching_ids                          = $this->getMatchingIDs(
             $current_user,
             $field,
-            $nature_presenter_factory,
+            $type_presenter_factory,
             ...$link_infos
         );
-        $this->grouped_by_project_then_tracker  = $this->groupAndEnhanceMatchingIDsPerProject(
+        $this->grouped_by_project_then_tracker = $this->groupAndEnhanceMatchingIDsPerProject(
             $tracker_factory,
             $report_factory,
             $matching_ids
         );
-        $this->grouped_by_nature_with_presenter = $this->groupPerNatureWithPresenter(
+        $this->grouped_by_type_with_presenter  = $this->groupPerTypeWithPresenter(
             $field,
             $current_user,
-            $nature_presenter_factory,
+            $type_presenter_factory,
             ...$link_infos
         );
     }
@@ -68,15 +68,15 @@ class ArtifactLinksToRender
     private function getMatchingIDs(
         \PFUser $current_user,
         \Tracker_FormElement_Field_ArtifactLink $field,
-        TypePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $type_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         $tracker = $field->getTracker();
         if ($tracker === null) {
             return [];
         }
-        $project_allowed_to_use_nature = $tracker->isProjectAllowedToUseNature();
-        $ids                           = [];
+        $project_allowed_to_use_type = $tracker->isProjectAllowedToUseType();
+        $ids                         = [];
         // build an array of artifact_id / last_changeset_id for fetch renderer method
         foreach ($link_infos as $artifact_link) {
             if ($this->canUseArtifactLink($current_user, $artifact_link)) {
@@ -86,19 +86,19 @@ class ArtifactLinksToRender
                         'id'                => '',
                         'last_changeset_id' => ''
                     ];
-                    if ($project_allowed_to_use_nature) {
-                        $ids[$artifact_link_tracker_id]['nature'] = [];
+                    if ($project_allowed_to_use_type) {
+                        $ids[$artifact_link_tracker_id]['type'] = [];
                     }
                 }
                 $artifact_id                                          = $artifact_link->getArtifactId();
                 $ids[$artifact_link_tracker_id]['id']                .= "$artifact_id,";
                 $ids[$artifact_link_tracker_id]['last_changeset_id'] .= $artifact_link->getLastChangesetId() . ',';
-                if ($project_allowed_to_use_nature) {
-                    $nature_presenter                                       = $this->getNaturePresenterFromShortnameWithCache(
-                        $nature_presenter_factory,
-                        $artifact_link->getNature()
+                if ($project_allowed_to_use_type) {
+                    $type_presenter                                       = $this->getTypePresenterFromShortnameWithCache(
+                        $type_presenter_factory,
+                        $artifact_link->getType()
                     );
-                    $ids[$artifact_link_tracker_id]['nature'][$artifact_id] = $nature_presenter;
+                    $ids[$artifact_link_tracker_id]['type'][$artifact_id] = $type_presenter;
                 }
             }
         }
@@ -157,45 +157,45 @@ class ArtifactLinksToRender
         return $projects;
     }
 
-    private function groupPerNatureWithPresenter(
+    private function groupPerTypeWithPresenter(
         \Tracker_FormElement_Field_ArtifactLink $field,
         \PFUser $current_user,
-        TypePresenterFactory $nature_presenter_factory,
+        TypePresenterFactory $type_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         $tracker = $field->getTracker();
-        if ($tracker === null || ! $tracker->isProjectAllowedToUseNature()) {
+        if ($tracker === null || ! $tracker->isProjectAllowedToUseType()) {
             return [];
         }
 
-        $by_nature = [];
+        $by_type = [];
         foreach ($link_infos as $artifact_link) {
             if ($this->canUseArtifactLink($current_user, $artifact_link)) {
-                $nature = (string) $artifact_link->getNature();
-                if (! isset($by_nature[$nature])) {
-                    $by_nature[$nature] = [];
+                $type = (string) $artifact_link->getType();
+                if (! isset($by_type[$type])) {
+                    $by_type[$type] = [];
                 }
-                $by_nature[$nature][] = $artifact_link;
+                $by_type[$type][] = $artifact_link;
             }
         }
 
-        $grouped_by_nature_with_presenter = [];
-        foreach ($by_nature as $nature => $artifact_links) {
-            if (empty($nature)) {
+        $grouped_by_type_with_presenter = [];
+        foreach ($by_type as $type => $artifact_links) {
+            if (empty($type)) {
                 continue;
             }
 
-            $nature_presenter = $this->getNaturePresenterFromShortnameWithCache($nature_presenter_factory, $nature);
-            if ($nature_presenter === null) {
+            $type_presenter = $this->getTypePresenterFromShortnameWithCache($type_presenter_factory, $type);
+            if ($type_presenter === null) {
                 continue;
             }
-            $grouped_by_nature_with_presenter[$nature] = new ArtifactLinksToRenderForPerNatureTable(
-                $nature_presenter,
+            $grouped_by_type_with_presenter[$type] = new ArtifactLinksToRenderForPerTypeTable(
+                $type_presenter,
                 ...$artifact_links
             );
         }
 
-        return $grouped_by_nature_with_presenter;
+        return $grouped_by_type_with_presenter;
     }
 
     /**
@@ -219,21 +219,21 @@ class ArtifactLinksToRender
     private function hideArtifact(Tracker_ArtifactLinkInfo $artifactlink_info)
     {
         return $artifactlink_info->shouldLinkBeHidden(
-            $artifactlink_info->getNature()
+            $artifactlink_info->getType()
         );
     }
 
     /**
      * @return null|Type\TypePresenter
      */
-    private function getNaturePresenterFromShortnameWithCache(TypePresenterFactory $nature_presenter_factory, $shortname)
+    private function getTypePresenterFromShortnameWithCache(TypePresenterFactory $type_presenter_factory, $shortname)
     {
-        if (isset($this->nature_presenter_cache[$shortname])) {
-            return $this->nature_presenter_cache[$shortname];
+        if (isset($this->type_presenter_cache[$shortname])) {
+            return $this->type_presenter_cache[$shortname];
         }
-        $nature_presenter                         = $nature_presenter_factory->getFromShortname($shortname);
-        $this->nature_presenter_cache[$shortname] = $nature_presenter;
-        return $nature_presenter;
+        $type_presenter                         = $type_presenter_factory->getFromShortname($shortname);
+        $this->type_presenter_cache[$shortname] = $type_presenter;
+        return $type_presenter;
     }
 
     public function hasArtifactLinksToDisplay()
@@ -270,8 +270,8 @@ class ArtifactLinksToRender
         return $this->grouped_by_project_then_tracker[$project_id][$tracker_id];
     }
 
-    public function getArtifactLinksForPerNatureDisplay()
+    public function getArtifactLinksForPerTypeDisplay()
     {
-        return $this->grouped_by_nature_with_presenter;
+        return $this->grouped_by_type_with_presenter;
     }
 }

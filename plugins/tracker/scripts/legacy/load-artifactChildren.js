@@ -22,9 +22,9 @@
 (function ($) {
     $(document).ready(function () {
         var hierarchy_containers = $(".artifact-hierarchy");
-        var nature_containers = $(".artifact-nature");
+        var type_containers = $(".artifact-type");
 
-        var containers = hierarchy_containers.add(nature_containers);
+        var containers = hierarchy_containers.add(type_containers);
 
         containers.each(function () {
             var container = $(this),

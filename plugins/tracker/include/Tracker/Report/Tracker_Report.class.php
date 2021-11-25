@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPriva
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Masschange\MasschangeUpdater;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
@@ -689,7 +689,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         $project = $this->getTracker()->getProject();
         $options = [];
-        $types   = $this->getNaturePresenterFactory()->getAllTypesEditableInProject($project);
+        $types   = $this->getTypePresenterFactory()->getAllTypesEditableInProject($project);
 
         $column_id = $id . '_';
         $option    = new Templating_Presenter_ButtonDropdownsOption(
@@ -700,10 +700,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         );
         $option->setLiParameters(
             [
-                'data-column-id'            => $column_id,
-                'data-field-id'             => $id,
-                'data-field-is-used'        => intval(isset($used[$column_id])),
-                'data-field-artlink-nature' => ''
+                'data-column-id'          => $column_id,
+                'data-field-id'           => $id,
+                'data-field-is-used'      => intval(isset($used[$column_id])),
+                'data-field-artlink-type' => ''
             ]
         );
         $options[] = $option;
@@ -727,10 +727,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             );
             $option->setLiParameters(
                 [
-                    'data-column-id'            => $column_id,
-                    'data-field-id'             => $id,
-                    'data-field-is-used'        => intval(isset($used[$column_id])),
-                    'data-field-artlink-nature' => $type->shortname
+                    'data-column-id'          => $column_id,
+                    'data-field-id'           => $id,
+                    'data-field-is-used'      => intval(isset($used[$column_id])),
+                    'data-field-artlink-type' => $type->shortname
                 ]
             );
             $options[] = $option;
@@ -757,9 +757,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     /**
      * @return TypePresenterFactory
      */
-    private function getNaturePresenterFactory()
+    private function getTypePresenterFactory()
     {
-        return new TypePresenterFactory(new NatureDao(), $this->getArtifactLinksUsageDao());
+        return new TypePresenterFactory(new TypeDao(), $this->getArtifactLinksUsageDao());
     }
 
     /**

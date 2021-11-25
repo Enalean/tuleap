@@ -166,7 +166,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
     add: function (dropdown, li) {
         var column_id = li.readAttribute("data-column-id"),
             field_id = li.readAttribute("data-field-id"),
-            artlink_nature = li.readAttribute("data-field-artlink-nature"),
+            artlink_type = li.readAttribute("data-field-artlink-type"),
             matching_columns = $$("th[data-column-id=" + column_id + "]");
 
         if (matching_columns.length > 0) {
@@ -190,8 +190,8 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     ),
                     "renderer_table[add-column][field-id]": field_id,
                 };
-            if (artlink_nature !== null) {
-                parameters["renderer_table[add-column][artlink-nature]"] = artlink_nature;
+            if (artlink_type !== null) {
+                parameters["renderer_table[add-column][artlink-type]"] = artlink_type;
             }
 
             //eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -247,9 +247,9 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     //resize
                     TableKit.reload();
 
-                    if (artlink_nature !== null) {
-                        codendi.tracker.report.table.initNatureColumnEditor(
-                            new_column.down(".nature-column-editor")
+                    if (artlink_type !== null) {
+                        codendi.tracker.report.table.initTypeColumnEditor(
+                            new_column.down(".type-column-editor")
                         );
                     }
                 },

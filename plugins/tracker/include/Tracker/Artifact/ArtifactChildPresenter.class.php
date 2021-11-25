@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 
 /**
  * Presenter of the child of an artifact
@@ -57,7 +57,7 @@ class Tracker_ArtifactChildPresenter
         Artifact $artifact,
         Artifact $parent,
         Tracker_Semantic_Status $semantic,
-        NatureIsChildLinkRetriever $retriever
+        TypeIsChildLinkRetriever $retriever
     ) {
         $base_url = \Tuleap\ServerHostname::HTTPSUrl();
 
@@ -70,9 +70,9 @@ class Tracker_ArtifactChildPresenter
         $this->has_children = $this->hasChildren($artifact, $retriever);
     }
 
-    private function hasChildren(Artifact $artifact, NatureIsChildLinkRetriever $retriever): bool
+    private function hasChildren(Artifact $artifact, TypeIsChildLinkRetriever $retriever): bool
     {
-        if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
+        if ($artifact->getTracker()->isProjectAllowedToUseType()) {
             $artifact_links = $retriever->getChildren($artifact);
             return count($artifact_links) > 0;
         } else {

@@ -46,12 +46,15 @@ class ValueFormatter
         $this->output  = $output;
     }
 
-    public function fetchFormattedValue(PFUser $user, array $values, $nature, $format)
+    /**
+     * @param Tracker_ArtifactLinkInfo[]  $values
+     */
+    public function fetchFormattedValue(PFUser $user, array $values, $type, $format): string
     {
         $arr = [];
         preg_match_all('/%(?P<names>[a-z_]+)/i', $format, $matches);
         foreach ($values as $artifact_link_info) {
-            if ($artifact_link_info->getNature() != $nature) {
+            if ($artifact_link_info->getType() != $type) {
                 continue;
             }
 

@@ -30,9 +30,9 @@ class HierarchyDAO extends DataAccessObject
     {
         $this->getDB()->tryFlatTransaction(
             function () use ($parent_id, $child_ids): void {
-                $this->removeExistingIsChildNatures($parent_id, $child_ids);
+                $this->removeExistingIsChildTypes($parent_id, $child_ids);
                 $this->changeTrackerHierarchy($parent_id, $child_ids);
-                $this->addIsChildNature($parent_id, $child_ids);
+                $this->addIsChildType($parent_id, $child_ids);
             }
         );
     }
@@ -54,16 +54,16 @@ class HierarchyDAO extends DataAccessObject
      *   Sprint
      *
      * As you can see, Sprint is not anymore child of Release, we
-     * must remove corresponding nature _is_child.
+     * must remove corresponding type _is_child.
      *
      * Furthermore, Task has a new parent which is Release instead
-     * of UserStory, we must remove corresponding nature _is_child.
+     * of UserStory, we must remove corresponding type _is_child.
      */
-    private function removeExistingIsChildNatures(int $parent_id, array $child_ids): void
+    private function removeExistingIsChildTypes(int $parent_id, array $child_ids): void
     {
-        $this->removeIsChildNatureForTrackersThatAreNotAnymoreChildren($parent_id, $child_ids);
-        $this->removeIsChildNatureForArtifactsThatWasManuallySetAsChildren($parent_id, $child_ids);
-        $this->removeIsChildNatureForTrackersThatHaveANewParent($parent_id, $child_ids);
+        $this->removeIsChildTypeForTrackersThatAreNotAnymoreChildren($parent_id, $child_ids);
+        $this->removeIsChildTypeForArtifactsThatWasManuallySetAsChildren($parent_id, $child_ids);
+        $this->removeIsChildTypeForTrackersThatHaveANewParent($parent_id, $child_ids);
     }
 
     public function changeTrackerHierarchy(int $parent_id, array $child_ids): void
@@ -79,7 +79,7 @@ class HierarchyDAO extends DataAccessObject
         }
     }
 
-    private function addIsChildNature(int $parent_id, array $child_ids): void
+    private function addIsChildType(int $parent_id, array $child_ids): void
     {
         if (empty($child_ids)) {
             return;
@@ -125,7 +125,7 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->run('DELETE FROM tracker_hierarchy WHERE parent_id = ?', $parent_id);
     }
 
-    private function removeIsChildNatureForTrackersThatAreNotAnymoreChildren(int $parent_id, array $child_ids): void
+    private function removeIsChildTypeForTrackersThatAreNotAnymoreChildren(int $parent_id, array $child_ids): void
     {
         $hierarchy_join_condition = EasyStatement::open()->with(
             'hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = ?',
@@ -151,7 +151,7 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->safeQuery($sql, $hierarchy_join_condition->values());
     }
 
-    private function removeIsChildNatureForArtifactsThatWasManuallySetAsChildren(int $parent_id, array $child_ids): void
+    private function removeIsChildTypeForArtifactsThatWasManuallySetAsChildren(int $parent_id, array $child_ids): void
     {
         $where_condition = EasyStatement::open()->with('nature = ?', Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
         if (! empty($child_ids)) {
@@ -175,7 +175,7 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->safeQuery($sql, array_merge([$parent_id], $where_condition->values()));
     }
 
-    private function removeIsChildNatureForTrackersThatHaveANewParent(int $parent_id, array $child_ids): void
+    private function removeIsChildTypeForTrackersThatHaveANewParent(int $parent_id, array $child_ids): void
     {
         if (empty($child_ids)) {
             return;
@@ -250,7 +250,7 @@ class HierarchyDAO extends DataAccessObject
 
         $this->getDB()->run($sql, $tracker_id, $tracker_id);
 
-        $this->removeExistingIsChildNatures($tracker_id, []);
+        $this->removeExistingIsChildTypes($tracker_id, []);
     }
 
     public function duplicate(int $parent_id, int $child_id, array $tracker_mapping): void

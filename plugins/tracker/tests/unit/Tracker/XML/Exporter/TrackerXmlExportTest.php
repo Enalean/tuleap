@@ -45,7 +45,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @var  Mockery\LegacyMockInterface|Mockery\MockInterface|TypePresenterFactory
      */
-    private $nature_presenter_factory;
+    private $type_presenter_factory;
     /**
      * @var Tracker_Artifact_XMLExport
      */
@@ -62,16 +62,16 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function setUp(): void
     {
         $this->tracker1 = Mockery::mock(Tracker::class);
-        $this->tracker1->shouldReceive('isProjectAllowedToUseNature');
+        $this->tracker1->shouldReceive('isProjectAllowedToUseType');
 
         $this->tracker2 = Mockery::mock(Tracker::class);
-        $this->tracker2->shouldReceive('isProjectAllowedToUseNature');
+        $this->tracker2->shouldReceive('isProjectAllowedToUseType');
 
         $tracker_factory = Mockery::mock(TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn([$this->tracker1, $this->tracker2]);
         $tracker_factory->shouldReceive('getTrackerById')->withArgs([456])->andReturn($this->tracker1);
 
-        $this->nature_presenter_factory = Mockery::mock(TypePresenterFactory::class);
+        $this->type_presenter_factory = Mockery::mock(TypePresenterFactory::class);
 
         $this->artifact_link_dao = Mockery::mock(ArtifactLinksUsageDao::class);
         $this->artifact_link_dao->shouldReceive('isTypeDisabledInProject');
@@ -93,7 +93,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_artifact_XMLexport,
             Mockery::mock(\UserXMLExporter::class),
             Mockery::mock(\EventManager::class),
-            $this->nature_presenter_factory,
+            $this->type_presenter_factory,
             $this->artifact_link_dao,
             $this->external_field_extractor
         );
@@ -118,7 +118,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $type = new TypePresenter('fixed_in', '', '', true);
 
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
         $this->xml_export->exportToXMl(
             $project,
@@ -146,7 +146,7 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $type = new TypePresenter('fixed_in', '', '', true);
 
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
         $this->xml_export->exportToXMl(
             $project,

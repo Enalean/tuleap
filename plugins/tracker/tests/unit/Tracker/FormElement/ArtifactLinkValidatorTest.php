@@ -38,7 +38,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory
      */
-    private $nature_presenter_factory;
+    private $type_presenter_factory;
 
     /**
      * @var Tracker_ArtifactFactory
@@ -73,24 +73,24 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter
      */
-    private $nature_is_child;
+    private $type_is_child;
 
     /**
      * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter
      */
-    private $nature_fixed_in;
+    private $type_fixed_in;
 
     /**
      * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter
      */
-    private $nature_no_nature;
+    private $type_no_type;
     private $project;
     private $dao;
 
     public function setUp(): void
     {
-        $this->artifact_factory         = \Mockery::spy(Tracker_ArtifactFactory::class);
-        $this->nature_presenter_factory = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory::class);
+        $this->artifact_factory       = \Mockery::spy(Tracker_ArtifactFactory::class);
+        $this->type_presenter_factory = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory::class);
 
         $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn(101);
@@ -112,13 +112,13 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->artifact_link_validator = new ArtifactLinkValidator(
             $this->artifact_factory,
-            $this->nature_presenter_factory,
+            $this->type_presenter_factory,
             $this->dao
         );
 
-        $this->nature_is_child  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter::class);
-        $this->nature_fixed_in  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
-        $this->nature_no_nature = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
+        $this->type_is_child = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter::class);
+        $this->type_fixed_in = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
+        $this->type_no_type  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
     }
 
     public function testItReturnsTrueWhenNoNewValuesAreSent(): void
@@ -143,7 +143,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenArtifactIdIsIncorrect(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
 
         $this->assertFalse(
             $this->artifact_link_validator->isValid(
@@ -184,7 +184,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn(null);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
 
         $this->assertFalse(
             $this->artifact_link_validator->isValid(
@@ -201,7 +201,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isDeleted')->andReturn(true);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
 
         $this->assertFalse(
             $this->artifact_link_validator->isValid(
@@ -217,7 +217,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
         $this->project->shouldReceive('isActive')->andReturn(false);
 
         $this->assertFalse(
@@ -230,11 +230,11 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsTrueWhenProjectCanNotUseNature(): void
+    public function testItReturnsTrueWhenProjectCanNotUseType(): void
     {
         $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
         $this->project->shouldReceive('isActive')->andReturn(true);
 
         $this->assertTrue(
@@ -247,13 +247,13 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsFalseWhenProjectCanUseNatureAndNatureDoesNotExist(): void
+    public function testItReturnsFalseWhenProjectCanUseTypeAndTypeDoesNotExist(): void
     {
-        $value = ['new_values' => '1000', 'natures' => ['_is_child', 'fixed_in']];
+        $value = ['new_values' => '1000', 'types' => ['_is_child', 'fixed_in']];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->andReturn(null);
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->andReturn(null);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->project->shouldReceive('isActive')->andReturn(true);
         $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
 
@@ -267,17 +267,17 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsTrueWhenProjectCanUseNatureAndNatureExist(): void
+    public function testItReturnsTrueWhenProjectCanUseTypeAndTypeExist(): void
     {
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn(
-            $this->nature_is_child
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn(
+            $this->type_is_child
         );
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(
-            $this->nature_fixed_in
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(
+            $this->type_fixed_in
         );
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn(
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn(
             [
                 new TypePresenter('_is_child', 'label', 'reverse_label', true),
                 new TypePresenter('fixed_in', 'label', 'reverse_label', true),
@@ -286,7 +286,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->shouldReceive('isActive')->andReturn(true);
         $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
 
-        $value = ['new_values' => '1000', 'natures' => ['_is_child', 'fixed_in']];
+        $value = ['new_values' => '1000', 'types' => ['_is_child', 'fixed_in']];
         $this->assertTrue(
             $this->artifact_link_validator->isValid(
                 $value,
@@ -296,7 +296,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $value = ['new_values' => '123          ,   321, 999', 'natures' => ['_is_child', 'fixed_in']];
+        $value = ['new_values' => '123          ,   321, 999', 'types' => ['_is_child', 'fixed_in']];
         $this->assertTrue(
             $this->artifact_link_validator->isValid(
                 $value,
@@ -306,7 +306,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $value = ['new_values' => '', 'natures' => ['_is_child', 'fixed_in']];
+        $value = ['new_values' => '', 'types' => ['_is_child', 'fixed_in']];
         $this->assertTrue(
             $this->artifact_link_validator->isValid(
                 $value,
@@ -316,7 +316,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         ); // existing values
 
-        $value = ['new_values' => '123', 'natures' => ['_is_child', 'fixed_in']];
+        $value = ['new_values' => '123', 'types' => ['_is_child', 'fixed_in']];
         $this->assertTrue(
             $this->artifact_link_validator->isValid(
                 $value,
@@ -327,15 +327,15 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsTrueWhenProjectCanUseNatureAndNatureEmpty(): void
+    public function testItReturnsTrueWhenProjectCanUseTypeAndTypeEmpty(): void
     {
-        $value = ['new_values' => '1000', 'natures' => ['']];
+        $value = ['new_values' => '1000', 'types' => ['']];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('')->andReturn(
-            $this->nature_no_nature
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('')->andReturn(
+            $this->type_no_type
         );
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->project->shouldReceive('isActive')->andReturn(true);
         $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
 
@@ -353,18 +353,18 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '1000',
-            'natures'    => ['_is_child', 'fixed_in']
+            'types'    => ['_is_child', 'fixed_in']
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn(
-            $this->nature_is_child
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn(
+            $this->type_is_child
         );
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(
-            $this->nature_fixed_in
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(
+            $this->type_fixed_in
         );
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->dao->shouldReceive('isTypeDisabledInProject')->with(101, 'fixed_in')->andReturn(true);
         $this->project->shouldReceive('isActive')->andReturn(true);
         $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
@@ -383,19 +383,19 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'natures' => ['123' => 'fixed_in_not_editable']
+            'types' => ['123' => 'fixed_in_not_editable']
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->nature_fixed_in);
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->type_fixed_in);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->project->shouldReceive('isActive')->andReturn(true);
         $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $changeset->shouldReceive('getValue')->andReturn($changeset_value);
         $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
-        $artifact_link_info->shouldReceive('getNature')->andReturn('an_editable_link');
+        $artifact_link_info->shouldReceive('getType')->andReturn('an_editable_link');
         $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
         $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
 
@@ -413,19 +413,19 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'natures' => ['123' => 'fixed_in_not_editable']
+            'types' => ['123' => 'fixed_in_not_editable']
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->nature_fixed_in);
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->type_fixed_in);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->project->shouldReceive('isActive')->andReturn(true);
         $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $changeset->shouldReceive('getValue')->andReturn($changeset_value);
         $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
-        $artifact_link_info->shouldReceive('getNature')->andReturn('fixed_in_not_editable');
+        $artifact_link_info->shouldReceive('getType')->andReturn('fixed_in_not_editable');
         $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
         $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
 
@@ -443,19 +443,19 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'natures' => ['123' => 'fixed_in_not_editable']
+            'types' => ['123' => 'fixed_in_not_editable']
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
-        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->nature_fixed_in);
-        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
+        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->type_fixed_in);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->project->shouldReceive('isActive')->andReturn(true);
         $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $changeset->shouldReceive('getValue')->andReturn($changeset_value);
         $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
-        $artifact_link_info->shouldReceive('getNature')->andReturn('an_editable_link');
+        $artifact_link_info->shouldReceive('getType')->andReturn('an_editable_link');
         $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
         $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
 

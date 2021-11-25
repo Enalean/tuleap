@@ -91,11 +91,11 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItChangesTheNatureOfAnExistingLink(): void
+    public function testItChangesTheTypeOfAnExistingLink(): void
     {
         $submitted_value = [
             'new_values' => '',
-            'natures'    => [
+            'types'      => [
                 '201' => 'fixed_in'
             ]
         ];
@@ -105,14 +105,14 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->previous_changesetvalue
         );
 
-        $this->assertEquals('fixed_in', $updated_submitted_value['list_of_artifactlinkinfo'][201]->getNature());
+        $this->assertEquals('fixed_in', $updated_submitted_value['list_of_artifactlinkinfo'][201]->getType());
     }
 
-    public function testItChangesTheNatureToNullOfAnExistingLink(): void
+    public function testItChangesTheTypeToNullOfAnExistingLink(): void
     {
         $submitted_value = [
             'new_values' => '',
-            'natures'    => [
+            'types'      => [
                 '201' => ''
             ]
         ];
@@ -122,14 +122,14 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->previous_changesetvalue
         );
 
-        $this->assertEquals(null, $updated_submitted_value['list_of_artifactlinkinfo'][201]->getNature());
+        $this->assertEquals(null, $updated_submitted_value['list_of_artifactlinkinfo'][201]->getType());
     }
 
     public function testItDoesNotMutateTheExistingArtifactLinkInfo(): void
     {
         $submitted_value = [
             'new_values' => '',
-            'natures'    => [
+            'types'      => [
                 '201' => '_is_child'
             ]
         ];
@@ -147,7 +147,7 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItConvertsWhenThereIsNoNature(): void
+    public function testItConvertsWhenThereIsNoType(): void
     {
         $submitted_value = ['new_values' => '123, 124'];
 
@@ -155,37 +155,37 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
             $submitted_value,
             $this->previous_changesetvalue
         );
-        $this->assertEquals(null, $updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature());
-        $this->assertEquals(null, $updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature());
+        $this->assertEquals(null, $updated_submitted_value['list_of_artifactlinkinfo']['123']->getType());
+        $this->assertEquals(null, $updated_submitted_value['list_of_artifactlinkinfo']['124']->getType());
     }
 
-    public function testItConvertsWhenThereIsOnlyOneNature(): void
+    public function testItConvertsWhenThereIsOnlyOneType(): void
     {
         $submitted_value = [
             'new_values' => '123, 124',
-            'natures'    => ['123' => '_is_child', '124' => '_is_child']
+            'types'      => ['123' => '_is_child', '124' => '_is_child']
         ];
 
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
             $this->previous_changesetvalue
         );
-        $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature());
-        $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature());
+        $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['123']->getType());
+        $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['124']->getType());
     }
 
-    public function testItConvertsWhenEachArtifactLinkHasItsOwnNature(): void
+    public function testItConvertsWhenEachArtifactLinkHasItsOwnType(): void
     {
         $submitted_value = [
             'new_values' => '123, 124',
-            'natures'    => ['123' => '_is_child', '124' => '_is_foo']
+            'types'      => ['123' => '_is_child', '124' => '_is_foo']
         ];
 
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
             $this->previous_changesetvalue
         );
-        $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature());
-        $this->assertEquals('_is_foo', $updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature());
+        $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['123']->getType());
+        $this->assertEquals('_is_foo', $updated_submitted_value['list_of_artifactlinkinfo']['124']->getType());
     }
 }

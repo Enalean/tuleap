@@ -550,7 +550,7 @@ select.tracker-report-expert-allowed-fields {
             text-align: right;
         }
 
-        &.tracker_report_table_column_nature_editor {
+        &.tracker_report_table_column_type_editor {
             > a {
                 display: block;
                 position: relative;
@@ -649,7 +649,7 @@ select.tracker-report-expert-allowed-fields {
     }
 }
 
-.nature-column-popover form {
+.type-column-popover form {
     margin: 0 0 5px;
 
     .alert-danger {
@@ -667,7 +667,7 @@ select.tracker-report-expert-allowed-fields {
         height: 30px;
     }
 
-    .nature-column-popover-actions {
+    .type-column-popover-actions {
         text-align: right;
 
         > .btn {
@@ -2683,7 +2683,7 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
         margin: 20px 0 10px;
     }
 
-    > .allowed-projects-for-nature-title {
+    > .allowed-projects-for-type-title {
         margin-top: 40px;
     }
 

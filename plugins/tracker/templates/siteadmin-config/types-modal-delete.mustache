@@ -1,0 +1,28 @@
+<form action="?action=delete-type" id="siteadmin-config-types-modal-delete-{{ shortname }}-form" method="post">
+    <div id="siteadmin-config-types-modal-delete-{{ shortname }}"
+        class="tlp-modal tlp-modal-danger siteadmin-config-types-modal-delete"
+        role="dialog"
+        aria-labelledby="siteadmin-config-types-modal-delete-{{ shortname }}-label"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="modal-danger-label">
+                <i class="far fa-trash-alt tlp-button-icon tlp-modal-title-icon"></i> {{ delete_modal_title }}
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+                &times;
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            {{{ csrf_token }}}
+            <input type="hidden" name="shortname" value="{{ shortname }}">
+
+            <p>{{{ delete_modal_content }}}</p>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
+            <button type="submit" form="siteadmin-config-types-modal-delete-{{ shortname }}-form" class="tlp-button-danger tlp-modal-action" data-test="confirm-delete-{{ shortname }}-button">
+                <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_modal_submit }}
+            </button>
+        </div>
+    </div>
+</form>

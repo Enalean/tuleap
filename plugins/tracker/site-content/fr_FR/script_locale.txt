@@ -34,7 +34,7 @@ codendi.locales['tracker_artifact_link'] = {
     create: 'Créer un nouvel artefact',
     advanced: 'Les fonctionnalités avancées (recherche d\'artefacts...) ne sont pas disponibles à la création d\'un artefact.',
     trackers_label: 'Trackers',
-    nature_label: 'Liens par nature'
+    type_label: 'Liens par nature'
 };
 codendi.locales['tracker_hierarchy'] = {
     no_child_artifacts: 'Cet artefact n\'as pas encore d\'enfants',
@@ -65,7 +65,7 @@ codendi.locales['tracker_modal_errors'] = {
 codendi.locales['tracker_report'] = {
     delete_report: 'Etes-vous sûr de vouloir supprimer ce rapport ?'
 };
-codendi.locales['nature_column_editor'] = {
+codendi.locales['type_column_editor'] = {
     title                    : 'Configuration de la colonne',
     how_to                   : 'Vous pouvez définir comment les artefacts s\'afficheront dans cette colonne en utilisant le format suivant : <code>%nom_du_champ</code>.',
     supported_types          : 'Seuls les champs de type chaîne de caractères, id de l\'artéfact, entier, flottant, ou liste de choix peuvent être formatés.',

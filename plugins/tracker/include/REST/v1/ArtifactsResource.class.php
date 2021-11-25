@@ -88,7 +88,7 @@ use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -199,7 +199,7 @@ class ArtifactsResource extends AuthenticatedResource
         $this->builder             = new ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->artifact_factory,
-            new NatureDao(),
+            new TypeDao(),
             new ChangesetRepresentationBuilder(
                 $this->user_manager,
                 $this->formelement_factory,
@@ -466,7 +466,7 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @throws RestException 403
      */
-    public function getArtifactLinkNatures($id)
+    public function getArtifactLinkTypes($id)
     {
         $this->checkAccess();
 
@@ -480,7 +480,7 @@ class ArtifactsResource extends AuthenticatedResource
 
         $artifact_link_representation = ArtifactLinkRepresentation::build($artifact);
 
-        $this->sendAllowHeadersForLinkNatures();
+        $this->sendAllowHeadersForLinkTypes();
         return $artifact_link_representation;
     }
 
@@ -489,9 +489,9 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @param int $id Id of the artifact
      */
-    public function optionsArtifactLinkNatures($id)
+    public function optionsArtifactLinkTypes($id)
     {
-        $this->sendAllowHeadersForLinkNatures();
+        $this->sendAllowHeadersForLinkTypes();
     }
 
     /**
@@ -1195,7 +1195,7 @@ class ArtifactsResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
-    private function sendAllowHeadersForLinkNatures()
+    private function sendAllowHeadersForLinkTypes()
     {
         Header::allowOptionsGet();
     }

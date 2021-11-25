@@ -22,12 +22,12 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 
 class HierarchyOfFolderBuilder
 {
     /**
-     * @var NatureIsChildLinkRetriever
+     * @var TypeIsChildLinkRetriever
      */
     private $retriever;
 
@@ -43,7 +43,7 @@ class HierarchyOfFolderBuilder
 
     public function __construct(
         Dao $folder_dao,
-        NatureIsChildLinkRetriever $retriever,
+        TypeIsChildLinkRetriever $retriever,
         Tracker_ArtifactFactory $artifact_factory
     ) {
         $this->retriever        = $retriever;

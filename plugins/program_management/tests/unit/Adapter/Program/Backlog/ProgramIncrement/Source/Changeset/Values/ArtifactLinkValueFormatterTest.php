@@ -39,9 +39,9 @@ final class ArtifactLinkValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $formatted_value = $this->getFormatter()->formatForTrackerPlugin(null);
         self::assertArrayHasKey('new_values', $formatted_value);
-        self::assertArrayHasKey('natures', $formatted_value);
+        self::assertArrayHasKey('types', $formatted_value);
         self::assertSame('', $formatted_value['new_values']);
-        self::assertEmpty($formatted_value['natures']);
+        self::assertEmpty($formatted_value['types']);
     }
 
     public function testItFormatsValueToArrayExpectedByTrackerPluginAPI(): void
@@ -52,9 +52,9 @@ final class ArtifactLinkValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $formatted_value = $this->getFormatter()->formatForTrackerPlugin($value);
         self::assertArrayHasKey('new_values', $formatted_value);
-        self::assertArrayHasKey('natures', $formatted_value);
+        self::assertArrayHasKey('types', $formatted_value);
         self::assertSame((string) self::TIMEBOX_ID, $formatted_value['new_values']);
-        self::assertArrayHasKey((string) self::TIMEBOX_ID, $formatted_value['natures']);
-        self::assertSame([(string) self::TIMEBOX_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME], $formatted_value['natures']);
+        self::assertArrayHasKey((string) self::TIMEBOX_ID, $formatted_value['types']);
+        self::assertSame([(string) self::TIMEBOX_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME], $formatted_value['types']);
     }
 }

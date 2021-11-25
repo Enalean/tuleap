@@ -30,7 +30,7 @@ use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
 use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Router;
-use Tuleap\ArtifactsFolders\Nature\TypeInFolderPresenter;
+use Tuleap\ArtifactsFolders\Type\TypeInFolderPresenter;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -38,8 +38,8 @@ use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\XML\PHPCast;
 
@@ -64,7 +64,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             $this->addHook('javascript_file');
             $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES);
-            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_IS_NATURE_VALID);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_IS_TYPE_VALID);
             $this->addHook('cssfile');
             $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
             $this->addHook(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER);
@@ -145,14 +145,14 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             return;
         }
 
-        $dao = new NatureDao();
+        $dao = new TypeDao();
         if ($this->canAddOurView($dao, $artifact, $project, $user)) {
             $view = new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder());
             $collection->add($view);
         }
     }
 
-    private function canAddOurView(NatureDao $dao, Artifact $artifact, Project $project, PFUser $user)
+    private function canAddOurView(TypeDao $dao, Artifact $artifact, Project $project, PFUser $user)
     {
         $folder_usage_retriever = $this->getFolderUsageRetriever();
 
@@ -160,11 +160,11 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             && $this->isViewAddableForArtifact($dao, $artifact);
     }
 
-    private function isViewAddableForArtifact(NatureDao $dao, Artifact $artifact)
+    private function isViewAddableForArtifact(TypeDao $dao, Artifact $artifact)
     {
         $linked_artifacts_ids = $dao->getReverseLinkedArtifactIds(
             $artifact->getId(),
-            TypeInFolderPresenter::NATURE_IN_FOLDER,
+            TypeInFolderPresenter::TYPE_IN_FOLDER,
             PHP_INT_MAX,
             0
         );
@@ -173,7 +173,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             return true;
         }
 
-        $children_folder = $this->getNatureIsChildLinkRetriever()->getChildren($artifact);
+        $children_folder = $this->getTypeIsChildLinkRetriever()->getChildren($artifact);
         foreach ($children_folder as $child_folder) {
             if ($this->isViewAddableForArtifact($dao, $child_folder)) {
                 return true;
@@ -222,8 +222,8 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         return new ArtifactPresenterBuilder(
             $this->getHierarchyOfFolderBuilder(),
-            new NatureDao(),
-            $this->getNatureIsChildLinkRetriever(),
+            new TypeDao(),
+            $this->getTypeIsChildLinkRetriever(),
             Tracker_ArtifactFactory::instance()
         );
     }
@@ -232,14 +232,14 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         return new HierarchyOfFolderBuilder(
             new Dao(),
-            $this->getNatureIsChildLinkRetriever(),
+            $this->getTypeIsChildLinkRetriever(),
             Tracker_ArtifactFactory::instance()
         );
     }
 
-    private function getNatureIsChildLinkRetriever()
+    private function getTypeIsChildLinkRetriever()
     {
-        return new NatureIsChildLinkRetriever(
+        return new TypeIsChildLinkRetriever(
             Tracker_ArtifactFactory::instance(),
             new ArtifactLinkFieldValueDao()
         );
@@ -247,12 +247,12 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
     public function hide_artifact($params) // phpcs:ignore
     {
-        $params['hide_artifact'] = $params['nature'] === TypeInFolderPresenter::NATURE_IN_FOLDER;
+        $params['hide_artifact'] = $params['type'] === TypeInFolderPresenter::TYPE_IN_FOLDER;
     }
 
     public function event_get_type_presenter($params) // phpcs:ignore
     {
-        if ($params['shortname'] === TypeInFolderPresenter::NATURE_IN_FOLDER) {
+        if ($params['shortname'] === TypeInFolderPresenter::TYPE_IN_FOLDER) {
             $params['presenter'] = new TypeInFolderPresenter();
         }
     }
@@ -274,17 +274,17 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
     public function tracker_add_system_types($params) // phpcs:ignore
     {
-        $params['types'][] = TypeInFolderPresenter::NATURE_IN_FOLDER;
+        $params['types'][] = TypeInFolderPresenter::TYPE_IN_FOLDER;
     }
 
-    public function tracker_is_nature_valid($params) // phpcs:ignore
+    public function tracker_is_type_valid($params) // phpcs:ignore
     {
         if (
             $this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
-            && $params['nature'] === TypeInFolderPresenter::NATURE_IN_FOLDER
+            && $params['type'] === TypeInFolderPresenter::TYPE_IN_FOLDER
         ) {
             $params['error'] = "Link between " . $params['artifact']->getId() . " and " . $params['children_id'] . " is inconsistent because tracker " .
-                $params['tracker_id'] . " is not defined as a Folder. Artifact " . $params['artifact']->getId() . " added without nature.";
+                $params['tracker_id'] . " is not defined as a Folder. Artifact " . $params['artifact']->getId() . " added without type.";
         }
     }
 
@@ -392,14 +392,14 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         $type = $event->getType();
 
-        if ($type->shortname === TypeInFolderPresenter::NATURE_IN_FOLDER) {
+        if ($type->shortname === TypeInFolderPresenter::TYPE_IN_FOLDER) {
             $event->setTypeIsCheckedByPlugin();
         }
     }
 
     public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event) // phpcs:ignore
     {
-        if ($event->getTypeName() !== TypeInFolderPresenter::NATURE_IN_FOLDER) {
+        if ($event->getTypeName() !== TypeInFolderPresenter::TYPE_IN_FOLDER) {
             return;
         }
 
@@ -408,7 +408,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($event->getProject())) {
             $event->setTypeIsUnusable();
         } else {
-            $event->setMessage(TypeInFolderPresenter::NATURE_IN_FOLDER . " type is forced because a tracker folder is defined.");
+            $event->setMessage(TypeInFolderPresenter::TYPE_IN_FOLDER . " type is forced because a tracker folder is defined.");
         }
     }
 }

@@ -123,7 +123,7 @@ describe("Artifact link usage", () => {
             cy.get("[data-test=direct-link-to-artifact]").first().click();
             cy.get("[data-test=edit-field-links]").click();
 
-            cy.get("[data-test=artifact-link-nature-selector]").should("not.contain", "Fixed in");
+            cy.get("[data-test=artifact-link-type-selector]").should("not.contain", "Fixed in");
 
             enableArtifactLinkUsage(project_id);
             cy.log("Fixed in nature can be used");
@@ -131,7 +131,7 @@ describe("Artifact link usage", () => {
             cy.visit("/plugins/tracker/?&aid=" + fixed_in_artifact);
             cy.get("[data-test=edit-field-links]").click();
             cy.get("[data-test=artifact-link-submit]").type(fixed_by_artifact);
-            cy.get("[data-test=artifact-link-nature-selector]").first().select("Fixed in");
+            cy.get("[data-test=artifact-link-type-selector]").first().select("Fixed in");
             submitArtifactAndStay();
 
             cy.get("[data-test=feedback]").contains("Successfully Updated");
@@ -149,7 +149,7 @@ describe("Artifact link usage", () => {
             cy.visit("/plugins/tracker/?&aid=" + child_artifact);
             cy.get("[data-test=edit-field-links]").click();
             cy.get("[data-test=artifact-link-submit]").type(parent_artifact);
-            cy.get("[data-test=artifact-link-nature-selector]").first().select("Child");
+            cy.get("[data-test=artifact-link-type-selector]").first().select("Child");
             submitArtifactAndStay();
 
             cy.get("[data-test=feedback]").contains("Successfully Updated");

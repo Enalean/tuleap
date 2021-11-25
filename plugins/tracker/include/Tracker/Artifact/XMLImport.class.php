@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
@@ -63,8 +63,8 @@ class Tracker_Artifact_XMLImport
     /** @var Tracker_ArtifactFactory  */
     private $tracker_artifact_factory;
 
-    /** @var NatureDao  */
-    private $nature_dao;
+    /** @var TypeDao  */
+    private $type_dao;
 
     private $source_platform;
 
@@ -107,7 +107,7 @@ class Tracker_Artifact_XMLImport
         \Psr\Log\LoggerInterface $logger,
         $send_notifications,
         Tracker_ArtifactFactory $tracker_artifact_factory,
-        NatureDao $nature_dao,
+        TypeDao $type_dao,
         XMLArtifactSourcePlatformExtractor $artifact_source_platform_extractor,
         ExistingArtifactSourceIdFromTrackerExtractor $existing_artifact_source_id_extractor,
         TrackerArtifactSourceIdDao $artifact_source_id_dao,
@@ -123,7 +123,7 @@ class Tracker_Artifact_XMLImport
         $this->logger                                 = new WrapperLogger($logger, 'XML import');
         $this->send_notifications                     = $send_notifications;
         $this->tracker_artifact_factory               = $tracker_artifact_factory;
-        $this->nature_dao                             = $nature_dao;
+        $this->type_dao                               = $type_dao;
         $this->xml_artifact_source_platform_extractor = $artifact_source_platform_extractor;
         $this->existing_artifact_source_id_extractor  = $existing_artifact_source_id_extractor;
         $this->tracker_artifact_source_id_dao         = $artifact_source_id_dao;
@@ -301,7 +301,7 @@ class Tracker_Artifact_XMLImport
             $xml_fields_mapping,
             $artifacts_id_mapping,
             $this->tracker_artifact_factory,
-            $this->nature_dao
+            $this->type_dao
         );
     }
 

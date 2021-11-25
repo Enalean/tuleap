@@ -29,23 +29,23 @@ use Tuleap\Tracker\Events\GetEditableTypesInProject;
 class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypesInProject
 {
     /**
-     * Add new artifact link natures
+     * Add new artifact link types
      *
      * Parameters:
-     *  - natures: List of existing natures
+     *  - types: List of existing types
      */
     public const EVENT_GET_ARTIFACTLINK_TYPES = 'event_get_artifactlink_types';
 
     /**
-     * Return presenter from nature shortname
+     * Return presenter from type shortname
      *
      * Parameters:
-     *  - nature: input nature shortname
+     *  - type: input type shortname
      */
     public const EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter';
 
     /**
-     * @var NatureDao
+     * @var TypeDao
      */
     private $dao;
     /**
@@ -53,7 +53,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
      */
     private $artifact_links_usage_dao;
 
-    public function __construct(NatureDao $dao, ArtifactLinksUsageDao $artifact_links_usage_dao)
+    public function __construct(TypeDao $dao, ArtifactLinksUsageDao $artifact_links_usage_dao)
     {
         $this->dao                      = $dao;
         $this->artifact_links_usage_dao = $artifact_links_usage_dao;
@@ -112,7 +112,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         $types = [];
 
         $params = [
-            'natures' => &$types
+            'types' => &$types
         ];
 
         EventManager::instance()->processEvent(
@@ -148,7 +148,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         $types = [];
 
         foreach ($this->dao->searchAllUsedTypesByProject($project->getGroupId()) as $row) {
-            $types[] = $row['nature'];
+            $types[] = $row['type'];
         }
 
         return $types;

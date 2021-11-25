@@ -144,7 +144,7 @@ class Tracker_Action_CreateArtifact
 
             if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
                 $art_link_key               = 'artifact[' . $art_link->getId() . '][new_values]';
-                $art_link_type              = 'artifact[' . $art_link->getId() . '][nature]';
+                $art_link_type              = 'artifact[' . $art_link->getId() . '][type]';
                 $redirect_params            = [
                     'tracker'      => (string) $parent_tracker->getId(),
                     'func'         => 'new-artifact',
