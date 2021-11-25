@@ -28,6 +28,8 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
@@ -42,6 +44,7 @@ final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\Test
                 BuildProgramBaseInfoStub::withDefault(),
                 BuildProgramIncrementInfoStub::withId(1260),
                 VerifyUserIsProgramAdminStub::withProgramAdminUser(),
+                RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(101)),
                 ProgramIdentifierBuilder::build(),
                 UserIdentifierStub::withId(666),
                 ProgramIncrementIdentifierBuilder::buildWithId(1260),
@@ -59,5 +62,6 @@ final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\Test
         self::assertEquals('{"id":1260,"title":"Program increment #1260","start_date":"Oct 01","end_date":"Oct 31"}', $presenter->program_increment);
         self::assertEquals('{"label":"Cycles","sub_label":"cycle"}', $presenter->iterations_labels);
         self::assertTrue($presenter->is_user_admin);
+        self::assertEquals('101', $presenter->iteration_tracker_id);
     }
 }

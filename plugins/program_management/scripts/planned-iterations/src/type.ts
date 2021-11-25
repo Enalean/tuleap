@@ -48,6 +48,7 @@ export interface State {
     readonly program_increment: ProgramIncrement;
     readonly iterations_labels: IterationLabels;
     readonly user_locale: string;
+    readonly iteration_tracker_id: number;
 }
 
 export interface IterationLabels {

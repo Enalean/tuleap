@@ -35,7 +35,8 @@ final class DisplayPlanIterationsPresenter
         public string $program,
         public string $program_increment,
         public string $iterations_labels,
-        public bool $is_user_admin
+        public bool $is_user_admin,
+        public int $iteration_tracker_id
     ) {
     }
 
@@ -47,7 +48,8 @@ final class DisplayPlanIterationsPresenter
             json_encode($planned_iterations->getProgramBaseInfo(), JSON_THROW_ON_ERROR),
             json_encode($planned_iterations->getProgramIncrementInfo(), JSON_THROW_ON_ERROR),
             json_encode($planned_iterations->getIterationLabels(), JSON_THROW_ON_ERROR),
-            $planned_iterations->isUserAdmin()
+            $planned_iterations->isUserAdmin(),
+            $planned_iterations->getIterationTrackerId()
         );
     }
 }

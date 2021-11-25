@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use Tracker_Artifact_Redirect;
+use Tuleap\ProgramManagement\Adapter\Redirections\IterationsRedirectParameters;
 
 final class RedirectParameterInjector
 {
@@ -62,5 +63,16 @@ final class RedirectParameterInjector
             \Feedback::INFO,
             $feedback_message
         );
+    }
+
+    public function injectAndInformUserAboutCreatingIncrementIteration(Tracker_Artifact_Redirect $redirect, \Response $response, IterationsRedirectParameters $redirect_to_planned_iterations_app_manager): void
+    {
+        $response->addFeedback(
+            \Feedback::INFO,
+            dgettext('tuleap-program_management', 'You are creating a new iteration, it will create associated milestones in team projects.')
+        );
+
+        $redirect->query_parameters[IterationsRedirectParameters::FLAG]               = IterationsRedirectParameters::REDIRECT_AFTER_CREATE_ACTION;
+        $redirect->query_parameters[IterationsRedirectParameters::PARAM_INCREMENT_ID] = $redirect_to_planned_iterations_app_manager->getIncrementId();
     }
 }

@@ -218,6 +218,10 @@ msgstr ""
 "Les ids des trackers planifiables ne doivent pas contenir l'id de l'outils "
 "de suivi d'itération"
 
+#, php-format
+msgid "Iteration tracker in program %d is not found"
+msgstr "L'outil de suivi d'itérations du programme %d n'a pas été trouvé"
+
 msgid "Iterations"
 msgstr "Itérations"
 
@@ -571,6 +575,13 @@ msgstr ""
 msgid "You are about to remove Team {{ public_name }} from this Program."
 msgstr ""
 "Vous êtes sur le point d'enlever l'Équipe {{ public_name }} de ce Programme."
+
+msgid ""
+"You are creating a new iteration, it will create associated milestones in "
+"team projects."
+msgstr ""
+"Vous allez créer une nouvelle itération, les jalons correspondants seront "
+"créés dans les projets des équipes."
 
 msgid ""
 "You are creating a new program increment, it will create associated "

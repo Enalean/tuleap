@@ -19,24 +19,34 @@
 
 <template>
     <div class="planned-iterations">
-        <h2 class="planned-iterations-section-title" data-test="planned-iterations-section-title">
-            {{ iterations_section_title }}
-        </h2>
+        <form v-bind:action="create_iteration_url" method="post">
+            <div class="planned-iteration-header-with-button">
+                <h2
+                    class="planned-iterations-section-title"
+                    data-test="planned-iterations-section-title"
+                >
+                    {{ iterations_section_title }}
+                </h2>
+                <button
+                    type="submit"
+                    class="
+                        tlp-button-primary tlp-button-outline tlp-button-small
+                        new-iteration-button
+                    "
+                >
+                    <i aria-hidden="true" class="fas fa-plus tlp-button-icon"></i>
+                    <span
+                        data-test="button-add-iteration-label"
+                        v-translate="{ iteration_sub_label: iterations_sub_label }"
+                    >
+                        New %{ iteration_sub_label }
+                    </span>
+                </button>
+            </div>
+        </form>
         <backlog-element-skeleton v-if="is_loading" />
         <template v-if="!is_loading && !has_error">
-            <div
-                class="empty-state-page"
-                data-test="planned-iterations-empty-state"
-                v-if="has_iterations === false"
-            >
-                <svg-planned-iterations-empty-state />
-                <p
-                    class="empty-state-text planned-iterations-empty-state-text"
-                    data-test="planned-iterations-empty-state-text"
-                >
-                    {{ planned_iterations_empty_state_text }}
-                </p>
-            </div>
+            <planned-iterations-section-empty-state v-if="has_iterations === false" />
             <iteration-card
                 v-else
                 v-for="iteration in iterations"
@@ -62,13 +72,15 @@ import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { sprintf } from "sprintf-js";
 import { getIncrementIterations } from "../helpers/increment-iterations-retriever";
-import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
+import { buildIterationCreationUrl } from "../helpers/create-new-iteration-link-builder";
+
+import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 import IterationCard from "./IterationCard.vue";
 import BacklogElementSkeleton from "./BacklogElementSkeleton.vue";
 
 @Component({
     components: {
-        SvgPlannedIterationsEmptyState,
+        PlannedIterationsSectionEmptyState,
         IterationCard,
         BacklogElementSkeleton,
     },
@@ -79,6 +91,9 @@ export default class PlannedIterationsSection extends Vue {
 
     @State
     readonly program_increment!: ProgramIncrement;
+
+    @State
+    readonly iteration_tracker_id!: number;
 
     private iterations: Array<Iteration> = [];
     private error_message = "";
@@ -114,16 +129,18 @@ export default class PlannedIterationsSection extends Vue {
             : this.iterations_labels.label;
     }
 
-    get planned_iterations_empty_state_text(): string {
-        if (this.iterations_labels.sub_label.length === 0) {
-            return this.$gettext("There is no iteration yet.");
-        }
-
-        return sprintf(this.$gettext("There is no %s yet."), this.iterations_labels.sub_label);
+    get iterations_sub_label(): string {
+        return this.iterations_labels.sub_label.length === 0
+            ? this.$gettext("iteration")
+            : this.iterations_labels.sub_label;
     }
 
     get has_iterations(): boolean {
         return this.iterations.length > 0;
+    }
+
+    get create_iteration_url(): string {
+        return buildIterationCreationUrl(this.program_increment.id, this.iteration_tracker_id);
     }
 }
 </script>

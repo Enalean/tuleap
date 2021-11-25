@@ -22,9 +22,11 @@ import { shallowMount } from "@vue/test-utils";
 import { createPlanIterationsLocalVue } from "../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import * as retriever from "../helpers/increment-iterations-retriever";
+
 import PlannedIterationsSection from "./PlannedIterationsSection.vue";
 import IterationCard from "./IterationCard.vue";
 import BacklogElementSkeleton from "./BacklogElementSkeleton.vue";
+import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 
 import type { Wrapper } from "@vue/test-utils";
 import type { IterationLabels } from "../type";
@@ -43,6 +45,7 @@ describe("PlannedIterationsSection", () => {
                             id: 666,
                             title: "Mating",
                         },
+                        iteration_tracker_id: "101",
                     },
                 }),
             },
@@ -66,9 +69,6 @@ describe("PlannedIterationsSection", () => {
             expect(wrapper.get("[data-test=planned-iterations-section-title]").text()).toEqual(
                 "Guinea Pigs"
             );
-            expect(wrapper.get("[data-test=planned-iterations-empty-state-text]").text()).toEqual(
-                "There is no g-pig yet."
-            );
         });
 
         it("should display Iterations/iteration by default", async () => {
@@ -82,9 +82,6 @@ describe("PlannedIterationsSection", () => {
 
             expect(wrapper.get("[data-test=planned-iterations-section-title]").text()).toEqual(
                 "Iterations"
-            );
-            expect(wrapper.get("[data-test=planned-iterations-empty-state-text]").text()).toEqual(
-                "There is no iteration yet."
             );
         });
 
@@ -109,6 +106,23 @@ describe("PlannedIterationsSection", () => {
                 );
             }
         );
+
+        it.each([
+            [{ label: "Guinea Pigs", sub_label: "g-pig" }, "New g-pig"],
+            [{ label: "", sub_label: "" }, "New iteration"],
+        ])(
+            "should use the custom iteration sub_label in the [+ add iteration] button when it is defined",
+            async (iterations_labels: IterationLabels, expected_button_label: string) => {
+                const wrapper = await getWrapper(iterations_labels);
+
+                await Vue.nextTick();
+                await Vue.nextTick();
+
+                expect(wrapper.find("[data-test=button-add-iteration-label]").text()).toEqual(
+                    expected_button_label
+                );
+            }
+        );
     });
 
     describe("Iterations display", () => {
@@ -122,7 +136,7 @@ describe("PlannedIterationsSection", () => {
             await Vue.nextTick();
             await Vue.nextTick();
 
-            expect(wrapper.find("[data-test=planned-iterations-empty-state]").exists()).toBe(true);
+            expect(wrapper.findComponent(PlannedIterationsSectionEmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
             expect(wrapper.find("[data-test=iteration-fetch-error]").exists()).toBe(false);
         });
@@ -146,7 +160,7 @@ describe("PlannedIterationsSection", () => {
             await Vue.nextTick();
 
             expect(retriever.getIncrementIterations).toHaveBeenCalledWith(666);
-            expect(wrapper.find("[data-test=planned-iterations-empty-state]").exists()).toBe(false);
+            expect(wrapper.findComponent(PlannedIterationsSectionEmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(IterationCard).exists()).toBe(true);
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
             expect(wrapper.find("[data-test=iteration-fetch-error]").exists()).toBe(false);
@@ -167,7 +181,7 @@ describe("PlannedIterationsSection", () => {
             expect(displayed_error.exists()).toBe(true);
             expect(displayed_error.text()).toEqual("The retrieval of Guinea Pigs has failed");
 
-            expect(wrapper.find("[data-test=planned-iterations-empty-state]").exists()).toBe(false);
+            expect(wrapper.findComponent(PlannedIterationsSectionEmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(IterationCard).exists()).toBe(false);
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
         });
