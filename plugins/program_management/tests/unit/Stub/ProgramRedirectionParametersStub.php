@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,30 +16,42 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement;
+namespace Tuleap\ProgramManagement\Tests\Stub;
+
+use Tuleap\ProgramManagement\Domain\Redirections\ProgramRedirectionParameters;
 
 /**
  * @psalm-immutable
  */
-final class RedirectToProgramManagementAppManager
+final class ProgramRedirectionParametersStub implements ProgramRedirectionParameters
 {
-    public const FLAG                         = 'program_increment';
-    public const REDIRECT_AFTER_CREATE_ACTION = 'create';
-    public const REDIRECT_AFTER_UPDATE_ACTION = 'update';
-
     private function __construct(private string $redirect_value)
     {
     }
 
-    public static function buildFromCodendiRequest(\Codendi_Request $request): self
+    public static function withCreate(): self
     {
-        $redirect_program_increment_value = $request->get(self::FLAG) ?: "";
+        return new self(ProgramRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION);
+    }
 
-        return new self($redirect_program_increment_value);
+    public static function withUpdate(): self
+    {
+        return new self(ProgramRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION);
+    }
+
+    public static function withOtherValue(): self
+    {
+        return new self("other");
+    }
+
+    public function getValue(): string
+    {
+        return $this->redirect_value;
     }
 
     public function isRedirectionNeeded(): bool
@@ -55,10 +67,5 @@ final class RedirectToProgramManagementAppManager
     public function needsRedirectionAfterUpdate(): bool
     {
         return $this->redirect_value === self::REDIRECT_AFTER_UPDATE_ACTION;
-    }
-
-    public function getRedirectValue(): string
-    {
-        return $this->redirect_value;
     }
 }

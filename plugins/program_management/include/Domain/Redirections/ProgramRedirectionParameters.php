@@ -21,22 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Domain\Redirections;
 
-use Tuleap\ProgramManagement\Domain\Redirections\IterationRedirectionParameters;
-use Tuleap\ProgramManagement\Domain\Redirections\ProgramRedirectionParameters;
-
-interface RedirectUserAfterArtifactCreationOrUpdateEvent
+/**
+ * @psalm-immutable
+ */
+interface ProgramRedirectionParameters
 {
-    public function setQueryParameter(IterationRedirectionParameters $parameters): void;
+    public const FLAG                         = 'program_increment';
+    public const REDIRECT_AFTER_CREATE_ACTION = 'create';
+    public const REDIRECT_AFTER_UPDATE_ACTION = 'update';
 
-    public function setProgramIncrementQueryParameter(ProgramRedirectionParameters $parameters): void;
+    public function getValue(): string;
 
-    public function setBaseUrl(string $url): void;
+    public function isRedirectionNeeded(): bool;
 
-    public function resetQueryParameters(): void;
+    public function needsRedirectionAfterCreate(): bool;
 
-    public function isContinueMode(): bool;
-
-    public function isStayMode(): bool;
+    public function needsRedirectionAfterUpdate(): bool;
 }

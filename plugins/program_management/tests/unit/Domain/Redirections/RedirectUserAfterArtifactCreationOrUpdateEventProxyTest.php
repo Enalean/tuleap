@@ -69,4 +69,26 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxyTest extends Test
         $proxy->setBaseUrl('/program_management/my_project/');
         self::assertSame('/program_management/my_project/', $this->redirect->base_url);
     }
+
+    public function testItIsInStayMode(): void
+    {
+        $this->redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
+        $proxy                = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent($this->event);
+        self::assertTrue($proxy->isStayMode());
+    }
+
+    public function testItIsInContinueMode(): void
+    {
+        $this->redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
+        $proxy                = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent($this->event);
+        self::assertTrue($proxy->isContinueMode());
+    }
+
+    public function testItIsInSubmitMode(): void
+    {
+        $this->redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
+        $proxy                = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent($this->event);
+        self::assertFalse($proxy->isStayMode());
+        self::assertFalse($proxy->isContinueMode());
+    }
 }

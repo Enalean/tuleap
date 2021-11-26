@@ -115,6 +115,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Redirections\IterationRedirectionParametersProxy;
+use Tuleap\ProgramManagement\Adapter\Redirections\ProgramRedirectionParametersProxy;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
@@ -169,17 +170,16 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionM
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
 use Tuleap\ProgramManagement\Domain\Redirections\RedirectToIterationsProcessor;
+use Tuleap\ProgramManagement\Domain\Redirections\RedirectToProgramManagementProcessor;
 use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
 use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Team\PossibleParentHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
-use Tuleap\ProgramManagement\RedirectToProgramIncrementAppHandler;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\RedirectParameterInjector;
-use Tuleap\ProgramManagement\RedirectToProgramManagementAppManager;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\ProgramManagement\Templates\ProgramTemplate;
 use Tuleap\ProgramManagement\Templates\TeamTemplate;
@@ -860,11 +860,10 @@ final class program_managementPlugin extends Plugin
     {
         $event_proxy       = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent($event);
         $project_reference = ProjectProxy::buildFromProject($event->getArtifact()->getTracker()->getProject());
-
-        (new RedirectToProgramIncrementAppHandler())->process(
-            RedirectToProgramManagementAppManager::buildFromCodendiRequest($event->getRequest()),
-            $event->getRedirect(),
-            $event->getArtifact()->getTracker()->getProject()
+        RedirectToProgramManagementProcessor::process(
+            ProgramRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest()),
+            $event_proxy,
+            $project_reference
         );
 
         RedirectToIterationsProcessor::process(
@@ -876,7 +875,7 @@ final class program_managementPlugin extends Plugin
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $program_management_redirect_manager = RedirectToProgramManagementAppManager::buildFromCodendiRequest($event->getRequest());
+        $program_management_redirect_manager = ProgramRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
         $iteration_redirection_parameters    = IterationRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
 
         if (! $program_management_redirect_manager->isRedirectionNeeded() && ! $iteration_redirection_parameters->isRedirectionNeeded()) {

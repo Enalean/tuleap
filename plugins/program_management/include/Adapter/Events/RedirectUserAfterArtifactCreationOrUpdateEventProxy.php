@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 use Tracker_Artifact_Redirect;
 use Tuleap\ProgramManagement\Domain\Events\RedirectUserAfterArtifactCreationOrUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Redirections\IterationRedirectionParameters;
+use Tuleap\ProgramManagement\Domain\Redirections\ProgramRedirectionParameters;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 
 final class RedirectUserAfterArtifactCreationOrUpdateEventProxy implements RedirectUserAfterArtifactCreationOrUpdateEvent
@@ -45,7 +46,13 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxy implements Redir
     public function setQueryParameter(IterationRedirectionParameters $parameters): void
     {
         $this->redirect->query_parameters[IterationRedirectionParameters::FLAG]               = $parameters->getValue();
-        $this->redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID] = $parameters->getIncrementId();
+        $this->redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID] = $parameters->getIncrementId(
+        );
+    }
+
+    public function setProgramIncrementQueryParameter(ProgramRedirectionParameters $parameters): void
+    {
+        $this->redirect->query_parameters[ProgramRedirectionParameters::FLAG] = $parameters->getValue();
     }
 
     public function setBaseUrl(string $url): void
@@ -60,11 +67,11 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxy implements Redir
 
     public function isContinueMode(): bool
     {
-        return Tracker_Artifact_Redirect::STATE_CONTINUE ===  $this->redirect->mode;
+        return Tracker_Artifact_Redirect::STATE_CONTINUE === $this->redirect->mode;
     }
 
     public function isStayMode(): bool
     {
-        return Tracker_Artifact_Redirect::STATE_STAY ===  $this->redirect->mode;
+        return Tracker_Artifact_Redirect::STATE_STAY === $this->redirect->mode;
     }
 }
