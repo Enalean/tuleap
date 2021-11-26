@@ -10,4 +10,7 @@
       <ugroup ugroup_name="project_members"/>
     </can_prioritize>
   </increments>
+  <iterations>
+    <source_tracker REF="T1030"/>
+  </iterations>
 </program_management>

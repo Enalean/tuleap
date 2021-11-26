@@ -148,7 +148,7 @@
                   <name><![CDATA[last_updated_on]]></name>
                   <label><![CDATA[Last Updated On]]></label>
                 </formElement>
-                <formElement type="lud" ID="F22635" rank="1" id="22635" tracker_id="1036" parent_id="22633">
+                <formElement type="luby" ID="F22635" rank="1" id="22635" tracker_id="1036" parent_id="22633">
                   <name><![CDATA[last_updated_by]]></name>
                   <label><![CDATA[Last Updated By]]></label>
                 </formElement>
