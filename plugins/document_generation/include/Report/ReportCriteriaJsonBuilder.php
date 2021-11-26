@@ -32,6 +32,10 @@ use Tuleap\REST\JsonCast;
 
 class ReportCriteriaJsonBuilder
 {
+    public function __construct(private \UGroupManager $ugroup_manager)
+    {
+    }
+
     public function buildReportCriteriaJson(Tracker_Report $report): ReportCriteriaJson
     {
         if ($report->is_in_expert_mode) {
@@ -67,6 +71,11 @@ class ReportCriteriaJsonBuilder
                 $list_criterion_json_value = $this->buildCriterionValueJsonFromListValue($criterion);
                 if ($list_criterion_json_value !== null) {
                     $criteria_value_json[] = $list_criterion_json_value;
+                }
+            } elseif ($criterion_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact) {
+                $value = $this->buildCriterionValueJsonFromPermissionsOnArtifactValue($criterion);
+                if ($value !== null) {
+                    $criteria_value_json[] = $value;
                 }
             } elseif (! empty($criterion_field->getCriteriaValue($criterion))) {
                 $criteria_value_json[] = new ClassicCriterionValueJson(
@@ -169,6 +178,36 @@ class ReportCriteriaJsonBuilder
             return new ClassicCriterionValueJson(
                 $criterion_field->getLabel(),
                 implode(', ', $criterion_values_labels),
+            );
+        }
+
+        return null;
+    }
+
+    private function buildCriterionValueJsonFromPermissionsOnArtifactValue(Tracker_Report_Criteria $criterion): ?CriterionValueJson
+    {
+        $criterion_field = $criterion->getField();
+        $criterion_value = $criterion_field->getCriteriaValue($criterion);
+
+        if (! is_array($criterion_value)) {
+            return null;
+        }
+
+        $project = $criterion_field->getTracker()->getProject();
+
+        $labels = [];
+
+        foreach (array_keys($criterion_value) as $ugroup_id) {
+            $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+            if ($ugroup !== null) {
+                $labels[] = $ugroup->getTranslatedName();
+            }
+        }
+
+        if (count($labels) > 0) {
+            return new ClassicCriterionValueJson(
+                $criterion_field->getLabel(),
+                implode(', ', $labels),
             );
         }
 

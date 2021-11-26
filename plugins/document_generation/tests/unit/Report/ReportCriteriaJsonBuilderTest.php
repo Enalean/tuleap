@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\Report;
 
 use ProjectUGroup;
+use Tracker;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
@@ -39,16 +40,29 @@ use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
 use Tracker_Report_Criteria;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ReportCriteriaJsonBuilderTest extends TestCase
 {
     use GlobalLanguageMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\UGroupManager
+     */
+    private mixed $ugroup_manager;
+    private ReportCriteriaJsonBuilder $builder;
+
+    protected function setUp(): void
+    {
+        $this->ugroup_manager = $this->createStub(\UGroupManager::class);
+        $this->builder        = new ReportCriteriaJsonBuilder($this->ugroup_manager);
+    }
+
     public function testItBuildsJsonForReportWithExpertQuery(): void
     {
         $report      = $this->buildReportWithExpertQuery();
-        $report_json = (new ReportCriteriaJsonBuilder())->buildReportCriteriaJson($report);
+        $report_json = $this->builder->buildReportCriteriaJson($report);
 
         self::assertInstanceOf(ExpertReportCriteriaJson::class, $report_json);
         self::assertNotNull($report_json->is_in_expert_mode);
@@ -65,13 +79,13 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->willReturn('None');
 
         $report      = $this->buildReportWithCriteria();
-        $report_json = (new ReportCriteriaJsonBuilder())->buildReportCriteriaJson($report);
+        $report_json = $this->builder->buildReportCriteriaJson($report);
 
         self::assertInstanceOf(ClassicReportCriteriaJson::class, $report_json);
         self::assertNotNull($report_json->is_in_expert_mode);
         self::assertFalse($report_json->is_in_expert_mode);
         self::assertNotNull($report_json->criteria);
-        self::assertCount(7, $report_json->criteria);
+        self::assertCount(8, $report_json->criteria);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[0]);
         self::assertSame("Summary", $report_json->criteria[0]->criterion_name);
         self::assertSame("Test", $report_json->criteria[0]->criterion_value);
@@ -91,9 +105,8 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertSame("Submitted On", $report_json->criteria[5]->criterion_name);
         self::assertSame("2021-08-01T00:00:00+02:00", $report_json->criteria[5]->criterion_from_value);
         self::assertSame("2021-08-28T00:00:00+02:00", $report_json->criteria[5]->criterion_to_value);
-        self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[6]);
-        self::assertSame("Additional01", $report_json->criteria[6]->criterion_name);
-        self::assertSame("ValueAdd01", $report_json->criteria[6]->criterion_value);
+        self::assertEquals(new ClassicCriterionValueJson('Perms', 'ugroup_name'), $report_json->criteria[6]);
+        self::assertEquals(new ClassicCriterionValueJson('Additional01', 'ValueAdd01'), $report_json->criteria[7]);
     }
 
     private function buildReportWithExpertQuery(): Tracker_Report
@@ -130,7 +143,8 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             $this->buildNotSetListCriterion($report),
             $this->buildNotSetOpenListCriterion($report),
             $this->buildNotSetDateCriterion($report),
-            $this->buildListCriterionWithInvalidValue($report)
+            $this->buildListCriterionWithInvalidValue($report),
+            $this->buildPermissionsOnArtifactCriterion($report),
         ];
 
         $report->method('getCriteria')->willReturn($criteria);
@@ -438,6 +452,32 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->willReturn(['404']);
 
         return $criterion_with_invalid_value;
+    }
+
+    private function buildPermissionsOnArtifactCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $field->method('getLabel')->willReturn('Perms');
+        $tracker = $this->createStub(Tracker::class);
+        $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $field->method('getTracker')->willReturn($tracker);
+
+        $criterion = new Tracker_Report_Criteria(
+            25,
+            $report,
+            $field,
+            5,
+            0
+        );
+
+        $field
+            ->method('getCriteriaValue')
+            ->willReturn([123 => ['123']]);
+
+        $ugroup = new ProjectUGroup(['name' => 'ugroup_name']);
+        $this->ugroup_manager->method('getUGroup')->willReturn($ugroup);
+
+        return $criterion;
     }
 
     private function buildNotSetDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
