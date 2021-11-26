@@ -385,7 +385,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
     {
-        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
+        $bind = $this->getBind();
+        if (! $bind instanceof Tracker_FormElement_Field_List_Bind_Static) {
             return;
         }
 
@@ -398,6 +399,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
                     $criteria_value_node->addChild('none_value');
                 } else {
+                    try {
+                        $bind->getValue($value_id);
+                    } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
+                        continue;
+                    }
                     $selected_value_node = $criteria_value_node->addChild('selected_value');
                     $selected_value_node->addAttribute('REF', 'V' . $value_id);
                 }

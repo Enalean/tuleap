@@ -25,6 +25,7 @@ namespace Tuleap\DocumentGeneration\Report;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_OpenList;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tuleap\REST\JsonCast;
@@ -153,7 +154,11 @@ class ReportCriteriaJsonBuilder
             if ((int) $value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
                 $criterion_values_labels[] = $GLOBALS['Language']->getText('global', 'none');
             } else {
-                $value = $criterion_field->getBind()->getValue($value_id);
+                try {
+                    $value = $criterion_field->getBind()->getValue($value_id);
+                } catch (Tracker_FormElement_InvalidFieldValueException $ex) {
+                    continue;
+                }
                 if ($value) {
                     $criterion_values_labels[] = $value->getLabel();
                 }

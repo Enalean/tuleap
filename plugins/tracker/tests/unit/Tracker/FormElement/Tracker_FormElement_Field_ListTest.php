@@ -531,4 +531,18 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertFalse($this->list_field->isValid($artifact, [9998, 9999]));
         $this->assertFalse($this->list_field->isValid($artifact, [101, 9999]));
     }
+
+    public function testDoestExportCriteriaInvalidValueToXML(): void
+    {
+        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root/>');
+        $report      = $this->createStub(Tracker_Report::class);
+        $report->method('getId')->willReturn(12);
+        $criteria = new Tracker_Report_Criteria(1, $report, $this->list_field, 1, false);
+
+        $this->bind->shouldReceive('getValue')->andThrow(new Tracker_FormElement_InvalidFieldValueException());
+
+        $this->list_field->setCriteriaValue(['404'], 12);
+
+        $this->list_field->exportCriteriaValueToXML($criteria, $xml_element);
+    }
 }

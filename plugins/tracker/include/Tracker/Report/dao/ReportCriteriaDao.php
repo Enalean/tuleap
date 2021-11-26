@@ -88,7 +88,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
         return $mapping['from'] || ! $value || ! isset($mapping['values'][$value]);
     }
 
-    private function getValueFromRow(array $row, array $mapping): string
+    private function getValueFromRow(array $row, array $mapping): ?string
     {
         switch ($row['field_type']) {
             case "list":
@@ -98,9 +98,8 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 
                 if ((int) $row['value'] === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
                     return $row['value'];
-                } else {
-                    return $mapping['values'][$row['value']];
                 }
+                return $mapping['values'][$row['value']] ?? null;
             case "alphanum":
             case "file":
             case "permissions":
@@ -232,11 +231,13 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                     if ($row['value'] === null) {
                         continue;
                     }
-                    $value                                = $this->getValueFromRow($row, $mapping);
-                    $data_to_insert[$row['field_type']][] = [
-                        'criteria_id' => $report_criteria_id,
-                        'value' => $value
-                    ];
+                    $value = $this->getValueFromRow($row, $mapping);
+                    if ($value !== null) {
+                        $data_to_insert[$row['field_type']][] = [
+                            'criteria_id' => $report_criteria_id,
+                            'value' => $value
+                        ];
+                    }
                 }
             }
 
