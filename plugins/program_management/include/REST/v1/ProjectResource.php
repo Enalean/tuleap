@@ -59,12 +59,13 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
+use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
@@ -225,7 +226,15 @@ final class ProjectResource extends AuthenticatedResource
                 new UserCanPlanInProgramIncrementVerifier(
                     $update_verifier,
                     $program_increments_dao,
-                    new UserCanLinkToProgramIncrementVerifier($this->user_manager_adapter, $field_retriever)
+                    new UserCanLinkToProgramIncrementVerifier($this->user_manager_adapter, $field_retriever),
+                    $program_dao,
+                    $this->build_program,
+                    new VisibleTeamSearcher(
+                        $program_dao,
+                        $this->user_manager_adapter,
+                        $project_manager_adapter,
+                        $project_access_checker,
+                    ),
                 )
             )
         );

@@ -25,6 +25,15 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\VerifyUserCanUpdateTimebox;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
+use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -33,7 +42,10 @@ final class UserCanPlanInProgramIncrementVerifier
     public function __construct(
         private VerifyUserCanUpdateTimebox $update_verifier,
         private RetrieveProgramIncrementTracker $tracker_retriever,
-        private VerifyUserCanLinkToProgramIncrement $link_verifier
+        private VerifyUserCanLinkToProgramIncrement $link_verifier,
+        private RetrieveProgramOfProgramIncrement $program_retriever,
+        private BuildProgram $program_builder,
+        private SearchVisibleTeamsOfProgram $teams_searcher,
     ) {
     }
 
@@ -49,7 +61,26 @@ final class UserCanPlanInProgramIncrementVerifier
             $program_increment
         );
 
-        return $this->link_verifier->canUserLinkToProgramIncrement($program_increment_tracker, $user);
+        if (! $this->link_verifier->canUserLinkToProgramIncrement($program_increment_tracker, $user)) {
+            return false;
+        }
+        try {
+            $program = ProgramIdentifier::fromProgramIncrement(
+                $this->program_retriever,
+                $this->program_builder,
+                $program_increment,
+                $user
+            );
+        } catch (ProgramAccessException | ProjectIsNotAProgramException) {
+            return false;
+        }
+
+        try {
+            TeamIdentifierCollection::fromProgram($this->teams_searcher, $program, $user);
+        } catch (ProgramHasNoTeamException | TeamIsNotVisibleException) {
+            return false;
+        }
+        return true;
     }
 
     /**

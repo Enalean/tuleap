@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanLinkToProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 
@@ -34,7 +37,10 @@ final class UserCanPlanInProgramIncrementVerifierBuilder
         return new UserCanPlanInProgramIncrementVerifier(
             VerifyUserCanUpdateTimeboxStub::withAllowed(),
             RetrieveProgramIncrementTrackerStub::withValidTracker(16),
-            VerifyUserCanLinkToProgramIncrementStub::withAllowed()
+            VerifyUserCanLinkToProgramIncrementStub::withAllowed(),
+            RetrieveProgramOfProgramIncrementStub::withProgram(182),
+            BuildProgramStub::stubValidProgram(),
+            SearchVisibleTeamsOfProgramStub::withTeamIds(174, 153)
         );
     }
 }

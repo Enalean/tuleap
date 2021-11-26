@@ -25,7 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanLinkToProgramIncrementStub;
@@ -39,6 +42,8 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     private ProgramIncrementIdentifier $program_increment;
     private VerifyUserCanUpdateTimeboxStub $update_verifier;
     private VerifyUserCanLinkToProgramIncrementStub $link_verifier;
+    private SearchVisibleTeamsOfProgramStub $team_searcher;
+    private BuildProgramStub $program_builder;
 
     protected function setUp(): void
     {
@@ -56,6 +61,8 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
             self::PROGRAM_INCREMENT_ID,
             $this->user
         );
+        $this->team_searcher       = SearchVisibleTeamsOfProgramStub::withTeamIds(139, 173);
+        $this->program_builder     = BuildProgramStub::stubValidProgram();
     }
 
     private function getVerifier(): UserCanPlanInProgramIncrementVerifier
@@ -63,7 +70,10 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
         return new UserCanPlanInProgramIncrementVerifier(
             $this->update_verifier,
             RetrieveProgramIncrementTrackerStub::withValidTracker(90),
-            $this->link_verifier
+            $this->link_verifier,
+            RetrieveProgramOfProgramIncrementStub::withProgram(141),
+            $this->program_builder,
+            $this->team_searcher
         );
     }
 
@@ -75,33 +85,63 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     public function testUserCannotPlanWhenUserCannotUpdateProgramIncrement(): void
     {
         $this->update_verifier = VerifyUserCanUpdateTimeboxStub::withDenied();
-
         self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
 
     public function testUserCannotPlanWhenUserCannotUpdateArtifactLinkOfProgramIncrement(): void
     {
         $this->link_verifier = VerifyUserCanLinkToProgramIncrementStub::withDenied();
+        self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
+    }
 
+    public function testUserCannotPlanWhenCannotRetrieveProgramOfProgramIncrement(): void
+    {
+        $this->program_builder = BuildProgramStub::stubInvalidProgramAccess();
+        self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
+    }
+
+    public function testUserCannotPlanWhenOneTeamIsNotVisible(): void
+    {
+        $this->team_searcher = SearchVisibleTeamsOfProgramStub::withNotVisibleTeam();
         self::assertFalse($this->getVerifier()->userCanPlan($this->program_increment, $this->user));
     }
 
     public function testUserCanPlanAndPrioritize(): void
     {
-        self::assertTrue($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
+        self::assertTrue(
+            $this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize)
+        );
     }
 
     public function testUserCannotPlanAndPrioritizeWhenUserCannotUpdateProgramIncrement(): void
     {
         $this->update_verifier = VerifyUserCanUpdateTimeboxStub::withDenied();
-
-        self::assertFalse($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
+        self::assertFalse(
+            $this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize)
+        );
     }
 
     public function testUserCannotPlanAndPrioritizeWhenUserCannotUpdateArtifactLinkOfProgramIncrement(): void
     {
         $this->link_verifier = VerifyUserCanLinkToProgramIncrementStub::withDenied();
+        self::assertFalse(
+            $this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize)
+        );
+    }
 
-        self::assertFalse($this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize));
+    public function testUserCannotPlanAndPrioritizeWhenCannotRetrieveProgramOfProgramIncrement(): void
+    {
+        $this->program_builder = BuildProgramStub::stubInvalidProgramAccess();
+        self::assertFalse(
+            $this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize)
+        );
+    }
+
+    public function testUserCannotPlanAndPrioritizeWhenOneTeamIsNotVisible(): void
+    {
+        $this->team_searcher = SearchVisibleTeamsOfProgramStub::withNotVisibleTeam();
+        self::assertFalse(
+            $this->getVerifier()->userCanPlanAndPrioritize($this->program_increment, $this->user_can_prioritize)
+        );
     }
 }
