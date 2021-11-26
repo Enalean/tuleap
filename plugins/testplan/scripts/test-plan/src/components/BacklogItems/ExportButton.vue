@@ -40,7 +40,16 @@
             <div class="tlp-dropdown-menu" role="menu">
                 <a
                     href="#"
-                    v-on:click.prevent="exportTestPlan"
+                    v-on:click.prevent="exportTestPlanAsDocx"
+                    class="tlp-dropdown-menu-item"
+                    role="menuitem"
+                    data-test="testplan-export-docx-button"
+                >
+                    <translate>Export as document</translate>
+                </a>
+                <a
+                    href="#"
+                    v-on:click.prevent="exportTestPlanAsXlsx"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
                     data-test="testplan-export-xlsx-button"
@@ -96,6 +105,21 @@ export default class ExportButton extends Vue {
     @State
     readonly user_display_name!: string;
 
+    @State
+    readonly platform_name!: string;
+
+    @State
+    readonly platform_logo_url!: string;
+
+    @State
+    readonly user_timezone!: string;
+
+    @State
+    readonly user_locale!: string;
+
+    @State
+    readonly milestone_url!: string;
+
     private is_preparing_the_download = false;
 
     private has_encountered_error_during_the_export = false;
@@ -125,7 +149,7 @@ export default class ExportButton extends Vue {
         return "fa-download";
     }
 
-    async exportTestPlan(): Promise<void> {
+    async exportTestPlanAsXlsx(): Promise<void> {
         if (this.is_preparing_the_download) {
             return;
         }
@@ -134,10 +158,10 @@ export default class ExportButton extends Vue {
 
         try {
             const { downloadExportDocument } = await import(
-                /* webpackChunkName: "testplan-download-export-sheet" */ "../../helpers/Export/download-export-document"
+                /* webpackChunkName: "testplan-download-export-sheet" */ "../../helpers/ExportAsSpreadsheet/download-export-document"
             );
             const { downloadXLSX } = await import(
-                /* webpackChunkName: "testplan-download-xlsx-export-sheet" */ "../../helpers/Export/Exporter/XLSX/download-xlsx"
+                /* webpackChunkName: "testplan-download-xlsx-export-sheet" */ "../../helpers/ExportAsSpreadsheet/Exporter/XLSX/download-xlsx"
             );
             await downloadExportDocument(
                 this,
@@ -147,6 +171,42 @@ export default class ExportButton extends Vue {
                 this.user_display_name,
                 this.backlog_items,
                 this.campaigns
+            );
+        } catch (e) {
+            this.has_encountered_error_during_the_export = true;
+            throw e;
+        } finally {
+            this.is_preparing_the_download = false;
+        }
+    }
+
+    async exportTestPlanAsDocx(): Promise<void> {
+        if (this.is_preparing_the_download) {
+            return;
+        }
+        this.is_preparing_the_download = true;
+        this.has_encountered_error_during_the_export = false;
+
+        try {
+            const { downloadExportDocument } = await import(
+                /* webpackChunkName: "testplan-download-export-doc" */ "../../helpers/ExportAsDocument/download-export-document"
+            );
+            const { downloadDocx } = await import(
+                /* webpackChunkName: "testplan-download-docx-export-doc" */ "../../helpers/ExportAsDocument/Exporter/DOCX/download-docx"
+            );
+            await downloadExportDocument(
+                {
+                    platform_name: this.platform_name,
+                    platform_logo_url: this.platform_logo_url,
+                    project_name: this.project_name,
+                    user_display_name: this.user_display_name,
+                    user_timezone: this.user_timezone,
+                    user_locale: this.user_locale,
+                    milestone_name: this.milestone_title,
+                    milestone_url: this.milestone_url,
+                },
+                this,
+                downloadDocx
             );
         } catch (e) {
             this.has_encountered_error_during_the_export = true;

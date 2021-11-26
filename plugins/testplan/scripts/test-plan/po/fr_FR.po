@@ -95,8 +95,17 @@ msgstr "Éditer %{ item_type } #%{ item_id }"
 msgid "Export"
 msgstr "Exporter"
 
+msgid "Export as document"
+msgstr "Exporter en tant que document"
+
 msgid "Export as spreadsheet"
 msgstr "Exporter en tant que feuille de calcul"
+
+msgid "Exported by"
+msgstr "Exporté par"
+
+msgid "Exported on"
+msgstr "Exporté le"
 
 msgid "Failed"
 msgstr "Échoué"
@@ -123,6 +132,9 @@ msgstr ""
 msgid "Milestone"
 msgstr "Jalon"
 
+msgid "Milestone URL"
+msgstr "URL du jalon"
+
 msgid "Name"
 msgstr "Nom"
 
@@ -143,6 +155,9 @@ msgstr "Oups, il y a eu un problème"
 
 msgid "Passed"
 msgstr "Passé"
+
+msgid "Platform"
+msgstr "Plateforme"
 
 msgid "Project"
 msgstr "Projet"

@@ -20,7 +20,7 @@
 import ExportError from "./ExportError.vue";
 
 const downloadExportDocument = jest.fn();
-jest.mock("../../helpers/Export/download-export-document", () => {
+jest.mock("../../helpers/ExportAsSpreadsheet/download-export-document", () => {
     return {
         downloadExportDocument,
     };
