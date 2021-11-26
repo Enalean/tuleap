@@ -65,3 +65,11 @@
 .iteration-fetch-error {
     margin: 0 var(--tlp-large-spacing) 0 0;
 }
+
+.new-iteration-button {
+    margin: 0 0 0 var(--tlp-large-spacing);
+}
+
+.planned-iteration-header-with-button {
+    display: flex;
+}

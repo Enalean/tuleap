@@ -30,6 +30,8 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
@@ -43,6 +45,7 @@ final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             BuildProgramBaseInfoStub::withDefault(),
             BuildProgramIncrementInfoStub::withId(1260),
             VerifyUserIsProgramAdminStub::withProgramAdminUser(),
+            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(101)),
             ProgramIdentifierBuilder::build(),
             UserIdentifierStub::withId(666),
             ProgramIncrementIdentifierBuilder::buildWithId(1260),
@@ -86,5 +89,6 @@ final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertEquals(IterationsLabelsBuilder::buildWithLabels("Cycles", "cycle"), $planned_iterations->getIterationLabels());
         self::assertTrue($planned_iterations->isUserAdmin());
+        self::assertEquals('101', $planned_iterations->getIterationTrackerId());
     }
 }

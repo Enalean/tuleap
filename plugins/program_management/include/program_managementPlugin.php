@@ -172,6 +172,8 @@ use Tuleap\ProgramManagement\Domain\Team\PossibleParentHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
+use Tuleap\ProgramManagement\Adapter\Redirections\RedirectToPlannedIterationsAppHandler;
+use Tuleap\ProgramManagement\Adapter\Redirections\IterationsRedirectParameters;
 use Tuleap\ProgramManagement\RedirectToProgramIncrementAppHandler;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
@@ -860,13 +862,20 @@ final class program_managementPlugin extends Plugin
             $event->getRedirect(),
             $event->getArtifact()->getTracker()->getProject()
         );
+
+        (new RedirectToPlannedIterationsAppHandler())->process(
+            IterationsRedirectParameters::buildFromCodendiRequest($event->getRequest()),
+            $event->getRedirect(),
+            $event->getArtifact()->getTracker()->getProject()
+        );
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
         $program_management_redirect_manager = RedirectToProgramManagementAppManager::buildFromCodendiRequest($event->getRequest());
+        $planned_iterations_redirect_manager = IterationsRedirectParameters::buildFromCodendiRequest($event->getRequest());
 
-        if (! $program_management_redirect_manager->isRedirectionNeeded()) {
+        if (! $program_management_redirect_manager->isRedirectionNeeded() && ! $planned_iterations_redirect_manager->isRedirectionNeeded()) {
             return;
         }
 
@@ -874,6 +883,12 @@ final class program_managementPlugin extends Plugin
 
         if ($program_management_redirect_manager->needsRedirectionAfterUpdate()) {
             $redirect->injectAndInformUserAboutUpdatingProgramItem($event->getRedirect(), $GLOBALS['Response']);
+
+            return;
+        }
+
+        if ($planned_iterations_redirect_manager->needsRedirectionAfterCreate()) {
+            $redirect->injectAndInformUserAboutCreatingIncrementIteration($event->getRedirect(), $GLOBALS['Response'], $planned_iterations_redirect_manager);
 
             return;
         }

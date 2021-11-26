@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             program: JSON.parse(getDatasetPropertyValue(vue_mount_point, "program")),
             program_privacy: JSON.parse(getDatasetPropertyValue(vue_mount_point, "programPrivacy")),
             program_flags: JSON.parse(getDatasetPropertyValue(vue_mount_point, "programFlags")),
-            is_program_admin: Boolean(vue_mount_point.dataset["isUserAdmin"]),
+            is_program_admin: Boolean(vue_mount_point.dataset.isUserAdmin),
             program_increment: JSON.parse(
                 getDatasetPropertyValue(vue_mount_point, "programIncrement")
             ),
@@ -57,6 +57,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 getDatasetPropertyValue(vue_mount_point, "iterationsLabels")
             ),
             user_locale: user_locale.replace("_", "-"),
+            iteration_tracker_id: parseInt(
+                getDatasetPropertyValue(vue_mount_point, "iterationTrackerId"),
+                10
+            ),
         }),
     }).$mount(vue_mount_point);
 });

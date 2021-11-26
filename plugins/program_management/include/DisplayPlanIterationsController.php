@@ -102,6 +102,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 $this->build_program_base_info,
                 $this->build_program_increment_info,
                 $this->verify_user_is_program_admin,
+                $this->retrieve_visible_iteration_tracker,
                 $program_identifier,
                 $user_identifier,
                 ProgramIncrementIdentifier::fromId(
@@ -118,6 +119,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         } catch (
             Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException |
             Domain\Program\Plan\ProjectIsNotAProgramException |
+            Domain\Program\ProgramIterationTrackerNotFoundException |
             Domain\Program\ProgramTrackerNotFoundException $e
         ) {
             throw new NotFoundException($e->getI18NExceptionMessage());

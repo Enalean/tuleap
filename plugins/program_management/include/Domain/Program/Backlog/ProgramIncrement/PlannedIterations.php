@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -44,13 +47,15 @@ final class PlannedIterations
         private ProgramBaseInfo $program_base_info,
         private ProgramIncrementInfo $program_increment_info,
         private bool $is_user_admin,
-        private IterationLabels $iteration_labels
+        private IterationLabels $iteration_labels,
+        private TrackerReference $iteration_tracker_reference
     ) {
     }
 
     /**
      * @throws ProgramIncrementNotFoundException
      * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException
+     * @throws ProgramIterationTrackerNotFoundException
      */
     public static function build(
         BuildProgramFlags $build_program_flags,
@@ -58,6 +63,7 @@ final class PlannedIterations
         BuildProgramBaseInfo $build_program_base_info,
         BuildProgramIncrementInfo $build_program_increment_info,
         VerifyUserIsProgramAdmin $verify_user_is_program_admin,
+        RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
         ProgramIdentifier $program_identifier,
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier,
@@ -68,8 +74,13 @@ final class PlannedIterations
         $program_base_info = $build_program_base_info->build($program_identifier);
         $program_increment = $build_program_increment_info->build($user_identifier, $increment_identifier);
         $is_user_admin     = $verify_user_is_program_admin->isUserProgramAdmin($user_identifier, $program_identifier);
+        $iteration_tracker = $retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker($program_identifier, $user_identifier);
 
-        return new self($program_flags, $program_privacy, $program_base_info, $program_increment, $is_user_admin, $iterations_labels);
+        if ($iteration_tracker === null) {
+            throw new ProgramIterationTrackerNotFoundException($program_identifier);
+        }
+
+        return new self($program_flags, $program_privacy, $program_base_info, $program_increment, $is_user_admin, $iterations_labels, $iteration_tracker);
     }
 
     /**
@@ -103,5 +114,10 @@ final class PlannedIterations
     public function getIterationLabels(): IterationLabels
     {
         return $this->iteration_labels;
+    }
+
+    public function getIterationTrackerId(): int
+    {
+        return $this->iteration_tracker_reference->getId();
     }
 }

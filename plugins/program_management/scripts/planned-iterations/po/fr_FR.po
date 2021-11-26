@@ -15,8 +15,17 @@ msgstr ""
 msgid "Administration"
 msgstr "Administration"
 
+msgid "Create the first %s"
+msgstr "Créer un(e) %s"
+
+msgid "Create the first iteration"
+msgstr "Créer la première itération"
+
 msgid "Iterations"
 msgstr "Itérations"
+
+msgid "New %{ iteration_sub_label }"
+msgstr "Ajouter un(e) %{ iteration_sub_label }"
 
 msgid "Nothing to see here for the moment"
 msgstr "Rien à voir ici pour le moment"
@@ -38,3 +47,6 @@ msgstr "Il n'y a pas encore d'itérations."
 
 msgid "To be planned by the Teams"
 msgstr "À plannifier par les équipes"
+
+msgid "iteration"
+msgstr "itération"

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,23 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.planned-iterations {
-    flex: 1 1 50%;
-}
+export function buildIterationCreationUrl(
+    program_increment_id: number,
+    iteration_tracker_id: number
+): string {
+    const url_params = new URLSearchParams({
+        "redirect-to-planned-iterations": "create",
+        "increment-id": String(program_increment_id),
+        tracker: String(iteration_tracker_id),
+        func: "new-artifact",
+    });
 
-.iterations-backlog {
-    display: flex;
-    padding: 0 var(--tlp-medium-spacing);
-}
-
-.planned-iterations-section-title {
-    color: var(--tlp-typo-default-text-color);
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 1.875rem;
-}
-
-.planned-iterations-empty-state-svg,
-.planned-iterations-empty-state-text {
-    margin: 0 0 var(--tlp-x-large-spacing) 0;
+    return `/plugins/tracker/?${url_params.toString()}`;
 }
