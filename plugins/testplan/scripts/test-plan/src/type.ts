@@ -88,3 +88,23 @@ interface TestDefinitionRefreshInformation {
 }
 
 export type TestDefinition = TestDefinitionFromREST & TestDefinitionRefreshInformation;
+
+export interface ExportDocument {
+    readonly name: string;
+}
+
+export interface GlobalExportProperties {
+    readonly platform_name: string;
+    readonly platform_logo_url: string;
+    readonly project_name: string;
+    readonly user_display_name: string;
+    readonly user_timezone: string;
+    readonly user_locale: string;
+    readonly milestone_name: string;
+    readonly milestone_url: string;
+}
+
+export interface DateTimeLocaleInformation {
+    readonly locale: string;
+    readonly timezone: string;
+}

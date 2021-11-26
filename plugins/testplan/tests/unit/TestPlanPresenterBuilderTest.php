@@ -27,12 +27,14 @@ use Planning_ArtifactMilestone;
 use Planning_MilestonePaneFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
 
 final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_ArtifactMilestone
@@ -53,6 +55,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
+        \ForgeConfig::set('sys_name', 'Tuleap');
         $pane_factory = \Mockery::mock(Planning_MilestonePaneFactory::class);
         $pane_factory->shouldReceive('getPanePresenterData')->andReturn(\Mockery::mock(PanePresenterData::class));
 
@@ -65,6 +68,9 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getID')->andReturn('102');
         $project->shouldReceive('getPublicName')->andReturn('Project public name');
         $this->milestone->shouldReceive('getProject')->andReturn($project);
+        $this->milestone->shouldReceive('getGroupId')->andReturn(102);
+        $this->milestone->shouldReceive('getPlanningId')->andReturn(111);
+        $this->milestone->shouldReceive('getArtifactId')->andReturn(999);
 
         $this->testmanagement_config       = \Mockery::mock(Config::class);
         $this->tracker_factory             = \Mockery::mock(TrackerFactory::class);

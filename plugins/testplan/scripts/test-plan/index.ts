@@ -34,10 +34,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    const user_locale = document.body.dataset.userLocale || "en_US";
+    const user_timezone = document.body.dataset.userTimezone || "UTC";
     const user_display_name = vue_mount_point.dataset.userDisplayName || "";
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId || "0", 10);
     const project_name = vue_mount_point.dataset.projectName || "";
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
+    const milestone_url = vue_mount_point.dataset.milestoneUrl || "";
     const expand_backlog_item_id = Number.parseInt(
         vue_mount_point.dataset.expandBacklogItemId || "0",
         10
@@ -59,6 +62,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         testdefinition_tracker_id = null;
     }
     const testdefinition_tracker_name = vue_mount_point.dataset.testDefinitionTrackerName || "";
+    const platform_name = vue_mount_point.dataset.platformName || "Tuleap";
+    const platform_logo_url = vue_mount_point.dataset.platformLogoUrl || "";
 
     await initVueGettext(
         Vue,
@@ -72,15 +77,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const initial_state = {
         user_display_name,
+        user_timezone,
+        user_locale,
         project_id,
         project_name,
         milestone_id,
         milestone_title,
+        milestone_url,
         user_can_create_campaign,
         testdefinition_tracker_id,
         testdefinition_tracker_name,
         expand_backlog_item_id,
         highlight_test_definition_id,
+        platform_name,
+        platform_logo_url,
     } as unknown as RootState;
 
     new AppComponent({

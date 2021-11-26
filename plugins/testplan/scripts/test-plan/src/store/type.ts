@@ -22,15 +22,20 @@ import type { BacklogItemState } from "./backlog-item/type";
 
 export interface State {
     readonly user_display_name: string;
+    readonly user_timezone: string;
+    readonly user_locale: string;
     readonly project_id: number;
     readonly project_name: string;
     readonly milestone_id: number;
     readonly milestone_title: string;
+    readonly milestone_url: string;
     readonly user_can_create_campaign: boolean;
     readonly testdefinition_tracker_id: number | null;
     readonly testdefinition_tracker_name: string;
     readonly expand_backlog_item_id: number;
     readonly highlight_test_definition_id: number | null;
+    readonly platform_name: string;
+    readonly platform_logo_url: string;
 }
 
 export interface RootState extends State {

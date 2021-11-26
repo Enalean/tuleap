@@ -24,6 +24,7 @@ namespace Tuleap\TestPlan;
 
 use Planning_MilestonePaneFactory;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\TestManagement\Config;
 use UserHelper;
 
@@ -74,17 +75,22 @@ class TestPlanPresenterBuilder
         $milestone_artifact = $milestone->getArtifact();
         $project            = $milestone->getProject();
 
+        $details_pane = new DetailsPaneInfo($milestone);
+
         return new TestPlanPresenter(
             new \AgileDashboard_MilestonePresenter($milestone, $presenter_data),
             $this->user_helper->getDisplayNameFromUser($user),
             (int) $milestone_artifact->getId(),
             $milestone_artifact->getTitle() ?? '',
+            \Tuleap\ServerHostname::HTTPSUrl() . $details_pane->getUri(),
             (int) $project->getID(),
             $project->getPublicName(),
             $this->canUserCreateACampaign($project, $user),
             $this->definition_tracker_retriever->getTestDefinitionTracker($project, $user),
             $expand_backlog_item_id,
             $highlight_test_definition_id,
+            \ForgeConfig::get('sys_name'),
+            \Admin_Homepage_LogoFinder::getCurrentUrl(),
         );
     }
 
