@@ -73,7 +73,7 @@ class PermissionsOnArtifactFieldValueDao extends FieldValueDao
         if ($changeset_value_ids === false) {
             return false;
         }
-        $sql = " INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id) VALUES (" . implode(', 1, 1), ( ', $changeset_value_ids) . ", 1, 1) ";
+        $sql = " INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id) VALUES (" . implode(', 1, 1), ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", 1, 1) ";
         $this->update($sql);
     }
 

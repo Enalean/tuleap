@@ -43,7 +43,7 @@ function getLdapFromUserName($username)
     if (! isset($list[$username])) {
         $user = UserManager::instance()->getUserByUserName($username);
         if ($user) {
-            $res = db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = ' . $user->getId());
+            $res = db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = ' . db_ei($user->getId()));
             if (! db_error($res) && db_numrows($res) === 1) {
                 $list[$username] = strtolower(db_result($res, 0, 'ldap_uid'));
             } else {
@@ -181,7 +181,7 @@ if ($ldapPlugin && $plugin_manager->isPluginAvailable($ldapPlugin)) {
                         $svnaccessfile->getPathname() . '.beforeldap',
                         $svnaccessfile->getPathname()
                     );
-                    db_query('INSERT INTO plugin_ldap_svn_repository(group_id, ldap_auth) VALUES(' . $row['group_id'] . ',1)');
+                    db_query('INSERT INTO plugin_ldap_svn_repository(group_id, ldap_auth) VALUES(' . db_ei($row['group_id']) . ',1)');
                 }
             }
         }

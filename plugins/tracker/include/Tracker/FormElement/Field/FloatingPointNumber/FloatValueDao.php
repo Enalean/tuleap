@@ -54,7 +54,7 @@ class FloatValueDao extends NumericFieldValueDao
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( " . implode(' , NULL ), ( ', $changeset_value_ids) . ", NULL)";
+                  ( " . implode(' , NULL ), ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", NULL)";
         return $this->update($sql);
     }
 

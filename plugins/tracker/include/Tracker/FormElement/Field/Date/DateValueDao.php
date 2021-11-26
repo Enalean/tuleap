@@ -60,7 +60,7 @@ class DateValueDao extends FieldValueDao
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( " . implode(' , NULL ),' . "\n" . ' ( ', $changeset_value_ids) . ", NULL)";
+                  ( " . implode(' , NULL ),' . "\n" . ' ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", NULL)";
         return $this->update($sql);
     }
 

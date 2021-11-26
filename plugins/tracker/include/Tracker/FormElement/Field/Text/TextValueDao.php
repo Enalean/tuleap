@@ -70,7 +70,7 @@ class TextValueDao extends FieldValueDao
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( " . implode(' , \'\' ),' . "\n" . ' ( ', $changeset_value_ids) . ", '')";
+                  ( " . implode(' , \'\' ),' . "\n" . ' ( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", '')";
         return $this->update($sql);
     }
 

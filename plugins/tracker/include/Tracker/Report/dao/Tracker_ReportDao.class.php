@@ -214,7 +214,7 @@ class Tracker_ReportDao extends DataAccessObject
         $where         .= $artifact_perms['where'];
 
         if ($this->submitterOnlyApplies($user_is_admin, $permissions, $ugroups)) {
-            $where .= ' AND artifact.submitted_by = ' . $user->getId() . ' ';
+            $where .= ' AND artifact.submitted_by = ' . $this->da->escapeInt($user->getId()) . ' ';
         }
 
         if (count($additional_from)) {

@@ -79,7 +79,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $users_ids = db_ei_implode($users_array);
         // update the user status flag to active
         db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" . $shell .
-                 ", approved_by='" . UserManager::instance()->getCurrentUser()->getId() . "'" .
+                 ", approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
              " WHERE user_id IN ($users_ids)");
 
         $em = EventManager::instance();
@@ -125,12 +125,12 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
 
         // update the user status flag to active
         db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" .
-                 ", approved_by='" . UserManager::instance()->getCurrentUser()->getId() . "'" .
-                 " WHERE user_id IN (" . implode(',', $users_array) . ")");
+                 ", approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
+                 " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
 
         // Now send the user verification emails
         $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
-                 . " WHERE user_id IN (" . implode(',', $users_array) . ")");
+                 . " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
 
         while ($row_user = db_fetch_array($res_user)) {
             if (! send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
@@ -155,8 +155,8 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         }
     } elseif ($action_select == 'delete') {
         $csrf_token->check();
-        db_query("UPDATE user SET status='D', approved_by='" . UserManager::instance()->getCurrentUser()->getId() . "'" .
-                 " WHERE user_id IN (" . implode(',', $users_array) . ")");
+        db_query("UPDATE user SET status='D', approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
+                 " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
         $em = EventManager::instance();
         foreach ($users_array as $user_id) {
             $em->processEvent('project_admin_delete_user', ['user_id' => $user_id]);

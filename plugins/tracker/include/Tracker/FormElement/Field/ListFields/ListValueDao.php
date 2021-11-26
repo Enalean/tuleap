@@ -68,7 +68,7 @@ class ListValueDao extends FieldValueDao
             return false;
         }
         $sql = "INSERT INTO $this->table_name(changeset_value_id, bindvalue_id)
-                    VALUES ( " . implode(', 100 ),( ', $changeset_value_ids) . ", 100 )";
+                    VALUES ( " . implode(', 100 ),( ', array_map(fn (int $value): string => $this->da->escapeInt($value), $changeset_value_ids)) . ", 100 )";
         return $this->update($sql);
     }
 

@@ -51,8 +51,6 @@ class TrackerDao extends DataAccessObject
         $group_id        = $this->da->escapeInt($group_id);
         $excluded_clause = $this->restrict("AND id NOT IN", $excluded_tracker_ids);
 
-        // TODO: escape $excluded_tracker_ids ?
-
         $sql = "SELECT *
                 FROM tracker
                 WHERE group_id = $group_id
@@ -351,7 +349,7 @@ class TrackerDao extends DataAccessObject
         if (! $excluded_tracker_ids) {
             return "";
         }
-        $id_enumeration = implode(',', $excluded_tracker_ids);
+        $id_enumeration = $this->da->escapeIntImplode($excluded_tracker_ids);
         return "$restriction_clause ($id_enumeration)";
     }
 
