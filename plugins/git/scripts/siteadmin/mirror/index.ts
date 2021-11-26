@@ -25,6 +25,11 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
     initAddModal();
     initConfigurationModal();
+    document
+        .querySelectorAll(".mirror-show-repositories")
+        .forEach((element): void =>
+            element.addEventListener("click", (event): void => event.preventDefault())
+        );
 });
 
 function initAddModal(): void {
