@@ -31,6 +31,25 @@ Domain code communicates with the Adapters via interfaces. This kind of Interfac
 
 For example, if you want to verify something in the database, you must add an interface in Domain code. Then, you must create a DAO in Adapter namespace that will implement the new interface. Your Domain code must **never** call the DAO directly, it **always** calls the interface. Then, in the entrypoint, you create a new DAO and pass it to your Domain class.
 
+### Anemic Domain
+
+A common bad behaviour has been done in Adapter namespace. They tend to have too much responsibility, they should not handle *any* logic, they should just provide brut data and Domain should handle everything.
+
+Example of bad adapters:
+ * General: ProgramManagementXMLConfigExtractor
+ * REST routes: FeatureContentRetriever
+ * Presenter: PotentialTeamsPresenterBuilder
+
+How should we correct them:
+ * ProgramManagementXMLConfigExtractor: Simplexml element must be transformed into a Domain object. Adapter will build the object, all the logic can now be moved in Domain.
+ * FeatureContentRetriever: Rest route must call a Domain object. The Domain object will build itself and rely on Adapter to have simple properties. The REST representation is built by Rest route upon the Domain object.
+ * PotentialTeamsPresenterBuilder: The controller should call a Domain object who will build everything needed by the UI. The presenter will build itself from the new Domain object
+
+Example of good adapters
+ * General: ArtifactCreatorAdapter
+ * REST routes: IterationsRetriever
+ * Presenter: DisplayPlanIterationsPresenter
+
 ### Stubs
 
 Having our Domain code depend on interfaces for all side effects, like UI, Database and other plugins is really handy for unit tests. See [ADR-0004 Writing unit-tests without mocks][6] for details.
