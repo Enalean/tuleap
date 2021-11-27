@@ -18,15 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Adapter\Redirections;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class RedirectToPlannedIterationsAppHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RedirectToPlannedIterationsAppHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private \Tracker_Artifact_Redirect $redirect;
     private RedirectToPlannedIterationsAppHandler $handler;
     private \Project $project;
