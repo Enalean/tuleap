@@ -26,13 +26,32 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 /**
  * @psalm-immutable
  */
-interface JiraUser
+final class ActiveJiraServerUser implements JiraUser
 {
-    public const NO_EMAIL_ADDRESS_SHARED = '';
+    private function __construct(private string $self, private string $display_name, private string $email_address)
+    {
+    }
 
-    public function getDisplayName(): string;
+    /**
+     * @param array{self: string, displayName: string, emailAddress?: string} $user_json
+     */
+    public static function buildFromPayload(array $user_json): self
+    {
+        return new self($user_json['self'], $user_json['displayName'], $user_json['emailAddress'] ?? JiraUser::NO_EMAIL_ADDRESS_SHARED);
+    }
 
-    public function getEmailAddress(): string;
+    public function getDisplayName(): string
+    {
+        return $this->display_name;
+    }
 
-    public function getUniqueIdentifier(): string;
+    public function getEmailAddress(): string
+    {
+        return $this->email_address;
+    }
+
+    public function getUniqueIdentifier(): string
+    {
+        return $this->self;
+    }
 }

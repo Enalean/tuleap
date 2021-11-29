@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
 use DateTimeImmutable;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraCloudUser;
 
 /**
  * @psalm-immutable
@@ -43,7 +43,7 @@ class Worklog
     private $seconds;
 
     /**
-     * @var JiraUser
+     * @var JiraCloudUser
      */
     private $author;
 
@@ -52,7 +52,7 @@ class Worklog
      */
     private $comment;
 
-    public function __construct(DateTimeImmutable $start_date, int $seconds, JiraUser $author, string $comment)
+    public function __construct(DateTimeImmutable $start_date, int $seconds, JiraCloudUser $author, string $comment)
     {
         $this->start_date = $start_date;
         $this->seconds    = $seconds;
@@ -90,7 +90,7 @@ class Worklog
 
         $start_date = new DateTimeImmutable($worklog_response['started']);
         $seconds    = (int) $worklog_response['timeSpentSeconds'];
-        $author     = new ActiveJiraUser($worklog_response['author']);
+        $author     = new ActiveJiraCloudUser($worklog_response['author']);
 
         $comment = '';
         if (isset($worklog_response['comment'])) {
@@ -115,7 +115,7 @@ class Worklog
         return $this->seconds;
     }
 
-    public function getAuthor(): JiraUser
+    public function getAuthor(): JiraCloudUser
     {
         return $this->author;
     }

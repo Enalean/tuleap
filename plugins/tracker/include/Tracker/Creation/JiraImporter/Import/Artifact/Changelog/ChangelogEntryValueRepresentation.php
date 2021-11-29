@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use DateTimeImmutable;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\AnonymousJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
@@ -81,7 +81,7 @@ class ChangelogEntryValueRepresentation
 
         $author = new AnonymousJiraUser();
         if (isset($changelog_response['author'])) {
-            $author = new ActiveJiraUser($changelog_response['author']);
+            $author = new ActiveJiraCloudUser($changelog_response['author']);
         }
 
         return new self(

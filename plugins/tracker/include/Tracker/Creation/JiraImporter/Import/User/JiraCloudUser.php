@@ -26,13 +26,11 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 /**
  * @psalm-immutable
  */
-interface JiraUser
+interface JiraCloudUser extends JiraUser
 {
-    public const NO_EMAIL_ADDRESS_SHARED = '';
-
     public function getDisplayName(): string;
 
-    public function getEmailAddress(): string;
+    public function getJiraAccountId(): string;
 
-    public function getUniqueIdentifier(): string;
+    public function getEmailAddress(): string;
 }

@@ -75,13 +75,30 @@ class JiraUserRetriever
             return $this->default_user;
         }
 
-        if (! isset($user_data['displayName'], $user_data['accountId'])) {
-            throw new JiraMinimalUserInformationMissingException();
+        if (isset($user_data['displayName'], $user_data['accountId'])) {
+            return $this->retrieveUser(
+                new ActiveJiraCloudUser($user_data)
+            );
         }
 
-        return $this->retrieveUser(
-            new ActiveJiraUser($user_data)
-        );
+        if (
+            isset($user_data['displayName'], $user_data['self'])
+            && is_string($user_data['displayName'])
+            && is_string($user_data['self'])
+            && (
+                ! isset($user_data['emailAddress'])
+                || (
+                    isset($user_data['emailAddress'])
+                    && is_string($user_data['emailAddress'])
+                )
+            )
+        ) {
+            return $this->retrieveUser(
+                ActiveJiraServerUser::buildFromPayload($user_data)
+            );
+        }
+
+        throw new JiraMinimalUserInformationMissingException();
     }
 
     private function retrieveUser(JiraUser $jira_user): PFUser
@@ -136,8 +153,8 @@ class JiraUserRetriever
      */
     public function getAssignedTuleapUser(string $jira_account_id): PFUser
     {
-        if ($this->user_cache->hasUserWithAccountId($jira_account_id)) {
-            return $this->user_cache->getUserFromCacheByJiraAccountId($jira_account_id);
+        if ($this->user_cache->hasUserWithUniqueIdentifier($jira_account_id)) {
+            return $this->user_cache->getUserFromCacheByJiraUniqueIdentifier($jira_account_id);
         }
 
         $jira_user = $this->jira_user_querier->retrieveUserFromJiraAPI($jira_account_id);

@@ -31,7 +31,7 @@ use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfiguration
 use Tuleap\Timetracking\JiraImporter\Worklog\WorklogRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraCloudUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use XML_SimpleXMLCDATAFactory;
@@ -161,7 +161,7 @@ class JiraXMLExport
 
     private function getTimeStepTextContent(
         string $worklog_comment,
-        JiraUser $comment_author,
+        JiraCloudUser $comment_author,
         PFUser $user_time
     ): string {
         $step_content = '';
