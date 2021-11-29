@@ -20,7 +20,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -186,5 +189,56 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         $this->assertEmpty($this->redirect->query_parameters);
+    }
+
+    public function testItLinksToTheTargetArtifactPostCreationWithTheGivenType(): void
+    {
+        $target_artifact_id = 1280;
+        $new_artifact_id    = 1281;
+        $current_user       = UserTestBuilder::buildWithDefaults();
+        $target_artifact    = $this->createMock(Artifact::class);
+        $new_artifact       = ArtifactTestBuilder::anArtifact($new_artifact_id)->build();
+        $artifact_factory   = $this->createMock(\Tracker_ArtifactFactory::class);
+
+        $target_artifact
+            ->expects(self::once())
+            ->method('linkArtifact')
+            ->with(
+                $new_artifact_id,
+                $current_user,
+                \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+            );
+
+        $artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->with($target_artifact_id)
+            ->willReturn($target_artifact);
+
+        $target_artifact->method('getId')->willReturn($target_artifact_id);
+
+        $action = new class (
+            TrackerTestBuilder::aTracker()->build(),
+            $artifact_factory,
+            $this->createMock(\Tracker_FormElementFactory::class)
+        ) extends Tracker_Action_CreateArtifact
+        {
+            public function associateImmediatelyIfNeeded(Artifact $new_artifact, \Codendi_Request $request, PFUser $current_user): void
+            {
+                parent::associateImmediatelyIfNeeded($new_artifact, $request, $current_user);
+            }
+        };
+
+        $action->associateImmediatelyIfNeeded(
+            $new_artifact,
+            new \Codendi_Request(
+                [
+                    'link-artifact-id' => (string) $target_artifact_id,
+                    'link-type'        => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+                    'immediate'        => 'true'
+                ],
+                $this->createMock(\ProjectManager::class)
+            ),
+            $current_user
+        );
     }
 }
