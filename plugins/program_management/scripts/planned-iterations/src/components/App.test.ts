@@ -23,9 +23,9 @@ import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createPlanIterationsLocalVue } from "../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import IterationsToBePlannedSection from "./IterationsToBePlannedSection.vue";
-import PlannedIterationsSection from "./PlannedIterationsSection.vue";
+import IterationsToBePlannedSection from "./Backlog/ToBePlanned/IterationsToBePlannedSection.vue";
 import Breadcrumb from "./Breadcrumb.vue";
+import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSection.vue";
 
 describe("App", () => {
     async function createWrapper(): Promise<Wrapper<App>> {

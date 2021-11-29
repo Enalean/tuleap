@@ -40,8 +40,8 @@ import Vue from "vue";
 import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import Breadcrumb from "./Breadcrumb.vue";
-import IterationsToBePlannedSection from "./IterationsToBePlannedSection.vue";
-import PlannedIterationsSection from "./PlannedIterationsSection.vue";
+import IterationsToBePlannedSection from "./Backlog/ToBePlanned/IterationsToBePlannedSection.vue";
+import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSection.vue";
 
 @Component({
     components: {

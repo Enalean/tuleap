@@ -1,7 +1,7 @@
 <!--
-  - Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+  - Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
   -
-  - This file is a part of Tuleap.
+  -  This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -63,18 +64,17 @@
 </template>
 
 <script lang="ts">
-import type { Iteration, IterationLabels, ProgramIncrement } from "../type";
+import type { Iteration, IterationLabels, ProgramIncrement } from "../../../type";
 
 import Vue from "vue";
 import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { sprintf } from "sprintf-js";
-import { getIncrementIterations } from "../helpers/increment-iterations-retriever";
-import { buildIterationCreationUrl } from "../helpers/create-new-iteration-link-builder";
-
+import { getIncrementIterations } from "../../../helpers/increment-iterations-retriever";
+import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
+import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 import IterationCard from "./IterationCard.vue";
-import BacklogElementSkeleton from "./BacklogElementSkeleton.vue";
 
 @Component({
     components: {

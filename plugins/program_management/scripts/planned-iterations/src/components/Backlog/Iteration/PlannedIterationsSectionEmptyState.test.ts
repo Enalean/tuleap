@@ -1,7 +1,7 @@
 /*
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createPlanIterationsLocalVue } from "../helpers/local-vue-for-test";
+import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 
 import type { Wrapper } from "@vue/test-utils";
-import type { IterationLabels } from "../type";
+import type { IterationLabels } from "../../../type";
 
 describe("PlannedIterationsSectionEmptyState", () => {
     async function getWrapper(

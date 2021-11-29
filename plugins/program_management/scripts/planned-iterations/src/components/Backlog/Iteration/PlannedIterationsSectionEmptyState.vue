@@ -1,7 +1,7 @@
 <!--
-  - Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+  - Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
   -
-  - This file is a part of Tuleap.
+  -  This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -46,11 +47,11 @@ import Vue from "vue";
 import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { sprintf } from "sprintf-js";
-import { buildIterationCreationUrl } from "../helpers/create-new-iteration-link-builder";
+import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
 
 import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
 
-import type { IterationLabels, ProgramIncrement } from "../type";
+import type { IterationLabels, ProgramIncrement } from "../../../type";
 
 @Component({
     components: {
