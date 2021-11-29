@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%{ milestone_title } backlog"
+msgstr "Backlog de %{ milestone_title }"
+
 msgid "%{ nb } blocked"
 msgid_plural "%{ nb } blocked"
 msgstr[0] "%{ nb } bloqué"
@@ -107,6 +110,9 @@ msgstr "Exporté par"
 msgid "Exported on"
 msgstr "Exporté le"
 
+msgid "Exported on %{ date } by %{ user }"
+msgstr "Exporté le %{ date } par %{ user }"
+
 msgid "Failed"
 msgstr "Échoué"
 
@@ -170,6 +176,9 @@ msgstr "Rapport extrait le"
 
 msgid "Requirements"
 msgstr "Exigences"
+
+msgid "Table of contents"
+msgstr "Table des matières"
 
 msgid "Test Report %{ milestone_title }"
 msgstr "Rapport de test %{ milestone_title }"

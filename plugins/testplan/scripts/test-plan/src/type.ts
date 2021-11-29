@@ -91,6 +91,7 @@ export type TestDefinition = TestDefinitionFromREST & TestDefinitionRefreshInfor
 
 export interface ExportDocument {
     readonly name: string;
+    readonly backlog: ReadonlyArray<BacklogItem>;
 }
 
 export interface GlobalExportProperties {

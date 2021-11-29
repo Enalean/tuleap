@@ -206,7 +206,8 @@ export default class ExportButton extends Vue {
                     milestone_url: this.milestone_url,
                 },
                 this,
-                downloadDocx
+                downloadDocx,
+                this.backlog_items
             );
         } catch (e) {
             this.has_encountered_error_during_the_export = true;
