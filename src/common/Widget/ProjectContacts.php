@@ -56,7 +56,7 @@ class ProjectContacts extends \Widget
         $template_factory = \TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
-        $html  = '<a href="javascript:;" ';
+        $html  = '<a href="#" ';
         $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
         $html .= 'data-project-id="' . $group_id . '">';
         $html .= '<i class="far fa-envelope massmail-project-member-link-icon"></i>';
