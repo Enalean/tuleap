@@ -29,7 +29,7 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -479,7 +479,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildChangelogEntriesCollection(): array
     {
         return [
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "100",
                     "created" => "2020-03-25T14:10:10.823+0100",
@@ -499,7 +499,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "101",
                     "created" => "2020-03-25T14:11:10.823+0100",

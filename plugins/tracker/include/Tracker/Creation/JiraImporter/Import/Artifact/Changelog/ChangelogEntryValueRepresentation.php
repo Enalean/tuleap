@@ -24,91 +24,26 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use DateTimeImmutable;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\AnonymousJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 /**
  * @psalm-immutable
  */
-class ChangelogEntryValueRepresentation
+interface ChangelogEntryValueRepresentation
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var ChangelogEntryItemsRepresentation[]
-     */
-    private $item_representations;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $created;
-
-    /**
-     * @var JiraUser
-     */
-    private $changelog_owner;
-
-    public function __construct(
-        int $id,
-        DateTimeImmutable $created,
-        JiraUser $changelog_owner,
-        array $item_representations
-    ) {
-        $this->id                   = $id;
-        $this->item_representations = $item_representations;
-        $this->created              = $created;
-        $this->changelog_owner      = $changelog_owner;
-    }
-
     /**
      * @throws ChangelogAPIResponseNotWellFormedException
      */
-    public static function buildFromAPIResponse(array $changelog_response): self
-    {
-        if (! isset($changelog_response['items'], $changelog_response['id'], $changelog_response['created'])) {
-            throw new ChangelogAPIResponseNotWellFormedException();
-        }
+    public static function buildFromAPIResponse(array $changelog_response): self;
 
-        $items = [];
-        foreach ($changelog_response['items'] as $changelog_reponse_item) {
-            $items[] = ChangelogEntryItemsRepresentation::buildFromAPIResponse($changelog_reponse_item);
-        }
+    /**
+     * @return ChangelogEntryItemsRepresentation[]
+     */
+    public function getItemRepresentations(): array;
 
-        $author = new AnonymousJiraUser();
-        if (isset($changelog_response['author'])) {
-            $author = new ActiveJiraCloudUser($changelog_response['author']);
-        }
+    public function getId(): int;
 
-        return new self(
-            (int) $changelog_response['id'],
-            new DateTimeImmutable($changelog_response['created']),
-            $author,
-            array_filter($items),
-        );
-    }
+    public function getCreated(): DateTimeImmutable;
 
-    public function getItemRepresentations(): array
-    {
-        return $this->item_representations;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getCreated(): DateTimeImmutable
-    {
-        return $this->created;
-    }
-
-    public function getChangelogOwner(): JiraUser
-    {
-        return $this->changelog_owner;
-    }
+    public function getChangelogOwner(): JiraUser;
 }

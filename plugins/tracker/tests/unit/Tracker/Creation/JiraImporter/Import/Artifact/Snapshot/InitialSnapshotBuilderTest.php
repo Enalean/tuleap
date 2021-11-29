@@ -30,7 +30,7 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -238,7 +238,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildChangelogEntries(): array
     {
         return [
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "100",
                     "created" => "2020-03-25T14:10:10.823+0100",
@@ -258,7 +258,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "101",
                     "created" => "2020-03-25T14:11:10.823+0100",
@@ -278,7 +278,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "102",
                     "created" => "2020-03-25T14:12:10.823+0100",
@@ -298,7 +298,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "103",
                     "created" => "2020-03-25T14:13:10.823+0100",
@@ -325,7 +325,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "104",
                     "created" => "2020-03-25T14:14:10.823+0100",
@@ -345,7 +345,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "105",
                     "created" => "2020-03-25T14:15:10.823+0100",
@@ -365,7 +365,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "106",
                     "created" => "2020-03-25T14:15:11.823+0100",
@@ -385,7 +385,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "107",
                     "created" => "2020-03-25T14:15:11.823+0100",
@@ -405,7 +405,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
-            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
                     "id" => "102",
                     "created" => "2020-03-25T14:15:12.823+0100",

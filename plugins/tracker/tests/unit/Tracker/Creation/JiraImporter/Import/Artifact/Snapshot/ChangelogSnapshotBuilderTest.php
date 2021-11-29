@@ -30,6 +30,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -225,7 +226,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildChangelogEntry(): ChangelogEntryValueRepresentation
     {
-        return ChangelogEntryValueRepresentation::buildFromAPIResponse(
+        return JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
             [
                 "id" => "100",
                 "created" => "2020-03-25T14:10:10.823+0100",
