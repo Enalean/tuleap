@@ -43,6 +43,7 @@ use Tuleap\ProgramManagement\Adapter\Events\IterationUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
+use Tuleap\ProgramManagement\Adapter\Events\RedirectUserAfterArtifactCreationOrUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
@@ -113,6 +114,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProg
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
+use Tuleap\ProgramManagement\Adapter\Redirections\IterationRedirectionParametersProxy;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\PossibleParentSelectorProxy;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
@@ -166,14 +168,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionA
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Redirections\RedirectToIterationsProcessor;
 use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
 use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Team\PossibleParentHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
-use Tuleap\ProgramManagement\Adapter\Redirections\RedirectToPlannedIterationsAppHandler;
-use Tuleap\ProgramManagement\Adapter\Redirections\IterationsRedirectParameters;
 use Tuleap\ProgramManagement\RedirectToProgramIncrementAppHandler;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
@@ -857,25 +858,28 @@ final class program_managementPlugin extends Plugin
 
     public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
+        $event_proxy       = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent($event);
+        $project_reference = ProjectProxy::buildFromProject($event->getArtifact()->getTracker()->getProject());
+
         (new RedirectToProgramIncrementAppHandler())->process(
             RedirectToProgramManagementAppManager::buildFromCodendiRequest($event->getRequest()),
             $event->getRedirect(),
             $event->getArtifact()->getTracker()->getProject()
         );
 
-        (new RedirectToPlannedIterationsAppHandler())->process(
-            IterationsRedirectParameters::buildFromCodendiRequest($event->getRequest()),
-            $event->getRedirect(),
-            $event->getArtifact()->getTracker()->getProject()
+        RedirectToIterationsProcessor::process(
+            IterationRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest()),
+            $event_proxy,
+            $project_reference
         );
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
         $program_management_redirect_manager = RedirectToProgramManagementAppManager::buildFromCodendiRequest($event->getRequest());
-        $planned_iterations_redirect_manager = IterationsRedirectParameters::buildFromCodendiRequest($event->getRequest());
+        $iteration_redirection_parameters    = IterationRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
 
-        if (! $program_management_redirect_manager->isRedirectionNeeded() && ! $planned_iterations_redirect_manager->isRedirectionNeeded()) {
+        if (! $program_management_redirect_manager->isRedirectionNeeded() && ! $iteration_redirection_parameters->isRedirectionNeeded()) {
             return;
         }
 
@@ -887,8 +891,8 @@ final class program_managementPlugin extends Plugin
             return;
         }
 
-        if ($planned_iterations_redirect_manager->needsRedirectionAfterCreate()) {
-            $redirect->injectAndInformUserAboutCreatingIncrementIteration($event->getRedirect(), $GLOBALS['Response'], $planned_iterations_redirect_manager);
+        if ($iteration_redirection_parameters->needsRedirectionAfterCreate()) {
+            $redirect->injectAndInformUserAboutCreatingIncrementIteration($event->getRedirect(), $GLOBALS['Response'], $iteration_redirection_parameters);
 
             return;
         }
