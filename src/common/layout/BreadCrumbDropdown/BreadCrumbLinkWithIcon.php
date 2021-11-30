@@ -25,7 +25,7 @@ class BreadCrumbLinkWithIcon extends BreadCrumbLink
     public function __construct(
         $label,
         $url,
-        $icon_name
+        $icon_name,
     ) {
         parent::__construct($label, $url);
         $this->setIconName($icon_name);

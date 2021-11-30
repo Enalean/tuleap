@@ -134,7 +134,7 @@ class TrackerRulesListValidator
         $target_value,
         array $dependencies,
         int $source,
-        int $target
+        int $target,
     ): bool {
         $valid = false;
         foreach ($source_values as $source_value) {

@@ -64,7 +64,7 @@ class ForgeAccess_AdminController
         Config_LocalIncFinder $localincfinder,
         UserDao $user_dao,
         Codendi_Request $request,
-        Response $response
+        Response $response,
     ) {
         $this->csrf           = $csrf;
         $this->manager        = $manager;

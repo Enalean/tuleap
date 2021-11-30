@@ -52,7 +52,7 @@ class Tracker_Semantic_ContributorFactoryTest extends \Tuleap\Test\PHPUnit\TestC
         $mapping              = [
                     'F9'  => $f1,
                     'F13'  => $f2,
-                    'F16' => $f3
+                    'F16' => $f3,
         ];
         $semantic_contributor = Tracker_Semantic_ContributorFactory::instance()->getInstanceFromXML(
             $xml,

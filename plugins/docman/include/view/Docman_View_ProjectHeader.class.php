@@ -65,8 +65,8 @@
                     'feedback_cut'             => dgettext('tuleap-docman', 'cut. You can now paste it wherever you want with \'Paste\' action in popup menu.'),
                     'feedback_copy'            => dgettext('tuleap-docman', 'copied. you can now paste it wherever you want (even across projects) with \'Paste\' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does. <br />Note that only the link of the <strong>wiki pages</strong> is copied, not the <strong>content</strong>.'),
                     'new_approvaltable'        => dgettext('tuleap-docman', 'Please choose option for creating approval table'),
-                    'event_lock_add'           => dgettext('tuleap-docman', 'Locked document')
-                ]
+                    'event_lock_add'           => dgettext('tuleap-docman', 'Locked document'),
+                ],
             ],
             $this->_getJSDocmanParameters($params)
         ));

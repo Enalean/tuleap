@@ -123,7 +123,7 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_actions = [
             $this->buildAPostAction(),
             $this->buildAPostAction(),
-            $this->buildAPostAction()
+            $this->buildAPostAction(),
         ];
 
         $builder = new PostActionsRepresentationBuilder($this->event_manager, $post_actions);

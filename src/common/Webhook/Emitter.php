@@ -50,7 +50,7 @@ class Emitter
         RequestFactoryInterface $http_request_factory,
         StreamFactoryInterface $stream_factory,
         HttpAsyncClient $http_client,
-        StatusLogger $status_logger
+        StatusLogger $status_logger,
     ) {
         $this->http_request_factory = $http_request_factory;
         $this->stream_factory       = $stream_factory;

@@ -47,7 +47,7 @@ class UserRetriever
     public function __construct(
         LSFAPIHTTPAuthorization $lfs_http_api_authorization,
         HTTPAccessControl $http_access_control,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->lfs_http_api_authorization = $lfs_http_api_authorization;
         $this->http_access_control        = $http_access_control;
@@ -60,7 +60,7 @@ class UserRetriever
     public function retrieveUser(
         HTTPRequest $request,
         GitRepository $repository,
-        GitLfsHTTPOperation $lfs_request
+        GitLfsHTTPOperation $lfs_request,
     ): ?PFUser {
         $user = $this->lfs_http_api_authorization->getUserFromAuthorizationToken($request, $repository, $lfs_request);
         if ($user === null) {
@@ -75,7 +75,7 @@ class UserRetriever
      */
     private function getUserFromGitHTTPAccessControlOrStop(
         GitRepository $repository,
-        GitLfsHTTPOperation $lfs_request
+        GitLfsHTTPOperation $lfs_request,
     ): ?PFUser {
         $pfo_user = $this->http_access_control->getUser($repository, $lfs_request);
         if ($pfo_user === null) {

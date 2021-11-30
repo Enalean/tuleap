@@ -226,7 +226,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         PFUser $user,
         string $href_approval,
         string $message_to_admin,
-        string $link
+        string $link,
     ): string;
 
     abstract protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string;

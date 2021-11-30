@@ -104,7 +104,7 @@ class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $data_row =    [
             'id' => 42,
-            'tenant_id' => 'tenant'
+            'tenant_id' => 'tenant',
         ];
         $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn($data_row);
         $this->azure_provider_manager
@@ -119,7 +119,7 @@ class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $data_row =    [
             'id' => 42,
-            'pas tenant id' => 'pas tenant'
+            'pas tenant id' => 'pas tenant',
         ];
 
         $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn($data_row);

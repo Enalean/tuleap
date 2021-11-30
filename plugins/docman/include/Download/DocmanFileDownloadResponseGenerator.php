@@ -43,7 +43,7 @@ class DocmanFileDownloadResponseGenerator
 
     public function __construct(
         Docman_VersionFactory $version_factory,
-        BinaryFileResponseBuilder $binary_file_response_builder
+        BinaryFileResponseBuilder $binary_file_response_builder,
     ) {
         $this->version_factory              = $version_factory;
         $this->binary_file_response_builder = $binary_file_response_builder;
@@ -58,7 +58,7 @@ class DocmanFileDownloadResponseGenerator
         ServerRequestInterface $request,
         PFUser $current_user,
         Docman_File $docman_file,
-        ?int $version_id
+        ?int $version_id,
     ): ResponseInterface {
         $permission_manager = Docman_PermissionsManager::instance($docman_file->getGroupId());
         if (! $permission_manager->userCanAccess($current_user, $docman_file->getId())) {

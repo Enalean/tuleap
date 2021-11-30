@@ -67,7 +67,7 @@ class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project    = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
         $this->user       = new PFUser([
             'language_id' => 'en',
-            'user_id' => 102
+            'user_id' => 102,
         ]);
         $this->tracker_v3 = \Mockery::spy(\ArtifactType::class);
     }

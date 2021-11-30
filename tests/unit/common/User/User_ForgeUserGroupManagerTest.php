@@ -65,7 +65,7 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
             'group_id'    => 45,
             'name'        => 'people',
-            'description' => 'to eat'
+            'description' => 'to eat',
         ]);
 
         $update = $this->manager->updateUserGroup($ugroup);
@@ -79,7 +79,7 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
             'group_id'    => 45,
             'name'        => 'fish',
-            'description' => 'to talk to'
+            'description' => 'to talk to',
         ]);
 
         $this->dao->shouldReceive('updateForgeUGroup')->with(45, 'people', 'to eat')->once()->andReturns(true);
@@ -96,7 +96,7 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
             'group_id'    => 45,
             'name'        => 'fish',
-            'description' => 'to talk to'
+            'description' => 'to talk to',
         ]);
 
         $this->dao->shouldReceive('updateForgeUGroup')->with(45, 'people', 'to eat')->once()->andThrows(new User_UserGroupNameInvalidException());

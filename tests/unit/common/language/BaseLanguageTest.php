@@ -140,15 +140,15 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         );
 
         $result = [
-            'file' => ['key1' => 'old-value']
+            'file' => ['key1' => 'old-value'],
         ];
         $l->parseLanguageFile(ForgeConfig::get('sys_incdir') . '/en_US/file.tab', $result);
         $this->assertEquals(
             [
                 'file' => [
                     'key1' => 'value',
-                    'key2' => 'value'
-                ]
+                    'key2' => 'value',
+                ],
             ],
             $result,
             'Definitions are merged'
@@ -165,7 +165,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             [
                 'file'   => [
                     'key1' => 'value',
-                    'key2' => 'value'
+                    'key2' => 'value',
                 ],
                 'system' => ['locale_label' => 'English'],
                 'inc'    => ['key1' => 'value'],
@@ -231,7 +231,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             [
                 'en_US' => 'English',
                 'fr_FR' => 'Français',
-                'ja_JP' => '日本語'
+                'ja_JP' => '日本語',
             ],
             $language->getLanguages()
         );

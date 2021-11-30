@@ -37,7 +37,7 @@ class ColumnPresenterCollectionRetriever
 
     public function __construct(
         Cardwall_OnTop_Config_ColumnFactory $column_factory,
-        TrackerMappingPresenterBuilder $tracker_mapping_builder
+        TrackerMappingPresenterBuilder $tracker_mapping_builder,
     ) {
         $this->column_factory          = $column_factory;
         $this->tracker_mapping_builder = $tracker_mapping_builder;

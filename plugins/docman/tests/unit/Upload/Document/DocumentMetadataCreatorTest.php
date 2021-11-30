@@ -84,7 +84,7 @@ class DocumentMetadataCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                            ->andReturn(
                                TestHelper::arrayToDar(
                                    [
-                                       'data_type' => PLUGIN_DOCMAN_METADATA_TYPE_TEXT
+                                       'data_type' => PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
                                    ]
                                )
                            );

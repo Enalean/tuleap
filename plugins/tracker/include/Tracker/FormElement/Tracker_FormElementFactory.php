@@ -140,7 +140,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 'fields'  => &$this->classnames,
                 'dynamic' => &$this->special_classnames,
                 'group'   => &$this->group_classnames,
-                'static'  => &$this->staticfield_classnames
+                'static'  => &$this->staticfield_classnames,
             ]
         );
     }
@@ -962,7 +962,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                         'from'    => (int) $from_row['id'],
                         'to'      => $id,
                         'values'  => $created_values,
-                        'workflow' => $has_workflow
+                        'workflow' => $has_workflow,
                     ];
                     $type      = $this->getType($created_form_element);
                 }
@@ -1147,7 +1147,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $xml,
         &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        TrackerXmlImportFeedbackCollector $feedback_collector
+        TrackerXmlImportFeedbackCollector $feedback_collector,
     ) {
         $att = $xml->attributes();
         assert($att !== null);
@@ -1431,8 +1431,8 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                          [
                              ProjectUGroup::ANONYMOUS        => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_READ),
                              ProjectUGroup::REGISTERED       => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_SUBMIT),
-                             ProjectUGroup::PROJECT_MEMBERS  => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_UPDATE)
-                         ]
+                             ProjectUGroup::PROJECT_MEMBERS  => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_UPDATE),
+                         ],
                     ];
                     $tracker     = $form_element->getTracker();
                     plugin_tracker_permission_process_update_fields_permissions(
@@ -1580,7 +1580,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     self::VIEW_ADMIN_CREATE_VISITOR,
                     [
                         'all_used_elements' => $allUsedElements,
-                        'visitor'           => &$visitor
+                        'visitor'           => &$visitor,
                     ]
                 );
             }
@@ -1747,8 +1747,8 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 [
                     ProjectUGroup::ANONYMOUS       => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_READ),
                     ProjectUGroup::REGISTERED      => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_SUBMIT),
-                    ProjectUGroup::PROJECT_MEMBERS => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_UPDATE)
-                ]
+                    ProjectUGroup::PROJECT_MEMBERS => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_UPDATE),
+                ],
             ];
         }
         return $ugroups_permissions;

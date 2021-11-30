@@ -71,8 +71,8 @@ class ReferencesBuilder
                         (?P<val>[0-9]+)
                     )
                     (?![_A-Za-z0-9])   # ensure the pattern is not folloed by digits or letters
-                /x'
-            ]
+                /x',
+            ],
         ];
     }
 

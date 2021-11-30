@@ -45,7 +45,7 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         UserManager $user_manager,
         PasswordVerifier $password_verifier,
         User_PasswordExpirationChecker $password_expiration_checker,
-        PasswordHandler $password_handler
+        PasswordHandler $password_handler,
     ) {
         $this->event_dispatcher            = $event_dispatcher;
         $this->user_manager                = $user_manager;

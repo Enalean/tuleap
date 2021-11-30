@@ -41,7 +41,7 @@ final class FeatureRepresentationBuilder
         private RetrieveBackgroundColor $retrieve_background_color,
         private VerifyFeatureIsVisibleByProgram $feature_verifier,
         private VerifyLinkedUserStoryIsNotPlanned $user_story_verifier,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 
@@ -50,7 +50,7 @@ final class FeatureRepresentationBuilder
         ProgramIdentifier $program,
         int $artifact_id,
         int $title_field_id,
-        string $artifact_title
+        string $artifact_title,
     ): ?FeatureRepresentation {
         $user = $this->retrieve_user->getUserWithId($user_identifier);
 

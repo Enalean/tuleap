@@ -74,7 +74,7 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
         $this->listeners[$event][] = [
             'listener'    => $listener,
             'callback'    => $callback,
-            'recallEvent' => $recallEvent
+            'recallEvent' => $recallEvent,
         ];
     }
 

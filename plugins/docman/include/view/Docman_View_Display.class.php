@@ -65,7 +65,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
             $parents[] = [
                 'item'  => $item,
                 'id'    => $item->getId(),
-                'title' => $item->getTitle()
+                'title' => $item->getTitle(),
             ];
         }
         $urlAction = 'show';

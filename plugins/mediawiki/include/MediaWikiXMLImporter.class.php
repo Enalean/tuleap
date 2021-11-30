@@ -63,7 +63,7 @@ class MediaWikiXMLImporter
         MediawikiManager $mediawiki_manager,
         MediawikiLanguageManager $language_manager,
         UGroupManager $ugroup_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->logger            = new WrapperLogger($logger, "MediaWikiXMLImporter");
         $this->mediawiki_manager = $mediawiki_manager;

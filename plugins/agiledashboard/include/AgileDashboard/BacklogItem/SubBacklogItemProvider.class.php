@@ -70,7 +70,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
         PlanningFactory $planning_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
     ) {
         $this->backlog_item_collection_factory   = $backlog_item_collection_factory;
         $this->backlog_factory                   = $backlog_factory;
@@ -184,7 +184,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
     private function filterResult(
         $artifacts_for_planning,
         array $filtrable_planning_tracker_ids,
-        int $backlog_tracker_id
+        int $backlog_tracker_id,
     ): array {
         $artifacts_to_inspect = [];
         foreach ($artifacts_for_planning as $artifact_row) {

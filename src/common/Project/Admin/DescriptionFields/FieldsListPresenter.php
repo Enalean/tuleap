@@ -48,7 +48,7 @@ class FieldsListPresenter
         ProjectCreationNavBarPresenter $navbar,
         $title,
         array $description_fields,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->navbar             = $navbar;
         $this->title              = $title;

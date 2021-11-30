@@ -60,7 +60,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         \ProjectManager $project_manager,
         ListPresenterBuilder $list_presenter_builder,
         IncludeAssets $include_assets,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->project_manager        = $project_manager;
         $this->list_presenter_builder = $list_presenter_builder;

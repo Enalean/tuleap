@@ -34,7 +34,7 @@ class TrackerFormElementExportPermissionsToXmlTest extends \Tuleap\Test\PHPUnit\
             'UGROUP_2' => 2,
             'UGROUP_3' => 3,
             'UGROUP_4' => 4,
-            'UGROUP_5' => 5
+            'UGROUP_5' => 5,
         ];
 
         $field_01 = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();

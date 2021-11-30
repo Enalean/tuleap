@@ -35,7 +35,7 @@ class MilestoneParentLinker
 
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
     ) {
         $this->milestone_factory = $milestone_factory;
         $this->backlog_factory   = $backlog_factory;
@@ -79,7 +79,7 @@ class MilestoneParentLinker
      */
     private function parentMilestoneHasItemTrackerInItsBacklogTracker(
         Planning_Milestone $parent_milestone,
-        Artifact $artifact_added
+        Artifact $artifact_added,
     ) {
         $backlog_trackers = $this->getBacklogTrackers($parent_milestone);
 
@@ -95,7 +95,7 @@ class MilestoneParentLinker
     private function isParentLinkedToParentMilestone(
         Artifact $artifact_added,
         Artifact $parent_milestone_artifact,
-        PFUser $user
+        PFUser $user,
     ) {
         $parent = $artifact_added->getParent($user);
 

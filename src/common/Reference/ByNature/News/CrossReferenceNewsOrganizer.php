@@ -42,7 +42,7 @@ class CrossReferenceNewsOrganizer
 
     public function organizeNewsReference(
         CrossReferencePresenter $cross_reference_presenter,
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): void {
         try {
             $news = $this->news_retriever->getNewsUserCanView((int) $cross_reference_presenter->target_value);

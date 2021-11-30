@@ -60,7 +60,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         OrderFeatureRank $features_rank_orderer,
         VerifyLinkedUserStoryIsNotPlanned $story_verifier,
         VerifyFeatureIsVisibleByProgram $visible_feature_verifier,
-        FeatureRemovalProcessor $feature_removal_processor
+        FeatureRemovalProcessor $feature_removal_processor,
     ) {
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
         $this->top_backlog_store                       = $top_backlog_store;
@@ -75,7 +75,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,
         UserIdentifier $user_identifier,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): void {
         $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user_identifier, $bypass) {
             try {
@@ -156,7 +156,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         UserCanPrioritize $user,
         ProgramIdentifier $program,
         bool $ignore_feature_cannot_be_retrieved,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): array {
         $filtered_features = [];
 

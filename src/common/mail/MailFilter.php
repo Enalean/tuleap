@@ -49,7 +49,7 @@ class MailFilter
     public function __construct(
         UserManager $user_manager,
         ProjectAccessChecker $project_access_checker,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->user_manager           = $user_manager;
         $this->project_access_checker = $project_access_checker;

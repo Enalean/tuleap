@@ -45,7 +45,7 @@ class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
     public function __construct(
         CollectionOfListValuesExtractor $values_extractor,
         FromWhereComparisonFieldReadOnlyBuilder $from_where_builder,
-        ListReadOnlyConditionBuilder $condition_builder
+        ListReadOnlyConditionBuilder $condition_builder,
     ) {
         $this->values_extractor   = $values_extractor;
         $this->from_where_builder = $from_where_builder;

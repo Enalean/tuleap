@@ -797,7 +797,7 @@ final class program_managementPlugin extends Plugin
     }
 
     public function planningAdministrationDelegation(
-        PlanningAdministrationDelegation $planning_administration_delegation
+        PlanningAdministrationDelegation $planning_administration_delegation,
     ): void {
         $component_involved_verifier = $this->getComponentInvolvedVerifier();
         $project_data                = ProjectProxy::buildFromProject(

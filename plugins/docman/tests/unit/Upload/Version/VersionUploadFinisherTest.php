@@ -124,7 +124,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
                 'title'                 => 'New title',
                 'description'           => '',
                 'obsolescence_date'     => 125861251,
-                'status'                => 101
+                'status'                => 101,
             ]
         );
         $item = Mockery::mock(Docman_File::class);
@@ -229,7 +229,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
                 'title'                 => 'New title',
                 'description'           => '',
                 'obsolescence_date'     => 125861251,
-                'status'                => 101
+                'status'                => 101,
             ]
         );
         $item = Mockery::mock(Docman_File::class);
@@ -334,7 +334,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
                 'title'                 => 'New title',
                 'description'           => '',
                 'obsolescence_date'     => 125861251,
-                'status'                => 101
+                'status'                => 101,
             ]
         );
         $item = Mockery::mock(Docman_File::class);

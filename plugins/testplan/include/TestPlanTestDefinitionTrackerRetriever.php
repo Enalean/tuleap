@@ -38,7 +38,7 @@ class TestPlanTestDefinitionTrackerRetriever
 
     public function __construct(
         Config $testmanagement_config,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         $this->testmanagement_config = $testmanagement_config;
         $this->tracker_factory       = $tracker_factory;

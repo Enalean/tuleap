@@ -92,7 +92,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                      'includedeleted' => false,
                      'author'       => $request->_user->UserName(),
                      'page'         => '[pagename]',
-                     'info'         => 'version,minor,author,summary,mtime'
+                     'info'         => 'version,minor,author,summary,mtime',
                      ];
     }
     // info arg allows multiple columns

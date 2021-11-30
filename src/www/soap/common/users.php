@@ -25,7 +25,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'checkUsersExistence',
         ['sessionKey' => 'xsd:string',
-        'users' => 'tns:ArrayOfstring'
+        'users' => 'tns:ArrayOfstring',
         ],
         ['return' => 'tns:ArrayOfUserInfo'],
         $uri,
@@ -38,7 +38,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getUserInfo',
         ['sessionKey' => 'xsd:string',
-          'user_id'    => 'xsd:int'
+          'user_id'    => 'xsd:int',
         ],
         ['return' => 'tns:UserInfo'],
         $uri,

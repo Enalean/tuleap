@@ -139,7 +139,7 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
 
         return [ 'title'        => SplitPagename($pagename),
                       'description'    => $this->summary($rev),
-                      'link'        => $this->pageURL($rev)
+                      'link'        => $this->pageURL($rev),
                       ];
     }
 }

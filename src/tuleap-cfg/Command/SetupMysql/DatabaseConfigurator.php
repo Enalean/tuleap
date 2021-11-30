@@ -75,7 +75,7 @@ final class DatabaseConfigurator
         string $grant_hostname,
         string $app_password,
         ConcealedString $site_admin_password,
-        string $domain_name
+        string $domain_name,
     ): void {
         $db_status = $this->initializeDatabase($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
         if ($db_status === self::DB_ALREADY_INIT) {

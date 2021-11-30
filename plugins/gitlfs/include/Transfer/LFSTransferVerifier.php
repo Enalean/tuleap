@@ -56,7 +56,7 @@ class LFSTransferVerifier
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
         LFSObjectDAO $lfs_object_dao,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->filesystem           = $filesystem;
         $this->lfs_object_retriever = $lfs_object_retriever;

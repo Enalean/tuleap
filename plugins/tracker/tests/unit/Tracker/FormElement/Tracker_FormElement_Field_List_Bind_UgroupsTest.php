@@ -110,7 +110,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
 
     private function buildBindUgroups(
         array $values = [],
-        array $default_values = []
+        array $default_values = [],
     ): Tracker_FormElement_Field_List_Bind_Ugroups {
         $bind = new Tracker_FormElement_Field_List_Bind_Ugroups(
             $this->field,
@@ -142,7 +142,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
         $values      = [
-            $this->integrators_ugroup_value
+            $this->integrators_ugroup_value,
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
 
@@ -154,7 +154,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
     public function testItExportsHiddenValues()
     {
         $values      = [
-            $this->hidden_ugroup_value
+            $this->hidden_ugroup_value,
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
@@ -167,7 +167,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
     public function testItExportsOneDynamicUgroup(): void
     {
         $values      = [
-            $this->project_members_ugroup_value
+            $this->project_members_ugroup_value,
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
@@ -181,7 +181,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
     {
         $values      = [
             $this->integrators_ugroup_value,
-            $this->customers_ugroup_value
+            $this->customers_ugroup_value,
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
@@ -196,7 +196,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
     {
         $values         = [
             $this->integrators_ugroup_value,
-            $this->customers_ugroup_value
+            $this->customers_ugroup_value,
         ];
         $default_values = [
             "{$this->customers_ugroup_value->getId()}" => true,

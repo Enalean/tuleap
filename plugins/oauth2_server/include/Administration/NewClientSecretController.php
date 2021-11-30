@@ -65,7 +65,7 @@ final class NewClientSecretController extends DispatchablePSR15Compatible
         ClientSecretUpdater $client_secret_updater,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory      = $response_factory;

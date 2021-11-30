@@ -26,7 +26,7 @@ class DiskUsageProjectsSearchFieldsPresenter extends DiskUsageSearchFieldsPresen
         array $service_values,
         $fields_values_url,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         parent::__construct($service_values, $fields_values_url, $start_date_value, $end_date_value);
     }

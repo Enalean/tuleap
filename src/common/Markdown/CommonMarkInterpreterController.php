@@ -54,7 +54,7 @@ final class CommonMarkInterpreterController extends DispatchablePSR15Compatible 
         StreamFactoryInterface $stream_factory,
         ContentInterpretor $interpreter,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->interpreter      = $interpreter;

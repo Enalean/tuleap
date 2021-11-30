@@ -61,7 +61,7 @@ class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                     'F14-V66' => 806,
                     'F14-V67' => 807,
                     'F14-V68' => 808,
-                    'F14-V69' => 809
+                    'F14-V69' => 809,
         ];
         $semantic_status = Tracker_Semantic_StatusFactory::instance()->getInstanceFromXML(
             $xml,

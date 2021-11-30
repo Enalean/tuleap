@@ -33,7 +33,7 @@ final class ProgramIncrementUpdateEventHandler
         private RetrieveProgramIncrementTracker $program_increment_tracker_retriever,
         private RetrieveIterationTracker $iteration_tracker_retriever,
         private BuildProgramIncrementUpdateProcessor $update_processor_builder,
-        private BuildIterationCreationProcessor $iteration_processor_builder
+        private BuildIterationCreationProcessor $iteration_processor_builder,
     ) {
     }
 

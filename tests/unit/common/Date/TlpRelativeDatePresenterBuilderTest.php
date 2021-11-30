@@ -50,7 +50,7 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBlockContext(
         string $preference_value,
         string $expected_placement,
-        string $expected_preference
+        string $expected_preference,
     ): void {
         $builder = new TlpRelativeDatePresenterBuilder();
 
@@ -85,7 +85,7 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInlineContext(
         string $preference_value,
         string $expected_placement,
-        string $expected_preference
+        string $expected_preference,
     ): void {
         $builder = new TlpRelativeDatePresenterBuilder();
 

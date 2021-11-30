@@ -40,7 +40,7 @@ class OrderedColumnRepresentationsBuilder
 
     public function __construct(
         AgileDashboard_KanbanColumnFactory $kanban_column_factory,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->kanban_column_factory = $kanban_column_factory;
         $this->artifact_factory      = $artifact_factory;
@@ -76,11 +76,11 @@ class OrderedColumnRepresentationsBuilder
         AgileDashboard_Kanban $kanban,
         PFUser $user,
         array $dates,
-        $items_in_columns
+        $items_in_columns,
     ) {
         $items_count_for_archive            = array_fill_keys($dates, 0);
         $items_count_grouped_by_open_column = [
-            self::BACKLOG_BINDVALUE_ID => array_fill_keys($dates, 0)
+            self::BACKLOG_BINDVALUE_ID => array_fill_keys($dates, 0),
         ];
         $columns                            = $this->kanban_column_factory->getAllKanbanColumnsForAKanban(
             $kanban,

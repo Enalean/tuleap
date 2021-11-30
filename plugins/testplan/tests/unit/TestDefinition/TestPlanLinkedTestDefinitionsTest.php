@@ -44,7 +44,7 @@ final class TestPlanLinkedTestDefinitionsTest extends \Tuleap\Test\PHPUnit\TestC
             )),
             TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
                 \Tuleap\Tracker\Artifact\Artifact::class
-            ))
+            )),
         ];
         $linked_test_definitions = TestPlanLinkedTestDefinitions::subset($artifacts, 512);
 
@@ -60,7 +60,7 @@ final class TestPlanLinkedTestDefinitionsTest extends \Tuleap\Test\PHPUnit\TestC
             )),
             TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
                 \Tuleap\Tracker\Artifact\Artifact::class
-            ))
+            )),
         ];
 
         $this->expectException(\LogicException::class);

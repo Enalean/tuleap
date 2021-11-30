@@ -49,7 +49,7 @@ class ViewVCProxy
     public function __construct(
         AccessHistorySaver $access_history_saver,
         EventManager $event_manager,
-        ProjectAccessSuspendedController $access_suspended_controller
+        ProjectAccessSuspendedController $access_suspended_controller,
     ) {
         $this->access_history_saver        = $access_history_saver;
         $this->event_manager               = $event_manager;

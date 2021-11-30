@@ -47,7 +47,7 @@ class BacklogItemRepresentationFactory
         BackgroundColorBuilder $background_color_builder,
         UserManager $user_manager,
         EventManager $event_manager,
-        ProjectBackgroundConfiguration $project_background_configuration
+        ProjectBackgroundConfiguration $project_background_configuration,
     ) {
         $this->background_color_builder         = $background_color_builder;
         $this->user_manager                     = $user_manager;
@@ -84,7 +84,7 @@ class BacklogItemRepresentationFactory
     private function getCardFields(
         Cardwall_Semantic_CardFields $card_fields_semantic,
         Artifact $artifact,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $card_fields = [];
 
@@ -112,7 +112,7 @@ class BacklogItemRepresentationFactory
             AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
             [
                 'tracker'              => $artifact->getTracker(),
-                'card_fields_semantic' => &$card_fields_semantic
+                'card_fields_semantic' => &$card_fields_semantic,
             ]
         );
 

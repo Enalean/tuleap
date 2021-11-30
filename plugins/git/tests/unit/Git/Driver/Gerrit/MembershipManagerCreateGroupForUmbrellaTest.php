@@ -103,7 +103,7 @@ class MembershipManagerCreateGroupForUmbrellaTest extends \Tuleap\Test\PHPUnit\T
                 $this->remote_server_factory,
                 $this->logger,
                 $this->ugroup_manager,
-                $this->project_manager
+                $this->project_manager,
             ]
         )
             ->makePartial()

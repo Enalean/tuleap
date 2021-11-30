@@ -66,7 +66,7 @@ class ArtifactTimeRetriever
         ProjectStatusVerificator $project_status_verificator,
         TimetrackingEnabler $timetracking_enabler,
         PermissionsRetriever $permissions_retriever,
-        TimeRetriever $time_retriever
+        TimeRetriever $time_retriever,
     ) {
         $this->artifact_factory           = $artifact_factory;
         $this->project_status_verificator = $project_status_verificator;

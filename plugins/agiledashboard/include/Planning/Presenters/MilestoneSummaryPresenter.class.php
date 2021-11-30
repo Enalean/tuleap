@@ -39,7 +39,7 @@ class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_Mi
         Planning_Milestone $milestone,
         $plugin_path,
         ?AlternativeBoardLinkPresenter $alternative_board_link,
-        $status_count
+        $status_count,
     ) {
         parent::__construct($milestone, $plugin_path, $alternative_board_link);
 

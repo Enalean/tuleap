@@ -36,7 +36,7 @@ final class ProjectProxy implements ProjectReference
         private string $project_label,
         private string $project_shortname,
         private string $project_url,
-        private string $project_icon
+        private string $project_icon,
     ) {
     }
 

@@ -183,7 +183,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \
         // field 102 is missing
         $fields_data = [
             '101' => 'foo',
-            '103' => 'bar'
+            '103' => 'bar',
         ];
         $this->assertTrue(
             $this->new_changeset_fields_validator->validate(
@@ -213,7 +213,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \
         // field 102 is missing
         $fields_data = [
             '101' => 'foo',
-            '103' => 'bar'
+            '103' => 'bar',
         ];
         $this->assertTrue(
             $this->new_changeset_fields_validator->validate(
@@ -238,7 +238,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \
 
         $user        = UserTestBuilder::aUser()->build();
         $fields_data = [
-            '101' => ['new_values' => '184']
+            '101' => ['new_values' => '184'],
         ];
         $context     = new ChangesetWithFieldsValidationContext(new ManualActionContext());
         $this->assertTrue(

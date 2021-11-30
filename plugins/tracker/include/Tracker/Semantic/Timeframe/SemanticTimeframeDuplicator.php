@@ -111,7 +111,7 @@ class SemanticTimeframeDuplicator
         ?int $from_start_date_field_id,
         ?int $from_duration_date_field_id,
         ?int $from_end_date_field_id,
-        int $to_tracker_id
+        int $to_tracker_id,
     ): void {
         $to_start_date_field_id = null;
         $to_duration_field_id   = null;

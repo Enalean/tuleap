@@ -44,7 +44,7 @@ class CrossReferenceFRSOrganizer
     public function __construct(
         \FRSPackageFactory $package_factory,
         \FRSReleaseFactory $release_factory,
-        \FRSFileFactory $file_factory
+        \FRSFileFactory $file_factory,
     ) {
         $this->package_factory = $package_factory;
         $this->release_factory = $release_factory;
@@ -53,7 +53,7 @@ class CrossReferenceFRSOrganizer
 
     public function organizeFRSReleaseReference(
         CrossReferencePresenter $cross_reference_presenter,
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): void {
         $release_id = (int) $cross_reference_presenter->target_value;
         $release    = $this->release_factory->getFRSReleaseFromDb($release_id);
@@ -103,7 +103,7 @@ class CrossReferenceFRSOrganizer
 
     public function organizeFRSFileReference(
         CrossReferencePresenter $cross_reference_presenter,
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): void {
         $file = $this->file_factory->getFRSFileFromDb($cross_reference_presenter->target_value);
 

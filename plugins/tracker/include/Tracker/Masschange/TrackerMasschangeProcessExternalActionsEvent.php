@@ -53,7 +53,7 @@ class TrackerMasschangeProcessExternalActionsEvent implements Dispatchable
         PFUser $user,
         Tracker $tracker,
         Codendi_Request $request,
-        array $masschange_aids
+        array $masschange_aids,
     ) {
         $this->request         = $request;
         $this->masschange_aids = $masschange_aids;

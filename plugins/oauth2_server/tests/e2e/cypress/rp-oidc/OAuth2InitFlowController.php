@@ -56,7 +56,7 @@ final class OAuth2InitFlowController
         OAuth2TestFlowClientCredentialStorage $client_credential_storage,
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
-        OAuth2TestFlowConfigurationStorage $configuration_storage
+        OAuth2TestFlowConfigurationStorage $configuration_storage,
     ) {
         $this->secret_generator          = $secret_generator;
         $this->client_credential_storage = $client_credential_storage;
@@ -98,7 +98,7 @@ final class OAuth2InitFlowController
             'state'                 => $this->secret_generator->getState(),
             'nonce'                 => $this->secret_generator->getNonce(),
             'code_challenge'        => sodium_bin2base64(hash('sha256', $this->secret_generator->getPKCEChallenge(), true), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
-            'code_challenge_method' => 'S256'
+            'code_challenge_method' => 'S256',
         ];
         return new Response(
             Status::FOUND,

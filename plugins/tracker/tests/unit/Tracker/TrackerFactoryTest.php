@@ -47,7 +47,7 @@ class TrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive("getName")->andReturn("Tracker name");
         $tracker->shouldReceive("getItemName")->andReturn("Item name");
         $trackers = [
-            $tracker
+            $tracker,
         ];
 
         $checker = \Mockery::mock(TrackerCreationDataChecker::class);
@@ -65,7 +65,7 @@ class TrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive("getName")->andReturn("Tracker name");
         $tracker->shouldReceive("getItemName")->andReturn("Item name");
         $trackers = [
-            $tracker
+            $tracker,
         ];
 
         $checker = \Mockery::mock(TrackerCreationDataChecker::class);

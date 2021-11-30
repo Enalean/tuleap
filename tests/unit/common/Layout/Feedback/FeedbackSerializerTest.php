@@ -41,7 +41,7 @@ final class FeedbackSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 12,
                 [
-                    ['level' => \Feedback::ERROR, 'msg' => 'An error has occurred', 'purify' => CODENDI_PURIFIER_CONVERT_HTML]
+                    ['level' => \Feedback::ERROR, 'msg' => 'An error has occurred', 'purify' => CODENDI_PURIFIER_CONVERT_HTML],
                 ]
             );
 

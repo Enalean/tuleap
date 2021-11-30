@@ -47,7 +47,7 @@ class DateValueExtractor implements ValueWrapperVisitor
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         return $value_wrapper->getValue()->format(DateFormat::DATETIME);
     }
@@ -56,27 +56,27 @@ class DateValueExtractor implements ValueWrapperVisitor
     {
         return [
             'min_value' => $value_wrapper->getMinValue()->accept($this, $parameters),
-            'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters)
+            'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters),
         ];
     }
 
     public function visitInValueWrapper(
         InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new RuntimeException('Should not end there');
     }
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new RuntimeException('Should not end there');
     }
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new RuntimeException('Should not end there');
     }

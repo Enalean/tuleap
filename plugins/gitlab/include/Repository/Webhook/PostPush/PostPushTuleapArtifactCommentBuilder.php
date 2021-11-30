@@ -35,7 +35,7 @@ class PostPushTuleapArtifactCommentBuilder
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        Artifact $artifact
+        Artifact $artifact,
     ): string {
         if (
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::RESOLVES_KEYWORD &&

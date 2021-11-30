@@ -46,7 +46,7 @@ class JiraSuccessImportNotifier
     public function __construct(
         JiraImportNotifier $jira_import_notifier,
         LocaleSwitcher $locale_switcher,
-        \TemplateRendererFactory $template_renderer_factory
+        \TemplateRendererFactory $template_renderer_factory,
     ) {
         $this->jira_import_notifier = $jira_import_notifier;
         $this->locale_switcher      = $locale_switcher;
@@ -57,7 +57,7 @@ class JiraSuccessImportNotifier
     public function warnUserAboutSuccess(
         PendingJiraImport $pending_jira_import,
         Tracker $tracker,
-        JiraUserOnTuleapCache $jira_users_on_tuleap_cache
+        JiraUserOnTuleapCache $jira_users_on_tuleap_cache,
     ): void {
         $this->locale_switcher->setLocaleForSpecificExecutionContext(
             $pending_jira_import->getUser()->getLocale(),

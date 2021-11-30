@@ -111,7 +111,7 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe' => false,
                 'rank' => 200,
                 'scope' => 'project',
-                'group_id' => 101
+                'group_id' => 101,
             ]
         );
 
@@ -155,7 +155,7 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe' => false,
                 'rank' => 200,
                 'scope' => 'project',
-                'group_id' => 101
+                'group_id' => 101,
             ]
         );
 

@@ -135,7 +135,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getProject' => $project,
                 'isStatic'   => true,
                 'getId'      => 24,
-                'exists'     => false
+                'exists'     => false,
             ]
         );
 
@@ -158,7 +158,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getProject' => $project,
                 'isStatic'   => true,
                 'getId'      => 24,
-                'exists'     => true
+                'exists'     => true,
             ]
         );
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
@@ -193,7 +193,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getProject' => $project,
                 'isStatic'   => true,
                 'getId'      => 24,
-                'exists'     => true
+                'exists'     => true,
             ]
         );
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
@@ -228,7 +228,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getProject' => $project,
                 'isStatic'   => true,
                 'getId'      => 24,
-                'exists'     => true
+                'exists'     => true,
             ]
         );
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')

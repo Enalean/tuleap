@@ -75,7 +75,7 @@ class AccessControl extends Pane
         FineGrainedRepresentationBuilder $fine_grained_builder,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         GitPermissionsManager $git_permission_manager,
-        RegexpFineGrainedRetriever $regexp_retriever
+        RegexpFineGrainedRetriever $regexp_retriever,
     ) {
         parent::__construct($repository, $request);
 

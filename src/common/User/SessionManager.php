@@ -47,7 +47,7 @@ class SessionManager
     public function __construct(
         UserManager $user_manager,
         SessionDao $session_dao,
-        RandomNumberGenerator $random_number_generator
+        RandomNumberGenerator $random_number_generator,
     ) {
         $this->session_dao             = $session_dao;
         $this->random_number_generator = $random_number_generator;

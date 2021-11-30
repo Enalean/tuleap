@@ -51,7 +51,7 @@ class CollectionOfUgroupMonitoredItemsBuilder
                 'ugroup_id'   => $ugroup->getId(),
                 'name'        => $ugroup->getName(),
                 'description' => $ugroup->getDescription(),
-                'group_id'    => $docman_item->getGroupId()
+                'group_id'    => $docman_item->getGroupId(),
             ];
 
             $monitored_items[] = new UgroupMonitoredItem(

@@ -92,7 +92,7 @@ final class OAuth2AuthorizationCallbackController
         Sha256 $signer,
         Validator $validator,
         RequestFactoryInterface $request_factory,
-        StreamFactoryInterface $stream_factory
+        StreamFactoryInterface $stream_factory,
     ) {
         $this->secret_generator                           = $secret_generator;
         $this->http_client                                = $http_client;
@@ -156,7 +156,7 @@ final class OAuth2AuthorizationCallbackController
                                 'grant_type'    => 'authorization_code',
                                 'redirect_uri'  => OAuth2TestFlowConstants::REDIRECT_URI,
                                 'code_verifier' => $this->secret_generator->getPKCEChallenge(),
-                                'code'          => $auth_code
+                                'code'          => $auth_code,
                             ]
                         )
                     )
@@ -189,7 +189,7 @@ final class OAuth2AuthorizationCallbackController
                         http_build_query(
                             [
                                 'grant_type'    => 'refresh_token',
-                                'refresh_token' => $refresh_token
+                                'refresh_token' => $refresh_token,
                             ]
                         )
                     )

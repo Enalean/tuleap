@@ -73,7 +73,7 @@ class PostPushWebhookCloseArtifactHandler
         GitlabRepositoryProjectDao $repository_project_dao,
         CredentialsRetriever $credentials_retriever,
         GitlabProjectBuilder $gitlab_project_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->artifact_updater        = $artifact_updater;
         $this->artifact_retriever      = $artifact_retriever;
@@ -88,7 +88,7 @@ class PostPushWebhookCloseArtifactHandler
     public function handleArtifactClosure(
         WebhookTuleapReference $tuleap_reference,
         PostPushCommitWebhookData $post_push_commit_webhook_data,
-        GitlabRepositoryIntegration $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration,
     ): void {
         if ($tuleap_reference->getCloseArtifactKeyword() === null) {
             return;

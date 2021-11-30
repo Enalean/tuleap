@@ -32,7 +32,7 @@ if (defined('NUSOAP')) {
         '',
         [
         'user_id' => ['name' => 'user_id', 'type' => 'xsd:int'],
-        'session_hash' => ['name' => 'session_hash', 'type' => 'xsd:string']
+        'session_hash' => ['name' => 'session_hash', 'type' => 'xsd:string'],
         ]
     );
 
@@ -44,7 +44,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'login', // method name
         ['loginname' => 'xsd:string', // input parameters
-        'passwd'    => 'xsd:string'
+        'passwd'    => 'xsd:string',
         ],
         ['return'   => 'tns:Session'], // output parameters
         $uri, // namespace
@@ -58,7 +58,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'loginAs', // method name
         ['admin_session_hash' => 'xsd:string', // input parameters
-          'loginname'    => 'xsd:string'
+          'loginname'    => 'xsd:string',
         ],
         ['return'   => 'xsd:string'], // output parameters
         $uri, // namespace
@@ -71,7 +71,7 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'retrieveSession',
-        ['session_hash' => 'xsd:string'
+        ['session_hash' => 'xsd:string',
         ],
         ['return'   => 'tns:Session'],
         $uri,
@@ -124,7 +124,7 @@ if (defined('NUSOAP')) {
         if ($user->isLoggedIn()) {
             $return = [
             'user_id'      => $user->getId(),
-            'session_hash' => $user->getSessionHash()
+            'session_hash' => $user->getSessionHash(),
             ];
             return $return;
         } else {
@@ -163,7 +163,7 @@ if (defined('NUSOAP')) {
             $user   = UserManager::instance()->getCurrentUser();
             $return = [
             'user_id'      => $user->getId(),
-            'session_hash' => $user->getSessionHash()
+            'session_hash' => $user->getSessionHash(),
             ];
             return $return;
         } else {
@@ -204,7 +204,7 @@ if (defined('NUSOAP')) {
             'retrieveSession',
             'logout',
             'getAPIVersion',
-            'loginAs'
+            'loginAs',
         ]
     );
 }

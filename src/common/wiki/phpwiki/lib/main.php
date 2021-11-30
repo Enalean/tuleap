@@ -541,7 +541,7 @@ class WikiRequest extends Request
                     'verify'     => _("verify the current action"),
                     'viewsource' => _("view the source of this page"),
                     'zip'        => _("download a zip dump from this wiki"),
-                    'ziphtml'    => _("download an html zip dump from this wiki")
+                    'ziphtml'    => _("download an html zip dump from this wiki"),
                     ];
         }
         if (in_array($action, array_keys($actionDescriptions))) {
@@ -580,7 +580,7 @@ class WikiRequest extends Request
                     'verify'     => _("Verify the current action"),
                     'viewsource' => _("Viewing the source of pages"),
                     'zip'        => _("Downloading zip dumps"),
-                    'ziphtml'    => _("Downloading html zip dumps")
+                    'ziphtml'    => _("Downloading html zip dumps"),
                     ];
         }
         if (in_array($action, array_keys($disallowedActionDescriptions))) {

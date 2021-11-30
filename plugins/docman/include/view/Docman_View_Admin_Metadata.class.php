@@ -46,7 +46,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
         $content    .= html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
                                                     dgettext('tuleap-docman', 'Description'),
                                                     dgettext('tuleap-docman', 'Status'),
-                                                    dgettext('tuleap-docman', 'Delete')
+                                                    dgettext('tuleap-docman', 'Delete'),
                                                     ]);
         $altRowClass = 0;
 

@@ -38,7 +38,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder
     public function __construct(
         UserManager $user_manager,
         TrackerFactory $tracker_factory,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->user_manager     = $user_manager;
         $this->tracker_factory  = $tracker_factory;

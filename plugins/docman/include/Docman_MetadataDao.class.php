@@ -120,7 +120,7 @@ class Docman_MetadataDao extends DataAccessObject
         $isEmptyAllowed,
         $mulValuesAllowed,
         $special,
-        $useIt
+        $useIt,
     ) {
         $sql = sprintf(
             'INSERT INTO plugin_docman_metadata(' .

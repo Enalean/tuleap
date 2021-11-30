@@ -33,7 +33,7 @@ class ConfigNotificationEmailCustomSenderFormatter
 {
     public const SLUGIFY_ARGS = [
         'separator' => ' ',
-        'lowercase' => false
+        'lowercase' => false,
     ];
 
     /**

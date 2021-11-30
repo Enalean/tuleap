@@ -50,7 +50,7 @@ class GenericWebhookPresenter implements WebhookPresenter
         $webhook_url,
         array $hooklogs,
         CSRFSynchronizerToken $csrf,
-        $use_default_edit_modal
+        $use_default_edit_modal,
     ) {
         $this->id                      = $id;
         $this->webhook_url             = $webhook_url;

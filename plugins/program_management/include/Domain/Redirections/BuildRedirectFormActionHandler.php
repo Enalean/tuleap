@@ -30,7 +30,7 @@ final class BuildRedirectFormActionHandler
     public static function injectParameters(
         ProgramRedirectionParameters $redirection_to_program_management,
         IterationRedirectionParameters $redirection_to_iteration,
-        BuildRedirectFormActionEvent $event
+        BuildRedirectFormActionEvent $event,
     ): void {
         if (! $redirection_to_program_management->isRedirectionNeeded() && ! $redirection_to_iteration->isRedirectionNeeded()) {
             return;

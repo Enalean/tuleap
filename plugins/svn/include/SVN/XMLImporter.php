@@ -48,7 +48,7 @@ class XMLImporter
         \UserManager $user_manager,
         NotificationsEmailsBuilder $notifications_emails_builder,
         RepositoryCopier $repository_copier,
-        XMLUserChecker $xml_user_checker
+        XMLUserChecker $xml_user_checker,
     ) {
         $this->repositories_data = [];
 
@@ -83,7 +83,7 @@ class XMLImporter
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
         RuleName $rule_name,
-        \PFUser $committer
+        \PFUser $committer,
     ) {
         $logger->info("[svn] Importing " . count($this->repositories_data) . " SVN repositories");
         foreach ($this->repositories_data as $repo) {

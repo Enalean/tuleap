@@ -168,7 +168,7 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $row  = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'oula la'
+                     'ldap_uid' => 'oula la',
                      ];
         $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -245,7 +245,7 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $row = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'mis_1234'
+                     'ldap_uid' => 'mis_1234',
                      ];
         $sync->ldapSync($row, 1);
     }
@@ -285,7 +285,7 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $row = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'mis_1234'
+                     'ldap_uid' => 'mis_1234',
                      ];
         $sync->ldapSync($row, 1);
     }
@@ -330,7 +330,7 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $row = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'mis_1234'
+                     'ldap_uid' => 'mis_1234',
                      ];
         $sync->ldapSync($row, 1);
     }

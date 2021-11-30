@@ -57,7 +57,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
             [
                 new Tracker_Workflow_WorkflowUser(),
                 Mockery::mock(SiblingsRetriever::class),
-                new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::DEBUG)
+                new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::DEBUG),
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -91,7 +91,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
     public function testItAlwaysApplyRuleWhenAtLeastOneValueIsSet(): void
     {
         $fields_data       = [
-            $this->target_field_id => $this->target_value_id
+            $this->target_field_id => $this->target_value_id,
         ];
         $send_notification = true;
 

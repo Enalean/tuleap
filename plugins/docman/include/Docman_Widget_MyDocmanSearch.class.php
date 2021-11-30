@@ -120,7 +120,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
             $row = db_fetch_array($res_group);
             $res = [
                 'group_id' => (int) $row['group_id'],
-                'title'    => (string) $row['title']
+                'title'    => (string) $row['title'],
             ];
 
             $project = ProjectManager::instance()->getProject($res['group_id']);

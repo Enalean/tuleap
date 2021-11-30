@@ -105,7 +105,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["foo@example.com", "bar@example.com"],
                 [],
                 []
-            )
+            ),
         ];
 
         $this->mail_notification_manager->shouldReceive('getByRepository')->andReturn($all_old_notifications);
@@ -125,7 +125,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["foo@example.com", "bar@example.com"],
                 [],
                 []
-            )
+            ),
         ];
         $all_old_notifications = [];
 
@@ -154,7 +154,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["foo@example.com"],
                 [],
                 []
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -165,7 +165,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["foo@example.com", "bar@example.com"],
                 [],
                 []
-            )
+            ),
         ];
 
         $this->mail_notification_manager->shouldReceive('getByRepository')->andReturn($all_old_notifications);
@@ -185,7 +185,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["foo@example.com", "bar@example.com"],
                 [],
                 []
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -196,7 +196,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["foo@example.com"],
                 [],
                 []
-            )
+            ),
         ];
         $old_notifications     = $all_old_notifications;
 
@@ -223,7 +223,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["bar@example.com", "foo@example.com"],
                 [],
                 []
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -234,7 +234,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ["foo@example.com", "bar@example.com"],
                 [],
                 []
-            )
+            ),
         ];
         $old_notifications     = $all_old_notifications;
 
@@ -261,7 +261,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 [$this->user_103]
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -272,7 +272,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 []
-            )
+            ),
         ];
         $old_notifications     = $all_old_notifications;
 
@@ -299,7 +299,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [$this->user_102, $this->user_103],
                 []
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -310,7 +310,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [$this->user_102],
                 []
-            )
+            ),
         ];
         $old_notifications     = $all_old_notifications;
 
@@ -337,7 +337,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [$this->user_102, $this->user_103],
                 []
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -348,7 +348,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [$this->user_102, $this->user_103],
                 []
-            )
+            ),
         ];
         $old_notifications     = $all_old_notifications;
 
@@ -375,7 +375,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 [$this->user_group_project_member, $this->user_group_101]
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -386,7 +386,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 [$this->user_group_project_member]
-            )
+            ),
         ];
         $old_notifications     = $all_old_notifications;
 
@@ -413,7 +413,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 [$this->user_group_project_member, $this->user_group_101]
-            )
+            ),
         ];
 
         $all_old_notifications = [
@@ -424,7 +424,7 @@ class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 [$this->user_group_project_member, $this->user_group_101]
-            )
+            ),
         ];
         $old_notifications     = $all_old_notifications;
 

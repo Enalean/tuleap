@@ -44,13 +44,13 @@ final class IterationUpdate implements TimeboxMirroringOrder
         private IterationIdentifier $iteration,
         private IterationTrackerIdentifier $tracker,
         private ChangesetIdentifier $changeset,
-        private UserIdentifier $user
+        private UserIdentifier $user,
     ) {
     }
 
     public static function fromArtifactUpdateEvent(
         VerifyIsIterationTracker $iteration_tracker_verifier,
-        ArtifactUpdatedEvent $event
+        ArtifactUpdatedEvent $event,
     ): ?self {
         $iteration = IterationIdentifier::fromArtifactUpdateEvent($iteration_tracker_verifier, $event);
         if (! $iteration) {
@@ -70,7 +70,7 @@ final class IterationUpdate implements TimeboxMirroringOrder
 
     public static function fromIterationUpdateEvent(
         RetrieveIterationTracker $iteration_tracker_retriever,
-        IterationUpdateEvent $event
+        IterationUpdateEvent $event,
     ): self {
         $iteration_tracker = IterationTrackerIdentifier::fromIteration(
             $iteration_tracker_retriever,

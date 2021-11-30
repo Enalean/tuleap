@@ -62,7 +62,7 @@ class ProjectBackgroundRetriever
     private function instantiateBackground(
         string $identifier,
         string $author,
-        ?ProjectBackgroundName $current_background
+        ?ProjectBackgroundName $current_background,
     ): ProjectBackground {
         if ($current_background === null) {
             return ProjectBackground::buildFromIdentifier($identifier, $author, $identifier === null);

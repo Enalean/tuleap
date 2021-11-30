@@ -48,7 +48,7 @@ class AccountCreationFeedback
         InvitationDao $dao,
         UserManager $user_manager,
         AccountCreationFeedbackEmailNotifier $email_notifier,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->dao            = $dao;
         $this->user_manager   = $user_manager;

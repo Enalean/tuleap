@@ -35,7 +35,7 @@ class LockResponseSuccessfulDestructionRepresentation implements LockResponse
     public function jsonSerialize(): array
     {
         return [
-            "lock" => $this->lock_representation
+            "lock" => $this->lock_representation,
         ];
     }
 }

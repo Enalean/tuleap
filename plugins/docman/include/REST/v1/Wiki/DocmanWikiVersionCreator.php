@@ -54,7 +54,7 @@ class DocmanWikiVersionCreator
         Docman_ItemFactory $docman_item_factory,
         \EventManager $event_manager,
         DocmanItemUpdator $updator,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->version_factory      = $version_factory;
         $this->docman_item_factory  = $docman_item_factory;
@@ -70,7 +70,7 @@ class DocmanWikiVersionCreator
         int $status_id,
         int $obsolescence_date_timestamp,
         string $title,
-        ?string $description
+        ?string $description,
     ): void {
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_timestamp, $title, $description) {
@@ -83,7 +83,7 @@ class DocmanWikiVersionCreator
                     'title'             => $title,
                     'description'       => $description,
                     'status'            => $status_id,
-                    'obsolescence_date' => $obsolescence_date_timestamp
+                    'obsolescence_date' => $obsolescence_date_timestamp,
                 ];
 
                 $this->docman_item_factory->update($new_wiki_version_row);
@@ -98,7 +98,7 @@ class DocmanWikiVersionCreator
                             'user'      => $current_user,
                             'wiki_page' => $representation->wiki_properties->page_name,
                             'old_value' => $next_version_id - 1,
-                            'new_value' => $next_version_id
+                            'new_value' => $next_version_id,
                         ]
                     );
                 }
@@ -109,7 +109,7 @@ class DocmanWikiVersionCreator
                     [
                         'group_id' => $item->getGroupId(),
                         'item'     => $item,
-                        'user'     => $current_user
+                        'user'     => $current_user,
                     ]
                 );
 

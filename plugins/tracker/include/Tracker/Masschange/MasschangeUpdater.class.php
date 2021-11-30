@@ -80,7 +80,7 @@ class MasschangeUpdater
         Tracker_FormElementFactory $form_element_factory,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_ArtifactDao $artifact_dao,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->tracker                     = $tracker;
         $this->tracker_report              = $tracker_report;
@@ -160,7 +160,7 @@ class MasschangeUpdater
         array $fields_data,
         string $comment,
         bool $send_notifications,
-        string $comment_format
+        string $comment_format,
     ): void {
         $fields_data = $this->consolidateFieldsData($fields_data);
 
@@ -269,7 +269,7 @@ class MasschangeUpdater
     private function consolidateFieldListDataForArtifact(
         Tracker_Artifact_Changeset $changeset,
         array $list_fields,
-        array $fields_data
+        array $fields_data,
     ): array {
         foreach ($list_fields as $list_field) {
             $changeset_value = $changeset->getValue($list_field);
@@ -292,7 +292,7 @@ class MasschangeUpdater
     private function unsubscribeUserFromEachArtifactNotification(
         PFUser $user,
         Codendi_Request $request,
-        array $masschange_aids
+        array $masschange_aids,
     ): void {
         foreach ($masschange_aids as $artifact_id) {
             $notification_subscriber = $this->getArtifactNotificationSubscriber((int) $artifact_id);

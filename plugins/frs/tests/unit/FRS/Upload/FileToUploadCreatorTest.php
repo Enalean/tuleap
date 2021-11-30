@@ -189,7 +189,7 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
             [
-                ['id' => 12, 'user_id' => 102, 'file_size' => 123]
+                ['id' => 12, 'user_id' => 102, 'file_size' => 123],
             ]
         );
 
@@ -220,7 +220,7 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
             [
                 ['id' => 12, 'user_id' => 102, 'file_size' => 123],
-                ['id' => 13, 'user_id' => 102, 'file_size' => 123]
+                ['id' => 13, 'user_id' => 102, 'file_size' => 123],
             ]
         );
 
@@ -252,7 +252,7 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
             [
-                ['user_id' => 103]
+                ['user_id' => 103],
             ]
         );
 
@@ -282,7 +282,7 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
             [
-                ['user_id' => 102, 'file_size' => 123456]
+                ['user_id' => 102, 'file_size' => 123456],
             ]
         );
 

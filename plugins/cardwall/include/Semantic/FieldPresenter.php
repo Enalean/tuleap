@@ -45,7 +45,7 @@ class FieldPresenter
 
     public function __construct(
         array $fields,
-        array $possible_fields
+        array $possible_fields,
     ) {
         $this->card_fields                               = $fields;
         $this->has_field                                 = count($fields) > 0;
@@ -54,7 +54,7 @@ class FieldPresenter
         $this->delete_image                              = $GLOBALS['HTML']->getimage(
             'ic/cross.png',
             [
-                'alt' => dgettext('tuleap-cardwall', 'The following fields are added to the cards:')
+                'alt' => dgettext('tuleap-cardwall', 'The following fields are added to the cards:'),
             ]
         );
     }

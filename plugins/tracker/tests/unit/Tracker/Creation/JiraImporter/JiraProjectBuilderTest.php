@@ -48,9 +48,9 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'values'     => [
                         [
                             'key'  => "TO",
-                            'name' => 'toto'
-                        ]
-                    ]
+                            'name' => 'toto',
+                        ],
+                    ],
                 ],
                 ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => [
                     'isLast'     => true,
@@ -59,9 +59,9 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'values'     => [
                         [
                             'key'  => "TU",
-                            'name' => 'tutu'
-                        ]
-                    ]
+                            'name' => 'tutu',
+                        ],
+                    ],
                 ],
             ];
         };
@@ -97,9 +97,9 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'values'     => [
                         [
                             'key'  => "TO",
-                            'name' => 'toto'
-                        ]
-                    ]
+                            'name' => 'toto',
+                        ],
+                    ],
                 ],
                 ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => null,
             ];
@@ -122,9 +122,9 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'values'     => [
                         [
                             'key'  => "TO",
-                            'dsdsdsds' => 'toto'
-                        ]
-                    ]
+                            'dsdsdsds' => 'toto',
+                        ],
+                    ],
                 ],
                 ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1" => null,
             ];
@@ -152,7 +152,7 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     [
                         'key' => 'SP',
                         'name' => 'Scrum Project',
-                    ]
+                    ],
                 ];
             }
         };
@@ -180,7 +180,7 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 return [
                     [
                         'name' => 'My project name',
-                    ]
+                    ],
                 ];
             }
         };

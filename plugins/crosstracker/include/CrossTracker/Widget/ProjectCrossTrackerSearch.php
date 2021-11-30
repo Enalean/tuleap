@@ -109,7 +109,7 @@ class ProjectCrossTrackerSearch extends Widget
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $content_id      = $this->getDao()->create();
         $tracker_factory = $this->getTrackerFactory();
@@ -161,7 +161,7 @@ class ProjectCrossTrackerSearch extends Widget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('cross-tracker.js')]
+            ['file' => $this->getAssets()->getFileURL('cross-tracker.js')],
         ];
     }
 

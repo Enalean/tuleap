@@ -64,7 +64,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
         string $short_type,
         ?string $test_status,
         ?TestExecutionUsedToDefineStatusRepresentation $test_exec,
-        ?ArtifactReferenceRepresentation $test_campaign
+        ?ArtifactReferenceRepresentation $test_campaign,
     ) {
         parent::__construct($artifact, $form_element_factory, $user, null);
         $this->short_type                           = $short_type;
@@ -76,7 +76,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
     public static function fromTestDefinitionWithTestStatus(
         TestPlanTestDefinitionWithTestStatus $test_definition_with_test_status,
         PFUser $user,
-        Tracker_FormElementFactory $form_element_factory
+        Tracker_FormElementFactory $form_element_factory,
     ): self {
         $test_definition = $test_definition_with_test_status->getTestDefinition();
         return new self(

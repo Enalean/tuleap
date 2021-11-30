@@ -63,7 +63,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
         ProjectAccessChecker $project_access_checker,
         array $cross_reference_presenters,
         NatureCollection $available_nature_collection,
-        \PFUser $current_user
+        \PFUser $current_user,
     ) {
         $this->project_manager             = $project_manager;
         $this->project_access_checker      = $project_access_checker;
@@ -96,7 +96,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
 
     public function moveCrossReferenceToSection(
         CrossReferencePresenter $cross_reference_presenter,
-        string $section_label
+        string $section_label,
     ): void {
         foreach ($this->cross_reference_presenters as $key => $xref) {
             if ($xref->id !== $cross_reference_presenter->id) {
@@ -118,7 +118,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     private function addCrossReferencePresenterToExistingNaturePresenter(
         string $nature_identifier,
         CrossReferencePresenter $cross_reference_presenter,
-        string $section_label
+        string $section_label,
     ): void {
         $this->setNature(
             $nature_identifier,
@@ -132,7 +132,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     private function addCrossReferencePresenterToNewNaturePresenter(
         string $nature_identifier,
         CrossReferencePresenter $cross_reference_presenter,
-        string $section_label
+        string $section_label,
     ): void {
         $available_nature = $this->available_nature_collection->getNatureFromIdentifier($nature_identifier);
 
@@ -149,7 +149,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
                     new CrossReferenceSectionPresenter(
                         $section_label,
                         [$cross_reference_presenter]
-                    )
+                    ),
                 ]
             )
         );
@@ -183,7 +183,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
 
     private function addCrossReferenceToItsNature(
         CrossReferencePresenter $cross_reference_presenter,
-        string $section_label
+        string $section_label,
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
         try {

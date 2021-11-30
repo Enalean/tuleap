@@ -161,15 +161,15 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                       [
                           [
                               'project_id' => 101,
-                              'database_name' => 'mediawiki_101'
+                              'database_name' => 'mediawiki_101',
                           ],
                           [
                               'project_id' => 102,
-                              'database_name' => 'mediawiki_102'
+                              'database_name' => 'mediawiki_102',
                           ],
                           [
                               'project_id' => 103,
-                              'database_name' => 'mediawiki_103'
+                              'database_name' => 'mediawiki_103',
                           ],
                       ]
                   );
@@ -224,15 +224,15 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                       [
                           [
                               'project_id' => 101,
-                              'database_name' => 'mediawiki_101'
+                              'database_name' => 'mediawiki_101',
                           ],
                           [
                               'project_id' => 102,
-                              'database_name' => 'mediawiki_102'
+                              'database_name' => 'mediawiki_102',
                           ],
                           [
                               'project_id' => 103,
-                              'database_name' => 'mediawiki_103'
+                              'database_name' => 'mediawiki_103',
                           ],
                       ]
                   );
@@ -280,7 +280,7 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     [
                         'project_id' => 103,
-                        'database_name' => 'mediawiki_103'
+                        'database_name' => 'mediawiki_103',
                     ],
                 ]
             );
@@ -312,15 +312,15 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                      [
                           [
                               'project_id' => 101,
-                              'database_name' => 'mediawiki_101'
+                              'database_name' => 'mediawiki_101',
                           ],
                           [
                               'project_id' => 102,
-                              'database_name' => 'mediawiki_102'
+                              'database_name' => 'mediawiki_102',
                           ],
                           [
                               'project_id' => 103,
-                              'database_name' => 'mediawiki_103'
+                              'database_name' => 'mediawiki_103',
                           ],
                      ]
                  );

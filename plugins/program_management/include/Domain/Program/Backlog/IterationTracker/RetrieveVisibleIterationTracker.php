@@ -34,6 +34,6 @@ interface RetrieveVisibleIterationTracker
      */
     public function retrieveVisibleIterationTracker(
         ProgramIdentifier $program,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): ?TrackerReference;
 }

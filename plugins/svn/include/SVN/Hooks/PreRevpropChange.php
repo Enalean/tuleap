@@ -59,7 +59,7 @@ class PreRevpropChange
         $propname,
         $new_commit_message,
         RepositoryManager $repository_manager,
-        HookConfigRetriever $hook_config_retriever
+        HookConfigRetriever $hook_config_retriever,
     ) {
         $this->repository            = $repository_manager->getRepositoryFromSystemPath($repository_path);
         $this->hook_config           = $hook_config_retriever->getHookConfig($this->repository);

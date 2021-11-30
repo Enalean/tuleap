@@ -67,7 +67,7 @@ class ListFieldMapping implements FieldMapping
         string $field_name,
         string $type,
         string $bind_type,
-        array $bound_values
+        array $bound_values,
     ) {
         $this->jira_field_id    = $jira_field_id;
         $this->jira_field_label = $jira_field_label;

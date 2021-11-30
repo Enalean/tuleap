@@ -42,7 +42,7 @@ final class LayoutHelperPassthrough implements LayoutHelper
         string $project_id,
         string $page_title,
         string $current_pane_shortname,
-        \Closure $callback
+        \Closure $callback,
     ): void {
         $callback($this->project, $this->current_user);
     }

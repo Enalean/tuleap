@@ -68,21 +68,21 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $project_desc_fields = [
             $field1,
-            $field2
+            $field2,
         ];
 
         $expected = [
             0 => [
                 'id' => 145,
                 'name' => 'champs 1',
-                'is_mandatory' => true
+                'is_mandatory' => true,
             ],
 
             1 => [
                 'id' => 255,
                 'name' => 'champs 2',
-                'is_mandatory' => false
-            ]
+                'is_mandatory' => false,
+            ],
         ];
 
         $this->description_factory->shouldReceive('getCustomDescriptions')->andReturns($project_desc_fields);
@@ -141,7 +141,7 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
             1 => [
                 'id' => 255,
                 'value' => 'valeur 2',
-            ]
+            ],
         ];
 
         $this->description_value_factory->shouldReceive('getDescriptionFieldsValue')->with($this->project)->andReturns($expected);

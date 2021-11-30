@@ -44,7 +44,7 @@ class ClientSecretUpdater
     public function __construct(
         SplitTokenVerificationStringHasher $hasher,
         AppDao $app_dao,
-        LastGeneratedClientSecretStore $client_secret_store
+        LastGeneratedClientSecretStore $client_secret_store,
     ) {
         $this->hasher              = $hasher;
         $this->app_dao             = $app_dao;

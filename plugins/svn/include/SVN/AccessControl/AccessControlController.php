@@ -42,7 +42,7 @@ class AccessControlController
     public function __construct(
         RepositoryManager $repository_manager,
         AccessFileHistoryFactory $access_file_factory,
-        AccessFileHistoryCreator $access_file_creator
+        AccessFileHistoryCreator $access_file_creator,
     ) {
         $this->repository_manager  = $repository_manager;
         $this->access_file_factory = $access_file_factory;
@@ -59,7 +59,7 @@ class AccessControlController
         return SVN_BASE_URL . '/?' . http_build_query([
                 'group_id' => $repository->getProject()->getId(),
                 'repo_id' => $repository->getId(),
-                'action' => 'access-control'
+                'action' => 'access-control',
             ]);
     }
 
@@ -72,7 +72,7 @@ class AccessControlController
             $versions[] = [
                 'file_id' => $historised_accessfile->getId(),
                 'version' => $historised_accessfile->getVersionNumber(),
-                'date' => format_date("Y-m-d", $historised_accessfile->getVersionDate())
+                'date' => format_date("Y-m-d", $historised_accessfile->getVersionDate()),
             ];
         }
 

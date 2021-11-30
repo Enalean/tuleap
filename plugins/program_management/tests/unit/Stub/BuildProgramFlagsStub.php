@@ -38,7 +38,7 @@ final class BuildProgramFlagsStub implements BuildProgramFlags
     public static function withDefaults(): self
     {
         return new self([
-            ProgramFlag::fromLabelAndDescription('Top Secret', 'For authorized eyes only')
+            ProgramFlag::fromLabelAndDescription('Top Secret', 'For authorized eyes only'),
         ]);
     }
 

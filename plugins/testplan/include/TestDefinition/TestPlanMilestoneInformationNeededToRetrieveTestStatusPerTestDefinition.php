@@ -69,7 +69,7 @@ final class TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinit
         array $current_user_ugroup_ids,
         int $test_exec_status_field_id,
         int $test_exec_art_link_field_id,
-        int $test_campaign_art_link_field_id
+        int $test_campaign_art_link_field_id,
     ) {
         $this->milestone_id  = (int) $milestone->getId();
         $test_definition_ids = [];

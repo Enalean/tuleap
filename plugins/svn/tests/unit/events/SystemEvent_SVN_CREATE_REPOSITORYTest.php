@@ -61,7 +61,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\TestCas
         $parameters            = [
             'system_path' => '/var/lib/tuleap/svn_plugin/101/test',
             'project_id'  => 101,
-            'name'        => 'project1/stuff'
+            'name'        => 'project1/stuff',
         ];
         $serialized_parameters = SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($parameters);
 
@@ -86,7 +86,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\TestCas
         $parameters                            = [
             'system_path' => '/var/lib/tuleap/svn_plugin/101/test',
             'project_id'  => 101,
-            'name'        => 'project1/stuff'
+            'name'        => 'project1/stuff',
         ];
         $serialized_parameters_standard_format = implode(\SystemEvent::PARAMETER_SEPARATOR, $parameters);
 

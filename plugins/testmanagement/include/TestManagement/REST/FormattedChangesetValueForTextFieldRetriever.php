@@ -44,7 +44,7 @@ class FormattedChangesetValueForTextFieldRetriever
         string $field_name,
         string $value,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): ?ArtifactValuesRepresentation {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($artifact->getTrackerId(), $field_name, $user);
         if (! $field) {
@@ -55,7 +55,7 @@ class FormattedChangesetValueForTextFieldRetriever
         $value_representation->field_id = (int) $field->getId();
         $value_representation->value    = [
             'format' => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-            'content' => $value
+            'content' => $value,
         ];
 
         return $value_representation;

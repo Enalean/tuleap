@@ -101,8 +101,8 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \Tule
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
             [
                 Tracker::PERMISSION_SUBMITTER_ONLY => [
-                    0 => $this->ugroup_id_submitter_only
-                ]
+                    0 => $this->ugroup_id_submitter_only,
+                ],
             ]
         );
 

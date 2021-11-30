@@ -33,7 +33,7 @@ class CommitTuleapReferenceDao extends DataAccessObject
         string $commit_title,
         string $commit_branch_name,
         string $commit_author_name,
-        string $commit_author_email
+        string $commit_author_email,
     ): void {
         $sql = '
             INSERT INTO plugin_gitlab_repository_integration_commit_info
@@ -84,7 +84,7 @@ class CommitTuleapReferenceDao extends DataAccessObject
     public function deleteCommitsInIntegration(
         string $integration_path,
         int $integration_id,
-        int $integration_project_id
+        int $integration_project_id,
     ): void {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_commit_info',

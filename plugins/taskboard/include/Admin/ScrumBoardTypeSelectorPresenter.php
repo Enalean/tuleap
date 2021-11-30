@@ -42,16 +42,16 @@ class ScrumBoardTypeSelectorPresenter
             [
                 'label'       => dgettext('tuleap-taskboard', 'Cardwall (legacy, for backward compatibility)'),
                 'value'       => TaskboardUsage::OPTION_CARDWALL,
-                'is_selected' => $current_board_type === 'cardwall'
+                'is_selected' => $current_board_type === 'cardwall',
             ], [
                 'label'       => dgettext('tuleap-taskboard', 'Taskboard (new, recommended)'),
                 'value'       => TaskboardUsage::OPTION_TASKBOARD,
-                'is_selected' => $current_board_type === 'taskboard'
+                'is_selected' => $current_board_type === 'taskboard',
             ], [
                 'label'       => dgettext('tuleap-taskboard', 'Cardwall & Taskboard'),
                 'value'       => TaskboardUsage::OPTION_CARDWALL_AND_TASKBOARD,
-                'is_selected' => $current_board_type === 'both'
-            ]
+                'is_selected' => $current_board_type === 'both',
+            ],
         ];
     }
 }

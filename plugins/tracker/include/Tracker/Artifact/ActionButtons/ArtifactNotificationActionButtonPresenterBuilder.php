@@ -38,7 +38,7 @@ class ArtifactNotificationActionButtonPresenterBuilder
 
     public function __construct(
         UnsubscribersNotificationDAO $unsubscribers_notification_DAO,
-        Tracker_ArtifactDao $tracker_artifact_dao
+        Tracker_ArtifactDao $tracker_artifact_dao,
     ) {
         $this->unsubscribers_DAO    = $unsubscribers_notification_DAO;
         $this->tracker_artifact_dao = $tracker_artifact_dao;

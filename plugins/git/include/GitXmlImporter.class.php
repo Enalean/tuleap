@@ -132,7 +132,7 @@ class GitXmlImporter
         FineGrainedPermissionSaver $fine_grained_saver,
         XmlUgroupRetriever $xml_ugroup_retriever,
         GitDao $git_dao,
-        IFindUserFromXMLReference $user_finder
+        IFindUserFromXMLReference $user_finder,
     ) {
         $this->logger                        = $logger;
         $this->permission_manager            = $permissions_manager;
@@ -161,7 +161,7 @@ class GitXmlImporter
         Project $project,
         PFUser $creator,
         SimpleXMLElement $xml_input,
-        $extraction_path
+        $extraction_path,
     ) {
         $xml_git = $xml_input->git;
         if (! $xml_git) {
@@ -211,7 +211,7 @@ class GitXmlImporter
         Project $project,
         PFUser $creator,
         SimpleXMLElement $repository_xmlnode,
-        $extraction_path
+        $extraction_path,
     ) {
         $repository_info = $repository_xmlnode->attributes();
         assert($repository_info !== null);
@@ -260,7 +260,7 @@ class GitXmlImporter
     private function importPermissions(
         Project $project,
         SimpleXMLElement $permission_xmlnodes,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         if (empty($permission_xmlnodes)) {
             return;
@@ -346,7 +346,7 @@ class GitXmlImporter
         Project $project,
         SimpleXMLElement $permission_xmlnode,
         $permission_type,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $ugroup_ids = $this->xml_ugroup_retriever->getUgroupIdsForPermissionNode($project, $permission_xmlnode);
 
@@ -369,7 +369,7 @@ class GitXmlImporter
         ImportConfig $configuration,
         Project $project,
         SimpleXMLElement $xml_references,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,

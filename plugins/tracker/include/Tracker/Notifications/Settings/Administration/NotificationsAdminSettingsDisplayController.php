@@ -47,7 +47,7 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
     public function __construct(
         TrackerFactory $tracker_factory,
         TrackerManager $tracker_manager,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->tracker_factory = $tracker_factory;
         $this->tracker_manager = $tracker_manager;

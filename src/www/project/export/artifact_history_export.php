@@ -87,7 +87,7 @@ $lbl_list = ['artifact_id' => $GLOBALS['Language']->getText('project_export_arti
           'email' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'email'),
           'date' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'mod_on'),
           'type' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'comment_type'),
-          'label' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'label')
+          'label' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'label'),
                   ];
 
 $dsc_list = ['artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),

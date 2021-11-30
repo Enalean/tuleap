@@ -39,7 +39,7 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
-        LFSBasicTransferObjectSaver $basic_object_saver
+        LFSBasicTransferObjectSaver $basic_object_saver,
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
         $this->basic_object_saver          = $basic_object_saver;

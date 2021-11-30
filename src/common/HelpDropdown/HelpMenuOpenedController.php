@@ -45,7 +45,7 @@ final class HelpMenuOpenedController extends DispatchablePSR15Compatible impleme
         Prometheus $prometheus,
         ResponseFactoryInterface $response_factory,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->prometheus       = $prometheus;

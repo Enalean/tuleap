@@ -40,7 +40,7 @@ final class StartDateValue
      */
     public static function fromStartDateReference(
         RetrieveStartDateValue $start_date_retriever,
-        StartDateFieldReference $start_date
+        StartDateFieldReference $start_date,
     ): self {
         return new self($start_date_retriever->getStartDateValue($start_date));
     }

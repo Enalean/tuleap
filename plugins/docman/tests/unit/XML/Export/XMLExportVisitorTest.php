@@ -143,7 +143,7 @@ class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                             'path'     => '/titi',
                             'filetype' => 'image/png',
                             'filename' => 'titi.png',
-                            'label'    => 'The label'
+                            'label'    => 'The label',
                         ]
                     ),
                     new Docman_Version(
@@ -153,7 +153,7 @@ class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                             'filetype'  => 'image/png',
                             'filename'  => 'toto.png',
                             'date'      => 1234567890,
-                            'changelog' => 'The changelog'
+                            'changelog' => 'The changelog',
                         ]
                     ),
                 ]
@@ -213,7 +213,7 @@ class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                             'id'       => 241,
                             'path'     => '/titi',
                             'filetype' => 'image/png',
-                            'filename' => 'file'
+                            'filename' => 'file',
                         ]
                     ),
                     new Docman_Version(
@@ -221,7 +221,7 @@ class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                             'id'       => 142,
                             'path'     => '/toto',
                             'filetype' => 'image/png',
-                            'filename' => 'file'
+                            'filename' => 'file',
                         ]
                     ),
                 ]
@@ -328,9 +328,9 @@ class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                             'path'     => '/titi',
                             'filetype' => 'image/png',
                             'filename' => 'file',
-                            'user_id'  => 104
+                            'user_id'  => 104,
                         ]
-                    )
+                    ),
                 ]
             )->once();
         $this->archive->shouldReceive('addFile');

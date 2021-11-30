@@ -81,7 +81,7 @@ class XMLImport
         UGroupManager $ugroup_manager,
         IFindUserFromXMLReference $user_finder,
         TimeDao $time_dao,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->rng_validator             = $rng_validator;
         $this->timetracking_enabler      = $timetracking_enabler;
@@ -96,7 +96,7 @@ class XMLImport
         SimpleXMLElement $xml,
         Project $project,
         array $created_trackers_objects,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
     ): void {
         if (! isset($xml->trackers)) {
             return;
@@ -148,7 +148,7 @@ class XMLImport
      */
     private function importTimes(
         SimpleXMLElement $xml_timetracking,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
     ): void {
         foreach ($xml_timetracking->time as $xml_time) {
             $time_user = $this->user_finder->getUser(

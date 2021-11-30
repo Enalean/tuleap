@@ -54,7 +54,7 @@ class StatisticsCollectionBuilder
         \ProjectManager $project_manager,
         UserManager $user_manager,
         EventManager $event_manager,
-        SVN_LogDao $svn_dao
+        SVN_LogDao $svn_dao,
     ) {
         $this->project_manager = $project_manager;
         $this->user_manager    = $user_manager;

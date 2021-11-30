@@ -55,7 +55,7 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturn(
             [
                 $admin_service,
-                $git_service
+                $git_service,
             ]
         );
     }

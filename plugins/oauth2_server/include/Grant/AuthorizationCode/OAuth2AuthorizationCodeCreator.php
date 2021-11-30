@@ -66,7 +66,7 @@ class OAuth2AuthorizationCodeCreator
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
         OAuth2ScopeSaver $authorization_code_scope_saver,
         DateInterval $access_token_expiration_delay,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->authorization_code_formatter   = $authorization_code_formatter;
         $this->hasher                         = $hasher;
@@ -87,7 +87,7 @@ class OAuth2AuthorizationCodeCreator
         array $scopes,
         \PFUser $user,
         ?string $pkce_code_challenge,
-        ?string $oidc_nonce
+        ?string $oidc_nonce,
     ): ConcealedString {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);

@@ -47,7 +47,7 @@ class RedirectWithFeedbackFactory
     public function createResponseForUser(
         \PFUser $user,
         string $redirect_to,
-        NewFeedback $new_feedback
+        NewFeedback $new_feedback,
     ): ResponseInterface {
         $this->feedback_serializer->serialize($user, $new_feedback);
         return $this->response_factory->createResponse(302)

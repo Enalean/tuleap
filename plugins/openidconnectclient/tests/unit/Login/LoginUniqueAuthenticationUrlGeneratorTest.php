@@ -59,7 +59,7 @@ class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUnit\Tes
         $provider_manager = \Mockery::mock(ProviderManager::class);
         $provider_manager->shouldReceive('getProvidersUsableToLogIn')->andReturns([
             \Mockery::mock(Provider::class),
-            \Mockery::mock(Provider::class)
+            \Mockery::mock(Provider::class),
         ]);
         $login_url_generator = new LoginURLGenerator('base_url');
 

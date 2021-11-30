@@ -111,7 +111,7 @@ function displayPage(&$request, $template = false)
         $last_page   = array_pop($pages); // deletes last element from array as side-effect
         $pageheader  = HTML::span(HTML::a(
             ['href' => WikiURL($pages[0]),
-                                              'class' => 'pagetitle'
+                                              'class' => 'pagetitle',
                                               ],
             $WikiTheme->maybeSplitWikiWord($pages[0] . SUBPAGE_SEPARATOR)
         ));
@@ -177,7 +177,7 @@ function displayPage(&$request, $template = false)
     $eM->processEvent('wiki_before_content', [
                     'html' => &$additional_html,
                     'group_id' => GROUP_ID,
-                    'wiki_page' => $pagename
+                    'wiki_page' => $pagename,
         ]);
     if ($additional_html) {
         $beforeHeader = HTML();

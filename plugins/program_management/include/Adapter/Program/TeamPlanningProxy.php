@@ -38,7 +38,7 @@ final class TeamPlanningProxy implements TeamPlanning
         private TrackerReference $planning_tracker,
         private int $id,
         private string $name,
-        private array $backlog_tracker_ids
+        private array $backlog_tracker_ids,
     ) {
     }
 

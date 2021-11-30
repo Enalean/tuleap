@@ -76,9 +76,9 @@ final class JiraServerChangelogEntriesBuilderTest extends TestCase
                                 ],
 
                             ],
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ];
         };
 

@@ -49,7 +49,7 @@ class PostMergeRequestWebhookDataBuilder
         string $event_name,
         int $project_id,
         string $project_url,
-        array $webhook_content
+        array $webhook_content,
     ): PostMergeRequestWebhookData {
         $this->checkNoMissingKeyInMergeRequestData($webhook_content);
 

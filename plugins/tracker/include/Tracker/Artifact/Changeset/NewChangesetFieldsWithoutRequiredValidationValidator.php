@@ -32,7 +32,7 @@ class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artif
     protected function canValidateField(
         Artifact $artifact,
         Tracker_FormElement_Field $field,
-        \PFUser $user
+        \PFUser $user,
     ): bool {
         return true;
     }
@@ -41,7 +41,7 @@ class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artif
         Artifact $artifact,
         Tracker_FormElement_Field $field,
         \PFUser $user,
-        $submitted_value
+        $submitted_value,
     ) {
         return $field->validateField($artifact, $submitted_value);
     }

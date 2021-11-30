@@ -77,7 +77,7 @@ class AttachmentController extends DispatchablePSR15Compatible implements Dispat
         Tracker_FileInfoFactory $file_info_factory,
         BinaryFileResponseBuilder $response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->url_verification          = $url_verification;

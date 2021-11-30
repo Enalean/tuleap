@@ -84,7 +84,7 @@ final class MailingListPresenter
         string $update_url,
         string $delete_url,
         string $subscribe_url,
-        array $archive_urls
+        array $archive_urls,
     ) {
         $this->id            = $id;
         $this->name          = $name;

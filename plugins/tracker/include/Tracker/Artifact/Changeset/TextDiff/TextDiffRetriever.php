@@ -46,7 +46,7 @@ class TextDiffRetriever implements DispatchableWithRequest
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
         ChangesetsForDiffRetriever $changesets_for_diff_retriever,
-        DiffProcessor $diff_processor
+        DiffProcessor $diff_processor,
     ) {
         $this->artifact_factory              = $artifact_factory;
         $this->changesets_for_diff_retriever = $changesets_for_diff_retriever;

@@ -56,7 +56,7 @@ class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -110,7 +110,7 @@ class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -167,7 +167,7 @@ class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -224,7 +224,7 @@ class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()

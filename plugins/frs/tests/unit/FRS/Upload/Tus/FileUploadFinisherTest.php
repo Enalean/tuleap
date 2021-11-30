@@ -136,7 +136,7 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $to_be_created_frs_file = \Mockery::mock(FRSFile::class);
 
         $to_be_created_frs_file_as_array = [
-            'filename' => 'readme.md'
+            'filename' => 'readme.md',
         ];
         $to_be_created_frs_file->shouldReceive('toArray')->andReturn($to_be_created_frs_file_as_array);
 
@@ -148,7 +148,7 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
                     'release_id' => $release_id,
                     'name'       => 'readme.md',
                     'user_id'    => $user_id,
-                    'file_size'  => 123
+                    'file_size'  => 123,
                 ]
             );
 

@@ -62,18 +62,18 @@ final class BarChartDataBuilderTest extends TestCase
             100 => '27-28 April',
             101 => '3-4 May',
             102 => '1-2 June',
-            103 => '18-19 July'
+            103 => '18-19 July',
         ];
         $engine->labels = [
             100 => '27-28 April',
             101 => '3-4 May',
             102 => '1-2 June',
-            103 => '18-19 July'
+            103 => '18-19 July',
         ];
         $engine->data   = [
             '' => [100 => 10, 101 => 11],
             1  => [102 => 13],
-            2  => [102 => 14, 103 => 15]
+            2  => [102 => 14, 103 => 15],
         ];
 
         $ordered_data = [
@@ -83,7 +83,7 @@ final class BarChartDataBuilderTest extends TestCase
                     [ 'label' => 'None', 'value' => 10 ],
                     [ 'label' => 'Abc', 'value' => '' ],
                     [ 'label' => 'Def', 'value' => '' ],
-                ]
+                ],
             ],
             [
                 'label'  => '3-4 May',
@@ -91,7 +91,7 @@ final class BarChartDataBuilderTest extends TestCase
                     [ 'label' => 'None', 'value' => 11 ],
                     [ 'label' => 'Abc', 'value' => '' ],
                     [ 'label' => 'Def', 'value' => '' ],
-                ]
+                ],
             ],
             [
                 'label'  => '1-2 June',
@@ -99,7 +99,7 @@ final class BarChartDataBuilderTest extends TestCase
                     [ 'label' => 'None', 'value' => '' ],
                     [ 'label' => 'Abc', 'value' => 13 ],
                     [ 'label' => 'Def', 'value' => 14 ],
-                ]
+                ],
             ],
             [
                 'label'  => '18-19 July',
@@ -107,8 +107,8 @@ final class BarChartDataBuilderTest extends TestCase
                     [ 'label' => 'None', 'value' => '' ],
                     [ 'label' => 'Abc', 'value' => '' ],
                     [ 'label' => 'Def', 'value' => 15 ],
-                ]
-            ]
+                ],
+            ],
         ];
 
         $builder = new BarChartDataBuilder();
@@ -120,10 +120,10 @@ final class BarChartDataBuilderTest extends TestCase
     {
         $engine        = new GraphOnTrackersV5_Engine_Bar();
         $engine->xaxis = [
-            '' => 'None'
+            '' => 'None',
         ];
         $engine->data  = [
-            377 => ['' => 1]
+            377 => ['' => 1],
         ];
 
         $builder = new BarChartDataBuilder();

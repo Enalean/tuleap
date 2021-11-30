@@ -45,7 +45,7 @@ class TokenRequestCreator
     public function __construct(
         RequestFactoryInterface $http_request_factory,
         StreamFactoryInterface $stream_factory,
-        BasicAuth $basic_auth
+        BasicAuth $basic_auth,
     ) {
         $this->http_request_factory = $http_request_factory;
         $this->stream_factory       = $stream_factory;

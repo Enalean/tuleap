@@ -36,7 +36,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
         Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user,
         UserXMLExporter $user_xml_exporter,
-        $is_in_archive_context
+        $is_in_archive_context,
     ): Tracker_XML_Exporter_ArtifactXMLExporter {
         $file_info_xml_exporter = new FileInfoXMLExporter($file_path_xml_exporter);
 

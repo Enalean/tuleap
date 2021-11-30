@@ -74,7 +74,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
         string $change_user_display_name,
         array $owners_without_change_user,
         NotificationEnhancedContent $enhanced_content,
-        array $new_commits
+        array $new_commits,
     ) {
         $this->pull_request             = $pull_request;
         $this->change_user_display_name = $change_user_display_name;
@@ -98,7 +98,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
         array $owners,
         GitResourceAccessor $git_resource_accessor,
         RepositoryURLToCommitBuilder $repository_url_to_commit_builder,
-        array $new_commit_references
+        array $new_commit_references,
     ): ?self {
         $commit_presenters = self::buildCommitPresenters($git_resource_accessor, $repository_url_to_commit_builder, ...$new_commit_references);
         if (empty($commit_presenters)) {
@@ -136,7 +136,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
     private static function buildCommitPresenters(
         GitResourceAccessor $git_resource_accessor,
         RepositoryURLToCommitBuilder $repository_url_to_commit_builder,
-        string ...$commit_references
+        string ...$commit_references,
     ): array {
         $presenters = [];
         foreach ($commit_references as $commit_reference) {

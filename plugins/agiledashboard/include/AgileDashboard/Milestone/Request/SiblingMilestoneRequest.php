@@ -61,7 +61,7 @@ final class SiblingMilestoneRequest
         \Planning_Milestone $reference_milestone,
         int $limit,
         int $offset,
-        ISearchOnStatus $status_query
+        ISearchOnStatus $status_query,
     ) {
         $this->user                = $user;
         $this->reference_milestone = $reference_milestone;

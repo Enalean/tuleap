@@ -93,8 +93,8 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_id => [
                     'item_id' => $this->item_id,
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION
-                ]
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+                ],
             ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
@@ -119,7 +119,7 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
 
-                ]
+                ],
             ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
@@ -144,7 +144,7 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
 
-                ]
+                ],
             ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
@@ -168,8 +168,8 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_id => [
                     'item_id' => $this->item_id,
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION
-                ]
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+                ],
             ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
@@ -196,8 +196,8 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_id => [
                     'item_id' => '65',
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-                ]
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
+                ],
             ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
@@ -221,8 +221,8 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_id => [
                     'item_id' => $this->item_id,
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION
-                ]
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+                ],
             ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
@@ -254,7 +254,7 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'item_id' => $item_id,
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
                 ]
             )
         );
@@ -270,7 +270,7 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'item_id' => $item_id,
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
                 ]
             )
         );

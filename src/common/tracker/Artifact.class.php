@@ -3297,7 +3297,7 @@ class Artifact
                     [
                         'id' => 'comment_' . (int) $comment_id . '_toggle',
                         'style' => 'vertical-align:middle; cursor:hand; cursor:pointer;',
-                        'title' => addslashes($GLOBALS['Language']->getText('tracker_include_artifact', 'toggle'))
+                        'title' => addslashes($GLOBALS['Language']->getText('tracker_include_artifact', 'toggle')),
                     ]
                 );
                 $out .= '</span>\');</script>';

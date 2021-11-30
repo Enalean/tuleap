@@ -37,7 +37,7 @@ class HiddenFieldsetsValueUpdater implements PostActionUpdater
 
     public function __construct(
         HiddenFieldsetsValueRepository $hidden_fieldsets_value_repository,
-        HiddenFieldsetsValueValidator $hidden_fieldsets_value_validator
+        HiddenFieldsetsValueValidator $hidden_fieldsets_value_validator,
     ) {
         $this->hidden_fieldsets_value_repository = $hidden_fieldsets_value_repository;
         $this->hidden_fieldsets_value_validator  = $hidden_fieldsets_value_validator;

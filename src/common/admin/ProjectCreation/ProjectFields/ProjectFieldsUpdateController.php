@@ -43,7 +43,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
 
     public function __construct(
         ProjectsFieldDescriptionUpdater $description_updater,
-        ProjectFieldsDao $project_fields_dao
+        ProjectFieldsDao $project_fields_dao,
     ) {
         $this->description_updater = $description_updater;
         $this->project_fields_dao  = $project_fields_dao;

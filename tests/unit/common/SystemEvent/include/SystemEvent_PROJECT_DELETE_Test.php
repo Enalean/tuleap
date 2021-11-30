@@ -61,7 +61,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -158,7 +158,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -255,7 +255,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -351,7 +351,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -448,7 +448,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -545,7 +545,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -642,7 +642,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -739,7 +739,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -836,7 +836,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -933,7 +933,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -1030,7 +1030,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -1127,7 +1127,7 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()

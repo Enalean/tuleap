@@ -43,7 +43,7 @@ class Git_AdminMAllowedProjectsPresenter
     public function __construct(
         Git_Mirror_Mirror $mirror,
         array $allowed_projects,
-        $is_mirror_restricted
+        $is_mirror_restricted,
     ) {
         $this->mirror                 = $mirror;
         $this->allowed_projects       = $allowed_projects;

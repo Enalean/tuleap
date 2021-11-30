@@ -69,7 +69,7 @@ class ProjectTest extends TestBase
     {
         $query = http_build_query(
             [
-                'query' => json_encode(['name' => 'repo01'])
+                'query' => json_encode(['name' => 'repo01']),
             ]
         );
 

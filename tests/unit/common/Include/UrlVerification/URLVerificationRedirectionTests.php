@@ -63,7 +63,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = [
             'HTTP_HOST'   => 'example.com',
-            'REQUEST_URI' => ''
+            'REQUEST_URI' => '',
         ];
         $chunks = ['protocol' => 'https'];
 
@@ -77,7 +77,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = [
             'HTTP_HOST'   => 'test.example.com',
-            'REQUEST_URI' => '/user.php'
+            'REQUEST_URI' => '/user.php',
         ];
         $chunks = ['protocol' => 'http', 'host' => 'secure.example.com'];
 
@@ -93,7 +93,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = [
             'HTTP_HOST'   => 'secure.example.com',
-            'REQUEST_URI' => '/user.php'
+            'REQUEST_URI' => '/user.php',
         ];
         $chunks = ['script' => '/project.php'];
 
@@ -114,7 +114,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 
         $server = [
             'REQUEST_URI' => '/search/',
-            'SCRIPT_NAME' => 'blah'
+            'SCRIPT_NAME' => 'blah',
         ];
 
         $url = Mockery::mock(URL::class);
@@ -151,7 +151,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 
         $server = [
             'REQUEST_URI' => '/search/',
-            'SCRIPT_NAME' => 'blah'
+            'SCRIPT_NAME' => 'blah',
         ];
 
         $this->url_verification->shouldReceive('displayRestrictedUserError')->once();
@@ -173,7 +173,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 
         $server = [
             'REQUEST_URI' => '/search/',
-            'SCRIPT_NAME' => 'blah'
+            'SCRIPT_NAME' => 'blah',
         ];
 
         $this->url_verification->shouldReceive('restrictedUserCanAccessUrl')->andReturn(false);
@@ -195,7 +195,7 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 
         $server = [
             'REQUEST_URI' => '/search/',
-            'SCRIPT_NAME' => 'blah'
+            'SCRIPT_NAME' => 'blah',
         ];
 
         $this->url_verification->shouldReceive('restrictedUserCanAccessUrl')->andReturn(false);

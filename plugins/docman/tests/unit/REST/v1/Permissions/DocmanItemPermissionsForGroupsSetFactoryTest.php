@@ -81,7 +81,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends \Tuleap\Test\PH
         $representation->can_write                  = [$project_member_write_representation];
         $representation->can_manage                 = [
             $user_group_management_representation_2,
-            $user_group_management_representation_1
+            $user_group_management_representation_1,
         ];
 
         $item->shouldReceive('getId')->andReturn(18);

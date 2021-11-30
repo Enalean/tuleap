@@ -96,7 +96,7 @@ class MimeDetector
         'vb'            => 'text/x-vb',
         'xml'           => 'application/xml',
         'yml'           => 'text/x-yaml',
-        'yaml'          => 'text/x-yaml'
+        'yaml'          => 'text/x-yaml',
     ];
 
     public static function getMimeInfo(string $file_path, string $dest_content, string $src_content): array

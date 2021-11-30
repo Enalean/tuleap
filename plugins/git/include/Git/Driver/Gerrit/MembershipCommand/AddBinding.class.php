@@ -32,7 +32,7 @@ class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_M
         Git_Driver_Gerrit_MembershipManager $membership_manager,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         ProjectUGroup $ugroup,
-        ProjectUGroup $source_ugroup
+        ProjectUGroup $source_ugroup,
     ) {
         parent::__construct($membership_manager, $driver_factory, $ugroup);
         $this->source_ugroup = $source_ugroup;

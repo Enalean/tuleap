@@ -65,7 +65,7 @@ class KanbanXmlImporter
         AgileDashboard_ConfigurationManager $agile_dashboard_configuration_manager,
         AgileDashboard_KanbanColumnManager $dashboard_kanban_column_manager,
         AgileDashboard_KanbanFactory $dashboard_kanban_factory,
-        AgileDashboard_KanbanColumnFactory $dashboard_kanban_column_factory
+        AgileDashboard_KanbanColumnFactory $dashboard_kanban_column_factory,
     ) {
         $this->logger                                = $logger;
         $this->kanban_manager                        = $kanban_manager;
@@ -81,7 +81,7 @@ class KanbanXmlImporter
         Project $project,
         TrackerXmlFieldsMapping $field_mapping,
         PFUser $user,
-        MappingsRegistry $mappings_registry
+        MappingsRegistry $mappings_registry,
     ) {
         if (! $xml->agiledashboard->kanban_list) {
             $this->logger->info("0 Kanban found");

@@ -39,7 +39,7 @@ final class ConfigurationErrorPresenterBuilder
         private ConfigurationErrorsGatherer $errors_gatherer,
         private RetrievePlannableTrackers $plannable_trackers_retriever,
         private VerifyTrackerSemantics $verify_tracker_semantics,
-        private \TrackerFactory $tracker_factory
+        private \TrackerFactory $tracker_factory,
     ) {
     }
 
@@ -47,7 +47,7 @@ final class ConfigurationErrorPresenterBuilder
         TrackerReference $program_increment_tracker,
         ?ProgramIdentifier $program,
         UserReference $user,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerErrorPresenter {
         if (! $program) {
             return null;
@@ -59,7 +59,7 @@ final class ConfigurationErrorPresenterBuilder
     public function buildIterationErrorPresenter(
         ?TrackerReference $iteration_tracker,
         UserReference $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerErrorPresenter {
         if (! $iteration_tracker) {
             return null;
@@ -71,7 +71,7 @@ final class ConfigurationErrorPresenterBuilder
     private function buildTrackerErrorPresenter(
         TrackerReference $tracker,
         UserReference $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerErrorPresenter {
         return TrackerErrorPresenter::fromTracker(
             $this->errors_gatherer,
@@ -83,7 +83,7 @@ final class ConfigurationErrorPresenterBuilder
 
     public function buildPlannableErrorPresenter(
         ProgramIdentifier $program,
-        ConfigurationErrorsCollector $plannable_error_collector
+        ConfigurationErrorsCollector $plannable_error_collector,
     ): ?TrackerErrorPresenter {
         $plannable_tracker = $this->plannable_trackers_retriever->getPlannableTrackersOfProgram($program->getId());
         foreach ($plannable_tracker as $tracker_id) {

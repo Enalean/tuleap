@@ -45,7 +45,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         $form_element_data['bind']      = [
             'value_function' => [
                 'artifact_modifiers',
-            ]
+            ],
         ];
         parent::afterCreate($form_element_data, $tracker_is_empty);
     }
@@ -120,7 +120,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         return false;
     }
@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
     }
@@ -208,7 +208,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
@@ -229,7 +229,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
 
@@ -254,7 +254,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         $submitted_value,
         PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
-        ?bool $is_submission = null
+        ?bool $is_submission = null,
     ): bool {
         if ($submitted_value !== null) {
             $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'The field "%1$s" will not be taken into account.'), $this->getName()));

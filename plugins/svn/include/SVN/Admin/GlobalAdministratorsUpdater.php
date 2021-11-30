@@ -47,7 +47,7 @@ class GlobalAdministratorsUpdater
 
     public function saveAdminGroups(
         HTTPRequest $request,
-        BaseLayout $layout
+        BaseLayout $layout,
     ): void {
         $project = $request->getProject();
 

@@ -37,7 +37,7 @@ class MessageDataPresenter
         $room_id,
         MessageRightsPresenter $rights,
         $cmd,
-        $data
+        $data,
     ) {
         $this->sender_user_id = intval($sender_user_id);
         $this->sender_uuid    = $uuid;

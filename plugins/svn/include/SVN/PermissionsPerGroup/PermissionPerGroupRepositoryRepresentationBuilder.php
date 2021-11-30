@@ -56,7 +56,7 @@ class PermissionPerGroupRepositoryRepresentationBuilder
             [
                 'group_id' => $repository->getProject()->getID(),
                 'action'   => 'access-control',
-                'repo_id'  => $repository->getId()
+                'repo_id'  => $repository->getId(),
             ]
         );
     }

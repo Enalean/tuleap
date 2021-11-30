@@ -75,7 +75,7 @@ class XMLImport
         string $extraction_path,
         array $tracker_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        ImportedChangesetMapping $changeset_mapping
+        ImportedChangesetMapping $changeset_mapping,
     ): void {
         $xml_path = $extraction_path . '/testmanagement.xml';
         if (! file_exists($xml_path)) {
@@ -147,7 +147,7 @@ class XMLImport
         int $definition_tracker_id,
         SimpleXMLElement $xml,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        ImportedChangesetMapping $changeset_mapping
+        ImportedChangesetMapping $changeset_mapping,
     ): void {
         if (! $execution_tracker_id) {
             return;

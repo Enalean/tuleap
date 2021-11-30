@@ -41,7 +41,7 @@ class XML_SimpleXMLCDATAFactory
         SimpleXMLElement $parent_node,
         string $node_name,
         string $node_value,
-        array $attributes
+        array $attributes,
     ): SimpleXMLElement {
         $node = $parent_node->addChild($node_name);
         foreach ($attributes as $name => $value) {

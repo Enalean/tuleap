@@ -57,7 +57,7 @@ class AdditionalMasschangeActionProcessor
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlannedArtifactDao $planned_artifact_dao,
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
         $this->planned_artifact_dao              = $planned_artifact_dao;
@@ -69,7 +69,7 @@ class AdditionalMasschangeActionProcessor
         PFUser $user,
         Tracker $tracker,
         Codendi_Request $request,
-        array $masschange_aids
+        array $masschange_aids,
     ): void {
         if (! $tracker->userIsAdmin($user)) {
             return;

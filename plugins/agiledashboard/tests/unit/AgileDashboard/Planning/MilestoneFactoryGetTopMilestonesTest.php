@@ -136,7 +136,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
 
         $my_artifacts = [
             $artifact_1,
-            $artifact_2
+            $artifact_2,
         ];
 
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
@@ -176,7 +176,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
 
         $my_artifacts = [
             $artifact_1,
-            $artifact_2
+            $artifact_2,
         ];
 
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')

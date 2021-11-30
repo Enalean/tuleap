@@ -86,7 +86,7 @@ class BatchSuccessfulResponseBuilder
         AdminDao $admin_dao,
         ProjectQuotaChecker $project_quota_checker,
         \Psr\Log\LoggerInterface $logger,
-        Prometheus $prometheus
+        Prometheus $prometheus,
     ) {
         $this->authorization_token_creator = $authorization_token_creator;
         $this->token_header_formatter      = $token_header_formatter;
@@ -102,7 +102,7 @@ class BatchSuccessfulResponseBuilder
         $server_url,
         \GitRepository $repository,
         BatchRequestOperation $operation,
-        LFSObject ...$request_objects
+        LFSObject ...$request_objects,
     ) {
         $response_objects = null;
         if ($operation->isUpload()) {
@@ -136,7 +136,7 @@ class BatchSuccessfulResponseBuilder
         \DateTimeImmutable $current_time,
         $server_url,
         \GitRepository $repository,
-        LFSObject ...$request_objects
+        LFSObject ...$request_objects,
     ) {
         $existing_objects = $this->lfs_object_retriever->getExistingLFSObjectsFromTheSetForRepository(
             $repository,
@@ -219,7 +219,7 @@ class BatchSuccessfulResponseBuilder
         \DateTimeImmutable $current_time,
         $server_url,
         \GitRepository $repository,
-        LFSObject ...$request_objects
+        LFSObject ...$request_objects,
     ) {
         $existing_objects = $this->lfs_object_retriever->getExistingLFSObjectsFromTheSetForRepository(
             $repository,
@@ -259,7 +259,7 @@ class BatchSuccessfulResponseBuilder
         LFSObject $request_object,
         $expiration_delay,
         ActionAuthorizationType $action_type,
-        BatchResponseActionHref $action_href
+        BatchResponseActionHref $action_href,
     ) {
         $authorization       = new ActionAuthorizationRequest(
             $repository,

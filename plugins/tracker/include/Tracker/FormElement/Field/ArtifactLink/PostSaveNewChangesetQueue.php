@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
         foreach ($this->queue as $command) {
             $command->execute($artifact, $submitter, $new_changeset, $fields_data, $previous_changeset);

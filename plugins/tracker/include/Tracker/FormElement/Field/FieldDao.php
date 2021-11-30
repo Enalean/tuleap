@@ -524,7 +524,7 @@ class FieldDao extends DataAccessObject
         $notifications,
         $rank,
         $original_field_id,
-        $force_absolute_ranking
+        $force_absolute_ranking,
     ) {
         $type          = $this->da->quoteSmart($type);
         $tracker_id    = $this->da->escapeInt($tracker_id);

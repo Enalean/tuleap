@@ -406,7 +406,7 @@ class PiePlot3D extends PiePlot
         $shadow = 0.65,
         $startangle = 0,
         $edgecolor = "",
-        $edgeweight = 1
+        $edgeweight = 1,
     ) {
         //---------------------------------------------------------------------------
         // As usual the algorithm get more complicated than I originally

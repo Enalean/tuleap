@@ -48,7 +48,7 @@ class HiddenFieldsetsDetector
     public function __construct(
         TransitionRetriever $transition_retriever,
         HiddenFieldsetsRetriever $hidden_fieldsets_retriever,
-        Tracker_FormElementFactory $form_element_factory
+        Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->transition_retriever       = $transition_retriever;
         $this->hidden_fieldsets_retriever = $hidden_fieldsets_retriever;

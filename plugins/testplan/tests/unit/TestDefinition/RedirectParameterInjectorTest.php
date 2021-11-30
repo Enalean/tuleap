@@ -221,7 +221,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 'ttm_backlog_item_id' => "123",
-                'ttm_milestone_id'    => "42"
+                'ttm_milestone_id'    => "42",
             ],
             $redirect->query_parameters
         );
@@ -235,21 +235,21 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
                 static function (string $content_to_display): bool {
                     return strpos($content_to_display, 'My story') !== false &&
                            strpos($content_to_display, 'story #123') !== false;
-                }
+                },
             ],
             'Edit test definition' => [
                 [],
                 static function (string $content_to_display): bool {
                     return strpos($content_to_display, 'My story') !== false &&
                            strpos($content_to_display, 'story #123') !== false;
-                }
+                },
             ],
             'Edit backlog definition' => [
                 ['aid' => '123'],
                 static function (string $content_to_display): bool {
                     return strpos($content_to_display, 'Some milestone') !== false &&
                            strpos($content_to_display, 'rel #42') !== false;
-                }
+                },
             ],
         ];
     }

@@ -52,7 +52,7 @@ final class ProgramPlannableTrackerCollection
     public static function fromIds(
         RetrieveTracker $tracker_retriever,
         array $plannable_trackers_id,
-        ProgramForAdministrationIdentifier $program
+        ProgramForAdministrationIdentifier $program,
     ): self {
         $trackers = [];
         foreach ($plannable_trackers_id as $tracker_id) {

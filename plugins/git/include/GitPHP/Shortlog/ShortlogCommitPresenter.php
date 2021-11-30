@@ -43,7 +43,7 @@ class ShortlogCommitPresenter
 
     public function __construct(
         Commit $commit,
-        CommitMetadata $commit_metadata
+        CommitMetadata $commit_metadata,
     ) {
         $this->commit   = $commit;
         $this->short_id = substr($commit->GetHash(), 0, 10);

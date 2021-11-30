@@ -31,7 +31,7 @@ class ProjectTest extends TrackerBase
     public function testItFiltersProjectsWithTrackerAdministrationPermission()
     {
         $url = 'projects?' . http_build_query([
-            'limit' => 50, 'offset' => 0
+            'limit' => 50, 'offset' => 0,
         ]);
 
         $response      = $this->getResponse($this->request_factory->createRequest('GET', $url), DataBuilder::USER_TESTER_NAME);
@@ -43,7 +43,7 @@ class ProjectTest extends TrackerBase
         $url = 'projects?' . http_build_query([
             'query'  => '{"is_tracker_admin":true}',
             'limit'  => 50,
-            'offset' => 0
+            'offset' => 0,
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url), DataBuilder::USER_TESTER_NAME);

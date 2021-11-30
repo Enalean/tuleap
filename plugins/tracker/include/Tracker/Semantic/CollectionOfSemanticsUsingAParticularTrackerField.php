@@ -32,7 +32,7 @@ final class CollectionOfSemanticsUsingAParticularTrackerField
 
     public function __construct(
         \Tracker_FormElement_Field $field,
-        array $semantics
+        array $semantics,
     ) {
         $this->tracker   = $field->getTracker();
         $this->semantics = $semantics;

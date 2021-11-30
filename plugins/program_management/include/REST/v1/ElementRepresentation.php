@@ -48,7 +48,7 @@ class ElementRepresentation
         int $id,
         string $uri,
         string $xref,
-        ?string $title
+        ?string $title,
     ) {
         $this->id    = $id;
         $this->uri   = $uri;

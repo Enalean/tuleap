@@ -98,7 +98,7 @@ class GitCommitRepresentationBuilder
         string $message,
         GitCommitVerificationRepresentation $verification,
         CommitMetadata $metadata,
-        GitRepository $repository
+        GitRepository $repository,
     ): GitCommitRepresentation {
         return new GitCommitRepresentation(
             $commit->GetHash(),

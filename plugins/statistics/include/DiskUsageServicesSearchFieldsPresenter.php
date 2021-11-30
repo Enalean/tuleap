@@ -39,7 +39,7 @@ class DiskUsageServicesSearchFieldsPresenter extends DiskUsageSearchFieldsPresen
         $group_by_values,
         $start_date_value,
         $end_date_value,
-        $relative_y_axis_value
+        $relative_y_axis_value,
     ) {
         parent::__construct($service_values, $fields_values_url, $start_date_value, $end_date_value);
 

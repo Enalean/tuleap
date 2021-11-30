@@ -42,7 +42,7 @@ class SetFieldValueRepresentation extends PostActionRepresentation
     public const DATE_VALUE_MAPPING = [
         0 => self::UNSET_DATE_VALUE,
         Transition_PostAction_Field_Date::CLEAR_DATE => self::EMPTY_DATE_VALUE,
-        Transition_PostAction_Field_Date::FILL_CURRENT_TIME => self::CURRENT_DATE_VALUE
+        Transition_PostAction_Field_Date::FILL_CURRENT_TIME => self::CURRENT_DATE_VALUE,
     ];
 
     /**

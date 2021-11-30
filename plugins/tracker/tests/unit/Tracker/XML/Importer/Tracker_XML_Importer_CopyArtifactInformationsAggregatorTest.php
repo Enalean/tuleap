@@ -49,7 +49,7 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
 
         $expected_logs = [
             "[error] this is an error",
-            "[warning] this is a warning"
+            "[warning] this is a warning",
         ];
         $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }
@@ -72,7 +72,7 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
 
         $expected_logs = [
             "[error] this is an error",
-            "[warning] this is a warning"
+            "[warning] this is a warning",
         ];
         $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }

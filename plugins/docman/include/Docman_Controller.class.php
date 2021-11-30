@@ -133,7 +133,7 @@ class Docman_Controller extends Controler
     private function cloneDocman(
         int $source_project_id,
         Project $destination_project,
-        ?MappingRegistry $mapping_registry
+        ?MappingRegistry $mapping_registry,
     ): void {
         $user                   = $this->getUser();
         $destination_project_id = (int) $destination_project->getID();

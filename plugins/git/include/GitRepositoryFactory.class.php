@@ -132,7 +132,7 @@ class GitRepositoryFactory
         $order_by,
         $limit,
         $offset,
-        &$total_number_repositories
+        &$total_number_repositories,
     ) {
         $repositories              = [];
         $repository_list           = $this->dao->getPaginatedOpenRepositories(

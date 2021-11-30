@@ -46,7 +46,7 @@ class ProjectCreationDataServiceFromXmlInheritor
      */
     public function markUsedServicesFromXML(
         SimpleXMLElement $xml,
-        Project $template
+        Project $template,
     ): array {
         $data_services = [];
 

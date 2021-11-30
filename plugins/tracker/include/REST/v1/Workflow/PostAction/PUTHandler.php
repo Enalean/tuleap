@@ -83,7 +83,7 @@ class PUTHandler
         TrackerChecker $tracker_checker,
         DBTransactionExecutor $transaction_executor,
         StateFactory $state_factory,
-        TransitionUpdater $transition_updater
+        TransitionUpdater $transition_updater,
     ) {
         $this->transitions_permissions_checker    = $transitions_permissions_checker;
         $this->project_status_verificator         = $project_status_verificator;
@@ -108,7 +108,7 @@ class PUTHandler
     public function handle(
         PFUser $current_user,
         Transition $transition,
-        PostActionsPUTRepresentation $post_actions_representation
+        PostActionsPUTRepresentation $post_actions_representation,
     ) {
         $this->transitions_permissions_checker->checkRead($current_user, $transition);
         $workflow = $transition->getWorkflow();

@@ -41,14 +41,14 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
         private CheckProjectAccess $project_access_checker,
         private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao,
         private RetrieveUser $user_manager,
-        private VerifyUserIsProgramAdmin $verify_user_is_program_admin
+        private VerifyUserIsProgramAdmin $verify_user_is_program_admin,
     ) {
     }
 
     public function canUserPrioritizeFeatures(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): bool {
         if ($bypass) {
             return true;

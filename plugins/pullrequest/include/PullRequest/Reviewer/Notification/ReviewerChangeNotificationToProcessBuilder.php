@@ -49,7 +49,7 @@ final class ReviewerChangeNotificationToProcessBuilder implements NotificationTo
     public function __construct(
         ReviewerChangeRetriever $reviewer_change_retriever,
         UserHelper $user_helper,
-        HTMLURLBuilder $html_url_builder
+        HTMLURLBuilder $html_url_builder,
     ) {
         $this->reviewer_change_retriever = $reviewer_change_retriever;
         $this->user_helper               = $user_helper;

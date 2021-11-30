@@ -51,7 +51,7 @@ class PlatformConfigurationForExternalPluginsEvent implements Dispatchable
     public function __construct(
         JiraClient $jira_client,
         PlatformConfiguration $platform_configuration,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->jira_client            = $jira_client;
         $this->platform_configuration = $platform_configuration;

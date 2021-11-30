@@ -74,7 +74,7 @@ class KanbanColumnRepresentation
         AgileDashboard_KanbanColumn $column,
         $user_can_add_in_place,
         $user_can_remove_column,
-        $user_can_edit_label
+        $user_can_edit_label,
     ) {
         $this->id                     = JsonCast::toInt($column->getId());
         $this->label                  = $column->getLabel();

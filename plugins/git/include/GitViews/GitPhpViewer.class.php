@@ -38,7 +38,7 @@ class GitViews_GitPhpViewer
         'search',
         'tree',
         'tag',
-        false
+        false,
     ];
 
     /**

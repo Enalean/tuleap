@@ -57,7 +57,7 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         foreach ($plan->getPlannableTrackerIds() as $plannable_tracker_id) {
             $insert[] = [
                 'project_id'           => $project_id,
-                'plannable_tracker_id' => $plannable_tracker_id
+                'plannable_tracker_id' => $plannable_tracker_id,
             ];
         }
         $this->getDB()->insertMany('plugin_program_management_plan', $insert);
@@ -73,7 +73,7 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         foreach ($plan->getCanPrioritize() as $can_prioritize_ugroup) {
             $insert[] = [
                 'project_id'    => $plan->getProjectId(),
-                'user_group_id' => $can_prioritize_ugroup->getId()
+                'user_group_id' => $can_prioritize_ugroup->getId(),
             ];
         }
         $this->getDB()->insertMany('plugin_program_management_can_prioritize_features', $insert);
@@ -88,7 +88,7 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
 
         $insert = [
             'program_project_id'   => $project_id,
-            'program_increment_tracker_id' => $plan->getProgramIncrementTracker()->getId()
+            'program_increment_tracker_id' => $plan->getProgramIncrementTracker()->getId(),
         ];
 
         if ($plan->getIterationTracker()) {

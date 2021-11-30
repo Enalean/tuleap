@@ -259,7 +259,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 "",
                 'text',
                 0,
-                []
+                [],
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -280,7 +280,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 " ",
                 'html',
                 1234,
-                []
+                [],
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $user    = $this->getAMockedUser();
@@ -305,7 +305,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 $body,
                 'html',
                 0,
-                []
+                [],
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $user      = $this->getAMockedUser();
@@ -335,7 +335,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 $body,
                 'html',
                 1234,
-                []
+                [],
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $user      = $this->getAMockedUser();

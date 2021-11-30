@@ -46,7 +46,7 @@ class PreviouslySavedReferencesRetriever
     public function __construct(
         TuleapReferencesFromMergeRequestDataExtractor $references_from_merge_request_data_extractor,
         TuleapReferenceRetriever $tuleap_reference_retriever,
-        MergeRequestTuleapReferenceDao $merge_request_reference_dao
+        MergeRequestTuleapReferenceDao $merge_request_reference_dao,
     ) {
         $this->references_from_merge_request_data_extractor = $references_from_merge_request_data_extractor;
         $this->tuleap_reference_retriever                   = $tuleap_reference_retriever;
@@ -58,7 +58,7 @@ class PreviouslySavedReferencesRetriever
      */
     public function retrievePreviousReferences(
         PostMergeRequestWebhookData $webhook_data,
-        GitlabRepositoryIntegration $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration,
     ): array {
         $previously_saved_merge_request_row = $this->merge_request_reference_dao->searchMergeRequestInRepositoryWithId(
             $gitlab_repository_integration->getId(),

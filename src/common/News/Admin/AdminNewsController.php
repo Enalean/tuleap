@@ -41,7 +41,7 @@ class AdminNewsController
     public function __construct(
         AdminNewsDao $admin_news_dao,
         AdminPageRenderer $admin_page_renderer,
-        AdminNewsBuilder $admin_news_builder
+        AdminNewsBuilder $admin_news_builder,
     ) {
         $this->admin_news_dao      = $admin_news_dao;
         $this->admin_page_renderer = $admin_page_renderer;

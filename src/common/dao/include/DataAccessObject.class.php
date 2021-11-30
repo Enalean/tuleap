@@ -291,7 +291,7 @@ class DataAccessObject
         $parent_key = 'parent_id',
         $rank_key = 'rank',
         ?string $parent_group_key = null,
-        ?int $parent_group_id = null
+        ?int $parent_group_id = null,
     ) {
         $newRank = null;
 

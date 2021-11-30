@@ -39,8 +39,8 @@ class CommitStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'commit_reference' => '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
                 'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
-                'date'             => 1528892466
-            ]
+                'date'             => 1528892466,
+            ],
         ]);
         $repository->shouldReceive('getId');
 
@@ -83,13 +83,13 @@ class CommitStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'commit_reference' => '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
                 'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
-                'date'             => 1528892466
+                'date'             => 1528892466,
             ],
             [
                 'commit_reference' => '23badb142cabe3e604ceb5fd5d243354e8e9f491',
                 'status'           => CommitStatusWithKnownStatus::STATUS_FAILURE,
-                'date'             => 1528898888
-            ]
+                'date'             => 1528898888,
+            ],
         ]);
         $repository->shouldReceive('getId');
 

@@ -66,7 +66,7 @@ class TimeUpdater
         Artifact $artifact,
         $added_date,
         $added_time,
-        $added_step
+        $added_step,
     ) {
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
             throw new TimeTrackingNotAllowedToAddException();

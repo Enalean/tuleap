@@ -45,14 +45,14 @@ final class ProgramIncrementsCreator implements CreateProgramIncrements
         private DBTransactionExecutor $transaction_executor,
         private MapStatusByValue $status_mapper,
         private CreateArtifact $artifact_creator,
-        private GatherSynchronizedFields $gather_synchronized_fields
+        private GatherSynchronizedFields $gather_synchronized_fields,
     ) {
     }
 
     public function createProgramIncrements(
         SourceTimeboxChangesetValues $values,
         MirroredProgramIncrementTrackerIdentifierCollection $mirrored_trackers,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): void {
         $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
             $values->getSourceTimebox(),
@@ -80,7 +80,7 @@ final class ProgramIncrementsCreator implements CreateProgramIncrements
         MirroredProgramIncrementTrackerIdentifier $mirrored_program_increment_tracker,
         SourceTimeboxChangesetValues $values,
         ArtifactLinkValue $artifact_link_value,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): void {
         $changeset = MirroredTimeboxFirstChangeset::fromMirroredTimeboxTracker(
             $this->gather_synchronized_fields,

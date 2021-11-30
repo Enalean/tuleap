@@ -34,7 +34,7 @@ class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->template = [
             'name' => 'template-name',
-            'id'   => 120
+            'id'   => 120,
         ];
         $this->project  = Mockery::mock(Project::class);
         $this->project->shouldReceive('getGroupId')->andReturn(101);

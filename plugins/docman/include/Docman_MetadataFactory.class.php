@@ -44,7 +44,7 @@ class Docman_MetadataFactory
         'create_date',
         'update_date',
         'status',
-        'obsolescence_date'
+        'obsolescence_date',
     ];
 
 

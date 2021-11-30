@@ -48,7 +48,7 @@ final class PlatformBannerAdministrationController implements DispatchableWithRe
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
         IncludeAssets $banner_assets,
-        BannerRetriever $banner_retriever
+        BannerRetriever $banner_retriever,
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
         $this->banner_assets       = $banner_assets;

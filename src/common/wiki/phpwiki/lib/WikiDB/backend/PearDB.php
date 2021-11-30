@@ -583,7 +583,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = ''
+        $exclude = '',
     ) {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
@@ -1261,7 +1261,7 @@ class WikiDB_backend_PearDB_generic_iter extends WikiDB_backend_iterator
     public function __construct(
         $backend,
         $query_result,
-        $field_list = null
+        $field_list = null,
     ) {
         if (DB::isError($query_result)) {
             // This shouldn't happen, I thought.

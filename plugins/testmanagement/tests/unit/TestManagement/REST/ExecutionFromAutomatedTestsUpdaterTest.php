@@ -127,7 +127,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
                 <testsuite>
                     <testcase name="firsttest" time="5.649"></testcase>
                 </testsuite>
-             </testsuites>'
+             </testsuites>',
         ];
 
         $this->tests_data_extractor
@@ -143,7 +143,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
                 5,
                 "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
                 $execution_1,
-                $this->user
+                $this->user,
             ]
         )->once()->andReturn(['changed']);
 
@@ -151,7 +151,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
             [
                 $execution_1,
                 ['changed'],
-                $this->user
+                $this->user,
             ]
         );
 
@@ -209,7 +209,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
                         <failure>this is a failure</failure>
                     </testcase>
                 </testsuite>
-             </testsuites>'
+             </testsuites>',
         ];
 
         $this->tests_data_extractor
@@ -225,7 +225,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
                 5,
                 "Executed 'firsttest' test case. <p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
                 $execution_1,
-                $this->user
+                $this->user,
             ]
         )->once()->andReturn(['changed']);
 
@@ -233,7 +233,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
             [
                 $execution_1,
                 ['changed'],
-                $this->user
+                $this->user,
             ]
         );
 
@@ -245,7 +245,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
                 9,
                 "Executed 'failtest' test case. Got a failure:</br><p>this is a failure</p><p>Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>",
                 $execution_2,
-                $this->user
+                $this->user,
             ]
         )->once()->andReturn(['changed with failure']);
 
@@ -253,7 +253,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
             [
                 $execution_2,
                 ['changed with failure'],
-                $this->user
+                $this->user,
             ]
         );
 
@@ -293,7 +293,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
                         <failure>this is a failure</failure>
                     </testcase>
                 </testsuite>
-             </testsuites>'
+             </testsuites>',
         ];
 
         $this->tests_data_extractor

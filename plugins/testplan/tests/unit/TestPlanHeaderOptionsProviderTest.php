@@ -95,8 +95,8 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getHeaderOptions' => [
-                        'main_classes' => ['toto']
-                    ]
+                        'main_classes' => ['toto'],
+                    ],
                 ]
             );
 
@@ -114,7 +114,7 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->header_options_provider
             ->shouldReceive(
                 [
-                    'getHeaderOptions' => []
+                    'getHeaderOptions' => [],
                 ]
             );
 
@@ -132,7 +132,7 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->header_options_provider
             ->shouldReceive(
                 [
-                    'getHeaderOptions' => []
+                    'getHeaderOptions' => [],
                 ]
             );
 
@@ -150,7 +150,7 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->header_options_provider
             ->shouldReceive(
                 [
-                    'getHeaderOptions' => []
+                    'getHeaderOptions' => [],
                 ]
             );
 
@@ -172,7 +172,7 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->header_options_provider
             ->shouldReceive(
                 [
-                    'getHeaderOptions' => []
+                    'getHeaderOptions' => [],
                 ]
             );
 
@@ -198,7 +198,7 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->header_options_provider
             ->shouldReceive(
                 [
-                    'getHeaderOptions' => []
+                    'getHeaderOptions' => [],
                 ]
             );
 
@@ -234,7 +234,7 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @depends testItAddsLinkToCampaignInCurrentContextSection
      */
     public function testItSetASpecialDataAttributeSoThatTestPlanAppCanSelectItMoreEasily(
-        NewDropdownLinkSectionPresenter $section
+        NewDropdownLinkSectionPresenter $section,
     ): void {
         self::assertEquals('test-plan-create-new-campaign', $section->links[0]->data_attributes[1]->name);
     }
@@ -250,8 +250,8 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                             [
                                 new NewDropdownLinkPresenter('url', 'New story', 'icon', []),
                             ]
-                        )
-                    ]
+                        ),
+                    ],
                 ]
             );
 

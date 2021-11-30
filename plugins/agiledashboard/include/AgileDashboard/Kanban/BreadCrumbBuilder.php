@@ -77,7 +77,7 @@ class BreadCrumbBuilder
                             [
                                 'group_id' => $tracker->getProject()->getID(),
                                 'action'   => 'showKanban',
-                                'id'       => $kanban_id
+                                'id'       => $kanban_id,
                             ]
                         )
                     )

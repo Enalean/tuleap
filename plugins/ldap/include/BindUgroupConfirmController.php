@@ -107,7 +107,7 @@ class BindUgroupConfirmController implements DispatchableWithRequest
                 $to_remove[] = [
                     'display_name' => $this->user_helper->getDisplayNameFromUser($user),
                     'has_avatar'   => $user->hasAvatar(),
-                    'avatar_url'   => $user->getAvatarUrl()
+                    'avatar_url'   => $user->getAvatarUrl(),
                 ];
             }
         }
@@ -119,7 +119,7 @@ class BindUgroupConfirmController implements DispatchableWithRequest
                 $to_add[] = [
                     'display_name' => $this->user_helper->getDisplayNameFromUser($user),
                     'has_avatar'   => $user->hasAvatar(),
-                    'avatar_url'   => $user->getAvatarUrl()
+                    'avatar_url'   => $user->getAvatarUrl(),
                 ];
             }
         }

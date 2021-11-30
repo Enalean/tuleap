@@ -64,7 +64,7 @@ if (svn_utils_svn_repo_exists($project_svnroot)) {
         $select_options[] = [
             'id'      => $row['id'],
             'version' => $row['version_number'],
-            'date'    => format_date("Y-m-d", (float) $row['version_date'], '')
+            'date'    => format_date("Y-m-d", (float) $row['version_date'], ''),
         ];
     }
 

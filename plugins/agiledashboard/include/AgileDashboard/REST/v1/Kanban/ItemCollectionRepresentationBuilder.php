@@ -38,7 +38,7 @@ class ItemCollectionRepresentationBuilder
     public function __construct(
         AgileDashboard_KanbanItemDao $kanban_item_dao,
         Tracker_ArtifactFactory $artifact_factory,
-        ItemRepresentationBuilder $item_representation_builder
+        ItemRepresentationBuilder $item_representation_builder,
     ) {
         $this->kanban_item_dao             = $kanban_item_dao;
         $this->artifact_factory            = $artifact_factory;
@@ -50,7 +50,7 @@ class ItemCollectionRepresentationBuilder
         PFUser $user,
         AgileDashboard_Kanban $kanban,
         $limit,
-        $offset
+        $offset,
     ) {
         if ($column_identifier->isBacklog()) {
             $data = $this->kanban_item_dao->searchPaginatedBacklogItemsByTrackerId(

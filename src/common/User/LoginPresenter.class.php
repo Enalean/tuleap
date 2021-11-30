@@ -45,7 +45,7 @@ class User_LoginPresenter
         CSRFSynchronizerToken $csrf_token,
         string $prompt_parameter,
         $display_new_account_button = true,
-        $allow_password_recovery = true
+        $allow_password_recovery = true,
     ) {
         $this->return_to                  = $return_to;
         $this->pv                         = $pv;

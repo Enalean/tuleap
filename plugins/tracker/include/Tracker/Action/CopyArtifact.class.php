@@ -74,7 +74,7 @@ class Tracker_Action_CopyArtifact
         Tracker_XML_Exporter_ChildrenXMLExporter $children_xml_exporter,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_imported_mapping,
         Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         $this->tracker                    = $tracker;
         $this->artifact_factory           = $artifact_factory;
@@ -91,7 +91,7 @@ class Tracker_Action_CopyArtifact
     public function process(
         Tracker_IDisplayTrackerLayout $layout,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         if (! $this->tracker->userCanSubmitArtifact($current_user)) {
             $this->logsErrorAndRedirectToTracker(
@@ -134,7 +134,7 @@ class Tracker_Action_CopyArtifact
     private function processCopy(
         Tracker_Artifact_Changeset $from_changeset,
         PFUser $current_user,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $current_time  = (new DateTimeImmutable())->setTimestamp($_SERVER['REQUEST_TIME']);
         $xml_artifacts = $this->getXMLRootNode();
@@ -190,7 +190,7 @@ class Tracker_Action_CopyArtifact
     private function importBareArtifacts(
         PFUser $current_user,
         DateTimeImmutable $imported_at,
-        SimpleXMLElement $xml_artifacts
+        SimpleXMLElement $xml_artifacts,
     ) {
         $new_artifacts = [];
         foreach ($xml_artifacts->children() as $xml_artifact) {
@@ -240,7 +240,7 @@ class Tracker_Action_CopyArtifact
     private function addSummaryCommentChangeset(
         Artifact $artifact,
         PFUser $user,
-        Tracker_Artifact_Changeset $from_changeset
+        Tracker_Artifact_Changeset $from_changeset,
     ) {
         $original_artifact = $from_changeset->getArtifact();
         $comment           = $this->logger->getAllLogs();

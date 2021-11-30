@@ -53,7 +53,7 @@ final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEquals([
-            ProgramFlag::fromLabelAndDescription('Top Secret', 'For authorized eyes only')
+            ProgramFlag::fromLabelAndDescription('Top Secret', 'For authorized eyes only'),
         ], $planned_iterations->getProgramFlag());
 
         self::assertEquals(

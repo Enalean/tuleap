@@ -57,7 +57,7 @@ class Snapshot
         PFUser $user,
         DateTimeImmutable $date,
         array $field_snapshots,
-        ?Comment $comment_snapshot
+        ?Comment $comment_snapshot,
     ) {
         $this->user             = $user;
         $this->date             = $date;

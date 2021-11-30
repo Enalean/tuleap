@@ -46,7 +46,7 @@ class MembersPresenterBuilder
     public function __construct(
         EventManager $event_manager,
         UserHelper $user_helper,
-        SynchronizedProjectMembershipDetector $detector
+        SynchronizedProjectMembershipDetector $detector,
     ) {
         $this->event_manager = $event_manager;
         $this->user_helper   = $user_helper;

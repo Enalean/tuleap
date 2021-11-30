@@ -112,7 +112,7 @@ class Dao extends \DataAccessObject
         array $used_labels,
         $content_id,
         $template_project_id,
-        $new_project_id
+        $new_project_id,
     ) {
         try {
             foreach ($used_labels as $used_label) {

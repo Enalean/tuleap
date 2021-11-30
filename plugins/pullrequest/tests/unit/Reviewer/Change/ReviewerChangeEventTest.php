@@ -36,7 +36,7 @@ final class ReviewerChangeEventTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testEventCanBeBuiltFromWorkerEventPayload(): void
     {
         $payload = [
-            'change_id' => 75
+            'change_id' => 75,
         ];
 
         $event = ReviewerChangeEvent::fromWorkerEventPayload($payload);

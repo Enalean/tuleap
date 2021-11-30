@@ -70,7 +70,7 @@ final class GitlabProjectResource extends AuthenticatedResource
     public function getGitlabRepositories(
         int $id,
         int $limit = 10,
-        int $offset = 0
+        int $offset = 0,
     ): array {
         if ($limit > self::MAX_LIMIT) {
             throw new RestException(400);

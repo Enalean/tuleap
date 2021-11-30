@@ -76,7 +76,7 @@ final class SiteDeployFPM
         string $php_configuration_folder,
         string $tuleap_php_configuration_folder,
         array $previous_php_configuration_folders,
-        string $temp_base_directory = '/var/tmp'
+        string $temp_base_directory = '/var/tmp',
     ) {
         $this->logger                             = $logger;
         $this->application_user                   = $application_user;
@@ -111,7 +111,7 @@ final class SiteDeployFPM
     public static function buildForPHP80(
         LoggerInterface $logger,
         string $application_user,
-        bool $development
+        bool $development,
     ): self {
         return new self(
             $logger,

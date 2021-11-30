@@ -30,7 +30,7 @@ class ProjectConfiguredMetadataRepresentation
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',
             PLUGIN_DOCMAN_METADATA_TYPE_STRING => 'string',
             PLUGIN_DOCMAN_METADATA_TYPE_DATE   => 'date',
-            PLUGIN_DOCMAN_METADATA_TYPE_LIST   => 'list'
+            PLUGIN_DOCMAN_METADATA_TYPE_LIST   => 'list',
         ];
 
     /**
@@ -81,7 +81,7 @@ class ProjectConfiguredMetadataRepresentation
         bool $is_empty_allowed,
         bool $is_multiple_value_allowed,
         bool $is_used,
-        ?array $allowed_list_values
+        ?array $allowed_list_values,
     ): void {
         $this->short_name                = $short_name;
         $this->name                      = $name;

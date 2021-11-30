@@ -65,7 +65,7 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
         TemplateRendererFactory $renderer_factory,
         CSRFSynchronizerToken $csrf_token,
         AccessKeyPresenterBuilder $access_key_presenter_builder,
-        SVNTokensPresenterBuilder $svn_tokens_presenter_builder
+        SVNTokensPresenterBuilder $svn_tokens_presenter_builder,
     ) {
         $this->dispatcher                   = $dispatcher;
         $this->renderer                     = $renderer_factory->getRenderer(__DIR__ . '/templates');

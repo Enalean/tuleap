@@ -93,7 +93,7 @@ class LicenseAgreementDisplayTest extends \Tuleap\Test\PHPUnit\TestCase
         $package->setApproveLicense(true);
         $this->factory->shouldReceive('getLicenseAgreementForPackage')->once()->andReturns(new DefaultLicenseAgreement());
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
-            new LicenseAgreement(5, 'Some custom stuff', 'bla')
+            new LicenseAgreement(5, 'Some custom stuff', 'bla'),
         ]);
         $this->assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
     }
@@ -131,7 +131,7 @@ class LicenseAgreementDisplayTest extends \Tuleap\Test\PHPUnit\TestCase
         $package = new \FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
-            new LicenseAgreement(5, 'Some custom stuff', 'bla')
+            new LicenseAgreement(5, 'Some custom stuff', 'bla'),
         ]);
         $this->factory->shouldReceive('getLicenseAgreementForPackage')->once()->andReturns(new NoLicenseToApprove());
         $this->assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
@@ -152,7 +152,7 @@ class LicenseAgreementDisplayTest extends \Tuleap\Test\PHPUnit\TestCase
         $package = new \FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
-            new LicenseAgreement(5, 'Some custom stuff', 'bla')
+            new LicenseAgreement(5, 'Some custom stuff', 'bla'),
         ]);
         $this->factory->shouldReceive('getLicenseAgreementForPackage')->once()->andReturns(new DefaultLicenseAgreement());
         $this->assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));

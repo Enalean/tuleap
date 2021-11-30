@@ -110,7 +110,7 @@ class BacklogItemRepresentation
         ?BacklogItemParentReference $parent,
         bool $has_children,
         array $accept,
-        array $card_fields
+        array $card_fields,
     ) {
         $this->id             = $id;
         $this->label          = $label;
@@ -130,7 +130,7 @@ class BacklogItemRepresentation
     public static function build(
         \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
         array $card_fields,
-        ProjectBackgroundConfiguration $project_background_configuration
+        ProjectBackgroundConfiguration $project_background_configuration,
     ): self {
         $parent = null;
         if ($backlog_item->getParent()) {

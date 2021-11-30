@@ -312,7 +312,7 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
             [
                 'formElement' => 1234,
                 'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                'src_aid'     => $artifact_id
+                'src_aid'     => $artifact_id,
             ]
         );
 

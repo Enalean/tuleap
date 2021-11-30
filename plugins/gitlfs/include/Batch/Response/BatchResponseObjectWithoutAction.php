@@ -38,7 +38,7 @@ final class BatchResponseObjectWithoutAction implements BatchResponseObject
     {
         return [
             'oid'    => $this->object->getOID()->getValue(),
-            'size'   => $this->object->getSize()
+            'size'   => $this->object->getSize(),
         ];
     }
 }

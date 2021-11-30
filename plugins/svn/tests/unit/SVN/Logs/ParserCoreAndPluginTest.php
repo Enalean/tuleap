@@ -38,16 +38,16 @@ class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
                             '20170321' => [
                                 'write' => 0,
                                 'read'  => 1,
-                            ]
+                            ],
                         ],
                         'alice' => [
                             '20161111' => [
                                 'write' => 1,
                                 'read'  => 0,
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
         $this->assertEquals(
@@ -58,15 +58,15 @@ class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
                         '20170321' => [
                             'write' => 0,
                             'read'  => 1,
-                        ]
+                        ],
                     ],
                     'alice' => [
                         '20161111' => [
                             'write' => 1,
                             'read'  => 0,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ]
         );
     }

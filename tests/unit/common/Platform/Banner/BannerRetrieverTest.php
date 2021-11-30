@@ -101,7 +101,7 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'message'          => $expected_banner_message,
                 'importance'       => $expected_banner_importance,
-                'preference_value' => 'hidden'
+                'preference_value' => 'hidden',
             ]
         );
 

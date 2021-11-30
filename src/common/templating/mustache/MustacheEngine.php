@@ -59,7 +59,7 @@ class MustacheEngine extends \Mustache_Engine
                     LineBreakHelper::NL2BR => function (string $text, \Mustache_LambdaHelper $helper) use ($line_break_helper): string {
                         return $line_break_helper->nl2br($text, $helper);
                     },
-                ]
+                ],
             ]
         );
     }

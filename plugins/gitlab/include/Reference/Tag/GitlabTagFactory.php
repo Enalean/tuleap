@@ -38,7 +38,7 @@ class GitlabTagFactory
 
     public function getGitlabTagInRepositoryWithTagName(
         GitlabRepositoryIntegration $repository_integration,
-        string $tag_name
+        string $tag_name,
     ): ?GitlabTag {
         $row = $this->tag_info_dao->searchTagInRepositoryWithTagName(
             $repository_integration->getId(),

@@ -119,7 +119,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
             'height' => $this->height,
             'width'  => $this->width,
             'data'   => $this->data,
-            'error'  => $this->error
+            'error'  => $this->error,
         ];
     }
 
@@ -127,7 +127,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
     {
         $this->error = [
             "message" => dgettext('tuleap-graphontrackersv5', 'Unable to render the chart'),
-            "cause" => $error
+            "cause" => $error,
         ];
     }
 }

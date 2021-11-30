@@ -71,7 +71,7 @@ class BackgroundColorPresenterBuilder
                 $formatted_field[] = [
                     "id"          => $field->getId(),
                     "name"        => $field->getLabel(),
-                    "is_selected" => (int) $field->getId() === (int) $selected_field_id
+                    "is_selected" => (int) $field->getId() === (int) $selected_field_id,
                 ];
             }
         }

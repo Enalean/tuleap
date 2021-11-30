@@ -33,7 +33,7 @@ class RoadmapTasksOutOfDateFilter
     private $out_of_date_detector;
 
     public function __construct(
-        IDetectIfArtifactIsOutOfDate $out_of_date_detector
+        IDetectIfArtifactIsOutOfDate $out_of_date_detector,
     ) {
         $this->out_of_date_detector = $out_of_date_detector;
     }
@@ -46,7 +46,7 @@ class RoadmapTasksOutOfDateFilter
         array $artifacts,
         DateTimeImmutable $now,
         \PFUser $user,
-        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection,
     ): array {
         return array_filter(
             $artifacts,

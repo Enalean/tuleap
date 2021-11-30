@@ -124,7 +124,7 @@ class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturn([
                 'transition_id' => 1,
-                'is_comment_required' => 1
+                'is_comment_required' => 1,
             ]);
 
         $condition = $this->factory->getCommentNotEmpty($transition);

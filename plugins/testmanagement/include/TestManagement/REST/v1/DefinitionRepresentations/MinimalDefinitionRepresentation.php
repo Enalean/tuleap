@@ -70,7 +70,7 @@ class MinimalDefinitionRepresentation
         Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
-        ?Tracker_Artifact_Changeset $changeset = null
+        ?Tracker_Artifact_Changeset $changeset = null,
     ) {
         $tracker_id = $artifact->getTrackerId();
         $this->id   = JsonCast::toInt($artifact->getId());
@@ -106,7 +106,7 @@ class MinimalDefinitionRepresentation
         Tracker_FormElementFactory $form_element_factory,
         int $tracker_id,
         PFUser $user,
-        ?Tracker_Artifact_Changeset $changeset
+        ?Tracker_Artifact_Changeset $changeset,
     ): ?string {
         $field_status = $form_element_factory->getSelectboxFieldByNameForUser(
             $tracker_id,

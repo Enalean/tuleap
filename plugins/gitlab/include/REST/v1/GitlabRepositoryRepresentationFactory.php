@@ -33,7 +33,7 @@ class GitlabRepositoryRepresentationFactory
 
     public function __construct(
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
-        WebhookDao $webhook_dao
+        WebhookDao $webhook_dao,
     ) {
         $this->repository_integration_factory = $repository_integration_factory;
         $this->webhook_dao                    = $webhook_dao;

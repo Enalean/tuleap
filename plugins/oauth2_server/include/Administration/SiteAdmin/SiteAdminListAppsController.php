@@ -64,7 +64,7 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
         UserManager $user_manager,
         AdminOAuth2AppsPresenterBuilder $presenter_builder,
         IncludeAssets $assets,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
         $this->user_manager        = $user_manager;

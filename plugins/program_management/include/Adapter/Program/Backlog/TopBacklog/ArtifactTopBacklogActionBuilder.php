@@ -56,7 +56,7 @@ final class ArtifactTopBacklogActionBuilder
 
     public function buildTopBacklogActionBuilder(
         TopBacklogActionArtifactSourceInformation $source_information,
-        PFUser $user
+        PFUser $user,
     ): ?AdditionalButtonAction {
         try {
             $user_identifier = UserProxy::buildFromPFUser($user);
@@ -112,16 +112,16 @@ final class ArtifactTopBacklogActionBuilder
             [
                 [
                     'name'  => 'project-id',
-                    'value' => $source_information->project_id
+                    'value' => $source_information->project_id,
                 ],
                 [
                     'name'  => 'artifact-id',
-                    'value' => $source_information->artifact_id
+                    'value' => $source_information->artifact_id,
                 ],
                 [
                     'name'  => 'action',
-                    'value' => $action
-                ]
+                    'value' => $action,
+                ],
             ],
             $error_messages
         );

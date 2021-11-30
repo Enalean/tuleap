@@ -48,7 +48,7 @@ class FooterPresenter
         ?BrowserDeprecationMessage $browser_deprecation_message,
         $is_footer_shown,
         $tuleap_version,
-        string $csp_nonce
+        string $csp_nonce,
     ) {
         $is_file_already_included    = [];
         $is_snippet_already_included = [];

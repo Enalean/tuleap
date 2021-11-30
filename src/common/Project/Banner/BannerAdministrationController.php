@@ -55,7 +55,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
         LayoutHelper $layout_helper,
         \TemplateRenderer $renderer,
         IncludeAssets $banner_assets,
-        BannerRetriever $banner_retriever
+        BannerRetriever $banner_retriever,
     ) {
         $this->layout_helper    = $layout_helper;
         $this->renderer         = $renderer;
@@ -84,7 +84,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
                 'administration',
                 [
                     'message'    => $banner === null ? '' : $banner->getMessage(),
-                    'project_id' => $project->getID()
+                    'project_id' => $project->getID(),
                 ]
             );
         };

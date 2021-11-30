@@ -702,7 +702,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         // $assignee, $u_ass, $submitter, $u_sub should have the right to see it.
         // $other and $u should not have the right to see it
         $permissions = ["PLUGIN_TRACKER_ACCESS_ASSIGNEE"  => [0 => $ugroup_ass],
-                             "PLUGIN_TRACKER_ACCESS_SUBMITTER" => [0 => $ugroup_sub]
+                             "PLUGIN_TRACKER_ACCESS_SUBMITTER" => [0 => $ugroup_sub],
                             ];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 

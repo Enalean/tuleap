@@ -56,7 +56,7 @@ final class DocmanItemMover
         Docman_ItemFactory $item_factory,
         BeforeMoveVisitor $before_move_visitor,
         Docman_PermissionsManager $permissions_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->item_factory        = $item_factory;
         $this->before_move_visitor = $before_move_visitor;
@@ -68,7 +68,7 @@ final class DocmanItemMover
         DateTimeImmutable $current_time,
         Docman_Item $item_to_move,
         PFUser $user,
-        DocmanMoveItemRepresentation $representation
+        DocmanMoveItemRepresentation $representation,
     ): void {
         $destination_item_id = $representation->destination_folder_id;
         $destination_folder  = $this->item_factory->getItemFromDb($representation->destination_folder_id);

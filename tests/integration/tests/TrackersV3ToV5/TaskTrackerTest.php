@@ -157,8 +157,8 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertEquals($this->task_tracker->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker::PERMISSION_FULL
-            ]
+                Tracker::PERMISSION_FULL,
+            ],
         ]);
     }
 
@@ -172,11 +172,11 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -191,10 +191,10 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -219,11 +219,11 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isMultiple());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -238,7 +238,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
         ]);
     }
@@ -253,11 +253,11 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -272,11 +272,11 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }

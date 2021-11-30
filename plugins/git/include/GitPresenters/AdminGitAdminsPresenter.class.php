@@ -35,7 +35,7 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
         $are_mirrors_defined,
         array $external_pane_presenters,
         $static_ugroups,
-        $selected_ugroups
+        $selected_ugroups,
     ) {
         parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
 
@@ -85,7 +85,7 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
             $options[] = [
                 'value'    => $group->getId(),
                 'label'    => $group->getTranslatedName(),
-                'selected' => isset($this->selected_ugroups) ? in_array($group->getId(), $this->selected_ugroups) : false
+                'selected' => isset($this->selected_ugroups) ? in_array($group->getId(), $this->selected_ugroups) : false,
             ];
         }
         return $options;
@@ -96,7 +96,7 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
         return [
             'value'    => ProjectUGroup::PROJECT_MEMBERS,
             'label'    => $GLOBALS['Language']->getText('project_admin_editugroup', 'proj_members'),
-            'selected' => isset($this->selected_ugroups) ? in_array(ProjectUGroup::PROJECT_MEMBERS, $this->selected_ugroups) : false
+            'selected' => isset($this->selected_ugroups) ? in_array(ProjectUGroup::PROJECT_MEMBERS, $this->selected_ugroups) : false,
         ];
     }
 }

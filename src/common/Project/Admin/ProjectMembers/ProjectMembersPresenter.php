@@ -55,7 +55,7 @@ class ProjectMembersPresenter
         ProjectMembersAdditionalModalCollectionPresenter $additional_modals,
         string $user_locale,
         bool $can_see_ugroups,
-        bool $is_synchronized_with_ugroups
+        bool $is_synchronized_with_ugroups,
     ) {
         $this->project_members_list         = $project_members_list;
         $this->csrf_token                   = $csrf_token;

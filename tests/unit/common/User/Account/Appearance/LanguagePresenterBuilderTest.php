@@ -38,7 +38,7 @@ class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 'ja_JP' => '日本語',
                 'en_US' => 'English',
-                'fr_FR' => 'Français'
+                'fr_FR' => 'Français',
             ]);
 
         $user = Mockery::mock(\PFUser::class);

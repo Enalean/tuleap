@@ -239,7 +239,7 @@ XML;
                 Mockery::any(),
                 $this->submitted_values,
                 $this->user,
-                $_SERVER['REQUEST_TIME']
+                $_SERVER['REQUEST_TIME'],
             ]
         )->once();
 

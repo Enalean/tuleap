@@ -41,7 +41,7 @@ class UGroupListPresenterBuilder
 
     public function __construct(
         UGroupManager $ugroup_manager,
-        SynchronizedProjectMembershipDetector $detector
+        SynchronizedProjectMembershipDetector $detector,
     ) {
         $this->ugroup_manager = $ugroup_manager;
         $this->detector       = $detector;
@@ -50,7 +50,7 @@ class UGroupListPresenterBuilder
     public function build(
         Project $project,
         CSRFSynchronizerToken $ugroup_delete_token,
-        CSRFSynchronizerToken $synchronized_membership_token
+        CSRFSynchronizerToken $synchronized_membership_token,
     ) {
         $static_ugroups = $this->getStaticUGroups($project);
         $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($project, $static_ugroups);
@@ -83,7 +83,7 @@ class UGroupListPresenterBuilder
         $ugroups[] = [
             'id'       => 'cx_empty',
             'name'     => _('Empty group'),
-            'selected' => 'selected="selected"'
+            'selected' => 'selected="selected"',
         ];
 
         if ($project->isLegacyDefaultTemplate()) {
@@ -93,20 +93,20 @@ class UGroupListPresenterBuilder
         $ugroups[] = [
             'id'       => 'cx_members',
             'name'     => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS),
-            'selected' => ''
+            'selected' => '',
         ];
 
         $ugroups[] = [
             'id'       => 'cx_admins',
             'name'     => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_ADMINS),
-            'selected' => ''
+            'selected' => '',
         ];
 
         foreach ($static_ugroups as $ugroup) {
             $ugroups[] = [
                 'id'       => $ugroup->getId(),
                 'name'     => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
-                'selected' => ''
+                'selected' => '',
             ];
         }
 
@@ -192,7 +192,7 @@ class UGroupListPresenterBuilder
     private function buildSynchronizedProjectMembershipPresenter(
         Project $project,
         bool $is_synchronized,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ): ?SynchronizedProjectMembershipPresenter {
         if (! $project->isPublic()) {
             return null;

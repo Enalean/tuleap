@@ -48,7 +48,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
     public function __construct(
         RepositoryManager $repository_manager,
         AccessFileHistoryFactory $access_file_history_factory,
-        AccessFileHistoryCreator $access_file_history_creator
+        AccessFileHistoryCreator $access_file_history_creator,
     ) {
         $this->repository_manager          = $repository_manager;
         $this->access_file_history_factory = $access_file_history_factory;

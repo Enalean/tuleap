@@ -42,7 +42,7 @@ class Account_RegisterPrefillValuesPresenter
         Account_RegisterField $realname,
         Account_RegisterField $register_purpose,
         Account_RegisterField $mail_site,
-        Account_RegisterField $timezone
+        Account_RegisterField $timezone,
     ) {
         $this->form_loginname        = $login_name;
         $this->form_email            = $email;

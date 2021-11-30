@@ -36,7 +36,7 @@ class FormElementListValueAdminViewPresenterBuilder
     private $value_dao;
 
     public function __construct(
-        BindStaticValueDao $value_dao
+        BindStaticValueDao $value_dao,
     ) {
         $this->value_dao = $value_dao;
     }
@@ -45,7 +45,7 @@ class FormElementListValueAdminViewPresenterBuilder
         \Tracker_FormElement_Field $field,
         Tracker_FormElement_Field_List_Value $value,
         ?ColorpickerMountPointPresenter $decorator,
-        bool $is_custom_value
+        bool $is_custom_value,
     ): FormElementListValueAdminViewPresenter {
         $value_can_be_hidden  = $this->canValueBeHidden($value, $field);
         $value_can_be_deleted = $this->canValueBeDeleted($value, $field);

@@ -74,7 +74,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
         PotentialReviewerRetriever $potential_reviewer_retriever,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->user_manager                    = $user_manager;

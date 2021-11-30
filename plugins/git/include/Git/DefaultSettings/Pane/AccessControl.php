@@ -77,7 +77,7 @@ class AccessControl extends Pane
         RegexpFineGrainedRetriever $regexp_retriever,
         UserManager $user_manager,
         Project $project,
-        $is_active
+        $is_active,
     ) {
         parent::__construct(
             dgettext('tuleap-git', 'Access control'),
@@ -85,7 +85,7 @@ class AccessControl extends Pane
                 [
                     'action'   => 'admin-default-settings',
                     'group_id' => $project->getID(),
-                    'pane'     => self::NAME
+                    'pane'     => self::NAME,
                 ]
             ),
             $is_active,
@@ -115,7 +115,7 @@ class AccessControl extends Pane
             "/plugins/git/?" . http_build_query(
                 [
                     'group_id' => $project_id,
-                    'action'   => 'admin-default-access-rights'
+                    'action'   => 'admin-default-access-rights',
                 ]
             )
         );

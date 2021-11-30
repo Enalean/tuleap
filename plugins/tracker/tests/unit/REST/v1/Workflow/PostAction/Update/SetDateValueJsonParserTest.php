@@ -50,7 +50,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertTrue($this->parser->accept([
             "type" => "set_field_value",
-            "field_type" => "date"
+            "field_type" => "date",
         ]));
     }
 
@@ -63,7 +63,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertFalse($this->parser->accept([
             "type" => "set_field_value",
-            "field_type" => "int"
+            "field_type" => "int",
         ]));
     }
 
@@ -84,7 +84,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => ""
+                "value" => "",
             ]
         );
         $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::CLEAR_DATE);
@@ -102,7 +102,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => "current"
+                "value" => "current",
             ]
         );
         $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
@@ -121,7 +121,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => ""
+                "value" => "",
             ]
         );
         $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::CLEAR_DATE);
@@ -140,7 +140,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 "type" => "set_field_value",
                 "field_type" => "date",
-                "value" => "current"
+                "value" => "current",
             ]
         );
     }
@@ -158,7 +158,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => null,
-                "value" => "current"
+                "value" => "current",
             ]
         );
     }
@@ -176,7 +176,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => "not int",
-                "value" => "current"
+                "value" => "current",
             ]
         );
     }
@@ -193,7 +193,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 "type" => "set_field_value",
                 "field_type" => "date",
-                "field_id" => 43
+                "field_id" => 43,
             ]
         );
     }
@@ -211,7 +211,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => null
+                "value" => null,
             ]
         );
     }
@@ -229,7 +229,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => 99
+                "value" => 99,
             ]
         );
     }
@@ -247,7 +247,7 @@ class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => "not supported"
+                "value" => "not supported",
             ]
         );
     }

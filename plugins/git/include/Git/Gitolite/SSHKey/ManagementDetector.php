@@ -38,7 +38,7 @@ class ManagementDetector
 
     public function __construct(
         VersionDetector $version_detector,
-        GlobalParameterDao $global_parameter_dao
+        GlobalParameterDao $global_parameter_dao,
     ) {
         $this->version_detector     = $version_detector;
         $this->global_parameter_dao = $global_parameter_dao;

@@ -162,7 +162,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        array $submitted_values = []
+        array $submitted_values = [],
     ): string {
         $steps = $this->getStepsPresentersFromSubmittedValues($submitted_values);
         if (empty($steps)) {
@@ -190,7 +190,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ): string {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
@@ -198,7 +198,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null,
     ): string {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
@@ -209,7 +209,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             'step-def-readonly',
             [
                 'steps' => $this->getStepsPresentersFromChangesetValue($value),
-                'purified_no_value_label' => $purifier->purify($no_value_label, CODENDI_PURIFIER_FULL)
+                'purified_no_value_label' => $purifier->purify($no_value_label, CODENDI_PURIFIER_FULL),
             ]
         );
     }
@@ -230,7 +230,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     protected function fetchTooltipValue(
         Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null,
     ): string {
         return '';
     }
@@ -327,7 +327,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     public function hasChanges(
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $old_value,
-        $new_value
+        $new_value,
     ) {
         if ($new_value === null) {
             return false;
@@ -380,7 +380,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $steps = $this->transformSubmittedValuesIntoArrayOfStructuredSteps($value, $url_mapping);
 
@@ -395,7 +395,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      */
     private function transformSubmittedValuesIntoArrayOfStructuredSteps(
         array $submitted_values,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): array {
         if ($this->doesUserWantToRemoveAllSteps($submitted_values) || ! isset($submitted_values['description'])) {
             return [];
@@ -573,20 +573,20 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             [
                 [
                     'name' => 'field-id',
-                    'value' => $this->id
+                    'value' => $this->id,
                 ],
                 [
                     'name' => 'steps',
-                    'value' => json_encode($steps_presenters)
+                    'value' => json_encode($steps_presenters),
                 ],
 
                 [
                     'name' => 'empty-step',
-                    'value' => json_encode($empty_step_presenter)
+                    'value' => json_encode($empty_step_presenter),
                 ],
                 [
                     'name' => 'project-id',
-                    'value' => (int) $tracker->getGroupId()
+                    'value' => (int) $tracker->getGroupId(),
                 ],
             ],
             $rich_textarea_provider->getDataAttributes($tracker, $this->getCurrentUser(), $artifact)
@@ -595,7 +595,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $renderer->renderToString(
             'step-def-edit',
             [
-                'data_attributes' => $data_attributes
+                'data_attributes' => $data_attributes,
             ]
         );
     }

@@ -53,7 +53,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
         Git_SystemEventManager $system_event_manager,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UsersToNotifyDao $users_to_notify_dao,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->repository_factory    = $repository_factory;
         $this->logger                = $logger;

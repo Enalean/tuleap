@@ -87,7 +87,7 @@ final class WorkflowTriggerRulesProcessorTest extends \Tuleap\Test\PHPUnit\TestC
         int $artifact_id,
         Artifact $parent,
         Tracker_Workflow_Trigger_TriggerRule $rule,
-        Tracker_Workflow_Trigger_RulesProcessor $processor
+        Tracker_Workflow_Trigger_RulesProcessor $processor,
     ): void {
         $artifact_mock->shouldReceive('getId')->andReturn($artifact_id);
         $artifact_mock->shouldReceive('getXRef')->andReturn('xref #' . $artifact_id);

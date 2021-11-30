@@ -116,7 +116,7 @@ final class CreateProjectFromJira
         PlatformConfigurationRetriever $platform_configuration_collection_builder,
         \ProjectManager $project_manager,
         UserRolesChecker $user_roles_checker,
-        RoadmapDashboardCreator $roadmap_dashboard_creator
+        RoadmapDashboardCreator $roadmap_dashboard_creator,
     ) {
         $this->user_manager                              = $user_manager;
         $this->user_finder                               = $user_finder;
@@ -137,7 +137,7 @@ final class CreateProjectFromJira
         string $jira_project,
         string $shortname,
         string $fullname,
-        string $jira_epic_issue_type
+        string $jira_epic_issue_type,
     ): \Project {
         try {
             if ($this->project_manager->getProjectByCaseInsensitiveUnixName($shortname) !== null) {
@@ -169,7 +169,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
-        string $archive_path
+        string $archive_path,
     ): void {
         try {
             $xml_element = $this->generateFromJira(
@@ -205,7 +205,7 @@ final class CreateProjectFromJira
         string $jira_project,
         string $shortname,
         string $fullname,
-        string $jira_epic_issue_type
+        string $jira_epic_issue_type,
     ): SimpleXMLElement {
         $this->user_roles_checker->checkUserIsAdminOfJiraProject(
             $jira_client,
@@ -358,7 +358,7 @@ final class CreateProjectFromJira
         ?JiraBoard $board,
         array $jira_issue_types,
         string $jira_epic_issue_type,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ): \SimpleXMLElement {
         $xml_dashboards = $xml_element->addChild('dashboards');
         $xml_dashboard  = $xml_dashboards->addChild("dashboard");

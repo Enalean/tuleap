@@ -110,7 +110,7 @@ class ArtifactLinksPresenter
         CSRFSynchronizerToken $csrf_token,
         bool $are_artifact_link_types_enabled,
         array $artifact_link_types,
-        bool $has_at_least_one_disabled_type
+        bool $has_at_least_one_disabled_type,
     ) {
         $this->title        = dgettext('tuleap-tracker', 'Tracker global administration');
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
@@ -122,7 +122,7 @@ class ArtifactLinksPresenter
 
         $this->form_url = $base_url . '?' . http_build_query(
             [
-                'func' => 'edit-artifact-links'
+                'func' => 'edit-artifact-links',
             ]
         );
 
@@ -138,7 +138,7 @@ class ArtifactLinksPresenter
 
         $this->form_type_url = $base_url . '?' . http_build_query(
             [
-                'func' => 'use-artifact-link-type'
+                'func' => 'use-artifact-link-type',
             ]
         );
 

@@ -74,7 +74,7 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
         OwnerRetriever $owner_retriever,
         FilterUserFromCollection $filter_user_from_collection,
         UserHelper $user_helper,
-        HTMLURLBuilder $html_url_builder
+        HTMLURLBuilder $html_url_builder,
     ) {
         $this->user_manager                = $user_manager;
         $this->pull_request_factory        = $pull_request_factory;
@@ -115,7 +115,7 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
                 $change_user,
                 $pull_request_owners,
                 $comment->getContent()
-            )
+            ),
         ];
     }
 }

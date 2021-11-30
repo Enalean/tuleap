@@ -52,7 +52,7 @@ class PanesPermissionPerGroupBuilder
         EventManager $event_manager,
         PaneCollector $pane_collector,
         PHPWikiPermissionPerGroupPaneBuilder $phpwiki_pane_builder,
-        NewsPermissionPerGroupPaneBuilder $news_pane_builder
+        NewsPermissionPerGroupPaneBuilder $news_pane_builder,
     ) {
         $this->event_manager        = $event_manager;
         $this->phpwiki_pane_builder = $phpwiki_pane_builder;

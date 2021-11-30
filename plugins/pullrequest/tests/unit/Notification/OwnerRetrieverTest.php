@@ -79,7 +79,7 @@ final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getUserById')->with(103)->andReturn($user_103);
 
         $this->timeline_dao->shouldReceive('searchUserIDsByPullRequestIDAndEventType')->andReturn([
-            ['user_id' => 104]
+            ['user_id' => 104],
         ]);
         $this->user_manager->shouldReceive('getUserById')->with(104)->andReturn($user_104);
 
@@ -99,7 +99,7 @@ final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $pull_request->shouldReceive('getUserId')->andReturn(105);
         $this->reviewer_retriever->shouldReceive('getReviewers')->andReturn([$user_105]);
         $this->timeline_dao->shouldReceive('searchUserIDsByPullRequestIDAndEventType')->andReturn([
-            ['user_id' => 105]
+            ['user_id' => 105],
         ]);
         $this->user_manager->shouldReceive('getUserById')->with(105)->andReturn($user_105);
 

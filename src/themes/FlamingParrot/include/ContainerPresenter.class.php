@@ -106,7 +106,7 @@ class FlamingParrot_ContainerPresenter
         ?\Tuleap\User\SwitchToPresenter $switch_to,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
-        array $main_classes
+        array $main_classes,
     ) {
         $this->breadcrumbs               = $breadcrumbs;
         $this->has_only_one_breadcrumb   = count($breadcrumbs) === 1;

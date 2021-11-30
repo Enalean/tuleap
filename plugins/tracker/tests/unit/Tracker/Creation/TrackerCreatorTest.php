@@ -84,7 +84,7 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Tracker Name',
                 '',
                 'tracker-shortname',
-                'fiesta-red'
+                'fiesta-red',
             ]
         )->once()->andReturn($tracker);
 
@@ -125,7 +125,7 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "Tracker Name",
                 "",
                 "tracker-shortname",
-                "peggy-pink"
+                "peggy-pink",
             ]
         )->once()->andReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
         $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
@@ -165,7 +165,7 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "Tracker Name",
                 "",
                 "tracker-shortname",
-                "peggy-pink"
+                "peggy-pink",
             ]
         )->once()->andReturn(false);
 
@@ -209,7 +209,7 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "Tracker Name",
                 "",
                 "tracker-shortname",
-                "peggy-pink"
+                "peggy-pink",
             ]
         )->once()->andReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
         $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();

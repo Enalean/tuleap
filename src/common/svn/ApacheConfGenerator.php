@@ -43,7 +43,7 @@ class ApacheConfGenerator
 
     public function __construct(
         ApacheServiceControl $service_control,
-        BackendSVN $backend_svn
+        BackendSVN $backend_svn,
     ) {
         $this->service_control = $service_control;
         $this->backend_svn     = $backend_svn;

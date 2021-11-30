@@ -30,7 +30,7 @@ class Planning_Presenter_MilestoneBurndownSummaryPresenter extends Planning_Pres
         Planning_Milestone $milestone,
         $plugin_path,
         ?AlternativeBoardLinkPresenter $alternative_board_link,
-        Tracker_Chart_Data_Burndown $burndown_data
+        Tracker_Chart_Data_Burndown $burndown_data,
     ) {
         parent::__construct($milestone, $plugin_path, $alternative_board_link);
 

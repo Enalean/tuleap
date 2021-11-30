@@ -80,7 +80,7 @@ class FileUploadFinisher implements TusFinisherDataStore
         DBTransactionExecutor $transaction_executor,
         FRSFileDao $file_dao,
         FRSLogDao $log_dao,
-        ToBeCreatedFRSFileBuilder $frs_file_builder
+        ToBeCreatedFRSFileBuilder $frs_file_builder,
     ) {
         $this->logger               = $logger;
         $this->path_allocator       = $path_allocator;

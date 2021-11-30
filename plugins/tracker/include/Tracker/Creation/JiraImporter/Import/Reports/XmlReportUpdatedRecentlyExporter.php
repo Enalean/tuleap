@@ -47,7 +47,7 @@ class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $priority_field,
         ?FieldMapping $link_field,
         ?FieldMapping $created_field,
-        ?FieldMapping $updated_field
+        ?FieldMapping $updated_field,
     ): void {
         if (! $updated_field) {
             return;
@@ -59,7 +59,7 @@ class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
                 $summary_field,
                 $description_field,
                 $priority_field,
-                $updated_field
+                $updated_field,
             ]
         );
         $column_fields      = array_filter(
@@ -68,7 +68,7 @@ class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
                 $status_field,
                 $link_field,
                 $priority_field,
-                $updated_field
+                $updated_field,
             ]
         );
 

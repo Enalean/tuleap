@@ -102,7 +102,7 @@ class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->transition_id)
             ->andReturn([
                 'id' => 1,
-                'transition_id' => $this->transition_id
+                'transition_id' => $this->transition_id,
             ]);
 
         $post_actions = $this->factory->loadPostActions($this->transition);
@@ -139,11 +139,11 @@ class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     [
                         'id' => 2,
-                        'transition_id' => 329
+                        'transition_id' => 329,
                     ],
                     [
                         'id' => 1,
-                        'transition_id' => $this->transition_id
+                        'transition_id' => $this->transition_id,
                     ],
                 ]
             );

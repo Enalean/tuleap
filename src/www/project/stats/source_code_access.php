@@ -84,7 +84,7 @@ project_admin_header(
     [
         'title' => $Language->getText('project_admin_index', 'p_admin', $pm->getProject($group_id)->getPublicName()),
         'group' => $group_id,
-        'help' => 'project-admin.html#access-logs'
+        'help' => 'project-admin.html#access-logs',
     ],
     \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
 );

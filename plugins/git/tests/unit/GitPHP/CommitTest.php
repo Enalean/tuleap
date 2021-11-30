@@ -78,7 +78,7 @@ EOF;
         $author_email,
         $author_timestamp,
         $commit_message,
-        $pgp_signature
+        $pgp_signature,
     ) {
         $project = \Mockery::mock(Project::class);
         $project->shouldReceive('GetObject')->with('3f4a9ea9a9bcc19fa6f0806058469c5e4c35df82')->andReturns($commit_content);
@@ -101,7 +101,7 @@ EOF;
                 'author@example.com',
                 '1534259619',
                 ['This is Tuleap 10.4'],
-                self::EXPECTED_PGP_SIGNATURE
+                self::EXPECTED_PGP_SIGNATURE,
             ],
         ];
     }

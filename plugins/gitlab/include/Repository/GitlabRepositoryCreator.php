@@ -59,7 +59,7 @@ class GitlabRepositoryCreator
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitlabRepositoryIntegrationDao $gitlab_repository_dao,
         WebhookCreator $webhook_creator,
-        IntegrationApiTokenInserter $token_inserter
+        IntegrationApiTokenInserter $token_inserter,
     ) {
         $this->db_transaction_executor        = $db_transaction_executor;
         $this->repository_integration_factory = $repository_integration_factory;
@@ -76,7 +76,7 @@ class GitlabRepositoryCreator
         Credentials $credentials,
         GitlabProject $gitlab_project,
         Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration
+        GitlabRepositoryCreatorConfiguration $configuration,
     ): GitlabRepositoryIntegration {
         return $this->db_transaction_executor->execute(
             function () use ($credentials, $gitlab_project, $project, $configuration) {
@@ -122,7 +122,7 @@ class GitlabRepositoryCreator
         Credentials $credentials,
         GitlabProject $gitlab_project,
         Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration
+        GitlabRepositoryCreatorConfiguration $configuration,
     ): GitlabRepositoryIntegration {
         $gitlab_repository = $this->repository_integration_factory->createRepositoryIntegration(
             $gitlab_project,

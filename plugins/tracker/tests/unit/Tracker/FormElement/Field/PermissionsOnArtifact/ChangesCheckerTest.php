@@ -53,7 +53,7 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $new_values = [
             'use_artifact_permissions' => "1",
-            "u_groups" => [3]
+            "u_groups" => [3],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -66,7 +66,7 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $new_values = [
             'use_artifact_permissions' => "1",
-            "u_groups" => [3]
+            "u_groups" => [3],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -91,7 +91,7 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $new_values = [
             'use_artifact_permissions' => "1",
-            "u_groups" => [3]
+            "u_groups" => [3],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
@@ -104,7 +104,7 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $new_values = [
             'use_artifact_permissions' => "1",
-            "u_groups" => [3]
+            "u_groups" => [3],
         ];
 
         $this->assertFalse($this->checker->hasChanges($this->old_value, $new_values));
@@ -117,7 +117,7 @@ final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $new_values = [
             'use_artifact_permissions' => "1",
-            "u_groups" => [3, 4]
+            "u_groups" => [3, 4],
         ];
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));

@@ -42,7 +42,7 @@ class ParentLinkAction
     public function linkParent(
         Artifact $artifact,
         PFUser $submitter,
-        array $fields_data
+        array $fields_data,
     ): bool {
         $artifact_link_field = $artifact->getAnArtifactLinkField($submitter);
         if ($artifact_link_field === null) {

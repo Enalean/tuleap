@@ -65,7 +65,7 @@ class DynamicUGroupMembersUpdater
         UserPermissionsDao $user_permissions_dao,
         DBTransactionExecutor $transaction_executor,
         ProjectMemberAdder $project_member_adder,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->user_permissions_dao = $user_permissions_dao;
         $this->transaction_executor = $transaction_executor;

@@ -859,7 +859,7 @@ function LoadFile(&$request, $filename, $text = false, $mtime = false)
                               '/[ \t\r]*\n/',
                               "\n",
                               chop($text)
-                          )
+                          ),
                           ];
         SavePage(
             $request,

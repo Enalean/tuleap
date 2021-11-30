@@ -40,7 +40,7 @@ class PermissionChecker
 
     public function isPrivateCommentForUser(
         \PFUser $user,
-        Tracker_Artifact_Changeset_Comment $comment
+        Tracker_Artifact_Changeset_Comment $comment,
     ): bool {
         $tracker = $comment->getChangeset()->getTracker();
         if (! $this->privateCheckMustBeDoneForUser($user, $tracker)) {
@@ -95,7 +95,7 @@ class PermissionChecker
      */
     public function getUgroupsThatUserCanSeeOnComment(
         \PFUser $user,
-        Tracker_Artifact_Changeset_Comment $comment
+        Tracker_Artifact_Changeset_Comment $comment,
     ) {
         $all_ugroups = $comment->getUgroupsCanSeePrivateComment();
         if ($all_ugroups === null) {

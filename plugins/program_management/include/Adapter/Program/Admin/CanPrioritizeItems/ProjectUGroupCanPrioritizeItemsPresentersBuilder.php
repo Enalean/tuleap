@@ -39,7 +39,7 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilder
     public function __construct(
         RetrieveUGroups $retrieve_u_groups,
         RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_items_retriever,
-        BuildUGroupRepresentation $ugroup_representation_builder
+        BuildUGroupRepresentation $ugroup_representation_builder,
     ) {
         $this->retrieve_u_groups              = $retrieve_u_groups;
         $this->can_prioritize_items_retriever = $can_prioritize_items_retriever;

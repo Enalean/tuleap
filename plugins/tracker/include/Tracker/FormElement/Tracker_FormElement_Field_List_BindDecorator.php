@@ -88,7 +88,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         if (! $this->isUsingOldPalette()) {
             $html .= self::fetchSquareImage('blank16x16.png', [
                 'title' => $value,
-                'class' => \Codendi_HTMLPurifier::instance()->purify('colorpicker-preview-' . $this->tlp_color_name)
+                'class' => \Codendi_HTMLPurifier::instance()->purify('colorpicker-preview-' . $this->tlp_color_name),
             ]);
         } else {
             $html .= self::fetchSquareColor('', $value, '', $this->r, $this->g, $this->b);
@@ -109,7 +109,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         if (! $this->isUsingOldPalette()) {
             return [
                 'classes'       => \Codendi_HTMLPurifier::instance()->purify('select-option-colored-' . $this->tlp_color_name),
-                'inline-styles' => ''
+                'inline-styles' => '',
             ];
         }
 
@@ -120,7 +120,7 @@ class Tracker_FormElement_Field_List_BindDecorator
 
         return [
             'classes'       => '',
-            'inline-styles' => 'border-left: 16px solid ' . $hexa_color . ';'
+            'inline-styles' => 'border-left: 16px solid ' . $hexa_color . ';',
         ];
     }
 
@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_List_BindDecorator
             'height' => '16px',
             'style'  => 'vertical-align:middle; ' . $bgcolor,
             'title'  => $title,
-            'class'  => $classname
+            'class'  => $classname,
         ]);
         return $html;
     }
@@ -194,7 +194,7 @@ class Tracker_FormElement_Field_List_BindDecorator
                 'value_id' => $this->value_id,
                 'r'        => $this->r,
                 'g'        => $this->g,
-                'b'        => $this->b
+                'b'        => $this->b,
             ]
         );
     }

@@ -78,7 +78,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertEquals(
             [
                 'content' => 'foo bar long text with nice stories',
-                'format'  => 'commonmark'
+                'format'  => 'commonmark',
             ],
             $this->text_field->getDefaultValue()
         );
@@ -94,7 +94,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertEquals(
             [
                 'content' => Mockery::any(),
-                'format'  => 'commonmark'
+                'format'  => 'commonmark',
             ],
             $this->text_field->getDefaultValue()
         );
@@ -110,7 +110,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertEquals(
             [
                 'content' => Mockery::any(),
-                'format'  => 'commonmark'
+                'format'  => 'commonmark',
             ],
             $this->text_field->getDefaultValue()
         );
@@ -126,7 +126,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertEquals(
             [
                 'content' => "<p>Eeny, meeny,<br />\nminy, &lt;b&gt;moe</p>",
-                'format'  => 'html'
+                'format'  => 'html',
             ],
             $this->text_field->getDefaultValue()
         );
@@ -142,7 +142,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertEquals(
             [
                 'content' => Mockery::any(),
-                'format'  => 'text'
+                'format'  => 'text',
             ],
             $this->text_field->getDefaultValue()
         );
@@ -245,27 +245,27 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
         $value_1 = [
             'content' => 'This is a text',
-            'format'  => 'text'
+            'format'  => 'text',
         ];
 
         $value_2 = [
             'content' => '2009-08-45',
-            'format'  => 'text'
+            'format'  => 'text',
         ];
 
         $value_3 = [
             'content' => 25,
-            'format'  => 'text'
+            'format'  => 'text',
         ];
 
         $value_4 = [
             'content' => '',
-            'format'  => 'text'
+            'format'  => 'text',
         ];
 
         $value_5 = [
             'content' => null,
-            'format'  => 'text'
+            'format'  => 'text',
         ];
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -372,7 +372,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             $this->text_field->isEmpty(
                 [
                     'format'  => 'text',
-                    'content' => ''
+                    'content' => '',
                 ],
                 $artifact
             )
@@ -389,7 +389,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             $this->text_field->isEmpty(
                 [
                     'format'  => 'text',
-                    'content' => '   '
+                    'content' => '   ',
                 ],
                 $artifact
             )
@@ -406,7 +406,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             $this->text_field->isEmpty(
                 [
                     'format'  => 'text',
-                    'content' => 'bla'
+                    'content' => 'bla',
                 ],
                 $artifact
             )
@@ -432,7 +432,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             "value"    => [
                 'content' => 'My awesome content',
                 'format'  => 'text',
-            ]
+            ],
         ];
 
         $fields_data = $this->text_field->getFieldDataFromRESTValueByField($value);
@@ -445,7 +445,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     {
         $new_value = [
             'content' => '1.0',
-            'format'  => 'text'
+            'format'  => 'text',
         ];
 
         $this->assertTrue(
@@ -457,7 +457,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     {
         $new_value = [
             'content' => '1',
-            'format'  => 'text'
+            'format'  => 'text',
         ];
 
         $this->assertFalse(
@@ -469,7 +469,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     {
         $new_value = [
             'content' => '1',
-            'format'  => 'html'
+            'format'  => 'html',
         ];
 
         $this->assertFalse(

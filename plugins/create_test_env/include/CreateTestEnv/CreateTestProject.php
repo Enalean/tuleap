@@ -46,7 +46,7 @@ class CreateTestProject
         string $user_name,
         string $archive_base_dir,
         Rule_ProjectName $rule_project_name,
-        Rule_ProjectFullName $rule_project_full_name
+        Rule_ProjectFullName $rule_project_full_name,
     ) {
         $this->user_name              = $user_name;
         $this->archive_base_dir       = $archive_base_dir;

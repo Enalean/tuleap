@@ -112,7 +112,7 @@ class ServiceActivator
 
     private function mustServiceBeActive(
         ?Service $tracker_core_service = null,
-        ?Service $tracker_plugin_service = null
+        ?Service $tracker_plugin_service = null,
     ) {
         return (bool) (($tracker_core_service && $tracker_core_service->isActive()) ||
             ($tracker_plugin_service && $tracker_plugin_service->isActive()));
@@ -120,7 +120,7 @@ class ServiceActivator
 
     private function mustServiceBeUsed(
         ?Service $tracker_core_service = null,
-        ?Service $tracker_plugin_service = null
+        ?Service $tracker_plugin_service = null,
     ) {
         return (bool) (($tracker_core_service && $tracker_core_service->isUsed()) ||
             ($tracker_plugin_service && $tracker_plugin_service->isUsed()));

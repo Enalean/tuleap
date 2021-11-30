@@ -79,7 +79,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         History\GitPhpAccessLogger $access_logger,
         GitRepositoryHeaderDisplayer $header_displayer,
         FilesHeaderPresenterBuilder $files_header_presenter_builder,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->repository_factory             = $repository_factory;
         $this->project_manager                = $project_manager;

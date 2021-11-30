@@ -31,7 +31,7 @@ final class ContentChange
 {
     private function __construct(
         public ?int $potential_feature_id_to_add,
-        public ?FeaturesToReorder $elements_to_order
+        public ?FeaturesToReorder $elements_to_order,
     ) {
     }
 
@@ -40,7 +40,7 @@ final class ContentChange
      */
     public static function fromFeatureAdditionAndReorder(
         ?int $potential_feature_id_to_add,
-        ?FeaturesToReorder $elements_to_order
+        ?FeaturesToReorder $elements_to_order,
     ): self {
         if ($potential_feature_id_to_add === null && $elements_to_order === null) {
             throw new AddOrOrderMustBeSetException();

@@ -72,7 +72,7 @@ class Docman_VersionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                     'filename'  => null,
                     'filesize'  => null,
                     'filetype'  => null,
-                    'path'      => null
+                    'path'      => null,
                 ]
             )
         );
@@ -99,7 +99,7 @@ class Docman_VersionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'filename'  => 'noFile',
                 'filesize'  => null,
                 'filetype'  => null,
-                'path'      => $this->tmp_tuleap_dir . '/noFile'
+                'path'      => $this->tmp_tuleap_dir . '/noFile',
             ]
         );
 
@@ -125,7 +125,7 @@ class Docman_VersionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'filename'  => 'fileToPurge.txt',
                 'filesize'  => null,
                 'filetype'  => null,
-                'path'      => $this->tmp_tuleap_dir . '/fileToPurge_txt'
+                'path'      => $this->tmp_tuleap_dir . '/fileToPurge_txt',
             ]
         );
 
@@ -155,7 +155,7 @@ class Docman_VersionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'filename'  => 'fileToDontPurge.txt',
                 'filesize'  => null,
                 'filetype'  => null,
-                'path'      => $this->tmp_tuleap_dir . '/fileToPurge_txt'
+                'path'      => $this->tmp_tuleap_dir . '/fileToPurge_txt',
             ]
         );
         fopen($version->getPath(), 'w');
@@ -196,7 +196,7 @@ class Docman_VersionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'group_id'  => 114,
                 'item'      => $file,
                 'old_value' => '2 (Ho hisse la saucisse)',
-                'user'      => $user
+                'user'      => $user,
             ]
         );
         $versionFactory->shouldReceive('_getEventManager')->andReturn($em);

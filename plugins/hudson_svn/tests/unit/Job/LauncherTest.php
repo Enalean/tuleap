@@ -116,7 +116,7 @@ class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
             new Job('6', '1', '/a/', 'https://ci.exemple.com/job/New_Job_Example/', ''),
             new Job('7', '1', '/a/*', 'https://ci.exemple.com/job/New_Job_Example/', ''),
             new Job('8', '1', '/a/trunk', 'https://ci.exemple.com/job/New_Job_Example/', ''),
-            new Job('9', '1', '/', 'https://ci.exemple.com/job/Another_Job_Example/', '')
+            new Job('9', '1', '/', 'https://ci.exemple.com/job/Another_Job_Example/', ''),
         ];
 
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 3);

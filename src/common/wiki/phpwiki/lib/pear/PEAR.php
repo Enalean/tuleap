@@ -474,7 +474,7 @@ class PEAR
         $options = null,
         $userinfo = null,
         $error_class = null,
-        $skipmsg = false
+        $skipmsg = false,
     ) {
         // The error is yet a PEAR error object
         if (is_object($message)) {
@@ -533,7 +533,7 @@ class PEAR
     public function &throwError(
         $message = null,
         $code = null,
-        $userinfo = null
+        $userinfo = null,
     ) {
         if (isset($this) && is_subclass_of($this, 'PEAR_Error')) {
             return $this->raiseError($message, $code, null, null, $userinfo);
@@ -696,7 +696,7 @@ class PEAR_Error
         $code = null,
         $mode = null,
         $options = null,
-        $userinfo = null
+        $userinfo = null,
     ) {
         if (function_exists("debug_backtrace")) {
             $this->backtrace = debug_backtrace();

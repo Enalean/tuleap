@@ -128,7 +128,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_post_representation->allow_restricted = false;
         $this->project_post_representation->categories       = [
             CategoryPostRepresentation::build(14, 89),
-            CategoryPostRepresentation::build(18, 53)
+            CategoryPostRepresentation::build(18, 53),
         ];
 
         $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);

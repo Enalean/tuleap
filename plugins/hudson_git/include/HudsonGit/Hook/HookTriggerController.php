@@ -62,7 +62,7 @@ class HookTriggerController
         JenkinsClient $jenkins_client,
         LoggerInterface $logger,
         LogCreator $log_creator,
-        JenkinsServerFactory $jenkins_server_factory
+        JenkinsServerFactory $jenkins_server_factory,
     ) {
         $this->dao                    = $dao;
         $this->jenkins_client         = $jenkins_client;
@@ -85,7 +85,7 @@ class HookTriggerController
         GitRepository $repository,
         string $commit_reference,
         DateTimeImmutable $date_time,
-        array &$already_called_jenkins_server_urls
+        array &$already_called_jenkins_server_urls,
     ): void {
         $date_job = $date_time->getTimestamp();
         $dar      = $this->dao->searchById($repository->getId());
@@ -128,7 +128,7 @@ class HookTriggerController
         GitRepository $repository,
         string $commit_reference,
         DateTimeImmutable $date_time,
-        array $already_called_jenkins_server_urls
+        array $already_called_jenkins_server_urls,
     ): void {
         $date_job = $date_time->getTimestamp();
         $project  = $repository->getProject();
@@ -163,7 +163,7 @@ class HookTriggerController
         GitRepository $repository,
         string $job_name,
         ?int $status_code,
-        $date_job
+        $date_job,
     ): void {
         $log = new Log($repository, $date_job, $job_name, $status_code);
         try {
@@ -177,7 +177,7 @@ class HookTriggerController
         GitRepository $repository,
         string $jenkins_server_url,
         ?string $commit_reference,
-        array &$polling_urls
+        array &$polling_urls,
     ): ?int {
         $transports = $repository->getAccessURL();
         foreach ($transports as $protocol => $url) {

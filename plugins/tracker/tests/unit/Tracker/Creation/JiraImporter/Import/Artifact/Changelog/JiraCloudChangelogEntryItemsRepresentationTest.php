@@ -33,7 +33,7 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
             "from"       => null,
             "fromString" => "string01",
             "to"         => null,
-            "toString"   => "string02"
+            "toString"   => "string02",
         ];
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
@@ -49,7 +49,7 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
             "from"       => "10001",
             "fromString" => "string02",
             "to"         => "10002",
-            "toString"   => "string03"
+            "toString"   => "string03",
         ];
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
@@ -67,7 +67,7 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
             "field"      => "WorklogId",
             "fieldtype"  => "jira",
             "from"       => null,
-            "fromString" => null
+            "fromString" => null,
         ];
 
         $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
@@ -81,7 +81,7 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
             "fieldId"    => "field01",
             "fromString" => "string01",
             "to"         => null,
-            "toString"   => "string02"
+            "toString"   => "string02",
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -92,7 +92,7 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
             "fieldId" => "field01",
             "from"    => "10001",
             "to"         => null,
-            "toString"   => "string02"
+            "toString"   => "string02",
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -103,7 +103,7 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
             "fieldId"    => "field01",
             "from"       => "10001",
             "fromString" => "string01",
-            "to"         => null
+            "to"         => null,
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -114,7 +114,7 @@ class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUni
             "fieldId"    => "field01",
             "from"       => "10001",
             "fromString" => "string01",
-            "toString"   => "string02"
+            "toString"   => "string02",
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);

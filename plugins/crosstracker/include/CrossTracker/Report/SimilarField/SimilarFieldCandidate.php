@@ -40,7 +40,7 @@ class SimilarFieldCandidate
     public function __construct(
         SimilarFieldIdentifier $identifier,
         SimilarFieldType $type,
-        \Tracker_FormElement_Field $field
+        \Tracker_FormElement_Field $field,
     ) {
         $this->identifier = $identifier;
         $this->type       = $type;

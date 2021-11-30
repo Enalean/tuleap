@@ -63,7 +63,7 @@ class PaneInfoCollector implements Dispatchable
         ?ActivePaneContext $active_pane_context,
         array $panes,
         ?AgileDashboard_Pane $active_pane,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $this->milestone           = $milestone;
         $this->active_pane_context = $active_pane_context;

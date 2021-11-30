@@ -40,7 +40,7 @@ class CrossReferenceFieldRenderer
 
     public function __construct(
         TemplateRendererFactory $template_renderer,
-        CrossReferenceFieldPresenterBuilder $cross_ref_field_presenter_builder
+        CrossReferenceFieldPresenterBuilder $cross_ref_field_presenter_builder,
     ) {
         $this->template_renderer                 = $template_renderer;
         $this->cross_ref_field_presenter_builder = $cross_ref_field_presenter_builder;

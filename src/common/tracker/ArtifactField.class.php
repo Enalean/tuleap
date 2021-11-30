@@ -1277,7 +1277,7 @@ class ArtifactField
         $keep_history,
         $special,
         $use_it,
-        $fieldset_id
+        $fieldset_id,
     ) {
         global $Language;
 

@@ -59,7 +59,7 @@ class TimetrackingOverviewRepresentationsBuilder
         AdminDao $admin_dao,
         $permissions_retriever,
         TrackerFactory $tracker_factory,
-        Tracker_REST_TrackerRestBuilder $tracker_rest_builder
+        Tracker_REST_TrackerRestBuilder $tracker_rest_builder,
     ) {
         $this->admin_dao             = $admin_dao;
         $this->permissions_retriever = $permissions_retriever;

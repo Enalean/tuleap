@@ -41,7 +41,7 @@ final class Iteration
         public ?int $end_date,
         public string $uri,
         public string $cross_ref,
-        public bool $user_can_update
+        public bool $user_can_update,
     ) {
     }
     public static function build(
@@ -52,7 +52,7 @@ final class Iteration
         RetrieveCrossRef $retrieve_cross_ref,
         VerifyUserCanUpdateTimebox $user_can_update_verifier,
         UserIdentifier $user_identifier,
-        IterationIdentifier $iteration_identifier
+        IterationIdentifier $iteration_identifier,
     ): ?self {
         $title = $retrieve_title_value->getTitle($iteration_identifier);
         if (! $title) {

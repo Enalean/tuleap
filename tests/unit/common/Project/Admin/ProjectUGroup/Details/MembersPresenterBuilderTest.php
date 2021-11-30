@@ -174,7 +174,7 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'hasAvatar'    => true,
                 'isAdmin'      => false,
                 'getStatus'    => 'A',
-                'getAvatarUrl' => ''
+                'getAvatarUrl' => '',
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
@@ -217,7 +217,7 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'hasAvatar'    => true,
                 'isAdmin'      => false,
                 'getStatus'    => 'A',
-                'getAvatarUrl' => ''
+                'getAvatarUrl' => '',
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
@@ -262,7 +262,7 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'hasAvatar'    => true,
                 'isAdmin'      => false,
                 'getStatus'    => 'A',
-                'getAvatarUrl' => ''
+                'getAvatarUrl' => '',
             ]
         );
         $first_member->shouldReceive('isMember')

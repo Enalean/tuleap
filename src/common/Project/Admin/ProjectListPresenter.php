@@ -38,7 +38,7 @@ class ProjectListPresenter
         $title,
         ProjectListSearchFieldsPresenter $search_fields,
         ProjectListResultsPresenter $results,
-        $pending_projects_count
+        $pending_projects_count,
     ) {
         $this->title                              = $title;
         $this->search_fields                      = $search_fields;
@@ -55,7 +55,7 @@ class ProjectListPresenter
                 'pending_projects_text',
                 [
                     '/admin/approve-pending.php',
-                    $pending_projects_count
+                    $pending_projects_count,
                 ]
             ),
             CODENDI_PURIFIER_LIGHT

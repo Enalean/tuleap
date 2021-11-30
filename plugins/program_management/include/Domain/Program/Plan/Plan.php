@@ -65,7 +65,7 @@ final class Plan
         ProgramUserGroupCollection $can_prioritize,
         ?string $custom_label,
         ?string $custom_sub_label,
-        ?IterationTracker $iteration_tracker
+        ?IterationTracker $iteration_tracker,
     ) {
         $this->program_increment_tracker = $program_increment_tracker;
         $this->project_id                = $project_id;

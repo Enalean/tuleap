@@ -82,7 +82,7 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
         JiraUserRetriever $jira_user_retriever,
         JiraClient $jira_client,
         LoggerInterface $logger,
-        FieldMappingCollection $field_mapping_collection
+        FieldMappingCollection $field_mapping_collection,
     ) {
         $this->xml_tracker                     = $xml_tracker;
         $this->jira_platform_configuration     = $jira_platform_configuration;

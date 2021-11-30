@@ -325,7 +325,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
 
         $user        = UserTestBuilder::aUser()->build();
         $fields_data = [
-            '101' => ['new_values' => '184']
+            '101' => ['new_values' => '184'],
         ];
         $context     = new ChangesetWithFieldsValidationContext(new ManualActionContext());
         $this->assertTrue(

@@ -37,7 +37,7 @@ class FrequenciesPresenter
         $datastr,
         $startdate,
         $enddate,
-        $filter
+        $filter,
     ) {
         $this->header        = $header;
         $this->search_fields = $search_fields;

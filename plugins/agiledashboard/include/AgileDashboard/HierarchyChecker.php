@@ -39,7 +39,7 @@ class AgileDashboard_HierarchyChecker
     public function __construct(
         PlanningFactory $planning_factory,
         AgileDashboard_KanbanFactory $kanban_factory,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         $this->planning_factory = $planning_factory;
         $this->kanban_factory   = $kanban_factory;

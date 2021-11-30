@@ -52,7 +52,7 @@ class CommentSender
         GitlabRepositoryIntegration $gitlab_repository_integration,
         Credentials $credentials,
         string $url,
-        array $comment_data
+        array $comment_data,
     ): void {
         try {
             $this->gitlab_api_client->postUrl(

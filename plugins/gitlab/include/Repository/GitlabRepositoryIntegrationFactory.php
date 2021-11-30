@@ -96,7 +96,7 @@ class GitlabRepositoryIntegrationFactory
     public function createRepositoryIntegration(
         GitlabProject $gitlab_project,
         Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration
+        GitlabRepositoryCreatorConfiguration $configuration,
     ): GitlabRepositoryIntegration {
         $id = $this->dao->createGitlabRepositoryIntegration(
             $gitlab_project->getId(),

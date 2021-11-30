@@ -31,7 +31,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
     public function __construct(
         AgileDashboard_BacklogItemDao $backlog_item_dao,
         Tracker_ArtifactDao $artifact_dao,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->backlog_item_dao = $backlog_item_dao;
         $this->artifact_dao     = $artifact_dao;

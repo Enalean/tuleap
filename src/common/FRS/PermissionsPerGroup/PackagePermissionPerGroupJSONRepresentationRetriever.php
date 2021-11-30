@@ -35,7 +35,7 @@ class PackagePermissionPerGroupJSONRepresentationRetriever
     private $package_representation_builder;
 
     public function __construct(
-        PackagePermissionPerGroupRepresentationBuilder $package_representation_builder
+        PackagePermissionPerGroupRepresentationBuilder $package_representation_builder,
     ) {
         $this->package_representation_builder = $package_representation_builder;
     }
@@ -47,7 +47,7 @@ class PackagePermissionPerGroupJSONRepresentationRetriever
                 [
                     'error' => _(
                         "Files service is disabled for this project."
-                    )
+                    ),
                 ]
             );
         }

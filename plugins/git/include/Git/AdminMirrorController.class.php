@@ -53,7 +53,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         ProjectManager $project_manager,
         Git_SystemEventManager $git_system_event_manager,
         AdminPageRenderer $admin_page_renderer,
-        IncludeAssets $include_assets
+        IncludeAssets $include_assets,
     ) {
         $this->csrf                           = $csrf;
         $this->git_mirror_mapper              = $git_mirror_mapper;

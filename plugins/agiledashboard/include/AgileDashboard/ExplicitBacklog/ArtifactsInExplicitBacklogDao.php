@@ -119,7 +119,7 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
 
     public function removeNoMoreSelectableItemsFromExplicitBacklogOfProject(
         array $planning_tracker_ids,
-        int $project_id
+        int $project_id,
     ): void {
         $where_condition = EasyStatement::open()
             ->in('tracker_artifact.tracker_id NOT IN (?*)', $planning_tracker_ids)
@@ -157,7 +157,7 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
 
     public function cleanUpDirectlyPlannedItemsInArtifact(
         int $milestone_artifact_id,
-        array $linked_artifact_ids
+        array $linked_artifact_ids,
     ) {
         $where_condition = EasyStatement::open()
             ->in('plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id IN (?*)', $linked_artifact_ids)

@@ -97,7 +97,7 @@ XML;
 
         $mapping = [
             'F1' => $fieldset_01,
-            'F2' => $fieldset_02
+            'F2' => $fieldset_02,
         ];
 
         $transition = Mockery::mock(\Transition::class);

@@ -44,7 +44,7 @@ class SSHAuthenticateResponseBuilder
         \GitRepository $repository,
         \PFUser $user,
         UserOperation $operation,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
     ) {
         return new BatchResponseActionContent(
             new LFSEndPointDiscovery($repository),

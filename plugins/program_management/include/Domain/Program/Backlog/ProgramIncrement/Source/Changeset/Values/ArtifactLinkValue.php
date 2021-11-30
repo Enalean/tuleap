@@ -33,7 +33,7 @@ final class ArtifactLinkValue
 {
     private function __construct(
         public ArtifactIdentifier $linked_artifact,
-        public ArtifactLinkType $type
+        public ArtifactLinkType $type,
     ) {
     }
 

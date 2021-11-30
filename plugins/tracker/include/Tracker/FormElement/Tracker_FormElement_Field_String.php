@@ -162,7 +162,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $html = '';
         if (isset($submitted_values[$this->getId()])) {
@@ -319,7 +319,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         return $this->getValueDao()->create($changeset_value_id, $value) &&
                $this->extractCrossRefs($artifact, $value);

@@ -52,7 +52,7 @@ class SubmittedValueConvertor
     private $artifact_factory;
 
     public function __construct(
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->artifact_factory = $artifact_factory;
     }
@@ -62,7 +62,7 @@ class SubmittedValueConvertor
      */
     public function convert(
         array $submitted_value,
-        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null,
     ) {
         $submitted_value['list_of_artifactlinkinfo'] = $this->getListOfArtifactLinkInfo(
             $submitted_value,
@@ -75,7 +75,7 @@ class SubmittedValueConvertor
     /** @return Tracker_ArtifactLinkInfo[] */
     private function getListOfArtifactLinkInfo(
         array $submitted_value,
-        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null,
     ) {
         $list_of_artifactlinkinfo = [];
         if ($previous_changesetvalue != null) {
@@ -90,7 +90,7 @@ class SubmittedValueConvertor
 
     private function removeLinksFromSubmittedValue(
         array &$list_of_artifactlinkinfo,
-        array $submitted_value
+        array $submitted_value,
     ) {
         $removed_values = $this->extractRemovedValuesFromSubmittedValue($submitted_value);
 
@@ -111,7 +111,7 @@ class SubmittedValueConvertor
      */
     private function changeTypeOfExistingLinks(
         array &$list_of_artifactlinkinfo,
-        array $submitted_value
+        array $submitted_value,
     ) {
         $types = $this->extractTypesFromSubmittedValue($submitted_value);
 

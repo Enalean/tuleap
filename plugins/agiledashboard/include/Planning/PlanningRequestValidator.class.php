@@ -41,7 +41,7 @@ class Planning_RequestValidator
     public function __construct(
         PlanningFactory $factory,
         TrackerFactory $tracker_factory,
-        ProvideCurrentUser $current_user_provider
+        ProvideCurrentUser $current_user_provider,
     ) {
         $this->factory               = $factory;
         $this->tracker_factory       = $tracker_factory;

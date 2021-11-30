@@ -100,12 +100,12 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
             [
                 'ugroup' => [
-                    'id' => ProjectUGroup::PROJECT_MEMBERS
+                    'id' => ProjectUGroup::PROJECT_MEMBERS,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_FULL => 1,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
@@ -122,12 +122,12 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
             [
                 'ugroup' => [
-                    'id' => ProjectUGroup::PROJECT_MEMBERS
+                    'id' => ProjectUGroup::PROJECT_MEMBERS,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_ADMIN => 1,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
@@ -144,12 +144,12 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
             [
                 'ugroup' => [
-                    'id' => ProjectUGroup::PROJECT_MEMBERS
+                    'id' => ProjectUGroup::PROJECT_MEMBERS,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_SUBMITTER_ONLY => 1,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
@@ -166,12 +166,12 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
             [
                 'ugroup' => [
-                    'id' => ProjectUGroup::PROJECT_MEMBERS
+                    'id' => ProjectUGroup::PROJECT_MEMBERS,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_SUBMITTER => 1,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
@@ -188,12 +188,12 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
             [
                 'ugroup' => [
-                    'id' => ProjectUGroup::PROJECT_MEMBERS
+                    'id' => ProjectUGroup::PROJECT_MEMBERS,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_ASSIGNEE => 1,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
@@ -231,36 +231,36 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
             [
                 'ugroup' => [
-                    'id' => ProjectUGroup::ANONYMOUS
+                    'id' => ProjectUGroup::ANONYMOUS,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_FULL => 1,
-                ]
+                ],
             ],
             [
                 'ugroup' => [
-                    'id' => ProjectUGroup::PROJECT_MEMBERS
+                    'id' => ProjectUGroup::PROJECT_MEMBERS,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_ADMIN => 1,
-                ]
+                ],
             ],
             [
                 'ugroup' => [
-                    'id' => $tracker_admin_id
+                    'id' => $tracker_admin_id,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_ADMIN => 1,
-                ]
+                ],
             ],
             [
                 'ugroup' => [
-                    'id' => $developers_id
+                    'id' => $developers_id,
                 ],
                 'permissions' => [
                     Tracker::PERMISSION_ASSIGNEE => 1,
                     Tracker::PERMISSION_SUBMITTER => 1,
-                ]
+                ],
             ],
         ]);
 

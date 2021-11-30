@@ -93,7 +93,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'No body'  => [null],
-            'No token' => [['not_token' => 'invalid']]
+            'No token' => [['not_token' => 'invalid']],
         ];
     }
 

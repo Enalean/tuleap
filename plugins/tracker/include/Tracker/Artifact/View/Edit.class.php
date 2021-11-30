@@ -45,7 +45,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
-        Tracker_Artifact_ArtifactRenderer $renderer
+        Tracker_Artifact_ArtifactRenderer $renderer,
     ) {
         parent::__construct($artifact, $request, $user);
 

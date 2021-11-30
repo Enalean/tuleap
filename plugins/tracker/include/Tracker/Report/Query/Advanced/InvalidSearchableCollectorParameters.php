@@ -47,7 +47,7 @@ class InvalidSearchableCollectorParameters implements VisitorParameters
         InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
         IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
-        Comparison $comparison
+        Comparison $comparison,
     ) {
         $this->checker_provider                         = $checker_provider;
         $this->metadata_checker                         = $metadata_checker;

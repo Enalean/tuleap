@@ -63,7 +63,7 @@ class FreestyleMappingFactory
 
     public function getValuesMappedToColumn(
         TaskboardTracker $taskboard_tracker,
-        Cardwall_Column $column
+        Cardwall_Column $column,
     ): MappedValuesInterface {
         $rows = $this->dao->searchMappedFieldValuesForColumn($taskboard_tracker, $column);
         if (empty($rows)) {

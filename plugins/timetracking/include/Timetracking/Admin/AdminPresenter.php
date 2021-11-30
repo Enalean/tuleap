@@ -50,12 +50,12 @@ class AdminPresenter
         CSRFSynchronizerToken $csrf_token,
         $is_timetracking_enabled,
         array $read_ugroups,
-        array $write_ugroups
+        array $write_ugroups,
     ) {
         $this->is_timetracking_enabled = $is_timetracking_enabled;
         $this->form_url                = TIMETRACKING_BASE_URL . '/?' . http_build_query([
                 'tracker' => $tracker->getId(),
-                'action'  => 'edit-timetracking'
+                'action'  => 'edit-timetracking',
         ]);
 
         $this->csrf_token = $csrf_token;

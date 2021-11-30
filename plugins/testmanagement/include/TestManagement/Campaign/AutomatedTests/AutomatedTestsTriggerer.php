@@ -55,7 +55,7 @@ class AutomatedTestsTriggerer
             $url,
             [
                 'campaign_id' => JsonCast::toInt($campaign->getArtifact()->getId()),
-                'campaign'    => $campaign->getLabel()
+                'campaign'    => $campaign->getLabel(),
             ]
         );
     }

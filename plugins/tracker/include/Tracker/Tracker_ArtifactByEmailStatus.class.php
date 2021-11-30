@@ -111,7 +111,7 @@ class Tracker_ArtifactByEmailStatus
     private function isRequiredFieldsValid(
         Tracker $tracker,
         Tracker_FormElement_Field $title_field,
-        Tracker_FormElement_Field $description_field
+        Tracker_FormElement_Field $description_field,
     ) {
         $is_required_fields_valid = true;
 

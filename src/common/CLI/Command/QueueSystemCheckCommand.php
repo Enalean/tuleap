@@ -51,7 +51,7 @@ final class QueueSystemCheckCommand extends Command
     public function __construct(
         EventManager $event_manager,
         DBConnection $db_connection,
-        ExecutionDelayedLauncher $execution_delayed_launcher
+        ExecutionDelayedLauncher $execution_delayed_launcher,
     ) {
         parent::__construct(self::NAME);
         $this->event_manager              = $event_manager;

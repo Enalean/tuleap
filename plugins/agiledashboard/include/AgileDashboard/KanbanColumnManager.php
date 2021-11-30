@@ -34,7 +34,7 @@ class AgileDashboard_KanbanColumnManager
     public function __construct(
         AgileDashboard_KanbanColumnDao $column_dao,
         BindStaticValueDao $formelement_field_list_bind_static_value_dao,
-        AgileDashboard_KanbanActionsChecker $kanban_actions_checker
+        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
     ) {
         $this->column_dao                                   = $column_dao;
         $this->formelement_field_list_bind_static_value_dao = $formelement_field_list_bind_static_value_dao;

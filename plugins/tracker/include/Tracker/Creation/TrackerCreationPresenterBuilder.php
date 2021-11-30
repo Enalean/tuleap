@@ -65,7 +65,7 @@ class TrackerCreationPresenterBuilder
         PendingJiraImportDao $pending_jira_import_dao,
         TrackerFactory $tracker_factory,
         DefaultTemplatesCollectionBuilder $default_templates_collection_builder,
-        JiraRunner $jira_runner
+        JiraRunner $jira_runner,
     ) {
         $this->project_manager                      = $project_manager;
         $this->tracker_dao                          = $tracker_dao;
@@ -99,7 +99,7 @@ class TrackerCreationPresenterBuilder
 
         $tracker_colors = [
             'colors_names' => TrackerColor::COLOR_NAMES,
-            'default_color' => TrackerColor::default()->getName()
+            'default_color' => TrackerColor::default()->getName(),
         ];
 
         $display_jira_importer = $this->jira_runner->canBeProcessedAsynchronously();
@@ -134,7 +134,7 @@ class TrackerCreationPresenterBuilder
         $trackers          = $this->tracker_dao->searchByGroupId($project->getID());
         $existing_trackers = [
             'names'      => [],
-            'shortnames' => []
+            'shortnames' => [],
         ];
 
         if ($trackers === false) {
@@ -176,7 +176,7 @@ class TrackerCreationPresenterBuilder
                     'id' => $tracker->getId(),
                     'name' => $tracker->getName(),
                     'description' => $tracker->getDescription(),
-                    'tlp_color' => $tracker->getColor()->getName()
+                    'tlp_color' => $tracker->getColor()->getName(),
                 ];
             }
 
@@ -189,7 +189,7 @@ class TrackerCreationPresenterBuilder
             $trackers[] = [
                 'id' => $id,
                 'name' => $project->getPublicName(),
-                'trackers' => $trackers_base_info
+                'trackers' => $trackers_base_info,
             ];
         }
 

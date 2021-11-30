@@ -462,7 +462,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             'plugin_docman_mydocman',
             'plugin_docman_mydocman_search',
             'plugin_docman_my_embedded',
-            'plugin_docman_project_embedded'
+            'plugin_docman_project_embedded',
         ]);
     }
 
@@ -569,7 +569,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $tooltip_json = new \Tuleap\Layout\TooltipJSON(
             $renderer->renderToString('tooltip-title', [
                 'icon'  => $icon_presenter_builder->buildForItem($item),
-                'title' => $item->getTitle()
+                'title' => $item->getTitle(),
             ]),
             $item->getDescription(),
         );
@@ -593,7 +593,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $request    = new Codendi_Request([
                 'id'       => $event->getValue(),
                 'group_id' => $event->getProject()->getID(),
-                'action'   => 'ajax_reference_tooltip'
+                'action'   => 'ajax_reference_tooltip',
             ]);
             $controller = $this->getHTTPController($request);
             ob_start();
@@ -888,7 +888,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     "/admin/show_pending_documents.php",
                     [
                         'group_id'   => $groupId,
-                        'offsetItem' => ($offset + $limit)
+                        'offsetItem' => ($offset + $limit),
                     ]
                 );
 
@@ -972,7 +972,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     "/admin/show_pending_documents.php",
                     [
                         'group_id'   => $groupId,
-                        'offsetItem' => ($offset + $limit)
+                        'offsetItem' => ($offset + $limit),
                     ]
                 );
 
@@ -1321,7 +1321,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 $this->getPluginPath() . '/?' . http_build_query(
                     [
                         'group_id' => $project->getID(),
-                        'action'   => 'admin_permissions'
+                        'action'   => 'admin_permissions',
                     ]
                 )
             )

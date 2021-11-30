@@ -30,6 +30,6 @@ interface VerifyPrioritizeFeaturesPermission
     public function canUserPrioritizeFeatures(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): bool;
 }

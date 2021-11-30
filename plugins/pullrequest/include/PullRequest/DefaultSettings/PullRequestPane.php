@@ -42,7 +42,7 @@ final class PullRequestPane extends Pane
     public function __construct(
         MergeSettingRetriever $merge_setting_retriever,
         Project $project,
-        $is_active
+        $is_active,
     ) {
         parent::__construct(
             dgettext('tuleap-pullrequest', 'Pull requests'),
@@ -50,7 +50,7 @@ final class PullRequestPane extends Pane
                 [
                     'action'   => 'admin-default-settings',
                     'group_id' => $project->getID(),
-                    'pane'     => self::NAME
+                    'pane'     => self::NAME,
                 ]
             ),
             $is_active,

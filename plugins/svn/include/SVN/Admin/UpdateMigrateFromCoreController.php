@@ -60,7 +60,7 @@ final class UpdateMigrateFromCoreController implements DispatchableWithRequest, 
         \ProjectManager $project_manager,
         SvnPermissionManager $permissions_manager,
         RepositoryManager $repository_manager,
-        BareRepositoryCreator $repository_creator
+        BareRepositoryCreator $repository_creator,
     ) {
         $this->project_manager     = $project_manager;
         $this->permissions_manager = $permissions_manager;

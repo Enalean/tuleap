@@ -51,7 +51,7 @@ class ServiceCVS extends \Service
                 ),
                 'info',
                 $current_pane_shortname
-            )
+            ),
         ];
 
         if ($this->project->isPublic() || user_isloggedin()) {

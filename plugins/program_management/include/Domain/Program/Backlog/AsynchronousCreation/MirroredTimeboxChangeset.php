@@ -43,7 +43,7 @@ final class MirroredTimeboxChangeset
         public MirroredTimeboxIdentifier $mirrored_timebox,
         public MirroredTimeboxChangesetValues $values,
         public UserIdentifier $user,
-        public SubmissionDate $submission_date
+        public SubmissionDate $submission_date,
     ) {
     }
 
@@ -56,7 +56,7 @@ final class MirroredTimeboxChangeset
         MapStatusByValue $status_mapper,
         MirroredTimeboxIdentifier $timebox,
         SourceTimeboxChangesetValues $source_values,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): self {
         $mirror_tracker = $tracker_retriever->getTrackerOfArtifact($timebox);
         $fields         = SynchronizedFieldReferences::fromTrackerIdentifier(

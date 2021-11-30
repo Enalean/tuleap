@@ -119,7 +119,7 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
             [
                 'jdoe',
                 'map:',
-                'There is an existing user jdoe but its email <john.doe@example.com> does not match <jdoe@example.com>. Use action "map:jdoe" to confirm the mapping.'
+                'There is an existing user jdoe but its email <john.doe@example.com> does not match <jdoe@example.com>. Use action "map:jdoe" to confirm the mapping.',
             ],
             $data
         );
@@ -148,7 +148,7 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
                 'jdoe',
                 'map:',
                 'User John Doe (jdoe) has the same email address than following users: John Doe (john) [A], John Doe (admin) (admin_john) [A].'
-                . ' Use one of the following actions to confirm the mapping: "map:john", "map:admin_john".'
+                . ' Use one of the following actions to confirm the mapping: "map:john", "map:admin_john".',
             ],
             $data
         );

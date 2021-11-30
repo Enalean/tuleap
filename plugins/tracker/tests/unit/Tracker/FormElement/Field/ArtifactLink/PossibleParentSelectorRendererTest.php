@@ -101,7 +101,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
                                 )
                                 ->build()
                         )
-                        ->build()
+                        ->build(),
                 ],
                 1
             )
@@ -149,7 +149,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
                                 )
                                 ->build()
                         )
-                        ->build()
+                        ->build(),
                 ],
                 2
             )

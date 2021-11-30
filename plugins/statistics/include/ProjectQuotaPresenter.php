@@ -65,7 +65,7 @@ class ProjectQuotaPresenter
         PaginationPresenter $pagination,
         $default_quota,
         $max_quota,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
     ) {
         $this->header           = $header;
         $this->quotas           = $quotas;

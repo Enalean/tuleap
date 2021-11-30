@@ -58,8 +58,8 @@ class CardsPreviewBuilder
                 [
                     'background_color' => '',
                     'field_id'         => '',
-                    'decorated_value'  => ''
-                ]
+                    'decorated_value'  => '',
+                ],
             ];
         }
 
@@ -73,7 +73,7 @@ class CardsPreviewBuilder
                 $colors[$decorator_background_color] = [
                     'background_color' => $decorator_background_color,
                     'field_id'         => $background_field->getId(),
-                    'decorated_value'  => $this->getDecoratedValue($decorators, $value)
+                    'decorated_value'  => $this->getDecoratedValue($decorators, $value),
                 ];
             }
         }

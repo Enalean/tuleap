@@ -398,7 +398,7 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['sub_task', 'sub-task'],
             ['tache', 'tâche'],
             ['sous_tache', 'Sous-Tâche'],
-            ['une_tache', 'une.tache']
+            ['une_tache', 'une.tache'],
         ];
     }
 }

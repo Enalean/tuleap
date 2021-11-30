@@ -56,7 +56,7 @@ class FineGrainedPermissionRepresentation
         array $rewinders,
         $branch,
         $tag,
-        array $all_ugroup_ids
+        array $all_ugroup_ids,
     ) {
         $this->id             = JsonCast::toInt($id);
         $this->writers        = $writers;

@@ -94,7 +94,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
         RemainingEffortValueRetriever $remaining_effort_value_retriever,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        Tracker_Artifact_PriorityDao $artifact_priority_dao
+        Tracker_Artifact_PriorityDao $artifact_priority_dao,
     ) {
         $this->dao                               = $dao;
         $this->artifact_factory                  = $artifact_factory;
@@ -115,7 +115,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
@@ -126,7 +126,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
@@ -137,7 +137,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $collection = $this->getUnplannedOpenCollection($user, $milestone, $backlog, $redirect_to_self);
 
@@ -148,7 +148,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $collection = $this->getUnplannedCollection($user, $milestone, $backlog, $redirect_to_self);
 
@@ -159,7 +159,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
 
@@ -171,7 +171,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        ?string $redirection_url
+        ?string $redirection_url,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
 
@@ -183,7 +183,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         AgileDashboard_Milestone_Backlog_DescendantItemsCollection $item_collection,
         PFUser $user,
         Planning_Milestone $milestone,
-        ?string $redirection_url
+        ?string $redirection_url,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $artifacts        = [];
         $backlog_item_ids = [];
@@ -231,7 +231,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $artifacts         = [];
         $backlog_item_ids  = [];
@@ -259,7 +259,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
@@ -270,7 +270,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
@@ -285,7 +285,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
@@ -296,7 +296,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         if (isset($this->open_and_closed_collection[$milestone->getArtifactId() ?? 0])) {
             return;
@@ -518,7 +518,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         array $parents,
         array $semantics,
-        $redirect_to_self
+        $redirect_to_self,
     ) {
         $artifact_id = $artifact->getId();
         if (! isset($semantics[$artifact_id])) {
@@ -544,7 +544,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Artifact $artifact,
         array $semantics,
         AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
-        PFUser $user
+        PFUser $user,
     ) {
         $artifact_id = $artifact->getId();
 
@@ -564,7 +564,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Artifact $artifact,
         array $semantics,
         AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->setInitialEffort($backlog_item, $semantics[$artifact->getId() ?? 0]);
         $backlog_item->setRemainingEffort(
@@ -656,7 +656,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         PFUser $user,
         Planning_Milestone $milestone,
         ?string $redirection_url,
-        array $planned
+        array $planned,
     ) {
         foreach ($planned as $planned_artifact_id) {
             if (! $this->open_and_closed_collection[$milestone->getArtifactId() ?? 0]->containsId($planned_artifact_id)) {
@@ -706,7 +706,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Planning_Milestone $milestone,
         ?string $redirect_to_self,
         int $limit,
-        int $offset
+        int $offset,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $rows                  = $this->artifacts_in_explicit_backlog_dao->getTopBacklogItemsForProjectSortedByRank(
             (int) $milestone->getGroupId(),
@@ -743,7 +743,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Planning_Milestone $milestone,
         ?string $redirection_url,
         array $backlog_item_ids,
-        array $artifacts
+        array $artifacts,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
         $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $artifacts);

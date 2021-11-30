@@ -74,7 +74,7 @@ class TagPushWebhookCreateAction
         TuleapReferenceRetriever $tuleap_reference_retriever,
         ReferenceManager $reference_manager,
         TagInfoDao $tag_info_dao,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->credentials_retriever      = $credentials_retriever;
         $this->gitlab_tag_retriever       = $gitlab_tag_retriever;
@@ -87,7 +87,7 @@ class TagPushWebhookCreateAction
 
     public function createTagReferences(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        TagPushWebhookData $tag_push_webhook_data
+        TagPushWebhookData $tag_push_webhook_data,
     ): void {
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
         if ($credentials === null) {
@@ -149,7 +149,7 @@ class TagPushWebhookCreateAction
         GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,
         TagPushWebhookData $tag_push_webhook_data,
-        \Reference $external_reference
+        \Reference $external_reference,
     ): void {
         $cross_reference = new CrossReference(
             $gitlab_repository_integration->getName() . '/' . $tag_push_webhook_data->getTagName(),

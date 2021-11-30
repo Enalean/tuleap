@@ -62,7 +62,7 @@ class Tracker_SemanticFactory
         SimpleXMLElement $full_semantic_xml,
         array $xml_mapping,
         Tracker $tracker,
-        array $created_trackers_mapping
+        array $created_trackers_mapping,
     ): ?Tracker_Semantic {
         $attributes = $xml->attributes();
         $type       = $attributes['type'];
@@ -123,7 +123,7 @@ class Tracker_SemanticFactory
         SimpleXMLElement $full_semantic_xml,
         array $xml_mapping,
         Tracker $tracker,
-        $type
+        $type,
     ) {
         $semantic = null;
 
@@ -239,7 +239,7 @@ class Tracker_SemanticFactory
             new SemanticDoneDuplicator(
                 new SemanticDoneDao(),
                 new Tracker_Semantic_StatusDao()
-            )
+            ),
         ];
 
         EventManager::instance()->processEvent(

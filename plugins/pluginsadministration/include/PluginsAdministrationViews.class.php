@@ -205,14 +205,14 @@ class PluginsAdministrationViews extends Views
                 [
                     'action'    => $action,
                     'plugin_id' => $id,
-                    'view'      => $view
+                    'view'      => $view,
                 ]
             );
     }
 
     private function getPluginResourceRestrictorPresenter(
         Plugin $plugin,
-        PluginResourceRestrictor $plugin_resource_restrictor
+        PluginResourceRestrictor $plugin_resource_restrictor,
     ) {
         return new PluginsAdministration_ManageAllowedProjectsPresenter(
             $plugin,
@@ -291,7 +291,7 @@ class PluginsAdministrationViews extends Views
                 'is_there_unmet_dependencies' => $is_there_unmet_dependencies,
                 'unmet_dependencies'          => $unmet_dependencies,
                 'csrf_token'                  => new CSRFSynchronizerToken('/plugins/pluginsadministration/'),
-                'is_enabled'                  => $plugin['available']
+                'is_enabled'                  => $plugin['available'],
             ];
         }
 

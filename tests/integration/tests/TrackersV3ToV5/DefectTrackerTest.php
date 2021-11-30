@@ -153,8 +153,8 @@ class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertEquals($this->defect_tracker->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker::PERMISSION_FULL
-            ]
+                Tracker::PERMISSION_FULL,
+            ],
         ]);
     }
 
@@ -168,13 +168,13 @@ class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::REGISTERED => [
-                Tracker_FormElement::PERMISSION_SUBMIT
+                Tracker_FormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -189,10 +189,10 @@ class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -217,13 +217,13 @@ class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($field->isMultiple());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::REGISTERED => [
-                Tracker_FormElement::PERMISSION_SUBMIT
+                Tracker_FormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -238,7 +238,7 @@ class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
         ]);
     }
@@ -253,13 +253,13 @@ class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::REGISTERED => [
-                Tracker_FormElement::PERMISSION_SUBMIT
+                Tracker_FormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }
@@ -274,10 +274,10 @@ class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(0, $field->isUsed());
         $this->assertEquals($field->getPermissionsByUgroupId(), [
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ
+                Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE
+                Tracker_FormElement::PERMISSION_UPDATE,
             ],
         ]);
     }

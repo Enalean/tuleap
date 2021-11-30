@@ -56,7 +56,7 @@ class Git_Mirror_MirrorDataMapper
         ProjectManager $project_manager,
         Git_SystemEventManager $git_system_event_manager,
         Git_Gitolite_GitoliteRCReader $reader,
-        DefaultProjectMirrorDao $default_dao
+        DefaultProjectMirrorDao $default_dao,
     ) {
         $this->dao                      = $dao;
         $this->user_manager             = $user_manager;
@@ -91,7 +91,7 @@ class Git_Mirror_MirrorDataMapper
             'id'       => $mirror_id,
             'url'      => $url,
             'hostname' => $hostname,
-            'name'     => $name
+            'name'     => $name,
         ]);
     }
 
@@ -140,7 +140,7 @@ class Git_Mirror_MirrorDataMapper
         $user = new PFUser([
             'user_name'       => self::MIRROR_OWNER_PREFIX . $mirror_id,
             'status'          => 'A',
-            'unix_status'     => 'A'
+            'unix_status'     => 'A',
         ]);
         $user->setPassword($password);
         $this->user_manager->createAccount($user);

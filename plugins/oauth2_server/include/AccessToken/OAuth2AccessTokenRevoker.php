@@ -55,7 +55,7 @@ class OAuth2AccessTokenRevoker
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2AuthorizationCodeRevoker $authorization_code_revoker,
         OAuth2AccessTokenDAO $access_token_dao,
-        SplitTokenVerificationStringHasher $hasher
+        SplitTokenVerificationStringHasher $hasher,
     ) {
         $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
         $this->authorization_code_revoker           = $authorization_code_revoker;

@@ -33,7 +33,7 @@ class GitlabMergeRequestReference extends \Reference
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,
         Project $project,
-        int $id
+        int $id,
     ) {
         parent::__construct(
             0,

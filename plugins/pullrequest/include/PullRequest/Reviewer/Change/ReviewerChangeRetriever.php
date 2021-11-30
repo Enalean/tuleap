@@ -45,7 +45,7 @@ class ReviewerChangeRetriever
     public function __construct(
         ReviewerChangeDAO $dao,
         Factory $pull_request_factory,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->dao                  = $dao;
         $this->pull_request_factory = $pull_request_factory;

@@ -71,7 +71,7 @@ class HierarchyController
         Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
         HierarchyDAO $dao,
         Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
-        ArtifactLinksUsageDao $artifact_links_usage_dao
+        ArtifactLinksUsageDao $artifact_links_usage_dao,
     ) {
         $this->request                            = $request;
         $this->tracker                            = $tracker;
@@ -164,7 +164,7 @@ class HierarchyController
         $redirect = http_build_query(
             [
                 'tracker' => $this->tracker->getId(),
-                'func'    => 'admin-hierarchy'
+                'func'    => 'admin-hierarchy',
             ]
         );
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . $redirect);

@@ -36,7 +36,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingDao $dao,
         \Psr\Log\LoggerInterface $logger,
-        $gitolite_admin_working_copy
+        $gitolite_admin_working_copy,
     ) {
         $this->dao                         = $dao;
         $this->logger                      = $logger;

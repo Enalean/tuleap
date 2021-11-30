@@ -69,7 +69,7 @@ class GlobalButtonsActionPresenter
         ?ArtifactMoveModalPresenter $artifact_move_modal_presenter = null,
         ?ArtifactCopyButtonPresenter $artifact_copy_button_presenter = null,
         ?ArtifactNotificationsButtonPresenter $artifact_notifications_button_presenter = null,
-        ?ArtifactOriginalEmailButtonPresenter $artifact_original_email_button_presenter = null
+        ?ArtifactOriginalEmailButtonPresenter $artifact_original_email_button_presenter = null,
     ) {
         $this->artifact_move_button_presenter           = $artifact_move_button_presenter;
         $this->artifact_move_modal_presenter            = $artifact_move_modal_presenter;
@@ -105,7 +105,7 @@ class GlobalButtonsActionPresenter
     private function hasPrimaryAction(
         ?ArtifactMoveButtonPresenter $artifact_move_button_presenter = null,
         ?ArtifactCopyButtonPresenter $artifact_copy_button_presenter = null,
-        ?ArtifactOriginalEmailButtonPresenter $artifact_original_email_button_presenter = null
+        ?ArtifactOriginalEmailButtonPresenter $artifact_original_email_button_presenter = null,
     ) {
         return ($artifact_move_button_presenter !== null ||
             $artifact_copy_button_presenter !== null ||

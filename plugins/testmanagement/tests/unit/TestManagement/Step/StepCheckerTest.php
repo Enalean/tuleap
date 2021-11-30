@@ -33,7 +33,7 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $step =
             [
                 "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
         self::expectException(RestException::class);
@@ -64,7 +64,7 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 "description"             => "some description",
                 "description_format"      => "vroom_format",
                 "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
         self::expectException(RestException::class);
@@ -81,7 +81,7 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 "description"             => "some description",
                 "description_format"      =>  Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 "expected_results"        => "some results",
-                "expected_results_format" => "honk_honk_format"
+                "expected_results_format" => "honk_honk_format",
             ];
 
         self::expectException(RestException::class);

@@ -33,7 +33,7 @@ class DashboardWidgetLinePresenter
     public function __construct(
         $line_id,
         $layout,
-        array $widget_columns
+        array $widget_columns,
     ) {
         $this->line_id        = $line_id;
         $this->layout         = $layout;

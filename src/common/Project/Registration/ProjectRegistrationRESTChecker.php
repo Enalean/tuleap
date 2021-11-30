@@ -41,7 +41,7 @@ final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
     public function __construct(
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         CategoryCollectionConsistencyChecker $category_collection_consistency_checker,
-        ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $submitted_fields_collection_consistency_checker
+        ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $submitted_fields_collection_consistency_checker,
     ) {
         $this->default_project_visibility_retriever            = $default_project_visibility_retriever;
         $this->category_collection_consistency_checker         = $category_collection_consistency_checker;

@@ -94,7 +94,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitter = $this->retriever->retrieveUserFromAPIData([
             'accountId' => '5e8dss456a2d45f3',
             'displayName' => 'John Doe',
-            'emailAddress' => 'johndoe@example.com'
+            'emailAddress' => 'johndoe@example.com',
         ]);
 
         $this->assertEquals("John Doe", $submitter->getRealName());
@@ -109,7 +109,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 $tuleap_user,
                 \Mockery::mock(\PFUser::class),
-                \Mockery::mock(\PFUser::class)
+                \Mockery::mock(\PFUser::class),
             ]);
 
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
@@ -118,7 +118,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitter = $this->retriever->retrieveUserFromAPIData([
             'accountId' => '5e8dss456a2d45f3',
             'displayName' => 'John Doe',
-            'emailAddress' => 'johndoe@example.com'
+            'emailAddress' => 'johndoe@example.com',
         ]);
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
@@ -138,7 +138,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitter = $this->retriever->retrieveUserFromAPIData([
             'accountId' => '5e8dss456a2d45f3',
             'displayName' => 'John Doe',
-            'emailAddress' => 'johndoe@example.com'
+            'emailAddress' => 'johndoe@example.com',
         ]);
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
@@ -169,7 +169,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $submitter = $this->retriever->retrieveUserFromAPIData([
             'accountId'   => '5e8dss456a2d45f3',
-            'displayName' => 'John Doe'
+            'displayName' => 'John Doe',
         ]);
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());

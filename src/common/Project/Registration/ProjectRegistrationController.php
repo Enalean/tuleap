@@ -54,7 +54,7 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
         TemplateRendererFactory $template_renderer_factory,
         IncludeAssets $assets,
         ProjectRegistrationUserPermissionChecker $permission_checker,
-        ProjectRegistrationPresenterBuilder $presenter_builder
+        ProjectRegistrationPresenterBuilder $presenter_builder,
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
         $this->presenter_builder         = $presenter_builder;

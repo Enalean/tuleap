@@ -133,7 +133,7 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [
-                'delete' => [123, 456]
+                'delete' => [123, 456],
             ],
             $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([]), $this->field, $this->artifact)
         );
@@ -396,7 +396,7 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [
-                ['id' => 123]
+                ['id' => 123],
             ],
             $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null)
         );

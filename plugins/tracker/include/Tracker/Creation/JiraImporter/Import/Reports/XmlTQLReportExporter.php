@@ -49,7 +49,7 @@ class XmlTQLReportExporter
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
         XML_SimpleXMLCDATAFactory $cdata_factory,
-        XmlReportTableExporter $report_table_exporter
+        XmlReportTableExporter $report_table_exporter,
     ) {
         $this->default_criteria_exporter = $default_criteria_exporter;
         $this->cdata_factory             = $cdata_factory;
@@ -67,7 +67,7 @@ class XmlTQLReportExporter
         bool $is_default,
         string $tql_query,
         array $criteria_fields,
-        array $column_fields
+        array $column_fields,
     ): void {
         $report_node = $reports_node->addChild('report');
         $report_node->addAttribute("is_default", $is_default ? '1' : '0');

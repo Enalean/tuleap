@@ -60,7 +60,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
                      'last'    => '',
                      'order'   => '',
                      'style'   => 'button', // or 'text'
-                     'class'   => 'wikiaction'
+                     'class'   => 'wikiaction',
                      ];
     }
 
@@ -74,7 +74,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
                              'last'     => _("Last"),
                              'up'       => _("Up"),
                              'contents'  => _("Contents"),
-                             'index'    => _("Index")
+                             'index'    => _("Index"),
                              ];
         if ($order) { // reorder the buttons: comma-delimited
             $new_directions = [];

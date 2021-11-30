@@ -74,7 +74,7 @@ class ExportXmlProject implements Dispatchable
         \UserXMLExporter $user_XML_exporter,
         ArchiveInterface $archive,
         string $temporary_dump_path_on_filesystem,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->project                           = $project;
         $this->options                           = $options;

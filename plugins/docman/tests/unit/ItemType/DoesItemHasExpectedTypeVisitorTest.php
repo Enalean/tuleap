@@ -41,7 +41,7 @@ final class DoesItemHasExpectedTypeVisitorTest extends \Tuleap\Test\PHPUnit\Test
         Docman_EmbeddedFile::class,
         Docman_Empty::class,
         Docman_Document::class,
-        Docman_Item::class
+        Docman_Item::class,
     ];
 
     public function testExpectedTypeIsCorrectlyIdentified(): void

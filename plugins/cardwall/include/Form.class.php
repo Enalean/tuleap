@@ -83,7 +83,7 @@ class Cardwall_Form
                 }
                 $this->possible_columns[] = [
                     'field'    => $form_element,
-                    'selected' => $selected
+                    'selected' => $selected,
                 ];
             }
         }

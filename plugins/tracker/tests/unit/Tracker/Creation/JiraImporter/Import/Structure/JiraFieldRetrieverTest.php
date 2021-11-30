@@ -51,7 +51,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $system_field['key']              = 'summary';
                 $system_field['hasDefaultValue']  = false;
                 $system_field['operation']        = [
-                    'set'
+                    'set',
                 ];
 
                 $custom_field                       = [];
@@ -63,12 +63,12 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $custom_field['key']                = 'customfield_10071';
                 $custom_field['hasDefaultValue']    = false;
                 $custom_field['operation']          = [
-                    'set'
+                    'set',
                 ];
 
                 $project_meta_content['projects'][0]['issuetypes'][0]['fields'] = [
                     'summary' => $system_field,
-                    'custom_01' => $custom_field
+                    'custom_01' => $custom_field,
                 ];
 
                 return $project_meta_content;

@@ -98,7 +98,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
         LesserThanOrEqualComparisonChecker $lesser_than_or_equal_comparison_checker,
         BetweenComparisonChecker $between_comparison_checker,
         InComparisonChecker $in_comparison_checker,
-        NotInComparisonChecker $not_in_comparison_checker
+        NotInComparisonChecker $not_in_comparison_checker,
     ) {
         $this->invalid_searchable_collector_visitor     = $invalid_searchable_collector_visitor;
         $this->metadata_checker                         = $metadata_checker;
@@ -120,7 +120,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
         Visitable $parsed_query,
         InvalidSearchablesCollection $invalid_searchables_collection,
         array $trackers,
-        PFUser $user
+        PFUser $user,
     ) {
         $parsed_query->accept(
             $this,
@@ -222,7 +222,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
         Comparison $comparison,
         ICheckMetadataForAComparison $metadata_checker,
         ComparisonChecker $comparison_checker,
-        InvalidComparisonCollectorParameters $parameters
+        InvalidComparisonCollectorParameters $parameters,
     ) {
         $comparison->getSearchable()->accept(
             $this->invalid_searchable_collector_visitor,

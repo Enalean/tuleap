@@ -59,7 +59,7 @@ class ListPresenterBuilder
         GitDao $dao,
         UserManager $user_manager,
         EventDispatcherInterface $event_manager,
-        ProjectFlagsBuilder $project_flags_builder
+        ProjectFlagsBuilder $project_flags_builder,
     ) {
         $this->git_permissions_manager = $git_permissions_manager;
         $this->dao                     = $dao;

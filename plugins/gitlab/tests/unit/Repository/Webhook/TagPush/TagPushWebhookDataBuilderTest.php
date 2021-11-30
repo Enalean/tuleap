@@ -30,7 +30,7 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfRefIsNotInContent(): void
     {
         $webhook_data = [
-            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"]
+            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
         ];
 
         $builder = new TagPushWebhookDataBuilder();

@@ -51,7 +51,7 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
         InviteBuddyConfiguration $configuration,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
         $this->configuration       = $configuration;

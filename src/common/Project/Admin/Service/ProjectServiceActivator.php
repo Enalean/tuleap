@@ -65,7 +65,7 @@ class ProjectServiceActivator
         \ServiceDao $service_dao,
         \ServiceManager $service_manager,
         ServiceLinkDataBuilder $link_data_builder,
-        ReferenceManager $reference_manager
+        ReferenceManager $reference_manager,
     ) {
         $this->service_creator   = $service_creator;
         $this->event_manager     = $event_manager;
@@ -83,7 +83,7 @@ class ProjectServiceActivator
         Project $group,
         Project $template_group,
         ProjectCreationData $data,
-        array $legacy
+        array $legacy,
     ): void {
         $template_id = (int) $template_group->getID();
 
@@ -102,7 +102,7 @@ class ProjectServiceActivator
         ProjectCreationData $data,
         Project $template_group,
         Project $group,
-        $template_service_list
+        $template_service_list,
     ): void {
         $group_id    = (int) $group->getID();
         $template_id = (int) $template_group->getID();
@@ -126,7 +126,7 @@ class ProjectServiceActivator
     private function retrieveLegacyServiceUsage(
         ProjectCreationData $data,
         array $template_service,
-        string $short_name
+        string $short_name,
     ) {
         $service_info = $data->getServiceInfo($template_service['service_id']);
         if (isset($service_info['is_used'])) {

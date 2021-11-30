@@ -32,7 +32,7 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
         array $groups_permissions,
         $is_compatibility_view_enabled,
         array $read_ugroups,
-        array $write_ugroups
+        array $write_ugroups,
     ) {
         parent::__construct($project);
         $this->groups_permissions            = $groups_permissions;
@@ -89,7 +89,7 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
     {
         return MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query([
             'group_id' => $this->project->getID(),
-            'action'   => 'save_permissions'
+            'action'   => 'save_permissions',
         ]);
     }
 

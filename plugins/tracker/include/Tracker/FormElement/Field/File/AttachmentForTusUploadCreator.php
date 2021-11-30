@@ -45,7 +45,7 @@ class AttachmentForTusUploadCreator implements AttachmentCreator
     public function __construct(
         FileInfoForTusUploadedFileReadyToBeAttachedProvider $provider,
         FileOngoingUploadDao $ongoing_upload_dao,
-        AttachmentCreator $next_creator_in_chain
+        AttachmentCreator $next_creator_in_chain,
     ) {
         $this->ongoing_upload_dao    = $ongoing_upload_dao;
         $this->next_creator_in_chain = $next_creator_in_chain;
@@ -56,7 +56,7 @@ class AttachmentForTusUploadCreator implements AttachmentCreator
         PFUser $current_user,
         Tracker_FormElement_Field_File $field,
         array $submitted_value_info,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): ?Tracker_FileInfo {
         if (! isset($submitted_value_info['tus-uploaded-id'])) {
             return $this->next_creator_in_chain->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);

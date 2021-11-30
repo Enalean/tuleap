@@ -321,7 +321,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             [
                 $config->getCampaignTrackerId($project),
                 $config->getTestDefinitionTrackerId($project),
-                $config->getTestExecutionTrackerId($project)
+                $config->getTestExecutionTrackerId($project),
             ]
         );
     }
@@ -678,7 +678,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     private function displayStepDefinitionBadUsageWarnings(
         FieldUsageDetector $field_usage,
         Tracker $tracker,
-        Response $response
+        Response $response,
     ): void {
         if (! $field_usage->isStepDefinitionFieldUsed($tracker->getId())) {
             return;
@@ -711,7 +711,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     private function displayStepExecutionBadUsageWarnings(
         FieldUsageDetector $field_usage,
         Tracker $tracker,
-        Response $response
+        Response $response,
     ): void {
         if (! $field_usage->isStepExecutionFieldUsed($tracker->getId())) {
             return;

@@ -250,7 +250,7 @@ function form_Start($serviceURI = "")
 //=============================================================================
 function form_End(
     $SubmitLegend = DEFAULT_SUBMIT_BUTTON,
-    $HaveResetButton = FORM_HAVE_RESET_BUTTON
+    $HaveResetButton = FORM_HAVE_RESET_BUTTON,
 ) {
     global $gInForm, $gFormName, $gFormUsedDateBox, $gFormHiddenParams,
         $gValidationCollection, $gFormSectionLevel, $gFormGroupLevel,

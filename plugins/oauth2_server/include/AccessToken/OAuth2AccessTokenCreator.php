@@ -64,7 +64,7 @@ class OAuth2AccessTokenCreator
         OAuth2AccessTokenDAO $dao,
         OAuth2ScopeSaver $scope_saver,
         DateInterval $access_token_expiration_delay,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->access_token_formatter        = $access_token_formatter;
         $this->hasher                        = $hasher;

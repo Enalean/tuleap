@@ -68,7 +68,7 @@ class Statistics_DiskUsageManager
         Statistics_DiskUsageDao $dao,
         SVNCollector $svn_collector,
         CVSCollector $cvs_collector,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->dao           = $dao;
         $this->svn_collector = $svn_collector;
@@ -385,7 +385,7 @@ class Statistics_DiskUsageManager
             $project_size = $project_row['size'];
             $result       = [
                 'group_id' => $group_id,
-                'result'   => $project_size
+                'result'   => $project_size,
             ];
         }
 
@@ -487,7 +487,7 @@ class Statistics_DiskUsageManager
         $project_id,
         $service,
         $path,
-        array &$time_to_collect
+        array &$time_to_collect,
     ) {
         $start = microtime(true);
         $size  = $this->getDirSize($path . '/');
@@ -570,7 +570,7 @@ class Statistics_DiskUsageManager
                 'project_row'      => $row,
                 'project'          => $project,
                 'collect_date'     => $collect_date,
-                'time_to_collect'  => &$time_to_collect
+                'time_to_collect'  => &$time_to_collect,
             ];
 
             $this->event_manager->processEvent(

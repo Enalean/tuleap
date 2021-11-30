@@ -45,7 +45,7 @@ final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends \Tuleap\Test
             [
                 12 => ['label' => 'Todo', 'bgcolor' => '#000000'],
                 13 => ['label' => ''],
-                14 => ['label' => 'Done', 'bgcolor' => '#16ed9d']
+                14 => ['label' => 'Done', 'bgcolor' => '#16ed9d'],
             ]
         );
         $this->dao->shouldReceive('save')->with($this->tracker_id, 12, 'Todo', 0, 0, 0)->once();

@@ -88,7 +88,7 @@ class RepositoryCreator
         ProjectHistoryDao $history_dao,
         HistoryValueFormatter $history_value_formatter,
         CITokenManager $ci_token_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->factory                 = $factory;
         $this->backend_gitolite        = $backend_gitolite;

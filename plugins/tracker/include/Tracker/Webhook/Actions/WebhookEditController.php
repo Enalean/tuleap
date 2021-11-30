@@ -58,7 +58,7 @@ class WebhookEditController implements DispatchableWithRequest
         WebhookFactory $webhook_factory,
         TrackerFactory $tracker_factory,
         WebhookDao $dao,
-        WebhookURLValidator $validator
+        WebhookURLValidator $validator,
     ) {
         $this->webhook_factory = $webhook_factory;
         $this->tracker_factory = $tracker_factory;
@@ -118,7 +118,7 @@ class WebhookEditController implements DispatchableWithRequest
         return '/plugins/tracker/?' . http_build_query(
             [
                 "func"    => "admin-webhooks",
-                "tracker" => $tracker->getId()
+                "tracker" => $tracker->getId(),
             ]
         );
     }

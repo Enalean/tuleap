@@ -37,7 +37,7 @@ class SimilarFieldsFormatter
 
     public function __construct(
         CSVFormatterVisitor $csv_formatter_visitor,
-        BindToValueVisitor $bind_to_value_visitor
+        BindToValueVisitor $bind_to_value_visitor,
     ) {
         $this->csv_formatter_visitor = $csv_formatter_visitor;
         $this->bind_to_value_visitor = $bind_to_value_visitor;
@@ -49,7 +49,7 @@ class SimilarFieldsFormatter
     public function formatSimilarFields(
         Artifact $artifact,
         SimilarFieldCollection $similar_fields,
-        FormatterParameters $parameters
+        FormatterParameters $parameters,
     ) {
         $field_identifiers = $similar_fields->getFieldIdentifiers();
         $last_changeset    = $artifact->getLastChangeset();
@@ -74,7 +74,7 @@ class SimilarFieldsFormatter
     private function getFieldValue(
         \Tracker_Artifact_Changeset $last_changeset,
         \Tracker_FormElement_Field $field,
-        FormatterParameters $parameters
+        FormatterParameters $parameters,
     ) {
         $changeset_value = $last_changeset->getValue($field);
         if ($changeset_value === null) {

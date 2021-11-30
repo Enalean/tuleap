@@ -48,7 +48,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                    'order'    => 'reverse',        // latest first
                    'info'     => 'month,numpages', // ignored
                    'month'    => false,
-                   'noheader' => 0
+                   'noheader' => 0,
                    ];
     }
 

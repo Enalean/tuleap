@@ -47,7 +47,7 @@ class ProjectPresenter
         ProjectManager $project_manager,
         PFUser $current_user,
         array $trove_cats,
-        ?string $project_icon
+        ?string $project_icon,
     ) {
         $this->name          = $project->getPublicName();
         $this->access        = new ProjectAccessPresenter($project->getAccess());

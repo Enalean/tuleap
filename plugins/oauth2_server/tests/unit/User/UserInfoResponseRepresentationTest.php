@@ -40,7 +40,7 @@ final class UserInfoResponseRepresentationTest extends \Tuleap\Test\PHPUnit\Test
     public function testBuildsRepresentation(
         bool $with_email,
         bool $with_profile,
-        string $expected_json
+        string $expected_json,
     ): void {
         $user           = UserTestBuilder::aUser()->withId(110)
             ->withEmail('user@example.com')
@@ -70,23 +70,23 @@ final class UserInfoResponseRepresentationTest extends \Tuleap\Test\PHPUnit\Test
             'With subject claim only' => [
                 false,
                 false,
-                '{"sub":"110"}'
+                '{"sub":"110"}',
             ],
             'With email'              => [
                 true,
                 false,
-                '{"sub":"110","email":"user@example.com","email_verified":true}'
+                '{"sub":"110","email":"user@example.com","email_verified":true}',
             ],
             'With profile'            => [
                 false,
                 true,
-                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
+                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}',
             ],
             'With all claims'         => [
                 true,
                 true,
-                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
-            ]
+                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}',
+            ],
         ];
     }
 }

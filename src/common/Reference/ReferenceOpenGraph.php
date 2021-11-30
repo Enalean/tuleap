@@ -41,7 +41,7 @@ class ReferenceOpenGraph
     public function __construct(
         Codendi_HTMLPurifier $purifier,
         Reference $reference,
-        Embed $embed
+        Embed $embed,
     ) {
         $this->purifier  = $purifier;
         $this->reference = $reference;

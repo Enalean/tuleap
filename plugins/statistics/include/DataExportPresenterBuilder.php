@@ -31,7 +31,7 @@ class DataExportPresenterBuilder
         $services_usage_end_date,
         $scm_statistics_start_date,
         $scm_statistics_end_date,
-        $scm_statistics_selected_project
+        $scm_statistics_selected_project,
     ) {
         if (! $services_usage_start_date) {
             $services_usage_start_date_time = new DateTime();

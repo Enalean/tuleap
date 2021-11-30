@@ -59,7 +59,7 @@ class WikiPageVersionContentFormatter
     private function getTransformedContent(
         WikiPage $wiki_page,
         WikiPageVersion $version,
-        WikiRequest $request
+        WikiRequest $request,
     ) {
         $dbi      = $request->_dbi;
         $page_db  = $dbi->getPage($wiki_page->getPagename());

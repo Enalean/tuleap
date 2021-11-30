@@ -70,7 +70,7 @@ final class MirroredTimeboxChangesetValues
         MapStatusByValue $status_mapper,
         SourceTimeboxChangesetValues $field_values,
         SynchronizedFieldReferences $target_fields,
-        ?ArtifactLinkValue $artifact_link_value
+        ?ArtifactLinkValue $artifact_link_value,
     ): self {
         $mapped_status = MappedStatusValue::fromStatusValueAndListField(
             $status_mapper,

@@ -55,7 +55,7 @@ final class AppsPresenter
     public function __construct(
         CSRFSynchronizerTokenPresenter $csrf_token,
         AccountTabPresenterCollection $tabs,
-        AccountAppPresenter ...$app_presenters
+        AccountAppPresenter ...$app_presenters,
     ) {
         $this->csrf_token = $csrf_token;
         $this->tabs       = $tabs;

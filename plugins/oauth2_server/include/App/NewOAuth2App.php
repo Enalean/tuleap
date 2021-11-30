@@ -64,7 +64,7 @@ final class NewOAuth2App
         SplitTokenVerificationString $secret,
         string $hashed_secret,
         ?\Project $project,
-        bool $use_pkce
+        bool $use_pkce,
     ) {
         $this->name              = $name;
         $this->redirect_endpoint = $redirect_endpoint;
@@ -82,7 +82,7 @@ final class NewOAuth2App
         string $redirect_endpoint,
         bool $use_pkce,
         \Project $project,
-        SplitTokenVerificationStringHasher $hasher
+        SplitTokenVerificationStringHasher $hasher,
     ): self {
         return self::fromAppData($name, $redirect_endpoint, $use_pkce, $project, $hasher);
     }
@@ -94,7 +94,7 @@ final class NewOAuth2App
         string $name,
         string $redirect_endpoint,
         bool $use_pkce,
-        SplitTokenVerificationStringHasher $hasher
+        SplitTokenVerificationStringHasher $hasher,
     ): self {
         return self::fromAppData($name, $redirect_endpoint, $use_pkce, null, $hasher);
     }
@@ -107,7 +107,7 @@ final class NewOAuth2App
         string $redirect_endpoint,
         bool $use_pkce,
         ?\Project $project,
-        SplitTokenVerificationStringHasher $hasher
+        SplitTokenVerificationStringHasher $hasher,
     ): self {
         $is_data_valid = self::isAppDataValid($name, $redirect_endpoint);
 

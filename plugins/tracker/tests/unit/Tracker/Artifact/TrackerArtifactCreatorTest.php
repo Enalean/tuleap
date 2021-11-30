@@ -114,7 +114,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->changeset_creator,
             $this->visit_recorder,
             new \Psr\Log\NullLogger(),
-            new DBTransactionExecutorPassthrough()
+            new DBTransactionExecutorPassthrough(),
         ])->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->creator->shouldReceive("createNewChangeset")->andReturn($changeset);

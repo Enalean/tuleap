@@ -48,7 +48,7 @@ class BurnupCacheChecker
         BurnupCacheGenerator $cache_generator,
         ChartConfigurationValueChecker $chart_value_checker,
         BurnupCacheDao $burnup_cache_dao,
-        ChartCachedDaysComparator $cache_days_comparator
+        ChartCachedDaysComparator $cache_days_comparator,
     ) {
         $this->cache_generator       = $cache_generator;
         $this->chart_value_checker   = $chart_value_checker;
@@ -75,7 +75,7 @@ class BurnupCacheChecker
     private function isCacheCompleteForBurnup(
         Artifact $artifact,
         TimePeriodWithoutWeekEnd $time_period,
-        \PFUser $user
+        \PFUser $user,
     ) {
         if ($this->chart_value_checker->hasStartDate($artifact, $user)) {
             $cached_days = $this->burnup_cache_dao->getNumberOfCachedDays(

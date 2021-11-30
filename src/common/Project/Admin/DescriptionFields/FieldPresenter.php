@@ -48,7 +48,7 @@ class FieldPresenter
         $type_value,
         $type_label,
         $rank_on_screen,
-        bool $is_system
+        bool $is_system,
     ) {
         $this->id                   = $id;
         $this->name                 = $name;

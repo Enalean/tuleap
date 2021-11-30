@@ -100,7 +100,7 @@ class PendingJiraImport
         string $tracker_name,
         string $tracker_shortname,
         string $tracker_color,
-        string $tracker_description
+        string $tracker_description,
     ) {
         $this->id                   = $id;
         $this->project              = $project;

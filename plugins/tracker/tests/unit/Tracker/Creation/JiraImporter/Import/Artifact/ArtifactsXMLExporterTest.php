@@ -240,16 +240,16 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                                 'summary'   => 'summary01',
                                 'issuetype' =>
                                     [
-                                        'id' => '10004'
+                                        'id' => '10004',
                                     ],
                                 'created' => '2020-03-25T14:10:10.823+0100',
                                 'updated' => '2020-04-25T14:10:10.823+0100',
                                 'creator' => [
                                     'displayName' => 'Mysterio',
-                                    'accountId' => 'e8d453qs8f47d538s'
-                                ]
+                                    'accountId' => 'e8d453qs8f47d538s',
+                                ],
                             ],
-                            'renderedFields' => []
+                            'renderedFields' => [],
                         ],
                         [
                             'id'     => '10043',
@@ -259,32 +259,32 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                                 'summary'   => 'summary02',
                                 'issuetype' =>
                                     [
-                                        'id' => '10004'
+                                        'id' => '10004',
                                     ],
                                 'created' => '2020-03-26T14:10:10.823+0100',
                                 'updated' => '2020-04-26T14:10:10.823+0100',
                                 'creator' => [
                                     'displayName' => 'Mysterio',
-                                    'accountId' => 'e8d453qs8f47d538s'
-                                ]
+                                    'accountId' => 'e8d453qs8f47d538s',
+                                ],
                             ],
-                            'renderedFields' => []
-                        ]
-                    ]
+                            'renderedFields' => [],
+                        ],
+                    ],
                 ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
-                'comments'   => []
+                'comments'   => [],
                 ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
-                'comments'   => []
+                'comments'   => [],
                 ];
 
         $issue_collection = new IssueAPIRepresentationCollection();
@@ -348,19 +348,19 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                                 'summary'   => 'summary01',
                                 'issuetype' =>
                                     [
-                                        'id' => '10004'
+                                        'id' => '10004',
                                     ],
                                 'created' => '2020-03-25T14:10:10.823+0100',
                                 'updated' => '2020-04-25T14:10:10.823+0100',
                                 'creator' => [
                                     'displayName' => 'John Doe',
                                     'emailAddress' => 'johndoe@example.com',
-                                    'accountId' => 'e8d4s2c53z'
-                                ]
+                                    'accountId' => 'e8d4s2c53z',
+                                ],
                             ],
-                            'renderedFields' => []
-                        ]
-                    ]
+                            'renderedFields' => [],
+                        ],
+                    ],
                 ];
 
         $john_doe = Mockery::mock(\PFUser::class);
@@ -386,32 +386,32 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                                 'summary'   => 'summary02',
                                 'issuetype' =>
                                     [
-                                        'id' => '10004'
+                                        'id' => '10004',
                                     ],
                                 'created' => '2020-03-26T14:10:10.823+0100',
                                 'updated' => '2020-04-26T14:10:10.823+0100',
                                 'creator' => [
                                     'displayName' => 'Mysterio',
-                                    'accountId' => 'e8d4s2c53z'
-                                ]
+                                    'accountId' => 'e8d4s2c53z',
+                                ],
                             ],
-                            'renderedFields' => []
-                        ]
-                    ]
+                            'renderedFields' => [],
+                        ],
+                    ],
                 ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
-                'comments'   => []
+                'comments'   => [],
                 ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
                 'startAt'    => 0,
                 'maxResults' => 50,
                 'total'      => 0,
-                'comments'   => []
+                'comments'   => [],
                 ];
 
         $issue_collection = new IssueAPIRepresentationCollection();
@@ -437,7 +437,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 "startAt"    => 0,
                 "total"      => 0,
                 "isLast"     => true,
-                "values"     => []
+                "values"     => [],
         ];
     }
 
@@ -448,7 +448,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 "startAt"    => 0,
                 "total"      => 0,
                 "isLast"     => true,
-                "values"     => []
+                "values"     => [],
                 ];
     }
 

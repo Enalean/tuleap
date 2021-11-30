@@ -51,7 +51,7 @@ final class MetricsAuthentication implements MiddlewareInterface
     public function __construct(
         ResponseFactoryInterface $response_factory,
         BasicAuthLoginExtractor $basic_auth_login_extractor,
-        string $config_dir_root
+        string $config_dir_root,
     ) {
         $this->response_factory           = $response_factory;
         $this->basic_auth_login_extractor = $basic_auth_login_extractor;

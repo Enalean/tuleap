@@ -56,7 +56,7 @@ final class StepChecker
             [
                     Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                     Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 ],
             true
         );

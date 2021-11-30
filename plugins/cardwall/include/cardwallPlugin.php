@@ -383,7 +383,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $em->processEvent(
             CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,
             [
-                'use_standard' => &$use_standard
+                'use_standard' => &$use_standard,
             ]
         );
 

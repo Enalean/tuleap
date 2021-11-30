@@ -176,7 +176,7 @@ class PermissionChangesDetectorForProjectTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
         $this->git_permission_manager->shouldReceive('getProjectGlobalPermissions')->with($this->project)->andReturns([
-            Git::DEFAULT_PERM_READ => ['3']
+            Git::DEFAULT_PERM_READ => ['3'],
         ]);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForProject(

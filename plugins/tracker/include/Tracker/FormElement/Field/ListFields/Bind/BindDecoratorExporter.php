@@ -33,7 +33,7 @@ class BindDecoratorExporter
         ?string $r,
         ?string $g,
         ?string $b,
-        ?string $tlp_color_name
+        ?string $tlp_color_name,
     ): void {
         $child = $root->addChild('decorator');
         $child->addAttribute('REF', $val);
@@ -47,7 +47,7 @@ class BindDecoratorExporter
         ?string $r,
         ?string $g,
         ?string $b,
-        ?string $tlp_color_name
+        ?string $tlp_color_name,
     ): void {
         $child = $root->addChild('decorator');
         $this->exportColorToXml($child, $is_using_old_palette, $r, $g, $b, $tlp_color_name);
@@ -59,7 +59,7 @@ class BindDecoratorExporter
         ?string $r,
         ?string $g,
         ?string $b,
-        ?string $tlp_color_name
+        ?string $tlp_color_name,
     ): void {
         if ($is_using_old_palette && $r !== null && $g !== null && $b !== null) {
             $child->addAttribute('r', $r);

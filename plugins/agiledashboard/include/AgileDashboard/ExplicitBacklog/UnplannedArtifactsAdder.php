@@ -45,7 +45,7 @@ class UnplannedArtifactsAdder
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlannedArtifactDao $planned_artifact_dao
+        PlannedArtifactDao $planned_artifact_dao,
     ) {
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
         $this->planned_artifact_dao              = $planned_artifact_dao;

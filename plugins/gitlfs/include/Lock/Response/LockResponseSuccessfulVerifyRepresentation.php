@@ -42,7 +42,7 @@ class LockResponseSuccessfulVerifyRepresentation implements LockResponse
     {
         return [
             "ours"   => $this->ours_lock_representations,
-            "theirs" => $this->theirs_lock_representations
+            "theirs" => $this->theirs_lock_representations,
         ];
     }
 }

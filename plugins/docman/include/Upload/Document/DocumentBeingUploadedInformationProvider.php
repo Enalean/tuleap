@@ -48,7 +48,7 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
     public function __construct(
         UploadPathAllocator $path_allocator,
         DocumentOngoingUploadDAO $dao,
-        \Docman_ItemFactory $item_factory
+        \Docman_ItemFactory $item_factory,
     ) {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;

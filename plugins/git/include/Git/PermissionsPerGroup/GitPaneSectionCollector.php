@@ -38,7 +38,7 @@ class GitPaneSectionCollector
 
     public function __construct(
         PermissionPerGroupGitSectionBuilder $git_section_builder,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->git_section_builder = $git_section_builder;
         $this->ugroup_manager      = $ugroup_manager;

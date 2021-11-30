@@ -43,7 +43,7 @@ class FRSPermissionCreator
     public function __construct(
         FRSPermissionDao $permission_dao,
         UGroupDao $ugroup_dao,
-        ProjectHistoryDao $project_history_dao
+        ProjectHistoryDao $project_history_dao,
     ) {
         $this->permission_dao      = $permission_dao;
         $this->ugroup_dao          = $ugroup_dao;

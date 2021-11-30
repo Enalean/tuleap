@@ -36,7 +36,7 @@ class GitlabBranchFactory
 
     public function getGitlabBranchInRepositoryWithBranchName(
         GitlabRepositoryIntegration $repository_integration,
-        string $branch_name
+        string $branch_name,
     ): ?GitlabBranch {
         $row = $this->dao->searchBranchInRepositoryWithBranchName(
             $repository_integration->getId(),

@@ -146,7 +146,7 @@ class WikiPlugin_CalendarList extends WikiPlugin
                 [
                     'class' => 'cal-hide',
                     'href' => WikiURL($page_for_date, ['action' => 'edit']),
-                    'title' => sprintf(_("Edit %s"), $page_for_date)
+                    'title' => sprintf(_("Edit %s"), $page_for_date),
                 ],
                 $date_string
             );

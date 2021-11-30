@@ -60,12 +60,12 @@ class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker->shouldReceive([
             'getGroupId' => 102,
-            'getId'      => 16
+            'getId'      => 16,
         ]);
 
         $this->artifact->shouldReceive([
             'getTracker' => $this->tracker,
-            'getId'      => 200
+            'getId'      => 200,
         ]);
 
         $this->request->allows()->get('time-id')->andReturns(83);

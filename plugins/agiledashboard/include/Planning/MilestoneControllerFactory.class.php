@@ -72,7 +72,7 @@ class Planning_MilestoneControllerFactory
         VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
-        HeaderOptionsProvider $header_options_provider
+        HeaderOptionsProvider $header_options_provider,
     ) {
         $this->project_manager                    = $project_manager;
         $this->milestone_factory                  = $milestone_factory;

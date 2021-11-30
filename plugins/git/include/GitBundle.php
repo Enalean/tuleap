@@ -49,7 +49,7 @@ class GitBundle
         GitRepository $repository,
         ArchiveInterface $archive,
         $temporary_dump_path_on_filesystem,
-        string $file_name
+        string $file_name,
     ) {
         try {
             if ($this->doesRepositoryHaveCommits($repository) === false) {
@@ -91,7 +91,7 @@ class GitBundle
         $repository_path,
         $file_name,
         $dump_path_on_filesystem,
-        ArchiveInterface $archive
+        ArchiveInterface $archive,
     ) {
         $command = "umask 77 && cd " . escapeshellarg($repository_path) .
             " && " . \Git_Exec::getGitCommand() . " bundle create " . escapeshellarg($file_name) . " --all" .

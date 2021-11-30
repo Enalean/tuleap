@@ -59,7 +59,7 @@ class FieldDataFromRESTBuilder
         Tracker_FormElementFactory $form_element_factory,
         Tracker_FileInfoFactory $file_info_factory,
         Tracker_Artifact_Attachment_TemporaryFileManager $temporary_file_manager,
-        FileInfoForTusUploadedFileReadyToBeAttachedProvider $tus_uploaded_file_provider
+        FileInfoForTusUploadedFileReadyToBeAttachedProvider $tus_uploaded_file_provider,
     ) {
         $this->user_manager               = $user_manager;
         $this->form_element_factory       = $form_element_factory;
@@ -76,7 +76,7 @@ class FieldDataFromRESTBuilder
     public function buildFieldDataFromREST(
         $rest_value,
         Tracker_FormElement_Field_File $field,
-        ?Artifact $artifact
+        ?Artifact $artifact,
     ) {
         $field_data = [];
 
@@ -117,7 +117,7 @@ class FieldDataFromRESTBuilder
     private function checkLinkedArtifactIsLinkedToTheCurrentOne(
         Artifact $linked_artifact,
         ?Artifact $current_artifact,
-        int $file_id
+        int $file_id,
     ): void {
         if (! $current_artifact) {
             throw new Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException(
@@ -166,7 +166,7 @@ class FieldDataFromRESTBuilder
     private function appendFileInfoDataForTusUploadedFile(
         int $file_id,
         Tracker_FormElement_Field_File $field,
-        array &$field_data
+        array &$field_data,
     ): bool {
         $file_information = $this->tus_uploaded_file_provider->getFileInfo(
             $file_id,
@@ -185,7 +185,7 @@ class FieldDataFromRESTBuilder
     private function markAsDeletedPreviouslyAttachedFilesThatAreNotSubmitted(
         Artifact $artifact,
         array $submitted_ids,
-        array &$field_data
+        array &$field_data,
     ): void {
         foreach ($this->getAlreadyAttachedFileIds($artifact) as $file_id) {
             // Not in given ids => unlink

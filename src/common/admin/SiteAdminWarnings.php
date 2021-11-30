@@ -46,7 +46,7 @@ final class SiteAdminWarnings
             Event::GET_SITEADMIN_WARNINGS,
             [
                 'nb_users_by_status' => $nb_users_by_status,
-                'warnings'           => &$warnings
+                'warnings'           => &$warnings,
             ]
         );
 

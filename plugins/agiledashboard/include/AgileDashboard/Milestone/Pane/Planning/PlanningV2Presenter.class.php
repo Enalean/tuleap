@@ -74,7 +74,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $milestone_id,
         bool $is_in_explicit_top_backlog,
         array $allowed_additional_panes_to_display,
-        bool $has_current_project_parents
+        bool $has_current_project_parents,
     ) {
         $this->user_id                                  = $current_user->getId();
         $this->lang                                     = $this->getLanguageAbbreviation($current_user);

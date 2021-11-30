@@ -41,7 +41,7 @@ class TypeConfigController
         private TypeDeletor $deletor,
         private TypePresenterFactory $type_presenter_factory,
         private TypeUsagePresenterFactory $type_usage_presenter_factory,
-        private AdminPageRenderer $admin_page_rendered
+        private AdminPageRenderer $admin_page_rendered,
     ) {
     }
 

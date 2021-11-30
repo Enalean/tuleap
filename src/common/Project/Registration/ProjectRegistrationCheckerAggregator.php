@@ -40,7 +40,7 @@ final class ProjectRegistrationCheckerAggregator implements ProjectRegistrationC
 
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
-        ProjectCreationData $project_creation_data
+        ProjectCreationData $project_creation_data,
     ): ProjectRegistrationErrorsCollection {
         $errors_collection = new ProjectRegistrationErrorsCollection();
         foreach ($this->checkers as $checker) {

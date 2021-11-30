@@ -59,7 +59,7 @@ class ArtifactsPresentersBuilder
                 'xref'                 => $artifact->getXRef(),
                 'href'                 => $server_url . $artifact->getUri(),
                 'title'                => $artifact->getTitle(),
-                'purified_description' => $this->getPurifiedDescription($artifact)
+                'purified_description' => $this->getPurifiedDescription($artifact),
             ];
         }
 

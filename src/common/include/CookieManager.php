@@ -37,7 +37,7 @@ class CookieManager
                 'expires'  => $expire,
                 'httponly' => true,
                 'secure'   => true,
-                'samesite' => 'Lax'
+                'samesite' => 'Lax',
             ]
         );
     }

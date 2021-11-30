@@ -77,7 +77,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         DBTransactionExecutor $transaction_executor,
         ArtifactChangesetSaver $artifact_changeset_saver,
         ParentLinkAction $parent_link_action,
-        TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter
+        TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter,
     ) {
         parent::__construct(
             $fields_validator,
@@ -114,7 +114,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         string $comment_format,
         CreatedFileURLMapping $url_mapping,
         TrackerImportConfig $tracker_import_config,
-        array $ugroups
+        array $ugroups,
     ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
@@ -241,7 +241,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         array $fields_data,
         PFUser $submitter,
         $changeset_id,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): bool;
 
     /**
@@ -253,7 +253,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         array $fields_data,
         PFUser $submitter,
         $changeset_id,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): bool {
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
             if (
@@ -288,7 +288,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $comment_format,
         $changeset_id,
         CreatedFileURLMapping $url_mapping,
-        array $ugroups
+        array $ugroups,
     ): bool {
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
 
@@ -330,7 +330,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         array $fields_data,
         $comment,
         PFUser $submitter,
-        $email
+        $email,
     ): void {
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
             $message = dgettext('tuleap-tracker', 'You are not logged in.');

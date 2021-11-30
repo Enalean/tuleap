@@ -103,7 +103,7 @@ final class ArtifactsTest extends TrackerBase
             "values"  => [
                 [
                     "field_id" => $title_field_id,
-                    "value"    => "Text field format test title"
+                    "value"    => "Text field format test title",
                 ],
                 [
                     "field_id" => $description_field_id,
@@ -112,7 +112,7 @@ final class ArtifactsTest extends TrackerBase
                         "format"  => "gang",
                     ],
                 ],
-            ]
+            ],
         ];
 
         $response = $this->getResponse(
@@ -132,7 +132,7 @@ final class ArtifactsTest extends TrackerBase
      * @depends testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsCreated
      */
     public function testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsUpdated(
-        int $created_artifact_id
+        int $created_artifact_id,
     ): void {
         $description_field_id = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'description');
 
@@ -146,7 +146,7 @@ final class ArtifactsTest extends TrackerBase
                         "format"  => "whololo",
                     ],
                 ],
-            ]
+            ],
         ];
 
         $response = $this->getResponse(

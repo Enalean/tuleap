@@ -41,7 +41,7 @@ final class TusServer implements RequestHandlerInterface
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
-        TusDataStore $data_store
+        TusDataStore $data_store,
     ) {
         $this->response_factory = $response_factory;
         $this->data_store       = $data_store;

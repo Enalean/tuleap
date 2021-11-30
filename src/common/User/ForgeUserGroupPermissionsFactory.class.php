@@ -50,7 +50,7 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
 
     public function __construct(
         User_ForgeUserGroupPermissionsDao $dao,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->permissions_dao = $dao;
         $this->event_manager   = $event_manager;
@@ -112,7 +112,7 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
         $plugins_permission = [];
 
         $params = [
-            'plugins_permission' => &$plugins_permission
+            'plugins_permission' => &$plugins_permission,
         ];
 
         $this->event_manager->processEvent(
@@ -127,7 +127,7 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
             RetrieveSystemEventsInformationApi::ID                              => new RetrieveSystemEventsInformationApi(),
             SiteAdministratorPermission::ID                                     => new SiteAdministratorPermission(),
             RestProjectManagementPermission::ID                                 => new RestProjectManagementPermission(),
-            RestReadOnlyAdminPermission::ID                                     => new RestReadOnlyAdminPermission()
+            RestReadOnlyAdminPermission::ID                                     => new RestReadOnlyAdminPermission(),
         ];
 
         return $all_permissions;

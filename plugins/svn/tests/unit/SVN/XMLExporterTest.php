@@ -102,7 +102,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     ['mail2@example.com'],
                     [],
                     []
-                )
+                ),
             ]
         );
 

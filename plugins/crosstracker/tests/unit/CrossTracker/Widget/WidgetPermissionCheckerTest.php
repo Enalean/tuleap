@@ -63,7 +63,7 @@ class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
             [
                 'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
-                'user_id'        => 101
+                'user_id'        => 101,
             ]
         );
 
@@ -78,7 +78,7 @@ class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
             [
                 'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
-                'user_id'        => 101
+                'user_id'        => 101,
             ]
         );
 
@@ -93,7 +93,7 @@ class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
             [
                 'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
-                'project_id'     => 101
+                'project_id'     => 101,
             ]
         );
         $project = Mockery::mock(Project::class);
@@ -111,7 +111,7 @@ class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cross_tracker_dao->shouldReceive("searchCrossTrackerWidgetByCrossTrackerReportId")->andReturns(
             [
                 'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
-                'project_id'     => 101
+                'project_id'     => 101,
             ]
         );
         $project = Mockery::mock(Project::class);

@@ -83,7 +83,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
         Planning_Milestone $milestone,
         Cardwall_OnTop_Config $config,
         PFUser $user,
-        Planning_MilestoneFactory $milestone_factory
+        Planning_MilestoneFactory $milestone_factory,
     ) {
         $this->info                         = $info;
         $this->milestone                    = $milestone;

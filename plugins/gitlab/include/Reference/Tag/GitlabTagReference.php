@@ -32,7 +32,7 @@ class GitlabTagReference extends \Reference
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,
         Project $project,
-        string $tag_name
+        string $tag_name,
     ) {
         parent::__construct(
             0,

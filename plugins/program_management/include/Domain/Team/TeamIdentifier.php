@@ -44,7 +44,7 @@ final class TeamIdentifier
     public static function buildCollectionFromProgram(
         SearchVisibleTeamsOfProgram $teams_searcher,
         ProgramIdentifier $program,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): array {
         $team_ids = $teams_searcher->searchTeamIdsOfProgram($program, $user);
         return array_map(static fn(int $id) => new self($id), $team_ids);

@@ -33,7 +33,7 @@ final class ComponentInvolvedVerifier
 
     public function __construct(
         VerifyIsTeam $team_verifier,
-        VerifyIsProgram $program_verifier
+        VerifyIsProgram $program_verifier,
     ) {
         $this->team_verifier    = $team_verifier;
         $this->program_verifier = $program_verifier;

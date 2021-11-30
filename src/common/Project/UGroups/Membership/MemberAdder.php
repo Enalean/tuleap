@@ -56,7 +56,7 @@ class MemberAdder
         StaticMemberAdder $static_member_adder,
         DynamicUGroupMembersUpdater $dynamic_member_updater,
         ProjectMemberAdder $project_member_adder,
-        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector
+        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
     ) {
         $this->membership_update_verifier               = $membership_update_verifier;
         $this->static_member_adder                      = $static_member_adder;

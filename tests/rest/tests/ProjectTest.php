@@ -56,7 +56,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-regular-user',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100
+            'template_id' => 100,
         ]);
 
         $response = $this->getResponseByName(
@@ -90,15 +90,15 @@ class ProjectTest extends ProjectBase
             'categories' => [
                 [
                     'category_id' => 15,
-                    'value_id' => 21
-                ]
+                    'value_id' => 21,
+                ],
             ],
             'fields' => [
                 [
                     'field_id' => 100002,
                     'value'    => "field value",
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(
@@ -128,7 +128,7 @@ class ProjectTest extends ProjectBase
                 'shortname' => 'short_name',
                 'description' => '',
                 'is_public' => true,
-                'template_id' => 1
+                'template_id' => 1,
             ],
             JSON_THROW_ON_ERROR
         );
@@ -159,7 +159,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-regular-user',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100
+            'template_id' => 100,
         ]);
 
         $response = $this->getResponseByName(
@@ -182,7 +182,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-regular-user',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100
+            'template_id' => 100,
         ]);
 
         $response = $this->getResponseByName(
@@ -233,7 +233,7 @@ class ProjectTest extends ProjectBase
                             'user_references' => [
                                 ['username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN],
                                 ['username' => $original_project_admin],
-                            ]
+                            ],
                         ],
                         JSON_THROW_ON_ERROR
                     )
@@ -254,7 +254,7 @@ class ProjectTest extends ProjectBase
                         [
                             'project_owner' => [
                                 'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
-                            ]
+                            ],
                         ],
                         JSON_THROW_ON_ERROR
                     )
@@ -276,8 +276,8 @@ class ProjectTest extends ProjectBase
                             'user_references' => [
                                 [
                                     'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
-                                ]
-                            ]
+                                ],
+                            ],
                         ],
                         JSON_THROW_ON_ERROR
                     )
@@ -299,8 +299,8 @@ class ProjectTest extends ProjectBase
                             'user_references' => [
                                 [
                                     'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
-                                ]
-                            ]
+                                ],
+                            ],
                         ],
                         JSON_THROW_ON_ERROR
                     )
@@ -318,7 +318,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100
+            'template_id' => 100,
         ]);
 
         $response = $this->getResponseByName(
@@ -350,7 +350,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9748',
             'description' => 'Test of Request 9748 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100
+            'template_id' => 100,
         ]);
 
         $response = $this->getResponseByName(
@@ -377,7 +377,7 @@ class ProjectTest extends ProjectBase
             'shortname'   => 'invalidtemplateid',
             'description' => 'Invalid project creation template ID',
             'is_public'   => true,
-            'template_id' => 0
+            'template_id' => 0,
         ]);
 
         $response = $this->getResponseByName(
@@ -432,7 +432,7 @@ class ProjectTest extends ProjectBase
                     $this->project_private_member_id,
                     $this->project_public_id,
                     $this->project_public_member_id,
-                    $this->project_pbi_id
+                    $this->project_pbi_id,
                 ],
                 $this->getIds($json_projects)
             )
@@ -797,7 +797,7 @@ class ProjectTest extends ProjectBase
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member',
-            'icon' => ''
+            'icon' => '',
         ]);
         self::assertArrayHasKey('id', $release_milestone['artifact']);
         self::assertArrayHasKey('uri', $release_milestone['artifact']);
@@ -857,7 +857,7 @@ class ProjectTest extends ProjectBase
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member',
-            'icon' => ''
+            'icon' => '',
         ]);
 
         $kanban_tracker = $trackers[1];
@@ -867,7 +867,7 @@ class ProjectTest extends ProjectBase
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member',
-            'icon' => ''
+            'icon' => '',
         ]);
 
         $releases_tracker = $trackers[2];
@@ -877,7 +877,7 @@ class ProjectTest extends ProjectBase
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member',
-            'icon' => ''
+            'icon' => '',
         ]);
 
         $sprints_tracker = $trackers[3];
@@ -887,7 +887,7 @@ class ProjectTest extends ProjectBase
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member',
-            'icon' => ''
+            'icon' => '',
         ]);
 
         $tasks_tracker = $trackers[4];
@@ -897,7 +897,7 @@ class ProjectTest extends ProjectBase
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member',
-            'icon' => ''
+            'icon' => '',
         ]);
 
         $userstories_tracker = $trackers[5];
@@ -907,7 +907,7 @@ class ProjectTest extends ProjectBase
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member',
-            'icon' => ''
+            'icon' => '',
         ]);
 
         self::assertEquals(200, $response->getStatusCode());
@@ -1100,7 +1100,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
                 'key' => REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY,
                 'short_name' => 'project_members',
-                'additional_information' => ['ldap' => null]
+                'additional_information' => ['ldap' => null],
             ],
             [
                 'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
@@ -1109,7 +1109,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
                 'key' => 'ugroup_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL . '_name_key',
                 'short_name' => 'project_admins',
-                'additional_information' => []
+                'additional_information' => [],
             ],
             [
                 'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
@@ -1118,7 +1118,7 @@ class ProjectTest extends ProjectBase
                 'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID . '/users',
                 'key'        => 'ugroup_file_manager_admin_name_key',
                 'short_name' => 'file_manager_admins',
-                'additional_information' => []
+                'additional_information' => [],
             ],
             [
                 'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
@@ -1127,7 +1127,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID . '/users',
                 'key' => 'ugroup_wiki_admin_name_key',
                 'short_name' => 'wiki_admins',
-                'additional_information' => []
+                'additional_information' => [],
             ],
             [
                 'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
@@ -1136,7 +1136,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID . '/users',
                 'key' => 'ugroup_forum_admin_name_key',
                 'short_name' => 'forum_admins',
-                'additional_information' => []
+                'additional_information' => [],
             ],
             [
                 'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
@@ -1145,7 +1145,7 @@ class ProjectTest extends ProjectBase
                 'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID . '/users',
                 'key'        => 'ugroup_news_admin_name_key',
                 'short_name' => 'news_admins',
-                'additional_information' => []
+                'additional_information' => [],
 
             ],
             [
@@ -1155,7 +1155,7 @@ class ProjectTest extends ProjectBase
                 'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID . '/users',
                 'key'        => 'ugroup_news_writer_name_key',
                 'short_name' => 'news_editors',
-                'additional_information' => []
+                'additional_information' => [],
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
@@ -1164,7 +1164,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
                 'short_name' => 'static_ugroup_1',
-                'additional_information' => ['ldap' => null]
+                'additional_information' => ['ldap' => null],
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
@@ -1173,7 +1173,7 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'short_name' => 'static_ugroup_2',
-                'additional_information' => ['ldap' => null]
+                'additional_information' => ['ldap' => null],
             ],
             [
                 'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
@@ -1182,8 +1182,8 @@ class ProjectTest extends ProjectBase
                 'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
                 'short_name' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
-                'additional_information' => ['ldap' => null]
-            ]
+                'additional_information' => ['ldap' => null],
+            ],
         ];
         self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
@@ -1243,8 +1243,8 @@ class ProjectTest extends ProjectBase
             'order' => [
                 'ids'         => [$second_item['id']],
                 'direction'   => 'before',
-                'compared_to' => $first_item['id']
-            ]
+                'compared_to' => $first_item['id'],
+            ],
         ]);
 
         $response_patch_with_rest_read_only = $this->getResponse(
@@ -1294,8 +1294,8 @@ class ProjectTest extends ProjectBase
                             'order' => [
                                 'ids' => [$first_modified['id']],
                                 'direction' => 'after',
-                                'compared_to' => $second_modified['id']
-                            ]
+                                'compared_to' => $second_modified['id'],
+                            ],
                         ]
                     )
                 )
@@ -1369,14 +1369,14 @@ class ProjectTest extends ProjectBase
                             'order' => [
                                 'ids' => [$first_epic['id']],
                                 'direction' => 'after',
-                                'compared_to' => $first_item['id']
+                                'compared_to' => $first_item['id'],
                             ],
                             'add' => [
                                 [
                                     'id' => $first_epic['id'],
                                     'remove_from' => $first_release['id'],
-                                ]
-                            ]
+                                ],
+                            ],
                         ]
                     )
                 )
@@ -1403,13 +1403,13 @@ class ProjectTest extends ProjectBase
                             'order' => [
                                 'ids' => [$first_epic['id']],
                                 'direction' => 'before',
-                                'compared_to' => $second_epic['id']
+                                'compared_to' => $second_epic['id'],
                             ],
                             'add' => [
                                 [
                                     'id' => $first_epic['id'],
-                                ]
-                            ]
+                                ],
+                            ],
                         ]
                     )
                 )
@@ -1461,14 +1461,14 @@ class ProjectTest extends ProjectBase
                 0 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_PAGE_ID,
                     'uri' => 'phpwiki/6097',
-                    'name' => 'WithContent'
+                    'name' => 'WithContent',
                 ],
                 1 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
                     'uri' => 'phpwiki/6100',
-                    'name' => 'With Space'
-                ]
-            ]
+                    'name' => 'With Space',
+                ],
+            ],
         ];
 
         self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
@@ -1483,9 +1483,9 @@ class ProjectTest extends ProjectBase
                 0 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_PAGE_ID,
                     'uri' => 'phpwiki/6097',
-                    'name' => 'WithContent'
-                ]
-            ]
+                    'name' => 'WithContent',
+                ],
+            ],
         ];
 
         self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
@@ -1500,9 +1500,9 @@ class ProjectTest extends ProjectBase
                 0 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
                     'uri' => 'phpwiki/6100',
-                    'name' => 'With Space'
-                ]
-            ]
+                    'name' => 'With Space',
+                ],
+            ],
         ];
 
         self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
@@ -1517,14 +1517,14 @@ class ProjectTest extends ProjectBase
                 0 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_PAGE_ID,
                     'uri' => 'phpwiki/6097',
-                    'name' => 'WithContent'
+                    'name' => 'WithContent',
                 ],
                 1 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
                     'uri' => 'phpwiki/6100',
-                    'name' => 'With Space'
-                ]
-            ]
+                    'name' => 'With Space',
+                ],
+            ],
         ];
 
         self::assertEqualsCanonicalizing($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
@@ -1535,7 +1535,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/phpwiki?pagename="no"'));
 
         $expected_result = [
-            'pages' => []
+            'pages' => [],
         ];
 
         self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
@@ -1552,7 +1552,7 @@ class ProjectTest extends ProjectBase
                     $this->project_private_member_id,
                     $this->project_public_id,
                     $this->project_public_member_id,
-                    $this->project_pbi_id
+                    $this->project_pbi_id,
                 ],
                 $this->getIds($json_projects)
             )
@@ -1562,7 +1562,7 @@ class ProjectTest extends ProjectBase
     public function testPATCHWithRegularUser()
     {
         $patch_resource = json_encode([
-            'status' => 'suspended'
+            'status' => 'suspended',
         ]);
 
         $response = $this->getResponseByName(
@@ -1577,7 +1577,7 @@ class ProjectTest extends ProjectBase
     public function testPATCHWithAdmin()
     {
         $patch_resource = json_encode([
-            'status' => 'suspended'
+            'status' => 'suspended',
         ]);
 
         $response = $this->getResponseByName(
@@ -1593,7 +1593,7 @@ class ProjectTest extends ProjectBase
     public function testPATCHWithRestProjectManager()
     {
         $patch_resource = json_encode([
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         $response = $this->getResponseByName(
@@ -1609,7 +1609,7 @@ class ProjectTest extends ProjectBase
     public function testPATCHWithAdminWhenProjectIsDeleted()
     {
         $patch_resource = json_encode([
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         $response = $this->getResponseByName(
@@ -1645,7 +1645,7 @@ class ProjectTest extends ProjectBase
     public function testPUTBanner(): void
     {
         $payload = json_encode([
-            'message' => 'a banner message'
+            'message' => 'a banner message',
         ]);
 
         $response = $this->getResponseByName(
@@ -1666,7 +1666,7 @@ class ProjectTest extends ProjectBase
     public function testPUTEmptyMessageBannerShouldReturn400(): void
     {
         $payload = json_encode([
-            'message' => ''
+            'message' => '',
         ]);
 
         $response = $this->getResponseByName(

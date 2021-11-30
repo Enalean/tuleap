@@ -135,7 +135,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     {
         $url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
                 'tracker' => $params['tracker_id'],
-                'action'  => 'admin-timetracking'
+                'action'  => 'admin-timetracking',
         ]);
 
         $params['items']['timetracking'] = [
@@ -143,7 +143,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             'short_title' => dgettext('tuleap-timetracking', 'Time tracking'),
             'title'       => dgettext('tuleap-timetracking', 'Time tracking'),
             'description' => dgettext('tuleap-timetracking', 'Time tracking for Tuleap artifacts'),
-            'data-test'   => 'timetracking'
+            'data-test'   => 'timetracking',
         ];
     }
 

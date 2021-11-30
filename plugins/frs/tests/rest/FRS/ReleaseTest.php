@@ -149,7 +149,7 @@ final class ReleaseTest extends RestBase
             'name'         => 'Paleo Pumpkin Bread',
             'release_note' => 'Philophobia',
             'changelog'    => 'Food & Dining',
-            'status'       => 'hidden'
+            'status'       => 'hidden',
         ]);
     }
 

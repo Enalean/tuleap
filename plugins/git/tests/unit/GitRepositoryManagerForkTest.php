@@ -89,7 +89,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->fine_grained_permission_replicator,
                 $this->project_history_dao,
                 $this->history_value_formatter,
-                $this->event_manager
+                $this->event_manager,
             ]
         )
             ->makePartial()

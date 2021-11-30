@@ -57,7 +57,7 @@ class ArtifactsDeletionConfigController
         AdminPageRenderer $admin_page_renderer,
         ArtifactsDeletionConfig $config,
         ArtifactsDeletionConfigDAO $dao,
-        PluginManager $plugin_manager
+        PluginManager $plugin_manager,
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
         $this->config              = $config;

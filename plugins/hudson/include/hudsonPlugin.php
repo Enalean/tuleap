@@ -243,7 +243,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             'plugin_hudson_project_jobtestresults',
             'plugin_hudson_project_jobtesttrend',
             'plugin_hudson_project_jobbuildhistory',
-            'plugin_hudson_project_joblastartifacts'
+            'plugin_hudson_project_joblastartifacts',
         ]);
     }
 

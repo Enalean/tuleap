@@ -50,7 +50,7 @@ class ReplicationHTTPUserAuthenticator
     public function __construct(
         PasswordHandler $password_handler,
         Git_RemoteServer_GerritServerFactory $server_factory,
-        HttpUserValidator $user_validator
+        HttpUserValidator $user_validator,
     ) {
         $this->password_handler = $password_handler;
         $this->server_factory   = $server_factory;

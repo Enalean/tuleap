@@ -49,7 +49,7 @@ class NavigationPresenterBuilder
 
     public function __construct(
         NavigationPermissionsDropdownPresenterBuilder $permission_builder,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->permission_builder = $permission_builder;
         $this->event_manager      = $event_manager;
@@ -92,7 +92,7 @@ class NavigationPresenterBuilder
                 '/tracker/import_admin.php?' . http_build_query(
                     [
                         'group_id' => $project->getID(),
-                        'mode' => 'admin'
+                        'mode' => 'admin',
                     ]
                 )
             )
@@ -149,7 +149,7 @@ class NavigationPresenterBuilder
                 new NavigationDropdownItemPresenter(
                     _('Access Logs'),
                     '/project/stats/source_code_access.php?' . http_build_query(['group_id' => $project_id])
-                )
+                ),
             ]
         );
 
@@ -201,7 +201,7 @@ class NavigationPresenterBuilder
     private function buildEntriesForCastratedAdmin(Project $project, $current_pane_shortname)
     {
         return [
-            'members' => $this->getMembersItemPresenter($project->getID(), $current_pane_shortname)
+            'members' => $this->getMembersItemPresenter($project->getID(), $current_pane_shortname),
         ];
     }
 

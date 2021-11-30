@@ -29,6 +29,6 @@ interface RetrieveChangesetSubmissionDate
 {
     public function getSubmissionDate(
         ArtifactIdentifier $artifact,
-        ChangesetIdentifier $changeset_identifier
+        ChangesetIdentifier $changeset_identifier,
     ): SubmissionDate;
 }

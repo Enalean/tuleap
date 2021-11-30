@@ -27,7 +27,7 @@ final class CurrentContextSectionToHeaderOptionsInserter
     public function addLinkToCurrentContextSection(
         string $section_label,
         NewDropdownLinkPresenter $link,
-        array &$header_options
+        array &$header_options,
     ): void {
         if (isset($header_options['new_dropdown_current_context_section'])) {
             $this->addLinkToExistingCurrentContextSection($link, $header_options);
@@ -42,7 +42,7 @@ final class CurrentContextSectionToHeaderOptionsInserter
     private function createNewCurrentContextSection(
         string $section_label,
         array $links,
-        array &$header_options
+        array &$header_options,
     ): void {
         $header_options['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
             $section_label,
@@ -52,7 +52,7 @@ final class CurrentContextSectionToHeaderOptionsInserter
 
     private function addLinkToExistingCurrentContextSection(
         NewDropdownLinkPresenter $link,
-        array &$header_options
+        array &$header_options,
     ): void {
         $this->createNewCurrentContextSection(
             $header_options['new_dropdown_current_context_section']->label,

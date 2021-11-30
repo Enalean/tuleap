@@ -644,7 +644,7 @@ class RepositoryResource extends AuthenticatedResource
         $id,
         ?GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit = null,
         $disconnect_from_gerrit = null,
-        ?string $default_branch = null
+        ?string $default_branch = null,
     ) {
         $this->checkAccess();
 
@@ -1053,7 +1053,7 @@ class RepositoryResource extends AuthenticatedResource
     private function migrate(
         GitRepository $repository,
         PFUser $user,
-        GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit
+        GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit,
     ) {
         $server_id   = $migrate_to_gerrit->server;
         $permissions = $migrate_to_gerrit->permissions;
@@ -1111,7 +1111,7 @@ class RepositoryResource extends AuthenticatedResource
                 'query'      => $query,
                 'limit'      => $limit,
                 'offset'     => $offset,
-                'result'     => &$result
+                'result'     => &$result,
             ]
         );
 
@@ -1125,7 +1125,7 @@ class RepositoryResource extends AuthenticatedResource
         EventManager::instance()->processEvent(
             REST_GIT_PULL_REQUEST_ENDPOINTS,
             [
-                'available' => &$available
+                'available' => &$available,
             ]
         );
 

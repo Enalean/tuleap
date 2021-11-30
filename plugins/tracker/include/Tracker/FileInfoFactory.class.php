@@ -149,7 +149,7 @@ class Tracker_FileInfoFactory
             'size'         => $file->getSize(),
             'type'         => $file->getType(),
             'error'        => UPLOAD_ERR_OK,
-            'action'       => ''
+            'action'       => '',
         ];
     }
 }

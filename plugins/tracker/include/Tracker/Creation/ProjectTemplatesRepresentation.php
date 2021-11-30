@@ -49,7 +49,7 @@ class ProjectTemplatesRepresentation implements \JsonSerializable
     {
         return [
             'project_name' => $this->project_name,
-            'tracker_list' => $this->tracker_list
+            'tracker_list' => $this->tracker_list,
         ];
     }
 }

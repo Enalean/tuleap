@@ -86,7 +86,7 @@ class TrackerCreationPresenter
         Project $current_project,
         \CSRFSynchronizerToken $csrf,
         bool $display_jira_importer,
-        bool $are_there_tv3
+        bool $are_there_tv3,
     ) {
         $this->default_templates            = json_encode($default_templates, JSON_THROW_ON_ERROR);
         $this->project_templates            = json_encode($project_templates, JSON_THROW_ON_ERROR);
@@ -98,7 +98,7 @@ class TrackerCreationPresenter
         $this->csrf_token                   = json_encode(
             [
                 'name'  => $csrf->getTokenName(),
-                'value' => $csrf->getToken()
+                'value' => $csrf->getToken(),
             ]
         );
         $this->company_name                 = (string) ForgeConfig::get('sys_org_name');

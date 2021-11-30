@@ -38,13 +38,13 @@ class SingleCardPreviewDetailsBuilder
 
     private function extractDetailsFields(
         Cardwall_Semantic_CardFields $semantic_card,
-        array $possible_background
+        array $possible_background,
     ) {
         $fields_details = [];
         foreach ($semantic_card->getFields() as $used_field) {
             $fields_details[] = [
                 'field_label' => $used_field->getLabel(),
-                'background'  => $possible_background['background_color']
+                'background'  => $possible_background['background_color'],
             ];
         }
         return $fields_details;

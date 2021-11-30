@@ -358,7 +358,7 @@ final class GitlabRepositoryResource
      */
     protected function patchId(
         int $id,
-        GitlabRepositoryPatchRepresentation $patch_representation
+        GitlabRepositoryPatchRepresentation $patch_representation,
     ): GitlabRepositoryRepresentation {
         $this->optionsId($id);
 

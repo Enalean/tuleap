@@ -32,7 +32,7 @@ final class JiraServerChangelogEntriesBuilder implements ChangelogEntriesBuilder
 {
     public function __construct(
         private JiraClient $jira_client,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

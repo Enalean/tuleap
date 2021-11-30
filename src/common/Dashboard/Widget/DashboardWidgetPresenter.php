@@ -52,7 +52,7 @@ class DashboardWidgetPresenter
         Dashboard $dashboard,
         DashboardWidget $dashboard_widget,
         Widget $widget,
-        $can_update_dashboards
+        $can_update_dashboards,
     ) {
         $this->widget_id    = $dashboard_widget->getId();
         $this->widget_name  = $dashboard_widget->getName();

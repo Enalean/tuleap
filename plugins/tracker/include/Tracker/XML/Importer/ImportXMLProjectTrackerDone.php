@@ -110,7 +110,7 @@ class ImportXMLProjectTrackerDone implements Dispatchable
         TrackerXmlFieldsMapping $xml_field_values_mapping,
         IFindUserFromXMLReference $user_finder,
         array $created_trackers_objects,
-        \PFUser $user
+        \PFUser $user,
     ) {
         $this->project                  = $project;
         $this->xml_element              = $xml_element;

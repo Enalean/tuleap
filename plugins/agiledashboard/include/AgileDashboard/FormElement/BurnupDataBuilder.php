@@ -81,7 +81,7 @@ class BurnupDataBuilder
         BurnupCalculator $burnup_calculator,
         CountElementsCacheDao $count_elements_cache_dao,
         CountElementsCalculator $count_elements_calculator,
-        CountElementsModeChecker $mode_checker
+        CountElementsModeChecker $mode_checker,
     ) {
         $this->logger                              = $logger;
         $this->cache_checker                       = $cache_checker;

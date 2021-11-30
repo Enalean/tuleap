@@ -48,7 +48,7 @@ class CreateBranchPrefixDao extends DataAccessObject
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_create_branch_prefix',
             [
-                'integration_id' => $integration_id
+                'integration_id' => $integration_id,
             ]
         );
     }

@@ -37,7 +37,7 @@ class SemanticTimeframeUpdator
     public function __construct(
         SemanticTimeframeDao $dao,
         \Tracker_FormElementFactory $form_factory,
-        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers
+        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers,
     ) {
         $this->dao                         = $dao;
         $this->form_factory                = $form_factory;
@@ -166,7 +166,7 @@ class SemanticTimeframeUpdator
         ?int $start_date_field_id,
         ?int $duration_field_id,
         ?int $end_date_field_id,
-        ?int $implied_from_tracker_id
+        ?int $implied_from_tracker_id,
     ): bool {
         if ($implied_from_tracker_id !== null && ! $start_date_field_id && ! $duration_field_id && ! $end_date_field_id) {
             return $this->isTrackerSuitableToImplyTheCurrentSemanticFromIt($tracker, $implied_from_tracker_id);

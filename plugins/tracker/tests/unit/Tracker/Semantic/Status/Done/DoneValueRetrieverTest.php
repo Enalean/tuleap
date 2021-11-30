@@ -226,7 +226,7 @@ class DoneValueRetrieverTest extends TestCase
                     Mockery::mock(SemanticDoneDao::class),
                     Mockery::mock(SemanticDoneValueChecker::class),
                     [
-                        $hidden_done_value
+                        $hidden_done_value,
                     ]
                 )
             );
@@ -250,7 +250,7 @@ class DoneValueRetrieverTest extends TestCase
                     ->shouldReceive('isHidden')
                     ->andReturnFalse()
                     ->getMock(),
-                45 => $done_value
+                45 => $done_value,
             ]);
 
         $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
@@ -267,7 +267,7 @@ class DoneValueRetrieverTest extends TestCase
                     Mockery::mock(SemanticDoneDao::class),
                     Mockery::mock(SemanticDoneValueChecker::class),
                     [
-                        $done_value
+                        $done_value,
                     ]
                 )
             );
@@ -290,7 +290,7 @@ class DoneValueRetrieverTest extends TestCase
                 45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                     ->shouldReceive('isHidden')
                     ->andReturnFalse()
-                    ->getMock()
+                    ->getMock(),
             ]);
 
         $this->semantic_done_factory->shouldReceive('getInstanceByTracker')

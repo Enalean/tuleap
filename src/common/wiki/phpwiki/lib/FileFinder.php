@@ -443,7 +443,7 @@ class PearFileFinder extends FileFinder
                                 '/usr/local/lib/php4',
                                 '/usr/local/lib/php',
                                 '/System/Library/PHP',
-                                '/Apache/pear'        // Windows
+                                '/Apache/pear',        // Windows
             ]
         ));
     }

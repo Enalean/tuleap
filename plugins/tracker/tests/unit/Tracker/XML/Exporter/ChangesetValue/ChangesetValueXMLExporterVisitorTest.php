@@ -252,7 +252,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
                 SimpleXMLElement $artifact_xml,
                 SimpleXMLElement $changeset_xml,
                 Artifact $artifact,
-                Tracker_Artifact_ChangesetValue $changeset_value
+                Tracker_Artifact_ChangesetValue $changeset_value,
             ) {
             }
         };

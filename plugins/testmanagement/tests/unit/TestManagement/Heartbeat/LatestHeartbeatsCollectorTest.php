@@ -88,7 +88,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
            'submitted_on' => 123456789,
            'last_update_date' => 123456789,
            'last_updated_by_id' => 101,
-           'use_artifact_permissions' => 1
+           'use_artifact_permissions' => 1,
         ];
 
         $this->dao->shouldReceive('searchLastTestExecUpdate')->once()->andReturn([$row_artifact]);

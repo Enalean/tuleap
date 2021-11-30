@@ -77,7 +77,7 @@ class GitForkPermissionsManager
         FineGrainedRepresentationBuilder $fine_grained_builder,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         GitPermissionsManager $git_permission_manager,
-        RegexpFineGrainedRetriever $regexp_retriever
+        RegexpFineGrainedRetriever $regexp_retriever,
     ) {
         $this->repository                   = $repository;
         $this->builder                      = $builder;

@@ -154,7 +154,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
                 IMAGETYPE_PNG,
                 'width="112" height="112"',
                 'bits' => 8,
-                'mime' => 'image/png'
+                'mime' => 'image/png',
             ],
             getimagesize($file_info_1->getThumbnailPath())
         );
@@ -181,7 +181,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
                 'width="112" height="112"',
                 'bits' => 6,
                 'channels' => 3,
-                'mime' => 'image/gif'
+                'mime' => 'image/gif',
             ],
             getimagesize($file_info_1->getThumbnailPath())
         );
@@ -208,7 +208,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
                 'width="112" height="112"',
                 'bits' => 8,
                 'channels' => 3,
-                'mime' => 'image/jpeg'
+                'mime' => 'image/jpeg',
             ],
             getimagesize($file_info_1->getThumbnailPath())
         );

@@ -44,7 +44,7 @@ final class VerifySynchronizedFieldsAreNotUsedInWorkflowStub implements VerifySy
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): bool {
         return $this->has_an_active_workflow;
     }

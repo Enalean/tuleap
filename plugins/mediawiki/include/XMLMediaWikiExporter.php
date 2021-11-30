@@ -73,7 +73,7 @@ class XMLMediaWikiExporter
         LoggerInterface $logger,
         MediawikiMaintenanceWrapper $maintenance_wrapper,
         MediawikiLanguageManager $language_manager,
-        MediawikiDataDir $mediawiki_data_dir
+        MediawikiDataDir $mediawiki_data_dir,
     ) {
         $this->project             = $project;
         $this->manager             = $manager;
@@ -88,7 +88,7 @@ class XMLMediaWikiExporter
         SimpleXMLElement $xml_content,
         ArchiveInterface $archive,
         $export_file,
-        $temporary_dump_path_on_filesystem
+        $temporary_dump_path_on_filesystem,
     ) {
         $project_name_dir = $this->mediawiki_data_dir->getMediawikiDir($this->project);
 

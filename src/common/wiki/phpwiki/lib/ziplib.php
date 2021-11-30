@@ -216,7 +216,7 @@ function zip_deflate($content)
 
     return [substr($z, $gz_header_len, $gz_data_len), // gzipped data
                  $crc32,        // crc
-                 $os_type        // OS type
+                 $os_type,        // OS type
                  ];
 }
 

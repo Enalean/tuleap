@@ -128,7 +128,7 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             $workflow,
             [
                 "type" => "run_job",
-                "job_url" => null
+                "job_url" => null,
             ]
         );
     }
@@ -144,7 +144,7 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             $workflow,
             [
                 "type" => "run_job",
-                "job_url" => 3
+                "job_url" => 3,
             ]
         );
     }

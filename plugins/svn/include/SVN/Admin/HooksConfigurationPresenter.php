@@ -50,7 +50,7 @@ class HooksConfigurationPresenter extends BaseAdminPresenter
         CSRFSynchronizerToken $token,
         $title,
         $pre_commit_must_contain_reference,
-        $allow_commit_message_changes
+        $allow_commit_message_changes,
     ) {
         parent::__construct();
 

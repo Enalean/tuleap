@@ -33,7 +33,7 @@ class Admin_Homepage_Router
 
     public function __construct(
         Admin_Homepage_Controller $controller,
-        Codendi_Request $request
+        Codendi_Request $request,
     ) {
         $this->controller = $controller;
         $this->request    = $request;

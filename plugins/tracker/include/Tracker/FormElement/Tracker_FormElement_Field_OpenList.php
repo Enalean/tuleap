@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         assert($value instanceof Tracker_Artifact_ChangesetValue_List);
         $selected_values = $value ? $value->getListValues() : [];
@@ -209,7 +209,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
@@ -230,7 +230,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         if (empty($value) || ! $value->getListValues()) {
             return '-';
@@ -388,7 +388,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $openvalue_dao = $this->getOpenValueDao();
         // the separator is a comma
@@ -1009,8 +1009,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             return [
                 'resource' => [
                     'type' => 'users',
-                    'uri'  => 'users/?query='
-                ]
+                    'uri'  => 'users/?query=',
+                ],
             ];
         }
 
@@ -1041,28 +1041,28 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     public function visitListBindStatic(
         Tracker_FormElement_Field_List_Bind_Static $bind,
-        BindParameters $parameters
+        BindParameters $parameters,
     ) {
         return '';
     }
 
     public function visitListBindUsers(
         Tracker_FormElement_Field_List_Bind_Users $bind,
-        BindParameters $parameters
+        BindParameters $parameters,
     ) {
         return sprintf(dgettext('tuleap-tracker', '%1$s contains a value which is not a login or an email.'), $this->getLabel());
     }
 
     public function visitListBindUgroups(
         Tracker_FormElement_Field_List_Bind_Ugroups $bind,
-        BindParameters $parameters
+        BindParameters $parameters,
     ) {
         return sprintf(dgettext('tuleap-tracker', '%1$s contains a value which is not a user group.'), $this->getLabel());
     }
 
     public function visitListBindNull(
         Tracker_FormElement_Field_List_Bind_Null $bind,
-        BindParameters $parameters
+        BindParameters $parameters,
     ) {
         return '';
     }

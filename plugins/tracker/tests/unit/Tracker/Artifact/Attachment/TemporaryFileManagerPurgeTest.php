@@ -96,8 +96,8 @@ class TemporaryFileManagerPurgeTest extends \Tuleap\Test\PHPUnit\TestCase
                         'offset'        => 1,
                         'submitted_by'  => 101,
                         'filesize'      => 12345,
-                        'filetype'      => 'image/png'
-                    ]
+                        'filetype'      => 'image/png',
+                    ],
                 ]
             )
         );

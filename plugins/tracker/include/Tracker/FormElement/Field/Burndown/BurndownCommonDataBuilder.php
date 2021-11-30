@@ -54,7 +54,7 @@ class BurndownCommonDataBuilder
         LoggerInterface $logger,
         ChartConfigurationFieldRetriever $field_retriever,
         ChartConfigurationValueRetriever $value_retriever,
-        BurndownCacheGenerationChecker $cache_checker
+        BurndownCacheGenerationChecker $cache_checker,
     ) {
         $this->logger          = $logger;
         $this->field_retriever = $field_retriever;
@@ -70,7 +70,7 @@ class BurndownCommonDataBuilder
         PFUser $user,
         TimePeriodWithoutWeekEnd $time_period,
         $capacity,
-        $user_timezone
+        $user_timezone,
     ) {
         $this->logger->info("Start calculating burndown " . $artifact->getId());
 

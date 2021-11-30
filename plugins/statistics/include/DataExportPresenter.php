@@ -43,7 +43,7 @@ class DataExportPresenter
         AdminHeaderPresenter $header,
         UsageProgressPresenter $usage_progress_presenter,
         ServicesUsagePresenter $services_usage_presenter,
-        SCMStatisticsPresenter $scm_statistics_presenter
+        SCMStatisticsPresenter $scm_statistics_presenter,
     ) {
         $this->header                   = $header;
         $this->usage_progress_presenter = $usage_progress_presenter;

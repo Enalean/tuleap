@@ -42,7 +42,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends 
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         $bind_type = $changeset_value->getField()->getBind()->getType();
         $values    = $changeset_value->getValue();

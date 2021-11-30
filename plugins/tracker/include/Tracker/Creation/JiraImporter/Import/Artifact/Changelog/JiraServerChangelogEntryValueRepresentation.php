@@ -40,7 +40,7 @@ final class JiraServerChangelogEntryValueRepresentation implements ChangelogEntr
         private int $id,
         private DateTimeImmutable $created,
         private JiraUser $changelog_owner,
-        private array $item_representations
+        private array $item_representations,
     ) {
     }
 

@@ -370,7 +370,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                    // more here or as method.
                    '' => function () {
                     return 'dummy';
-                   }
+                   },
                    ];
         // split the argument string by any number of commas or space
         // characters, which include " ", \r, \t, \n and \f
@@ -392,7 +392,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                              'supported_languages' => _("Supported languages"),
                              'supported_themes'    => _("Supported themes"),
 //                           '' => _(""),
-                             '' => ""
+                             '' => "",
                              ];
             $table   = HTML::table(['border' => 1,'cellspacing' => 3,
                                        'cellpadding' => 3]);

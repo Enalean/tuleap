@@ -40,7 +40,7 @@ class CommitStatusCreator
         \GitRepository $git_repository,
         \Git_Exec $git_executor,
         $commit_reference,
-        $status_name
+        $status_name,
     ) {
         if (! $git_executor->doesObjectExists($commit_reference)) {
             throw new CommitDoesNotExistException($commit_reference);

@@ -40,7 +40,7 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
     public function __construct(
         ArtifactXMLNodeHelper $node_helper,
         ArtifactXMLExporterDao $dao,
-        ArtifactMultiListCurrentValueExporter $current_value_exporter
+        ArtifactMultiListCurrentValueExporter $current_value_exporter,
     ) {
         parent::__construct($node_helper);
         $this->dao                    = $dao;

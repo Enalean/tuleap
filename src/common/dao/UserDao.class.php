@@ -620,7 +620,7 @@ class UserDao extends DataAccessObject
 
         return [
             'users'   => $this->retrieve($sql),
-            'numrows' => $this->foundRows()
+            'numrows' => $this->foundRows(),
         ];
     }
 

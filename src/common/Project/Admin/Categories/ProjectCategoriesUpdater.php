@@ -37,7 +37,7 @@ class ProjectCategoriesUpdater
     public function __construct(
         TroveCatFactory $factory,
         ProjectHistoryDao $history_dao,
-        TroveSetNodeFacade $set_node_facade
+        TroveSetNodeFacade $set_node_facade,
     ) {
         $this->factory         = $factory;
         $this->history_dao     = $history_dao;

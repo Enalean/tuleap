@@ -46,7 +46,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
     public function __construct(
         Tracker_HierarchyFactory $hierarchy_factory,
         PlanningFactory $planning_factory,
-        ScrumForMonoMilestoneChecker $mono_milestone_checker
+        ScrumForMonoMilestoneChecker $mono_milestone_checker,
     ) {
         $this->hierarchy_factory      = $hierarchy_factory;
         $this->planning_factory       = $planning_factory;

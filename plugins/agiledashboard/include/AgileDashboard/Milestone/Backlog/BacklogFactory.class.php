@@ -55,7 +55,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
         Tracker_ArtifactFactory $artifact_factory,
         PlanningFactory $planning_factory,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        MonoMilestoneItemsFinder $mono_milestone_items_finder
+        MonoMilestoneItemsFinder $mono_milestone_items_finder,
     ) {
         $this->dao                          = $dao;
         $this->artifact_factory             = $artifact_factory;
@@ -93,7 +93,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
         Planning_Milestone $milestone,
         array $backlog_trackers_children_can_manage,
         $limit = null,
-        $offset = null
+        $offset = null,
     ): AgileDashboard_Milestone_Backlog_Backlog {
         return new AgileDashboard_Milestone_Backlog_Backlog(
             $this->artifact_factory,

@@ -38,7 +38,7 @@ class MirroringPresenter
 
     public function __construct(
         Project $project,
-        array $mirror_presenters
+        array $mirror_presenters,
     ) {
         $this->project_id        = $project->getID();
         $this->mirror_presenters = $mirror_presenters;

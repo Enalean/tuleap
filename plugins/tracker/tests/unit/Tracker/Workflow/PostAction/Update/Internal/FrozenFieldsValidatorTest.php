@@ -223,7 +223,7 @@ class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 0 => [
                     'source_field_id' => '1',
                     'target_field_id' => '2',
-                ]
+                ],
             ]);
 
         $frozen_fields_value = new FrozenFieldsValue([1, 2]);

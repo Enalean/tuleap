@@ -86,7 +86,7 @@ class AlwaysThereFieldsExporter
     public function exportFields(
         ContainersXMLCollection $containers_collection,
         FieldMappingCollection $field_mapping_collection,
-        StatusValuesCollection $status_values_collection
+        StatusValuesCollection $status_values_collection,
     ): void {
         $this->field_xml_exporter->exportField(
             $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
@@ -167,7 +167,7 @@ class AlwaysThereFieldsExporter
             self::JIRA_RESOLUTION_DATE_RANK,
             false,
             [
-                'display_time' => '1'
+                'display_time' => '1',
             ],
             [],
             $field_mapping_collection,

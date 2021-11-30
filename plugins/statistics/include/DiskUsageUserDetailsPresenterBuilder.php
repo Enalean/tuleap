@@ -50,7 +50,7 @@ class DiskUsageUserDetailsPresenterBuilder
         Statistics_DiskUsageManager $disk_usage_manager,
         Statistics_DiskUsageOutput $disk_usage_output,
         SearchFieldsPresenterBuilder $search_fields_builder,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->disk_usage_manager    = $disk_usage_manager;
         $this->disk_usage_output     = $disk_usage_output;
@@ -63,7 +63,7 @@ class DiskUsageUserDetailsPresenterBuilder
         $user_value,
         $group_by_value,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         if (! $start_date_value) {
             $start_date       = new DateTime();
@@ -129,14 +129,14 @@ class DiskUsageUserDetailsPresenterBuilder
         $user_id,
         $group_by,
         $start_date,
-        $end_date
+        $end_date,
     ) {
         $graph_query = http_build_query([
             'user_id'    => $user_id,
             'start_date' => $start_date,
             'end_date'   => $end_date,
             'group_by'   => $group_by,
-            'graph_type' => 'graph_user'
+            'graph_type' => 'graph_user',
         ]);
 
         return 'disk_usage_graph.php?' . $graph_query;
@@ -145,7 +145,7 @@ class DiskUsageUserDetailsPresenterBuilder
     private function buildUserDetails(
         PFUser $user,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $row = $this->disk_usage_manager->returnUserEvolutionForPeriod(
             $user->getId(),
@@ -158,7 +158,7 @@ class DiskUsageUserDetailsPresenterBuilder
         }
 
         $user_details_query = http_build_query([
-            'user_id' => $user->getId()
+            'user_id' => $user->getId(),
         ]);
 
         return [
@@ -167,7 +167,7 @@ class DiskUsageUserDetailsPresenterBuilder
             'start_size'       => $this->disk_usage_output->sizeReadable($row['start_size']),
             'end_size'         => $this->disk_usage_output->sizeReadable($row['end_size']),
             'evolution'        => $this->disk_usage_output->sizeReadable($row['evolution']),
-            'evolution_rate'   => ($row['evolution'] == 0) ? '-' : sprintf('%01.2f %%', ($row['evolution_rate'] * 100))
+            'evolution_rate'   => ($row['evolution'] == 0) ? '-' : sprintf('%01.2f %%', ($row['evolution_rate'] * 100)),
         ];
     }
 }

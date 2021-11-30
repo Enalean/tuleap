@@ -49,7 +49,7 @@ class OAuth2AppRemover
         AppDao $app_dao,
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
         AuthorizationDao $authorization_dao,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->app_dao                = $app_dao;
         $this->authorization_code_dao = $authorization_code_dao;

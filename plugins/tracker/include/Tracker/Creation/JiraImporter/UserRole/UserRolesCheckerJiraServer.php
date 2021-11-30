@@ -44,7 +44,7 @@ final class UserRolesCheckerJiraServer implements UserRolesCheckerInterface
     public function checkUserIsAdminOfJiraProject(
         JiraClient $jira_client,
         LoggerInterface $logger,
-        string $jira_project
+        string $jira_project,
     ): void {
         $user_role_url = ClientWrapper::JIRA_CORE_BASE_URL . "/mypermissions?projectKey=" . urlencode($jira_project);
         $logger->debug("  GET " . $user_role_url);

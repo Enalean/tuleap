@@ -61,7 +61,7 @@ class HookController
         GitRepositoryFactory $git_repository_factory,
         HookDao $dao,
         CSRFSynchronizerToken $csrf,
-        Valid_HTTPURI $valid_HTTPURI
+        Valid_HTTPURI $valid_HTTPURI,
     ) {
         $this->request                = $request;
         $this->git_repository_factory = $git_repository_factory;
@@ -132,7 +132,7 @@ class HookController
             'action'      => 'repo_management',
             'group_id'    => $repository->getProjectId(),
             'repo_id'     => $repository->getId(),
-            'pane'        => Hooks::ID
+            'pane'        => Hooks::ID,
         ]);
     }
 }

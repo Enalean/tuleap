@@ -171,7 +171,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public static function buildFromFormArray(
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         TemplateFromProjectForCreation $template_from_project_for_creation,
-        array $data
+        array $data,
     ) {
         $instance = new ProjectCreationData($default_project_visibility_retriever);
         $instance->fromForm($template_from_project_for_creation, $data);
@@ -223,7 +223,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         ?\Psr\Log\LoggerInterface $logger = null,
         ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null,
         ?ExternalFieldsExtractor $external_fields_extractor = null,
-        ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null
+        ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null,
     ) {
         $default_project_visibility_retriever = $default_project_visibility_retriever ?? new DefaultProjectVisibilityRetriever();
 
@@ -237,7 +237,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         ?XML_RNGValidator $xml_validator = null,
         ?ServiceManager $service_manager = null,
         ?ExternalFieldsExtractor $external_fields_extractor = null,
-        ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null
+        ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null,
     ) {
         if (empty($xml_validator)) {
             $xml_validator = new XML_RNGValidator();

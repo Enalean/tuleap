@@ -64,7 +64,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\P
         $this->field->shouldReceive('isRequired')->andReturn(false);
         $submitted_values = [
             'use_artifact_permissions' => true,
-            'u_groups'                 => [ForgeAccess::ANONYMOUS]
+            'u_groups'                 => [ForgeAccess::ANONYMOUS],
         ];
         $this->assertTrue(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
@@ -79,7 +79,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\P
     {
         $this->field->shouldReceive('isRequired')->andReturn(false);
         $submitted_values = [
-            'use_artifact_permissions' => false
+            'use_artifact_permissions' => false,
         ];
         $this->assertTrue(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
@@ -108,7 +108,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\P
         $this->field->shouldReceive('isRequired')->andReturn(false);
         $submitted_values = [
             'use_artifact_permissions' => true,
-            'u_groups'                 => []
+            'u_groups'                 => [],
         ];
 
         $this->assertFalse(
@@ -138,7 +138,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\P
         $this->field->shouldReceive('isRequired')->andReturn(true);
         $submitted_values = [
             'use_artifact_permissions' => true,
-            'u_groups'                 => []
+            'u_groups'                 => [],
         ];
         $this->assertFalse(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(

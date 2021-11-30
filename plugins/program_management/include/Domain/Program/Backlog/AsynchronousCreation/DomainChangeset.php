@@ -48,7 +48,7 @@ final class DomainChangeset implements ChangesetIdentifier
 
     public static function fromIterationLastChangeset(
         RetrieveLastChangeset $changeset_retriever,
-        IterationIdentifier $iteration
+        IterationIdentifier $iteration,
     ): ?self {
         $changeset_id = $changeset_retriever->retrieveLastChangesetId($iteration);
         return ($changeset_id !== null) ? new self($changeset_id) : null;

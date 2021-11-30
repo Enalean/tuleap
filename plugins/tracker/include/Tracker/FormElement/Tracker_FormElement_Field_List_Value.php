@@ -135,7 +135,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
         return [
-            'label' => $this->getLabel()
+            'label' => $this->getLabel(),
         ];
     }
 

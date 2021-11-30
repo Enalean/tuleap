@@ -80,7 +80,7 @@ final class XMLPlanning
         string $plan_title,
         string $planning_tracker_id,
         string $backlog_title,
-        array $backlog_tracker_ids
+        array $backlog_tracker_ids,
     ) {
         $this->name                = $name;
         $this->plan_title          = $plan_title;

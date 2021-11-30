@@ -98,7 +98,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
                 $is_used,
                 $is_advanced,
                 $is_legacy,
-                $transitions
+                $transitions,
             ]
         );
 
@@ -114,7 +114,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
                 false,
                 $is_advanced,
                 $is_legacy,
-                $transitions
+                $transitions,
             ]
         );
 
@@ -130,7 +130,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
                 false,
                 $is_advanced,
                 true,
-                $transitions
+                $transitions,
             ]
         );
 
@@ -271,7 +271,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $array_xml_mapping = ['F32' => 103,
                                    'values' => [
                                        'F32-V0' => 806,
-                                       'F32-V1' => 807]
+                                       'F32-V1' => 807],
                                    ];
         $workflow->exportToXML($root, $array_xml_mapping);
 
@@ -479,7 +479,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
                 $is_used,
                 false,
                 false,
-                [$transition]
+                [$transition],
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -541,7 +541,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
                 true,
                 false,
                 false,
-                [$transition]
+                [$transition],
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

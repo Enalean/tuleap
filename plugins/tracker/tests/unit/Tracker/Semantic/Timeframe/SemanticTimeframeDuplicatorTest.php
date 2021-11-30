@@ -141,7 +141,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             2,
             [
                 ['from' => 101, 'to' => 1001],
-                ['from' => 102, 'to' => 1002]
+                ['from' => 102, 'to' => 1002],
             ]
         );
     }
@@ -168,7 +168,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             2,
             [
                 ['from' => 101, 'to' => 1001],
-                ['from' => 103, 'to' => 1003]
+                ['from' => 103, 'to' => 1003],
             ]
         );
     }
@@ -187,7 +187,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $from_start_date_field_id,
         ?int $from_duration_field_id,
         ?int $from_end_date_field_id,
-        ?int $from_implied_from_tracker_id
+        ?int $from_implied_from_tracker_id,
     ): void {
         $this->dao
             ->shouldReceive('searchByTrackerId')
@@ -197,7 +197,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => $from_start_date_field_id,
                 'duration_field_id' => $from_duration_field_id,
                 'end_date_field_id' => $from_end_date_field_id,
-                'implied_from_tracker_id' => $from_implied_from_tracker_id
+                'implied_from_tracker_id' => $from_implied_from_tracker_id,
             ]);
 
         $this->dao
@@ -216,7 +216,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 ['from' => $from_start_date_field_id, 'to' => null],
                 ['from' => $from_duration_field_id, 'to' => null],
-                ['from' => $from_end_date_field_id, 'to' => null]
+                ['from' => $from_end_date_field_id, 'to' => null],
             ]
         );
     }
@@ -235,7 +235,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $from_start_date_field_id,
         ?int $from_duration_field_id,
         ?int $from_end_date_field_id,
-        ?int $from_implied_from_tracker_id
+        ?int $from_implied_from_tracker_id,
     ): void {
         $this->dao->shouldReceive('searchByTrackerId')
             ->with(50);
@@ -248,7 +248,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => $from_start_date_field_id,
                 'duration_field_id' => $from_duration_field_id,
                 'end_date_field_id' => $from_end_date_field_id,
-                'implied_from_tracker_id' => $from_implied_from_tracker_id
+                'implied_from_tracker_id' => $from_implied_from_tracker_id,
             ]);
 
         $this->dao
@@ -260,11 +260,11 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 ['from' => $from_start_date_field_id, 'to' => null],
                 ['from' => $from_duration_field_id, 'to' => null],
-                ['from' => $from_end_date_field_id, 'to' => null]
+                ['from' => $from_end_date_field_id, 'to' => null],
             ],
             [
                 50 => 500,
-                60 => 600
+                60 => 600,
             ]
         );
     }
@@ -282,7 +282,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 1,
                 'duration_field_id' => 2,
                 'end_date_field_id' => 3,
-                'implied_from_tracker_id' => 50
+                'implied_from_tracker_id' => 50,
             ]);
 
         $this->dao
@@ -294,10 +294,10 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 ['from' => 1, 'to' => null],
                 ['from' => 2, 'to' => null],
-                ['from' => 3, 'to' => null]
+                ['from' => 3, 'to' => null],
             ],
             [
-                60 => 600
+                60 => 600,
             ]
         );
     }
@@ -312,7 +312,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 1,
                 'duration_field_id' => 2,
                 'end_date_field_id' => 3,
-                'implied_from_tracker_id' => 50
+                'implied_from_tracker_id' => 50,
             ]);
 
         $this->dao->shouldNotReceive('save');
@@ -334,7 +334,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 1,
                 'duration_field_id' => 2,
                 'end_date_field_id' => 3,
-                'implied_from_tracker_id' => null
+                'implied_from_tracker_id' => null,
             ]);
 
         $this->dao
@@ -347,7 +347,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             201,
             [
                 ['from' => 1, 'to' => 1001],
-                ['from' => 3, 'to' => 3001]
+                ['from' => 3, 'to' => 3001],
             ]
         );
     }

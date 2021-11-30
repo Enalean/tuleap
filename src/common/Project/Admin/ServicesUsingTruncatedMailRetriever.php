@@ -63,7 +63,7 @@ class ServicesUsingTruncatedMailRetriever
             Event::SERVICES_TRUNCATED_EMAILS,
             [
                 'project'  => $project,
-                'services' => &$truncated_mails_impacted_services
+                'services' => &$truncated_mails_impacted_services,
             ]
         );
 

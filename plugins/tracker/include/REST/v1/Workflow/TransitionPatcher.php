@@ -51,7 +51,7 @@ class TransitionPatcher
         ConditionsUpdater $conditions_updater,
         DBTransactionExecutor $transaction_executor,
         StateFactory $state_factory,
-        TransitionUpdater $transition_updater
+        TransitionUpdater $transition_updater,
     ) {
         $this->conditions_updater   = $conditions_updater;
         $this->transaction_executor = $transaction_executor;

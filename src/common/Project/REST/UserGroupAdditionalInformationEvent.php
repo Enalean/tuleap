@@ -37,7 +37,7 @@ final class UserGroupAdditionalInformationEvent implements Dispatchable
 
     public function __construct(
         /** @psalm-readonly */ public \ProjectUGroup $project_ugroup,
-        /** @psalm-readonly */ public \PFUser $current_user
+        /** @psalm-readonly */ public \PFUser $current_user,
     ) {
     }
 

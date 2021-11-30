@@ -43,7 +43,7 @@ class ServiceMailingList extends \Service
     public function displayMailingListHeaderWithAdditionalBreadcrumbs(
         \PFUser $user,
         string $title,
-        BreadCrumbCollection $additional_breadcrumbs
+        BreadCrumbCollection $additional_breadcrumbs,
     ): void {
         \Tuleap\Project\ServiceInstrumentation::increment('mailinglists');
 
@@ -80,7 +80,7 @@ class ServiceMailingList extends \Service
                             new BreadCrumbLink(
                                 _('Administration'),
                                 MailingListAdministrationController::getUrl($this->project),
-                            )
+                            ),
                         ]
                     )
                 )

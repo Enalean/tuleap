@@ -74,7 +74,7 @@ class SimilarFieldsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $candidates = $this->buildCandidates([
             ['field' => $first_field, 'tracker' => $first_tracker],
-            ['field' => $second_field, 'tracker' => $second_tracker]
+            ['field' => $second_field, 'tracker' => $second_tracker],
         ]);
 
         $results = $this->filter->filterCandidatesUsedInSemantics(...$candidates);

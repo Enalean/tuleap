@@ -40,7 +40,7 @@ final class TeamCreator implements CreateTeam
         private VerifyIsTeam $team_verifier,
         private VerifyProjectPermission $permission_verifier,
         private BuildTeam $team_builder,
-        private TeamStore $team_store
+        private TeamStore $team_store,
     ) {
     }
 

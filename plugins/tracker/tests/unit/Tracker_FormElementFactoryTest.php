@@ -110,13 +110,13 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'permissions' => [
                 $GLOBALS['UGROUP_ANONYMOUS']  => [
                     0 => 'PLUGIN_TRACKER_FIELD_READ',
-                    1 => 'PLUGIN_TRACKER_FIELD_UPDATE'
+                    1 => 'PLUGIN_TRACKER_FIELD_UPDATE',
                 ],
                 $GLOBALS['UGROUP_REGISTERED'] => [
                     0 => 'PLUGIN_TRACKER_FIELD_UPDATE',
-                    1 => 'PLUGIN_TRACKER_FIELD_READ'
+                    1 => 'PLUGIN_TRACKER_FIELD_READ',
                 ],
-            ]
+            ],
         ];
 
         $elmtId = 134;
@@ -136,14 +136,14 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'permissions' => [
                 $GLOBALS['UGROUP_ANONYMOUS']  => [
                     0 => 'PLUGIN_TRACKER_FIELD_UPDATE',
-                    1 => 'PLUGIN_TRACKER_FIELD_SUBMIT'
+                    1 => 'PLUGIN_TRACKER_FIELD_SUBMIT',
                 ],
                 $GLOBALS['UGROUP_REGISTERED'] => [
                     0 => 'PLUGIN_TRACKER_FIELD_SUBMIT',
-                    1 => 'PLUGIN_TRACKER_FIELD_READ'
+                    1 => 'PLUGIN_TRACKER_FIELD_READ',
                 ],
 
-            ]
+            ],
         ];
 
         $elmtId = 134;
@@ -335,7 +335,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'required'          => null,
             'notifications'     => null,
             'rank'              => null,
-            'original_field_id' => null
+            'original_field_id' => null,
         ];
     }
 
@@ -407,7 +407,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['from' => 999, 'to' => 234],
             ['from' => 103, 'to' => 567],
             ['from' => 555, 'to' => 888, 'values' => [1 => 2]],
-            ['from' => 666, 'to' => 777, 'values' => [3 => 4, 5 => 6]]
+            ['from' => 666, 'to' => 777, 'values' => [3 => 4, 5 => 6]],
         ];
 
         $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)
@@ -441,7 +441,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = [
             ['from' => 999, 'to' => 234],
             ['from' => 103, 'to' => 567],
-            ['from' => 666, 'to' => 777, 'values' => [1 => 2, 3 => 4]]
+            ['from' => 666, 'to' => 777, 'values' => [1 => 2, 3 => 4]],
         ];
 
         $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)

@@ -75,7 +75,7 @@ class UserWidget extends Widget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('widget-timetracking.js')]
+            ['file' => $this->getAssets()->getFileURL('widget-timetracking.js')],
         ];
     }
 

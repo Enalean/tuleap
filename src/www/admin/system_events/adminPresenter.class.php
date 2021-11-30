@@ -59,7 +59,7 @@ class SystemEvents_adminPresenter
         array $events,
         $queue,
         Tuleap\SystemEvent\SystemEventSearchPresenter $search,
-        Tuleap\Layout\PaginationPresenter $pagination
+        Tuleap\Layout\PaginationPresenter $pagination,
     ) {
         $this->csrf       = $csrf;
         $this->sections   = $this->groupByCreatedDate($events);
@@ -103,7 +103,7 @@ class SystemEvents_adminPresenter
             if (! isset($grouped_events[$prefix])) {
                 $grouped_events[$prefix] = [
                     'label'  => $this->getSectionLabel($event->raw_create_date),
-                    'events' => []
+                    'events' => [],
                 ];
             }
 

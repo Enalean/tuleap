@@ -56,7 +56,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
             'key'  => "JIRA",
-            'name' => "JIRA provided time tracking"
+            'name' => "JIRA provided time tracking",
         ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
@@ -77,7 +77,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     public function testItReturnsNullIfKeyEntryIsMissingInJson(): void
     {
         $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
-            'name' => "JIRA provided time tracking"
+            'name' => "JIRA provided time tracking",
         ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
@@ -89,7 +89,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
             'key'  => "whatever",
-            'name' => "JIRA provided time tracking"
+            'name' => "JIRA provided time tracking",
         ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();

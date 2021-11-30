@@ -61,7 +61,7 @@ class AddController implements DispatchableWithRequest
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         JenkinsServerAdder $jenkins_server_adder,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->project_manager         = $project_manager;
         $this->git_permissions_manager = $git_permissions_manager;

@@ -38,7 +38,7 @@ class BetweenComparisonFromWhereBuilder implements FromWhereBuilder
 
     public function __construct(
         AlwaysThereField\Date\BetweenComparisonFromWhereBuilder $submitted_on_builder,
-        AlwaysThereField\Date\BetweenComparisonFromWhereBuilder $last_update_date_builder
+        AlwaysThereField\Date\BetweenComparisonFromWhereBuilder $last_update_date_builder,
     ) {
         $this->submitted_on_builder     = $submitted_on_builder;
         $this->last_update_date_builder = $last_update_date_builder;

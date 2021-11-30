@@ -69,13 +69,13 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 0
+                        'count' => 0,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 0
-                    ]
-                ]
+                        'count' => 0,
+                    ],
+                ],
             ],
             200 => [
                 'id' => 200,
@@ -84,14 +84,14 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
-            ]
+                        'count' => 6,
+                    ],
+                ],
+            ],
         ];
         $only_used_columns = [
             [
@@ -101,13 +101,13 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ], [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
-            ]
+                        'count' => 6,
+                    ],
+                ],
+            ],
         ];
 
         $this->assertEquals($this->data_builder->getColumns($all_columns), $only_used_columns);
@@ -121,7 +121,7 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
         $criterion_field->shouldReceive('getId')->andReturn('201');
         $criterion_field->shouldReceive('getCriteriaValue')->with($criterion)->andReturn([
             101,
-            102
+            102,
         ]);
 
         $criterion->shouldReceive('getField')->andReturn($criterion_field);
@@ -136,13 +136,13 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 0
+                        'count' => 0,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 0
-                    ]
-                ]
+                        'count' => 0,
+                    ],
+                ],
             ],
             101 => [
                 'id' => 101,
@@ -151,13 +151,13 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
+                        'count' => 6,
+                    ],
+                ],
             ],
             102 => [
                 'id' => 102,
@@ -166,13 +166,13 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
+                        'count' => 6,
+                    ],
+                ],
             ],
             103 => [
                 'id' => 103,
@@ -181,14 +181,14 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
-            ]
+                        'count' => 6,
+                    ],
+                ],
+            ],
         ];
 
         $returned_columns = $this->data_builder->getColumns($all_columns);
@@ -216,13 +216,13 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
+                        'count' => 6,
+                    ],
+                ],
             ],
             102 => [
                 'id' => 102,
@@ -231,13 +231,13 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
+                        'count' => 6,
+                    ],
+                ],
             ],
             103 => [
                 'id' => 103,
@@ -246,14 +246,14 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
                 'values' => [
                     1 => [
                         'date' => 1,
-                        'count' => 1
+                        'count' => 1,
                     ],
                     2 => [
                         'date' => 2,
-                        'count' => 6
-                    ]
-                ]
-            ]
+                        'count' => 6,
+                    ],
+                ],
+            ],
         ];
 
         $returned_columns = $this->data_builder->getColumns($all_columns);

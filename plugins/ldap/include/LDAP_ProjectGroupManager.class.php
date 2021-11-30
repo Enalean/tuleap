@@ -53,7 +53,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         ProjectManager $project_manager,
         UserManager $user_manager,
         GroupSyncNotificationsManager $notifications_manager,
-        ProjectGroupManagerRestrictedUserFilter $project_restricted_user_filter
+        ProjectGroupManagerRestrictedUserFilter $project_restricted_user_filter,
     ) {
         parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager);
 

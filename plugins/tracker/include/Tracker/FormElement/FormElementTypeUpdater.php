@@ -41,7 +41,7 @@ class FormElementTypeUpdater
 
     public function __construct(
         DBTransactionExecutor $db_transaction_executor,
-        Tracker_FormElementFactory $form_element_factory
+        Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->db_transaction_executor = $db_transaction_executor;
         $this->form_element_factory    = $form_element_factory;

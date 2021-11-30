@@ -40,7 +40,7 @@ class TransitionUpdater
 
     public function __construct(
         ConditionsUpdater $conditions_updater,
-        PostActionCollectionUpdater $action_collection_updater
+        PostActionCollectionUpdater $action_collection_updater,
     ) {
         $this->conditions_updater        = $conditions_updater;
         $this->action_collection_updater = $action_collection_updater;
@@ -53,7 +53,7 @@ class TransitionUpdater
         State $state,
         array $authorized_user_group_ids,
         array $not_empty_field_ids,
-        bool $is_comment_required
+        bool $is_comment_required,
     ) {
         foreach ($state->getTransitions() as $transition) {
             $this->conditions_updater->update(

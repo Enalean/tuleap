@@ -37,7 +37,7 @@ final class UserRolesChecker implements UserRolesCheckerInterface
     public function checkUserIsAdminOfJiraProject(
         JiraClient $jira_client,
         LoggerInterface $logger,
-        string $jira_project
+        string $jira_project,
     ): void {
         $logger->debug("Check if user is administrator in Jira Project");
 

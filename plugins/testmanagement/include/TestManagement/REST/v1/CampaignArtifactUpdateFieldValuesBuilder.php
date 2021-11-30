@@ -50,7 +50,7 @@ class CampaignArtifactUpdateFieldValuesBuilder
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        StatusValueRetriever $status_value_retriever
+        StatusValueRetriever $status_value_retriever,
     ) {
         $this->formelement_factory    = $formelement_factory;
         $this->status_value_retriever = $status_value_retriever;
@@ -68,7 +68,7 @@ class CampaignArtifactUpdateFieldValuesBuilder
         Tracker $tracker,
         PFUser $user,
         string $label,
-        ?string $change_status
+        ?string $change_status,
     ): array {
         $field_values = [
             $this->getLabelValueRepresentation(
@@ -80,7 +80,7 @@ class CampaignArtifactUpdateFieldValuesBuilder
                 $tracker,
                 $user,
                 $change_status
-            )
+            ),
         ];
 
         return array_filter($field_values);
@@ -95,7 +95,7 @@ class CampaignArtifactUpdateFieldValuesBuilder
     private function getStatusValueRepresentation(
         Tracker $tracker,
         PFUser $user,
-        ?string $change_status
+        ?string $change_status,
     ): ?ArtifactValuesRepresentation {
         if ($change_status === null) {
             return null;
@@ -126,7 +126,7 @@ class CampaignArtifactUpdateFieldValuesBuilder
     private function getLabelValueRepresentation(
         Tracker $tracker,
         PFUser $user,
-        string $label
+        string $label,
     ): ArtifactValuesRepresentation {
         $label_field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker->getId(),

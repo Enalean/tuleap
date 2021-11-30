@@ -49,7 +49,7 @@ class ProjectDetailsDAO extends DataAccessObject
     public function createGroupDescription(
         $group_id,
         $group_desc_id,
-        $current_form
+        $current_form,
     ) {
         $escaped_current_form  = $this->da->quoteSmart($current_form);
         $escaped_group_id      = $this->da->escapeInt($group_id);
@@ -64,7 +64,7 @@ class ProjectDetailsDAO extends DataAccessObject
     public function updateGroupDescription(
         $group_id,
         $group_desc_id,
-        $current_form
+        $current_form,
     ) {
         $escaped_current_form  = $this->da->quoteSmart($current_form);
         $escaped_group_id      = $this->da->escapeInt($group_id);
@@ -82,7 +82,7 @@ class ProjectDetailsDAO extends DataAccessObject
         $form_group_name,
         $form_shortdesc,
         $group_id,
-        ?string $project_icon_codepoint
+        ?string $project_icon_codepoint,
     ) {
         $escaped_form_group_name        = $this->da->quoteSmart($form_group_name);
         $escaped_form_shortdesc         = $this->da->quoteSmart($form_shortdesc);

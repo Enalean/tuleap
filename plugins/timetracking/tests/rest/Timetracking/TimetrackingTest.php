@@ -33,7 +33,7 @@ class TimetrackingTest extends TimetrackingBase
         $query               = urlencode(
             json_encode([
                 "start_date" => "2018-04-01T00:00:00+01",
-                "end_date"   => "2018-04-10T00:00:00+01"
+                "end_date"   => "2018-04-10T00:00:00+01",
             ])
         );
         $response            = $this->getResponseByName(
@@ -57,7 +57,7 @@ class TimetrackingTest extends TimetrackingBase
         $query    = urlencode(
             json_encode([
                 "start_date" => "2018-04-01T00:00:00+01",
-                "end_date"   => "2018-04-10T00:00:00+01"
+                "end_date"   => "2018-04-10T00:00:00+01",
             ])
         );
         $response = $this->getResponse(
@@ -73,7 +73,7 @@ class TimetrackingTest extends TimetrackingBase
         $query = urlencode(
             json_encode([
                 "start_date" => "2018-04-01T00:00:00+01",
-                "end_date"   => "2018-04-01T00:00:00+01"
+                "end_date"   => "2018-04-01T00:00:00+01",
             ])
         );
 
@@ -97,7 +97,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "end_date" => "2018-04-10T00:00:00+01"
+                "end_date" => "2018-04-10T00:00:00+01",
             ])
         );
 
@@ -118,7 +118,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "start_date" => "2018-04-01T00:00:00+01"
+                "start_date" => "2018-04-01T00:00:00+01",
             ])
         );
 
@@ -140,7 +140,7 @@ class TimetrackingTest extends TimetrackingBase
         $query = urlencode(
             json_encode([
                 "start_date" => "2018-04-10T00:00:00+01",
-                "end_date"   => "2018-04-01T00:00:00+01"
+                "end_date"   => "2018-04-01T00:00:00+01",
             ])
         );
 
@@ -162,7 +162,7 @@ class TimetrackingTest extends TimetrackingBase
         $query = urlencode(
             json_encode([
                 "start_date" => "not a valid date",
-                "end_date"   => ""
+                "end_date"   => "",
             ])
         );
 
@@ -185,7 +185,7 @@ class TimetrackingTest extends TimetrackingBase
             json_encode(
                 [
                     "start_date" => "2018/01/01",
-                    "end_date"   => "2018/01/30"
+                    "end_date"   => "2018/01/30",
                 ]
             )
         );
@@ -208,7 +208,7 @@ class TimetrackingTest extends TimetrackingBase
         $query = urlencode(
             json_encode([
                 "start_date" => "2010-04-01T00:00:00+01",
-                "end_date"   => "2018-05-31T00:00:00+01"
+                "end_date"   => "2018-05-31T00:00:00+01",
             ])
         );
 
@@ -236,7 +236,7 @@ class TimetrackingTest extends TimetrackingBase
             "date_time"   => "2018-04-01",
             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
             "time_value"  => "11:11",
-            "step"        => "etape"
+            "step"        => "etape",
         ]);
         $response = $this->getResponse($this->request_factory->createRequest('POST', '/api/v1/timetracking')->withBody($this->stream_factory->createStream($query)), TimetrackingDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($response->getStatusCode(), 201);
@@ -265,7 +265,7 @@ class TimetrackingTest extends TimetrackingBase
              "date_time"   => "2018-04-01",
              "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
              "time_value"  => "11/11",
-             "step"        => "etape"
+             "step"        => "etape",
          ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'timetracking')->withBody($this->stream_factory->createStream($query)),
@@ -279,7 +279,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "with_time_tracking" => true
+                "with_time_tracking" => true,
             ])
         );
 
@@ -297,7 +297,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                'with_time_tracking' => true
+                'with_time_tracking' => true,
             ])
         );
 
@@ -315,7 +315,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "with_time_tracking" => false
+                "with_time_tracking" => false,
             ])
         );
 
@@ -329,7 +329,7 @@ class TimetrackingTest extends TimetrackingBase
     {
         $query = urlencode(
             json_encode([
-                "with_time_tracking" => false
+                "with_time_tracking" => false,
             ])
         );
 
@@ -345,7 +345,7 @@ class TimetrackingTest extends TimetrackingBase
              "date_time"   => "oui",
              "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
              "time_value"  => "11:11",
-             "step"        => "etape"
+             "step"        => "etape",
          ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'timetracking')->withBody($this->stream_factory->createStream($query)),
@@ -360,7 +360,7 @@ class TimetrackingTest extends TimetrackingBase
         $query    = json_encode([
             "date_time"   => "2018-04-01",
             "time_value"  => "11:11",
-            "step"        => "etape"
+            "step"        => "etape",
         ]);
         $response = $this->getResponse($this->request_factory->createRequest('PUT', '/api/v1/timetracking/1')->withBody($this->stream_factory->createStream($query)), TimetrackingDataBuilder::USER_TESTER_NAME);
 
@@ -372,7 +372,7 @@ class TimetrackingTest extends TimetrackingBase
         $query    = json_encode([
             "date_time"   => "2018-04-01",
             "time_value"  => "11/11",
-            "step"        => "etape"
+            "step"        => "etape",
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', '/api/v1/timetracking/1')->withBody($this->stream_factory->createStream($query)),
@@ -387,7 +387,7 @@ class TimetrackingTest extends TimetrackingBase
         $query    = json_encode([
             "date_time"   => "201804-01",
             "time_value"  => "11:11",
-            "step"        => "etape"
+            "step"        => "etape",
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', '/api/v1/timetracking/1')->withBody($this->stream_factory->createStream($query)),
@@ -402,7 +402,7 @@ class TimetrackingTest extends TimetrackingBase
         $query    = json_encode([
             "date_time"   => "2018-04-01",
             "time_value"  => "11:11",
-            "step"        => "etape"
+            "step"        => "etape",
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', '/api/v1/timetracking/8000')->withBody($this->stream_factory->createStream($query)),

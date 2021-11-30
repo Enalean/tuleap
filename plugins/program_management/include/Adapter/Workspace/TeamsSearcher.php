@@ -30,7 +30,7 @@ final class TeamsSearcher implements SearchLinkedProjects
 {
     public function __construct(
         private SearchTeamsOfProgram $team_ids_searcher,
-        private RetrieveFullProject $retrieve_full_project
+        private RetrieveFullProject $retrieve_full_project,
     ) {
     }
 

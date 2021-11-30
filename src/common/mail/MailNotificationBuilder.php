@@ -49,7 +49,7 @@ class MailNotificationBuilder
         $text_body,
         $link,
         $truncated_service_name,
-        MailEnhancer $mail_enhancer
+        MailEnhancer $mail_enhancer,
     ) {
         return $this->mail_builder->buildAndSendEmail(
             $project,

@@ -48,7 +48,7 @@ final class FileCreator
 
     public function __construct(
         FileToUploadCreator $file_to_upload_creator,
-        EmptyFileToUploadFinisher $empty_file_to_upload_finisher
+        EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
     ) {
         $this->file_to_upload_creator        = $file_to_upload_creator;
         $this->empty_file_to_upload_finisher = $empty_file_to_upload_finisher;
@@ -62,7 +62,7 @@ final class FileCreator
         FRSRelease $release,
         PFUser $user,
         FilePOSTRepresentation $file_post_representation,
-        DateTimeImmutable $current_time
+        DateTimeImmutable $current_time,
     ): CreatedFileRepresentation {
         try {
             $file_to_upload = $this->file_to_upload_creator->create(

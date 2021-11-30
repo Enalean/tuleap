@@ -62,7 +62,7 @@ class HistoryValueFormatter
         UGroupManager $ugroup_manager,
         FineGrainedRetriever $fine_grained_retriever,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
-        FineGrainedPermissionFactory $fine_grained_factory
+        FineGrainedPermissionFactory $fine_grained_factory,
     ) {
         $this->permissions_manager          = $permissions_manager;
         $this->ugroup_manager               = $ugroup_manager;

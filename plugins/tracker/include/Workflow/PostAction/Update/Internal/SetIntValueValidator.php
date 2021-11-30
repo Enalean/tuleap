@@ -37,7 +37,7 @@ class SetIntValueValidator
 
     public function __construct(
         PostActionFieldIdValidator $field_ids_validator,
-        \Tracker_FormElementFactory $form_element_factory
+        \Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->field_ids_validator  = $field_ids_validator;
         $this->form_element_factory = $form_element_factory;

@@ -48,7 +48,7 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
             ),
             [
                 'T2' => 102,
-                'T3' => 103
+                'T3' => 103,
             ]
         );
     }
@@ -68,7 +68,7 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
             [
                 'T2' => 102,
                 'T3' => 103,
-                'T123' => 123
+                'T123' => 123,
             ]
         );
 
@@ -240,7 +240,7 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
             ),
             [
                 'T2' => 102,
-                'T3' => 103
+                'T3' => 103,
             ]
         );
     }
@@ -260,7 +260,7 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
             [
                 'T2' => 102,
                 'T3' => 103,
-                'T123' => 123
+                'T123' => 123,
             ]
         );
 

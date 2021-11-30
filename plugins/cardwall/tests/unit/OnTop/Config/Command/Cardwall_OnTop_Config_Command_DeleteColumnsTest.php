@@ -48,7 +48,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test
             'column',
             [
                 12 => ['label' => 'Todo'],
-                14 => ['label' => '']
+                14 => ['label' => ''],
             ]
         );
         $this->field_dao->shouldReceive('deleteCardwall')->never();
@@ -65,7 +65,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test
             [
                 12 => ['label' => 'Todo'],
                 13 => ['label' => ''],
-                14 => ['label' => '']
+                14 => ['label' => ''],
             ]
         );
         $this->field_dao->shouldReceive('deleteCardwall')->never();

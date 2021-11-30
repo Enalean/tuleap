@@ -34,7 +34,7 @@ final class UnplannedReportCriterionCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             Tracker_Report::COMMENT_CRITERION_NAME => new Tracker_Report_AdditionalCriterion(
                 Tracker_Report::COMMENT_CRITERION_NAME,
                 'my comment'
-            )
+            ),
         ];
 
         $checker = new UnplannedReportCriterionChecker($additional_criteria);
@@ -52,7 +52,7 @@ final class UnplannedReportCriterionCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME => new Tracker_Report_AdditionalCriterion(
                 AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME,
                 '104'
-            )
+            ),
         ];
 
         $checker = new UnplannedReportCriterionChecker($additional_criteria);
@@ -70,7 +70,7 @@ final class UnplannedReportCriterionCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME => new Tracker_Report_AdditionalCriterion(
                 AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME,
                 '-1'
-            )
+            ),
         ];
 
         $checker = new UnplannedReportCriterionChecker($additional_criteria);

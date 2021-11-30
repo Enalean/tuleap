@@ -46,7 +46,7 @@ class HudsonBuild
     public function __construct(
         string $hudson_build_url,
         ClientInterface $http_client,
-        RequestFactoryInterface $request_factory
+        RequestFactoryInterface $request_factory,
     ) {
         $parsed_url = parse_url($hudson_build_url);
 

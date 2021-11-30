@@ -108,7 +108,7 @@ abstract class Tracker_Artifact_ChangesetValue
 
     public function isThereDiffWithPreviousChangeset(
         ?Tracker_Artifact_ChangesetValue $previous_changeset_value,
-        PFUser $user
+        PFUser $user,
     ): bool {
         if ($previous_changeset_value === null) {
             return true;
@@ -130,7 +130,7 @@ abstract class Tracker_Artifact_ChangesetValue
         $changeset_id,
         $ignore_perms,
         $format = 'html',
-        ?PFUser $user = null
+        ?PFUser $user = null,
     ) {
         return $this->diff($changeset_value, $format, $user, $ignore_perms);
     }

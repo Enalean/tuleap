@@ -58,7 +58,7 @@ class AzureProviderPresenter
         AzureADProvider $provider,
         $can_user_enable_unique_authentication_endpoint,
         array $icons_presenters,
-        array $colors_presenters
+        array $colors_presenters,
     ) {
         $this->provider                                       = $provider;
         $this->can_user_enable_unique_authentication_endpoint = $can_user_enable_unique_authentication_endpoint;

@@ -189,7 +189,7 @@ class KanbanColumnsResource
             $data    = [
                 'id'        => $id,
                 'label'     => $updated_column_properties->label,
-                'wip_limit' => $updated_column_properties->wip_limit
+                'wip_limit' => $updated_column_properties->wip_limit,
             ];
             $message = new MessageDataPresenter(
                 $current_user->getId(),

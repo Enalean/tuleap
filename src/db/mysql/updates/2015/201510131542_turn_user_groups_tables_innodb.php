@@ -35,7 +35,7 @@ class b201510131542_turn_user_groups_tables_innodb extends \Tuleap\ForgeUpgrade\
     {
         $tables = [
             'ugroup_user',
-            'user_group '
+            'user_group ',
         ];
 
         foreach ($tables as $table) {

@@ -69,7 +69,7 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
         LFSAPIHTTPAccessControl $api_access_control,
         LockResponseBuilder $lock_response_builder,
         LockRetriever $lock_retriever,
-        UserRetriever $user_retriever
+        UserRetriever $user_retriever,
     ) {
         $this->plugin                = $plugin;
         $this->repository_factory    = $repository_factory;

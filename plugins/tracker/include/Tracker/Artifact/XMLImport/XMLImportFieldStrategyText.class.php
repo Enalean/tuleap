@@ -33,11 +33,11 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyText implements Tracker_A
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $data = [
             'format'  => (string) $field_change->value['format'],
-            'content' => (string) $field_change->value
+            'content' => (string) $field_change->value,
         ];
 
         return $data;

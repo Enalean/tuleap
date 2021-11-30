@@ -40,7 +40,7 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
         $id,
         Tracker_Workflow_Trigger_FieldValue $target,
         $condition,
-        array $triggers
+        array $triggers,
     ) {
         $this->id        = $id;
         $this->target    = $target;
@@ -105,7 +105,7 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
             'id'                => $this->getId(),
             'target'            => $this->getTarget()->fetchFormattedForJson(),
             'condition'         => $this->getCondition(),
-            'triggering_fields' => $this->fetchTriggersFormattedForJson()
+            'triggering_fields' => $this->fetchTriggersFormattedForJson(),
         ];
     }
 

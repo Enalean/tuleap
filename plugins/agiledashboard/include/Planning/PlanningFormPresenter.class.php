@@ -76,7 +76,7 @@ class Planning_FormPresenter extends PlanningPresenter
         array $available_backlog_trackers,
         array $available_planning_trackers,
         $cardwall_admin,
-        array $warning_list
+        array $warning_list,
     ) {
         parent::__construct($planning);
 

@@ -320,7 +320,7 @@ class TreeDiff implements \Iterator, \Countable
             list($added, $removed, $filename)     = explode("\t", $line);
             $stats_indexed_by_filename[$filename] = [
                 'added'   => $added,
-                'removed' => $removed
+                'removed' => $removed,
             ];
         }
 

@@ -31,7 +31,7 @@ class Tracker_XML_Updater_TemporaryFileXMLUpdater
     private $temporary_file_creator;
 
     public function __construct(
-        Tracker_XML_Updater_TemporaryFileCreator $temporary_file_creator
+        Tracker_XML_Updater_TemporaryFileCreator $temporary_file_creator,
     ) {
         $this->temporary_file_creator = $temporary_file_creator;
     }

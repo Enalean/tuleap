@@ -104,14 +104,14 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $bindvalue_ids,
                 $tracker,
                 false,
-                false
+                false,
             ]
         )->once()->andReturn('sql fragement');
 
         $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
             [
                 ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
             ]
         );
 
@@ -157,14 +157,14 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $bindvalue_ids,
                 $tracker,
                 false,
-                false
+                false,
             ]
         )->once()->andReturn('sql fragement');
 
         $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
             [
                 ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
             ]
         );
 
@@ -210,7 +210,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $bindvalue_ids,
                 $tracker,
                 false,
-                false
+                false,
             ]
         )->once()->andReturn(null);
 
@@ -243,7 +243,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
             [
                 ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
             ]
         );
 
@@ -287,7 +287,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
             [
                 ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
             ]
         );
 
@@ -329,7 +329,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
             [
                 ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
             ]
         );
 
@@ -340,7 +340,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $bindvalue_ids,
                 $tracker,
                 false,
-                false
+                false,
             ]
         )->once()->andReturn('sql fragement');
 
@@ -382,7 +382,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
             [
                 ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
             ]
         );
 
@@ -390,7 +390,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $keyword,
                 $bindvalue_ids,
-                $matches = ["ugroup_109", 109]
+                $matches = ["ugroup_109", 109],
             ]
         )->once()->andReturn('sql fragement');
 
@@ -435,7 +435,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
             [
                 ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
             ]
         );
 

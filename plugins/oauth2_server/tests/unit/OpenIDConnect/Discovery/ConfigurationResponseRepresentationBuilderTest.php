@@ -43,7 +43,7 @@ final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\
                 [
                     'ja_JP' => '日本語',
                     'en_US' => 'English',
-                    'fr_FR' => 'Français'
+                    'fr_FR' => 'Français',
                 ]
             );
         $scope_builder = $this->createMock(AuthenticationScopeBuilder::class);
@@ -52,7 +52,7 @@ final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\
                 [
                     OAuth2SignInScope::fromItself(),
                     OpenIDConnectEmailScope::fromItself(),
-                    OpenIDConnectProfileScope::fromItself()
+                    OpenIDConnectProfileScope::fromItself(),
                 ]
             );
         $builder        = new ConfigurationResponseRepresentationBuilder($language_factory, $scope_builder);

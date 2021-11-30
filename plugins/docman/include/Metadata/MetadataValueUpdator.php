@@ -47,7 +47,7 @@ class MetadataValueUpdator
         DocmanMetadataInputValidator $validator,
         MetadataValueObjectFactory $metadata_value_object_factory,
         Docman_MetadataValueDao $metadata_value_dao,
-        MetadataValueStore $metadata_value_store
+        MetadataValueStore $metadata_value_store,
     ) {
         $this->validator                     = $validator;
         $this->metadata_value_object_factory = $metadata_value_object_factory;

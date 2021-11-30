@@ -47,7 +47,7 @@ class HeaderOptionsForPlanningProvider
     public function __construct(
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
-        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter
+        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
     ) {
         $this->submilestone_finder     = $submilestone_finder;
         $this->presenter_builder       = $presenter_builder;
@@ -76,7 +76,7 @@ class HeaderOptionsForPlanningProvider
     private function addPlanningOptionsForRegularMilestone(
         Planning_Milestone $milestone,
         PFUser $user,
-        array &$header_options
+        array &$header_options,
     ): void {
         $tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $tracker || ! $tracker->userCanSubmitArtifact($user)) {
@@ -93,7 +93,7 @@ class HeaderOptionsForPlanningProvider
     private function addPlanningOptionsForTopBacklog(
         Planning_VirtualTopMilestone $top_milestone,
         PFUser $user,
-        array &$header_options
+        array &$header_options,
     ): void {
         $this->header_options_inserter->addLinkToCurrentContextSection(
             dgettext('tuleap-agiledashboard', 'Top backlog'),

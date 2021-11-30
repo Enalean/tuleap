@@ -55,7 +55,7 @@ $vFunc = new Valid_WhiteList('func', [
     'immutable_tags',
     'access_control',
     'notification',
-    'access_control_version'
+    'access_control_version',
 ]);
 $vFunc->required();
 if ($request->valid($vFunc)) {
@@ -96,7 +96,7 @@ if ($request->valid($vFunc)) {
 
     svn_header_admin([
         'title' => $Language->getText('svn_admin_index', 'admin'),
-        'help' => 'svn.html#subversion-administration-interface'
+        'help' => 'svn.html#subversion-administration-interface',
        ]);
 
     $purifier = Codendi_HTMLPurifier::instance();

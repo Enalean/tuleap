@@ -51,7 +51,7 @@ class FirstConfigCreator
         TrackerFactory $tracker_factory,
         TrackerChecker $tracker_checker,
         TestmanagementTrackersConfigurator $testmanagement_trackers_configurator,
-        TestmanagementTrackersCreator $testmanagement_trackers_creator
+        TestmanagementTrackersCreator $testmanagement_trackers_creator,
     ) {
         $this->config                          = $config;
         $this->tracker_factory                 = $tracker_factory;
@@ -72,7 +72,7 @@ class FirstConfigCreator
     public function createConfigForProjectFromTemplate(
         Project $project,
         Project $template,
-        array $tracker_mapping
+        array $tracker_mapping,
     ): void {
         if (! $this->config->isConfigNeeded($project)) {
             return;
@@ -122,7 +122,7 @@ class FirstConfigCreator
             CAMPAIGN_TRACKER_SHORTNAME,
             DEFINITION_TRACKER_SHORTNAME,
             EXECUTION_TRACKER_SHORTNAME,
-            ISSUE_TRACKER_SHORTNAME
+            ISSUE_TRACKER_SHORTNAME,
         ];
 
         if (! $this->config->isConfigNeeded($project)) {

@@ -56,7 +56,7 @@ class FreestyleMappingDao extends DataAccessObject
 
     public function searchMappedFieldValuesForColumn(
         TaskboardTracker $taskboard_tracker,
-        Cardwall_Column $column
+        Cardwall_Column $column,
     ): array {
         $sql = "SELECT mapped_value.value_id
             FROM plugin_cardwall_on_top_column_mapping_field AS mapping_field

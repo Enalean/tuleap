@@ -90,7 +90,7 @@ class PullRequestUpdater
         GitRepositoryFactory $git_repository_factory,
         GitExecFactory $git_exec_factory,
         GitPullRequestReferenceUpdater $git_pull_request_reference_updater,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->pull_request_factory               = $pull_request_factory;
         $this->pull_request_merger                = $pull_request_merger;

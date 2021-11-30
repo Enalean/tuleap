@@ -55,7 +55,7 @@ final class WorkflowRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $rules_processor,
                 $logger,
                 Mockery::mock(Tracker_Workflow_Trigger_RulesBuilderFactory::class),
-                new WorkflowRulesManagerLoopSafeGuard($logger)
+                new WorkflowRulesManagerLoopSafeGuard($logger),
             ]
         );
 

@@ -41,7 +41,7 @@ class ReportArtifactFactory
         Tracker_Report $report,
         IProvideFromAndWhereSQLFragments $additional_from_where,
         $limit,
-        $offset
+        $offset,
     ) {
         $matching_ids = $report->getMatchingIdsWithAdditionalFromWhere($additional_from_where);
 
@@ -56,7 +56,7 @@ class ReportArtifactFactory
     public function getArtifactsMatchingReport(
         Tracker_Report $report,
         $limit,
-        $offset
+        $offset,
     ) {
         $matching_ids = $report->getMatchingIds();
 

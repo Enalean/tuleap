@@ -36,7 +36,7 @@ class DiskUsageTopUsersPresenterBuilder
 
     public function __construct(
         Statistics_DiskUsageManager $disk_usage_manager,
-        Statistics_DiskUsageOutput $disk_usage_output
+        Statistics_DiskUsageOutput $disk_usage_output,
     ) {
         $this->disk_usage_manager = $disk_usage_manager;
         $this->disk_usage_output  = $disk_usage_output;
@@ -44,7 +44,7 @@ class DiskUsageTopUsersPresenterBuilder
 
     public function build(
         $title,
-        $end_date
+        $end_date,
     ) {
         if (! $end_date) {
             $end_date = date('Y-m-d');
@@ -58,13 +58,13 @@ class DiskUsageTopUsersPresenterBuilder
         $rank           = 0;
         foreach ($users as $row) {
             $user_details_query = http_build_query([
-                'user_id' => $row['user_id']
+                'user_id' => $row['user_id'],
             ]);
 
             $disk_usage_user_details_query = http_build_query([
                 'menu'     => 'one_user_details',
                 'end_date' => $end_date,
-                'user'     => $row['user_name']
+                'user'     => $row['user_name'],
             ]);
 
             $data_user = [
@@ -72,7 +72,7 @@ class DiskUsageTopUsersPresenterBuilder
                 'user_name'                   => $row['user_name'],
                 'user_details_url'            => '/admin/usergroup.php?' . $user_details_query,
                 'disk_usage_user_details_url' => 'disk_usage.php?' . $disk_usage_user_details_query,
-                'end_size'                    => $this->disk_usage_output->sizeReadable($row['end_size'])
+                'end_size'                    => $this->disk_usage_output->sizeReadable($row['end_size']),
             ];
 
             $data_top_users[] = $data_user;

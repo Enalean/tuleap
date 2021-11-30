@@ -67,7 +67,7 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
         TemplateRendererFactory $renderer_factory,
         CSRFSynchronizerToken $csrf_token,
         PasswordSanityChecker $password_sanity_checker,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->dispatcher              = $dispatcher;
         $this->renderer                = $renderer_factory->getRenderer(__DIR__ . '/templates');

@@ -31,7 +31,7 @@ class CrossReferenceLinkPresenterCollectionBuilder
     public function build(
         array $cross_references,
         string $key,
-        bool $display_params
+        bool $display_params,
     ): array {
         $cross_ref_link_collection = [];
 

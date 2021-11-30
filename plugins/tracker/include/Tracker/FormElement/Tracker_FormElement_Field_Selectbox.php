@@ -176,7 +176,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     public function getComputedValue(
         PFUser $user,
         Artifact $artifact,
-        $timestamp = null
+        $timestamp = null,
     ) {
         if ($this->userCanRead($user)) {
             return $this->getCurrentValue($artifact);

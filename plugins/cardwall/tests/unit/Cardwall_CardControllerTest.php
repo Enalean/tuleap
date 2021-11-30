@@ -107,14 +107,14 @@ final class Cardwall_CardControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'fields'       => [
                     'remaining_effort' => 5.1,
                     'assigned_to'      => [101, 201],
-                    'impediment'       => 236
+                    'impediment'       => 236,
                 ],
                 'html_fields'  => [
                     'remaining_effort' => '5.1',
                     'assigned_to'      => '<a href',
-                    'impediment'       => '<span>Decorator</span>'
+                    'impediment'       => '<span>Decorator</span>',
                 ],
-            ]
+            ],
         ];
 
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);

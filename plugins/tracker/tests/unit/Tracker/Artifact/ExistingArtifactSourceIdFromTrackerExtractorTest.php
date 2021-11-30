@@ -73,12 +73,12 @@ class ExistingArtifactSourceIdFromTrackerExtractorTest extends \Tuleap\Test\PHPU
             [
                 [
                     "source_artifact_id" => 123,
-                    "artifact_id" => 456
+                    "artifact_id" => 456,
                 ],
                 [
                     "source_artifact_id" => 789,
-                    "artifact_id" => 987
-                ]
+                    "artifact_id" => 987,
+                ],
             ]
         );
 

@@ -92,7 +92,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with('mmanson@example.com')->andReturns([]);
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns([
             $this->active_user_in_ldap,
-            $this->suspended_user_in_ldap
+            $this->suspended_user_in_ldap,
         ]);
 
         $this->john_doe = $this->createUser(
@@ -128,7 +128,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'email'       => $email,
             'ldap_id'     => $ldapid,
             'status'      => $status,
-            'language_id' => 'en'
+            'language_id' => 'en',
         ]);
     }
 
@@ -192,7 +192,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
         $expected   = [
-            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
+            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456'),
         ];
 
         $this->assertEquals(
@@ -217,7 +217,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
         $expected   = [
-            'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap, 107, 'sus1234')
+            'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap, 107, 'sus1234'),
         ];
 
         $this->assertEquals(
@@ -242,7 +242,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
         $expected   = [
-            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, '')
+            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, ''),
         ];
 
         $this->assertEquals(
@@ -267,7 +267,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
         $expected   = [
-            'kperry' => new ToBeActivatedUser($this->suspended_user_in_db, 109, '')
+            'kperry' => new ToBeActivatedUser($this->suspended_user_in_db, 109, ''),
         ];
 
         $this->assertEquals(
@@ -292,7 +292,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
         $expected   = [
-            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, 'no_matching_ldap_id')
+            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, 'no_matching_ldap_id'),
         ];
 
         $this->assertEquals(
@@ -317,7 +317,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
         $expected   = [
-            'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com', 108, '')
+            'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com', 108, ''),
         ];
 
         $this->assertEquals(
@@ -342,7 +342,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
         $expected   = [
-            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
+            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456'),
         ];
 
         $this->assertEquals(
@@ -373,7 +373,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
                 'mmanson@example.com',
                 111,
                 ''
-            )
+            ),
         ];
 
         $this->assertEquals(
@@ -403,11 +403,11 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
                 'John Doe',
                 [
                     $this->active_user_in_ldap,
-                    $this->suspended_user_in_ldap
+                    $this->suspended_user_in_ldap,
                 ],
                 109,
                 ''
-            )
+            ),
         ];
 
         $this->assertEquals(
@@ -432,7 +432,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->buildWithoutEmail($xml);
         $expected   = [
-            'jdoe' => new AlreadyExistingUser($this->john_doe, 109, 'jd3456')
+            'jdoe' => new AlreadyExistingUser($this->john_doe, 109, 'jd3456'),
         ];
 
         $this->assertEquals(
@@ -458,7 +458,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
         $collection = $this->builder->buildWithoutEmail($xml);
 
         $expected = [
-            'cstevens' => new AlreadyExistingUser($this->cat_steven, 110, 'cs3456')
+            'cstevens' => new AlreadyExistingUser($this->cat_steven, 110, 'cs3456'),
         ];
 
         $this->assertEquals(
@@ -490,7 +490,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
                 'cstevens@example.com',
                 111,
                 ''
-            )
+            ),
         ];
 
         $this->assertEquals(

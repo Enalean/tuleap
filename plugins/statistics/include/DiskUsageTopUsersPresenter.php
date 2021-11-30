@@ -37,7 +37,7 @@ class DiskUsageTopUsersPresenter
     public function __construct(
         AdminHeaderPresenter $header,
         $end_date_value,
-        array $data_top_users
+        array $data_top_users,
     ) {
         $this->header         = $header;
         $this->end_date_value = $end_date_value;

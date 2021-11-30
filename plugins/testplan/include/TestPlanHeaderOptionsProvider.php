@@ -56,7 +56,7 @@ class TestPlanHeaderOptionsProvider
         Config $testmanagement_config,
         \TrackerFactory $tracker_factory,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
-        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter
+        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
     ) {
         $this->header_options_provider = $header_options_provider;
         $this->testmanagement_config   = $testmanagement_config;
@@ -83,7 +83,7 @@ class TestPlanHeaderOptionsProvider
     private function addCampaignInCurrentContextSection(
         \PFUser $user,
         \Planning_Milestone $milestone,
-        array &$header_options
+        array &$header_options,
     ): void {
         $campaign_tracker_id = $this->testmanagement_config->getCampaignTrackerId($milestone->getProject());
         if (! $campaign_tracker_id) {

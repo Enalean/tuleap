@@ -35,7 +35,7 @@ class LockResponseErrorRepresentation implements LockResponse
     public function jsonSerialize(): array
     {
         return [
-            "message" => $this->message
+            "message" => $this->message,
         ];
     }
 }

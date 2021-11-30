@@ -62,7 +62,7 @@ final class OAuth2ClientAuthenticationMiddleware implements MiddlewareInterface
         SplitTokenIdentifierTranslator $client_secret_unserializer,
         OAuth2AppCredentialVerifier $app_credential_verifier,
         BasicAuthLoginExtractor $basic_auth_login_extractor,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->client_secret_unserializer = $client_secret_unserializer;
         $this->app_credential_verifier    = $app_credential_verifier;

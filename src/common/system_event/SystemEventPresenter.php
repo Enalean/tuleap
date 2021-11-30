@@ -33,7 +33,7 @@ class SystemEventPresenter
         SystemEvent::STATUS_WARNING => 'warning',
         SystemEvent::STATUS_ERROR   => 'danger',
         SystemEvent::STATUS_NONE    => 'secondary',
-        SystemEvent::STATUS_NEW     => 'secondary'
+        SystemEvent::STATUS_NEW     => 'secondary',
     ];
 
     public $id;

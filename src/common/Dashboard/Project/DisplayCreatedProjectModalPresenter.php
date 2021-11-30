@@ -40,7 +40,7 @@ final class DisplayCreatedProjectModalPresenter implements Dispatchable
     public function __construct(
         bool $should_display_created_project_modal,
         \Project $project,
-        string $xml_template_name
+        string $xml_template_name,
     ) {
         $this->should_display_created_project_modal = $should_display_created_project_modal;
         $this->project                              = $project;

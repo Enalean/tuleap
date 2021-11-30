@@ -45,7 +45,7 @@ final class FeatureIdentifier implements ArtifactIdentifier
         int $feature_id,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): ?self {
         if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier, $program, $bypass)) {
             return null;
@@ -56,7 +56,7 @@ final class FeatureIdentifier implements ArtifactIdentifier
     public static function fromId(
         VerifyFeatureIsVisible $feature_verifier,
         int $feature_id,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): ?self {
         if (! $feature_verifier->isVisible($feature_id, $user_identifier)) {
             return null;

@@ -49,7 +49,7 @@ class Notification extends Pane
         GitRepository $repository,
         Codendi_Request $request,
         CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
-        CollectionOfUgroupToBeNotifiedPresenterBuilder $group_to_be_notified_builder
+        CollectionOfUgroupToBeNotifiedPresenterBuilder $group_to_be_notified_builder,
     ) {
         parent::__construct($repository, $request);
         $this->user_to_be_notified_builder  = $user_to_be_notified_builder;

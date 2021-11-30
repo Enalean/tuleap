@@ -37,7 +37,7 @@ final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisiblePr
     public function __construct(
         private RetrieveProgramIncrementTracker $program_increment_tracker_retriever,
         private \TrackerFactory $tracker_factory,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 

@@ -47,7 +47,7 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     public function __construct(
         PluginDao $plugin_dao,
-        PluginResourceRestrictor $plugin_restrictor
+        PluginResourceRestrictor $plugin_restrictor,
     ) {
         $this->plugin_dao        = $plugin_dao;
         $this->plugin_restrictor = $plugin_restrictor;

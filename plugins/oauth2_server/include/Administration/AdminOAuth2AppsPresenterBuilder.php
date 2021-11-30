@@ -63,7 +63,7 @@ class AdminOAuth2AppsPresenterBuilder
 
     public function buildProjectAdministration(
         \CSRFSynchronizerToken $csrf_token,
-        \Project $project
+        \Project $project,
     ): AdminOAuth2AppsPresenter {
         $apps = $this->app_factory->getAppsForProject($project);
 

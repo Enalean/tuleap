@@ -35,7 +35,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @title != "" '
+            "expert_query" => ' @title != "" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -58,7 +58,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @title = "first" OR @title = "third" '
+            "expert_query" => ' @title = "first" OR @title = "third" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -84,7 +84,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @description = "" '
+            "expert_query" => ' @description = "" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -98,7 +98,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         );
 
         $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[8]
+            $this->epic_artifact_ids[8],
         ]);
     }
 
@@ -109,7 +109,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [$this->epic_tracker_id],
-            "expert_query" => ' @description = "" AND @title != "" '
+            "expert_query" => ' @description = "" AND @title != "" ',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -123,7 +123,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         );
 
         $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[8]
+            $this->epic_artifact_ids[8],
         ]);
     }
 
@@ -131,7 +131,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @submitted_by = "rest_api_tester_1"'
+            "expert_query" => ' @submitted_by = "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -152,7 +152,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             $this->epic_artifact_ids[4],
             $this->epic_artifact_ids[3],
             $this->epic_artifact_ids[2],
-            $this->epic_artifact_ids[1]
+            $this->epic_artifact_ids[1],
         ]);
     }
 
@@ -163,7 +163,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @submitted_by != "rest_api_tester_1"'
+            "expert_query" => ' @submitted_by != "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -183,7 +183,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @last_update_by = "rest_api_tester_1"'
+            "expert_query" => ' @last_update_by = "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -204,7 +204,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             $this->epic_artifact_ids[4],
             $this->epic_artifact_ids[3],
             $this->epic_artifact_ids[2],
-            $this->epic_artifact_ids[1]
+            $this->epic_artifact_ids[1],
         ]);
     }
 
@@ -212,7 +212,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     {
         $params = [
             "trackers_id"  => [ $this->epic_tracker_id ],
-            "expert_query" => ' @assigned_to = "rest_api_tester_1"'
+            "expert_query" => ' @assigned_to = "rest_api_tester_1"',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
@@ -226,7 +226,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         );
 
         $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[3]
+            $this->epic_artifact_ids[3],
         ]);
     }
 

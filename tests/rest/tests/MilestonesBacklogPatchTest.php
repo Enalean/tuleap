@@ -89,8 +89,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->story_mul['id'], $this->story_div['id']],
                                 'direction' => 'after',
-                                'compared_to' => $this->story_add['id']
-                            ]
+                                'compared_to' => $this->story_add['id'],
+                            ],
                         ]
                     )
                 )
@@ -120,8 +120,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->story_div['id'], $this->story_mul['id']],
                                 'direction' => 'after',
-                                'compared_to' => $this->story_add['id']
-                            ]
+                                'compared_to' => $this->story_add['id'],
+                            ],
                         ]
                     )
                 )
@@ -150,8 +150,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->story_mul['id'], $this->story_sub['id']],
                                 'direction' => 'before',
-                                'compared_to' => $this->story_add['id']
-                            ]
+                                'compared_to' => $this->story_add['id'],
+                            ],
                         ]
                     )
                 )
@@ -180,8 +180,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->story_mul['id'], $this->story_sub['id']],
                                 'direction' => 'before',
-                                'compared_to' => 1
-                            ]
+                                'compared_to' => 1,
+                            ],
                         ]
                     )
                 )
@@ -202,8 +202,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->epic_basic['id'], $this->epic_log['id']],
                                 'direction' => 'before',
-                                'compared_to' => $this->epic_fin['id']
-                            ]
+                                'compared_to' => $this->epic_fin['id'],
+                            ],
                         ]
                     )
                 )
@@ -235,8 +235,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->epic_exp['id'], $this->epic_adv['id']],
                                 'direction' => 'after',
-                                'compared_to' => $this->epic_log['id']
-                            ]
+                                'compared_to' => $this->epic_log['id'],
+                            ],
                         ]
                     )
                 )
@@ -269,8 +269,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->epic_adv['id'], $this->epic_exp['id']],
                                 'direction' => 'after',
-                                'compared_to' => $this->epic_log['id']
-                            ]
+                                'compared_to' => $this->epic_log['id'],
+                            ],
                         ]
                     )
                 )
@@ -310,7 +310,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                                 [
                                     'id' => $this->epic_adv['id'],
                                     'remove_from' => $this->release['id'],
-                                ]
+                                ],
                             ],
                         ]
                     )
@@ -349,12 +349,12 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                             'order' => [
                                 'ids' => [$this->epic_fin['id'], $this->epic_sta['id']],
                                 'direction' => 'after',
-                                'compared_to' => $this->epic_basic['id']
+                                'compared_to' => $this->epic_basic['id'],
                             ],
                             'add' => [
                                 [
                                     'id' => $this->epic_sta['id'],
-                                ]
+                                ],
                             ],
                         ]
                     )
@@ -386,13 +386,13 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
             'order'  => [
                 'ids'         => [$inconsistent_story['id'], $this->story_div['id'], $this->story_sub['id']],
                 'direction'   => 'after',
-                'compared_to' => $this->story_mul['id']
+                'compared_to' => $this->story_mul['id'],
             ],
             'add' => [
                 [
                     'id'          => $inconsistent_story['id'],
                     'remove_from' => $sprint_id,
-                ]
+                ],
             ],
         ]);
 

@@ -111,7 +111,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
     }
@@ -126,7 +126,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null,
     ) {
         $html  = $this->fetchBurndownReadOnly($artifact);
         $html .= $this->fetchBurndownCacheGenerationButton($artifact);
@@ -402,7 +402,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         $purifier = Codendi_HTMLPurifier::instance();
         $output   = '';
@@ -492,7 +492,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         return false;
     }
@@ -576,7 +576,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             [
                 'formElement' => $this->getId(),
                 'func'        => self::FUNC_SHOW_BURNDOWN,
-                'src_aid'     => $artifact->getId()
+                'src_aid'     => $artifact->getId(),
             ]
         );
 
@@ -618,7 +618,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
         try {
             if (

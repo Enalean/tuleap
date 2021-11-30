@@ -76,7 +76,7 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $item   = [
             "parent_id" => 0,
             "item_id"   => 100,
-            'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+            'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
         ];
         $params = [
             'item' => $item,
@@ -92,11 +92,11 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $item   = [
             "parent_id" => 3,
             "item_id"   => 100,
-            'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+            'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
         ];
         $params = [
             'item'   => $item,
-            'action' => 'show'
+            'action' => 'show',
         ];
 
         $this->event_manager->shouldReceive('processEvent')->once();

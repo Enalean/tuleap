@@ -37,6 +37,6 @@ interface CreateIterations
     public function createIterations(
         SourceTimeboxChangesetValues $values,
         TeamIdentifierCollection $teams,
-        IterationCreation $creation
+        IterationCreation $creation,
     ): void;
 }

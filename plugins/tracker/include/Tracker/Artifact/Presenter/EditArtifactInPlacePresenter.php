@@ -53,7 +53,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
         $form_elements,
         Artifact $artifact,
         PFUser $user,
-        HiddenFieldsetsDetector $hidden_fieldsets_detector
+        HiddenFieldsetsDetector $hidden_fieldsets_detector,
     ) {
         $this->follow_ups                = $follow_ups;
         $this->artifact_links            = $artifact_links;

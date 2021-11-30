@@ -353,7 +353,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '1000',
-            'types'    => ['_is_child', 'fixed_in']
+            'types'    => ['_is_child', 'fixed_in'],
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
@@ -383,7 +383,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'types' => ['123' => 'fixed_in_not_editable']
+            'types' => ['123' => 'fixed_in_not_editable'],
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
@@ -413,7 +413,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'types' => ['123' => 'fixed_in_not_editable']
+            'types' => ['123' => 'fixed_in_not_editable'],
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
@@ -443,7 +443,7 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'types' => ['123' => 'fixed_in_not_editable']
+            'types' => ['123' => 'fixed_in_not_editable'],
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);

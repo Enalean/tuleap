@@ -108,7 +108,7 @@ final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(0, $reports[0]->is_in_expert_mode);
 
         $expected_mapping = [
-            "R1" => $renderer
+            "R1" => $renderer,
         ];
 
         $this->assertEquals($expected_mapping, $renderers_xml_mapping);

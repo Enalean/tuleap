@@ -118,7 +118,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         Docman_LockFactory $lock_factory,
         ApprovalTableUpdater $approval_table_updater,
         ApprovalTableRetriever $approval_table_retriever,
-        ApprovalTableUpdateActionChecker $approval_table_action_checker
+        ApprovalTableUpdateActionChecker $approval_table_action_checker,
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -201,7 +201,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                         'filesize'  => $upload_row['filesize'],
                         'filetype'  => $this->getFiletype($upload_row['filename'], $file_path),
                         'path'      => $file_path,
-                        'date'      => $current_time
+                        'date'      => $current_time,
                     ]
                 );
 
@@ -228,7 +228,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                         'description'       => $upload_row['description'],
                         'obsolescence_date' => $upload_row['obsolescence_date'],
                         'status'            => $upload_row['status'],
-                        'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_FILE
+                        'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_FILE,
                     ]
                 );
                 if (! $last_update_date_change) {
@@ -269,7 +269,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
             'item'     => $item,
             'user'     => $user,
             'group_id' => $item->getGroupId(),
-            'version'  => $this->version_factory->getCurrentVersionForItem($item)
+            'version'  => $this->version_factory->getCurrentVersionForItem($item),
         ];
 
         $this->items_event_adder->addNotificationEvents($this->project_manager->getProject($item->getGroupId()));

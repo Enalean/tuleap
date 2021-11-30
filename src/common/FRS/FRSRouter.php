@@ -84,7 +84,7 @@ class FRSRouter
         $GLOBALS['Response']->redirect('/file/admin/?' . http_build_query(
             [
                 'group_id' => $project->getId(),
-                'action'   => 'edit-permissions'
+                'action'   => 'edit-permissions',
             ]
         ));
     }

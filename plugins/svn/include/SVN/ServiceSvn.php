@@ -87,7 +87,7 @@ class ServiceSvn extends Service
         string $template,
         $presenter,
         string $body_class,
-        Repository $repository
+        Repository $repository,
     ): void {
         $breadcrumbs = new BreadCrumbCollection();
         $admin_crumb = new BreadCrumb(
@@ -110,7 +110,7 @@ class ServiceSvn extends Service
         $presenter,
         string $body_class,
         Repository $repository,
-        BreadCrumbCollection $breadcrumbs
+        BreadCrumbCollection $breadcrumbs,
     ): void {
         $repository_crumb = new BreadCrumb(
             new BreadCrumbLink(
@@ -144,7 +144,7 @@ class ServiceSvn extends Service
         string $template,
         $presenter,
         string $body_class,
-        BreadCrumbCollection $breadcrumbs
+        BreadCrumbCollection $breadcrumbs,
     ): void {
         $this->displaySVNHeader($request, $title, $body_class, $breadcrumbs);
         $this->getRenderer()->renderToPage($template, $presenter);
@@ -160,7 +160,7 @@ class ServiceSvn extends Service
     private function displaySVNHeader(HTTPRequest $request, string $title, string $body_class, BreadCrumbCollection $breadcrumbs): void
     {
         $params = [
-            'body_class' => [$body_class]
+            'body_class' => [$body_class],
         ];
         $title  = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
 

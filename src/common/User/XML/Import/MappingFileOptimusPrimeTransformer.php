@@ -29,7 +29,7 @@ class MappingFileOptimusPrimeTransformer
     private static $ALLOWED_ACTIONS = [
         ToBeActivatedUser::ACTION,
         ToBeCreatedUser::ACTION,
-        ToBeMappedUser::ACTION
+        ToBeMappedUser::ACTION,
     ];
 
     /**
@@ -86,7 +86,7 @@ class MappingFileOptimusPrimeTransformer
         UsersToBeImportedCollection $collection_from_archive,
         $username,
         $action,
-        User $to_be_imported_user
+        User $to_be_imported_user,
     ) {
         if ($to_be_imported_user instanceof ToBeActivatedUser) {
             $action = ToBeActivatedUser::ACTION;
@@ -125,7 +125,7 @@ class MappingFileOptimusPrimeTransformer
         UsersToBeImportedCollection $collection_from_archive,
         $username,
         $action,
-        User $to_be_imported_user
+        User $to_be_imported_user,
     ) {
         $argument = null;
         if (strpos($action, ':') !== false) {

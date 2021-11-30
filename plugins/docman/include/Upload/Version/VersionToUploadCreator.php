@@ -66,7 +66,7 @@ class VersionToUploadCreator
         int $obsolescence_date_timestamp,
         string $title,
         string $description,
-        ?string $approval_table_action
+        ?string $approval_table_action,
     ): VersionToUpload {
         $file_size = $filesize;
         if ((int) $file_size > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {

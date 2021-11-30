@@ -132,7 +132,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $hp = Codendi_HTMLPurifier::instance();
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
@@ -195,7 +195,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();

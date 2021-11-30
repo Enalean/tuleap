@@ -79,7 +79,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
         \Psr\Log\LoggerInterface $logger,
-        MailGatewayFilter $mail_filter
+        MailGatewayFilter $mail_filter,
     ) {
         $this->logger                   = $logger;
         $this->incoming_message_factory = $incoming_message_factory;
@@ -204,7 +204,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
 
         $field_data = [
             $title_field->getId()       => $title,
-            $description_field->getId() => $body
+            $description_field->getId() => $body,
         ];
         $field_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $field_data, $user);
 
@@ -214,7 +214,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
 
     private function logNoSufficientRightsToCreateChangeset(
         Tracker_Artifact_MailGateway_IncomingMessage $incoming_message,
-        IncomingMail $incoming_mail
+        IncomingMail $incoming_mail,
     ) {
         $this->logger->info(
             'An artifact for the tracker #' . $incoming_message->getTracker()->getId() .

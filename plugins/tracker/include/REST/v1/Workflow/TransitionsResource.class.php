@@ -560,7 +560,7 @@ class TransitionsResource extends AuthenticatedResource
                 new HiddenFieldsetsValueValidator(
                     $form_element_factory
                 )
-            )
+            ),
         ];
 
         $value_updaters = array_merge(

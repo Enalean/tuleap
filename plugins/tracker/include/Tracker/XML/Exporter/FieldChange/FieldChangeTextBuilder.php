@@ -43,7 +43,7 @@ class FieldChangeTextBuilder
         SimpleXMLElement $changeset_xml,
         string $field_name,
         string $content,
-        string $format
+        string $format,
     ): void {
         $field_change_node = $changeset_xml->addChild('field_change');
         $field_change_node->addAttribute('type', Tracker_FormElementFactory::FIELD_TEXT_TYPE);
@@ -54,7 +54,7 @@ class FieldChangeTextBuilder
             'value',
             $content,
             [
-                'format' => $format
+                'format' => $format,
             ]
         );
     }

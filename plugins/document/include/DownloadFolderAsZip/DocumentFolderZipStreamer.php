@@ -81,7 +81,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
         FolderSizeIsAllowedChecker $folder_size_is_allowed_checker,
         FileDownloadLimitsBuilder $download_limits_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         $this->binary_file_response_builder   = $binary_file_response_builder;
         $this->user_manager                   = $user_manager;
@@ -120,7 +120,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
     private function getFolder(
         \PFUser $user,
         Project $project,
-        array $variables
+        array $variables,
     ): \Docman_Folder {
         if (! isset($variables['folder_id'])) {
             throw new NotFoundException('folder_id is missing in the route params.');

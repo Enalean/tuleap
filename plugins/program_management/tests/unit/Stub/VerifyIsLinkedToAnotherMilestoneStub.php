@@ -43,7 +43,7 @@ final class VerifyIsLinkedToAnotherMilestoneStub implements VerifyIsLinkedToAnot
     public function isLinkedToASprintInMirroredProgramIncrement(
         int $artifact_id,
         int $release_tracker_id,
-        int $project_id
+        int $project_id,
     ): bool {
         return $this->is_linked;
     }

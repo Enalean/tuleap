@@ -94,7 +94,7 @@ class RepositoryHeaderPresenterBuilder
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         $selected_tab,
         \EventManager $event_manager,
-        DefaultCloneURLSelector $default_clone_url_selector
+        DefaultCloneURLSelector $default_clone_url_selector,
     ) {
         $this->dao                        = $dao;
         $this->url_manager                = $url_manager;
@@ -222,7 +222,7 @@ class RepositoryHeaderPresenterBuilder
             $is_selected,
             $this->url_manager->getRepositoryBaseUrl($repository) . '?' . http_build_query(
                 [
-                    'a' => 'shortlog'
+                    'a' => 'shortlog',
                 ]
             ),
             dgettext("tuleap-git", "Commits"),

@@ -29,7 +29,7 @@ class TestResultsPieChartDisplayer
         $widget_id,
         $job_id,
         $group_id,
-        HudsonTestResult $test_results
+        HudsonTestResult $test_results,
     ) {
         $presenter = new TestResultsPieChartPresenter(
             $widget_id,

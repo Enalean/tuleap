@@ -79,7 +79,7 @@ class AuthorizedKeysFileCreator
         $file_path,
         $shell,
         $authentication_options,
-        InvalidKeysCollector $invalid_keys_collector
+        InvalidKeysCollector $invalid_keys_collector,
     ) {
         $file = $this->openAuthorizedKeysFile($file_path);
 
@@ -149,7 +149,7 @@ class AuthorizedKeysFileCreator
         Key $key,
         $shell,
         $authentication_options,
-        InvalidKeysCollector $invalid_keys_collector
+        InvalidKeysCollector $invalid_keys_collector,
     ) {
         $authorized_key_line = $this->getAuthorizedKeyLine($key, $shell, $authentication_options);
 

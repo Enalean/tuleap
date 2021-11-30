@@ -81,7 +81,7 @@ class PullRequestMerger
     public function detectMergeabilityStatus(
         GitExec $git_exec_destination,
         $merge_revision,
-        $destination_revision
+        $destination_revision,
     ) {
         try {
             if ($this->isFastForwardable($git_exec_destination, $merge_revision, $destination_revision)) {

@@ -297,7 +297,7 @@ XML;
             'name'       => "package",
             'status_id'  => FRSPackage::STATUS_ACTIVE,
             'rank'       => 0,
-            'approve_license' => true
+            'approve_license' => true,
         ];
 
         $expected_package_array = $this->getDefaultPackage('package');
@@ -395,7 +395,7 @@ XML;
             'name'       => "package",
             'status_id'  => FRSPackage::STATUS_ACTIVE,
             'rank'       => 0,
-            'approve_license' => true
+            'approve_license' => true,
         ];
 
         $expected_package_array = $this->getDefaultPackage('package');

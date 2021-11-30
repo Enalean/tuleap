@@ -54,7 +54,7 @@ class AccessFileHistoryCreator
         AccessFileHistoryFactory $access_file_factory,
         \ProjectHistoryDao $project_history_dao,
         ProjectHistoryFormatter $project_history_formatter,
-        \BackendSVN $backend_SVN
+        \BackendSVN $backend_SVN,
     ) {
         $this->dao                       = $dao;
         $this->access_file_factory       = $access_file_factory;

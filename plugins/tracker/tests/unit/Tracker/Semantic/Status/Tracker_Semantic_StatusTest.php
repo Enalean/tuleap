@@ -64,7 +64,7 @@ class Tracker_Semantic_StatusTest extends \Tuleap\Test\PHPUnit\TestCase
                 'F14-V67' => 807,
                 'F14-V68' => 808,
                 'F14-V69' => 809,
-            ]
+            ],
         ];
 
         $semantic->exportToXML($root, $array_xml_mapping);

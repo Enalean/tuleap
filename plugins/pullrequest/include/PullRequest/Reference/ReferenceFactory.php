@@ -50,7 +50,7 @@ class ReferenceFactory
         Factory $pull_request_factory,
         GitRepositoryFactory $repository_factory,
         ProjectReferenceRetriever $reference_retriever,
-        HTMLURLBuilder $html_url_builder
+        HTMLURLBuilder $html_url_builder,
     ) {
         $this->pull_request_factory = $pull_request_factory;
         $this->repository_factory   = $repository_factory;

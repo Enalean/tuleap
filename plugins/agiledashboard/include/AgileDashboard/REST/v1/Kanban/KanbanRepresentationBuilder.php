@@ -47,7 +47,7 @@ class KanbanRepresentationBuilder
     public function __construct(
         AgileDashboard_KanbanUserPreferences $user_preferences,
         AgileDashboard_KanbanColumnFactory $kanban_column_factory,
-        AgileDashboard_KanbanActionsChecker $kanban_actions_checker
+        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
     ) {
         $this->kanban_column_factory  = $kanban_column_factory;
         $this->user_preferences       = $user_preferences;

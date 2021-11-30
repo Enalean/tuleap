@@ -41,7 +41,7 @@ final class BatchResponseActionsForUploadOperation implements BatchResponseActio
     {
         return [
             'upload' => $this->upload_action,
-            'verify' => $this->verify_operation
+            'verify' => $this->verify_operation,
         ];
     }
 }

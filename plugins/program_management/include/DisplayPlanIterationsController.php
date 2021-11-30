@@ -65,7 +65,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private VerifyIsVisibleArtifact $verify_is_visible_artifact,
         private VerifyUserIsProgramAdmin $verify_user_is_program_admin,
         private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
-        private RetrieveIterationLabels $retrieve_iteration_labels
+        private RetrieveIterationLabels $retrieve_iteration_labels,
     ) {
     }
 

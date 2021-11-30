@@ -33,11 +33,11 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact imp
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $data = [
             'use_artifact_permissions' => (int) $field_change['use_perm'],
-            'u_groups' => []
+            'u_groups' => [],
         ];
 
         foreach ($field_change->ugroup as $ugroup_xml) {

@@ -302,7 +302,7 @@ class PageEditor
                     'referenced'       => $wiki_page->isReferenced(),
                     'diff_link'        => $difflink,
                     'user'             => $user,
-                    'version'          => $this->version
+                    'version'          => $this->version,
                 ]
             );
         }

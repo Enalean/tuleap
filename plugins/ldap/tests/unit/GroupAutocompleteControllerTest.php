@@ -64,8 +64,8 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $output = [
             'results'    => [],
             'pagination' => [
-                'more' => false
-            ]
+                'more' => false,
+            ],
         ];
         $this->layout->shouldReceive('sendJSON')->with($output);
 
@@ -80,8 +80,8 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $output = [
             'results'    => [],
             'pagination' => [
-                'more' => false
-            ]
+                'more' => false,
+            ],
         ];
         $this->layout->shouldReceive('sendJSON')->with($output);
 
@@ -113,7 +113,7 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                     [
                         'id'   => 'mis_1234',
                         'text' => 'test_group_dn',
-                    ]
+                    ],
                 ],
             'pagination' => ['more' => false],
         ];

@@ -32,7 +32,7 @@ class Tracker_ColorPresenterCollection implements Iterator
         foreach (TrackerColor::COLOR_NAMES as $color) {
              $this->colors[] = [
                  'color'    => $color,
-                 'selected' => $color === $tracker->getColor()->getName()
+                 'selected' => $color === $tracker->getColor()->getName(),
              ];
         }
     }

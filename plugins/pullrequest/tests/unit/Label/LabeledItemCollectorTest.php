@@ -123,7 +123,7 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturns(\TestHelper::argListToDar([
                 ['id' => 75],
-                ['id' => 66]
+                ['id' => 66],
             ]));
 
         $this->item_collection->shouldReceive('add')->times(2);
@@ -137,7 +137,7 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
             ['id' => 75],
-            ['id' => 66]
+            ['id' => 66],
         ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new UserCannotReadGitRepositoryException());
@@ -152,7 +152,7 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
             ['id' => 75],
-            ['id' => 66]
+            ['id' => 66],
         ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \Project_AccessPrivateException());
@@ -167,7 +167,7 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
             ['id' => 75],
-            ['id' => 66]
+            ['id' => 66],
         ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \GitRepoNotFoundException());
@@ -182,7 +182,7 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
             ['id' => 75],
-            ['id' => 66]
+            ['id' => 66],
         ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \Project_AccessProjectNotFoundException());

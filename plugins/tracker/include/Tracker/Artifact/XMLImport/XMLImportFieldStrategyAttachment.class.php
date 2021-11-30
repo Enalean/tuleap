@@ -54,7 +54,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $values = $field_change->value;
 

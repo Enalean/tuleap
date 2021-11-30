@@ -54,7 +54,7 @@ class ArtifactPresenterBuilder
         HierarchyOfFolderBuilder $hierarchy_builder,
         TypeDao $nature_dao,
         TypeIsChildLinkRetriever $child_link_retriever,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->nature_dao           = $nature_dao;
         $this->artifact_factory     = $artifact_factory;

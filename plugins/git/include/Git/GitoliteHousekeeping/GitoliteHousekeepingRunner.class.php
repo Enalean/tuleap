@@ -40,7 +40,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
         BackendService $backend_service,
         $gitolite_var_path,
-        $remote_admin_repository
+        $remote_admin_repository,
     ) {
         $this->process_manager         = $process_manager;
         $this->process                 = $process;
@@ -64,7 +64,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner
             new Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents($this->response, $this->process_manager, $this->process),
             new Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo($this->response, $this->gitolite_var_path, $this->remote_admin_repository),
             new Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc($this->response, $this->housekeeping_dao),
-            new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service)
+            new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service),
         ];
         $this->setUpChainFromArrayOfCommands($commands);
         $head_of_chain = $commands[0];

@@ -82,7 +82,7 @@ class BindToValueVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->changeset_value->shouldReceive('getValue')->andReturn(
             [
-                (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
+                (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             ]
         );
 
@@ -140,7 +140,7 @@ class BindToValueVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->changeset_value->shouldReceive('getValue')->andReturn(
             [
-                (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
+                (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             ]
         );
 
@@ -197,7 +197,7 @@ class BindToValueVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->changeset_value->shouldReceive('getValue')->andReturn(
             [
-                (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
+                (string) \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             ]
         );
 

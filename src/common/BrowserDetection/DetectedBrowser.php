@@ -53,8 +53,8 @@ final class DetectedBrowser
         ],
         self::CHROME => [
             'Chromium(?:/(\d+[\.\d]+))?'       => null,
-            'Chrome(?!book)(?:/(\d+[\.\d]+))?' => null
-        ]
+            'Chrome(?!book)(?:/(\d+[\.\d]+))?' => null,
+        ],
     ];
     // Only the latest version of these browsers is supported.
     // Versions considered "very old" are very likely to break in some ways when using Tuleap.

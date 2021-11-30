@@ -61,7 +61,7 @@ class UserListResultsPresenter
         $nb_active_sessions,
         $display_nb_projects,
         $limit,
-        $offset
+        $offset,
     ) {
         $this->user_manager          = $user_manager;
         $this->nb_matching_users     = $nb_matching_users;
@@ -76,7 +76,7 @@ class UserListResultsPresenter
             'previous_sort_header' => $sort_params["sort_header"],
             'current_sort_header'  => $sort_params["sort_header"],
             'sort_order'           => $sort_params['order'],
-            'status_values'        => $user_status
+            'status_values'        => $user_status,
         ];
 
         if (! $default_params['status_values']) {

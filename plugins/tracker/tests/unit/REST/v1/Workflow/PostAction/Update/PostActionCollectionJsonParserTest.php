@@ -107,7 +107,7 @@ class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->collection_parser->parse(
             $workflow,
             [
-                "not an array"
+                "not an array",
             ]
         );
     }

@@ -87,7 +87,7 @@ class GitlabRepositoryDeletor
         TagInfoDao $tag_info_dao,
         BranchInfoDao $branch_info_dao,
         CredentialsRetriever $credentials_retriever,
-        CreateBranchPrefixDao $branch_prefix_dao
+        CreateBranchPrefixDao $branch_prefix_dao,
     ) {
         $this->git_permissions_manager     = $git_permissions_manager;
         $this->db_transaction_executor     = $db_transaction_executor;
@@ -107,7 +107,7 @@ class GitlabRepositoryDeletor
      */
     public function deleteRepositoryIntegration(
         GitlabRepositoryIntegration $repository_integration,
-        PFUser $user
+        PFUser $user,
     ): void {
         $project = $repository_integration->getProject();
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {

@@ -94,7 +94,7 @@ class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PHPUnit\
                 $elem,
                 &$xmlMapping,
                 User\XML\Import\IFindUserFromXMLReference $user_finder,
-                TrackerXmlImportFeedbackCollector $feedback_collector
+                TrackerXmlImportFeedbackCollector $feedback_collector,
             ) {
                 $xmlMapping = $this->mapping;
             }

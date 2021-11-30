@@ -78,7 +78,7 @@ final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\Test
     public function testItReturnsFalseWhenPermissionsAreNotChecked(): void
     {
         $value = [
-            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 0
+            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 0,
         ];
 
         $this->assertFalse($this->validator->isArtifactPermissionChecked($value));
@@ -87,7 +87,7 @@ final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\Test
     public function testItReturnsTrueWhenPermissionsAreSentAndChecked(): void
     {
         $value = [
-            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 1
+            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 1,
         ];
 
         $this->assertTrue($this->validator->isArtifactPermissionChecked($value));

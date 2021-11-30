@@ -316,7 +316,7 @@ class ProjectDao extends DataAccessObject
         $offset,
         $limit,
         $status = false,
-        $project_name = false
+        $project_name = false,
     ) {
         $conditions = [];
         $offset     = $this->da->escapeInt($offset);

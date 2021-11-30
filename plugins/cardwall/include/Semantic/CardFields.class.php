@@ -99,7 +99,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         BackgroundColorFieldRetriever $background_field_retriever,
         CardFieldXmlExporter $xml_exporter,
         BackgroundColorDao $background_color_dao,
-        CardsPreviewBuilder $cards_preview_builder
+        CardsPreviewBuilder $cards_preview_builder,
     ) {
         parent::__construct($tracker);
 
@@ -173,7 +173,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 

@@ -32,7 +32,7 @@ class FieldChangeFileBuilder
     public function build(
         SimpleXMLElement $changeset_xml,
         string $field_name,
-        array $fileinfo_ids
+        array $fileinfo_ids,
     ): void {
         $field_change_node = $changeset_xml->addChild('field_change');
         $field_change_node->addAttribute('type', Tracker_FormElementFactory::FIELD_FILE_TYPE);

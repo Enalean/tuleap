@@ -49,7 +49,7 @@ class ColorpickerMountPointPresenter
         $current_color,
         $field_name,
         $field_id,
-        $is_field_used_in_semantic
+        $is_field_used_in_semantic,
     ) {
         $this->current_color      = ($current_color) ? $current_color : '';
         $this->input_name         = $field_name;

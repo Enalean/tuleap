@@ -50,7 +50,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider
         AgileDashboard_Milestone_SelectedMilestoneProvider $milestone_provider,
         AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider $options_provider,
         UnplannedCriterionOptionsProvider $unplanned_criterion_options_provider,
-        UnplannedReportCriterionChecker $unplanned_report_criterion_checker
+        UnplannedReportCriterionChecker $unplanned_report_criterion_checker,
     ) {
         $this->milestone_provider                   = $milestone_provider;
         $this->options_provider                     = $options_provider;

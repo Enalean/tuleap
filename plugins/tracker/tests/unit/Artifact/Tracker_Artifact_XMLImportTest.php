@@ -121,7 +121,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->john_doe     = new PFUser([
             'user_id' => 200,
             'language_id' => 'en',
-            'user_name' => 'john_doe'
+            'user_name' => 'john_doe',
         ]);
         $this->user_manager = \Mockery::spy(\UserManager::class);
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('john_doe')->andReturns($this->john_doe);
@@ -198,7 +198,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
                 Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
                 $this->external_field_extractor,
-                $this->private_comment_extractor
+                $this->private_comment_extractor,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $importer->shouldReceive('importFromXML')->with($this->tracker, Mockery::on(function ($element) {
@@ -238,7 +238,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesArtifactWithSummaryFieldData(): void
     {
         $data          = [
-            $this->summary_field_id => 'Ça marche'
+            $this->summary_field_id => 'Ça marche',
         ];
         $bare_artifact = Mockery::spy(Artifact::class);
         $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
@@ -865,7 +865,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesTheNewChangesetWithSummaryValue(): void
     {
         $data = [
-            $this->summary_field_id => '^Wit updates'
+            $this->summary_field_id => '^Wit updates',
         ];
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
@@ -1242,7 +1242,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesAChangesetWithSummaryWhenFileFormElementDoesNotExist(): void
     {
         $data = [
-            $this->summary_field_id => 'Newly submitted'
+            $this->summary_field_id => 'Newly submitted',
         ];
 
         $this->artifact_creator->shouldReceive('createBare')
@@ -1347,7 +1347,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ');
 
         $data = [
-            $this->summary_field_id => 'Newly submitted'
+            $this->summary_field_id => 'Newly submitted',
         ];
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -2098,13 +2098,13 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $jeanne = new PFUser([
             'user_id' => 101,
             'language_id' => 'en',
-            'user_name' => 'jeanne'
+            'user_name' => 'jeanne',
         ]);
 
         $serge = new PFUser([
             'user_id' => 102,
             'language_id' => 'en',
-            'user_name' => 'serge'
+            'user_name' => 'serge',
         ]);
 
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('jeanne')->andReturns($jeanne);

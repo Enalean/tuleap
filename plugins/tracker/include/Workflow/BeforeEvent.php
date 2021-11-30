@@ -50,7 +50,7 @@ class BeforeEvent implements Dispatchable
     public function __construct(
         Artifact $artifact,
         array $fields_data,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->artifact    = $artifact;
         $this->fields_data = $fields_data;

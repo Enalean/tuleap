@@ -40,7 +40,7 @@ class AgileDashboardKanbanConfigurationUpdater
         Codendi_Request $request,
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboardConfigurationResponse $response,
-        AgileDashboard_FirstKanbanCreator $first_kanban_creator
+        AgileDashboard_FirstKanbanCreator $first_kanban_creator,
     ) {
         $this->request              = $request;
         $this->project_id           = (int) $this->request->get('group_id');

@@ -79,7 +79,7 @@ class MoveArtifact
         Tracker_Artifact_XMLImport $xml_import,
         Tracker_Artifact_PriorityManager $artifact_priority_manager,
         BeforeMoveArtifact $before_move_artifact,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->artifacts_deletion_manager = $artifacts_deletion_manager;
         $this->xml_exporter               = $xml_exporter;
@@ -97,7 +97,7 @@ class MoveArtifact
         Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         try {
             $this->before_move_artifact->artifactCanBeMoved($artifact->getTracker(), $target_tracker, $feedback_field_collector);
@@ -119,7 +119,7 @@ class MoveArtifact
         Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         if (! $target_tracker->getProject()->isActive()) {
             throw new MoveArtifactTargetProjectNotActiveException();
@@ -148,7 +148,7 @@ class MoveArtifact
         Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $xml_artifacts = $this->getXMLRootNode();
         $this->xml_exporter->exportFullHistory(

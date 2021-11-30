@@ -48,7 +48,7 @@ class Docman_SystemCheck
         Docman_SystemCheckProjectRetriever $retriever,
         Backend $backend,
         PluginConfigChecker $config_checker,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->retriever      = $retriever;
         $this->docman_plugin  = $docman_plugin;

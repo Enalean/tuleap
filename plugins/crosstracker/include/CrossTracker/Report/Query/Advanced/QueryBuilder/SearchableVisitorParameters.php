@@ -37,7 +37,7 @@ class SearchableVisitorParameters implements VisitorParameters
     public function __construct(
         Comparison $comparison,
         FromWhereBuilder $from_where_builder,
-        array $trackers
+        array $trackers,
     ) {
         $this->comparison         = $comparison;
         $this->from_where_builder = $from_where_builder;

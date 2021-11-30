@@ -49,7 +49,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'name'        => 'readme.mkd',
             'size'        => 123,
             'type'        => 'text/plain',
-            'tmp_name'    => '/var/tmp'
+            'tmp_name'    => '/var/tmp',
         ];
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -87,7 +87,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'size'        => 123,
             'type'        => 'text/plain',
             'tmp_name'    => '/var/tmp',
-            'is_migrated' => true
+            'is_migrated' => true,
         ];
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -126,7 +126,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'type'                 => 'text/plain',
             'tmp_name'             => '/var/tmp',
             'is_migrated'          => true,
-            'previous_fileinfo_id' => 123
+            'previous_fileinfo_id' => 123,
         ];
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -174,7 +174,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'size'         => 123,
             'type'         => 'text/plain',
             'tmp_name'     => '/var/tmp',
-            'submitted_by' => $another_user
+            'submitted_by' => $another_user,
         ];
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -211,7 +211,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'name'        => 'readme.mkd',
             'size'        => 123,
             'type'        => 'text/plain',
-            'tmp_name'    => '/var/tmp'
+            'tmp_name'    => '/var/tmp',
         ];
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -248,7 +248,7 @@ class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'name'        => 'readme.mkd',
             'size'        => 123,
             'type'        => 'text/plain',
-            'tmp_name'    => '/var/tmp'
+            'tmp_name'    => '/var/tmp',
         ];
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);

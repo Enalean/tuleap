@@ -52,7 +52,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         TrackerFactory $tracker_factory,
         TrackerManager $tracker_manager,
         WorkflowMenuTabPresenterBuilder $presenter_builder,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->tracker_factory   = $tracker_factory;
         $this->tracker_manager   = $tracker_manager;

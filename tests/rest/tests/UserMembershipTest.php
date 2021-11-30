@@ -55,7 +55,7 @@ final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.Clas
         $user2_groups = [
             "site_active",
             "private-member_project_members",
-            "ug_102"
+            "ug_102",
         ];
 
         $this->assertEquals(200, $response->getStatusCode());

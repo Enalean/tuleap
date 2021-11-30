@@ -282,7 +282,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
      */
     public function putMetadata(
         int $id,
-        PUTMetadataRepresentation $representation
+        PUTMetadataRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setMetadataHeaders();
@@ -332,7 +332,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
      */
     public function postEmbeddedFileVersion(
         int $id,
-        EmbeddedPropertiesPOSTPATCHRepresentation $representation
+        EmbeddedPropertiesPOSTPATCHRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setVersionHeaders();
@@ -384,7 +384,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
      */
     public function postLinkVersion(
         int $id,
-        LinkPropertiesPOSTPATCHRepresentation $representation
+        LinkPropertiesPOSTPATCHRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setVersionHeaders();
@@ -437,7 +437,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
      */
     public function postFileVersion(
         int $id,
-        FilePropertiesPOSTPATCHRepresentation $representation
+        FilePropertiesPOSTPATCHRepresentation $representation,
     ): CreatedItemFilePropertiesRepresentation {
         $this->checkAccess();
         $this->setVersionHeaders();
@@ -636,7 +636,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     private function getDocumentBeforeModificationValidatorVisitor(
         Project $project,
         \PFUser $current_user,
-        Docman_Item $item
+        Docman_Item $item,
     ): DocumentBeforeModificationValidatorVisitor {
         return new DocumentBeforeModificationValidatorVisitor(
             $this->getPermissionManager($project),

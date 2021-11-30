@@ -53,7 +53,7 @@ final class DisplayEditionController implements DispatchableWithRequest, Dispatc
     public function __construct(
         EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->dispatcher = $dispatcher;
         $this->renderer   = $renderer_factory->getRenderer(__DIR__ . '/templates');

@@ -71,7 +71,7 @@ class OAuth2RefreshTokenCreator
         OAuth2RefreshTokenDAO $dao,
         OAuth2ScopeSaver $scope_saver,
         DateInterval $refresh_token_expiration_delay,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->offline_access_scope           = $offline_access_scope;
         $this->refresh_token_formatter        = $refresh_token_formatter;

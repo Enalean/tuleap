@@ -43,7 +43,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
             'current'      => $this->item->getParentId(),
             'hierarchy'    => $this->params['hierarchy'],
             'input_name'   => 'id',
-            'excludes'     => [$this->item->getId()]
+            'excludes'     => [$this->item->getId()],
         ]);
         $content     .= '<script type="text/javascript">docman.options.move.item_id = ' . $this->item->getId() . ';</script>';
         $content     .=  '<br />';

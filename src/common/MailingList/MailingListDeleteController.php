@@ -53,7 +53,7 @@ class MailingListDeleteController implements DispatchableWithRequest
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
         MailingListDao $dao,
-        \EventManager $event_manager
+        \EventManager $event_manager,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;

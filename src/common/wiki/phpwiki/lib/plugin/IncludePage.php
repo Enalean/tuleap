@@ -57,7 +57,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
                       'words'   => false, // maximum number of words to include
                       'lines'   => false, // maximum number of lines to include
                       'section' => false, // include a named section
-                      'sectionhead' => false // when including a named section show the heading
+                      'sectionhead' => false, // when including a named section show the heading
                       ];
     }
 

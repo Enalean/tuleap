@@ -33,7 +33,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
 
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
-        Git_SystemEventManager $system_event_manager
+        Git_SystemEventManager $system_event_manager,
     ) {
         $this->repository_factory   = $repository_factory;
         $this->system_event_manager = $system_event_manager;

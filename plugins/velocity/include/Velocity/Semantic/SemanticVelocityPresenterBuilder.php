@@ -42,7 +42,7 @@ class SemanticVelocityPresenterBuilder
     public function __construct(
         MissingRequirementRetriever $missing_requirement_retriever,
         BacklogRetriever $backlog_retriever,
-        VelocitySemanticChecker $semantic_checker
+        VelocitySemanticChecker $semantic_checker,
     ) {
         $this->missing_requirement_retriever = $missing_requirement_retriever;
         $this->backlog_retriever             = $backlog_retriever;
@@ -52,7 +52,7 @@ class SemanticVelocityPresenterBuilder
     public function build(
         Tracker $tracker,
         SemanticDone $semantic_done,
-        ?Tracker_FormElement_Field $velocity_field = null
+        ?Tracker_FormElement_Field $velocity_field = null,
     ) {
         $backlog_trackers                     = $this->backlog_retriever->getBacklogTrackers($tracker);
         $backlog_required_trackers_collection = $this->missing_requirement_retriever->buildCollectionFromBacklogTrackers(

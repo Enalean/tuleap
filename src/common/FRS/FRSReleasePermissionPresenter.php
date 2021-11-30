@@ -35,7 +35,7 @@ class FRSReleasePermissionPresenter
             'project_admin_permissions',
             'admins_create_modify_ug',
             [
-                "/project/admin/ugroup.php?group_id=" . urlencode($project->getGroupId())
+                "/project/admin/ugroup.php?group_id=" . urlencode($project->getGroupId()),
             ]
         );
     }

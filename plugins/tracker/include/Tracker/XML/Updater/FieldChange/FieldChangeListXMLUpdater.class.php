@@ -42,7 +42,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Track
     protected function appendValuesToFieldChangeNode(
         $value,
         $index,
-        SimpleXMLElement $field_xml
+        SimpleXMLElement $field_xml,
     ) {
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'id']);

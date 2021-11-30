@@ -75,7 +75,7 @@ final class TrackerHierarchyFactoryGetParentTest extends \Tuleap\Test\PHPUnit\Te
         $this->tracker_factory->shouldReceive('getTrackerById')->with(111)->andReturn($this->epic_tracker)->once();
         $this->dao->shouldReceive('searchTrackerHierarchy')->andReturn(
             [
-                ['parent_id' => 111, 'child_id' => 112]
+                ['parent_id' => 111, 'child_id' => 112],
             ]
         );
         $this->assertEquals($this->epic_tracker, $this->hierarchy_factory->getParent($this->story_tracker));

@@ -39,7 +39,7 @@ class TrackerPrivateCommentUGroupExtractor
 
     public function __construct(
         TrackerPrivateCommentUGroupEnabledDao $private_comment_enabled_dao,
-        \UGroupManager $ugroup_manager
+        \UGroupManager $ugroup_manager,
     ) {
         $this->private_comment_enabled_dao = $private_comment_enabled_dao;
         $this->ugroup_manager              = $ugroup_manager;

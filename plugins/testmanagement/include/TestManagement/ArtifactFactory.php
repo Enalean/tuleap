@@ -42,7 +42,7 @@ class ArtifactFactory
     public function __construct(
         Config $config,
         Tracker_ArtifactFactory $tracker_artifact_factory,
-        ArtifactDao $dao
+        ArtifactDao $dao,
     ) {
         $this->config                   = $config;
         $this->tracker_artifact_factory = $tracker_artifact_factory;

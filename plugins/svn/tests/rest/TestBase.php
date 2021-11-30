@@ -88,7 +88,7 @@ class TestBase extends RestBase
             "ldap_id"      => "tester1",
             "avatar_url"   => "https://localhost/users/rest_api_tester_1/avatar.png",
             "is_anonymous" => false,
-            "has_avatar"   => true
+            "has_avatar"   => true,
         ];
 
         $this->user_103 = [
@@ -101,7 +101,7 @@ class TestBase extends RestBase
             "ldap_id"      => "",
             "avatar_url"   => "https://localhost/themes/common/images/avatar_default.png",
             "is_anonymous" => false,
-            "has_avatar"   => false
+            "has_avatar"   => false,
         ];
 
         $this->user_group_101 = [
@@ -119,7 +119,7 @@ class TestBase extends RestBase
             "label"      =>  self::UGROUP_NAME_2,
             "users_uri"  => "user_groups/" . $this->user_group_2_id . "/users",
             "short_name" => self::UGROUP_NAME_2,
-            "key"        =>  self::UGROUP_NAME_2
+            "key"        =>  self::UGROUP_NAME_2,
         ];
 
         if (isset($_ENV['TULEAP_HOST'])) {

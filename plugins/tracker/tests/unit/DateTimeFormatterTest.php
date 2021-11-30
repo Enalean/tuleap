@@ -111,7 +111,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\Tes
             '03',
             '08',
             '06',
-            '12'
+            '12',
         ];
 
         $expected = '2014-09-03 08:06';
@@ -126,7 +126,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\Tes
             '09',
             '03',
             '08',
-            '06'
+            '06',
         ];
 
         $expected = '2014-09-03 08:06';

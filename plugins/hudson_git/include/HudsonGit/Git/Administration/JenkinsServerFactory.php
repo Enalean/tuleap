@@ -39,7 +39,7 @@ class JenkinsServerFactory
 
     public function __construct(
         JenkinsServerDao $jenkins_server_dao,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         $this->jenkins_server_dao = $jenkins_server_dao;
         $this->project_manager    = $project_manager;

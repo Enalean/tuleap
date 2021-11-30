@@ -54,7 +54,7 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         private ProgramIncrementIdentifier $program_increment,
         private UserIdentifier $user,
         private ChangesetIdentifier $changeset,
-        PendingIterationCreation ...$iterations
+        PendingIterationCreation ...$iterations,
     ) {
         $this->iterations = $iterations;
     }
@@ -66,7 +66,7 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         VerifyIsVisibleArtifact $visibility_verifier,
         VerifyIsIteration $iteration_verifier,
         VerifyIsChangeset $changeset_verifier,
-        WorkerEvent $event
+        WorkerEvent $event,
     ): ?self {
         $event_name = $event->getEventName();
         if ($event_name !== self::TOPIC) {
@@ -119,7 +119,7 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         LoggerInterface $logger,
         int $program_increment_id,
         int $user_id,
-        int $changeset_id
+        int $changeset_id,
     ): void {
         $logger->error(
             sprintf(
@@ -137,7 +137,7 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         VerifyIsVisibleArtifact $visibility_verifier,
         VerifyIsChangeset $changeset_verifier,
         UserIdentifier $user,
-        array $iterations
+        array $iterations,
     ): array {
         $pending_iterations = [];
         foreach ($iterations as $iteration_payload) {

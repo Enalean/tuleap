@@ -49,7 +49,7 @@ final class DiscoveryController extends DispatchablePSR15Compatible implements D
         ConfigurationResponseRepresentationBuilder $representation_builder,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->representation_builder = $representation_builder;

@@ -67,7 +67,7 @@ final class AdminReleaseNoteLinkController implements DispatchableWithRequest, D
         AdminPageRenderer $admin_page_renderer,
         ReleaseNoteManager $help_links_manager,
         CSRFSynchronizerToken $csrf_token,
-        string $version_number
+        string $version_number,
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
         $this->help_links_manager  = $help_links_manager;

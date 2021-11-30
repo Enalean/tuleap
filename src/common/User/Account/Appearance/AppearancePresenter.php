@@ -133,7 +133,7 @@ final class AppearancePresenter
         bool $is_login_realname,
         bool $is_login,
         bool $is_realname,
-        string $relative_dates_display
+        string $relative_dates_display,
     ) {
         $this->csrf_token               = $csrf_token;
         $this->tabs                     = $tabs;

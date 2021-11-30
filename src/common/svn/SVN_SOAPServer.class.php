@@ -45,7 +45,7 @@ class SVN_SOAPServer
     public function __construct(
         SOAPRequestValidator $soap_request_validator,
         SVN_RepositoryListing $svn_repository_listing,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
     ) {
         $this->soap_request_validator = $soap_request_validator;
         $this->svn_repository_listing = $svn_repository_listing;

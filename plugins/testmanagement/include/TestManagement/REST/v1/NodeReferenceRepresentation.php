@@ -88,7 +88,7 @@ class NodeReferenceRepresentation
         string $color,
         string $title,
         ?string $status_semantic,
-        ?string $status_label
+        ?string $status_label,
     ): void {
         $this->id              = JsonCast::toInt($id);
         $this->uri             = self::ROUTE . '/' . $this->id;

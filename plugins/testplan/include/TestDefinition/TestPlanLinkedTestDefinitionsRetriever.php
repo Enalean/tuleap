@@ -53,7 +53,7 @@ class TestPlanLinkedTestDefinitionsRetriever
         Config $testmanagement_config,
         ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
-        TestPlanTestDefinitionWithTestStatusRetriever $test_definition_with_test_status_retriever
+        TestPlanTestDefinitionWithTestStatusRetriever $test_definition_with_test_status_retriever,
     ) {
         $this->testmanagement_config                      = $testmanagement_config;
         $this->artifact_dao                               = $artifact_dao;

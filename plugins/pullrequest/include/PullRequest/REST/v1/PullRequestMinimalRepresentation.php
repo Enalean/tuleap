@@ -96,7 +96,7 @@ class PullRequestMinimalRepresentation
     public function buildMinimal(
         PullRequest $pull_request,
         GitRepository $repository,
-        GitRepository $repository_dest
+        GitRepository $repository_dest,
     ) {
         $this->id = JsonCast::toInt($pull_request->getId());
 
@@ -125,7 +125,7 @@ class PullRequestMinimalRepresentation
         $status_name = [
             PullRequest::STATUS_ABANDONED => PullRequestRepresentation::STATUS_ABANDON,
             PullRequest::STATUS_MERGED    => PullRequestRepresentation::STATUS_MERGE,
-            PullRequest::STATUS_REVIEW    => PullRequestRepresentation::STATUS_REVIEW
+            PullRequest::STATUS_REVIEW    => PullRequestRepresentation::STATUS_REVIEW,
         ];
 
         return $status_name[$status_acronym];

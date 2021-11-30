@@ -38,7 +38,7 @@ class GreaterThanComparisonFromWhereBuilder implements FromWhereBuilder
 
     public function __construct(
         AlwaysThereField\Date\GreaterThanComparisonFromWhereBuilder $submitted_on_builder,
-        AlwaysThereField\Date\GreaterThanComparisonFromWhereBuilder $last_update_date_builder
+        AlwaysThereField\Date\GreaterThanComparisonFromWhereBuilder $last_update_date_builder,
     ) {
         $this->submitted_on_builder     = $submitted_on_builder;
         $this->last_update_date_builder = $last_update_date_builder;

@@ -169,7 +169,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_xml_importer->import(
             $xml,
             [
-                'T22' => 50
+                'T22' => 50,
             ],
             $this->project,
             $field_mapping,
@@ -220,7 +220,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_xml_importer->import(
             $xml,
             [
-                'T22' => 50
+                'T22' => 50,
             ],
             $this->project,
             $field_mapping,
@@ -258,7 +258,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_xml_importer->import(
             $xml,
             [
-                'T22' => 50
+                'T22' => 50,
             ],
             $this->project,
             $field_mapping,
@@ -308,7 +308,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml,
             [
                 'T22' => 50,
-                'T21' => 51
+                'T21' => 51,
             ],
             $this->project,
             $field_mapping,
@@ -347,7 +347,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml,
             [
                 'T22' => 50,
-                'T21' => 51
+                'T21' => 51,
             ],
             $this->project,
             \Mockery::spy(\TrackerXmlFieldsMapping::class),

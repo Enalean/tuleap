@@ -61,7 +61,7 @@ class FormElementRepresentationsBuilder
         Tracker_FormElementFactory $form_element_factory,
         PermissionsExporter $permissions_exporter,
         HiddenFieldsetChecker $hidden_fieldset_checker,
-        PermissionsForGroupsBuilder $permissions_for_groups_builder
+        PermissionsForGroupsBuilder $permissions_for_groups_builder,
     ) {
         $this->permissions_exporter           = $permissions_exporter;
         $this->form_element_factory           = $form_element_factory;
@@ -143,7 +143,7 @@ class FormElementRepresentationsBuilder
     private function getPermissionsForFormElement(
         Tracker_FormElement $form_element,
         ?Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): array {
         if ($artifact === null) {
             return $this->permissions_exporter->exportUserPermissionsForFieldWithoutWorkflowComputedPermissions(

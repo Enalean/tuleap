@@ -35,7 +35,7 @@ class GitViewHeader
     private $event_manager;
 
     public function __construct(
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->event_manager = $event_manager;
     }
@@ -44,7 +44,7 @@ class GitViewHeader
         HTTPRequest $request,
         BaseLayout $layout,
         Project $project,
-        BreadCrumbCollection $breadcrumbs
+        BreadCrumbCollection $breadcrumbs,
     ) {
         $layout->addBreadcrumbs($breadcrumbs);
 
@@ -53,7 +53,7 @@ class GitViewHeader
                 'title'      => dgettext('tuleap-git', 'Git'),
                 'group'      => $project->getID(),
                 'toptab'     => dgettext('tuleap-git', 'Git'),
-                'body_class' => array_merge(['git-administration'], $this->getAdditionalBodyClasses($request))
+                'body_class' => array_merge(['git-administration'], $this->getAdditionalBodyClasses($request)),
             ]
         );
     }
@@ -63,7 +63,7 @@ class GitViewHeader
         $classes = [];
         $params  = [
             'request' => $request,
-            'classes' => &$classes
+            'classes' => &$classes,
         ];
 
         $this->event_manager->processEvent(GIT_ADDITIONAL_BODY_CLASSES, $params);

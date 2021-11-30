@@ -29,7 +29,7 @@ final class ProgramFlag
 {
     private function __construct(
         public string $label,
-        public string $description
+        public string $description,
     ) {
     }
 

@@ -52,7 +52,7 @@ class DocmanItemsRequest
         Docman_ItemFactory $factory,
         Docman_Item $item,
         Project $project,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->item    = $item;
         $this->project = $project;

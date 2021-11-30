@@ -50,7 +50,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase
         FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
-        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator
+        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
     ) {
         $this->fields_validator    = $fields_validator;
         $this->artifact_factory    = $artifact_factory;
@@ -74,7 +74,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase
         array $fields_data,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ): bool {
         if ($this->artifact_factory->save($artifact)) {
             foreach ($this->fields_retriever->getFields($artifact) as $field) {

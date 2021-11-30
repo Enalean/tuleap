@@ -50,7 +50,7 @@ class KanbanColumnsTest extends TestBase
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
             "wip_limit" => 200,
-            "label"     => "yummy"
+            "label"     => "yummy",
         ]))));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -69,7 +69,7 @@ class KanbanColumnsTest extends TestBase
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
                 "wip_limit" => 200,
-                "label"     => "yummy"
+                "label"     => "yummy",
             ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );

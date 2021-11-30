@@ -57,7 +57,7 @@ class BurndownDataBuilderForLegacy
         ChartConfigurationFieldRetriever $field_retriever,
         ChartConfigurationValueRetriever $value_retriever,
         BurndownCacheGenerationChecker $cache_checker,
-        BurndownRemainingEffortAdderForLegacy $remaining_effort_adder
+        BurndownRemainingEffortAdderForLegacy $remaining_effort_adder,
     ) {
         $this->logger                 = $logger;
         $this->field_retriever        = $field_retriever;
@@ -111,7 +111,7 @@ class BurndownDataBuilderForLegacy
         PFUser $user,
         TimePeriodWithoutWeekEnd $time_period,
         $capacity,
-        $user_timezone
+        $user_timezone,
     ) {
         $this->logger->info("Start calculating burndown " . $artifact->getId());
 
@@ -138,7 +138,7 @@ class BurndownDataBuilderForLegacy
         PFUser $user,
         TimePeriodWithoutWeekEnd $time_period,
         $capacity,
-        $is_burndown_under_calculation
+        $is_burndown_under_calculation,
     ) {
         $user_time_period   = $this->getTimePeriod($time_period);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);

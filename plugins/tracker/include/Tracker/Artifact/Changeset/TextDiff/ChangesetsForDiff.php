@@ -44,7 +44,7 @@ class ChangesetsForDiff
     public function __construct(
         \Tracker_Artifact_Changeset $next_changeset,
         \Tracker_FormElement_Field_Text $field_text,
-        ?\Tracker_Artifact_Changeset $previous_changeset
+        ?\Tracker_Artifact_Changeset $previous_changeset,
     ) {
         $this->previous_changeset = $previous_changeset;
         $this->next_changeset     = $next_changeset;

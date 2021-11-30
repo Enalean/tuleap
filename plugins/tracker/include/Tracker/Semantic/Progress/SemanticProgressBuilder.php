@@ -37,7 +37,7 @@ class SemanticProgressBuilder
 
     public function __construct(
         SemanticProgressDao $dao,
-        MethodBuilder $method_builder
+        MethodBuilder $method_builder,
     ) {
         $this->dao            = $dao;
         $this->method_builder = $method_builder;
@@ -94,7 +94,7 @@ class SemanticProgressBuilder
     private function buildEffortBasedSemanticProgress(
         Tracker $tracker,
         int $total_effort_field_id,
-        int $remaining_effort_field_id
+        int $remaining_effort_field_id,
     ): SemanticProgress {
         return new SemanticProgress(
             $tracker,

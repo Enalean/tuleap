@@ -33,7 +33,7 @@ class AgileDashboard_KanbanManager
 
     public function __construct(
         AgileDashboard_KanbanDao $dao,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         $this->dao             = $dao;
         $this->tracker_factory = $tracker_factory;

@@ -41,7 +41,7 @@ final class AdditionalButtonLinkPresenter
         ?string $icon = null,
         ?string $id = null,
         ?array $data = null,
-        array $disabled_messages = []
+        array $disabled_messages = [],
     ) {
         $this->link_label        = $link_label;
         $this->url               = $url;

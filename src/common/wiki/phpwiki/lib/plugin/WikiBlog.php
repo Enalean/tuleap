@@ -116,7 +116,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         return ['pagename'   => '[pagename]',
                      'order'      => 'normal',
                      'mode'       => 'show,add',
-                     'noheader'   => false
+                     'noheader'   => false,
                     ];
     }
 

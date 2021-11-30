@@ -155,7 +155,7 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
         string $ref_source_key,
         int $ref_source_id,
         string $ref_source_url,
-        string $ref_source_type
+        string $ref_source_type,
     ): \CrossReference {
         $cross_ref = \Mockery::mock(\CrossReference::class);
         $cross_ref->shouldReceive('getRefTargetKey')->andReturn($ref_target_key);

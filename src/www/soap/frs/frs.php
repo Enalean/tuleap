@@ -316,7 +316,7 @@ if (defined('NUSOAP')) {
         'type_id'           => 'xsd:int',
         'processor_id'      => 'xsd:int',
         'reference_md5'     => 'xsd:string',
-        'comment'           => 'xsd:string'
+        'comment'           => 'xsd:string',
         ],
         ['addFile' => 'xsd:int'],
         $uri,
@@ -364,7 +364,7 @@ if (defined('NUSOAP')) {
         'type_id'       => 'xsd:int',
         'processor_id'  => 'xsd:int',
         'reference_md5' => 'xsd:string',
-        'comment'       => 'xsd:string'
+        'comment'       => 'xsd:string',
         ],
         ['addUploadedFile' => 'xsd:int'],
         $uri,
@@ -385,7 +385,7 @@ if (defined('NUSOAP')) {
         'getUploadedFiles',
         [
         'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int'
+        'group_id' => 'xsd:int',
         ],
         ['getUploadedFilesResponse' => 'tns:ArrayOfstring'],
         $uri,
@@ -402,7 +402,7 @@ if (defined('NUSOAP')) {
         'group_id' => 'xsd:int',
         'package_id' => 'xsd:int',
         'release_id' => 'xsd:int',
-        'file_id' => 'xsd:int'
+        'file_id' => 'xsd:int',
         ],
         ['deleteFileResponse' => 'xsd:boolean'],
         $uri,
@@ -419,7 +419,7 @@ if (defined('NUSOAP')) {
         'sessionKey'  => 'xsd:string',
         'group_id'    => 'xsd:int',
         'package_id'  => 'xsd:int',
-        'cleanup_all' => 'xsd:boolean'
+        'cleanup_all' => 'xsd:boolean',
         ],
         ['deleteEmptyPackageResponse' => 'tns:ArrayOfFRSPackage'],
         $uri,
@@ -437,7 +437,7 @@ if (defined('NUSOAP')) {
         'group_id'    => 'xsd:int',
         'package_id'  => 'xsd:int',
         'release_id'  => 'xsd:int',
-        'cleanup_all' => 'xsd:boolean'
+        'cleanup_all' => 'xsd:boolean',
         ],
         ['deleteEmptyReleaseResponse' => 'tns:ArrayOfFRSRelease'],
         $uri,
@@ -518,7 +518,7 @@ if (defined('NUSOAP')) {
             'name' => util_unconvert_htmlspecialchars($package->getName()),
             'status_id' => $package->getStatusID(),
             'rank' => $package->getRank(),
-            'approve_license' => $package->getApproveLicense()
+            'approve_license' => $package->getApproveLicense(),
             ];
         }
         return null;
@@ -642,7 +642,7 @@ if (defined('NUSOAP')) {
             'changes' => $release->getChanges(),
             'status_id' => $release->getStatusID(),
             'release_date' => $release->getReleaseDate(),
-            'released_by' => $release->getReleasedBy()
+            'released_by' => $release->getReleasedBy(),
             ];
         }
         return null;
@@ -782,7 +782,7 @@ if (defined('NUSOAP')) {
         'notes'         => $notes,
         'changes'       => $changes,
         'status_id'     => $status_id,
-        'release_id'    => $release_id
+        'release_id'    => $release_id,
         ];
 
         if (! $release_factory->update($release_array)) {
@@ -1196,7 +1196,7 @@ if (defined('NUSOAP')) {
 
             $data_array = [
                 'comment'   => $comment,
-                'file_id'   => $file_id
+                'file_id'   => $file_id,
             ];
             try {
                 $file_factory->update($data_array);

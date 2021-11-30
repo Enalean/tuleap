@@ -69,7 +69,7 @@ final class CardFieldXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $mapping = [
             'F102' => 13,
-            'F103' => 14
+            'F103' => 14,
         ];
 
         $severity_field = Mockery::spy(Tracker_FormElement_Field_List::class);
@@ -80,7 +80,7 @@ final class CardFieldXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $fields = [
             $severity_field,
-            $status_field
+            $status_field,
         ];
 
         $semantic = Mockery::spy(Cardwall_Semantic_CardFields::class);
@@ -103,7 +103,7 @@ final class CardFieldXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping = [
             'F102' => 13,
-            'F103' => 14
+            'F103' => 14,
         ];
 
         $semantic = Mockery::spy(Cardwall_Semantic_CardFields::class);

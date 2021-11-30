@@ -56,7 +56,7 @@ abstract class TestManagementController extends MVC2_PluginController
     public function __construct(
         Codendi_Request $request,
         Config $config,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         parent::__construct(self::NAME, $request);
 

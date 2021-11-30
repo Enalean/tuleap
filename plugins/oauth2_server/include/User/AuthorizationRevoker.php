@@ -43,7 +43,7 @@ class AuthorizationRevoker
     public function __construct(
         OAuth2AuthorizationCodeDAO $authorization_code_DAO,
         AuthorizationDao $authorization_dao,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->authorization_code_DAO = $authorization_code_DAO;
         $this->authorization_dao      = $authorization_dao;

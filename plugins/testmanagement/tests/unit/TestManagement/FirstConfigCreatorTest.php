@@ -103,7 +103,7 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->campaign_tracker_id   => $this->new_campaign_tracker_id,
             $this->definition_tracker_id => $this->new_definition_tracker_id,
             $this->execution_tracker_id  => $this->new_execution_tracker_id,
-            $this->issue_tracker_id      => $this->new_issue_tracker_id
+            $this->issue_tracker_id      => $this->new_issue_tracker_id,
         ];
 
         $this->config          = Mockery::spy(Config::class);
@@ -439,7 +439,7 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "bugs",
                 "bug",
                 $this->issue_tracker_id
-            )
+            ),
 
         ];
     }
@@ -466,7 +466,7 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "bugs",
                 "bug",
                 $this->issue_tracker_id
-            )
+            ),
 
         ];
     }

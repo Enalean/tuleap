@@ -121,7 +121,7 @@ class GitViews_RepoManagement
         GitPermissionsManager $git_permission_manager,
         RegexpFineGrainedRetriever $regexp_retriever,
         EventManager $event_manager,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         $this->project_manager                 = $project_manager;
         $this->repository                      = $repository;

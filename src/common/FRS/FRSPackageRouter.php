@@ -39,7 +39,7 @@ class FRSPackageRouter
     public function __construct(
         FRSPackageController $package_controller,
         FRSPackageFactory $package_factory,
-        FRSPermissionManager $permission_manager
+        FRSPermissionManager $permission_manager,
     ) {
         $this->package_controller = $package_controller;
         $this->package_factory    = $package_factory;

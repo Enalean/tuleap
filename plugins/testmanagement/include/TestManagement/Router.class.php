@@ -108,7 +108,7 @@ class Router
         VisitRecorder $visit_recorder,
         Valid_UInt $int_validator,
         ProjectFlagsBuilder $project_flags_builder,
-        AdminTrackersRetriever $tracker_retriever
+        AdminTrackersRetriever $tracker_retriever,
     ) {
         $this->config                       = $config;
         $this->tracker_factory              = $tracker_factory;
@@ -220,7 +220,7 @@ class Router
         Codendi_Request $request,
         bool $without_project_in_breadcrumb,
         array $args = [],
-        array $extra_classes = []
+        array $extra_classes = [],
     ): void {
         $content = $this->executeAction($controller, $action_name, $args);
 
@@ -242,7 +242,7 @@ class Router
     private function executeAction(
         $controller,
         $action_name,
-        array $args = []
+        array $args = [],
     ) {
         return call_user_func_array([$controller, $action_name], $args);
     }
@@ -265,7 +265,7 @@ class Router
             'misconfiguration' => dgettext(
                 'tuleap-testmanagement',
                 'Configuration incomplete'
-            )
+            ),
         ];
 
         return $header_title[$action_name];
@@ -297,7 +297,7 @@ class Router
         Codendi_Request $request,
         $title,
         bool $without_project_in_breadcrumb,
-        array $extra_classes = []
+        array $extra_classes = [],
     ): void {
         $service = $this->getService($request);
 

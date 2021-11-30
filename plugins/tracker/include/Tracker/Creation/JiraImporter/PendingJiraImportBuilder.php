@@ -38,7 +38,7 @@ class PendingJiraImportBuilder
 
     public function __construct(
         ProjectManager $project_manager,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->project_manager = $project_manager;
         $this->user_manager    = $user_manager;

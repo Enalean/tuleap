@@ -47,7 +47,7 @@ final class FieldChangeArtifactLinksBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $changeset_node,
             'Links',
             [
-                new ArtifactLinkChange(10089), new ArtifactLinkChange(10090)
+                new ArtifactLinkChange(10089), new ArtifactLinkChange(10090),
             ]
         );
 
@@ -67,7 +67,7 @@ final class FieldChangeArtifactLinksBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $changeset_node,
             'Links',
             [
-                new ArtifactLinkChange(10089, 'child'), new ArtifactLinkChange(10090)
+                new ArtifactLinkChange(10089, 'child'), new ArtifactLinkChange(10090),
             ]
         );
 

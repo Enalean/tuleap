@@ -54,7 +54,7 @@ class UGroupEditProcessAction implements Dispatchable
         Codendi_Request $request,
         ProjectUGroup $ugroup,
         CSRFSynchronizerToken $csrf,
-        EditBindingUGroupEventLauncher $edit_event_launcher
+        EditBindingUGroupEventLauncher $edit_event_launcher,
     ) {
         $this->request             = $request;
         $this->ugroup              = $ugroup;

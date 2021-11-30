@@ -44,7 +44,7 @@ final class StepDefinitionTextField
     public function __construct(
         string $content,
         string $format,
-        ?string $commonmark
+        ?string $commonmark,
     ) {
         $this->content    = $content;
         $this->format     = $format;

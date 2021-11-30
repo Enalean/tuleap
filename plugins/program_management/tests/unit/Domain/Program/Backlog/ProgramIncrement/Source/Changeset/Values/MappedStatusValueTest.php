@@ -43,7 +43,7 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapped_status       = MappedStatusValue::fromStatusValueAndListField(
             MapStatusByValueStub::withMultipleValuesOnce([
                 BindValueIdentifierStub::withId(self::FIRST_BIND_VALUE_ID),
-                BindValueIdentifierStub::withId(self::SECOND_BIND_VALUE_ID)
+                BindValueIdentifierStub::withId(self::SECOND_BIND_VALUE_ID),
             ]),
             $status_value,
             $target_status_field

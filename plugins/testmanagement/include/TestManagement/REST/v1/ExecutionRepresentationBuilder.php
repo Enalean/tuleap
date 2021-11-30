@@ -102,7 +102,7 @@ class ExecutionRepresentationBuilder
         ExecutionDao $execution_dao,
         StepsResultsRepresentationBuilder $steps_results_representation_builder,
         FileUploadDataProvider $file_upload_data_provider,
-        DefinitionRepresentationBuilder $definition_representation_builder
+        DefinitionRepresentationBuilder $definition_representation_builder,
     ) {
         $this->user_manager                         = $user_manager;
         $this->tracker_form_element_factory         = $tracker_form_element_factory;
@@ -127,7 +127,7 @@ class ExecutionRepresentationBuilder
         Artifact $artifact,
         \Tracker $execution_tracker,
         int $limit,
-        int $offset
+        int $offset,
     ) {
         $executions      = $this->getSlicedExecutionsForCampaign($artifact, $user, $execution_tracker, $limit, $offset);
         $representations = $this->getListOfRepresentations($user, $executions, $execution_tracker);
@@ -159,7 +159,7 @@ class ExecutionRepresentationBuilder
         PFUser $user,
         Artifact $execution,
         array $definitions_changeset_ids,
-        array $file_fields
+        array $file_fields,
     ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
 
@@ -256,7 +256,7 @@ class ExecutionRepresentationBuilder
         PFUser $user,
         \Tracker $execution_tracker,
         int $limit,
-        int $offset
+        int $offset,
     ) {
         $artifact_links_data = $this->artifact_dao->searchPaginatedExecutionArtifactsForCampaign(
             $campaign_artifact->getId(),
@@ -303,7 +303,7 @@ class ExecutionRepresentationBuilder
         PFUser $user,
         Artifact $execution,
         Artifact $definition,
-        array $definitions_changeset_ids
+        array $definitions_changeset_ids,
     ): DefinitionRepresentation {
         return $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
@@ -324,7 +324,7 @@ class ExecutionRepresentationBuilder
     private function getSpecificDefinitionChangesetForExecution(
         Artifact $execution,
         Artifact $definition,
-        array $definitions_changeset_ids
+        array $definitions_changeset_ids,
     ) {
         if (isset($definitions_changeset_ids[$execution->getId()])) {
             return $definition->getChangeset($definitions_changeset_ids[$execution->getId()]);
@@ -377,7 +377,7 @@ class ExecutionRepresentationBuilder
 
     private function getPreviousResultRepresentationForExecution(
         PFUser $user,
-        Artifact $execution
+        Artifact $execution,
     ): ?PreviousResultRepresentation {
         $last_changeset = $execution->getLastChangeset();
         if (! $last_changeset) {

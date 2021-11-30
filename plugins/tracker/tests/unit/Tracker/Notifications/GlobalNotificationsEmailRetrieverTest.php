@@ -67,20 +67,20 @@ class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
                         'language_id' => 'en',
                         'user_id' => 201,
                         'status' => PFUser::STATUS_ACTIVE,
-                        'email' => 'jdoe@example.com'
+                        'email' => 'jdoe@example.com',
                     ]),
                     new PFUser([
                         'language_id' => 'en',
                         'user_id' => 202,
                         'status' => PFUser::STATUS_RESTRICTED,
-                        'email' => 'charles@example.com'
+                        'email' => 'charles@example.com',
                     ]),
                     new PFUser([
                         'language_id' => 'en',
                         'user_id' => 202,
                         'status' => PFUser::STATUS_SUSPENDED,
-                        'email' => 'suspended@example.com'
-                    ])
+                        'email' => 'suspended@example.com',
+                    ]),
                 ]
             );
 

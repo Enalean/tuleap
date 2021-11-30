@@ -497,7 +497,7 @@ class _WikiUser
         &$request,
         $args,
         $fail_message = false,
-        $seperate_page = false
+        $seperate_page = false,
     ) {
         include_once('lib/Template.php');
         // Call update_locale in case the system's default language is not 'en'.
@@ -1400,7 +1400,7 @@ class _UserPreference_numeric extends _UserPreference
     public function __construct(
         $default,
         $minval = false,
-        $maxval = false
+        $maxval = false,
     ) {
         parent::__construct((double) $default);
         $this->_minval = (double) $minval;

@@ -56,7 +56,7 @@ class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tuleap\Te
             'description_format'      => ["text", "html"],
             'description'             => ["Yep", "Yep"],
             'expected_results_format' => ["text", "html"],
-            'expected_results'        => ["Non", "Non"]
+            'expected_results'        => ["Non", "Non"],
         ];
 
         $this->assertEquals($data, $import_strategie->getFieldData($field, $xml, $user, $artifact));

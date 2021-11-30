@@ -35,7 +35,7 @@ final class ChangesetValuesFormatter
     public function __construct(
         private ArtifactLinkValueFormatter $artifact_link_formatter,
         private DescriptionValueFormatter $description_formatter,
-        private DateValueFormatter $date_value_formatter
+        private DateValueFormatter $date_value_formatter,
     ) {
     }
 
@@ -58,7 +58,7 @@ final class ChangesetValuesFormatter
             ),
             $values->status_field->getId()        => $values->mapped_status_value->getValues(),
             $values->start_date_field->getId()    => $this->date_value_formatter->formatForTrackerPlugin($values->start_date_value),
-            $values->end_period_field->getId()    => $formatted_end_period_value
+            $values->end_period_field->getId()    => $formatted_end_period_value,
         ];
     }
 
@@ -68,7 +68,7 @@ final class ChangesetValuesFormatter
     public function formatArtifactLink(ArtifactLinkFieldReference $artifact_link_field, ArtifactLinkValue $value): array
     {
         return [
-            $artifact_link_field->getId() => $this->artifact_link_formatter->formatForTrackerPlugin($value)
+            $artifact_link_field->getId() => $this->artifact_link_formatter->formatForTrackerPlugin($value),
         ];
     }
 }

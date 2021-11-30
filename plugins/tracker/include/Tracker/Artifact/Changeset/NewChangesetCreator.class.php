@@ -35,7 +35,7 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
         array $fields_data,
         PFUser $submitter,
         $changeset_id,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): bool {
         $is_submission = false;
         $bypass_perms  = true;

@@ -66,7 +66,7 @@ final class AppRevocationController extends DispatchablePSR15Compatible implemen
         AuthorizationRevoker $authorization_revoker,
         RedirectWithFeedbackFactory $redirector,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory      = $response_factory;

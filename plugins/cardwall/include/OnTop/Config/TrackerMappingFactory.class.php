@@ -46,7 +46,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $element_factory,
         Cardwall_OnTop_ColumnMappingFieldDao $dao,
-        Cardwall_OnTop_Config_ValueMappingFactory $value_mapping_factory
+        Cardwall_OnTop_Config_ValueMappingFactory $value_mapping_factory,
     ) {
         $this->tracker_factory       = $tracker_factory;
         $this->element_factory       = $element_factory;

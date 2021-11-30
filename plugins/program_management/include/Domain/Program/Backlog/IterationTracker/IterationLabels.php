@@ -40,7 +40,7 @@ final class IterationLabels
 
     public static function fromIterationTracker(
         RetrieveIterationLabels $label_retriever,
-        ?TrackerReference $tracker
+        ?TrackerReference $tracker,
     ): self {
         if (! $tracker) {
             return new self(null, null);

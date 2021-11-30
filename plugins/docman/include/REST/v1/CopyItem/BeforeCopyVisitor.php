@@ -59,7 +59,7 @@ final class BeforeCopyVisitor implements ItemVisitor
     public function __construct(
         DoesItemHasExpectedTypeVisitor $does_item_has_expected_type,
         Docman_ItemFactory $item_factory,
-        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever
+        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
     ) {
         $this->does_item_has_expected_type       = $does_item_has_expected_type;
         $this->item_factory                      = $item_factory;
@@ -108,7 +108,7 @@ final class BeforeCopyVisitor implements ItemVisitor
     private function handleDocument(
         DateTimeImmutable $current_time,
         Docman_Item $item,
-        Docman_Folder $destination
+        Docman_Folder $destination,
     ): ItemBeingCopiedExpectation {
         $is_document_being_uploaded = $this->document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing(
             $destination,

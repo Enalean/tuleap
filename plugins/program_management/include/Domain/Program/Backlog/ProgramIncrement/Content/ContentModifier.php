@@ -58,7 +58,7 @@ final class ContentModifier implements ModifyContent
         private UserCanPlanInProgramIncrementVerifier $can_plan_in_program_increment_verifier,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveProgramOfProgramIncrement $program_retriever,
-        private BuildProgram $program_builder
+        private BuildProgram $program_builder,
     ) {
     }
 
@@ -111,7 +111,7 @@ final class ContentModifier implements ModifyContent
         int $potential_feature_id_to_add,
         ProgramIncrementIdentifier $program_increment,
         UserCanPrioritize $user,
-        ProgramIdentifier $program
+        ProgramIdentifier $program,
     ): void {
         $feature = FeatureIdentifier::fromIdAndProgram($this->visible_verifier, $potential_feature_id_to_add, $user, $program, null);
         if ($feature === null) {
@@ -135,7 +135,7 @@ final class ContentModifier implements ModifyContent
         FeaturesToReorder $feature_to_order_representation,
         ProgramIncrementIdentifier $program_increment,
         ProgramIdentifier $program,
-        UserCanPrioritize $user
+        UserCanPrioritize $user,
     ): void {
         $this->checkFeatureCanBeReordered($feature_to_order_representation->getIds()[0], $program_increment, $user);
         $this->checkFeatureCanBeReordered($feature_to_order_representation->getComparedTo(), $program_increment, $user);
@@ -149,7 +149,7 @@ final class ContentModifier implements ModifyContent
     private function checkFeatureCanBeReordered(
         int $potential_feature_id_to_manipulate,
         ProgramIncrementIdentifier $program_increment,
-        UserCanPrioritize $user
+        UserCanPrioritize $user,
     ): void {
         $can_be_planned = $this->can_be_planned_verifier->canBePlannedInProgramIncrement(
             $potential_feature_id_to_manipulate,

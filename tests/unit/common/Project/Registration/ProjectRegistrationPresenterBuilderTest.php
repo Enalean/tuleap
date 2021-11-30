@@ -132,7 +132,7 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
                     {
                         return true;
                     }
-                }
+                },
             ]
         );
 
@@ -142,8 +142,8 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
                 'desc_name'        => 'Custom field',
                 'desc_type'        => 'text',
                 'desc_description' => 'Custom description',
-                'desc_required'    => 1
-            ]
+                'desc_required'    => 1,
+            ],
         ];
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             $fields
@@ -158,7 +158,7 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
                 $glyph_finder,
                 $this->createMock(ProjectXMLMerger::class),
                 $this->createMock(ConsistencyChecker::class)
-            )
+            ),
         ];
         $this->template_factory->method('getValidTemplates')->willReturn(
             $tuleap_templates

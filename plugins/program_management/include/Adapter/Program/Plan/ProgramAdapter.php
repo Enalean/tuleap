@@ -40,7 +40,7 @@ final class ProgramAdapter implements BuildProgram
         private RetrieveFullProject $retrieve_full_project,
         private ProjectAccessChecker $project_access_checker,
         private VerifyIsProgram $program_verifier,
-        private RetrieveUser $user_manager_adapter
+        private RetrieveUser $user_manager_adapter,
     ) {
     }
 

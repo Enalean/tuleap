@@ -84,7 +84,7 @@ class AdminPresenter
         ListOfAdminTrackersPresenter $issue_tracker_config,
         CSRFSynchronizerToken $csrf_token,
         bool $is_definition_disabled,
-        bool $is_execution_disabled
+        bool $is_execution_disabled,
     ) {
         $this->campaign_tracker_config        = $campaign_tracker_config;
         $this->test_definition_tracker_config = $test_definition_tracker_config;
@@ -99,7 +99,7 @@ class AdminPresenter
                 http_build_query(
                     [
                         'tracker' => $test_definition_tracker_config->selected_tracker->tracker_id,
-                        'func'    => 'admin-formElements'
+                        'func'    => 'admin-formElements',
                     ]
                 );
         }
@@ -109,7 +109,7 @@ class AdminPresenter
                 http_build_query(
                     [
                         'tracker' => $test_execution_tracker_config->selected_tracker->tracker_id,
-                        'func'    => 'admin-formElements'
+                        'func'    => 'admin-formElements',
                     ]
                 );
         }

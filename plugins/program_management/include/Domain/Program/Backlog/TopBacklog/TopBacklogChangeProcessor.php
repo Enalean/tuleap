@@ -41,6 +41,6 @@ interface TopBacklogChangeProcessor
         ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,
         UserIdentifier $user_identifier,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): void;
 }

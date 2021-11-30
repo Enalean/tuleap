@@ -141,7 +141,7 @@ class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     new NewDropdownLinkPresenter("url", "Already existing link", "icon", []),
                 ],
-            )
+            ),
         ];
         $this->provider->addPlanningOptions($user, $this->aMilestone(), $options);
 

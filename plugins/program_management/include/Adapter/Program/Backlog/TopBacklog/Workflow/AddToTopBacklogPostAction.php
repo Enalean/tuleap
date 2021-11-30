@@ -46,7 +46,7 @@ final class AddToTopBacklogPostAction extends Transition_PostAction
         Transition $transition,
         int $id,
         private BuildProgram $build_program,
-        private TopBacklogChangeProcessor $top_backlog_change_processor
+        private TopBacklogChangeProcessor $top_backlog_change_processor,
     ) {
         parent::__construct($transition, $id);
     }

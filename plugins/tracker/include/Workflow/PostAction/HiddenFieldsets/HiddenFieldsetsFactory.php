@@ -41,7 +41,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
 
     public function __construct(
         HiddenFieldsetsDao $hidden_fieldsets_dao,
-        HiddenFieldsetsRetriever $hidden_fieldsets_retriever
+        HiddenFieldsetsRetriever $hidden_fieldsets_retriever,
     ) {
         $this->hidden_fieldsets_dao       = $hidden_fieldsets_dao;
         $this->hidden_fieldsets_retriever = $hidden_fieldsets_retriever;

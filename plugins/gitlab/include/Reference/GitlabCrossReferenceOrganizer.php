@@ -96,7 +96,7 @@ class GitlabCrossReferenceOrganizer
         \ProjectManager $project_manager,
         TlpRelativeDatePresenterBuilder $relative_date_builder,
         \UserManager $user_manager,
-        \UserHelper $user_helper
+        \UserHelper $user_helper,
     ) {
         $this->repository_integration_factory           = $repository_integration_factory;
         $this->gitlab_commit_factory                    = $gitlab_commit_factory;
@@ -127,7 +127,7 @@ class GitlabCrossReferenceOrganizer
 
     private function moveGitlabCrossReferenceToRepositorySection(
         CrossReferenceByNatureOrganizer $by_nature_organizer,
-        CrossReferencePresenter $cross_reference_presenter
+        CrossReferencePresenter $cross_reference_presenter,
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
@@ -195,7 +195,7 @@ class GitlabCrossReferenceOrganizer
         CrossReferencePresenter $cross_reference_presenter,
         Project $project,
         GitlabRepositoryIntegration $repository_integration,
-        string $sha1
+        string $sha1,
     ): void {
         $user = $by_nature_organizer->getCurrentUser();
 
@@ -225,7 +225,7 @@ class GitlabCrossReferenceOrganizer
         CrossReferencePresenter $cross_reference_presenter,
         Project $project,
         GitlabRepositoryIntegration $repository_integration,
-        int $id
+        int $id,
     ): void {
         $gitlab_merge_request = $this->gitlab_merge_request_reference_retriever->getGitlabMergeRequestInRepositoryWithId(
             $repository_integration,
@@ -258,7 +258,7 @@ class GitlabCrossReferenceOrganizer
         CrossReferencePresenter $cross_reference_presenter,
         Project $project,
         GitlabRepositoryIntegration $repository_integration,
-        string $tag_name
+        string $tag_name,
     ): void {
         $tag_info = $this->gitlab_tag_factory->getGitlabTagInRepositoryWithTagName(
             $repository_integration,
@@ -276,7 +276,7 @@ class GitlabCrossReferenceOrganizer
                 ->withAdditionalBadges(
                     [
                         AdditionalBadgePresenter::buildPrimary($tag_info->getTagName()),
-                        AdditionalBadgePresenter::buildSecondary(substr($tag_info->getCommitSha1(), 0, 10))
+                        AdditionalBadgePresenter::buildSecondary(substr($tag_info->getCommitSha1(), 0, 10)),
                     ]
                 ),
             $project->getUnixNameLowerCase() . '/' . $repository_integration->getName()
@@ -288,7 +288,7 @@ class GitlabCrossReferenceOrganizer
         CrossReferencePresenter $cross_reference_presenter,
         Project $project,
         GitlabRepositoryIntegration $repository_integration,
-        string $branch_name
+        string $branch_name,
     ): void {
         $branch_info = $this->gitlab_branch_factory->getGitlabBranchInRepositoryWithBranchName(
             $repository_integration,

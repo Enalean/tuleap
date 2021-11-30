@@ -103,7 +103,7 @@ class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'id' => 10,
                     'is_approved' => 1,
-                    'summary' => 'Secret news'
+                    'summary' => 'Secret news',
                 ]
             ));
 

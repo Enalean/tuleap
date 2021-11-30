@@ -32,7 +32,7 @@ class ProjectListResultsPresenterBuilder
         $group_name_search,
         $status_values,
         $limit,
-        $offset
+        $offset,
     ) {
         $matching_projects = [];
 
@@ -124,7 +124,7 @@ class ProjectListResultsPresenterBuilder
             Project::STATUS_SYSTEM,
             Project::STATUS_PENDING,
             Project::STATUS_SUSPENDED,
-            Project::STATUS_DELETED
+            Project::STATUS_DELETED,
         ]);
     }
 }

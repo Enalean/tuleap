@@ -45,7 +45,7 @@ class SVN_ImmutableTagsPresenter
         Project $project,
         $immutable_tags_whitelist,
         $immutable_tags_path,
-        array $existing_tree
+        array $existing_tree,
     ) {
         $this->project                  = $project;
         $this->immutable_tags_whitelist = $immutable_tags_whitelist;

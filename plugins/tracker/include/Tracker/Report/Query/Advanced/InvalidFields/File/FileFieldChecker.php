@@ -34,7 +34,7 @@ class FileFieldChecker implements InvalidFieldChecker
     private $values_extractor;
 
     public function __construct(
-        ValueForFileExtractor $values_extractor
+        ValueForFileExtractor $values_extractor,
     ) {
         $this->values_extractor = $values_extractor;
     }

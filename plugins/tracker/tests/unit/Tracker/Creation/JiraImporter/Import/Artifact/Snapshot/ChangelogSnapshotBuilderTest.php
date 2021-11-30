@@ -75,7 +75,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "image/gif",
                     "URL2",
                     3056
-                )
+                ),
             ]
         );
 
@@ -141,7 +141,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(
             [
                 ['id' => '105'],
-                ['id' => '106']
+                ['id' => '106'],
             ],
             $snapshot->getFieldInSnapshot('homies')->getValue()
         );
@@ -185,8 +185,8 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ),
                     [
                         [
-                            'id' => "10007"
-                        ]
+                            'id' => "10007",
+                        ],
                     ],
                     null
                 ),
@@ -218,7 +218,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         ['id' => '106'],
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -236,42 +236,42 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         "from"       => null,
                         "fromString" => null,
                         "to"         => null,
-                        "toString"   => "9"
+                        "toString"   => "9",
                     ],
                     1 => [
                         "fieldId"    => "customfield_10040",
                         "from"       => "[10009]",
                         "fromString" => "mulit1",
                         "to"         => "[10009, 10010]",
-                        "toString"   => "mulit1,multi2"
+                        "toString"   => "mulit1,multi2",
                     ],
                     2 => [
                         "fieldId"    => "environment",
                         "from"       => null,
                         "fromString" => "\r\n----\r\n",
                         "to"         => null,
-                        "toString"   => "----\r\n"
+                        "toString"   => "----\r\n",
                     ],
                     3 => [
                         "fieldId"    => "description",
                         "from"       => null,
                         "fromString" => "aaaaaaaaaaa",
                         "to"         => '{"id":"ari:cloud:jira:d63a8014-ba58-4b58-b22d-eb1d85d56f3d:issuefieldvalue/10006/description","version":"1"}',
-                        "toString"   => "*aaaaaaaaa*"
+                        "toString"   => "*aaaaaaaaa*",
                     ],
                     4 => [
                         "fieldId"    => "textfield",
                         "from"       => null,
                         "fromString" => "abc",
                         "to"         => null,
-                        "toString"   => "*def*"
+                        "toString"   => "*def*",
                     ],
                     5 => [
                         "fieldId"    => "attachment",
                         "from"       => null,
                         "fromString" => null,
                         "to"         => "10008",
-                        "toString"   => "file02.gif"
+                        "toString"   => "file02.gif",
                     ],
                     6 => [
 
@@ -279,28 +279,28 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         "from"       => null,
                         "fromString" => null,
                         "to"         => "2020-03-25",
-                        "toString"   => "25/Mar/20"
+                        "toString"   => "25/Mar/20",
                     ],
                     7 => [
                         "fieldId"    => "assignee",
                         "from"       => null,
                         "fromString" => null,
                         "to"         => "e8a7dbae5",
-                        "toString"   => "John Doe"
+                        "toString"   => "John Doe",
                     ],
                     8 => [
                         "fieldId"    => "homies",
                         "from"       => null,
                         "fromString" => null,
                         "to"         => "[e8a7dbae5, a7e8b9c5]",
-                        "toString"   => "[John Doe, Mysterio]"
-                    ]
+                        "toString"   => "[John Doe, Mysterio]",
+                    ],
                 ],
                 'author' => [
                     'accountId' => 'e8a7dbae5',
                     'displayName' => 'John Doe',
-                    'emailAddress' => 'john.doe@example.com'
-                ]
+                    'emailAddress' => 'john.doe@example.com',
+                ],
             ]
         );
     }

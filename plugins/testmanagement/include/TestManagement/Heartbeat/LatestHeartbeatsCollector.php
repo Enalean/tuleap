@@ -36,7 +36,7 @@ class LatestHeartbeatsCollector
         private ExecutionDao $dao,
         private Tracker_ArtifactFactory $factory,
         private \UserHelper $user_helper,
-        private \UserManager $user_manager
+        private \UserManager $user_manager,
     ) {
     }
 

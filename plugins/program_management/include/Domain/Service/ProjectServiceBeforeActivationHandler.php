@@ -31,7 +31,7 @@ final class ProjectServiceBeforeActivationHandler
 {
     public function __construct(
         private VerifyIsTeam $verify_is_team,
-        private VerifyScrumBlocksServiceActivation $scrum_blocks_activation_verifier
+        private VerifyScrumBlocksServiceActivation $scrum_blocks_activation_verifier,
     ) {
     }
 

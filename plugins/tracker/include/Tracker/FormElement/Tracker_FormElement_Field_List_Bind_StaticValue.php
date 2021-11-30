@@ -152,7 +152,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
                 $color = [
                     'r' => (int) $decorator->r,
                     'g' => (int) $decorator->g,
-                    'b' => (int) $decorator->b
+                    'b' => (int) $decorator->b,
                 ];
             } else {
                 $tlp_color_name = $decorator->tlp_color_name;
@@ -163,7 +163,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
             'id'        => $this->getId(),
             'label'     => $this->getLabel(),
             'color'     => $color,
-            'tlp_color' => $tlp_color_name
+            'tlp_color' => $tlp_color_name,
         ];
     }
 }

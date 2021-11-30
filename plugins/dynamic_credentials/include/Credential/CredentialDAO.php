@@ -31,7 +31,7 @@ class CredentialDAO extends DataAccessObject
             [
                 'identifier' => $identifier,
                 'password'   => $password,
-                'expiration' => $expiration_date
+                'expiration' => $expiration_date,
             ]
         );
     }

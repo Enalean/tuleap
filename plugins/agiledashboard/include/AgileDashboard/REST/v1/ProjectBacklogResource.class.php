@@ -235,7 +235,7 @@ class ProjectBacklogResource
         Project $project,
         ?OrderRepresentation $order = null,
         ?array $add = null,
-        ?array $remove = null
+        ?array $remove = null,
     ) {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
         if ($add) {

@@ -63,7 +63,7 @@ final class TeamProjectsCollection
     public static function fromProgramIdentifier(
         SearchTeamsOfProgram $teams_searcher,
         RetrieveProjectReference $project_builder,
-        ProgramIdentifier $program
+        ProgramIdentifier $program,
     ): self {
         return self::buildFromProjectId($teams_searcher, $project_builder, $program->getId());
     }
@@ -71,7 +71,7 @@ final class TeamProjectsCollection
     public static function fromProgramForAdministration(
         SearchTeamsOfProgram $teams_searcher,
         RetrieveProjectReference $project_builder,
-        ProgramForAdministrationIdentifier $program
+        ProgramForAdministrationIdentifier $program,
     ): self {
         return self::buildFromProjectId($teams_searcher, $project_builder, $program->id);
     }
@@ -79,7 +79,7 @@ final class TeamProjectsCollection
     private static function buildFromProjectId(
         SearchTeamsOfProgram $teams_searcher,
         RetrieveProjectReference $project_builder,
-        int $program_project_id
+        int $program_project_id,
     ): self {
         $team_projects = [];
         foreach ($teams_searcher->searchTeamIdsOfProgram($program_project_id) as $team_id) {

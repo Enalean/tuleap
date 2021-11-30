@@ -32,7 +32,7 @@ final class SemanticsExporter
     public function process(
         \SimpleXMLElement $xml_tracker,
         PlatformConfiguration $platform_configuration,
-        FieldMappingCollection $field_mapping_collection
+        FieldMappingCollection $field_mapping_collection,
     ): void {
         if (! $xml_tracker->semantics) {
             throw new \LogicException('tracker XML node does not have a `semantics` node');
@@ -44,7 +44,7 @@ final class SemanticsExporter
     private function exportInitialEffort(
         PlatformConfiguration $platform_configuration,
         FieldMappingCollection $field_mapping_collection,
-        \SimpleXMLElement $xml_semantics
+        \SimpleXMLElement $xml_semantics,
     ): void {
         if (! $platform_configuration->hasStoryPointsField()) {
             return;

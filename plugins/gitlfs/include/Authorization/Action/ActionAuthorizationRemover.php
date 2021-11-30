@@ -41,7 +41,7 @@ class ActionAuthorizationRemover
     public function __construct(
         ActionAuthorizationDAO $dao,
         FilesystemOperator $filesystem,
-        LFSObjectPathAllocator $path_allocator
+        LFSObjectPathAllocator $path_allocator,
     ) {
         $this->dao            = $dao;
         $this->filesystem     = $filesystem;

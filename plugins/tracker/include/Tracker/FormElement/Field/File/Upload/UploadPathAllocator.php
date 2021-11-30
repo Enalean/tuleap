@@ -59,7 +59,7 @@ final class UploadPathAllocator implements PathAllocator
     }
 
     private function getDelegatedUploadPathAllocatorForField(
-        Tracker_FormElement_Field_File $field
+        Tracker_FormElement_Field_File $field,
     ): DelegatedUploadPathAllocator {
         return new DelegatedUploadPathAllocator($field->getRootPath());
     }

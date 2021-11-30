@@ -190,7 +190,7 @@ class BacklogItemResource extends AuthenticatedResource
         PFUser $current_user,
         Artifact $artifact,
         AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
-        Tracker_SemanticCollection $semantics
+        Tracker_SemanticCollection $semantics,
     ) {
         $semantic_status = $semantics[Tracker_Semantic_Status::NAME];
 
@@ -211,7 +211,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function updateBacklogItemRemainingEffort(
         PFUser $current_user,
-        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item
+        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
     ) {
         $backlog_item->setRemainingEffort(
             $this->remaining_effort_value_retriever->getRemainingEffortValue($current_user, $backlog_item->getArtifact())

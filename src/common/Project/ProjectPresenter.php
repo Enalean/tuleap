@@ -42,7 +42,7 @@ class ProjectPresenter
         string $project_uri,
         string $project_config_uri,
         bool $is_current_user_admin,
-        Project $project
+        Project $project,
     ) {
         $this->project_name          = $project_name;
         $this->project_uri           = $project_uri;

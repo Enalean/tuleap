@@ -39,7 +39,7 @@ class AssignedToRepresentationBuilder
 
     public function __construct(
         Tracker_FormElementFactory $tracker_form_element_factory,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->user_manager                 = $user_manager;

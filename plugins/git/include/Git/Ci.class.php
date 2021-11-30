@@ -88,7 +88,7 @@ class Git_Ci
                 $warning    = "";
                 $intalled   = false;
                 $parameters = [
-                    'installed' => &$intalled
+                    'installed' => &$intalled,
                 ];
 
                 $this->getEventManager()->processEvent('display_hudson_addition_info', $parameters);

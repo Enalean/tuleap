@@ -48,7 +48,7 @@ class SimpleWorkflowXMLExporter
     public function __construct(
         SimpleWorkflowDao $simple_workflow_dao,
         StateFactory $state_factory,
-        TransitionExtractor $transition_extractor
+        TransitionExtractor $transition_extractor,
     ) {
         $this->simple_workflow_dao  = $simple_workflow_dao;
         $this->state_factory        = $state_factory;

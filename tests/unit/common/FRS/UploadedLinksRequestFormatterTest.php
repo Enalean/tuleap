@@ -37,7 +37,7 @@ final class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestC
         $formatter      = new UploadedLinksRequestFormatter();
         $expected_links = [
             ['link' => 'http://example.com', 'name' => 'test'],
-            ['link' => 'ftp://example.com', 'name' => '']
+            ['link' => 'ftp://example.com', 'name' => ''],
         ];
 
         $this->assertSame($expected_links, $formatter->formatFromRequest($request));

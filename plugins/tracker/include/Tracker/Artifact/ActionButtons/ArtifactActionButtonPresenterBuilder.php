@@ -53,7 +53,7 @@ class ArtifactActionButtonPresenterBuilder
         ArtifactIncomingEmailButtonPresenterBuilder $mail_button_builder,
         ArtifactCopyButtonPresenterBuilder $artifact_copy_button_builder,
         ArtifactMoveButtonPresenterBuilder $move_button_builder,
-        AdditionalArtifactActionButtonsPresenterBuilder $additional_buttons_builder
+        AdditionalArtifactActionButtonsPresenterBuilder $additional_buttons_builder,
     ) {
         $this->notification_button_builder  = $notification_button_builder;
         $this->mail_button_builder          = $mail_button_builder;

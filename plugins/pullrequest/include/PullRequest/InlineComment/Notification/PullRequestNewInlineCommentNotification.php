@@ -75,7 +75,7 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         array $owners_without_change_user,
         InlineComment $inline_comment,
         string $code_context,
-        NotificationEnhancedContent $enhanced_content
+        NotificationEnhancedContent $enhanced_content,
     ) {
         $this->pull_request             = $pull_request;
         $this->change_user_display_name = $change_user_display_name;
@@ -98,7 +98,7 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         PFUser $change_user,
         array $owners,
         InlineComment $inline_comment,
-        InlineCommentCodeContextExtractor $code_context_extractor
+        InlineCommentCodeContextExtractor $code_context_extractor,
     ): self {
         $code_context = $code_context_extractor->getCodeContext($inline_comment, $pull_request);
 

@@ -46,7 +46,7 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollection
 
     public static function fromTimeboxTracker(
         PotentialTrackerCollection $all_potential_trackers,
-        ?TrackerReference $timebox_tracker
+        ?TrackerReference $timebox_tracker,
     ): self {
         $potential_tracker_presenters = [];
 

@@ -47,7 +47,7 @@ final class LinkedProjectsCollection
         SearchLinkedProjects $searcher,
         CheckProjectAccess $access_checker,
         \Project $source_project,
-        \PFUser $user
+        \PFUser $user,
     ): self {
         $projects        = $searcher->searchLinkedProjects($source_project);
         $linked_projects = [];

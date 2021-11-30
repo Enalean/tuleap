@@ -67,7 +67,7 @@ project_admin_header(
     [
         'title' => $title,
         'group' => $group_id,
-        'help'  => 'project-admin.html'
+        'help'  => 'project-admin.html',
     ],
     'members'
 );

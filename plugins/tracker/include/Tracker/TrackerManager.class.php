@@ -226,7 +226,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                             'error' => dgettext(
                                                 "tuleap-tracker",
                                                 "You don't have permissions to see user groups."
-                                            )
+                                            ),
                                         ]
                                     );
                                 }
@@ -275,7 +275,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     private function getTrackerHomepageURL($project_id)
     {
         return TRACKER_BASE_URL . '/?' . http_build_query([
-            'group_id' => $project_id
+            'group_id' => $project_id,
         ]);
     }
 
@@ -295,7 +295,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     {
         $breadcrumbs = array_merge(
             [
-                $this->getServiceTrackerBreadcrumb($project)
+                $this->getServiceTrackerBreadcrumb($project),
             ],
             $breadcrumbs
         );
@@ -310,7 +310,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $service_tracker_breadcrumb = [
             'title'     => dgettext('tuleap-tracker', 'Trackers'),
             'url'       => TRACKER_BASE_URL . '/?group_id=' . $project->getID(),
-            'icon_name' => 'fa-list-ol'
+            'icon_name' => 'fa-list-ol',
         ];
 
         if ($this->getCurrentUser()->isAdmin($project->getID())) {
@@ -318,8 +318,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 [
                     'title'     => $GLOBALS['Language']->getText('global', 'Administration'),
                     'url'       => Tracker::getTrackerGlobalAdministrationURL($project),
-                    'data-test' => "tracker-administration"
-                ]
+                    'data-test' => "tracker-administration",
+                ],
             ];
         }
 
@@ -391,7 +391,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $name = '',
         $description = '',
         $itemname = '',
-        ?Tracker $tracker_template = null
+        ?Tracker $tracker_template = null,
     ) {
         global $Language;
 
@@ -406,8 +406,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $breadcrumbs = [
             [
                 'title' => dgettext('tuleap-tracker', 'Create a New Tracker'),
-                'url'   => TRACKER_BASE_URL . '/?group_id=' . $project->group_id . '&amp;func=create'
-            ]
+                'url'   => TRACKER_BASE_URL . '/?group_id=' . $project->group_id . '&amp;func=create',
+            ],
         ];
         $toolbar     = [];
         $params      = [];
@@ -482,8 +482,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 [
                     [
                         'button' => $radio,
-                        'label'  => dgettext('tuleap-tracker', 'From a Tracker v3')
-                    ]
+                        'label'  => dgettext('tuleap-tracker', 'From a Tracker v3'),
+                    ],
                 ],
                 $trackers_v3
             );
@@ -949,11 +949,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 [
                     [
                         'button' => $radio_test,
-                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content for test')
+                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content for test'),
                     ],
                     [
                         'button' => $radio,
-                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content keeping original ids')
+                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content keeping original ids'),
                     ],
                 ],
                 $trackers_v3,

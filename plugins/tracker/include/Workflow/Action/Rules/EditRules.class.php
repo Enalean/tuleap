@@ -316,7 +316,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     private function getListOfDateFieldLabelsPlusPleaseChoose()
     {
         $labels = [
-            $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
+            $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed'),
         ];
 
         return $labels + $this->getListOfDateFieldLabels();

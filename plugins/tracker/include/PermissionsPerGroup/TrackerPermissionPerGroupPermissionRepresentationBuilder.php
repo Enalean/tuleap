@@ -43,7 +43,7 @@ class TrackerPermissionPerGroupPermissionRepresentationBuilder
 
     public function __construct(
         UGroupManager $ugroup_manager,
-        PermissionPerGroupUGroupRepresentationBuilder $ugroup_builder
+        PermissionPerGroupUGroupRepresentationBuilder $ugroup_builder,
     ) {
         $this->ugroup_manager = $ugroup_manager;
         $this->ugroup_builder = $ugroup_builder;

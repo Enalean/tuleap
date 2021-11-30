@@ -125,7 +125,7 @@ class WikiPageWrapper
                 'group_id'         => $this->gid,
                 'wiki_page'        => $pagename,
                 'user'             => $user,
-                'version'          => $version
+                'version'          => $version,
                 ]
             );
         }

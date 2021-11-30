@@ -141,7 +141,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $root_folder = new Docman_Folder(
             [
                 'item_id' => 10,
-                'title'   => 'Root folder'
+                'title'   => 'Root folder',
             ]
         );
 
@@ -157,7 +157,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             new PrioritizedList(
                 [
                     $file,
-                    $embedded
+                    $embedded,
                 ]
             )
         );
@@ -166,7 +166,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             new Docman_Link(['item_id' => 1, 'title' => 'a link', 'link_url' => 'https://link.com']),
             new Docman_Empty(['item_id' => 2, 'title' => 'an empty item']),
             new Docman_Wiki(['item_id' => 3, 'title' => 'a wiki', 'wiki_page' => 'wikis for dummies']),
-            $subfolder
+            $subfolder,
         ];
 
         if ($does_contain_corrupted_file) {

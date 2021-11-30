@@ -76,7 +76,7 @@ class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'total_effort_field_id' => 1001,
                 'remaining_effort_field_id' => 1002,
-                'artifact_link_type' => null
+                'artifact_link_type' => null,
             ]
         )->once();
 
@@ -120,7 +120,7 @@ class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'total_effort_field_id' => null,
                 'remaining_effort_field_id' => null,
-                'artifact_link_type' => 'covered_by'
+                'artifact_link_type' => 'covered_by',
             ]
         )->once();
 
@@ -156,13 +156,13 @@ class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAnInvalidSemantic(
         ?int $total_effort_field_id,
         ?int $remaining_effort_field_id,
-        ?string $artifact_link_type
+        ?string $artifact_link_type,
     ): void {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
                 'total_effort_field_id' => $total_effort_field_id,
                 'remaining_effort_field_id' => $remaining_effort_field_id,
-                'artifact_link_type' => $artifact_link_type
+                'artifact_link_type' => $artifact_link_type,
             ]
         )->once();
 

@@ -70,7 +70,7 @@ class FrontRouter
         ErrorRendering $error_rendering,
         ThemeManager $theme_manager,
         PluginManager $plugin_manager,
-        RequestInstrumentation $request_instrumentation
+        RequestInstrumentation $request_instrumentation,
     ) {
         $this->route_collector          = $route_collector;
         $this->url_verification_factory = $url_verification_factory;

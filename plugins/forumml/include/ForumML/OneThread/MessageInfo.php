@@ -69,7 +69,7 @@ class MessageInfo
         string $content_type,
         string $msg_type,
         ?string $cached_html,
-        \DateTimeImmutable $date
+        \DateTimeImmutable $date,
     ) {
         $this->id           = $id;
         $this->sender       = $sender;

@@ -48,7 +48,7 @@ final class IterationCreationProcessor implements ProcessIterationCreation
         private RetrieveProgramOfIteration $program_retriever,
         private BuildProgram $program_builder,
         private SearchVisibleTeamsOfProgram $teams_searcher,
-        private CreateIterations $iterations_creator
+        private CreateIterations $iterations_creator,
     ) {
     }
 

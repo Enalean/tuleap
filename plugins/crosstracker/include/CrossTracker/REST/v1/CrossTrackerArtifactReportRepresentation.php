@@ -85,7 +85,7 @@ class CrossTrackerArtifactReportRepresentation
         array $assigned_to,
         TrackerReference $tracker,
         array $badge,
-        ProjectReference $project
+        ProjectReference $project,
     ) {
         $this->id               = $id;
         $this->title            = $title;
@@ -118,7 +118,7 @@ class CrossTrackerArtifactReportRepresentation
             [
                 "uri"       => $artifact->getUri(),
                 "color"     => $artifact->getTracker()->getColor()->getName(),
-                "cross_ref" => $artifact->getXRef()
+                "cross_ref" => $artifact->getXRef(),
             ],
             new ProjectReference($tracker->getProject()),
         );

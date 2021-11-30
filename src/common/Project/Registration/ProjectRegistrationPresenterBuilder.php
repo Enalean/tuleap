@@ -56,7 +56,7 @@ class ProjectRegistrationPresenterBuilder
         TemplateFactory $template_factory,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         \TroveCatFactory $trove_cat_factory,
-        DescriptionFieldsFactory $fields_factory
+        DescriptionFieldsFactory $fields_factory,
     ) {
         $this->template_factory                     = $template_factory;
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
@@ -81,7 +81,7 @@ class ProjectRegistrationPresenterBuilder
                 'desc_name'        => DescriptionFieldLabelBuilder::getFieldTranslatedName($field['desc_name']),
                 'desc_type'        => $field['desc_type'],
                 'desc_description' => DescriptionFieldLabelBuilder::getFieldTranslatedDescription($field['desc_description']),
-                'desc_required'    => (string) $field['desc_required']
+                'desc_required'    => (string) $field['desc_required'],
             ];
         }
 

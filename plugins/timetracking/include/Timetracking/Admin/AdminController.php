@@ -78,7 +78,7 @@ class AdminController
         PermissionsNormalizer $permissions_normalizer,
         TimetrackingUgroupSaver $timetracking_ugroup_saver,
         TimetrackingUgroupRetriever $timetracking_ugroup_retriever,
-        ProjectHistoryDao $project_history_dao
+        ProjectHistoryDao $project_history_dao,
     ) {
         $this->tracker_manager               = $tracker_manager;
         $this->enabler                       = $enabler;
@@ -132,7 +132,7 @@ class AdminController
             $read_ugroups[] = [
                 'label'    => $ugroup->getName(),
                 'value'    => $ugroup->getId(),
-                'selected' => in_array($ugroup->getId(), $selected_ugroups)
+                'selected' => in_array($ugroup->getId(), $selected_ugroups),
             ];
         }
 
@@ -149,7 +149,7 @@ class AdminController
             $write_ugroups[] = [
                 'label'    => $ugroup->getName(),
                 'value'    => $ugroup->getId(),
-                'selected' => in_array($ugroup->getId(), $selected_ugroups)
+                'selected' => in_array($ugroup->getId(), $selected_ugroups),
             ];
         }
 

@@ -55,7 +55,7 @@ class DiskUsageRouter
         DiskUsageProjectsPresenterBuilder $projects_builder,
         DiskUsageTopUsersPresenterBuilder $top_users_builder,
         DiskUsageGlobalPresenterBuilder $global_builder,
-        DiskUsageUserDetailsPresenterBuilder $user_details_builder
+        DiskUsageUserDetailsPresenterBuilder $user_details_builder,
     ) {
         $this->services_builder     = $services_builder;
         $this->projects_builder     = $projects_builder;

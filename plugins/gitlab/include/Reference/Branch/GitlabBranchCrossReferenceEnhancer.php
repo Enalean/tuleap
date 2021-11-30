@@ -37,14 +37,14 @@ class GitlabBranchCrossReferenceEnhancer
     public function getCrossReferencePresenterWithBranchInformation(
         CrossReferencePresenter $basic_cross_reference_presenter,
         GitlabBranch $gitlab_branch,
-        \PFUser $user
+        \PFUser $user,
     ): CrossReferencePresenter {
         if ($gitlab_branch->getLastPushDate() === null) {
             return $basic_cross_reference_presenter
                 ->withTitle($gitlab_branch->getBranchName(), null)
                 ->withAdditionalBadges(
                     [
-                        AdditionalBadgePresenter::buildSecondary(substr($gitlab_branch->getCommitSha1(), 0, 10))
+                        AdditionalBadgePresenter::buildSecondary(substr($gitlab_branch->getCommitSha1(), 0, 10)),
                     ]
                 );
         }
@@ -53,7 +53,7 @@ class GitlabBranchCrossReferenceEnhancer
             ->withTitle($gitlab_branch->getBranchName(), null)
             ->withAdditionalBadges(
                 [
-                    AdditionalBadgePresenter::buildSecondary(substr($gitlab_branch->getCommitSha1(), 0, 10))
+                    AdditionalBadgePresenter::buildSecondary(substr($gitlab_branch->getCommitSha1(), 0, 10)),
                 ]
             )
             ->withCreationMetadata(

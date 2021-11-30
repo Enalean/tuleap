@@ -33,6 +33,6 @@ interface Tracker_Artifact_XMLImport_XMLImportFieldStrategy
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     );
 }

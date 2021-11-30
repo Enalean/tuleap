@@ -255,7 +255,7 @@ class Tracker_Widget_MyArtifacts extends Widget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates'],
         ];
     }
 }

@@ -59,7 +59,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
     private static $permissions_types = [
         Git::PERM_READ   => ' R  ',
         Git::PERM_WRITE  => ' RW ',
-        Git::PERM_WPLUS  => ' RW+'
+        Git::PERM_WPLUS  => ' RW+',
     ];
     /**
      * @var RegexpFineGrainedRetriever
@@ -77,7 +77,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionFactory $fine_grained_factory,
         RegexpFineGrainedRetriever $regexp_retriever,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->data_mapper   = $data_mapper;
         $this->gerrit_status = $gerrit_status;
@@ -121,7 +121,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
         return $this->template_renderer->renderToString(
             'gitolite-includes.conf',
             [
-                "project_names" => $project_names
+                "project_names" => $project_names,
             ]
         );
     }
@@ -132,7 +132,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
             'gitolite-includes-for-hostname.conf',
             [
                 "hostname"      => $hostname,
-                "project_names" => $project_names
+                "project_names" => $project_names,
             ]
         );
     }

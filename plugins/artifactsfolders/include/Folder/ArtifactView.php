@@ -39,7 +39,7 @@ class ArtifactView extends Tracker_Artifact_View_View
         Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
-        ArtifactPresenterBuilder $artifact_presenter_builder
+        ArtifactPresenterBuilder $artifact_presenter_builder,
     ) {
         parent::__construct($artifact, $request, $user);
         $this->artifact_presenter_builder = $artifact_presenter_builder;

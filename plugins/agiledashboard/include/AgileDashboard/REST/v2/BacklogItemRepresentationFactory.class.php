@@ -64,7 +64,7 @@ class BacklogItemRepresentationFactory
             AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
             [
                 'tracker'              => $backlog_item->getArtifact()->getTracker(),
-                'card_fields_semantic' => &$card_fields_semantic
+                'card_fields_semantic' => &$card_fields_semantic,
             ]
         );
 

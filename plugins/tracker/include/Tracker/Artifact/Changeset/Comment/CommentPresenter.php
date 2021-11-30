@@ -68,7 +68,7 @@ final class CommentPresenter
     public function __construct(
         \Tracker_Artifact_Changeset_Comment $comment,
         \UserHelper $user_helper,
-        \PFUser $current_user
+        \PFUser $current_user,
     ) {
         $this->has_parent    = (bool) $comment->parent_id;
         $this->format        = $comment->bodyFormat;

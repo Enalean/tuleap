@@ -87,7 +87,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'No body' => [null],
-            'No app id' => [['not_app_id' => '12']]
+            'No app id' => [['not_app_id' => '12']],
         ];
     }
 

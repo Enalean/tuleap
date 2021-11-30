@@ -44,7 +44,7 @@ class UserListResultsUserPresenter
         $avatar_url,
         $status,
         $nb_member_of,
-        $nb_admin_of
+        $nb_admin_of,
     ) {
         $this->id           = $id;
         $this->name         = $name;

@@ -93,7 +93,7 @@ final class ProgramAdminPresenter
         ?string $iteration_sub_label,
         ?TrackerErrorPresenter $program_increment_error_presenter,
         ?TrackerErrorPresenter $iteration_error_presenter,
-        ?TrackerErrorPresenter $plannable_error_presenter
+        ?TrackerErrorPresenter $plannable_error_presenter,
     ) {
         $this->program_id                   = $program->id;
         $this->potential_teams              = $potential_teams;

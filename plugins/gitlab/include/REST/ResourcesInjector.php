@@ -44,7 +44,7 @@ class ResourcesInjector
     public function declareProjectGitlabResource(array &$resources, Project $project): void
     {
         $routes = [
-            GitlabRepositoryRepresentation::ROUTE
+            GitlabRepositoryRepresentation::ROUTE,
         ];
 
         foreach ($routes as $route) {

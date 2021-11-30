@@ -53,7 +53,7 @@ class IndexController
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
         CollectionOfLabelableDao $labelable_daos,
-        ColorPresenterFactory $color_factory
+        ColorPresenterFactory $color_factory,
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;

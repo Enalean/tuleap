@@ -62,7 +62,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $name,
         $description,
         $rank,
-        ?Tracker_FormElement_Field_Selectbox $field = null
+        ?Tracker_FormElement_Field_Selectbox $field = null,
     ) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin = $plugin;
@@ -335,7 +335,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     public function getJavascriptDependencies()
     {
         return [
-            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates'],
         ];
     }
 
@@ -351,7 +351,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         );
         return new CssAssetCollection([
             new CssAssetWithoutVariantDeclinaisons($tracker_assets, 'style-fp'),
-            new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'flamingparrot-theme')
+            new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'flamingparrot-theme'),
         ]);
     }
 }

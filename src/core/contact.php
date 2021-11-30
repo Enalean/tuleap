@@ -21,7 +21,7 @@
 
 $HTML->header([
     'title' => $Language->getText('contact', 'title'),
-    'main_classes' => ['tlp-framed']
+    'main_classes' => ['tlp-framed'],
 ]);
 $HTML->displayContactPage();
 $HTML->footer([]);

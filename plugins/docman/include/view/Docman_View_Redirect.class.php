@@ -31,7 +31,7 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
             $event_manager->processEvent('plugin_docman_event_access', [
                 'group_id' => $params['group_id'],
                 'item'     => &$params['item'],
-                'user'     => &$params['user']
+                'user'     => &$params['user'],
             ]);
             $url = $params['item']->accept($this, $params);
         } else {

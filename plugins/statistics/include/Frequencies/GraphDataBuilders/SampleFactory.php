@@ -94,7 +94,7 @@ class SampleFactory
                     Statistics_Event::FREQUENCE_STAT_SAMPLE,
                     [
                         'character' => $character,
-                        'sample'    => &$sample
+                        'sample'    => &$sample,
                     ]
                 );
                 $this->sample = $sample;

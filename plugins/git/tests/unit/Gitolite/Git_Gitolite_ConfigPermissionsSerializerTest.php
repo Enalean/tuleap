@@ -46,7 +46,7 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase // @codingSt
                 $fine_grained_retriever,
                 Mockery::mock(FineGrainedPermissionFactory::class),
                 $regexp_fine_grained_retriever,
-                $event_manager
+                $event_manager,
             ]
         );
         $serializer->shouldReceive('fetchConfigPermissions');

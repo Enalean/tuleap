@@ -48,7 +48,7 @@ class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBenchmark()
     {
         $csv = [
-            'labels' => ['']
+            'labels' => [''],
         ];
         foreach (
             [
@@ -56,7 +56,7 @@ class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
             10000,
             100000,
             500000,
-            1000000
+            1000000,
             ] as $n
         ) {
             $csv['labels'][] = $n;

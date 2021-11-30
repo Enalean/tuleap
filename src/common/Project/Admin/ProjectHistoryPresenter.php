@@ -44,7 +44,7 @@ class ProjectHistoryPresenter
         ProjectHistoryResultsPresenter $results,
         $limit,
         $offset,
-        ProjectHistorySearchPresenter $search
+        ProjectHistorySearchPresenter $search,
     ) {
         $this->id          = $project->getID();
         $this->public_name = $project->getPublicName();
@@ -80,11 +80,11 @@ class ProjectHistoryPresenter
         ProjectHistorySearchPresenter $search,
         ProjectHistoryResultsPresenter $results,
         $limit,
-        $offset
+        $offset,
     ) {
         $base_url       = '/admin/projecthistory.php';
         $default_params = [
-            'group_id' => $project->getId()
+            'group_id' => $project->getId(),
         ];
 
         if ($search->selected_event) {

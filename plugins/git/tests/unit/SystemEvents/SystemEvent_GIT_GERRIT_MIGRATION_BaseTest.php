@@ -113,7 +113,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends \Tuleap\Test\PHPUnit\
         $this->user_manager->shouldReceive('getUserById')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 0
+                'user_id' => 0,
             ])
         );
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
@@ -129,7 +129,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends \Tuleap\Test\PHPUnit\
         $this->user_manager->shouldReceive('getUserById')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 0
+                'user_id' => 0,
             ])
         );
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
@@ -145,7 +145,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends \Tuleap\Test\PHPUnit\
         $this->user_manager->shouldReceive('getUserById')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 0
+                'user_id' => 0,
             ])
         );
         $e = new Exception("failure detail");

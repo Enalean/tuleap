@@ -37,7 +37,7 @@ class GitPullRequestReferenceCreator
 
     public function __construct(
         GitPullRequestReferenceDAO $dao,
-        GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker
+        GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker,
     ) {
         $this->dao                            = $dao;
         $this->namespace_availability_checker = $namespace_availability_checker;
@@ -47,7 +47,7 @@ class GitPullRequestReferenceCreator
         PullRequest $pull_request,
         GitExec $executor_repository_source,
         GitExec $executor_repository_destination,
-        GitRepository $repository_destination
+        GitRepository $repository_destination,
     ) {
         if ((int) $pull_request->getRepoDestId() !== (int) $repository_destination->getId()) {
             throw new \LogicException('Destination repository ID does not match the one of the PR');

@@ -66,7 +66,7 @@ class ProjectDashboardXMLImporter
         DashboardWidgetDao $widget_dao,
         \Psr\Log\LoggerInterface $logger,
         \EventManager $event_manager,
-        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
     ) {
         $this->project_dashboard_saver          = $project_dashboard_saver;
         $this->widget_factory                   = $widget_factory;

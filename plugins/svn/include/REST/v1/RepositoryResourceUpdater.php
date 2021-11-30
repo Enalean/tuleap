@@ -70,7 +70,7 @@ class RepositoryResourceUpdater
         AccessFileHistoryCreator $access_file_history_creator,
         ImmutableTagFactory $immutable_tag_factory,
         MailNotificationManager $mail_notification_manager,
-        NotificationUpdateChecker $notification_update_checker
+        NotificationUpdateChecker $notification_update_checker,
     ) {
         $this->hook_config_updator         = $hook_config_updator;
         $this->immutable_tag_creator       = $immutable_tag_creator;

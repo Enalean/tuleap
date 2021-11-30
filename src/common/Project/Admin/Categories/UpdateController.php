@@ -43,7 +43,7 @@ class UpdateController implements DispatchableWithRequest
     public function __construct(
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
-        UpdateCategoriesProcessor $update_processor
+        UpdateCategoriesProcessor $update_processor,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;

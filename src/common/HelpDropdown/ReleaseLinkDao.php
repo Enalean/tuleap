@@ -47,7 +47,7 @@ class ReleaseLinkDao extends DataAccessObject
         $this->getDB()->insert(
             "release_note_link",
             [
-                "tuleap_version" => $tuleap_version
+                "tuleap_version" => $tuleap_version,
             ]
         );
     }

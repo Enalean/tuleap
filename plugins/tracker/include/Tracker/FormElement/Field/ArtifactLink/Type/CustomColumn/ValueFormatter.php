@@ -77,7 +77,7 @@ class ValueFormatter
         $format,
         Tracker_ArtifactLinkInfo $artifact_link_info,
         $matching_field_names,
-        PFUser $user
+        PFUser $user,
     ) {
         if (! trim($format)) {
             return '';
@@ -114,7 +114,7 @@ class ValueFormatter
         Tracker_ArtifactLinkInfo $artifact_link_info,
         Tracker_Artifact_Changeset $changeset,
         array $matching_field_names,
-        PFUser $user
+        PFUser $user,
     ) {
         foreach ($matching_field_names as $field_name) {
             $search[] = '%' . $field_name;

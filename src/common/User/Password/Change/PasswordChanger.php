@@ -57,7 +57,7 @@ class PasswordChanger
         SessionManager $session_manager,
         ResetTokenRevoker $token_revoker,
         EventDispatcherInterface $event_dispatcher,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
     ) {
         $this->user_manager            = $user_manager;
         $this->session_manager         = $session_manager;

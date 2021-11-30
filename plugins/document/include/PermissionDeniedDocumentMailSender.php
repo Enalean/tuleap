@@ -34,7 +34,7 @@ class PermissionDeniedDocumentMailSender extends PermissionDeniedMailSender
         PFUser $user,
         string $href_approval,
         string $message_to_admin,
-        string $link
+        string $link,
     ): string {
         return sprintf(dgettext('tuleap-docman', 'Dear document manager,
 

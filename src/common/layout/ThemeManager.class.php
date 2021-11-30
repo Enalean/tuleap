@@ -37,7 +37,7 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     private $page_detector;
 
     public function __construct(
-        BurningParrotCompatiblePageDetector $page_detector
+        BurningParrotCompatiblePageDetector $page_detector,
     ) {
         $this->page_detector = $page_detector;
     }

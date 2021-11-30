@@ -120,7 +120,7 @@ class ProjectDashboardController
         BaseLayout $layout,
         IncludeAssets $core_assets,
         CssAsset $css_asset,
-        Codendi_HTMLPurifier $purifier
+        Codendi_HTMLPurifier $purifier,
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;

@@ -65,7 +65,7 @@ class Planning_VirtualTopMilestoneController extends BaseController
         Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory,
         AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
-        HeaderOptionsProvider $header_options_provider
+        HeaderOptionsProvider $header_options_provider,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory             = $milestone_factory;

@@ -67,7 +67,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->shouldReceive('header')->never();
 
         $server = [
-            'REQUEST_URI' => '/'
+            'REQUEST_URI' => '/',
         ];
         $this->url_verification->assertValidUrl($server, $this->request);
     }
@@ -81,7 +81,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->shouldReceive('header')->once();
 
         $server = [
-            'REQUEST_URI' => '/'
+            'REQUEST_URI' => '/',
         ];
         $this->url_verification->assertValidUrl($server, $this->request);
     }

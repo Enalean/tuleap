@@ -60,7 +60,7 @@ class EmbeddedFileVersionCreator
         \Docman_ItemFactory $item_factory,
         DocmanItemUpdator $updator,
         DBTransactionExecutor $transaction_executor,
-        PostUpdateEventAdder $post_update_event_adder
+        PostUpdateEventAdder $post_update_event_adder,
     ) {
         $this->file_storage            = $file_storage;
         $this->version_factory         = $version_factory;
@@ -78,7 +78,7 @@ class EmbeddedFileVersionCreator
         int $status,
         ?int $obsolesence_date,
         string $title,
-        ?string $description
+        ?string $description,
     ): void {
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation, $status, $obsolesence_date, $current_time, $title, $description) {
@@ -101,7 +101,7 @@ class EmbeddedFileVersionCreator
                     'filename'  => basename($created_file_path),
                     'filesize'  => filesize($created_file_path),
                     'filetype'  => 'text/html',
-                    'path'      => $created_file_path
+                    'path'      => $created_file_path,
                 ];
 
                 $this->version_factory->create($new_embedded_version_row);
@@ -111,7 +111,7 @@ class EmbeddedFileVersionCreator
                     'title'             => $title,
                     'description'       => $description,
                     'status'            => $status,
-                    'obsolescence_date' => $obsolesence_date
+                    'obsolescence_date' => $obsolesence_date,
                 ];
 
                 $this->item_factory->update($new_embedded_hardcoded_metadata_row);
@@ -131,7 +131,7 @@ class EmbeddedFileVersionCreator
         \Docman_Empty $item,
         \PFUser $current_user,
         EmbeddedPropertiesPOSTPATCHRepresentation $representation,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
     ): void {
         $this->transaction_executor->execute(
             function () use (
@@ -158,14 +158,14 @@ class EmbeddedFileVersionCreator
                     'filename'  => basename($created_file_path),
                     'filesize'  => filesize($created_file_path),
                     'filetype'  => 'text/html',
-                    'path'      => $created_file_path
+                    'path'      => $created_file_path,
                 ];
 
                 $this->version_factory->create($new_embedded_version_row);
 
                 $new_embedded_hardcoded_metadata_row = [
                     'id'        => $item->getId(),
-                    'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                    'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
                 ];
 
                 $this->item_factory->update($new_embedded_hardcoded_metadata_row);

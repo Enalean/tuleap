@@ -38,7 +38,7 @@ class Git_Hook_ParseLog
     public function __construct(
         Git_Hook_LogPushes $log_pushes,
         CrossReferencesExtractor $extract_cross_ref,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->log_pushes        = $log_pushes;
         $this->extract_cross_ref = $extract_cross_ref;

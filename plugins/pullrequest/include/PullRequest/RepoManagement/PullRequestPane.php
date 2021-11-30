@@ -39,7 +39,7 @@ class PullRequestPane extends Pane
     public function __construct(
         GitRepository $repository,
         Codendi_Request $request,
-        MergeSettingRetriever $merge_setting_retriever
+        MergeSettingRetriever $merge_setting_retriever,
     ) {
         parent::__construct($repository, $request);
         $this->merge_setting_retriever = $merge_setting_retriever;

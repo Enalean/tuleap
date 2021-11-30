@@ -60,7 +60,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         'News' => 'ic/news.png',
         'CVS' => 'ic/convert.png',
         'Files' => 'ic/save.png',
-        'Trackers' => 'ic/tracker20w.png'
+        'Trackers' => 'ic/tracker20w.png',
         ];
 
     public const INCLUDE_FAT_COMBINED = 'include_fat_combined';
@@ -618,7 +618,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         array $criteria_selector,
         array $classes,
         bool $is_time_displayed,
-        string $data_test
+        string $data_test,
     ): string {
         $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';

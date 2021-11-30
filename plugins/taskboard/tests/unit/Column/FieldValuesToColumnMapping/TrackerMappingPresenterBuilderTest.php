@@ -165,7 +165,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private function mockMappedValues(
         array $value_ids,
         TaskboardTracker $taskboard_tracker,
-        Cardwall_Column $column
+        Cardwall_Column $column,
     ): void {
         $mapped_values = new MappedValues($value_ids);
         $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')

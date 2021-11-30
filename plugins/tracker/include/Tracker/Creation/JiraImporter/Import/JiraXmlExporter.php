@@ -108,7 +108,7 @@ class JiraXmlExporter
         private XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
         private XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
         private XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
-        private EventDispatcherInterface $event_manager
+        private EventDispatcherInterface $event_manager,
     ) {
     }
 
@@ -118,7 +118,7 @@ class JiraXmlExporter
     public static function build(
         JiraClient $wrapper,
         LoggerInterface $logger,
-        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
     ): self {
         $error_collector = new ErrorCollector();
 
@@ -276,7 +276,7 @@ class JiraXmlExporter
         string $jira_project_key,
         IssueType $issue_type,
         IDGenerator $field_id_generator,
-        LinkedIssuesCollection $linked_issues_collection
+        LinkedIssuesCollection $linked_issues_collection,
     ): void {
         $this->logger->debug("Start export Jira to XML: " . $issue_type->getId());
 
@@ -394,7 +394,7 @@ class JiraXmlExporter
         IDGenerator $id_generator,
         string $jira_project_id,
         IssueType $issue_type,
-        PlatformConfiguration $platform_configuration
+        PlatformConfiguration $platform_configuration,
     ): void {
         $this->logger->debug("Start exporting jira field structure (custom fields) ...");
         $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $issue_type->getId(), $id_generator);

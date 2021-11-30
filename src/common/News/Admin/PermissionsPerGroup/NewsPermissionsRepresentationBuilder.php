@@ -32,7 +32,7 @@ class NewsPermissionsRepresentationBuilder
     private $news_permissions_manager;
 
     public function __construct(
-        NewsPermissionsManager $news_permissions_manager
+        NewsPermissionsManager $news_permissions_manager,
     ) {
         $this->news_permissions_manager = $news_permissions_manager;
     }
@@ -77,7 +77,7 @@ class NewsPermissionsRepresentationBuilder
             [
                 'approve'  => $new['is_approved'],
                 'id'       => $new['id'],
-                'group_id' => $new['group_id']
+                'group_id' => $new['group_id'],
             ]
         );
 

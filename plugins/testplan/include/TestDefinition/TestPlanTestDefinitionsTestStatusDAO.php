@@ -86,7 +86,7 @@ class TestPlanTestDefinitionsTestStatusDAO extends DataAccessObject
             [
                 $information->test_campaign_art_link_field_id,
                 $information->test_campaign_art_link_field_id,
-                $information->milestone_id
+                $information->milestone_id,
             ],
             $current_user_ugroup_ids_in_filter->values(),
             $test_definition_ids_in_filter->values(),

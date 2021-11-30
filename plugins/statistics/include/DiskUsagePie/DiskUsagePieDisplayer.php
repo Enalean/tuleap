@@ -45,7 +45,7 @@ class DiskUsagePieDisplayer
     public function __construct(
         Statistics_DiskUsageManager $disk_manager,
         ProjectQuotaManager $quota_manager,
-        Statistics_DiskUsageOutput $disk_usage_output
+        Statistics_DiskUsageOutput $disk_usage_output,
     ) {
         $this->disk_manager      = $disk_manager;
         $this->quota_manager     = $quota_manager;

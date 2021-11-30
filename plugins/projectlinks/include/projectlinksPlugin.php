@@ -124,7 +124,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             [
                 'title' => $Language->getText('project_admin_servicebar', 'edit_s_bar'),
                 'group' => $group_id,
-                'help' => 'project-links.html'
+                'help' => 'project-links.html',
             ],
             'project_links'
         );
@@ -248,7 +248,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         "reverse_name" => $q_reverse_name,
                         "description" => $q_description,
                         "uri_plus" => $q_uri_plus,
-                        "group_id" => $group_id
+                        "group_id" => $group_id,
                         ],
                         ($link_type_id === null ? null : "link_type_id=$link_type_id")
                     )
@@ -414,7 +414,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     dgettext('tuleap-projectlinks', 'Name'),
                     dgettext('tuleap-projectlinks', 'Reverse Name'),
                     dgettext('tuleap-projectlinks', 'Description'),
-                    ""
+                    "",
                 ],
                 false, //links_arr
                 false, //mass_change
@@ -449,7 +449,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         dgettext('tuleap-projectlinks', 'Delete project link type (including all links of this type)'),
                         [
                             'onclick' => "return confirm('" .
-                                dgettext('tuleap-projectlinks', 'Delete project link type (including all links of this type)') . "?')"
+                                dgettext('tuleap-projectlinks', 'Delete project link type (including all links of this type)') . "?')",
                         ]
                     ) . "
                     </td>
@@ -466,7 +466,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             form_hiddenParams([
                 "disp" => 'resync_template',
                 "group_id" => $group_id,
-                "template_id" => $project->getTemplate()
+                "template_id" => $project->getTemplate(),
             ]);
             form_End(
                 dgettext('tuleap-projectlinks', 'Re-Synchronise Project Links with Template'),
@@ -494,14 +494,14 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 'name' => htmlentities($row['name']),
                 'reverse_name' => htmlentities($row['reverse_name']),
                 'description' => htmlentities($row['description']),
-                'uri_plus' => htmlentities($row['uri_plus'])
+                'uri_plus' => htmlentities($row['uri_plus']),
             ];
         } else {
             $def = [
                 'name' => "",
                 'reverse_name' => "",
                 'description' => "",
-                'uri_plus' => '/projects/$projname/'
+                'uri_plus' => '/projects/$projname/',
             ];
         }
         $HTML->box1_top(dgettext('tuleap-projectlinks', 'Project Links') .
@@ -517,7 +517,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         form_Start("");
         form_HiddenParams([
             "func" => 'pl_type_update',
-            "group_id" => $group_id
+            "group_id" => $group_id,
         ]);
         if (isset($link_type_id)) {
             form_HiddenParams(["link_type_id" => $link_type_id]);
@@ -632,7 +632,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 dgettext('tuleap-projectlinks', 'Name'),
                 dgettext('tuleap-projectlinks', 'Reverse Name'),
                 dgettext('tuleap-projectlinks', 'Description'),
-                dgettext('tuleap-projectlinks', 'Link URI (template)')
+                dgettext('tuleap-projectlinks', 'Link URI (template)'),
             ],
             false, //links_arr
             false, //mass_change
@@ -769,7 +769,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 [
                     dgettext('tuleap-projectlinks', 'Action'),
                     dgettext('tuleap-projectlinks', 'Link Type'),
-                    dgettext('tuleap-projectlinks', 'project')
+                    dgettext('tuleap-projectlinks', 'project'),
                 ],
                 false, //links_arr
                 false, //mass_change
@@ -854,7 +854,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             $updates = [
                 "link_type_id" => db_ei($link_type_id),
                 "target_group_id" => db_ei($target_group_id),
-                "master_group_id" => db_ei($group_id)
+                "master_group_id" => db_ei($group_id),
             ];
             if (is_null($link_id)) {
                 // new item - set date, otherwise leave it alone

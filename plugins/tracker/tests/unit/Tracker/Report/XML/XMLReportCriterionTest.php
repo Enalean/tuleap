@@ -41,7 +41,7 @@ final class XMLReportCriterionTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withStaticValues(
                     new XMLBindStaticValue('V1', 'On going'),
                     new XMLBindStaticValue('V2', 'Done'),
-                )
+                ),
         ]);
 
         $criterion = (new XMLReportCriterion(new XMLReferenceByID('F1')))
@@ -60,7 +60,7 @@ final class XMLReportCriterionTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withStaticValues(
                     new XMLBindStaticValue('V1', 'On going'),
                     new XMLBindStaticValue('V2', 'Done'),
-                )
+                ),
         ]);
 
         $criterion = (new XMLReportCriterion(new XMLReferenceByID('F1')))

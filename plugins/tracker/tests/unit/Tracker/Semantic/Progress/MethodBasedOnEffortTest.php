@@ -82,7 +82,7 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         int $total_effort,
         float $remaining_effort,
         ?float $expected_progress_value,
-        string $expected_error_message
+        string $expected_error_message,
     ): void {
         $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
         $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
@@ -122,7 +122,7 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         ?float $total_effort,
         ?float $remaining_effort,
         ?float $expected_progress_value,
-        string $expected_error_message
+        string $expected_error_message,
     ): void {
         $computed_field_total_effort     = \Mockery::mock(\Tracker_FormElement_Field_Computed::class);
         $computed_field_remaining_effort = \Mockery::mock(\Tracker_FormElement_Field_Computed::class);
@@ -200,7 +200,7 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->method->exportToXMl($root, [
             'F201' => 1001,
-            'F202' => 1002
+            'F202' => 1002,
         ]);
 
         $this->assertCount(1, $root->children());
@@ -215,7 +215,7 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         $root     = new \SimpleXMLElement($xml_data);
 
         $this->method->exportToXMl($root, [
-            'F202' => 1002
+            'F202' => 1002,
         ]);
 
         $this->assertCount(0, $root->children());
@@ -227,7 +227,7 @@ class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         $root     = new \SimpleXMLElement($xml_data);
 
         $this->method->exportToXMl($root, [
-            'F201' => 1001
+            'F201' => 1001,
         ]);
 
         $this->assertCount(0, $root->children());

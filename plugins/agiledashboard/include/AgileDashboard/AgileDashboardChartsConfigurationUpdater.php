@@ -61,7 +61,7 @@ class AgileDashboardChartsConfigurationUpdater
         $query_parts = [
             'group_id' => $project->getID(),
             'action'   => 'admin',
-            'pane'     => 'charts'
+            'pane'     => 'charts',
         ];
 
         $GLOBALS['Response']->redirect('/plugins/agiledashboard/?' . http_build_query($query_parts));

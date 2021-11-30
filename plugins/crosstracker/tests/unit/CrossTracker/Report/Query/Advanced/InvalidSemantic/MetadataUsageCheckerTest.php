@@ -125,7 +125,7 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->submitted_on_101->method('userCanRead')->willReturn(true);
         $fields_map = [
             [$this->tracker_101, 'subon', true, [$this->submitted_on_101]],
-            [$this->tracker_102, 'subon', true, []]
+            [$this->tracker_102, 'subon', true, []],
         ];
         $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
 
@@ -147,7 +147,7 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->submitted_on_102->method('userCanRead')->willReturn(true);
         $fields_map = [
             [$this->tracker_101, 'subon', true, [$this->submitted_on_101]],
-            [$this->tracker_102, 'subon', true, [$this->submitted_on_102]]
+            [$this->tracker_102, 'subon', true, [$this->submitted_on_102]],
         ];
         $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
 
@@ -169,7 +169,7 @@ class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->submitted_on_102->method('userCanRead')->willReturn(true);
         $fields_map = [
             [$this->tracker_101, 'subon', true, [$this->submitted_on_101]],
-            [$this->tracker_102, 'subon', true, [$this->submitted_on_102]]
+            [$this->tracker_102, 'subon', true, [$this->submitted_on_102]],
         ];
         $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
 

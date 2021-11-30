@@ -84,7 +84,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
         $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', $changeset, '*', '*', '*');
         $this->values                = [
             $this->int_changeset_value,
-            $this->float_changeset_value
+            $this->float_changeset_value,
         ];
 
         $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -127,7 +127,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
             'user_id' => 101,
             'language_id' => 'en',
             'user_name' => 'user_01',
-            'ldap_id' => 'ldap_01'
+            'ldap_id' => 'ldap_01',
         ]);
         $this->user_manager->shouldReceive('getUserById')->with(101)->andReturn($user);
 
@@ -143,7 +143,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
             'user_id' => 101,
             'language_id' => 'en',
             'user_name' => 'user_01',
-            'ldap_id' => 'ldap_01'
+            'ldap_id' => 'ldap_01',
         ]);
         $this->user_manager->shouldReceive('getUserById')->with(101)->andReturn($user);
 
@@ -171,7 +171,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
 
         $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getValues')->andReturns([
             101 => $value,
-            102 => null
+            102 => null,
         ])->getMock();
 
         $changeset->shouldReceive('getArtifact')->andReturns($this->artifact);

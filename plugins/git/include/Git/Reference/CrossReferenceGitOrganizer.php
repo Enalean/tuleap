@@ -37,7 +37,7 @@ final class CrossReferenceGitOrganizer
 
     public function __construct(
         OrganizeableGitCrossReferencesAndTheContributorsCollector $collector,
-        CrossReferenceGitEnhancer $cross_reference_git_filler
+        CrossReferenceGitEnhancer $cross_reference_git_filler,
     ) {
         $this->collector                    = $collector;
         $this->cross_reference_git_enhancer = $cross_reference_git_filler;

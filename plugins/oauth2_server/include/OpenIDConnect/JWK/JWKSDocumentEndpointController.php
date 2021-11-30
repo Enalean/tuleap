@@ -51,7 +51,7 @@ final class JWKSDocumentEndpointController extends DispatchablePSR15Compatible i
         \DateInterval $max_cache_age,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->signing_key_factory   = $signing_key_factory;

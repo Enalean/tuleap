@@ -54,7 +54,7 @@ class CommitDetailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager = Mockery::mock(
             \UserManager::class,
             [
-                'getUserCollectionByEmails' => new UserEmailCollection($john_doe)
+                'getUserCollectionByEmails' => new UserEmailCollection($john_doe),
             ]
         );
 
@@ -101,7 +101,7 @@ class CommitDetailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager = Mockery::mock(
             \UserManager::class,
             [
-                'getUserCollectionByEmails' => new UserEmailCollection($john_doe)
+                'getUserCollectionByEmails' => new UserEmailCollection($john_doe),
             ]
         );
 

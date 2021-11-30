@@ -138,7 +138,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
                     false,
                     true,
                     "dev-"
-                )
+                ),
             ]);
 
         $button_action = $this->fetcher->getActionButton($artifact, $user);
@@ -150,14 +150,14 @@ final class CreateBranchButtonFetcherTest extends TestCase
         self::assertSame(
             [
                 'name' => 'artifact-id',
-                'value' => '89'
+                'value' => '89',
             ],
             $button_action->getLinkPresenter()->data[1]
         );
         self::assertSame(
             [
                 'name' => 'branch-name',
-                'value' => 'tuleap-89-this-is-a-feature'
+                'value' => 'tuleap-89-this-is-a-feature',
             ],
             $button_action->getLinkPresenter()->data[2]
         );
@@ -232,7 +232,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
                     false,
                     true,
                     "dev-"
-                )
+                ),
             ]);
 
         $button_action = $this->fetcher->getActionButton($artifact, $user);
@@ -244,14 +244,14 @@ final class CreateBranchButtonFetcherTest extends TestCase
         self::assertSame(
             [
                 'name' => 'artifact-id',
-                'value' => '89'
+                'value' => '89',
             ],
             $button_action->getLinkPresenter()->data[1]
         );
         self::assertSame(
             [
                 'name' => 'branch-name',
-                'value' => 'tuleap-89'
+                'value' => 'tuleap-89',
             ],
             $button_action->getLinkPresenter()->data[2]
         );

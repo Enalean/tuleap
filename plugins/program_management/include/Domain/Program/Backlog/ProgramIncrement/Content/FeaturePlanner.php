@@ -33,7 +33,7 @@ final class FeaturePlanner
         private VerifyLinkedUserStoryIsNotPlanned $story_verifier,
         private RemoveFeature $feature_remover,
         private TopBacklogStore $top_backlog_store,
-        private AddFeature $feature_adder
+        private AddFeature $feature_adder,
     ) {
     }
 

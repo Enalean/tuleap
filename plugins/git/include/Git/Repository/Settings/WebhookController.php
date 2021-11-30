@@ -50,7 +50,7 @@ abstract class WebhookController extends SettingsController
                 'action'   => 'repo_management',
                 'group_id' => $repository->getProjectId(),
                 'repo_id'  => $repository->getId(),
-                'pane'     => Pane\Hooks::ID
+                'pane'     => Pane\Hooks::ID,
             ]);
     }
 

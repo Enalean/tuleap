@@ -173,7 +173,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     }
 
     public function projectImportCleanupUserCreatorFromAdministrators(
-        ProjectImportCleanupUserCreatorFromAdministrators $cleanup_user_creator_from_administrators
+        ProjectImportCleanupUserCreatorFromAdministrators $cleanup_user_creator_from_administrators,
     ): void {
         $xml_project_user_creator_project_owner_updater = new XMLProjectImportUserCreatorProjectOwnerCleaner(
             new ProjectOwnerUpdater(
@@ -198,7 +198,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
             case ProjectOwnerStatusNotificationSystemEvent::NAME:
                 $params['class']        = ProjectOwnerStatusNotificationSystemEvent::class;
                 $params['dependencies'] = [
-                    new \Tuleap\ProjectOwnership\Notification\Sender(\ProjectManager::instance(), new \Tuleap\Language\LocaleSwitcher())
+                    new \Tuleap\ProjectOwnership\Notification\Sender(\ProjectManager::instance(), new \Tuleap\Language\LocaleSwitcher()),
                 ];
                 break;
         }

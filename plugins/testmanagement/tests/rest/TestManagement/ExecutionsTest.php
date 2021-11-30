@@ -40,7 +40,7 @@ final class ExecutionsTest extends BaseTest
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
                 'status' => $new_value,
-                'time'   => 0
+                'time'   => 0,
             ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -52,7 +52,7 @@ final class ExecutionsTest extends BaseTest
         $response2 = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
                 'status' => $initial_value,
-                'time'   => 0
+                'time'   => 0,
             ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -70,7 +70,7 @@ final class ExecutionsTest extends BaseTest
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
             'status' => $new_value,
-            'time'   => 0
+            'time'   => 0,
         ]))));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -80,7 +80,7 @@ final class ExecutionsTest extends BaseTest
 
         $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
             'status' => $initial_value,
-            'time'   => 0
+            'time'   => 0,
         ]))));
     }
 
@@ -99,7 +99,7 @@ final class ExecutionsTest extends BaseTest
         $file_resource = json_encode([
             'file_size' => $file_size,
             'file_type' => 'text/plain',
-            'name'      => 'aaaa.txt'
+            'name'      => 'aaaa.txt',
         ]);
 
         $new_file_response = $this->getResponseByName(
@@ -151,7 +151,7 @@ final class ExecutionsTest extends BaseTest
 
         $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
             'status' => $initial_value,
-            'time'   => 0
+            'time'   => 0,
         ]))));
     }
 
@@ -192,7 +192,7 @@ final class ExecutionsTest extends BaseTest
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
             'status' => $new_value,
             'time'   => 0,
-            'uploaded_file_ids' => [12]
+            'uploaded_file_ids' => [12],
         ]))));
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -211,8 +211,8 @@ final class ExecutionsTest extends BaseTest
                 'issue_id' => $issue_id,
                 'comment'  => [
                     'body'     => 'test result',
-                    'format'   => 'html'
-                ]
+                    'format'   => 'html',
+                ],
             ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -232,8 +232,8 @@ final class ExecutionsTest extends BaseTest
             'issue_id' => $issue_id,
             'comment'  => [
                 'body'     => 'test result',
-                'format'   => 'html'
-            ]
+                'format'   => 'html',
+            ],
         ]))));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -281,8 +281,8 @@ final class ExecutionsTest extends BaseTest
         $response  = $this->getResponse($this->request_factory->createRequest('PATCH', 'testmanagement_executions/' . $execution['id'] . '/issues')->withBody($this->stream_factory->createStream(json_encode([
             'steps_results'  => [
                 'step_id'  => '1',
-                'status'   => 'notrun'
-            ]
+                'status'   => 'notrun',
+            ],
         ]))));
 
         $this->assertEquals(400, $response->getStatusCode());

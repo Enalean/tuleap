@@ -32,7 +32,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
 
     public function __construct(
         Tracker_XML_Exporter_ChangesetValuesXMLExporter $values_exporter,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ) {
         $this->values_exporter   = $values_exporter;
         $this->user_xml_exporter = $user_xml_exporter;
@@ -40,7 +40,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
 
     public function exportWithoutComments(
         SimpleXMLElement $artifact_xml,
-        Tracker_Artifact_Changeset $changeset
+        Tracker_Artifact_Changeset $changeset,
     ) {
         $changeset_xml = $artifact_xml->addChild('changeset');
 
@@ -58,7 +58,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
 
     public function exportFullHistory(
         SimpleXMLElement $artifact_xml,
-        Tracker_Artifact_Changeset $changeset
+        Tracker_Artifact_Changeset $changeset,
     ) {
         $changeset_xml = $artifact_xml->addChild('changeset');
         $changeset_xml->addAttribute('id', self::PREFIX . $changeset->getId());

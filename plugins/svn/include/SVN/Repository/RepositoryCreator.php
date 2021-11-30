@@ -85,7 +85,7 @@ class RepositoryCreator
         ProjectHistoryFormatter $project_history_formatter,
         ImmutableTagCreator $immutable_tag_creator,
         AccessFileHistoryCreator $access_file_history_creator,
-        MailNotificationManager $mail_notification_manager
+        MailNotificationManager $mail_notification_manager,
     ) {
         $this->dao                         = $dao;
         $this->system_event_manager        = $system_event_manager;
@@ -127,7 +127,7 @@ class RepositoryCreator
         Repository $svn_repository,
         PFUser $committer,
         array $initial_repository_layout,
-        $copy_from_core
+        $copy_from_core,
     ): ?SystemEvent_SVN_CREATE_REPOSITORY {
         $repo_event['system_path']    = $svn_repository->getSystemPath();
         $repo_event['project_id']     = $svn_repository->getProject()->getId();
@@ -157,7 +157,7 @@ class RepositoryCreator
         PFUser $user,
         Settings $settings,
         array $initial_repository_layout,
-        $copy_from_core
+        $copy_from_core,
     ): ?SystemEvent_SVN_CREATE_REPOSITORY {
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository = $this->createRepository($repository);
@@ -303,7 +303,7 @@ class RepositoryCreator
     private function createAccessAndAVersionOfFileHistoryWithoutCleaningContent(
         Repository $repository,
         Settings $settings,
-        array $access_file_history
+        array $access_file_history,
     ) {
         foreach ($access_file_history as $history) {
             if ($settings->isAccessFileAlreadyPurged()) {

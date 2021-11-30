@@ -28,7 +28,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 {
     public function searchPaginatedSubMilestones(
         int $milestone_artifact_id,
-        SubMilestoneRequest $request
+        SubMilestoneRequest $request,
     ) {
         $limit                 = $request->getLimit();
         $order                 = $request->getOrder();
@@ -178,7 +178,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
             'from_statement'         => $from_status_statement,
             'where_status_statement' => $where_status_statement,
             'order'                  => $order,
-            'limit_statement'        => $limit_statement
+            'limit_statement'        => $limit_statement,
         ];
     }
 
@@ -202,7 +202,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 
     public function searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
         int $milestone_tracker_id,
-        TopMilestoneRequest $request
+        TopMilestoneRequest $request,
     ) {
         $built_sql            = $this->getPaginationAndStatusStatements($request);
         $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);

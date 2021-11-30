@@ -55,7 +55,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
     public function __construct(
         AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
-        ExplicitBacklogDao $explicit_backlog_dao
+        ExplicitBacklogDao $explicit_backlog_dao,
     ) {
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
         $this->unplanned_artifacts_adder          = $unplanned_artifacts_adder;
@@ -92,7 +92,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
                         $transition,
                         $this->cache[$workflow_id][$transition_id],
                         $this->unplanned_artifacts_adder
-                    )
+                    ),
                 ];
             }
             return [];
@@ -111,7 +111,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
                     $transition,
                     (int) $row['id'],
                     $this->unplanned_artifacts_adder
-                )
+                ),
             ];
         }
 

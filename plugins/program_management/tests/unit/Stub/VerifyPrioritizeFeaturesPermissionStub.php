@@ -49,7 +49,7 @@ final class VerifyPrioritizeFeaturesPermissionStub implements VerifyPrioritizeFe
     public function canUserPrioritizeFeatures(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): bool {
         return $this->is_authorized;
     }

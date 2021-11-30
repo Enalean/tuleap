@@ -53,7 +53,7 @@ class GlobalNotificationsEmailRetriever
         UgroupsToNotifyDao $ugroup_dao,
         UGroupManager $ugroup_manager,
         TrackerFactory $tracker_factory,
-        GlobalNotificationsAddressesBuilder $addresses_builder
+        GlobalNotificationsAddressesBuilder $addresses_builder,
     ) {
         $this->user_dao          = $user_dao;
         $this->ugroup_dao        = $ugroup_dao;

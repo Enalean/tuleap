@@ -38,7 +38,7 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap
         $unsubscribers_notification_dao = \Mockery::mock(UnsubscribersNotificationDAO::class);
         $user_rows                      = [
             ['user_id' => 200, 'user_name' => 'username1', 'realname' => 'Realname1'],
-            ['user_id' => 102, 'user_name' => 'username2', 'realname' => 'Realname2']
+            ['user_id' => 102, 'user_name' => 'username2', 'realname' => 'Realname2'],
         ];
         $unsubscribers_notification_dao->shouldReceive(
             'searchUsersUnsubcribedFromNotificationByTrackerID'

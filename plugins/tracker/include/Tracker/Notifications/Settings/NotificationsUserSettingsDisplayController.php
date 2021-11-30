@@ -52,7 +52,7 @@ class NotificationsUserSettingsDisplayController implements DispatchableWithRequ
         TemplateRenderer $template_renderer,
         TrackerFactory $tracker_factory,
         TrackerManager $tracker_manager,
-        UserNotificationSettingsRetriever $user_notification_settings_retriever
+        UserNotificationSettingsRetriever $user_notification_settings_retriever,
     ) {
         $this->template_renderer                    = $template_renderer;
         $this->tracker_factory                      = $tracker_factory;
@@ -84,7 +84,7 @@ class NotificationsUserSettingsDisplayController implements DispatchableWithRequ
             $this->tracker_manager,
             dgettext('tuleap-tracker', 'Email Notifications Settings'),
             [
-               ['title' => dgettext('tuleap-tracker', 'Email Notifications Settings'), 'url' => $current_uri]
+               ['title' => dgettext('tuleap-tracker', 'Email Notifications Settings'), 'url' => $current_uri],
             ],
             []
         );

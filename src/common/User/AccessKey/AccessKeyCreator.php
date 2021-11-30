@@ -64,7 +64,7 @@ class AccessKeyCreator
         SplitTokenVerificationStringHasher $hasher,
         AccessKeyScopeSaver $access_key_scope_saver,
         DBTransactionExecutor $transaction_executor,
-        AccessKeyCreationNotifier $notifier
+        AccessKeyCreationNotifier $notifier,
     ) {
         $this->last_access_key_identifier_store = $last_access_key_identifier_store;
         $this->dao                              = $dao;
@@ -83,7 +83,7 @@ class AccessKeyCreator
         \PFUser $user,
         string $description,
         ?DateTimeImmutable $expiration_date,
-        AuthenticationScope ...$access_key_scopes
+        AuthenticationScope ...$access_key_scopes,
     ): void {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $current_time        = new DateTimeImmutable();

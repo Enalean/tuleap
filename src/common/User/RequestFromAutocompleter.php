@@ -86,7 +86,7 @@ class RequestFromAutocompleter
         UGroupManager $ugroup_manager,
         PFUser $current_user,
         Project $project,
-        $data
+        $data,
     ) {
         $this->invalid_entries = $invalid_entries;
         $this->rule_email      = $rule_email;

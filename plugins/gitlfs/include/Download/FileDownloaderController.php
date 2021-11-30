@@ -64,7 +64,7 @@ class FileDownloaderController implements DispatchableWithRequest
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
         FilesystemReader $filesystem,
-        Prometheus $prometheus
+        Prometheus $prometheus,
     ) {
         $this->git_repository_factory = $git_repository_factory;
         $this->lfs_object_retriever   = $lfs_object_retriever;

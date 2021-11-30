@@ -51,14 +51,14 @@ class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ldapResIter = $this->getLdapResult('getGroupMembers', [
             'eduid=edA,ou=people,dc=codendi,dc=com',
-            'eduid=edE,ou=people,dc=codendi,dc=com'
+            'eduid=edE,ou=people,dc=codendi,dc=com',
         ]);
 
         $ldap = \Mockery::mock(
             \LDAP::class,
             [
                 ['server' => 'server'],
-                Mockery::mock(\Psr\Log\LoggerInterface::class)
+                Mockery::mock(\Psr\Log\LoggerInterface::class),
             ]
         )
             ->makePartial()
@@ -86,7 +86,7 @@ class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $ldap,
                 $ldap_user_manager,
                 $prjm,
-                $notm
+                $notm,
             ]
         )
             ->makePartial()
@@ -145,7 +145,7 @@ class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $ldap,
                 $ldap_user_manager,
                 $prjm,
-                \Mockery::spy(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class)
+                \Mockery::spy(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class),
             ]
         )->makePartial();
 

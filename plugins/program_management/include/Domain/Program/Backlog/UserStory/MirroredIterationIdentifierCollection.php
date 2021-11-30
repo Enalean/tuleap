@@ -44,7 +44,7 @@ final class MirroredIterationIdentifierCollection
         SearchMirroredTimeboxes $iteration_searcher,
         VerifyIsVisibleArtifact $artifact_visibility_verifier,
         IterationIdentifier $iteration,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): self {
         $mirrors = MirroredIterationIdentifier::buildCollectionFromIteration($iteration_searcher, $artifact_visibility_verifier, $iteration, $user);
         return new self($mirrors);

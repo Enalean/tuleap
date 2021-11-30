@@ -34,7 +34,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         $url,
         $controller,
         $itemToPaste,
-        $mode
+        $mode,
     ) {
         parent::__construct(
             $item,

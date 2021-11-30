@@ -82,7 +82,7 @@ class CrossReferencePullRequestOrganizer
         GitRepositoryFactory $git_repository_factory,
         TlpRelativeDatePresenterBuilder $relative_date_builder,
         UserManager $user_manager,
-        UserHelper $user_helper
+        UserHelper $user_helper,
     ) {
         $this->project_manager        = $project_manager;
         $this->pull_request_factory   = $pull_request_factory;
@@ -106,7 +106,7 @@ class CrossReferencePullRequestOrganizer
 
     private function moveCrossReferenceToRepositorySection(
         CrossReferenceByNatureOrganizer $by_nature_organizer,
-        CrossReferencePresenter $cross_reference_presenter
+        CrossReferencePresenter $cross_reference_presenter,
     ): void {
         $user = $by_nature_organizer->getCurrentUser();
 
@@ -148,7 +148,7 @@ class CrossReferencePullRequestOrganizer
     private function withCreationMetadata(
         CrossReferencePresenter $cross_reference_presenter,
         PullRequest $pull_request,
-        PFUser $user
+        PFUser $user,
     ): CrossReferencePresenter {
         $created_by = $this->getCreatedByPresenter($pull_request);
         if (! $created_by) {

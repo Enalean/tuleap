@@ -65,7 +65,7 @@ class AccessKeyPresenterBuilder
         AuthenticationScopeBuilder $access_key_scope_builder,
         AccessKeyMetadataRetriever $access_key_metadata_retriever,
         SplitTokenFormatter $split_token_formatter,
-        EncryptionKey $encryption_key
+        EncryptionKey $encryption_key,
     ) {
         $this->access_key_scope_builder      = $access_key_scope_builder;
         $this->access_key_metadata_retriever = $access_key_metadata_retriever;

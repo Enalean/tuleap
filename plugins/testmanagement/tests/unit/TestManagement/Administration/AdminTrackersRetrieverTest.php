@@ -117,7 +117,7 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             new AdminTrackerPresenter("chosen tracker", 12),
             [
                 new AdminTrackerPresenter("tracker_1", 13),
-                new AdminTrackerPresenter("tracker_2", 14)
+                new AdminTrackerPresenter("tracker_2", 14),
             ]
         );
 
@@ -146,7 +146,7 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             [
                 new AdminTrackerPresenter("tracker_1", 13),
-                new AdminTrackerPresenter("tracker_2", 14)
+                new AdminTrackerPresenter("tracker_2", 14),
             ]
         );
 
@@ -179,7 +179,7 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             new AdminTrackerPresenter("chosen tracker", 12),
             [
                 new AdminTrackerPresenter("tracker_1", 13),
-                new AdminTrackerPresenter("tracker_2", 14)
+                new AdminTrackerPresenter("tracker_2", 14),
             ]
         );
 
@@ -212,7 +212,7 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             new AdminTrackerPresenter("chosen tracker", 12),
             [
                 new AdminTrackerPresenter("tracker_1", 13),
-                new AdminTrackerPresenter("tracker_2", 14)
+                new AdminTrackerPresenter("tracker_2", 14),
             ]
         );
 
@@ -244,7 +244,7 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             new AdminTrackerPresenter("chosen tracker", 12),
             [
                 new AdminTrackerPresenter("tracker_1", 13),
-                new AdminTrackerPresenter("tracker_2", 14)
+                new AdminTrackerPresenter("tracker_2", 14),
             ]
         );
 

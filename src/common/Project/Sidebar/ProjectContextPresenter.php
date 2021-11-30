@@ -66,7 +66,7 @@ final class ProjectContextPresenter
         array $project_flags,
         ?BannerDisplay $banner,
         string $purified_banner,
-        ?string $project_icon
+        ?string $project_icon,
     ) {
         $this->project_id                 = (int) $project->getID();
         $this->privacy                    = $privacy;
@@ -89,7 +89,7 @@ final class ProjectContextPresenter
         ?ProjectAdministrationLinkPresenter $administration_link,
         ?LinkedProjectsCollectionPresenter $linked_projects_presenter,
         array $project_flags,
-        ?BannerDisplay $banner
+        ?BannerDisplay $banner,
     ): self {
         $purified_banner = '';
         if ($banner) {

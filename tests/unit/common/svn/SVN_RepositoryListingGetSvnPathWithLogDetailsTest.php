@@ -42,7 +42,7 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends \Tuleap\Test\PHP
         $content = [
             "/my/Project/tags",
             "/my/Project/tags/1.0/",
-            "/my/Project/tags/2.0/"
+            "/my/Project/tags/2.0/",
         ];
 
         $this->svnlook->shouldReceive('getDirectoryListing')->with($this->project, '/my/Project/tags')->andReturns($content);

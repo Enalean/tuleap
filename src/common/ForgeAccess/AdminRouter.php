@@ -33,7 +33,7 @@ class ForgeAccess_AdminRouter
 
     public function __construct(
         ForgeAccess_AdminController $controller,
-        Codendi_Request $request
+        Codendi_Request $request,
     ) {
         $this->controller = $controller;
         $this->request    = $request;

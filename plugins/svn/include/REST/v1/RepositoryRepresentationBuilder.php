@@ -62,7 +62,7 @@ class RepositoryRepresentationBuilder
         ImmutableTagFactory $immutable_tag_factory,
         AccessFileHistoryFactory $access_file_history_factory,
         MailNotificationManager $mail_notification_manager,
-        NotificationsBuilder $notification_list_builder
+        NotificationsBuilder $notification_list_builder,
     ) {
         $this->permission_manager          = $permission_manager;
         $this->hook_config_retriever       = $hook_config_retriever;

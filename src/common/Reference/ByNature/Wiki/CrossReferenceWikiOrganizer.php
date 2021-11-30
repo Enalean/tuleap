@@ -40,7 +40,7 @@ class CrossReferenceWikiOrganizer
 
     public function __construct(
         ProjectManager $project_manager,
-        WikiPageFromReferenceValueRetriever $wiki_page_retriever
+        WikiPageFromReferenceValueRetriever $wiki_page_retriever,
     ) {
         $this->project_manager     = $project_manager;
         $this->wiki_page_retriever = $wiki_page_retriever;
@@ -48,7 +48,7 @@ class CrossReferenceWikiOrganizer
 
     public function organizeWikiReference(
         CrossReferencePresenter $cross_reference_presenter,
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 

@@ -88,7 +88,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'           => 'GET F',
                 'description'     => 'A description',
-                'file_properties' => ['file_name' => 'NEW F', 'file_size' => 0]
+                'file_properties' => ['file_name' => 'NEW F', 'file_size' => 0],
             ]
         );
 
@@ -109,7 +109,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $query     = json_encode(
             [
                 'title'           => 'NEW F',
-                'file_properties' => ['file_name' => 'NEW F', 'file_size' => $file_size]
+                'file_properties' => ['file_name' => 'NEW F', 'file_size' => $file_size],
             ]
         );
 
@@ -208,7 +208,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $query = json_encode(
             [
                 'title'           => 'NEW EMPTY F',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 0],
             ]
         );
 
@@ -236,7 +236,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $query = json_encode(
             [
                 'title'           => 'NEW EMPTY F',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 0],
             ]
         );
 
@@ -257,7 +257,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $query   = json_encode(
             [
                 'title'           => 'NEW BIG F',
-                'file_properties' => ['file_name' => 'NEW BIG F', 'file_size' => 999999999999]
+                'file_properties' => ['file_name' => 'NEW BIG F', 'file_size' => 999999999999],
             ]
         );
 
@@ -281,7 +281,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'title'           => $document_name,
-                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123],
                 ]
             )))
         );
@@ -310,7 +310,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'title'           => $document_name,
-                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123],
                 ]
             )))
         );
@@ -329,7 +329,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'title'           => $document_name,
-                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123],
                 ]
             )))
         );
@@ -578,7 +578,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'           => 'NEW W',
                 'description'     => 'A description',
-                'wiki_properties' => $wiki_properties
+                'wiki_properties' => $wiki_properties,
             ]
         );
 
@@ -603,7 +603,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'           => 'NEW W',
                 'description'     => 'A description',
-                'wiki_properties' => $wiki_properties
+                'wiki_properties' => $wiki_properties,
             ]
         );
 
@@ -659,7 +659,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'               => 'NEW EMEBEDDED',
                 'description'         => 'A description',
-                'embedded_properties' => $embedded_properties
+                'embedded_properties' => $embedded_properties,
             ]
         );
 
@@ -684,7 +684,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'               => 'NEW EMEBEDDED',
                 'description'         => 'A description',
-                'embedded_properties' => $embedded_properties
+                'embedded_properties' => $embedded_properties,
             ]
         );
 
@@ -740,7 +740,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'           => 'NEW L',
                 'description'     => 'A description',
-                'link_properties' => $link_properties
+                'link_properties' => $link_properties,
             ]
         );
 
@@ -765,7 +765,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'           => 'NEW L',
                 'description'     => 'A description',
-                'link_properties' => $link_properties
+                'link_properties' => $link_properties,
             ]
         );
 
@@ -821,7 +821,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'       => 'NEW FOLDER',
                 'description' => 'A description',
-                'status'      => 'approved'
+                'status'      => 'approved',
             ]
         );
 
@@ -845,7 +845,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             [
                 'title'           => 'File5',
                 'file_properties' => ['file_name' => 'file1', 'file_size' => $file_size],
-                'status'          => 'approved'
+                'status'          => 'approved',
             ]
         );
 
@@ -930,7 +930,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
                 'apply_permissions_on_children' => true,
                 'can_read'                      => [],
                 'can_write'                     => [],
-                'can_manage'                    => [['id' => $project_members_identifier]]
+                'can_manage'                    => [['id' => $project_members_identifier]],
             ])))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());

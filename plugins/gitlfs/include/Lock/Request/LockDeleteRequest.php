@@ -37,7 +37,7 @@ class LockDeleteRequest implements GitLfsHTTPOperation
 
     public function __construct(
         bool $force,
-        ?RequestReference $reference
+        ?RequestReference $reference,
     ) {
         $this->force     = $force;
         $this->reference = $reference;

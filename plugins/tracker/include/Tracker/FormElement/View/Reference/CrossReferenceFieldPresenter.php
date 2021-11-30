@@ -47,7 +47,7 @@ class CrossReferenceFieldPresenter
     public function __construct(
         bool $can_delete,
         CrossReferenceByDirectionPresenter $by_direction,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $this->can_delete                = $can_delete;
         $this->by_direction              = $by_direction;

@@ -171,18 +171,18 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $this->filed_id,
                     "timestamp"   => $start_date,
-                    "value"       => 10
+                    "value"       => 10,
                 ], [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $this->filed_id,
                     "timestamp"   => $second_day,
-                    "value"       => 10
+                    "value"       => 10,
                 ], [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $this->filed_id,
                     "timestamp"   => $third_day,
-                    "value"       => 10
-                ]
+                    "value"       => 10,
+                ],
             ]
         );
 
@@ -209,18 +209,18 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $this->filed_id,
                     "timestamp"   => $start_date,
-                    "value"       => 10
+                    "value"       => 10,
                 ], [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $this->filed_id,
                     "timestamp"   => $second_day,
-                    "value"       => 10
+                    "value"       => 10,
                 ], [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $this->filed_id,
                     "timestamp"   => $third_day,
-                    "value"       => 10
-                ]
+                    "value"       => 10,
+                ],
             ]
         );
 

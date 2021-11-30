@@ -28,7 +28,7 @@ class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Arti
     protected function canValidateField(
         Artifact $artifact,
         Tracker_FormElement_Field $field,
-        PFUser $user
+        PFUser $user,
     ): bool {
         return true;
     }
@@ -37,7 +37,7 @@ class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Arti
         Artifact $artifact,
         Tracker_FormElement_Field $field,
         \PFUser $user,
-        $submitted_value
+        $submitted_value,
     ) {
         return $field->validateField($artifact, $submitted_value);
     }

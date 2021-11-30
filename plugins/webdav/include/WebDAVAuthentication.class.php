@@ -46,7 +46,7 @@ class WebDAVAuthentication
         UserManager $user_manager,
         private User_LoginManager $login_manager,
         HeadersSender $headers_sender,
-        HTTPBasicAuthUserAccessKeyAuthenticator $access_key_authenticator
+        HTTPBasicAuthUserAccessKeyAuthenticator $access_key_authenticator,
     ) {
         $this->user_manager             = $user_manager;
         $this->headers_sender           = $headers_sender;

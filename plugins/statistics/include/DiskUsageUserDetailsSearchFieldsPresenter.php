@@ -38,7 +38,7 @@ class DiskUsageUserDetailsSearchFieldsPresenter
         $user_name_value,
         array $group_by_values,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $this->user_name_value  = $user_name_value;
         $this->start_date_value = $start_date_value;

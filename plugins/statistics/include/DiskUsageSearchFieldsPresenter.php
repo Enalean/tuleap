@@ -37,7 +37,7 @@ class DiskUsageSearchFieldsPresenter
         array $service_values,
         array $fields_values_url,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $this->service_values    = $service_values;
         $this->fields_values_url = $fields_values_url;

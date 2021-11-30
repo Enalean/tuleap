@@ -47,7 +47,7 @@ class MailGatewayConfigPresenter
         CSRFSynchronizerToken $csrf,
         $title,
         $localinc_path,
-        MailGatewayConfig $config
+        MailGatewayConfig $config,
     ) {
         $this->title      = $title;
         $this->csrf_token = $csrf->fetchHTMLInput();

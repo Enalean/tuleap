@@ -131,7 +131,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $user_can_update_labels,
         $last_build_status_name,
         $last_build_date,
-        PullRequestShortStatRepresentation $pr_short_stat_representation
+        PullRequestShortStatRepresentation $pr_short_stat_representation,
     ) {
         $this->buildMinimal($pull_request, $repository, $repository_dest);
 
@@ -159,22 +159,22 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
 
         $this->resources = [
             self::COMMENTS_ROUTE => [
-                'uri' => $this->uri . '/' . self::COMMENTS_ROUTE
+                'uri' => $this->uri . '/' . self::COMMENTS_ROUTE,
             ],
             self::INLINE_ROUTE => [
-                'uri' => $this->uri . '/' . self::INLINE_ROUTE
+                'uri' => $this->uri . '/' . self::INLINE_ROUTE,
             ],
             self::LABELS_ROUTE => [
-                'uri' => $this->uri . '/' . self::LABELS_ROUTE
+                'uri' => $this->uri . '/' . self::LABELS_ROUTE,
             ],
             self::FILES_ROUTE => [
-                'uri' => $this->uri . '/' . self::FILES_ROUTE
+                'uri' => $this->uri . '/' . self::FILES_ROUTE,
             ],
             self::DIFF_ROUTE => [
-                'uri' => $this->uri . '/' . self::DIFF_ROUTE
+                'uri' => $this->uri . '/' . self::DIFF_ROUTE,
             ],
             self::TIMELINE_ROUTE => [
-                'uri' => $this->uri . '/' . self::TIMELINE_ROUTE
+                'uri' => $this->uri . '/' . self::TIMELINE_ROUTE,
             ],
         ];
     }
@@ -184,7 +184,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $status_name = [
             PullRequest::STATUS_ABANDONED => self::STATUS_ABANDON,
             PullRequest::STATUS_MERGED    => self::STATUS_MERGE,
-            PullRequest::STATUS_REVIEW    => self::STATUS_REVIEW
+            PullRequest::STATUS_REVIEW    => self::STATUS_REVIEW,
         ];
 
         return $status_name[$status_acronym];
@@ -196,7 +196,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
             PullRequest::NO_FASTFORWARD_MERGE => self::NO_FASTFORWARD_MERGE,
             PullRequest::FASTFORWARD_MERGE    => self::FASTFORWARD_MERGE,
             PullRequest::CONFLICT_MERGE       => self::CONFLICT_MERGE,
-            PullRequest::UNKNOWN_MERGE        => self::UNKNOWN_MERGE
+            PullRequest::UNKNOWN_MERGE        => self::UNKNOWN_MERGE,
         ];
 
         return $status_name[$merge_status_acronym];

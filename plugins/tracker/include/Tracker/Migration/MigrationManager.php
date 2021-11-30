@@ -74,7 +74,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
         LegacyTrackerMigrationDao $legacy_tracker_migration_dao,
         KeepReverseCrossReferenceDAO $keep_reverse_cross_reference_dao,
         Tracker_Migration_MailLogger $mail_logger,
-        Tracker_Migration_MigrationLogger $logger
+        Tracker_Migration_MigrationLogger $logger,
     ) {
         $this->system_event_manager             = $system_event_manager;
         $this->tracker_factory                  = $tracker_factory;
@@ -97,7 +97,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
         $tracker_name,
         $tracker_description,
         $tracker_short_name,
-        bool $keep_original_ids
+        bool $keep_original_ids,
     ): void {
         $this->logger->info('-- Beginning of migration of tracker v3 ' . $tv3_id . ' to ' . $tracker_name . ' --');
 
@@ -179,7 +179,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
         $tracker_id,
         $xml_file_path,
         PFUser $user,
-        bool $keep_original_ids
+        bool $keep_original_ids,
     ): void {
         $this->logger->info('--> Import into TV5 ');
         $this->user_manager->forceLogin($username);

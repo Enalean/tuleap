@@ -42,7 +42,7 @@ final class ProgramIncrementCreationEventProxy implements ProgramIncrementCreati
     public static function fromWorkerEvent(
         LoggerInterface $logger,
         \UserManager $user_manager,
-        WorkerEvent $event
+        WorkerEvent $event,
     ): ?self {
         $event_name = $event->getEventName();
         if ($event_name !== self::TOPIC) {

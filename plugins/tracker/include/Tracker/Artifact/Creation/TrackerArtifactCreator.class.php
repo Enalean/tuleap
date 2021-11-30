@@ -78,7 +78,7 @@ class TrackerArtifactCreator
         Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator,
         VisitRecorder $visit_recorder,
         \Psr\Log\LoggerInterface $logger,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
     ) {
         $this->artifact_dao            = $artifact_factory->getDao();
         $this->artifact_factory        = $artifact_factory;
@@ -92,7 +92,7 @@ class TrackerArtifactCreator
     public static function build(
         Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator_base,
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ): self {
         return new self(
             Tracker_ArtifactFactory::instance(),
@@ -128,7 +128,7 @@ class TrackerArtifactCreator
         int $submitted_on,
         bool $send_notification,
         CreatedFileURLMapping $url_mapping,
-        TrackerImportConfig $tracker_import_config
+        TrackerImportConfig $tracker_import_config,
     ): ?Tracker_Artifact_Changeset {
         $validation_context = new NullChangesetValidationContext();
         $are_fields_valid   = $this->fields_validator->validate(
@@ -165,7 +165,7 @@ class TrackerArtifactCreator
         bool $send_notification,
         CreatedFileURLMapping $url_mapping,
         TrackerImportConfig $tracker_import_config,
-        ChangesetValidationContext $context
+        ChangesetValidationContext $context,
     ): ?Tracker_Artifact_Changeset {
         $changeset_id = $this->db_transaction_executor->execute(
             function () use (
@@ -208,7 +208,7 @@ class TrackerArtifactCreator
         int $submitted_on,
         bool $send_notification,
         bool $should_visit_be_recorded,
-        ChangesetValidationContext $context
+        ChangesetValidationContext $context,
     ): ?Artifact {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
 
@@ -263,7 +263,7 @@ class TrackerArtifactCreator
         Tracker $tracker,
         PFUser $user,
         Artifact $artifact,
-        int $submitted_on
+        int $submitted_on,
     ): bool {
         $use_artifact_permissions = 0;
         $id                       = $this->artifact_dao->create($tracker->getId(), $user->getId(), $submitted_on, $use_artifact_permissions);
@@ -287,7 +287,7 @@ class TrackerArtifactCreator
         Tracker $tracker,
         Artifact $artifact,
         int $submitted_on,
-        int $submitted_by
+        int $submitted_by,
     ): int {
         $use_artifact_permissions = 0;
 

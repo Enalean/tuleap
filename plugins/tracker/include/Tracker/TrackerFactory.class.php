@@ -444,7 +444,7 @@ class TrackerFactory
         $em          = EventManager::instance();
         $pref_params = [
             'atid_source' => $id_template,
-            'atid_dest'   => $id
+            'atid_dest'   => $id,
         ];
         $em->processEvent('Tracker_created', $pref_params);
         //Duplicate Permissions
@@ -462,7 +462,7 @@ class TrackerFactory
         return [
             'tracker'        => $tracker,
             'field_mapping'  => $field_mapping,
-            'report_mapping' => $report_mapping
+            'report_mapping' => $report_mapping,
         ];
     }
 
@@ -577,7 +577,7 @@ class TrackerFactory
             'report_mapping'    => $report_mapping,
             'group_id'          => $to_project_id,
             'ugroups_mapping'   => $mapping_registry->getUgroupMapping(),
-            'source_project_id' => $from_project_id
+            'source_project_id' => $from_project_id,
         ]);
     }
 
@@ -614,7 +614,7 @@ class TrackerFactory
         Tracker $tracker,
         MappingRegistry $mapping_registry,
         $to_project_id,
-        $ugroup_mapping
+        $ugroup_mapping,
     ) {
         $tracker_and_field_and_report_mapping = $this->create(
             $to_project_id,
@@ -638,7 +638,7 @@ class TrackerFactory
         return [
             $tracker_mapping,
             $field_mapping,
-            $report_mapping
+            $report_mapping,
         ];
     }
 

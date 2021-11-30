@@ -74,7 +74,7 @@ class FileFieldArtifactChangesetTest extends TrackerBase
         $query = [
             "name"       => "file_creation_" . bin2hex(random_bytes(8)),
             "file_size"  => $file_size,
-            "file_type"  => "text/plain"
+            "file_type"  => "text/plain",
         ];
 
         $response1 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$file_field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
@@ -105,9 +105,9 @@ class FileFieldArtifactChangesetTest extends TrackerBase
             "values"  => [
                 [
                     "field_id" => $file_field_id,
-                    "value"    => [$file_id]
-                ]
-            ]
+                    "value"    => [$file_id],
+                ],
+            ],
         ];
 
         $response = $this->getResponse(

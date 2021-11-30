@@ -64,7 +64,7 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'repository_id'   => 3,
             'action_type'     => $action_type->getName(),
             'object_oid'      => $oid_value,
-            'object_size'     => $size
+            'object_size'     => $size,
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
         $expected_repository = \Mockery::mock(\GitRepository::class);
@@ -110,7 +110,7 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'repository_id'   => 3,
             'action_type'     => $action_type->getName(),
             'object_oid'      => $oid,
-            'object_size'     => 123456
+            'object_size'     => 123456,
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(false);
 
@@ -137,7 +137,7 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'repository_id'   => 3,
             'action_type'     => $action_type->getName(),
             'object_oid'      => 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b',
-            'object_size'     => 123456
+            'object_size'     => 123456,
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
@@ -166,7 +166,7 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'repository_id'   => 3,
             'action_type'     => 'upload',
             'object_oid'      => $oid,
-            'object_size'     => 123456
+            'object_size'     => 123456,
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
@@ -194,7 +194,7 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'repository_id'   => 3,
             'action_type'     => $action_type->getName(),
             'object_oid'      => $oid,
-            'object_size'     => 123456
+            'object_size'     => 123456,
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);

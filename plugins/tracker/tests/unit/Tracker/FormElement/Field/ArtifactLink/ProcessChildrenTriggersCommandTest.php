@@ -67,7 +67,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
                 'P',
                 true,
                 true,
-                100
+                100,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $this->artifact              = Mockery::mock(Artifact::class);
@@ -96,7 +96,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value->shouldReceive('getValue')->andReturns(
             [
-                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
             ]
         );
         $previous_changeset->shouldReceive('getValue')->with($this->field)->andReturns($changeset_value);
@@ -109,7 +109,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [
                 123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
-                456 => new Tracker_ArtifactLinkInfo(456, 'art', 101, 1, 12345, '')
+                456 => new Tracker_ArtifactLinkInfo(456, 'art', 101, 1, 12345, ''),
             ]
         );
         $new_changeset->shouldReceive('getValue')->with($this->field)->andReturns($changeset_value_bis);
@@ -127,7 +127,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value->shouldReceive('getValue')->andReturns(
             [
-                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
             ]
         );
         $previous_changeset->shouldReceive('getValue')->with($this->field)->andReturns($changeset_value);
@@ -138,7 +138,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
         )->shouldAllowMockingProtectedMethods();
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [
-                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
             ]
         );
         $new_changeset->shouldReceive('getValue')->with($this->field)->andReturns($changeset_value_bis);
@@ -161,7 +161,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [
-                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
             ]
         );
         $new_changeset->shouldReceive('getValue')->with($this->field)->andReturns($changeset_value_bis);
@@ -181,7 +181,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [
-                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
             ]
         );
         $new_changeset->shouldReceive('getValue')->with($this->field)->andReturns($changeset_value_bis);

@@ -58,7 +58,7 @@ abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         // AllowedMetadata::SUBMITTED_ON can be used with GreaterOrLesserThan operators
     }

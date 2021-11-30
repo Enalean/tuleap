@@ -67,7 +67,7 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject
      */
     public function searchIntegrationsByGitlabRepositoryIdAndPath(
         int $gitlab_repository_id,
-        string $http_path
+        string $http_path,
     ): ?array {
         $sql = 'SELECT *
                 FROM plugin_gitlab_repository_integration
@@ -101,7 +101,7 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject
         string $gitlab_repository_url,
         int $last_push_date,
         int $project_id,
-        bool $allow_artifact_closure
+        bool $allow_artifact_closure,
     ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_gitlab_repository_integration',
@@ -120,7 +120,7 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject
     public function isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(
         string $name,
         string $web_url,
-        int $project_id
+        int $project_id,
     ): bool {
         $sql = "SELECT NULL
                 FROM plugin_gitlab_repository_integration
@@ -136,7 +136,7 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject
     public function isTheGitlabRepositoryAlreadyIntegratedInProject(
         int $project_id,
         int $gitlab_repository_id,
-        string $http_path
+        string $http_path,
     ): bool {
         $sql = 'SELECT NULL
                 FROM plugin_gitlab_repository_integration
@@ -151,7 +151,7 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject
 
     public function updateGitlabRepositoryIntegrationAllowArtifactClosureValue(
         int $id,
-        bool $allow_artifact_closure
+        bool $allow_artifact_closure,
     ): void {
         $this->getDB()->update(
             'plugin_gitlab_repository_integration',

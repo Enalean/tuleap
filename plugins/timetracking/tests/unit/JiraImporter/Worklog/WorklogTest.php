@@ -38,7 +38,7 @@ class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
                 "emailAddress" => "whatever@example.com",
                 "displayName"  => "What Ever",
             ],
-            'comment' => "*Comment* {color:#36b37e}*RED*{color}"
+            'comment' => "*Comment* {color:#36b37e}*RED*{color}",
         ];
 
         $worklog = Worklog::buildFromAPIResponse($response);

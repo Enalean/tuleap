@@ -57,7 +57,7 @@ class CrossReferenceByDirectionPresenterBuilder
         CrossReferencePresenterFactory $factory,
         \ProjectManager $project_manager,
         ProjectAccessChecker $project_access_checker,
-        CrossReferenceByNatureInCoreOrganizer $in_core_organizer
+        CrossReferenceByNatureInCoreOrganizer $in_core_organizer,
     ) {
         $this->event_dispatcher       = $event_dispatcher;
         $this->reference_manager      = $reference_manager;
@@ -71,7 +71,7 @@ class CrossReferenceByDirectionPresenterBuilder
         string $entity_id,
         string $entity_type,
         int $entity_project_id,
-        \PFUser $current_user
+        \PFUser $current_user,
     ): CrossReferenceByDirectionPresenter {
         $available_nature_collection = $this->reference_manager->getAvailableNatures();
         $source_presenters           = $this->factory->getSourcesOfEntity($entity_id, $entity_type, $entity_project_id);
@@ -91,7 +91,7 @@ class CrossReferenceByDirectionPresenterBuilder
     private function getNaturesFromCrossReferences(
         array $cross_references,
         NatureCollection $available_nature_collection,
-        \PFUser $current_user
+        \PFUser $current_user,
     ): array {
         $organizer = $this->event_dispatcher->dispatch(
             new CrossReferenceByNatureOrganizer(

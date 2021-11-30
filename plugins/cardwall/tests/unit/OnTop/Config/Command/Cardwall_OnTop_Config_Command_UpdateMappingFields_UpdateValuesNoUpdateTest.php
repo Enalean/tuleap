@@ -31,7 +31,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
-                'field_id'            => 321
+                'field_id'            => 321,
             ]
         ));
 
@@ -70,9 +70,9 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                     'values' => [
                         '11' => [
                             '9001',
-                            '9002'
+                            '9002',
                         ],
-                    ]
+                    ],
                 ],
             ]
         );
@@ -93,10 +93,10 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                         '11' => [
                             '9001',
                             '9002',
-                            '9003'
+                            '9003',
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
         $this->value_dao->shouldReceive('deleteAllFieldValues')->once();
@@ -116,7 +116,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                         '11' => [
                             '9001',
                         ],
-                    ]
+                    ],
                 ],
             ]
         );

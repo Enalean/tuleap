@@ -40,7 +40,7 @@ final class LatestHeartbeatsCollector
         private Tracker_ArtifactFactory $factory,
         private UserManager $user_manager,
         private UserHelper $user_helper,
-        private EventDispatcherInterface $event_manager
+        private EventDispatcherInterface $event_manager,
     ) {
     }
 

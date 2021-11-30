@@ -47,7 +47,7 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function __construct(
         Tracker $tracker,
-        IComputeProgression $method
+        IComputeProgression $method,
     ) {
         parent::__construct($tracker);
         $this->method = $method;
@@ -91,7 +91,7 @@ class SemanticProgress extends \Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ): void {
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
@@ -124,7 +124,7 @@ class SemanticProgress extends \Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         if ($request->exist('update-semantic-progress')) {
             $this->getCSRFToken()->check();

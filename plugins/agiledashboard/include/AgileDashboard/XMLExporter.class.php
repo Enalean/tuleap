@@ -49,7 +49,7 @@ class AgileDashboard_XMLExporter
         XML_RNGValidator $xml_validator,
         PlanningXMLExporter $planning_xml_exporter,
         KanbanXMLExporter $kanban_XML_exporter,
-        ExplicitBacklogXMLExporter $explicit_backlog_xml_exporter
+        ExplicitBacklogXMLExporter $explicit_backlog_xml_exporter,
     ) {
         $this->xml_validator                 = $xml_validator;
         $this->kanban_XML_exporter           = $kanban_XML_exporter;

@@ -54,7 +54,7 @@ class GitPullRequestReferenceBulkConverter
         GitPullRequestReferenceUpdater $updater,
         Factory $pull_request_factory,
         GitRepositoryFactory $git_repository_factory,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->dao                    = $dao;
         $this->updater                = $updater;

@@ -162,13 +162,13 @@ class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_12->shouldReceive([
             'getName' => 'release',
             'getProject' => $project,
-            'getColor' => TrackerColor::fromName('chrome-silver')
+            'getColor' => TrackerColor::fromName('chrome-silver'),
         ]);
         $tracker_24 = Mockery::mock(Tracker::class);
         $tracker_24->shouldReceive([
             'getName' => 'sprint',
             'getProject' => $project,
-            'getColor' => TrackerColor::fromName('red-wine')
+            'getColor' => TrackerColor::fromName('red-wine'),
         ]);
 
         $this->dao

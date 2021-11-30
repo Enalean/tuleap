@@ -108,7 +108,7 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name'                     => 'repositoryname',
                 'repository_deletion_date' => null,
                 'backup_path'              => null,
-                'is_core'                  => '0'
+                'is_core'                  => '0',
             ]
         );
 
@@ -220,7 +220,7 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'backup_path'              => '/tmp/103',
                     'repository_deletion_date' => null,
                     'is_core'                  => '0',
-                ]
+                ],
             ]
         );
 
@@ -233,9 +233,9 @@ class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_collection = [
             RepositoryByProjectCollection::build($project_A, [
                 SvnRepository::buildFromDatabase(['id' => '1', 'name' => 'repo A', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A),
-                SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A)
+                SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A),
             ]),
-            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A)])
+            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A)]),
         ];
 
         $this->assertEquals($expected_collection, $collection);

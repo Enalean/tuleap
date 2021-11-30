@@ -149,7 +149,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     private function assertArtifactUGroupIdsWithoutAdminsEquals(
         Artifact $artifact,
-        array $expected_values
+        array $expected_values,
     ): void {
         $this->assertEquals(
             $expected_values,
@@ -232,7 +232,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
             [
-                ProjectUGroup::REGISTERED
+                ProjectUGroup::REGISTERED,
             ]
         );
     }
@@ -268,7 +268,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
             $this->anArtifact($this->user_not_project_member, [], []),
             [
                 $this->support_ugroup_id,
-                ProjectUGroup::PROJECT_MEMBERS
+                ProjectUGroup::PROJECT_MEMBERS,
             ]
         );
     }
@@ -300,7 +300,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
             ->andReturns(
                 [
-                    Tracker::PERMISSION_ADMIN => [$this->support_ugroup_id, ProjectUGroup::PROJECT_MEMBERS]
+                    Tracker::PERMISSION_ADMIN => [$this->support_ugroup_id, ProjectUGroup::PROJECT_MEMBERS],
                 ]
             );
 
@@ -308,7 +308,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
             $this->anArtifact($this->user_not_project_member, [], []),
             [
                 $this->support_ugroup_id,
-                ProjectUGroup::PROJECT_MEMBERS
+                ProjectUGroup::PROJECT_MEMBERS,
             ]
         );
     }
@@ -356,7 +356,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
             $this->anArtifact($this->support_and_project_member, [], []),
             [
                 ProjectUGroup::PROJECT_MEMBERS,
-                $this->support_ugroup_id
+                $this->support_ugroup_id,
             ]
         );
     }
@@ -413,7 +413,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
             $this->anArtifact($this->user_not_project_member, [$this->support_and_project_member], []),
             [
                 ProjectUGroup::PROJECT_MEMBERS,
-                $this->support_ugroup_id
+                $this->support_ugroup_id,
             ]
         );
     }
@@ -430,7 +430,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
             ),
             [
                 $this->support_ugroup_id,
-                $this->marketing_ugroup_id
+                $this->marketing_ugroup_id,
             ]
         );
     }
@@ -610,7 +610,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->assertArtifactUGroupIdsEquals(
             $this->artifact,
             [
-                $this->support_ugroup_id
+                $this->support_ugroup_id,
             ]
         );
     }
@@ -649,8 +649,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
                     [
                         Tracker_FormElement_Field::PERMISSION_READ   => [$this->support_ugroup_id],
                         Tracker_FormElement_Field::PERMISSION_SUBMIT => [ProjectUGroup::PROJECT_ADMIN],
-                        Tracker_FormElement_Field::PERMISSION_UPDATE => [ProjectUGroup::PROJECT_MEMBERS]
-                    ]
+                        Tracker_FormElement_Field::PERMISSION_UPDATE => [ProjectUGroup::PROJECT_MEMBERS],
+                    ],
             ]
         );
 
@@ -670,7 +670,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
                 Tracker::PERMISSION_ADMIN          => [ProjectUGroup::PROJECT_ADMIN],
                 Tracker::PERMISSION_SUBMITTER      => [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::PROJECT_MEMBERS],
                 Tracker::PERMISSION_ASSIGNEE       => [ProjectUGroup::PROJECT_ADMIN, $this->support_ugroup_id],
-                Tracker::PERMISSION_SUBMITTER_ONLY => [ProjectUGroup::PROJECT_ADMIN]
+                Tracker::PERMISSION_SUBMITTER_ONLY => [ProjectUGroup::PROJECT_ADMIN],
             ]
         );
 
@@ -679,7 +679,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
             [
                 $this->project_admin_literalize,
                 $this->project_members_literalize,
-                $this->support_ugroup_literalize
+                $this->support_ugroup_literalize,
             ]
         );
     }

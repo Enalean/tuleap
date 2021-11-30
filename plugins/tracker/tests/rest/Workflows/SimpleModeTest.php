@@ -74,7 +74,7 @@ class SimpleModeTest extends TrackerBase
             'done_id'       => $done_id,
             'closed_id'     => $closed_id,
             'date_field_id' => $date_field_id,
-            'int_field_id'  => $int_field_id
+            'int_field_id'  => $int_field_id,
         ];
     }
 
@@ -86,7 +86,7 @@ class SimpleModeTest extends TrackerBase
             [
                 'tracker_id' => $this->simple_mode_workflow_tracker_id,
                 'from_id'    => $infos['done_id'],
-                'to_id'      => $infos['closed_id']
+                'to_id'      => $infos['closed_id'],
             ]
         );
         $response = $this->getResponseByName(
@@ -152,7 +152,7 @@ class SimpleModeTest extends TrackerBase
             [
                 'authorized_user_group_ids' => [$project_admins_ugroup],
                 'is_comment_required'       => true,
-                'not_empty_field_ids'       => [$date_field_id]
+                'not_empty_field_ids'       => [$date_field_id],
             ]
         );
 
@@ -203,16 +203,16 @@ class SimpleModeTest extends TrackerBase
                         'type'       => 'set_field_value',
                         'field_id'   => $int_field_id,
                         'field_type' => 'int',
-                        'value'      => 9001
+                        'value'      => 9001,
                     ],
                     [
                         'id'         => null,
                         'type'       => 'set_field_value',
                         'field_id'   => $date_field_id,
                         'field_type' => 'date',
-                        'value'      => ''
-                    ]
-                ]
+                        'value'      => '',
+                    ],
+                ],
             ]
         );
         $response = $this->getResponseByName(
@@ -262,9 +262,9 @@ class SimpleModeTest extends TrackerBase
                 [
                     "id" => null,
                     "type" => "frozen_fields",
-                    "field_ids" => [$used_field_id]
-                ]
-            ]
+                    "field_ids" => [$used_field_id],
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(
@@ -310,9 +310,9 @@ class SimpleModeTest extends TrackerBase
                 [
                     "id" => null,
                     "type" => "frozen_fields",
-                    "field_ids" => [$workflow_field_id]
-                ]
-            ]
+                    "field_ids" => [$workflow_field_id],
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(
@@ -327,7 +327,7 @@ class SimpleModeTest extends TrackerBase
      * @depends testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction
      */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsCannotUsedAFieldUsedInFieldDependencies(
-        int $transition_id
+        int $transition_id,
     ) {
         $workflow_field_id = $this->getAUsedFieldId(
             $this->simple_mode_workflow_tracker_id,
@@ -339,9 +339,9 @@ class SimpleModeTest extends TrackerBase
                 [
                     "id" => null,
                     "type" => "frozen_fields",
-                    "field_ids" => [$workflow_field_id]
-                ]
-            ]
+                    "field_ids" => [$workflow_field_id],
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(
@@ -367,9 +367,9 @@ class SimpleModeTest extends TrackerBase
                 [
                     "id" => null,
                     "type" => "hidden_fieldsets",
-                    "fieldset_ids" => [$used_field_id]
-                ]
-            ]
+                    "fieldset_ids" => [$used_field_id],
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(

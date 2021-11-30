@@ -89,7 +89,7 @@ class ItemRepresentationBuilder
         MetadataRepresentationBuilder $metadata_representation_builder,
         ApprovalTableRetriever $approval_table_retriever,
         DocmanItemPermissionsForGroupsBuilder $item_permissions_for_groups_builder,
-        Codendi_HTMLPurifier $purifier
+        Codendi_HTMLPurifier $purifier,
     ) {
         $this->dao                                 = $dao;
         $this->user_manager                        = $user_manager;
@@ -138,7 +138,7 @@ class ItemRepresentationBuilder
         ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         ?LinkPropertiesRepresentation $link_properties = null,
         ?WikiPropertiesRepresentation $wiki_properties = null,
-        ?FolderPropertiesRepresentation $folder_properties = null
+        ?FolderPropertiesRepresentation $folder_properties = null,
     ) {
         $owner                = $this->user_manager->getUserById($item->getOwnerId());
         $owner_representation = MinimalUserRepresentation::build($owner);

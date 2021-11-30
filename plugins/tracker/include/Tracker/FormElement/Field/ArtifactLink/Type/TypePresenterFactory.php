@@ -112,7 +112,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         $types = [];
 
         $params = [
-            'types' => &$types
+            'types' => &$types,
         ];
 
         EventManager::instance()->processEvent(
@@ -191,7 +191,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
 
         $params = [
             'presenter' => &$presenter,
-            'shortname' => $shortname
+            'shortname' => $shortname,
         ];
 
         EventManager::instance()->processEvent(

@@ -137,7 +137,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
         string $example,
         string $demo,
         string $section_id,
-        string $subsection_id = ''
+        string $subsection_id = '',
     ): void {
         if ($documentation) { ?>
             <div class="doc-information">

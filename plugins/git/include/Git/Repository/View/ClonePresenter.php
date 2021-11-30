@@ -81,7 +81,7 @@ class ClonePresenter
     private function buildAdditionalCloneURLs(
         CloneURLs $clone_urls,
         DefaultCloneURL $selected_clone_url,
-        GitRepository $repository
+        GitRepository $repository,
     ): void {
         if ($clone_urls->hasSshUrl() && ! $selected_clone_url->hasSameUrl($clone_urls->getSshUrl())) {
             $this->clone_url_presenters[] = new CloneURLPresenter(

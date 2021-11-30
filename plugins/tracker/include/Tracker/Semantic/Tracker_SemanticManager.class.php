@@ -247,7 +247,7 @@ class Tracker_SemanticManager
         EventManager::instance()->processEvent(
             TRACKER_EVENT_GET_SEMANTICS_NAMES,
             [
-                'semantics' => &$order
+                'semantics' => &$order,
             ]
         );
 

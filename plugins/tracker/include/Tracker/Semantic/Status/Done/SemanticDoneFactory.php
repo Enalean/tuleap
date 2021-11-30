@@ -59,7 +59,7 @@ class SemanticDoneFactory implements IBuildSemanticFromXML
         SimpleXMLElement $all_semantics_xml,
         array $xml_mapping,
         Tracker $tracker,
-        array $tracker_mapping
+        array $tracker_mapping,
     ): ?Tracker_Semantic {
         $semantic_status = Tracker_Semantic_Status::load($tracker);
         $done_values     = $this->getDoneValues($current_semantic_xml, $all_semantics_xml, $xml_mapping);

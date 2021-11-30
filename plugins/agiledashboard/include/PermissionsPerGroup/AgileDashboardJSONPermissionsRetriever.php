@@ -44,7 +44,7 @@ class AgileDashboardJSONPermissionsRetriever
                     'error' => dgettext(
                         'tuleap-agiledashboard',
                         "Service Agiledashboard is disabled."
-                    )
+                    ),
                 ]
             );
         }

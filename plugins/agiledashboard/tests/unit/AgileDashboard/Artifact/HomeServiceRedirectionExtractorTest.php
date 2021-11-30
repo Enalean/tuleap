@@ -33,8 +33,8 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
         $extractor = new HomeServiceRedirectionExtractor();
         $request   = new Codendi_Request([
             'agiledashboard' => [
-                'home' => '1'
-            ]
+                'home' => '1',
+            ],
         ]);
 
         assertTrue(
@@ -52,23 +52,14 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $request = new Codendi_Request([
-            'agiledashboard'
+            'agiledashboard',
         ]);
         assertFalse(
             $extractor->mustRedirectToAgiledashboardHomepage($request)
         );
 
         $request = new Codendi_Request([
-            'agiledashboard' => []
-        ]);
-        assertFalse(
-            $extractor->mustRedirectToAgiledashboardHomepage($request)
-        );
-
-        $request = new Codendi_Request([
-            'agiledashboard' => [
-                'home' => 'whatever'
-            ]
+            'agiledashboard' => [],
         ]);
         assertFalse(
             $extractor->mustRedirectToAgiledashboardHomepage($request)
@@ -76,8 +67,17 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
 
         $request = new Codendi_Request([
             'agiledashboard' => [
-                'whatever' => '1'
-            ]
+                'home' => 'whatever',
+            ],
+        ]);
+        assertFalse(
+            $extractor->mustRedirectToAgiledashboardHomepage($request)
+        );
+
+        $request = new Codendi_Request([
+            'agiledashboard' => [
+                'whatever' => '1',
+            ],
         ]);
         assertFalse(
             $extractor->mustRedirectToAgiledashboardHomepage($request)
@@ -85,8 +85,8 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
 
         $request = new Codendi_Request([
             'whatever' => [
-                'home' => '1'
-            ]
+                'home' => '1',
+            ],
         ]);
         assertFalse(
             $extractor->mustRedirectToAgiledashboardHomepage($request)

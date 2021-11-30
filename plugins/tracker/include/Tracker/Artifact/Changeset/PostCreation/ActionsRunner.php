@@ -83,7 +83,7 @@ class ActionsRunner
         LoggerInterface $logger,
         QueueFactory $queue_factory,
         WorkerAvailability $worker_availability,
-        PostCreationTask ...$post_creation_tasks
+        PostCreationTask ...$post_creation_tasks,
     ) {
         $this->logger              = new WrapperLogger($logger, self::class);
         $this->queue_factory       = $queue_factory;
@@ -179,7 +179,7 @@ class ActionsRunner
                 [
                     'artifact_id'  => (int) $changeset->getArtifact()->getId(),
                     'changeset_id' => (int) $changeset->getId(),
-                    'send_notifications' => $send_notifications
+                    'send_notifications' => $send_notifications,
                 ]
             );
         } catch (Exception $exception) {

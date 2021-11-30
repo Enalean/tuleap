@@ -42,7 +42,7 @@ class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\T
         $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
             'item_id' => 5,
-            'filename' => 'readme.md'
+            'filename' => 'readme.md',
         ]);
         $item = \Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getId')->andReturn(5);
@@ -71,7 +71,7 @@ class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\T
         $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
             'item_id' => 5,
-            'filename' => 'readme.md'
+            'filename' => 'readme.md',
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 

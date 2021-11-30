@@ -80,7 +80,7 @@ final class GitForkCrossProjectTest extends \Tuleap\Test\PHPUnit\TestCase
             'choose_destination' => 'project',
             'to_project' => $toProjectId,
             'repos' => $repo_ids,
-            'repo_access' => $forkPermissions
+            'repo_access' => $forkPermissions,
         ];
 
         $permissions_manager = \Mockery::spy(\GitPermissionsManager::class)->shouldReceive('userIsGitAdmin')->with($user, $toProject)->andReturns(true)->getMock();
@@ -131,7 +131,7 @@ final class GitForkCrossProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = new Codendi_Request([
             'repos'       => ['qdfj'],
-            'repo_access' => []
+            'repo_access' => [],
         ]);
 
         $git->_doDispatchForkCrossProject($request, null);
@@ -164,7 +164,7 @@ final class GitForkCrossProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = new Codendi_Request([
             'to_project'  => 666,
             'repos'       => "1",
-            'repo_access' => []
+            'repo_access' => [],
         ]);
 
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();

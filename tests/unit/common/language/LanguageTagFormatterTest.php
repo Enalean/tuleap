@@ -38,7 +38,7 @@ final class LanguageTagFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         return [
             ['en_US', 'en-US'],
             ['fr_FR', 'fr-FR'],
-            ['ja_JP', 'ja-JP']
+            ['ja_JP', 'ja-JP'],
         ];
     }
 }

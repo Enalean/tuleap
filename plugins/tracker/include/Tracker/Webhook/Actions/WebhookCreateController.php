@@ -52,7 +52,7 @@ class WebhookCreateController implements DispatchableWithRequest
     public function __construct(
         WebhookDao $webhook_dao,
         TrackerFactory $tracker_factory,
-        WebhookURLValidator $validator
+        WebhookURLValidator $validator,
     ) {
         $this->tracker_factory = $tracker_factory;
         $this->webhook_dao     = $webhook_dao;
@@ -106,7 +106,7 @@ class WebhookCreateController implements DispatchableWithRequest
     {
         return '/plugins/tracker/?' . http_build_query([
             "func"    => "admin-webhooks",
-            "tracker" => $tracker->getId()
+            "tracker" => $tracker->getId(),
         ]);
     }
 }

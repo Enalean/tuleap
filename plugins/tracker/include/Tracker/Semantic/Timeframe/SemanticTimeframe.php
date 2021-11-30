@@ -50,7 +50,7 @@ class SemanticTimeframe extends Tracker_Semantic
      */
     public function __construct(
         Tracker $tracker,
-        IComputeTimeframes $timeframe
+        IComputeTimeframes $timeframe,
     ) {
         parent::__construct($tracker);
         $this->timeframe = $timeframe;
@@ -81,7 +81,7 @@ class SemanticTimeframe extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ): void {
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
@@ -117,7 +117,7 @@ class SemanticTimeframe extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ): void {
         if ($request->exist('update-semantic-timeframe')) {
             $this->getCSRFSynchronizerToken()->check();
@@ -192,7 +192,7 @@ class SemanticTimeframe extends Tracker_Semantic
             TRACKER_BASE_URL . "/?" . http_build_query(
                 [
                     "semantic" => self::NAME,
-                    "func"     => "admin-semantic"
+                    "func"     => "admin-semantic",
                 ]
             )
         );

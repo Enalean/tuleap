@@ -48,7 +48,7 @@ class UGroupListPresenter
         array $template_ugroups,
         CSRFSynchronizerToken $csrf,
         bool $is_synchronized_project_membership,
-        ?SynchronizedProjectMembershipPresenter $synchronized_project_membership_presenter
+        ?SynchronizedProjectMembershipPresenter $synchronized_project_membership_presenter,
     ) {
         $this->dynamic_ugroups                           = $dynamic_ugroups;
         $this->static_ugroups                            = $static_ugroups;

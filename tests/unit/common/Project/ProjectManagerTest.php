@@ -312,7 +312,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive([
             'getId' => 69,
-            'isRestricted' => true
+            'isRestricted' => true,
         ]);
 
         $this->project_dao->shouldReceive('searchActiveProjectsForUser')->with(69)->andReturns(\TestHelper::arrayToDar(['group_id' => 101, 'access' => Project::ACCESS_PRIVATE_WO_RESTRICTED], ['group_id' => 102, 'access' => Project::ACCESS_PRIVATE], ['group_id' => 103, 'access' => Project::ACCESS_PUBLIC], ['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]));

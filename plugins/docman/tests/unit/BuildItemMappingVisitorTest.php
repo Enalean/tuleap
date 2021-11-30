@@ -50,7 +50,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 150 => true,
-                135 => true
+                135 => true,
             ],
             $nodesOk
         );
@@ -58,7 +58,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 150 => 36,
-                135 => 40
+                135 => 40,
             ],
             $itemMapping
         );
@@ -89,7 +89,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 150 => 40,
-                135 => 36
+                135 => 36,
             ],
             $itemMapping
         );
@@ -121,7 +121,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 150 => true,
-                135 => true
+                135 => true,
             ],
             $nodesOk
         );
@@ -156,7 +156,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 150 => true,
-                135 => true
+                135 => true,
             ],
             $nodesOk
         );
@@ -164,7 +164,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 150 => 36,
-                135 => 40
+                135 => 40,
             ],
             $itemMapping
         );
@@ -265,7 +265,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 150 => 36,
                 112 => 37,
                 113 => 38,
-                135 => 40
+                135 => 40,
             ],
             $itemMapping
         );
@@ -350,7 +350,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 140 => 35,
                 150 => 36,
                 112 => 37,
-                113 => 38
+                113 => 38,
             ],
             $itemMapping
         );
@@ -435,7 +435,7 @@ class BuildItemMappingVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 150 => 36,
                 112 => 37,
                 135 => 40,
-                173 => 56
+                173 => 56,
             ],
             $itemMapping
         );

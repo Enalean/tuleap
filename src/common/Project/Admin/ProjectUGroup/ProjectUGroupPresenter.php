@@ -51,7 +51,7 @@ class ProjectUGroupPresenter
         PermissionsDelegationPresenter $permissions_delegation,
         BindingPresenter $binding,
         MembersPresenter $members,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->id                        = $ugroup->getId();
         $this->project_id                = $ugroup->getProjectId();
@@ -70,7 +70,7 @@ class ProjectUGroupPresenter
     {
         $url_params = http_build_query([
             'group_id' => $this->project_id,
-            'group'    => $this->id
+            'group'    => $this->id,
         ]);
 
         return '/project/admin/permission_per_group.php?' . $url_params;

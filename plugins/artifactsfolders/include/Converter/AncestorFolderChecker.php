@@ -37,7 +37,7 @@ class AncestorFolderChecker
 
     public function __construct(
         TypeIsChildLinkRetriever $nature_is_child_retriever,
-        HierarchyOfFolderBuilder $hierarchy_of_folder_builder
+        HierarchyOfFolderBuilder $hierarchy_of_folder_builder,
     ) {
         $this->nature_is_child_retriever   = $nature_is_child_retriever;
         $this->hierarchy_of_folder_builder = $hierarchy_of_folder_builder;
@@ -45,7 +45,7 @@ class AncestorFolderChecker
 
     public function isAncestorInSameFolder(
         Artifact $folder_artifact,
-        Artifact $item_artifact
+        Artifact $item_artifact,
     ) {
         $ancestors_of_artifact = $this->nature_is_child_retriever->getParentsHierarchy($item_artifact);
         foreach ($ancestors_of_artifact->getArtifacts() as $ancestors) {

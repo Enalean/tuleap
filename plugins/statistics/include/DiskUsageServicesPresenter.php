@@ -48,7 +48,7 @@ class DiskUsageServicesPresenter
         array $data_services,
         $total_start_size,
         $total_end_size,
-        $total_evolution
+        $total_evolution,
     ) {
         $this->header           = $header;
         $this->search_fields    = $search_fields;

@@ -46,7 +46,7 @@ class UserDetailsFormatter
             'N' => $GLOBALS['Language']->getText('admin_usergroup', 'no_account'),
             'A' => $GLOBALS['Language']->getText('admin_usergroup', 'active'),
             'S' => $GLOBALS['Language']->getText('admin_usergroup', 'suspended'),
-            'D' => $GLOBALS['Language']->getText('admin_usergroup', 'deleted')
+            'D' => $GLOBALS['Language']->getText('admin_usergroup', 'deleted'),
         ];
 
         $unix_status = [];
@@ -54,7 +54,7 @@ class UserDetailsFormatter
             $unix_status[] = [
                 'key'        => $key,
                 'status'     => $status,
-                'is_current' => $user->getUnixStatus() === $key
+                'is_current' => $user->getUnixStatus() === $key,
             ];
         }
 
@@ -71,7 +71,7 @@ class UserDetailsFormatter
         foreach (PFUser::getAllUnixShells() as $shell) {
             $shells[] = [
                 'shell'      => $shell,
-                'is_current' => $current_shell === $shell
+                'is_current' => $current_shell === $shell,
             ];
         }
 
@@ -83,15 +83,15 @@ class UserDetailsFormatter
         $links = [
             [
                 'href'  => '/users/' . urlencode($user->getUserName()),
-                'label' => $GLOBALS['Language']->getText('admin_usergroup', 'user_public_profile')
-            ]
+                'label' => $GLOBALS['Language']->getText('admin_usergroup', 'user_public_profile'),
+            ],
         ];
 
         EventManager::instance()->processEvent(
             'usergroup_data',
             [
                 'user'  => $user,
-                'links' => &$links
+                'links' => &$links,
             ]
         );
 

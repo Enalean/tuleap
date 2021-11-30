@@ -46,7 +46,7 @@ class AllBreadCrumbsForMilestoneBuilder
     public function __construct(
         AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
-        MilestoneCrumbBuilder $milestone_crumb_builder
+        MilestoneCrumbBuilder $milestone_crumb_builder,
     ) {
         $this->agile_dashboard_crumb_builder = $agile_dashboard_crumb_builder;
         $this->top_milestone_crumb_builder   = $top_milestone_crumb_builder;

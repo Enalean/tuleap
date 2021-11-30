@@ -56,7 +56,7 @@ final class UserStoryRepresentation extends ElementRepresentation
         bool $is_open,
         ProjectReference $project,
         MinimalTrackerRepresentation $tracker,
-        string $background_color
+        string $background_color,
     ) {
         parent::__construct($id, $uri, $xref, $title);
         $this->is_open          = $is_open;
@@ -67,7 +67,7 @@ final class UserStoryRepresentation extends ElementRepresentation
 
     public static function build(
         \TrackerFactory $tracker_factory,
-        UserStory $user_story
+        UserStory $user_story,
     ): ?self {
         $tracker = $tracker_factory->getTrackerById($user_story->tracker_identifier->getId());
         if (! $tracker) {

@@ -121,7 +121,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         $this->additional_references = [];
         $this->event_manager->processEvent(Event::GET_PLUGINS_EXTRA_REFERENCES, [
             'reference_manager' => $this,
-            'refs'              => &$this->additional_references
+            'refs'              => &$this->additional_references,
         ]);
     }
 
@@ -952,7 +952,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             EventManager::instance()->processEvent(
                 Event::POST_REFERENCE_EXTRACTED,
                 [
-                    'cross_reference' => $cross_reference
+                    'cross_reference' => $cross_reference,
                 ]
             );
 
@@ -982,7 +982,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             Event::REMOVE_CROSS_REFERENCE,
             [
                 'cross_reference'      => $cross_reference,
-                'is_reference_removed' => &$is_reference_removed
+                'is_reference_removed' => &$is_reference_removed,
             ]
         );
 

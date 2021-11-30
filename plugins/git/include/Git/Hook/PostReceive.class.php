@@ -76,7 +76,7 @@ class Git_Hook_PostReceive
         EventManager $event_manager,
         WebhookRequestSender $webhook_request_sender,
         PostReceiveMailSender $mail_sender,
-        DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater
+        DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater,
     ) {
         $this->log_analyzer                        = $log_analyzer;
         $this->repository_factory                  = $repository_factory;

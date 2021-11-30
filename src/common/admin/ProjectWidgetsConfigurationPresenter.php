@@ -42,7 +42,7 @@ class ProjectWidgetsConfigurationPresenter
     public function __construct(
         ProjectCreationNavBarPresenter $menu_tabs,
         \CSRFSynchronizerToken $csrf_token,
-        array $project_widgets
+        array $project_widgets,
     ) {
         $this->navbar          = $menu_tabs;
         $this->csrf_token      = $csrf_token;

@@ -79,7 +79,7 @@ final class UserlogAccess
         string $request_method,
         string $request_uri,
         string $ip_address,
-        string $http_referer
+        string $http_referer,
     ) {
         $this->date           = $date;
         $this->project        = $project;

@@ -293,7 +293,7 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'team_effort' => 10,
                     'total_effort' => 10,
                     'timestamp' => 1560988800,
-                ]
+                ],
             ]);
     }
 
@@ -321,7 +321,7 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'closed_subelements' => 4,
                     'total_subelements' => 5,
                     'timestamp' => 1560988800,
-                ]
+                ],
             ]);
     }
 }

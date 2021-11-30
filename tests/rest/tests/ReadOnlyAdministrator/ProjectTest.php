@@ -40,7 +40,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-ro',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100
+            'template_id' => 100,
         ]);
 
         $response = $this->getResponse(
@@ -69,7 +69,7 @@ class ProjectTest extends ProjectBase
                     $this->project_private_member_id,
                     $this->project_public_id,
                     $this->project_public_member_id,
-                    $this->project_pbi_id
+                    $this->project_pbi_id,
                 ],
                 $this->getIds($json_projects)
             )
@@ -290,14 +290,14 @@ class ProjectTest extends ProjectBase
                 0 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_PAGE_ID,
                     'uri' => 'phpwiki/6097',
-                    'name' => 'WithContent'
+                    'name' => 'WithContent',
                 ],
                 1 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
                     'uri' => 'phpwiki/6100',
-                    'name' => 'With Space'
-                ]
-            ]
+                    'name' => 'With Space',
+                ],
+            ],
         ];
 
         $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
@@ -306,7 +306,7 @@ class ProjectTest extends ProjectBase
     public function testPATCH(): void
     {
         $patch_resource = json_encode([
-            'status' => 'suspended'
+            'status' => 'suspended',
         ]);
 
         $response = $this->getResponse(

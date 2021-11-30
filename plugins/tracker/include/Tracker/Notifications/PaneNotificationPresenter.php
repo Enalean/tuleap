@@ -45,7 +45,7 @@ class PaneNotificationPresenter
         array $ugroups_to_be_notified,
         $emails_to_be_notified_json,
         $users_to_be_notified_json,
-        $ugroups_to_be_notified_json
+        $ugroups_to_be_notified_json,
     ) {
         $this->notification_id   = $notification->getId();
         $this->all_updates       = $notification->isAllUpdates();

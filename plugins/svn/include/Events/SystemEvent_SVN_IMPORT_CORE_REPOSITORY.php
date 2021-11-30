@@ -60,7 +60,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
         \ProjectManager $project_manager,
         \BackendSVN $backend_svn,
         RepositoryManager $repository_manager,
-        LastAccessDao $last_access_dao
+        LastAccessDao $last_access_dao,
     ): array {
         return [
             $project_manager,
@@ -74,7 +74,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
         \ProjectManager $project_manager,
         \BackendSVN $backend_svn,
         RepositoryManager $repository_manager,
-        LastAccessDao $last_access_dao
+        LastAccessDao $last_access_dao,
     ): void {
         $this->project_manager    = $project_manager;
         $this->backend_svn        = $backend_svn;

@@ -79,7 +79,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
     {
         $url = '/plugins/tracker/?' . http_build_query([
             "func"    => "admin-webhooks",
-            "tracker" => $this->tracker->getId()
+            "tracker" => $this->tracker->getId(),
         ]);
 
         return new CSRFSynchronizerToken($url);

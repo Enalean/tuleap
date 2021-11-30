@@ -142,7 +142,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
         InviteBuddiesPresenter $invite_buddies_presenter,
-        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
         $this->imgroot                   = $imgroot;
         $this->user                      = $user;

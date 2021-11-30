@@ -133,7 +133,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         string $has_group_by_field,
         ?Tracker_FormElement_Field_List $group_by_field,
         GraphOnTrackersV5_Engine_Bar $engine,
-        Tracker_FormElement_Field_List $source_field
+        Tracker_FormElement_Field_List $source_field,
     ): void {
         $engine->data = [];
 
@@ -167,7 +167,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         GraphOnTrackersV5_Engine_Bar $engine,
         array $data,
         Tracker_FormElement_Field_List $source_field,
-        Tracker_FormElement_Field_List $group_by_field
+        Tracker_FormElement_Field_List $group_by_field,
     ): void {
         $none                                         = $GLOBALS['Language']->getText('global', 'none');
         $engine->colors[$data[$source_field->name]]   = $color;
@@ -190,7 +190,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         string $has_group_by_field,
         string $from_group,
         string $group_group,
-        string $order_by
+        string $order_by,
     ): string {
         $select = " SELECT count(a.id) AS nb, " . $source_field->getQuerySelectWithDecorator() . $has_group_by_field;
         $from   = " FROM tracker_artifact AS a

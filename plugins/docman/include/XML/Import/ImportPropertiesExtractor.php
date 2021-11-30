@@ -47,7 +47,7 @@ class ImportPropertiesExtractor
     public function __construct(
         DateTimeImmutable $current_date,
         PFUser $current_user,
-        IFindUserFromXMLReference $user_finder
+        IFindUserFromXMLReference $user_finder,
     ) {
         $this->current_date = $current_date;
         $this->user_finder  = $user_finder;

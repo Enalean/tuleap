@@ -73,7 +73,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
                      'order'      => 'normal',   // oldest first
                      'mode'       => 'show,add', // 'summary',
                      'info'       => '',
-                     'noheader'   => false
+                     'noheader'   => false,
                     ];
     }
 

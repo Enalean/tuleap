@@ -124,7 +124,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_tree = new SimpleXMLElement($data);
 
         $structure = [
-            'files' => []
+            'files' => [],
         ];
 
         $base_dir           = vfsStream::setup();
@@ -193,12 +193,12 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mediawiki_manager->shouldReceive('getReadAccessControl')->andReturn(
             [
                 4,
-                5
+                5,
             ]
         );
         $this->mediawiki_manager->shouldReceive('getWriteAccessControl')->andReturn(
             [
-                5
+                5,
             ]
         );
 
@@ -232,7 +232,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->mediawiki_manager->shouldReceive('getWriteAccessControl')->andReturn(
             [
-                5
+                5,
             ]
         );
 
@@ -263,7 +263,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mediawiki_manager->shouldReceive('getReadAccessControl')->andReturn(
             [
                 4,
-                5
+                5,
             ]
         );
         $this->mediawiki_manager->shouldReceive('getWriteAccessControl')->andReturn(

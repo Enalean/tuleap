@@ -108,7 +108,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             public function checkUserIsAdminOfJiraProject(
                 JiraClient $jira_client,
                 LoggerInterface $logger,
-                string $jira_project
+                string $jira_project,
             ): void {
             }
         };
@@ -122,7 +122,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->logger,
                 $this->jira_user_on_tuleap_cache,
                 $this->platform_configuration_retriever,
-                $user_roles_checker
+                $user_roles_checker,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -175,7 +175,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             public function checkUserIsAdminOfJiraProject(
                 JiraClient $jira_client,
                 LoggerInterface $logger,
-                string $jira_project
+                string $jira_project,
             ): void {
                 throw new UserIsNotProjectAdminException();
             }
@@ -190,7 +190,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->logger,
                 $this->jira_user_on_tuleap_cache,
                 $this->platform_configuration_retriever,
-                $user_roles_checker
+                $user_roles_checker,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

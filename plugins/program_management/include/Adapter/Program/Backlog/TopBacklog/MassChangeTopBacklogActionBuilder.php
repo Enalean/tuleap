@@ -42,7 +42,7 @@ final class MassChangeTopBacklogActionBuilder
         private BuildProgram $build_program,
         private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
         private VerifyIsPlannable $verify_is_plannable,
-        private TemplateRenderer $template_renderer
+        private TemplateRenderer $template_renderer,
     ) {
     }
 

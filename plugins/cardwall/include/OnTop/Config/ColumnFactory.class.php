@@ -78,7 +78,7 @@ class Cardwall_OnTop_Config_ColumnFactory
     private function fillColumnsFor(
         Cardwall_OnTop_Config_ColumnCollection &$columns,
         Tracker_FormElement_Field_List $field,
-        array $filter
+        array $filter,
     ) {
         $decorators = $field->getDecorators();
         foreach ($this->getFieldBindValues($field, $filter) as $value) {
@@ -89,7 +89,7 @@ class Cardwall_OnTop_Config_ColumnFactory
 
     private function getFieldBindValues(
         Tracker_FormElement_Field_List $field,
-        array $filter
+        array $filter,
     ) {
         if (count($filter) === 0) {
             return $field->getVisibleValuesPlusNoneIfAny();

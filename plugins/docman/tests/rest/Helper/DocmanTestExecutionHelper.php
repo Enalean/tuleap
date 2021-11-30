@@ -37,7 +37,7 @@ class DocmanTestExecutionHelper extends DocmanBase
         $search   = urlencode(
             json_encode(
                 [
-                    'username' => DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+                    'username' => DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
                 ]
             )
         );
@@ -77,7 +77,7 @@ class DocmanTestExecutionHelper extends DocmanBase
 
     public function loadRootFolderContent(
         int $root_id,
-        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME
+        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,
@@ -94,7 +94,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function loadFolderContent(
         int $folder_id,
         string $folder_name,
-        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME
+        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,

@@ -42,7 +42,7 @@ final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
      */
     public static function withFields(
         ArtifactLinkFieldReference $field,
-        ArtifactLinkFieldReference ...$other_fields
+        ArtifactLinkFieldReference ...$other_fields,
     ): self {
         return new self(false, [$field, ...$other_fields]);
     }

@@ -49,7 +49,7 @@ class MilestoneIsAllowedChecker
         Cardwall_OnTop_Dao $cardwall_on_top_dao,
         TaskboardUsage $taskboard_usage,
         PluginManager $plugin_manager,
-        taskboardPlugin $taskboard_plugin
+        taskboardPlugin $taskboard_plugin,
     ) {
         $this->cardwall_on_top_dao = $cardwall_on_top_dao;
         $this->plugin_manager      = $plugin_manager;

@@ -53,7 +53,7 @@ final class TlpRelativeDatePresenter
         string $absolute_date,
         string $placement,
         string $preference,
-        string $locale
+        string $locale,
     ) {
         $this->date          = $date;
         $this->absolute_date = $absolute_date;

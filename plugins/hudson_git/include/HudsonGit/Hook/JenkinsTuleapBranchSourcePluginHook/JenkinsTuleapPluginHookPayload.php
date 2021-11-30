@@ -46,7 +46,7 @@ class JenkinsTuleapPluginHookPayload implements Payload
         return [
             'tuleapProjectId'      => (string) $git_repository->getProjectId(),
             'repositoryName' => $git_repository->getName(),
-            'branchName'     => $branch_name
+            'branchName'     => $branch_name,
         ];
     }
 

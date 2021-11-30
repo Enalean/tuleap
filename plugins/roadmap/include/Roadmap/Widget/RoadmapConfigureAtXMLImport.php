@@ -117,7 +117,7 @@ final class RoadmapConfigureAtXMLImport
     private function getReferencedIterationTrackerIdFromXML(
         \SimpleXMLElement $xml,
         MappingsRegistry $mapping_registry,
-        string $name
+        string $name,
     ): ?string {
         $tracker_id_nodes = $xml->xpath("preference/value[@name='$name']");
         if (count($tracker_id_nodes) === 0) {

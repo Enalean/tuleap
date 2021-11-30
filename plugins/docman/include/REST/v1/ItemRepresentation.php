@@ -184,7 +184,7 @@ class ItemRepresentation
         bool $has_approval_table,
         bool $is_approval_table_enabled,
         ?DocmanItemPermissionsForGroupsRepresentation $permissions_for_groups,
-        ?int $parent_id
+        ?int $parent_id,
     ) {
         $this->id                         = $id;
         $this->title                      = $title;
@@ -232,7 +232,7 @@ class ItemRepresentation
         ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties,
         ?LinkPropertiesRepresentation $link_properties,
         ?WikiPropertiesRepresentation $wiki_properties,
-        ?FolderPropertiesRepresentation $folder_properties
+        ?FolderPropertiesRepresentation $folder_properties,
     ): self {
         $description = $item->getDescription();
         return new self(

@@ -134,7 +134,7 @@ class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($this->tracker)
             ->andReturn([
-                987
+                987,
             ]);
 
         $this->user->shouldReceive('isMemberOfUGroup')
@@ -158,7 +158,7 @@ class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($this->tracker)
             ->andReturn([
-                987
+                987,
             ]);
 
         $this->user->shouldReceive('isMemberOfUGroup')
@@ -258,7 +258,7 @@ class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($this->tracker)
             ->andReturn([
-                987
+                987,
             ]);
 
         $this->user->shouldReceive('isMemberOfUGroup')
@@ -282,7 +282,7 @@ class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($this->tracker)
             ->andReturn([
-                987
+                987,
             ]);
 
         $this->user->shouldReceive('isMemberOfUGroup')

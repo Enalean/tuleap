@@ -65,7 +65,7 @@ class Router
         TrackerFactory $tracker_factory,
         Tracker_ArtifactFactory $artifact_factory,
         AdminController $admin_controller,
-        TimeController $time_controller
+        TimeController $time_controller,
     ) {
         $this->tracker_factory  = $tracker_factory;
         $this->artifact_factory = $artifact_factory;
@@ -195,7 +195,7 @@ class Router
     {
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
                 'aid'  => $artifact->getId(),
-                'view' => 'timetracking'
+                'view' => 'timetracking',
             ]);
 
         $GLOBALS['Response']->redirect($url);
@@ -204,7 +204,7 @@ class Router
     private function redirectToArtifactView(Artifact $artifact)
     {
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
-                'aid'  => $artifact->getId()
+                'aid'  => $artifact->getId(),
             ]);
 
         $GLOBALS['Response']->redirect($url);
@@ -252,7 +252,7 @@ class Router
         );
 
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
-                'tracker' => $tracker_id
+                'tracker' => $tracker_id,
         ]);
 
         $GLOBALS['Response']->redirect($url);
@@ -262,7 +262,7 @@ class Router
     {
         $url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
                 'tracker' => $tracker->getId(),
-                'action' => 'admin-timetracking'
+                'action' => 'admin-timetracking',
         ]);
 
         $GLOBALS['Response']->redirect($url);

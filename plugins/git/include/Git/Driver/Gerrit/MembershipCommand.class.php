@@ -34,7 +34,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand
     public function __construct(
         Git_Driver_Gerrit_MembershipManager $membership_manager,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        ProjectUGroup $ugroup
+        ProjectUGroup $ugroup,
     ) {
         $this->membership_manager = $membership_manager;
         $this->driver_factory     = $driver_factory;

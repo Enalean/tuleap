@@ -126,14 +126,14 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
         $tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
             [
                 Tracker::PERMISSION_SUBMITTER_ONLY => [
-                    $ugroup_id_submitter_only
+                    $ugroup_id_submitter_only,
                 ],
                 Tracker::PERMISSION_FULL           => [
-                    $this->ugroup_id_maintainers
+                    $this->ugroup_id_maintainers,
                 ],
                 Tracker::PERMISSION_ADMIN          => [
-                    $this->ugroup_id_admin
-                ]
+                    $this->ugroup_id_admin,
+                ],
             ]
         );
 
@@ -182,8 +182,8 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
         $tracker_in_private_project->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
             [
                 Tracker::PERMISSION_FULL => [
-                    $this->ugroup_private_project
-                ]
+                    $this->ugroup_private_project,
+                ],
             ]
         );
 

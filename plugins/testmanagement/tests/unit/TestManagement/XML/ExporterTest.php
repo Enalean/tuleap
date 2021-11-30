@@ -65,7 +65,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'getCampaignTrackerId'       => 2,
             'getTestDefinitionTrackerId' => 3,
             'getTestExecutionTrackerId'  => 4,
-            'isConfigNeeded'             => false
+            'isConfigNeeded'             => false,
         ]);
 
         $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->once()->andReturn([]);
@@ -85,7 +85,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'getCampaignTrackerId'       => 2,
             'getTestDefinitionTrackerId' => 3,
             'getTestExecutionTrackerId'  => 4,
-            'isConfigNeeded'             => false
+            'isConfigNeeded'             => false,
         ]);
 
         $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->once()->andReturn([]);
@@ -105,7 +105,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'getCampaignTrackerId'       => 2,
             'getTestDefinitionTrackerId' => 3,
             'getTestExecutionTrackerId'  => false,
-            'isConfigNeeded'             => true
+            'isConfigNeeded'             => true,
         ]);
 
         $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->never();
@@ -122,7 +122,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'getCampaignTrackerId'       => 2,
             'getTestDefinitionTrackerId' => 3,
             'getTestExecutionTrackerId'  => 4,
-            'isConfigNeeded'             => false
+            'isConfigNeeded'             => false,
         ]);
 
         $this->execution_dao

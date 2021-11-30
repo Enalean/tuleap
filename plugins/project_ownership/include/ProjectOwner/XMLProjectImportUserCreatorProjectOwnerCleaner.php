@@ -37,7 +37,7 @@ final class XMLProjectImportUserCreatorProjectOwnerCleaner
     }
 
     public function updateProjectOwnership(
-        ProjectImportCleanupUserCreatorFromAdministrators $cleanup_user_creator_from_administrators
+        ProjectImportCleanupUserCreatorFromAdministrators $cleanup_user_creator_from_administrators,
     ): void {
         $ugroup_admin = $cleanup_user_creator_from_administrators->getUGroupAdministrator();
         $project      = $ugroup_admin->getProject();

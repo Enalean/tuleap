@@ -62,7 +62,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $required,
         $notifications,
         $rank,
-        ?Tracker_FormElement $original_field = null
+        ?Tracker_FormElement $original_field = null,
     ) {
         parent::__construct(
             $id,
@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function getComputedValue(
         PFUser $user,
         Artifact $artifact,
-        $timestamp = null
+        $timestamp = null,
     ) {
         return $this->getCalculator()->calculate(
             [$artifact->getId()],
@@ -233,14 +233,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         Tracker_IDisplayTrackerLayout $layout,
         $request,
         $current_user,
-        $redirect = false
+        $redirect = false,
     ) {
         $formElement_data = $request->get('formElement_data');
 
         if ($formElement_data !== false) {
             $default_specific_properties   = [
                 'fast_compute'      => '1',
-                'target_field_name' => $formElement_data['name']
+                'target_field_name' => $formElement_data['name'],
             ];
             $submitted_specific_properties = isset($formElement_data['specific_properties']) ? $formElement_data['specific_properties'] : [];
 
@@ -328,7 +328,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
@@ -337,7 +337,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getHiddenArtifactValueForEdition(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $purifier       = Codendi_HTMLPurifier::instance();
         $current_user   = UserManager::instance()->getCurrentUser();
@@ -382,7 +382,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $displayed_value = null;
         $is_autocomputed = true;
@@ -422,7 +422,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $changeset_value = null
+        ?Tracker_Artifact_ChangesetValue $changeset_value = null,
     ) {
         $value    = null;
         $purifier = Codendi_HTMLPurifier::instance();
@@ -474,7 +474,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         $changeset      = $artifact->getLastChangesetWithFieldValue($this);
         $computed_value = null;
@@ -734,7 +734,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         return [
             self::FIELD_VALUE_IS_AUTOCOMPUTED => false,
-            self::FIELD_VALUE_MANUAL => (float) $property
+            self::FIELD_VALUE_MANUAL => (float) $property,
         ];
     }
 
@@ -747,7 +747,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         return [
             'type'  => self::FIELD_VALUE_MANUAL,
-            'value' => (float) $property
+            'value' => (float) $property,
         ];
     }
 
@@ -967,7 +967,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $user = $this->getCurrentUser();
         if (! $this->userCanUpdate($user)) {
@@ -1081,7 +1081,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $submitted_value,
         PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
-        ?bool $is_submission = null
+        ?bool $is_submission = null,
     ): bool {
         $hasPermission = $this->userCanUpdate();
         if ($is_submission) {

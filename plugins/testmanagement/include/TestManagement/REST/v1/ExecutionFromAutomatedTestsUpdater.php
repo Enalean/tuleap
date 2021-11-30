@@ -52,7 +52,7 @@ class ExecutionFromAutomatedTestsUpdater
         ExecutionStatusUpdater $execution_status_updater,
         ExecutionChangesExtractor $execution_change_extractor,
         TestsDataFromJunitExtractor $tests_data_extractor,
-        ListOfExecutionsWithAutomatedTestDataRetriever $list_of_executions_with_automated_test_data_retriever
+        ListOfExecutionsWithAutomatedTestDataRetriever $list_of_executions_with_automated_test_data_retriever,
     ) {
         $this->execution_status_updater                              = $execution_status_updater;
         $this->execution_change_extractor                            = $execution_change_extractor;
@@ -66,7 +66,7 @@ class ExecutionFromAutomatedTestsUpdater
     public function updateExecutionFromAutomatedTests(
         AutomatedTestsResultPATCHRepresentation $automated_tests_results,
         Artifact $campaign_artifact,
-        PFUser $user
+        PFUser $user,
     ): void {
         if (! empty($automated_tests_results->junit_contents)) {
             $all_test_cases = $this->tests_data_extractor->getTestsResultsFromJunit(
@@ -93,7 +93,7 @@ class ExecutionFromAutomatedTestsUpdater
     private function updateExecution(
         array $all_test_cases,
         array $executions_with_automated_test_data,
-        PFUser $user
+        PFUser $user,
     ): void {
         foreach ($executions_with_automated_test_data as $execution_with_automated_test_data) {
             $automated_test = $execution_with_automated_test_data->getAutomatedTest();

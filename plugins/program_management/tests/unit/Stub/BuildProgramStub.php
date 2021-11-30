@@ -35,7 +35,7 @@ final class BuildProgramStub implements BuildProgram
 
     private function __construct(
         bool $is_a_program,
-        bool $is_access_allowed
+        bool $is_access_allowed,
     ) {
         $this->is_a_program      = $is_a_program;
         $this->is_access_allowed = $is_access_allowed;

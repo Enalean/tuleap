@@ -189,7 +189,7 @@ class Docman_PermissionsExport
         $title_arr = [
             dgettext('tuleap-docman', 'Label'),
             dgettext('tuleap-docman', 'Sample value'),
-            dgettext('tuleap-docman', 'Description')
+            dgettext('tuleap-docman', 'Description'),
         ];
         echo html_build_list_table_top($title_arr);
         $i = 0;

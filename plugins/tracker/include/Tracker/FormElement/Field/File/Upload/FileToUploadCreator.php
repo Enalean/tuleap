@@ -47,7 +47,7 @@ final class FileToUploadCreator
     public function __construct(
         FileOngoingUploadDao $dao,
         DBTransactionExecutor $transaction_executor,
-        int $max_size_upload
+        int $max_size_upload,
     ) {
         $this->dao                  = $dao;
         $this->transaction_executor = $transaction_executor;
@@ -60,7 +60,7 @@ final class FileToUploadCreator
         DateTimeImmutable $current_time,
         string $filename,
         int $filesize,
-        string $filetype
+        string $filetype,
     ): FileToUpload {
         if ($filesize > $this->max_size_upload) {
             throw new UploadMaxSizeExceededException($filesize, $this->max_size_upload);
@@ -100,7 +100,7 @@ final class FileToUploadCreator
         string $name,
         DateTimeImmutable $current_time,
         PFUser $user,
-        int $file_size
+        int $file_size,
     ): ?int {
         $rows = $this->dao->searchFileOngoingUploadByFieldIdNameAndExpirationDate(
             (int) $field->getId(),

@@ -47,7 +47,7 @@ class RepoManagementController implements DispatchableWithRequest
     public function __construct(
         MergeSettingDAO $merge_setting_dao,
         GitRepositoryFactory $repository_factory,
-        GitPermissionsManager $permissions_manager
+        GitPermissionsManager $permissions_manager,
     ) {
         $this->merge_setting_dao   = $merge_setting_dao;
         $this->repository_factory  = $repository_factory;
@@ -103,7 +103,7 @@ class RepoManagementController implements DispatchableWithRequest
                 'action'   => 'repo_management',
                 'group_id' => $request->getProject()->getID(),
                 'repo_id'  => $repository->getId(),
-                'pane'     => PullRequestPane::NAME
+                'pane'     => PullRequestPane::NAME,
             ]
         );
     }

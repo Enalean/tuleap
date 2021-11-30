@@ -104,7 +104,7 @@ class AdminScrumPresenter
         bool $explicit_top_backlog_enabled,
         bool $has_workflow_action_add_to_top_backlog_defined,
         array $additional_scrum_sections_controllers,
-        bool $is_planning_administration_delegated
+        bool $is_planning_administration_delegated,
     ) {
         $this->plannings                                   = $plannings;
         $this->group_id                                    = $group_id;

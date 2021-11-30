@@ -84,7 +84,7 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
         $this->tracker             = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn($this->tracker_id)->getMock();
         $this->submitted_values    = [
             1001 => 'Content of summary field',
-            1002 => '123'
+            1002 => '123',
         ];
 
         $this->field_summary = Mockery::spy(Tracker_FormElement_Field_String::class);

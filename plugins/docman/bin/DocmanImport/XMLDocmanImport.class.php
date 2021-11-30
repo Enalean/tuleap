@@ -798,7 +798,7 @@ class XMLDocmanImport
              $createDate,
              $updateDate,
              $metadata,
-             $permissions
+             $permissions,
         ] = $this->getItemInformation($node);
 
         $ordering = 'end';
@@ -814,7 +814,7 @@ class XMLDocmanImport
                         $label,
                         $changelog,
                         $author,
-                        $date
+                        $date,
                     ] = $this->getVersionInformation($version);
 
                     $fileName = (string) $version->filename;
@@ -842,7 +842,7 @@ class XMLDocmanImport
                         $label,
                         $changelog,
                         $author,
-                        $date
+                        $date,
                     ] = $this->getVersionInformation($version);
 
                     // If this is the initial version

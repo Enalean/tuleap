@@ -55,7 +55,7 @@ class WebhookSecretGenerator
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitPermissionsManager $permissions_manager,
         CredentialsRetriever $credentials_retriever,
-        WebhookCreator $webhook_creator
+        WebhookCreator $webhook_creator,
     ) {
         $this->repository_integration_factory = $repository_integration_factory;
         $this->permissions_manager            = $permissions_manager;
@@ -65,7 +65,7 @@ class WebhookSecretGenerator
 
     public function regenerate(
         int $id,
-        \PFUser $current_user
+        \PFUser $current_user,
     ): void {
         $repository = $this->repository_integration_factory->getIntegrationById($id);
         if (! $repository) {

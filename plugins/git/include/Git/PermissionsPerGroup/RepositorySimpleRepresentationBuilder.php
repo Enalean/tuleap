@@ -39,7 +39,7 @@ class RepositorySimpleRepresentationBuilder
     public function __construct(
         GitPermissionsManager $permissions_manager,
         CollectionOfUGroupRepresentationBuilder $collection_of_ugroups_builder,
-        AdminUrlBuilder $url_builder
+        AdminUrlBuilder $url_builder,
     ) {
         $this->permissions_manager           = $permissions_manager;
         $this->url_builder                   = $url_builder;
@@ -54,7 +54,7 @@ class RepositorySimpleRepresentationBuilder
     public function build(
         GitRepository $repository,
         Project $project,
-        $selected_ugroup_id
+        $selected_ugroup_id,
     ) {
         $permissions = $this->permissions_manager->getRepositoryGlobalPermissions($repository);
 

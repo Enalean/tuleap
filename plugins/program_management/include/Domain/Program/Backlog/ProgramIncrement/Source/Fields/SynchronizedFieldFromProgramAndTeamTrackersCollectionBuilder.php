@@ -34,7 +34,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
         private LogMessage $logger,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
         private VerifyFieldPermissions $retrieve_field_permission,
-        private RetrieveProjectFromTracker $retrieve_project_from_tracker
+        private RetrieveProjectFromTracker $retrieve_project_from_tracker,
     ) {
     }
 
@@ -43,7 +43,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
      */
     public function buildFromSourceTrackers(
         SourceTrackerCollection $source_tracker_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): SynchronizedFieldFromProgramAndTeamTrackersCollection {
         $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(
             $this->logger,

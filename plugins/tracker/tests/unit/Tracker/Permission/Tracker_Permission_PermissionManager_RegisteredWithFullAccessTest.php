@@ -47,25 +47,25 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
         $permissions = [
             ProjectUGroup::ANONYMOUS       => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::REGISTERED      => [
                 'ugroup'      => ['name' => 'whatever'],
                 'permissions' => [
-                    Tracker::PERMISSION_FULL => 1
-                ]
+                    Tracker::PERMISSION_FULL => 1,
+                ],
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::PROJECT_ADMIN   => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             $this->some_ugroupid           => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
         ];
 

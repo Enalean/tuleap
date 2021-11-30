@@ -49,7 +49,7 @@ class MembersPresenter
         array $members,
         bool $can_be_updated,
         bool $is_dynamic_group,
-        bool $is_synchronized_with_project_members
+        bool $is_synchronized_with_project_members,
     ) {
         $this->has_members                   = count($members) > 0;
         $this->can_be_updated                = $can_be_updated;

@@ -64,7 +64,7 @@ class MoveArtifactParseFieldChangeNodes implements Dispatchable
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
         FeedbackFieldCollectorInterface $feedback_field_collector,
-        $index
+        $index,
     ) {
         $this->source_tracker           = $source_tracker;
         $this->target_tracker           = $target_tracker;

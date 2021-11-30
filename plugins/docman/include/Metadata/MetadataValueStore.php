@@ -39,7 +39,7 @@ class MetadataValueStore
 
     public function __construct(
         Docman_MetadataValueDao $metadata_value_dao,
-        ReferenceManager $reference_manager
+        ReferenceManager $reference_manager,
     ) {
         $this->metadata_value_dao = $metadata_value_dao;
         $this->reference_manager  = $reference_manager;

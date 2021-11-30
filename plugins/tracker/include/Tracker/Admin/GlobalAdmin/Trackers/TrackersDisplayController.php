@@ -83,7 +83,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         TemplateRendererFactory $renderer_factory,
         TrackerInNewDropdownDao $in_new_dropdown_dao,
         CSRFSynchronizerTokenProvider $token_provider,
-        FieldDao $field_dao
+        FieldDao $field_dao,
     ) {
         $this->project_manager     = $project_manager;
         $this->tracker_manager     = $tracker_manager;

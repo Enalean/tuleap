@@ -86,7 +86,7 @@ final class SwaggerJson
         array $consumes,
         SwaggerJsonInfo $info,
         SwaggerJsonPathsAndDefinitions $paths_and_models,
-        array $security_definitions
+        array $security_definitions,
     ) {
         $this->host                = $host;
         $this->produces            = $produces;

@@ -87,7 +87,7 @@ class OAuth2GrantAccessTokenFromRefreshToken
         OAuth2RefreshTokenVerifier $refresh_token_verifier,
         AccessTokenGrantRepresentationBuilder $access_token_grant_representation_builder,
         ScopeExtractor $scope_extractor,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->response_factory                          = $response_factory;
         $this->stream_factory                            = $stream_factory;

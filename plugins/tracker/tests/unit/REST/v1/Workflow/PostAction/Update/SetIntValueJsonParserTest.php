@@ -50,7 +50,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertTrue($this->parser->accept([
             "type" => "set_field_value",
-            "field_type" => "int"
+            "field_type" => "int",
         ]));
     }
 
@@ -63,7 +63,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertFalse($this->parser->accept([
             "type" => "set_field_value",
-            "field_type" => "date"
+            "field_type" => "date",
         ]));
     }
 
@@ -84,7 +84,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "int",
                 "field_id" => 43,
-                "value" => 1
+                "value" => 1,
             ]
         );
         $expected_action = new SetIntValue(43, 1);
@@ -102,7 +102,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => 1
+                "value" => 1,
             ]
         );
         $expected_action = new SetIntValue(43, 1);
@@ -121,7 +121,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "int",
                 "field_id" => 43,
-                "value" => 1
+                "value" => 1,
             ]
         );
         $expected_action = new SetIntValue(43, 1);
@@ -140,7 +140,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 "type" => "set_field_value",
                 "field_type" => "date",
-                "value" => 1
+                "value" => 1,
             ]
         );
     }
@@ -158,7 +158,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => null,
-                "value" => 1
+                "value" => 1,
             ]
         );
     }
@@ -176,7 +176,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => "not int",
-                "value" => 1
+                "value" => 1,
             ]
         );
     }
@@ -193,7 +193,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 "type" => "set_field_value",
                 "field_type" => "date",
-                "field_id" => 43
+                "field_id" => 43,
             ]
         );
     }
@@ -211,7 +211,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => null
+                "value" => null,
             ]
         );
     }
@@ -229,7 +229,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => "not int"
+                "value" => "not int",
             ]
         );
     }
@@ -247,7 +247,7 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "date",
                 "field_id" => 43,
-                "value" => 1.23
+                "value" => 1.23,
             ]
         );
     }

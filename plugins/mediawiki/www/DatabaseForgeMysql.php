@@ -28,7 +28,7 @@ class DatabaseForge extends DataBase
         $password = false,
         $dbName = false,
         $failFunction = false,
-        $flags = 0
+        $flags = 0,
     ) {
         global $wgDBtype;
 

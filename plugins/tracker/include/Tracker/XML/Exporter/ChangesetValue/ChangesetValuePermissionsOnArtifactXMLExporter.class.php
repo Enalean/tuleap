@@ -32,7 +32,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
@@ -65,7 +65,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
     private function appendUgroupToFieldChangeNode(
         $ugroup_name,
         $index,
-        SimpleXMLElement $field_xml
+        SimpleXMLElement $field_xml,
     ) {
         $node = $field_xml->addChild('ugroup');
         $node->addAttribute('ugroup_name', $ugroup_name);

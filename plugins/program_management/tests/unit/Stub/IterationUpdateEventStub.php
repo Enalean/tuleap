@@ -38,7 +38,7 @@ final class IterationUpdateEventStub implements IterationUpdateEvent
     private function __construct(
         private IterationIdentifier $iteration,
         private UserIdentifier $user,
-        private ChangesetIdentifier $changeset
+        private ChangesetIdentifier $changeset,
     ) {
     }
 

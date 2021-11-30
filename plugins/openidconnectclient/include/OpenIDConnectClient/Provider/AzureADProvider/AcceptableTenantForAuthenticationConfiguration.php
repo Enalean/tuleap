@@ -49,7 +49,7 @@ final class AcceptableTenantForAuthenticationConfiguration
 
     public static function fromTenantSetupAndTenantID(
         AzureADTenantSetup $tenant_setup,
-        string $tenant_id
+        string $tenant_id,
     ): self {
         return new self($tenant_setup, $tenant_id);
     }

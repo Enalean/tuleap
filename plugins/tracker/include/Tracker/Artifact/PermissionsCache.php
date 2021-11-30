@@ -34,7 +34,7 @@ class PermissionsCache
     public static function userCanView(
         Artifact $artifact,
         PFUser $user,
-        Tracker_Permission_PermissionChecker $permission_checker
+        Tracker_Permission_PermissionChecker $permission_checker,
     ) {
         if ($user instanceof Tracker_UserWithReadAllPermission) {
             return true;

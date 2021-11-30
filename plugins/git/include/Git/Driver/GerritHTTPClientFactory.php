@@ -47,7 +47,7 @@ final class GerritHTTPClientFactory
             [
                 new AuthenticationPlugin(
                     new BasicAuth($gerrit_server->getLogin(), $gerrit_server->getHTTPPassword())
-                )
+                ),
             ]
         );
     }

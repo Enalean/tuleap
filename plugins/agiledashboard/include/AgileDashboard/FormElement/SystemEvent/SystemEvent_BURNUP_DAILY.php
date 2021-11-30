@@ -79,7 +79,7 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
         BurnupCacheDao $cache_dao,
         CountElementsCacheDao $count_elements_cache_dao,
         LoggerInterface $logger,
-        BurnupCacheDateRetriever $date_retriever
+        BurnupCacheDateRetriever $date_retriever,
     ) {
         $this->burnup_dao                       = $burnup_dao;
         $this->logger                           = $logger;

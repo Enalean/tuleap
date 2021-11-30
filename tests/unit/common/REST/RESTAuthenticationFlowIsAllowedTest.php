@@ -110,26 +110,26 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 new class extends User_LoginException {
                 },
-                403
+                403,
             ],
             [
                 new Rest_Exception_InvalidTokenException(),
-                401
+                401,
             ],
             [
                 new class extends AccessKeyException {
                 },
-                401
+                401,
             ],
             [
                 new class extends \RuntimeException implements OAuth2Exception {
                 },
-                401
+                401,
             ],
             [
                 new class extends SplitTokenException {
                 },
-                401
+                401,
             ],
         ];
     }

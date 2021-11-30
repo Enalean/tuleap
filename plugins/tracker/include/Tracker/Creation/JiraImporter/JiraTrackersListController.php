@@ -53,7 +53,7 @@ class JiraTrackersListController implements DispatchableWithRequest, Dispatchabl
         \ProjectManager $project_manager,
         TrackerCreationPermissionChecker $permission_checker,
         JiraTrackerBuilder $jira_tracker_builder,
-        ClientWrapperBuilder $wrapper_builder
+        ClientWrapperBuilder $wrapper_builder,
     ) {
         $this->project_manager      = $project_manager;
         $this->permission_checker   = $permission_checker;

@@ -116,7 +116,7 @@ class ArtifactDao extends DataAccessObject
         array $types,
         $target_tracker_id,
         int $limit,
-        int $offset
+        int $offset,
     ): array {
         $where_statement = EasyStatement::open()->in('parent_art.id IN (?*)', $artifacts_ids)
             ->andIn('IFNULL(artlink.nature, "") IN (?*)', $types);
@@ -161,7 +161,7 @@ class ArtifactDao extends DataAccessObject
         int $campaign_artifact_id,
         int $execution_tracker_id,
         int $limit,
-        int $offset
+        int $offset,
     ): array {
         $sql = "SELECT DISTINCT SQL_CALC_FOUND_ROWS linked_art.*
                 FROM tracker_artifact parent_art
@@ -183,7 +183,7 @@ class ArtifactDao extends DataAccessObject
 
     public function searchExecutionArtifactsForCampaign(
         int $campaign_artifact_id,
-        int $execution_tracker_id
+        int $execution_tracker_id,
     ): array {
         $sql = "SELECT DISTINCT linked_art.*
                 FROM tracker_artifact parent_art

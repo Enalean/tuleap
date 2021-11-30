@@ -34,7 +34,7 @@ class EmptyFileToUploadFinisher
     private $upload_path_allocator;
 
     public function __construct(
-        PathAllocator $upload_path_allocator
+        PathAllocator $upload_path_allocator,
     ) {
         $this->upload_path_allocator = $upload_path_allocator;
     }

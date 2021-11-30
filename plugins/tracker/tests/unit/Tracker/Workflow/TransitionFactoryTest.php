@@ -85,7 +85,7 @@ class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_mapping = [
             'F32'    => $field,
             'F32-V1' => $from_value,
-            'F32-V0' => $this->to_value
+            'F32-V0' => $this->to_value,
         ];
     }
 

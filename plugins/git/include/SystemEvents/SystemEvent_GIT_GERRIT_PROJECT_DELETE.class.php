@@ -43,7 +43,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit_GerritDriverFactory $factory
+        Git_Driver_Gerrit_GerritDriverFactory $factory,
     ) {
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $gerrit_server_factory;
@@ -102,7 +102,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent
         GitRepository $repository,
         Git_RemoteServer_GerritServer $server,
         Project $project,
-        $backend
+        $backend,
     ) {
         try {
             $this->driver_factory->getDriver($server)->deleteProject(

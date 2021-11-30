@@ -37,7 +37,7 @@ class b201811051700_rename_burnup_daily_sysevent_with_wrong_case extends ForgeUp
         $statement = $this->db->dbh->prepare($sql);
         $res       = $statement->execute([
             'Tuleap\\AgileDashboard\\FormElement\\SystemEvent\\SystemEvent_BURNUP_DAILY',
-            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\SystemEvent_BURNUP_DAILY'
+            'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\SystemEvent_BURNUP_DAILY',
         ]);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(

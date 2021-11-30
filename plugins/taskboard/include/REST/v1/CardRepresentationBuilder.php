@@ -50,7 +50,7 @@ class CardRepresentationBuilder
     public function __construct(
         BackgroundColorBuilder $background_color_builder,
         ArtifactMappedFieldValueRetriever $mapped_field_value_retriever,
-        RemainingEffortRepresentationBuilder $remaining_effort_representation_builder
+        RemainingEffortRepresentationBuilder $remaining_effort_representation_builder,
     ) {
         $this->background_color_builder                = $background_color_builder;
         $this->mapped_field_value_retriever            = $mapped_field_value_retriever;
@@ -61,7 +61,7 @@ class CardRepresentationBuilder
         \Planning_ArtifactMilestone $milestone,
         Artifact $artifact,
         PFUser $user,
-        int $rank
+        int $rank,
     ): CardRepresentation {
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());
         $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $user);
@@ -87,7 +87,7 @@ class CardRepresentationBuilder
     private function getMappedListValue(
         \Planning_ArtifactMilestone $milestone,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): ?MappedListValueRepresentation {
         $mapped_list_value = $this->mapped_field_value_retriever->getValueAtLastChangeset($milestone, $artifact, $user);
         if (! $mapped_list_value instanceof Tracker_FormElement_Field_List_BindValue) {

@@ -60,7 +60,7 @@ class GetReferenceEvent implements Dispatchable
         ReferenceManager $reference_manager,
         Project $project,
         string $keyword,
-        string $value
+        string $value,
     ) {
         $this->reference_manager = $reference_manager;
         $this->project           = $project;

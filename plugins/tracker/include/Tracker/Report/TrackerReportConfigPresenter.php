@@ -39,7 +39,7 @@ class TrackerReportConfigPresenter
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
         $title,
-        $query_limit
+        $query_limit,
     ) {
         $this->csrf_token          = $csrf_token;
         $this->title               = $title;

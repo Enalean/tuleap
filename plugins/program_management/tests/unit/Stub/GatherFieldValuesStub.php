@@ -39,7 +39,7 @@ final class GatherFieldValuesStub implements GatherFieldValues
         private RetrieveStartDateValueStub $start_date_stub,
         private ?RetrieveEndDateValueStub $end_date_stub,
         private ?RetrieveDurationValueStub $duration_stub,
-        private RetrieveStatusValuesStub $status_stub
+        private RetrieveStatusValuesStub $status_stub,
     ) {
     }
 
@@ -66,7 +66,7 @@ final class GatherFieldValuesStub implements GatherFieldValues
         string $description_format,
         int $start_date,
         int $end_date,
-        array $status_values
+        array $status_values,
     ): self {
         return new self(
             RetrieveTitleValueStub::withValue($title),
@@ -89,7 +89,7 @@ final class GatherFieldValuesStub implements GatherFieldValues
         string $description_format,
         int $start_date,
         int $duration,
-        array $status_values
+        array $status_values,
     ): self {
         return new self(
             RetrieveTitleValueStub::withValue($title),

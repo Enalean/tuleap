@@ -89,7 +89,7 @@ class ForgeAccess_AdminPresenter
         $ugroup_authenticated_users,
         $ugroup_registered_users,
         $anonymous_can_see_site_homepage,
-        $anonymous_can_see_contact
+        $anonymous_can_see_contact,
     ) {
         $this->title                           = $title;
         $this->csrf_token                      = $csrf;

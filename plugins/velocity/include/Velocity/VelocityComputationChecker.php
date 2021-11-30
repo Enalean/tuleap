@@ -31,7 +31,7 @@ class VelocityComputationChecker
         Tracker_Semantic_Status $semantic_status,
         SemanticDone $semantic_done,
         SemanticVelocity $semantic_velocity,
-        BeforeEvent $before_event
+        BeforeEvent $before_event,
     ) {
         if (! $semantic_status->getFieldId() || $semantic_status->getField()->isMultiple()) {
             return false;

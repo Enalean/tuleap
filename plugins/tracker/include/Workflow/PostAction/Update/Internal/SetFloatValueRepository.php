@@ -43,7 +43,7 @@ class SetFloatValueRepository
 
     public function __construct(
         Transition_PostAction_Field_FloatDao $set_float_value_dao,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->set_float_value_dao  = $set_float_value_dao;
         $this->transaction_executor = $transaction_executor;

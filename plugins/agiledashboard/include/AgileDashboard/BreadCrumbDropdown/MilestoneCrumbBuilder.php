@@ -49,7 +49,7 @@ class MilestoneCrumbBuilder
     public function __construct(
         $plugin_path,
         Planning_MilestonePaneFactory $pane_factory,
-        Planning_MilestoneFactory $milestone_factory
+        Planning_MilestoneFactory $milestone_factory,
     ) {
         $this->plugin_path       = $plugin_path;
         $this->pane_factory      = $pane_factory;
@@ -83,7 +83,7 @@ class MilestoneCrumbBuilder
                     'pane'        => DetailsPaneInfo::IDENTIFIER,
                     'action'      => 'show',
                     'group_id'    => $milestone->getGroupId(),
-                    'aid'         => $milestone->getArtifactId()
+                    'aid'         => $milestone->getArtifactId(),
                 ]
             );
     }

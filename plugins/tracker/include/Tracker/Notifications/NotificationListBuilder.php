@@ -42,7 +42,7 @@ class NotificationListBuilder
     public function __construct(
         UGroupDao $ugroup_dao,
         CollectionOfUserInvolvedInNotificationPresenterBuilder $user_involved_in_notification_presenter_builder,
-        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder
+        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
     ) {
         $this->ugroup_dao                                      = $ugroup_dao;
         $this->user_involved_in_notification_presenter_builder = $user_involved_in_notification_presenter_builder;
@@ -92,7 +92,7 @@ class NotificationListBuilder
             $ugroup_parsed                   = [
                 'type' => 'group',
                 'id'   => '_ugroup:' . $ugroup->getNormalizedName(),
-                'text' => $ugroup->getTranslatedName()
+                'text' => $ugroup->getTranslatedName(),
             ];
             $ugroups_to_be_notified_parsed[] = $ugroup_parsed;
         }
@@ -119,7 +119,7 @@ class NotificationListBuilder
             $email_parsed                   = [
                 'type' => 'email',
                 'id'   => $email,
-                'text' => $email
+                'text' => $email,
             ];
             $emails_to_be_notified_parsed[] = $email_parsed;
         }

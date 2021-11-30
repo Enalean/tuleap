@@ -62,7 +62,7 @@ final class TestPlanTestDefinitionWithTestStatus
         ?int $test_execution_id_used_to_define_status,
         ?int $test_execution_date,
         ?PFUser $test_execution_submitted_by,
-        ?int $test_campaign_id
+        ?int $test_campaign_id,
     ) {
         $this->test_definition                         = $test_definition;
         $this->status                                  = $status;
@@ -86,7 +86,7 @@ final class TestPlanTestDefinitionWithTestStatus
         int $test_execution_id_used_to_define_status,
         int $test_execution_date,
         PFUser $test_execution_submitted_by,
-        int $test_campaign_id
+        int $test_campaign_id,
     ): self {
         return new self(
             $test_definition,

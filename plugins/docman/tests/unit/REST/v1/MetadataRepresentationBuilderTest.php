@@ -62,7 +62,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $list_metadata->shouldReceive('getValue')->andReturn(
             new \ArrayIterator([
                 $value1,
-                $value2
+                $value2,
             ])
         );
         $list_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(true);
@@ -75,7 +75,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getMetadata')->andReturn(
             [
                 $simple_metadata,
-                $list_metadata
+                $list_metadata,
             ]
         );
         $html_purifier->shouldReceive('purifyTextWithReferences')->andReturn('value with references');
@@ -101,7 +101,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 null,
                 [
                     new MetadataListValueRepresentation(1, "My value 1"),
-                    new MetadataListValueRepresentation(100, "None")
+                    new MetadataListValueRepresentation(100, "None"),
                 ],
                 false,
                 "list_metadata_label"

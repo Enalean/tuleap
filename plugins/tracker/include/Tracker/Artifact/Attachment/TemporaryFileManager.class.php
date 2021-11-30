@@ -58,7 +58,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
         Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao,
         System_Command $system,
         $retention_delay,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->dao                     = $dao;
         $this->system                  = $system;

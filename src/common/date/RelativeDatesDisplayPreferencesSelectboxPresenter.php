@@ -51,7 +51,7 @@ class RelativeDatesDisplayPreferencesSelectboxPresenter
         bool $is_relative_first_absolute_shown,
         bool $is_absolute_first_relative_shown,
         bool $is_absolute_first_relative_tooltip,
-        bool $is_relative_first_absolute_tooltip
+        bool $is_relative_first_absolute_tooltip,
     ) {
         $this->is_relative_first_absolute_shown   = $is_relative_first_absolute_shown;
         $this->is_absolute_first_relative_shown   = $is_absolute_first_relative_shown;

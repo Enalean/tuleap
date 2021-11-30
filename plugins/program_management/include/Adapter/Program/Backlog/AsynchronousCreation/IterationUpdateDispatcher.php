@@ -56,7 +56,7 @@ final class IterationUpdateDispatcher implements DispatchIterationUpdate
 
     private function processUpdateSynchronously(
         IterationUpdate $update,
-        \Exception $exception
+        \Exception $exception,
     ): void {
         $this->logger->error(
             sprintf(

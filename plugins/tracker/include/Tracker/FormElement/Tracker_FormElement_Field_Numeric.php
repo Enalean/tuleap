@@ -48,7 +48,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     public function getComputedValue(
         PFUser $user,
         Artifact $artifact,
-        $timestamp = null
+        $timestamp = null,
     ) {
         if ($this->userCanRead($user)) {
             if ($timestamp !== null) {
@@ -234,7 +234,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $html = '';
         if (isset($submitted_values[$this->getId()])) {
@@ -269,7 +269,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         if (empty($value) || ! $value->getNumeric()) {
             return '-';
@@ -324,7 +324,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }

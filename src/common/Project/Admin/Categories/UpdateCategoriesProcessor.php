@@ -32,7 +32,7 @@ class UpdateCategoriesProcessor
 
     public function __construct(
         CategoryCollectionConsistencyChecker $category_collection_consistency_checker,
-        ProjectCategoriesUpdater $updater
+        ProjectCategoriesUpdater $updater,
     ) {
         $this->category_collection_consistency_checker = $category_collection_consistency_checker;
         $this->updater                                 = $updater;

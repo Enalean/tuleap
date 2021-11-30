@@ -46,8 +46,8 @@ final class EventSubjectToNotificationListenerProviderTest extends \Tuleap\Test\
                         \Mockery::mock(PullRequestNotificationStrategy::class),
                         \Mockery::mock(NotificationToProcessBuilder::class)
                     );
-                }
-            ]
+                },
+            ],
         ]);
 
         $listeners = $listener_provider->getListenersForEvent($event_subject_notification_implementation);

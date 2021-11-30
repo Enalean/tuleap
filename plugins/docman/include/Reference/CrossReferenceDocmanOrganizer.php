@@ -45,7 +45,7 @@ class CrossReferenceDocmanOrganizer
     public function __construct(
         \ProjectManager $project_manager,
         DocumentFromReferenceValueFinder $finder,
-        DocumentIconPresenterBuilder $icon_presenter_builder
+        DocumentIconPresenterBuilder $icon_presenter_builder,
     ) {
         $this->project_manager        = $project_manager;
         $this->finder                 = $finder;
@@ -77,7 +77,7 @@ class CrossReferenceDocmanOrganizer
 
     private function addTitleBadgeOnCrossReference(
         CrossReferencePresenter $cross_reference_presenter,
-        \Docman_Item $item
+        \Docman_Item $item,
     ): CrossReferencePresenter {
         $icon_presenter = $this->icon_presenter_builder->buildForItem($item);
 

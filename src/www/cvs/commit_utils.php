@@ -115,7 +115,7 @@ function show_commitslist(
     $srch = '',
     $chunksz = 15,
     $morder = '',
-    $msort = 0
+    $msort = 0,
 ) {
     /*
         Accepts a result set from the commits table. Should include all columns from

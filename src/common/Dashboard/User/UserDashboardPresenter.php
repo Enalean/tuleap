@@ -35,14 +35,14 @@ class UserDashboardPresenter extends DashboardPresenter
             [
                 'action'         => 'get-add-modal-content',
                 'dashboard-id'   => $this->id,
-                'dashboard-type' => UserDashboardController::DASHBOARD_TYPE
+                'dashboard-type' => UserDashboardController::DASHBOARD_TYPE,
             ]
         );
         $this->url_add_widget         = '/widgets/?' . http_build_query(
             [
                 'action'         => 'add-widget',
                 'dashboard-id'   => $this->id,
-                'dashboard-type' => UserDashboardController::DASHBOARD_TYPE
+                'dashboard-type' => UserDashboardController::DASHBOARD_TYPE,
             ]
         );
     }

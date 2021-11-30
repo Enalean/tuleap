@@ -48,7 +48,7 @@ class PullRequestPermissionChecker
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
         ProjectAccessChecker $project_access_checker,
-        AccessControlVerifier $access_control_verifier
+        AccessControlVerifier $access_control_verifier,
     ) {
         $this->git_repository_factory  = $git_repository_factory;
         $this->project_access_checker  = $project_access_checker;

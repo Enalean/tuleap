@@ -42,7 +42,7 @@ class NewsVisibilityRepresentation
     public function __construct(
         $news_name,
         $admin_quicklink,
-        $is_public
+        $is_public,
     ) {
         $this->news_name       = $news_name;
         $this->admin_quicklink = $admin_quicklink;

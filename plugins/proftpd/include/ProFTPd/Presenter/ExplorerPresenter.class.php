@@ -45,7 +45,7 @@ class ExplorerPresenter
         DirectoryPathCollection $path_parts,
         $path,
         DirectoryItemCollection $directory_items,
-        Project $project
+        Project $project,
     ) {
         $this->path_parts      = $path_parts;
         $this->path            = $path;

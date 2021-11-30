@@ -33,7 +33,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric implements T
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         return (string) $field_change->value;
     }

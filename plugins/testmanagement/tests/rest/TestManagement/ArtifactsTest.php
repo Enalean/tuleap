@@ -38,11 +38,11 @@ final class ArtifactsTest extends BaseTest
             "values"  => [
                 [
                     "field_id" => $summary_field_id,
-                    "value"    => "Test if the car is usable or not"
+                    "value"    => "Test if the car is usable or not",
                 ],
                 [
                     "field_id" => $details_field_id,
-                    "value"    => "Cars go brrrrr"
+                    "value"    => "Cars go brrrrr",
                 ],
                 [
                     "field_id" => $steps_field_id,
@@ -51,23 +51,23 @@ final class ArtifactsTest extends BaseTest
                             "description"             => "You can turn the steering wheel",
                             "description_format"      => "commonmark",
                             "expected_results"        => "The car should also turn ",
-                            "expected_results_format" => "commonmark"
+                            "expected_results_format" => "commonmark",
                         ],
                         [
                             "description"             => "The car does not have tyre",
                             "description_format"      => "html",
                             "expected_results"        => "It should be difficult to move",
-                            "expected_results_format" => "html"
+                            "expected_results_format" => "html",
                         ],
                         [
                             "description"             => "The car does not have tyre",
                             "description_format"      => "text",
                             "expected_results"        => "It should be difficult to move",
-                            "expected_results_format" => "text"
-                        ]
+                            "expected_results_format" => "text",
+                        ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->getResponse(
@@ -97,16 +97,16 @@ final class ArtifactsTest extends BaseTest
                             "description"             => "You can turn the steering wheel",
                             "description_format"      => "commonmark",
                             "expected_results"        => "The car should also turn ",
-                            "expected_results_format" => "commonmark"
+                            "expected_results_format" => "commonmark",
                         ],
                         [
                             "description"             => "The car does not have tyre",
                             "description_format"      => "html",
                             "expected_results"        => "It should be difficult to move",
-                            "expected_results_format" => "html"
-                        ]
+                            "expected_results_format" => "html",
+                        ],
                     ],
-                ]
+                ],
             ],
         ];
 
@@ -134,14 +134,14 @@ final class ArtifactsTest extends BaseTest
                 'description_format' => 'html',
                 'expected_results' => 'R10',
                 'expected_results_format' => 'html',
-                'rank' => 10
+                'rank' => 10,
             ],
             [
                 'description' => 'D1',
                 'description_format' => 'html',
                 'expected_results' => 'R1',
                 'expected_results_format' => 'html',
-                'rank' => 1
+                'rank' => 1,
             ],
         ];
 
@@ -167,14 +167,14 @@ final class ArtifactsTest extends BaseTest
                     'description_format' => 'html',
                     'expected_results' => 'R1',
                     'expected_results_format' => 'html',
-                    'rank' => 1
+                    'rank' => 1,
                 ],
                 [
                     'description' => 'D10',
                     'description_format' => 'html',
                     'expected_results' => 'R10',
                     'expected_results_format' => 'html',
-                    'rank' => 2
+                    'rank' => 2,
                 ],
             ],
             $updated_step_field_definition_value_without_id

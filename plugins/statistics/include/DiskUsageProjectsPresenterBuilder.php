@@ -46,7 +46,7 @@ class DiskUsageProjectsPresenterBuilder
         Statistics_DiskUsageManager $usage_manager,
         Statistics_DiskUsageOutput $usage_output,
         SearchFieldsPresenterBuilder $search_fields_builder,
-        DiskUsageServicesPresenterBuilder $services_builder
+        DiskUsageServicesPresenterBuilder $services_builder,
     ) {
         $this->usage_manager         = $usage_manager;
         $this->usage_output          = $usage_output;
@@ -61,7 +61,7 @@ class DiskUsageProjectsPresenterBuilder
         $end_date,
         $order,
         $offset,
-        $limit
+        $limit,
     ) {
         if (! $order) {
             $order = 'end_size';
@@ -101,7 +101,7 @@ class DiskUsageProjectsPresenterBuilder
         DiskUsageProjectsSearchFieldsPresenter $search_fields,
         $order,
         $offset,
-        $limit
+        $limit,
     ) {
         $services = $this->getServiceKeys($search_fields->service_values);
 
@@ -124,7 +124,7 @@ class DiskUsageProjectsPresenterBuilder
                 'evolution'           => $this->usage_output->sizeReadable($value['evolution']),
                 'evolution_rate'      => $value['evolution_rate'],
                 'project_details_url' => $this->buildProjectDetailsUrl($value['group_id']),
-                'project_url'         => $this->buildProjectUrl($value['group_id'])
+                'project_url'         => $this->buildProjectUrl($value['group_id']),
             ];
 
             $data_projects[] = $data_project;
@@ -159,7 +159,7 @@ class DiskUsageProjectsPresenterBuilder
         $page   = '/plugins/statistics/disk_usage.php';
         $params = [
             'menu'       => 'services',
-            'project_id' => $project_id
+            'project_id' => $project_id,
         ];
 
         return $page . '?' . http_build_query($params);
@@ -169,7 +169,7 @@ class DiskUsageProjectsPresenterBuilder
     {
         $page   = '/admin/groupedit.php';
         $params = [
-            'group_id' => $project_id
+            'group_id' => $project_id,
         ];
 
         return $page . '?' . http_build_query($params);

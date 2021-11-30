@@ -87,7 +87,7 @@ class CSVBuilder
         TroveCatFactory $trove_cat_factory,
         Statistics_DiskUsageManager $disk_usage_manager,
         PluginManager $plugin_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->services_usage_dao           = $services_usage_dao;
         $this->services_usage_formatter     = $services_usage_formatter;
@@ -190,7 +190,7 @@ class CSVBuilder
             [
                 'csv_exporter' => $this->services_usage_formatter,
                 'start_date'   => $start_date,
-                'end_date'     => $end_date
+                'end_date'     => $end_date,
             ]
         );
 

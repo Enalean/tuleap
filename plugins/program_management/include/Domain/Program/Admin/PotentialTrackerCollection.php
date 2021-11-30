@@ -41,7 +41,7 @@ final class PotentialTrackerCollection
 
     public static function fromProgram(
         SearchTrackersOfProgram $trackers_searcher,
-        ProgramForAdministrationIdentifier $program
+        ProgramForAdministrationIdentifier $program,
     ): self {
         return new self($trackers_searcher->searchAllTrackersOfProgram($program));
     }

@@ -175,7 +175,7 @@ final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase /
         $dar = [
             ['parent_id' => 111, 'child_id' => 112],
             ['parent_id' => 112, 'child_id' => 113],
-            ['parent_id' => 113, 'child_id' => 114]
+            ['parent_id' => 113, 'child_id' => 114],
         ];
         $dao->shouldReceive('searchTrackerHierarchy')->with([111, 112, 113, 114])->andReturn($dar);
 
@@ -190,13 +190,13 @@ final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase /
         $dao  = Mockery::mock(HierarchyDAO::class);
         $dar1 = [
             ['parent_id' => 111, 'child_id' => 112],
-            ['parent_id' => 113, 'child_id' => 114]
+            ['parent_id' => 113, 'child_id' => 114],
         ];
         $dao->shouldReceive('searchTrackerHierarchy')->with([111, 114])->andReturn($dar1);
         $dar2 = [
             ['parent_id' => 111, 'child_id' => 112],
             ['parent_id' => 112, 'child_id' => 113],
-            ['parent_id' => 113, 'child_id' => 114]
+            ['parent_id' => 113, 'child_id' => 114],
          ];
         $dao->shouldReceive('searchTrackerHierarchy')->with([112, 113])->andReturn($dar2);
         return $dao;

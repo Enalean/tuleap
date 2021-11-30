@@ -37,8 +37,8 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings"   => [
                     "commit_rules" => [
                         "is_reference_mandatory" => true,
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 
@@ -57,13 +57,13 @@ class RepositoryTestNonRegressionTest extends TestBase
                         [
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'users'       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -82,10 +82,10 @@ class RepositoryTestNonRegressionTest extends TestBase
                         [
                             'path'        => "/tags",
                             'users'       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -104,10 +104,10 @@ class RepositoryTestNonRegressionTest extends TestBase
                         [
                             'path'   => "/tags",
                             'users'  => [],
-                            "emails" => []
-                        ]
-                    ]
-                ]
+                            "emails" => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -126,13 +126,13 @@ class RepositoryTestNonRegressionTest extends TestBase
                         [
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'path'        => "/tags",
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -152,10 +152,10 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'users'       => [],
                             'emails'      => [],
                             'path'        => "/tags",
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -175,21 +175,21 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'users'       => [],
-                            'user_groups' => []
+                            'user_groups' => [],
                         ],
                         [
                             'path'        => "/tags",
                             'emails'      => [
-                                "test@list.example.com"
+                                "test@list.example.com",
                             ],
                             'users'       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -209,13 +209,13 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'users'       => [],
-                            'user_groups' => ["1000"]
-                        ]
-                    ]
-                ]
+                            'user_groups' => ["1000"],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -235,13 +235,13 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'users'       => [],
-                            'user_groups' => ["110_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS]
-                        ]
-                    ]
-                ]
+                            'user_groups' => ["110_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -261,13 +261,13 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'users'       => [],
-                            'user_groups' => [$this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_ANONYMOUS]
-                        ]
-                    ]
-                ]
+                            'user_groups' => [$this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_ANONYMOUS],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -287,13 +287,13 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'users'       => [],
-                            'user_groups' => [$this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS]
-                        ]
-                    ]
-                ]
+                            'user_groups' => [$this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -308,25 +308,25 @@ class RepositoryTestNonRegressionTest extends TestBase
                 'settings' => [
                     'commit_rules'        => [
                         'is_reference_mandatory'           => true,
-                        'is_commit_message_change_allowed' => false
+                        'is_commit_message_change_allowed' => false,
                     ],
                     "access_file"         => "",
                     "immutable_tags"      => [
                         "paths"     => [],
-                        "whitelist" => []
+                        "whitelist" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             "users"       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -340,7 +340,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             $repository['settings']['commit_rules'],
             [
                 "is_reference_mandatory"           => true,
-                "is_commit_message_change_allowed" => false
+                "is_commit_message_change_allowed" => false,
             ]
         );
         $this->assertEquals(
@@ -364,19 +364,19 @@ class RepositoryTestNonRegressionTest extends TestBase
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags"      => [
                         "paths"     => [],
-                        "whitelist" => []
+                        "whitelist" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
-                                "project-announce@list.example.com"
+                                "project-announce@list.example.com",
                             ],
                             "users"       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -391,20 +391,20 @@ class RepositoryTestNonRegressionTest extends TestBase
                 'settings' => [
                     'commit_rules'        => [
                         'is_reference_mandatory'           => true,
-                        'is_commit_message_change_allowed' => false
+                        'is_commit_message_change_allowed' => false,
                     ],
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
-                                "project-announce@list.example.com"
+                                "project-announce@list.example.com",
                             ],
                             "users"       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -419,23 +419,23 @@ class RepositoryTestNonRegressionTest extends TestBase
                 'settings' => [
                     'commit_rules'        => [
                         'is_reference_mandatory'           => true,
-                        'is_commit_message_change_allowed' => false
+                        'is_commit_message_change_allowed' => false,
                     ],
                     "immutable_tags"      => [
                         "paths"     => [],
-                        "whitelist" => []
+                        "whitelist" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
-                                "project-announce@list.example.com"
+                                "project-announce@list.example.com",
                             ],
                             "users"       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -450,14 +450,14 @@ class RepositoryTestNonRegressionTest extends TestBase
                 'settings' => [
                     'commit_rules'   => [
                         'is_reference_mandatory'           => true,
-                        'is_commit_message_change_allowed' => false
+                        'is_commit_message_change_allowed' => false,
                     ],
                     "immutable_tags" => [
                         "paths"     => [],
-                        "whitelist" => []
+                        "whitelist" => [],
                     ],
-                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw"
-                ]
+                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
+                ],
             ]
         );
 
@@ -476,19 +476,19 @@ class RepositoryTestNonRegressionTest extends TestBase
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags"      => [
                         "paths"     => [],
-                        "whitelist" => []
+                        "whitelist" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
-                                "project-announce@list.example.com"
+                                "project-announce@list.example.com",
                             ],
                             "users"       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -503,19 +503,19 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings" => [
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags"      => [
-                        "paths" => []
+                        "paths" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
-                                "project-announce@list.example.com"
+                                "project-announce@list.example.com",
                             ],
                             "users"       => [],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -530,18 +530,18 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings" => [
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags"      => [
-                        "paths" => []
+                        "paths" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
-                                "project-announce@list.example.com"
+                                "project-announce@list.example.com",
                             ],
-                            'user_groups' => []
-                        ]
-                    ]
-                ]
+                            'user_groups' => [],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -556,18 +556,18 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings" => [
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags"      => [
-                        "paths" => []
+                        "paths" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'   => "/tags",
                             'emails' => [
-                                "project-announce@list.example.com"
+                                "project-announce@list.example.com",
                             ],
-                            'users'  => []
-                        ]
-                    ]
-                ]
+                            'users'  => [],
+                        ],
+                    ],
+                ],
             ]
         );
 

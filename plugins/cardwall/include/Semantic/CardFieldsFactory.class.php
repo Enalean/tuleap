@@ -31,7 +31,7 @@ class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML
         SimpleXMLElement $all_semantics_xml,
         array $xml_mapping,
         Tracker $tracker,
-        array $tracker_mapping
+        array $tracker_mapping,
     ): Tracker_Semantic {
         $extractor        = new CardFieldXmlExtractor();
         $fields           = $extractor->extractFieldFromXml($current_semantic_xml, $xml_mapping);

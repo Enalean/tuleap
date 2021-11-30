@@ -51,7 +51,7 @@ class GraphOnTrackersV5_GraphActionsPresenter
         $delete_url,
         $edit_url,
         array $user_dashboards,
-        array $project_dashboards
+        array $project_dashboards,
     ) {
         $this->chart                 = $chart;
         $this->can_be_updated        = $can_be_updated;

@@ -40,7 +40,7 @@ class FRSReleaseRouter
     public function __construct(
         FRSReleaseController $release_controller,
         FRSReleaseFactory $release_factory,
-        FRSPackageFactory $package_factory
+        FRSPackageFactory $package_factory,
     ) {
         $this->release_controller = $release_controller;
         $this->release_factory    = $release_factory;

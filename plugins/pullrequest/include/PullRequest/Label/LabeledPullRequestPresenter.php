@@ -35,7 +35,7 @@ class LabeledPullRequestPresenter
     public function __construct(
         PullRequest $pull_request,
         $repository_link,
-        $user_link
+        $user_link,
     ) {
         $this->purified_repository_link = \Codendi_HTMLPurifier::instance()->purify(
             $repository_link,

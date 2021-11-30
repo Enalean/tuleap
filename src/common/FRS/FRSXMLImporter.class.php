@@ -75,7 +75,7 @@ class FRSXMLImporter
         UploadedLinksUpdater $links_updater,
         ?FRSProcessorDao $processor_dao = null,
         ?FRSFileTypeDao $filetype_dao = null,
-        ?PermissionsManager $permission_manager = null
+        ?PermissionsManager $permission_manager = null,
     ) {
         $this->logger             = new WrapperLogger($logger, "FRSXMLImporter");
         $this->package_factory    = $package_factory;
@@ -198,7 +198,7 @@ class FRSXMLImporter
         SimpleXMLElement $xml_pkg,
         $extraction_path,
         array &$created_id_map,
-        array &$frs_release_mapping
+        array &$frs_release_mapping,
     ) {
         $attrs   = $xml_pkg->attributes();
         $id      = isset($attrs['id']) ? (string) $attrs['id'] : null;
@@ -244,7 +244,7 @@ class FRSXMLImporter
         SimpleXMLElement $xml_rel,
         $extraction_path,
         array &$frs_release_mapping,
-        array &$created_id_map
+        array &$created_id_map,
     ) {
         $user  = $this->user_finder->getUser($xml_rel->user);
         $attrs = $xml_rel->attributes();
@@ -384,8 +384,8 @@ class FRSXMLImporter
         $release_links = [
             [
                 'link' => (string) $attrs['url'],
-                'name' => (string) $attrs['name']
-            ]
+                'name' => (string) $attrs['name'],
+            ],
         ];
 
         $this->links_updater->update($release_links, $user, $release, strtotime((string) $attrs['release-time']));

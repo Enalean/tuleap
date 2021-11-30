@@ -60,7 +60,7 @@ class ProjectXMLExporter
         UserXMLExporter $user_xml_exporter,
         DashboardXMLExporter $dashboard_xml_exporter,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->event_manager                            = $event_manager;
         $this->ugroup_manager                           = $ugroup_manager;
@@ -149,7 +149,7 @@ class ProjectXMLExporter
         array $options,
         PFUser $user,
         ArchiveInterface $archive,
-        $temporary_dump_path_on_filesystem
+        $temporary_dump_path_on_filesystem,
     ) {
         $this->logger->info("Export plugins");
 

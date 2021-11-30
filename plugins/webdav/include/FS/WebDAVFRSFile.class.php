@@ -83,7 +83,7 @@ class WebDAVFRSFile extends \Sabre\DAV\File
         $frs_file_factory->update([
             'file_id'      => $this->file->getFileId(),
             'file_size'    => filesize($this->file->getFileLocation()),
-            'computed_md5' => $this->utils->getIncomingFileMd5Sum($this->file->getFileLocation())
+            'computed_md5' => $this->utils->getIncomingFileMd5Sum($this->file->getFileLocation()),
         ]);
     }
 

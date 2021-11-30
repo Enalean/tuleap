@@ -56,7 +56,7 @@ final class ChartDataController extends DispatchablePSR15Compatible
         \UserManager $user_manager,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->report_factory        = $report_factory;

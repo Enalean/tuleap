@@ -59,7 +59,7 @@ final class DeleteAppController extends DispatchablePSR15Compatible
         OAuth2AppRemover $app_remover,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->redirector       = $redirector;

@@ -145,7 +145,7 @@ class Tracker_Chart_Data_Burndown
         $values = [
             'duration' => $this->getDuration(),
             'capacity' => $this->getCapacityValueInJson(),
-            'points'   => $this->getRemainingEffortWithoutNullValues()
+            'points'   => $this->getRemainingEffortWithoutNullValues(),
         ];
 
         return json_encode($values);

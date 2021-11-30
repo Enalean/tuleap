@@ -157,7 +157,7 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $commit_rules        = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
-            HookConfig::MANDATORY_REFERENCE       => true
+            HookConfig::MANDATORY_REFERENCE       => true,
         ];
         $immutable_tag       = new ImmutableTag($this->repository, [], []);
         $access_file         = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
@@ -196,7 +196,7 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $commit_rules        = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
-            HookConfig::MANDATORY_REFERENCE       => true
+            HookConfig::MANDATORY_REFERENCE       => true,
         ];
         $immutable_tag       = new ImmutableTag($this->repository, [], []);
         $access_file         = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
@@ -235,7 +235,7 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $commit_rules       = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
-            HookConfig::MANDATORY_REFERENCE       => true
+            HookConfig::MANDATORY_REFERENCE       => true,
         ];
         $immutable_tag      = new ImmutableTag($this->repository, [], []);
         $access_file        = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";

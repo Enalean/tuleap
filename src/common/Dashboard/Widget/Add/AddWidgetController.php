@@ -57,7 +57,7 @@ class AddWidgetController
         DashboardWidgetDao $dao,
         WidgetFactory $factory,
         WidgetCreator $creator,
-        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
     ) {
         $this->dao                              = $dao;
         $this->factory                          = $factory;
@@ -144,7 +144,7 @@ class AddWidgetController
 
     private function displayWidgetEntries(
         $dashboard_type,
-        array $used_widgets
+        array $used_widgets,
     ) {
         $categories                 = $this->getWidgetsGroupedByCategories($dashboard_type);
         $widgets_category_presenter = [];
@@ -288,7 +288,7 @@ class AddWidgetController
         $GLOBALS['Response']->redirect(
             $url . '?' . http_build_query(
                 [
-                    'dashboard_id' => $dashboard_id
+                    'dashboard_id' => $dashboard_id,
                 ]
             )
         );

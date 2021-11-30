@@ -76,7 +76,7 @@ class ProjectHistoryPresenter
         $index,
         $offset,
         $limit,
-        $forward_sub_events
+        $forward_sub_events,
     ) {
         $this->group_id           = $group_id;
         $this->select_button      = $select_button;

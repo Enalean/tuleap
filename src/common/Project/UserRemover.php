@@ -73,7 +73,7 @@ class UserRemover
         UserRemoverDao $dao,
         UserManager $user_manager,
         ProjectHistoryDao $project_history_dao,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->project_manager     = $project_manager;
         $this->event_manager       = $event_manager;
@@ -99,7 +99,7 @@ class UserRemover
 
         $this->event_manager->processEvent('project_admin_remove_user', [
             'group_id' => $project_id,
-            'user_id'  => $user_id
+            'user_id'  => $user_id,
         ]);
 
         $this->removeUserFromTrackerV3($project_id, $user_id);
@@ -192,7 +192,7 @@ class UserRemover
         $this->event_manager->processEvent('project_admin_remove_user_from_project_ugroups', [
             'group_id' => $project_id,
             'user_id'  => $user_id,
-            'ugroups'  => $ugroup_ids
+            'ugroups'  => $ugroup_ids,
         ]);
 
         return true;

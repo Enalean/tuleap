@@ -195,7 +195,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         PFUser $user,
         string $href_approval,
         string $message_to_admin,
-        string $link
+        string $link,
     ): string {
         return sprintf(dgettext('tuleap-docman', 'Dear document manager,
 

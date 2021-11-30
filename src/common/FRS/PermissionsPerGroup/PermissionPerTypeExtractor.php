@@ -51,7 +51,7 @@ class PermissionPerTypeExtractor
         FRSPermissionFactory $frs_permission_factory,
         PermissionPerGroupUGroupFormatter $formatter,
         FRSPermissionPerGroupURLBuilder $url_builder,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->frs_permission_factory = $frs_permission_factory;
         $this->formatter              = $formatter;
@@ -69,7 +69,7 @@ class PermissionPerTypeExtractor
         PermissionPerGroupCollection $permissions,
         $type,
         $permission_title,
-        $selected_ugroup_id = null
+        $selected_ugroup_id = null,
     ) {
         $formatted_permissions = new FrsGlobalAdminPermissionCollection();
         $this->addUGroupsToPermissions($project, $type, $selected_ugroup_id, $formatted_permissions);
@@ -79,7 +79,7 @@ class PermissionPerTypeExtractor
                 [
                     'name'   => $permission_title,
                     'groups' => $formatted_permissions->getPermissions(),
-                    'url'    => $this->url_builder->getGlobalAdminLink($project)
+                    'url'    => $this->url_builder->getGlobalAdminLink($project),
                 ]
             );
         }
@@ -89,7 +89,7 @@ class PermissionPerTypeExtractor
         Project $project,
         $type,
         $selected_ugroup_id,
-        FrsGlobalAdminPermissionCollection $permissions
+        FrsGlobalAdminPermissionCollection $permissions,
     ) {
         if ($selected_ugroup_id) {
             $ugroups = $this->extractUGroupsFromSelection($project, $type, $selected_ugroup_id);
@@ -136,7 +136,7 @@ class PermissionPerTypeExtractor
     private function addProjectAdministratorsToFRSAdminPermissions(
         Project $project,
         $type,
-        FrsGlobalAdminPermissionCollection $permission
+        FrsGlobalAdminPermissionCollection $permission,
     ) {
         if ($type === FRSPermission::FRS_ADMIN) {
             $user_group = $this->ugroup_manager->getProjectAdminsUGroup($project);

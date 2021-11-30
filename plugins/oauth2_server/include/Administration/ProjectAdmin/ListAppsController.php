@@ -53,7 +53,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
         TemplateRenderer $renderer,
         AdminOAuth2AppsPresenterBuilder $presenter_builder,
         IncludeAssets $assets,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->layout_helper     = $layout_helper;
         $this->renderer          = $renderer;

@@ -37,7 +37,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
 
     public function __construct(
         \Tracker_FormElementFactory $tracker_formelement_factory,
-        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever
+        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever,
     ) {
         $this->tracker_formelement_factory = $tracker_formelement_factory;
         $this->suitable_trackers_retriever = $suitable_trackers_retriever;
@@ -48,7 +48,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
         Tracker $tracker,
         string $target_url,
         SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter,
-        IComputeTimeframes $timeframe
+        IComputeTimeframes $timeframe,
     ): SemanticTimeframeAdministrationPresenter {
         return new SemanticTimeframeAdministrationPresenter(
             $csrf,
@@ -70,7 +70,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
 
         $chart_fields = $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, [
             'burnup',
-            'burndown'
+            'burndown',
         ]);
 
         return count($chart_fields) > 0 || $event->doesAPluginRenderAChartForTracker();
@@ -92,7 +92,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
         foreach ($suitable_trackers as $suitable_tracker) {
             $select_box_entries[] = [
                 'name' => $suitable_tracker->getName(),
-                'id'   => $suitable_tracker->getId()
+                'id'   => $suitable_tracker->getId(),
             ];
         }
 

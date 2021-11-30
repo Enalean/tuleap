@@ -32,7 +32,7 @@ class Tracker_GlobalNotification
         $tracker_id,
         $addresses,
         $all_updates,
-        $check_permissions
+        $check_permissions,
     ) {
         $this->id                = $id;
         $this->tracker_id        = $tracker_id;

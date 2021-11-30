@@ -30,7 +30,7 @@ class ChangesetFromXmlDao extends DataAccessObject
     public function saveChangesetIsCreatedFromXml(
         int $import_timestamp,
         int $user_id,
-        int $changeset_id
+        int $changeset_id,
     ): void {
         $this->getDB()->run(
             'INSERT INTO plugin_tracker_changeset_from_xml (changeset_id, user_id, timestamp) VALUES (?, ?, ?)',

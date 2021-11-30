@@ -38,7 +38,7 @@ final class CreateArtifactStub implements CreateArtifact
     private function __construct(
         private bool $should_throw,
         private array $return_values,
-        private array $arguments = []
+        private array $arguments = [],
     ) {
     }
 

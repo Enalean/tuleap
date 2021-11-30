@@ -237,7 +237,7 @@ class Tracker_FormElement_Field_List_BindFactory
         SimpleXMLElement $xml,
         Tracker_FormElement_Field $field,
         array &$xmlMapping,
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
     ) {
         $row = ['type' => (string) $xml['type'],
                      'field' => $field,

@@ -60,7 +60,7 @@ class TransitionFactory
         EventManager $event_manager,
         DBTransactionExecutor $db_transaction_executor,
         Transition_PostActionFactory $transition_post_action_factory,
-        Workflow_TransitionDao $dao
+        Workflow_TransitionDao $dao,
     ) {
         $this->condition_factory              = $condition_factory;
         $this->event_manager                  = $event_manager;
@@ -223,7 +223,7 @@ class TransitionFactory
         SimpleXMLElement $state_xml,
         array &$xml_mapping,
         Project $project,
-        Tracker_FormElement_Field_List_Value $to_value
+        Tracker_FormElement_Field_List_Value $to_value,
     ) {
         $transitions = [];
         foreach ($state_xml->transitions->transition as $transition_xml) {
@@ -246,7 +246,7 @@ class TransitionFactory
         Project $project,
         array $xml_mapping,
         ?Tracker_FormElement_Field_List_Value $from_value,
-        Tracker_FormElement_Field_List_Value $to_value
+        Tracker_FormElement_Field_List_Value $to_value,
     ) {
         $transition  = new Transition(0, 0, $from_value, $to_value);
         $postactions = [];

@@ -115,7 +115,7 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             [new DocmanItemPermissionsForGroupsSet([])],
-            [null]
+            [null],
         ];
     }
 
@@ -181,7 +181,7 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable();
 
         $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([
-            ['item_id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456]
+            ['item_id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456],
         ]);
 
         $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
@@ -221,7 +221,7 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable();
 
         $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([
-            ['user_id' => 103]
+            ['user_id' => 103],
         ]);
 
         $this->expectException(UploadCreationConflictException::class);
@@ -261,7 +261,7 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable();
 
         $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([
-            ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456]
+            ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456],
         ]);
 
         $this->expectException(UploadCreationFileMismatchException::class);

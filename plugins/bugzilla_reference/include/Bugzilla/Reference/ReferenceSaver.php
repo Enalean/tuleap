@@ -56,7 +56,7 @@ class ReferenceSaver
         ReferenceValidator $reference_validator,
         ReferenceRetriever $reference_retriever,
         ReferenceManager $reference_manager,
-        EncryptionKey $encryption_key
+        EncryptionKey $encryption_key,
     ) {
         $this->dao                 = $dao;
         $this->reference_validator = $reference_validator;

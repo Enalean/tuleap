@@ -54,7 +54,7 @@ final class ReleaseRepresentation
     public static $STATUS = [
         FRSRelease::STATUS_ACTIVE  => self::STATUS_ACTIVE,
         FRSRelease::STATUS_DELETED => self::STATUS_DELETED,
-        FRSRelease::STATUS_HIDDEN  => self::STATUS_HIDDEN
+        FRSRelease::STATUS_HIDDEN  => self::STATUS_HIDDEN,
     ];
 
     /**
@@ -140,8 +140,8 @@ final class ReleaseRepresentation
         $this->artifact  = self::getArtifactRepresentation($release, $link_retriever, $user);
         $this->resources = [
             "artifacts" => [
-                "uri" => $this->uri . "/artifacts"
-            ]
+                "uri" => $this->uri . "/artifacts",
+            ],
         ];
         $this->project   = self::getProjectReference($release);
 
@@ -239,7 +239,7 @@ final class ReleaseRepresentation
     private static function getPermissionsForGroups(
         ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder,
         PFUser $user,
-        FRSRelease $release
+        FRSRelease $release,
     ): ?ReleasePermissionsForGroupsRepresentation {
         return $permissions_for_groups_builder->getRepresentation($user, $release);
     }

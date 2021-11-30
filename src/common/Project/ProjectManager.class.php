@@ -90,7 +90,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     private function __construct(
         ProjectAccessChecker $project_access_checker,
         ProjectHistoryDao $project_history_dao,
-        ?ProjectDao $dao = null
+        ?ProjectDao $dao = null,
     ) {
         $this->_dao                   = $dao;
         $this->_cached_projects       = [];
@@ -133,7 +133,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public static function testInstance(
         ProjectAccessChecker $project_access_checker,
         ProjectHistoryDao $project_history_dao,
-        ProjectDao $dao
+        ProjectDao $dao,
     ) {
         return new self($project_access_checker, $project_history_dao, $dao);
     }
@@ -977,7 +977,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         if ($result) {
             $event_manager->processEvent(Event::PROJECT_SET_PARENT_PROJECT, [
                 'group_id'  => $group_id,
-                'parent_id' => $parent_group_id
+                'parent_id' => $parent_group_id,
             ]);
         }
 
@@ -995,7 +995,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
         if ($result) {
             $event_manager->processEvent(Event::PROJECT_UNSET_PARENT_PROJECT, [
-                'group_id'  => $group_id
+                'group_id'  => $group_id,
             ]);
         }
 

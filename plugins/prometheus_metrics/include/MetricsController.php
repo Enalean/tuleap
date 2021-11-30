@@ -87,7 +87,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         VersionPresenter $version_presenter,
         ?Redis $redis,
         FlushableStorage $flushable_storage,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory  = $response_factory;

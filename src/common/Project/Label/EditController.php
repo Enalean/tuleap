@@ -62,7 +62,7 @@ class EditController
         ProjectHistoryDao $history_dao,
         CollectionOfLabelableDao $labelable_daos,
         AllowedColorsCollection $allowed_colors,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;

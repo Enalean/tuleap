@@ -56,7 +56,7 @@ class MediawikiGroupPresenter
         $selector = [
             'name'     => 'available_' . $this->mediawiki_group_id . '[]',
             'class'    => 'forge_mw_available_groups',
-            'options'  => []
+            'options'  => [],
         ];
         foreach ($this->available_ugroups as $ugroup) {
             $selector['options'][] = [
@@ -73,7 +73,7 @@ class MediawikiGroupPresenter
         $selector = [
             'name'     => 'selected_' . $this->mediawiki_group_id . '[]',
             'class'    => 'forge_mw_selected_groups',
-            'options'  => []
+            'options'  => [],
         ];
 
         foreach ($this->current_mapping as $ugroup) {

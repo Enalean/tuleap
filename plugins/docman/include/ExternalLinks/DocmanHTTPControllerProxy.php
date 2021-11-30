@@ -48,7 +48,7 @@ class DocmanHTTPControllerProxy
         \EventManager $event_manager,
         ExternalLinkParametersExtractor $parameters_extractor,
         \Docman_HTTPController $docman_HTTP_controller,
-        Docman_ItemDao $docman_item_dao
+        Docman_ItemDao $docman_item_dao,
     ) {
         $this->event_manager          = $event_manager;
         $this->parameters_extractor   = $parameters_extractor;

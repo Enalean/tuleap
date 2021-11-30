@@ -58,7 +58,7 @@ final class DisplayMigrateFromCoreController implements DispatchableWithRequest,
     public function __construct(
         \ProjectManager $project_manager,
         SvnPermissionManager $permissions_manager,
-        RepositoryManager $repository_manager
+        RepositoryManager $repository_manager,
     ) {
         $this->project_manager     = $project_manager;
         $this->permissions_manager = $permissions_manager;

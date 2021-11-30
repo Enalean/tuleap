@@ -41,7 +41,7 @@ class InlineComment implements TimelineEvent
         $file_path,
         $unidiff_offset,
         $content,
-        $is_outdated
+        $is_outdated,
     ) {
         $this->id              = $id;
         $this->pull_request_id = $pull_request_id;

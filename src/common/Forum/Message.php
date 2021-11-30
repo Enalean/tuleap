@@ -68,7 +68,7 @@ final class Message
         int $project_id,
         int $thread_id,
         int $forum_id,
-        string $forum_name
+        string $forum_name,
     ) {
         $this->subject    = $subject;
         $this->body       = $body;

@@ -190,7 +190,7 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         int $artifact_id,
         \Project $project,
         \Planning $planning,
-        \Tracker $milestone_tracker
+        \Tracker $milestone_tracker,
     ): \Planning_ArtifactMilestone {
         $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);

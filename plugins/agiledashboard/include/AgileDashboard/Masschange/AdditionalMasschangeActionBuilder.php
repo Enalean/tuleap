@@ -54,7 +54,7 @@ class AdditionalMasschangeActionBuilder
         ExplicitBacklogDao $explicit_backlog_dao,
         PlanningFactory $planning_factory,
         TemplateRenderer $template_renderer,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->explicit_backlog_dao = $explicit_backlog_dao;
         $this->planning_factory     = $planning_factory;

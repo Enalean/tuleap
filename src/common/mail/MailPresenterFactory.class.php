@@ -45,7 +45,7 @@ class MailPresenterFactory
             "color_button"  => $color_button,
             "confirm_hash"  => $confirm_hash,
             "base_url"      => $base_url,
-            "logo_url"      => $logo_url
+            "logo_url"      => $logo_url,
         ];
 
         if ($presenter_role === "user") {

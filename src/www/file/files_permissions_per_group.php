@@ -35,7 +35,7 @@ if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
         [
             'error' => _(
                 "You don't have permissions to see user groups."
-            )
+            ),
         ]
     );
 }

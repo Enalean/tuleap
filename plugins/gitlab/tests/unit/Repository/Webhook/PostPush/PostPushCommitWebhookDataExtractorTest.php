@@ -46,7 +46,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->expectExceptionMessage("key commits is missing");
 
         $webhook_content = [
-            'ref' => 'master'
+            'ref' => 'master',
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -58,8 +58,8 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $webhook_content = [
             'commits' => [
-                ['message' => "commit 01"]
-            ]
+                ['message' => "commit 01"],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -72,8 +72,8 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         $webhook_content = [
             'ref' => 'master',
             'commits' => [
-                ['message' => "commit 01"]
-            ]
+                ['message' => "commit 01"],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -88,9 +88,9 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
-                    'message' => 'commit 01'
-                ]
-            ]
+                    'message' => 'commit 01',
+                ],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -105,9 +105,9 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
-                    'title' => 'commit 01'
-                ]
-            ]
+                    'title' => 'commit 01',
+                ],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -126,10 +126,10 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'message' => "commit 01",
                     'author' => [
                         'name' => "John Snow",
-                        'email' => "john-snow@example.com"
-                    ]
-                ]
-            ]
+                        'email' => "john-snow@example.com",
+                    ],
+                ],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -146,9 +146,9 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
                     'title' => 'commit 01',
                     'message' => "commit 01",
-                    'timestamp' => "2020-12-16T10:21:50+01:00"
-                ]
-            ]
+                    'timestamp' => "2020-12-16T10:21:50+01:00",
+                ],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -167,10 +167,10 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'message' => "commit 01",
                     'timestamp' => "2020-12-16T10:21:50+01:00",
                     'author' => [
-                        'email' => 'john-snow@example.com'
-                    ]
-                ]
-            ]
+                        'email' => 'john-snow@example.com',
+                    ],
+                ],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -190,9 +190,9 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'timestamp' => "2020-12-16T10:21:50+01:00",
                     'author' => [
                         'name' => "John Snow",
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
         $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
@@ -209,8 +209,8 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'timestamp' => '2020-12-16T10:21:50+01:00',
                     'author' => [
                         'name' => 'John Snow',
-                        'email' => 'john-snow@example.com'
-                    ]
+                        'email' => 'john-snow@example.com',
+                    ],
                 ],
                 [
                     'id' => '08596fb6360bcc951a06471c616f8bc77800d4f4',
@@ -219,10 +219,10 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'timestamp' => '2020-12-16T10:21:50+01:00',
                     'author' => [
                         'name' => 'The Night King',
-                        'email' => 'the-night-king@example.com'
-                    ]
-                ]
-            ]
+                        'email' => 'the-night-king@example.com',
+                    ],
+                ],
+            ],
         ];
 
         $commits_data = $this->extractor->retrieveWebhookCommitsData($webhook_content);

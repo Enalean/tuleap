@@ -54,7 +54,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         if ($this->isCurrentChangesetTheLastChangeset($artifact, $changeset_value)) {
             $this->exportLastChangeset($changeset_xml, $artifact, $changeset_value);
@@ -65,7 +65,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
 
     private function isCurrentChangesetTheLastChangeset(
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $current_changeset_value
+        Tracker_Artifact_ChangesetValue $current_changeset_value,
     ) {
         $field          = $current_changeset_value->getField();
         $last_changeset = $artifact->getLastChangeset();
@@ -86,7 +86,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
     private function exportLastChangeset(
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         if ($this->is_in_archive_context) {
             $this->exportLastChangesetInArchiveContext($changeset_xml, $artifact, $changeset_value);
@@ -100,7 +100,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
      */
     private function createFieldChangeTag(
         SimpleXMLElement $changeset_xml,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         return $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
@@ -111,7 +111,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
     private function exportLastChangesetInArchiveContext(
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         $number_of_changeset = count($artifact->getChangesets());
 
@@ -128,7 +128,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
     private function previousChangesetIsNotInManualValue(
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-        $number_of_changeset
+        $number_of_changeset,
     ) {
         $previous_changeset = $artifact->getPreviousChangeset((int) $changeset_value->getChangeset()->getId());
 
@@ -147,7 +147,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
 
     private function exportInGlobalContext(
         SimpleXMLElement $changeset_xml,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         $field_change = $this->createFieldChangeTag($changeset_xml, $changeset_value);
 

@@ -85,7 +85,7 @@ class TroveCat implements JsonSerializable
             'id' => $this->id,
             'shortname' => $this->shortname,
             'fullname' => $this->fullname,
-            'children' => $this->children
+            'children' => $this->children,
         ];
     }
 }

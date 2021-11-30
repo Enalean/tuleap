@@ -38,7 +38,7 @@ class RssWriter extends XmlElement
         'rss091'    => "http://purl.org/rss/1.0/modules/rss091/",
         'slash'    => "http://purl.org/rss/1.0/modules/slash/",
         'taxo'    => "http://purl.org/rss/1.0/modules/taxonomy/",
-        'thr'    => "http://purl.org/rss/1.0/modules/threading/"
+        'thr'    => "http://purl.org/rss/1.0/modules/threading/",
         ];
 
         $this->_uris_seen = [];

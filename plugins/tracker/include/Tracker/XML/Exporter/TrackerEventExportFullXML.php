@@ -67,7 +67,7 @@ class TrackerEventExportFullXML implements Dispatchable
         SimpleXMLElement $xml_element,
         Project $project,
         array $exported_trackers,
-        ArchiveInterface $archive
+        ArchiveInterface $archive,
     ) {
         $this->user              = $user;
         $this->xml_element       = $xml_element;

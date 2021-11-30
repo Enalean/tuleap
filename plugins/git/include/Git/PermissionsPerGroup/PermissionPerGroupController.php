@@ -55,7 +55,7 @@ class PermissionPerGroupController extends RouterLink
                     'error' => dgettext(
                         'tuleap-git',
                         "You don't have permissions to see user groups."
-                    )
+                    ),
                 ]
             );
         }

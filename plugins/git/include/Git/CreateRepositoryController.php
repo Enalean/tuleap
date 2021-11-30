@@ -39,7 +39,7 @@ class CreateRepositoryController extends RouterLink
 
     public function __construct(
         Git_GitRepositoryUrlManager $url_manager,
-        RepositoryCreator $repository_creator
+        RepositoryCreator $repository_creator,
     ) {
         parent::__construct();
 

@@ -36,7 +36,7 @@ final class CanSubmitNewArtifactHandler
 
     public function handle(
         CanSubmitNewArtifactEvent $event,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): void {
         $this->configuration_errors_gatherer->gatherConfigurationErrors(
             $event->getTrackerReference(),

@@ -62,7 +62,7 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
         PullRequest $pull_request,
         string $change_user_display_name,
         array $owners_without_change_user,
-        NotificationEnhancedContent $enhanced_content
+        NotificationEnhancedContent $enhanced_content,
     ) {
         $this->pull_request             = $pull_request;
         $this->change_user_display_name = $change_user_display_name;
@@ -79,7 +79,7 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
         FilterUserFromCollection $filter_user_from_collection,
         PullRequest $pull_request,
         PFUser $change_user,
-        array $owners
+        array $owners,
     ): self {
         $change_user_display_name   = $user_helper->getDisplayNameFromUser($change_user) ?? '';
         $owners_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners);

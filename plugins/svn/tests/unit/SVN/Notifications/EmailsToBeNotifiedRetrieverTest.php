@@ -113,7 +113,7 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     ['jdoe@example.com', 'jsmith@example.com'],
                     [],
                     []
-                )
+                ),
             ]
         );
 
@@ -143,7 +143,7 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     ['jdoe@example.com'],
                     [],
                     []
-                )
+                ),
             ]
         );
 
@@ -165,7 +165,7 @@ class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     [],
                     [$this->user_jsmith],
                     []
-                )
+                ),
             ]
         );
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');

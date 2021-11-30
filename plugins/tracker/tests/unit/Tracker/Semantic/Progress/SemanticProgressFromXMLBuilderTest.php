@@ -58,7 +58,7 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $all_semantics_xml,
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
-                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
             ],
             \Mockery::mock(\Tracker::class, ['getId' => 113]),
             []
@@ -91,7 +91,7 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $all_semantics_xml,
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
-                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
             ],
             \Mockery::mock(\Tracker::class, ['getId' => 113]),
             []
@@ -118,7 +118,7 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $all_semantics_xml,
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
-                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
             ],
             \Mockery::mock(\Tracker::class, ['getId' => 113]),
             []
@@ -144,7 +144,7 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml,
             $all_semantics_xml,
             [
-                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+                'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
             ],
             \Mockery::mock(\Tracker::class, ['getId' => 113]),
             []
@@ -170,7 +170,7 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml,
             $all_semantics_xml,
             [
-                'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+                'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
             ],
             \Mockery::mock(\Tracker::class, ['getId' => 113]),
             []

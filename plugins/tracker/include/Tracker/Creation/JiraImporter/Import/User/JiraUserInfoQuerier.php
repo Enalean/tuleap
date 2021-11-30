@@ -31,7 +31,7 @@ class JiraUserInfoQuerier
 {
     public function __construct(
         private JiraClient $wrapper,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

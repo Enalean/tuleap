@@ -34,7 +34,7 @@ class Collector
 
     public function __construct(
         \Statistics_DiskUsageDao $disk_usage_dao,
-        Retriever $statistics_retriever
+        Retriever $statistics_retriever,
     ) {
         $this->disk_usage_dao       = $disk_usage_dao;
         $this->statistics_retriever = $statistics_retriever;

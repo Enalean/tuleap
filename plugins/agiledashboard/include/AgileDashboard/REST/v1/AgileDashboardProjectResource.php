@@ -114,7 +114,7 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
         $query = '',
         $limit = 10,
         $offset = 0,
-        $order = 'asc'
+        $order = 'asc',
     ) {
         $this->checkAccess();
 

@@ -45,7 +45,7 @@ final class IterationCreation implements TimeboxMirroringOrder
         private IterationTrackerIdentifier $tracker,
         private ProgramIncrementIdentifier $program_increment,
         private UserIdentifier $user,
-        private ChangesetIdentifier $changeset
+        private ChangesetIdentifier $changeset,
     ) {
     }
 
@@ -57,7 +57,7 @@ final class IterationCreation implements TimeboxMirroringOrder
         RetrieveIterationTracker $tracker_retriever,
         LogMessage $logger,
         JustLinkedIterationCollection $iterations,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): array {
         if (count($iterations->ids) === 0) {
             return [];
@@ -95,7 +95,7 @@ final class IterationCreation implements TimeboxMirroringOrder
      */
     public static function buildCollectionFromProgramIncrementUpdateEvent(
         RetrieveIterationTracker $tracker_retriever,
-        ProgramIncrementUpdateEvent $event
+        ProgramIncrementUpdateEvent $event,
     ): array {
         $pending_iterations = $event->getIterations();
         if (count($pending_iterations) === 0) {

@@ -93,27 +93,27 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             'is_project_admin' => false,
             'is_static'        => true,
             'is_custom'        => false,
-            'name'             => "Project members"
+            'name'             => "Project members",
         ];
 
         $this->formatted_project_admin = [
             'is_project_admin' => true,
             'is_static'        => true,
             'is_custom'        => false,
-            'name'             => "Project admin"
+            'name'             => "Project admin",
         ];
 
         $this->ugroup_project_member = new ProjectUGroup(
             [
                 "ugroup_id" => ProjectUGroup::PROJECT_MEMBERS,
-                "name"      => "Project members"
+                "name"      => "Project members",
             ]
         );
 
         $this->ugroup_project_admin = new ProjectUGroup(
             [
                 "ugroup_id" => ProjectUGroup::PROJECT_ADMIN,
-                "name"      => "Project admin"
+                "name"      => "Project admin",
             ]
         );
 
@@ -126,7 +126,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
                     ProjectUGroup::PROJECT_MEMBERS
-                )
+                ),
             ]
         );
         $this->ugroup_manager->method('getProjectAdminsUGroup')->willReturn($this->ugroup_project_admin);
@@ -165,8 +165,8 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     "name"   => "FRS administrators",
                     "groups" => [$this->formatted_project_admin, $this->formatted_project_member],
-                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
-                ]
+                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions",
+                ],
             ];
 
         $this->assertEquals($expected_packages, $permissions->getPermissions());
@@ -178,7 +178,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
                     ProjectUGroup::PROJECT_MEMBERS
-                )
+                ),
             ]
         );
         $this->ugroup_manager->method('getUGroup')->withConsecutive(
@@ -212,8 +212,8 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     "name"   => "FRS readers",
                     "groups" => [$this->formatted_project_member],
-                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions"
-                ]
+                    "url"    => "/admin/?group_id=" . $this->project->getID() . "&action=edit-permissions",
+                ],
             ];
 
         $this->assertEquals($expected_packages, $permissions->getPermissions());
@@ -225,7 +225,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
                     ProjectUGroup::PROJECT_MEMBERS
-                )
+                ),
             ]
         );
         $this->ugroup_manager->method('getUGroup')->willReturn(

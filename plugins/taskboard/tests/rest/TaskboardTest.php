@@ -178,7 +178,7 @@ class TaskboardTest extends RestBase
     {
         return [
             [REST_TestDataBuilder::TEST_USER_1_NAME],
-            [REST_TestDataBuilder::TEST_BOT_USER_NAME]
+            [REST_TestDataBuilder::TEST_BOT_USER_NAME],
         ];
     }
 }

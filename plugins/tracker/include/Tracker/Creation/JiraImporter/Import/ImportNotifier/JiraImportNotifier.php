@@ -36,7 +36,7 @@ class JiraImportNotifier
     private $mail_notification_builder;
 
     public function __construct(
-        MailNotificationBuilder $mail_notification_builder
+        MailNotificationBuilder $mail_notification_builder,
     ) {
         $this->mail_notification_builder = $mail_notification_builder;
     }
@@ -48,7 +48,7 @@ class JiraImportNotifier
         string $html_body,
         string $text_body,
         string $link,
-        array $additional_breadcrumbs
+        array $additional_breadcrumbs,
     ): void {
         $hp       = \Codendi_HTMLPurifier::instance();
         $base_url = ServerHostname::HTTPSUrl();

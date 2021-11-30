@@ -130,7 +130,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
-        MembershipDelegationDao $membership_delegation_dao
+        MembershipDelegationDao $membership_delegation_dao,
     ) {
         $this->members_dao                              = $members_dao;
         $this->user_helper                              = $user_helper;

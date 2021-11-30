@@ -65,7 +65,7 @@ class GitlabProject
         string $web_url,
         string $path_with_namespace,
         DateTimeImmutable $last_activity_at,
-        string $default_branch
+        string $default_branch,
     ) {
         $this->id                  = $id;
         $this->description         = $description;

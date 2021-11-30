@@ -60,8 +60,8 @@ class ReportRepresentation
         $this->resources = [
             [
                 'type' => 'artifacts',
-                'uri'  => $this->uri . '/' . ArtifactRepresentation::ROUTE
-            ]
+                'uri'  => $this->uri . '/' . ArtifactRepresentation::ROUTE,
+            ],
         ];
     }
 }

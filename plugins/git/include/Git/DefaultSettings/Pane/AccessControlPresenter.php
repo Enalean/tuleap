@@ -92,7 +92,7 @@ class AccessControlPresenter
         CSRFSynchronizerToken $csrf_delete,
         $are_regexp_permission_activated_at_site_level,
         $is_regexp_enabled_at_global_level,
-        $are_regexp_permission_conflicting_at_site_level
+        $are_regexp_permission_conflicting_at_site_level,
     ) {
         $this->project_id                                      = $project->getID();
         $this->manage_default_settings                         = true;

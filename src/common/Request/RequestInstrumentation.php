@@ -81,7 +81,7 @@ class RequestInstrumentation
                 'code' => $code,
                 'router' => $router,
                 'browser' => $detected_browser->getName() ?? 'Not identified',
-                'browser_is_outdated' => $detected_browser->isAnOutdatedBrowser() ? 'true' : 'false'
+                'browser_is_outdated' => $detected_browser->isAnOutdatedBrowser() ? 'true' : 'false',
             ]
         );
     }

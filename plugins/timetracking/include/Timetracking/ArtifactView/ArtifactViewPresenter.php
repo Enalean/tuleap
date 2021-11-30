@@ -86,21 +86,21 @@ class ArtifactViewPresenter
         CSRFSynchronizerToken $csrf,
         array $times,
         $formatted_total_time,
-        $user_can_add_time
+        $user_can_add_time,
     ) {
         $this->add_url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
             'artifact' => $artifact->getId(),
-            'action'   => 'add-time'
+            'action'   => 'add-time',
         ]);
 
         $this->base_delete_url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
             'artifact' => $artifact->getId(),
-            'action'   => 'delete-time'
+            'action'   => 'delete-time',
         ]);
 
         $this->edit_url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
             'artifact' => $artifact->getId(),
-            'action'   => 'edit-time'
+            'action'   => 'edit-time',
         ]);
 
         $this->csrf_token        = $csrf;

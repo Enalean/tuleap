@@ -98,7 +98,7 @@ class CampaignRepresentation
         int $nb_of_blocked,
         array $resources,
         JobConfigurationRepresentation $job_configuration,
-        bool $user_can_update
+        bool $user_can_update,
     ) {
         $this->id                = $id;
         $this->label             = $label;
@@ -122,7 +122,7 @@ class CampaignRepresentation
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $form_element_factory,
         TestExecutionTestStatusDAO $test_execution_test_status_dao,
-        PFUser $user
+        PFUser $user,
     ): self {
         $artifact    = $campaign->getArtifact();
         $id          = $artifact->getId();
@@ -157,8 +157,8 @@ class CampaignRepresentation
             [
                 [
                     'type' => ExecutionRepresentation::ROUTE,
-                    'uri'  => self::ROUTE . '/' . $id . '/' . ExecutionRepresentation::ROUTE
-                ]
+                    'uri'  => self::ROUTE . '/' . $id . '/' . ExecutionRepresentation::ROUTE,
+                ],
             ],
             $job_configuration,
             $user_can_update,
@@ -181,7 +181,7 @@ class CampaignRepresentation
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $form_element_factory,
-        TestExecutionTestStatusDAO $test_execution_test_status_dao
+        TestExecutionTestStatusDAO $test_execution_test_status_dao,
     ): array {
         $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
             $campaign_artifact,
@@ -196,7 +196,7 @@ class CampaignRepresentation
                 self::STATUS_NOT_RUN => 0,
                 self::STATUS_BLOCKED => 0,
                 self::STATUS_PASSED  => 0,
-                self::STATUS_FAILED  => 0
+                self::STATUS_FAILED  => 0,
             ];
         }
 
@@ -206,7 +206,7 @@ class CampaignRepresentation
     private static function isUserAllowedToUpdateLabelField(
         PFUser $user,
         Artifact $artifact,
-        Tracker_FormElement_Field $label_field
+        Tracker_FormElement_Field $label_field,
     ): bool {
         return $artifact->userCanUpdate($user) && $label_field->userCanUpdate($user);
     }

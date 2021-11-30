@@ -53,7 +53,7 @@ final class PulRequestUpdatedEventTest extends \Tuleap\Test\PHPUnit\TestCase
                 'old_src' => 'a7d1692502252a5ec18bfcae4184498b1459810c',
                 'new_src' => 'fbe4dade4f744aa203ec35bf09f71475ecc3f9d6',
                 'old_dst' => '4682f1f1fb9ee3cf6ca518547ae5525c9768a319',
-                'new_dst' => '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
+                'new_dst' => '4682f1f1fb9ee3cf6ca518547ae5525c9768a319',
             ],
             $event->toWorkerEventPayload()
         );
@@ -79,7 +79,7 @@ final class PulRequestUpdatedEventTest extends \Tuleap\Test\PHPUnit\TestCase
             'old_src' => $old_src,
             'new_src' => $new_src,
             'old_dst' => $old_dst,
-            'new_dst' => $new_dst
+            'new_dst' => $new_dst,
         ];
 
         $event = PullRequestUpdatedEvent::fromWorkerEventPayload($payload);

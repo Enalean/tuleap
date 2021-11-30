@@ -49,7 +49,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
     public function injectDependencies(
         UserManager $user_manager,
         UserGroupDao $user_group_dao,
-        UserRemover $user_remover
+        UserRemover $user_remover,
     ): void {
         $this->user_manager   = $user_manager;
         $this->user_group_dao = $user_group_dao;

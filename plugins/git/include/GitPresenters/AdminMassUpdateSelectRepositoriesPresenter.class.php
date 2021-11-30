@@ -35,7 +35,7 @@ class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresen
         CSRFSynchronizerToken $csrf,
         $project_id,
         array $external_pane_presenters,
-        array $repositories
+        array $repositories,
     ) {
         $are_mirrors_defined = true;
         parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);

@@ -32,7 +32,7 @@ class AdminNewsRouter
     private $admin_news_controller;
 
     public function __construct(
-        AdminNewsController $admin_news_controller
+        AdminNewsController $admin_news_controller,
     ) {
         $this->admin_news_controller = $admin_news_controller;
     }

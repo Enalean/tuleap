@@ -869,8 +869,8 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 [
                     'id'    => 1,
-                    'value' => $metadata->value
-                ]
+                    'value' => $metadata->value,
+                ],
             ],
             false
         );
@@ -919,8 +919,8 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 [
                     'id'    => 1,
-                    'value' => $metadata->value
-                ]
+                    'value' => $metadata->value,
+                ],
             ],
             false
         );
@@ -980,8 +980,8 @@ class CustomMetadataRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 [
                     'id'    => 1,
-                    'value' => $metadata->list_value
-                ]
+                    'value' => $metadata->list_value,
+                ],
             ],
             false
         );

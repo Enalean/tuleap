@@ -48,7 +48,7 @@ class ForgeUpgradeDb
             self::STATUS_ERROR   => 'error',
             self::STATUS_SUCCESS => 'success',
             self::STATUS_FAILURE => 'failure',
-            self::STATUS_SKIP    => 'skipped'
+            self::STATUS_SKIP    => 'skipped',
         ];
         return $labels[$status];
     }

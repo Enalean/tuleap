@@ -88,7 +88,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends \Tuleap\Te
         $file_information->shouldReceive(
             [
                 'getLength' => 123,
-                'getOffset' => 42
+                'getOffset' => 42,
             ]
         );
         $this->file_information_provider
@@ -107,7 +107,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends \Tuleap\Te
             [
                 'getLength' => 123,
                 'getOffset' => 123,
-                'getID'     => 42
+                'getID'     => 42,
             ]
         );
         $this->file_information_provider
@@ -128,7 +128,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends \Tuleap\Te
             [
                 'getLength' => 123,
                 'getOffset' => 123,
-                'getID'     => 42
+                'getID'     => 42,
             ]
         );
         $this->file_information_provider
@@ -150,7 +150,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends \Tuleap\Te
             [
                 'getLength' => 123,
                 'getOffset' => 123,
-                'getID'     => 42
+                'getID'     => 42,
             ]
         );
         $this->file_information_provider
@@ -167,7 +167,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends \Tuleap\Te
                 'filetype'     => 'text/plain',
                 'filename'     => 'readme.mkd',
                 'description'  => '',
-                'filesize'     => 123
+                'filesize'     => 123,
             ]
         );
 

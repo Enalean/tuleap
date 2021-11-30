@@ -60,7 +60,7 @@ class TrackerTemplatesRepresentation implements \JsonSerializable
             'id'          => $this->id,
             'name'        => $this->name,
             'description' => $this->description,
-            'tlp_color'   => $this->tlp_color
+            'tlp_color'   => $this->tlp_color,
         ];
     }
 }

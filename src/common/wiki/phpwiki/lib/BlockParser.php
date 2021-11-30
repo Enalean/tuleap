@@ -472,7 +472,7 @@ class SubBlock extends ParsedBlock
         $indent_re,
         $initial_indent = false,
         $tag = 'div',
-        $attr = false
+        $attr = false,
     ) {
         $subinput = new BlockParser_InputSubBlock($input, $indent_re, $initial_indent);
         parent::__construct($subinput, $tag, $attr);
@@ -496,7 +496,7 @@ class TightSubBlock extends SubBlock
         $indent_re,
         $initial_indent = false,
         $tag = 'div',
-        $attr = false
+        $attr = false,
     ) {
         parent::__construct($input, $indent_re, $initial_indent, $tag, $attr);
 

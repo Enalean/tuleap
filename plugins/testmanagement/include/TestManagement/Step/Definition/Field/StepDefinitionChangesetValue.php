@@ -48,7 +48,7 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
         Tracker_Artifact_Changeset $changeset,
         StepDefinition $field,
         $has_changed,
-        array $steps
+        array $steps,
     ) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->steps = $steps;

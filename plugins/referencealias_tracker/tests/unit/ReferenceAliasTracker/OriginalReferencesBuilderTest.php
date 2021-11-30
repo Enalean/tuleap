@@ -56,7 +56,7 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('tracker123')
             ->andReturn([
                 'project_id' => 101,
-                'target' => 'T2'
+                'target' => 'T2',
             ]);
 
         $reference = $this->builder->getReference(
@@ -77,7 +77,7 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('artf123')
             ->andReturn([
                 'project_id' => 101,
-                'target' => '12'
+                'target' => '12',
             ]);
 
         $reference = $this->builder->getReference(
@@ -98,7 +98,7 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('plan123')
             ->andReturn([
                 'project_id' => 101,
-                'target' => '12'
+                'target' => '12',
             ]);
 
         $reference = $this->builder->getReference(
@@ -133,7 +133,7 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('whatever123')
             ->andReturn([
                 'project_id' => 101,
-                'target' => '01'
+                'target' => '01',
             ]);
 
         $this->assertNull(

@@ -59,7 +59,7 @@ class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 new CIBuildValue('https://example.com/1'),
-                new CIBuildValue('https://example.com/2')
+                new CIBuildValue('https://example.com/2'),
             ],
             $result
         );
@@ -80,7 +80,7 @@ class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 new SetDateValue(104, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
-                new SetDateValue(108, \Transition_PostAction_Field_Date::CLEAR_DATE)
+                new SetDateValue(108, \Transition_PostAction_Field_Date::CLEAR_DATE),
             ],
             $result
         );
@@ -101,7 +101,7 @@ class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 new SetFloatValue(104, 186.43),
-                new SetFloatValue(108, -83)
+                new SetFloatValue(108, -83),
             ],
             $result
         );
@@ -122,7 +122,7 @@ class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 new SetIntValue(104, 42),
-                new SetIntValue(108, -18)
+                new SetIntValue(108, -18),
             ],
             $result
         );
@@ -153,7 +153,7 @@ class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $hidden_fieldsets = Mockery::mock(HiddenFieldsets::class);
         $hidden_fieldsets->shouldReceive('getFieldsets')->andReturn([
             $fieldset_01,
-            $fieldset_02
+            $fieldset_02,
         ]);
 
         $result = $this->mapper->convertToHiddenFieldsetsValueWithNullId($hidden_fieldsets);

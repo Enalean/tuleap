@@ -40,7 +40,7 @@ class BindListUserValueGetter
 
     public function __construct(
         BindDefaultValueDao $bind_defaultvalue_dao,
-        UserHelper $user_helper
+        UserHelper $user_helper,
     ) {
         $this->bind_defaultvalue_dao = $bind_defaultvalue_dao;
         $this->user_helper           = $user_helper;
@@ -53,7 +53,7 @@ class BindListUserValueGetter
         array $ugroups,
         $keyword,
         array $bindvalue_ids,
-        \Tracker_FormElement_Field $field
+        \Tracker_FormElement_Field $field,
     ): array {
         return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
             $ugroups,
@@ -69,7 +69,7 @@ class BindListUserValueGetter
      */
     public function getActiveUsersValue(
         array $ugroups,
-        \Tracker_FormElement_Field $field
+        \Tracker_FormElement_Field $field,
     ): array {
         return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
             $ugroups,
@@ -88,7 +88,7 @@ class BindListUserValueGetter
         $keyword,
         array $bindvalue_ids,
         \Tracker_FormElement_Field $field,
-        bool $filter_on_active_user
+        bool $filter_on_active_user,
     ): array {
         $da = $this->bind_defaultvalue_dao->getDa();
 
@@ -232,7 +232,7 @@ class BindListUserValueGetter
         array $bindvalue_ids,
         \Tracker $tracker,
         bool $show_suspended,
-        bool $show_deleted
+        bool $show_deleted,
     ): ?string {
         return ugroup_db_get_dynamic_members(
             $ugroup_name,

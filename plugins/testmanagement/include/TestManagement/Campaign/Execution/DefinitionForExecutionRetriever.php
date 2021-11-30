@@ -43,7 +43,7 @@ class DefinitionForExecutionRetriever
      */
     public function getDefinitionRepresentationForExecution(
         PFUser $user,
-        Artifact $execution
+        Artifact $execution,
     ) {
         $art_links = $execution->getLinkedArtifacts($user);
         foreach ($art_links as $art_link) {

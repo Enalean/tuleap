@@ -52,7 +52,7 @@ class ContentForMiletoneProvider
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
     ) {
         $this->backlog_factory                 = $backlog_factory;
         $this->backlog_item_collection_factory = $backlog_item_collection_factory;
@@ -100,7 +100,7 @@ class ContentForMiletoneProvider
         \Planning_Milestone $milestone,
         \PFUser $user,
         int $limit,
-        int $offset
+        int $offset,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $backlog = $this->backlog_factory->getSelfBacklog($milestone, $limit, $offset);
 

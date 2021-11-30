@@ -675,7 +675,7 @@ class CampaignsResource
         $label = null,
         ?JobConfigurationRepresentation $job_configuration = null,
         ?AutomatedTestsResultPATCHRepresentation $automated_tests_results = null,
-        ?string $change_status = null
+        ?string $change_status = null,
     ) {
         $user              = $this->getCurrentUser();
         $campaign          = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
@@ -812,7 +812,7 @@ class CampaignsResource
         PFUser $user,
         $id,
         $label = null,
-        ?JobConfigurationRepresentation $job_representation = null
+        ?JobConfigurationRepresentation $job_representation = null,
     ) {
         $campaign = $this->getCampaignUserCanRead($user, $id);
 
@@ -869,7 +869,7 @@ class CampaignsResource
     private function overrideWithSubmittedData(
         Campaign $campaign,
         $label = null,
-        ?JobConfigurationRepresentation $job_representation = null
+        ?JobConfigurationRepresentation $job_representation = null,
     ): void {
         if ($label) {
             $campaign->setLabel($label);
@@ -980,7 +980,7 @@ class CampaignsResource
             [
                 TESTMANAGEMENT_BASE_DIR,
                 'templates',
-                'TestsDataJUnitExtraction'
+                'TestsDataJUnitExtraction',
             ]
         );
 

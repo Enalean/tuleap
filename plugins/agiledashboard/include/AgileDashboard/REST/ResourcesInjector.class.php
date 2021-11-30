@@ -49,7 +49,7 @@ class AgileDashboard_REST_ResourcesInjector
         $routes = [
             BacklogItemRepresentation::BACKLOG_ROUTE,
             MilestoneRepresentation::ROUTE,
-            PlanningRepresentation::ROUTE
+            PlanningRepresentation::ROUTE,
         ];
         foreach ($routes as $route) {
             $resource_reference = new ProjectResourceReference();

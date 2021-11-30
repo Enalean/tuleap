@@ -102,7 +102,7 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $row           = [
             'ugroup_id'   => 105,
             'name'        => 'my name',
-            'description' => 'user group'
+            'description' => 'user group',
         ];
 
         $this->dao->shouldReceive('getForgeUGroup')->with($user_group_id)->andReturns($row);

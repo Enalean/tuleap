@@ -36,13 +36,13 @@ final class VisibleIterationTrackerRetriever implements RetrieveVisibleIteration
     public function __construct(
         private RetrieveIterationTracker $iteration_tracker_retriever,
         private \TrackerFactory $tracker_factory,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 
     public function retrieveVisibleIterationTracker(
         ProgramIdentifier $program,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): ?TrackerReference {
         $program_id           = $program->getId();
         $iteration_tracker_id = $this->iteration_tracker_retriever->getIterationTrackerId(

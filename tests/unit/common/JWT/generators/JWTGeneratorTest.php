@@ -81,7 +81,7 @@ final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected = [
             'user_id'     => 9,
-            'user_rights' => ['@site_active']
+            'user_rights' => ['@site_active'],
         ];
 
         $token   = $this->jwt_generator->getToken();

@@ -45,7 +45,7 @@ class MetadataChecker implements ICheckMetadataForAComparison
         Metadata $metadata,
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
-        ComparisonChecker $checker
+        ComparisonChecker $checker,
     ) {
         $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
         $checker->checkComparisonIsValid($metadata, $comparison);

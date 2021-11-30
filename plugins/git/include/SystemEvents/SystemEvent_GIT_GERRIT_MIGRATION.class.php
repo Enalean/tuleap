@@ -182,7 +182,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_GitRepositoryUrlManager $url_manager,
         UserManager $user_manager,
-        MailBuilder $mail_builder
+        MailBuilder $mail_builder,
     ) {
         $this->dao                = $dao;
         $this->repository_factory = $repository_factory;

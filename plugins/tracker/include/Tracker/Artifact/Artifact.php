@@ -906,7 +906,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     self::DISPLAY_COPY_OF_ARTIFACT,
                     [
                         'artifact'     => $this,
-                        'current_user' => $current_user
+                        'current_user' => $current_user,
                     ]
                 );
 
@@ -1186,7 +1186,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $comment,
         PFUser $submitter,
         $send_notification = true,
-        $comment_format = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT
+        $comment_format = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
     ) {
         $submitted_on = $_SERVER['REQUEST_TIME'];
         $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -1215,7 +1215,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $comment,
         PFUser $submitter,
         $send_notification,
-        $comment_format
+        $comment_format,
     ): ?Tracker_Artifact_Changeset {
         $submitted_on = $_SERVER['REQUEST_TIME'];
         $validator    = new NewChangesetFieldsWithoutRequiredValidationValidator(
@@ -1601,7 +1601,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function getValue(
         Tracker_FormElement_Field $field,
-        ?Tracker_Artifact_Changeset $changeset = null
+        ?Tracker_Artifact_Changeset $changeset = null,
     ): ?Tracker_Artifact_ChangesetValue {
         if (! $changeset) {
             $changeset = $this->getLastChangeset();
@@ -1710,7 +1710,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function linkArtifact(
         $linked_artifact_id,
         PFUser $current_user,
-        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
     ): bool {
         $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
         if (count($artlink_fields)) {
@@ -1775,7 +1775,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
     private function filterArtifactIdsIAmAlreadyLinkedTo(
         Tracker_FormElement_Field_ArtifactLink $field,
-        $linked_artifact_id
+        $linked_artifact_id,
     ) {
         $linked_artifact_id_as_array = explode(',', $linked_artifact_id);
 
@@ -2125,7 +2125,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function exportToXML(
         SimpleXMLElement $artifacts_node,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-        Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_exporter
+        Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_exporter,
     ) {
         if (count($this->getChangesets()) > 0) {
             $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);

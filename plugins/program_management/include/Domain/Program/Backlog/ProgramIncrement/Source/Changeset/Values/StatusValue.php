@@ -48,7 +48,7 @@ final class StatusValue
      */
     public static function fromStatusReference(
         RetrieveStatusValues $status_retriever,
-        StatusFieldReference $status
+        StatusFieldReference $status,
     ): self {
         $labels = $status_retriever->getStatusValues($status);
         return new self(...$labels);

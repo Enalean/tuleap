@@ -190,7 +190,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
         array $dashboard,
         array $column,
         $new_dashboard_id,
-        $new_column_id
+        $new_column_id,
     ) {
         $sql = "SELECT *
                 FROM layouts_contents
@@ -204,7 +204,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
             [
                 ':old_column_id' => $column['id'],
                 ':owner_type'    => $dashboard['owner_type'],
-                ':owner_id'      => $dashboard['owner_id']
+                ':owner_id'      => $dashboard['owner_id'],
             ]
         );
 
@@ -219,7 +219,7 @@ class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
                     ':rank'          => $widget['rank'],
                     ':name'          => $widget['name'],
                     ':content_id'    => $widget['content_id'],
-                    ':is_minimized'  => $widget['is_minimized']
+                    ':is_minimized'  => $widget['is_minimized'],
                 ]
             );
 

@@ -46,7 +46,7 @@ class PresenterBuilder
         bool $should_logo_be_displayed,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
-        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
         $this->current_user = $current_user;
 

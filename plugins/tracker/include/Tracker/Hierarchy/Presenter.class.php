@@ -66,7 +66,7 @@ class Tracker_Hierarchy_Presenter
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         array $possible_children,
         TreeNode $hierarchy,
-        array $trackers_used_in_trigger_rules
+        array $trackers_used_in_trigger_rules,
     ) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);

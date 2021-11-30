@@ -45,7 +45,7 @@ class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('searchAllProjectDashboards')->with(1)->andReturns(\TestHelper::arrayToDar([
             'id'         => 1,
             'project_id' => 1,
-            'name'       => 'dashboard_one'
+            'name'       => 'dashboard_one',
         ]));
         $dao->shouldReceive('searchAllProjectDashboards')->with(2)->andReturns(\TestHelper::emptyDar());
 
@@ -57,7 +57,7 @@ class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $result = $this->project_retriever->getAllProjectDashboards($this->project_with_a_dashboard);
 
         $expected_result = [
-            new ProjectDashboard(1, 1, 'dashboard_one')
+            new ProjectDashboard(1, 1, 'dashboard_one'),
         ];
 
         $this->assertEquals($expected_result, $result);

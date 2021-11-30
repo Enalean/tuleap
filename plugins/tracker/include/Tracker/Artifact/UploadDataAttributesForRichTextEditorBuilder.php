@@ -33,7 +33,7 @@ class UploadDataAttributesForRichTextEditorBuilder
     private $file_upload_data_provider;
 
     public function __construct(
-        FileUploadDataProvider $file_upload_data_provider
+        FileUploadDataProvider $file_upload_data_provider,
     ) {
         $this->file_upload_data_provider = $file_upload_data_provider;
     }
@@ -50,15 +50,15 @@ class UploadDataAttributesForRichTextEditorBuilder
         if ($field_upload_data) {
             $data_attributes[] = [
                 'name' => 'upload-url',
-                'value' => $field_upload_data->getUploadUrl()
+                'value' => $field_upload_data->getUploadUrl(),
             ];
             $data_attributes[] = [
                 'name' => 'upload-field-name',
-                'value' => $field_upload_data->getUploadFileName()
+                'value' => $field_upload_data->getUploadFileName(),
             ];
             $data_attributes[] = [
                 'name' => 'upload-max-size',
-                'value' => $field_upload_data->getUploadMaxSize()
+                'value' => $field_upload_data->getUploadMaxSize(),
             ];
         }
 

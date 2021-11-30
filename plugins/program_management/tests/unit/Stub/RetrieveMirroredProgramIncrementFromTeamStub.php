@@ -33,7 +33,7 @@ final class RetrieveMirroredProgramIncrementFromTeamStub implements RetrieveMirr
      */
     private function __construct(
         private bool $should_return_null,
-        private array $ids
+        private array $ids,
     ) {
     }
 

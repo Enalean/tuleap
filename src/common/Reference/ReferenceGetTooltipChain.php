@@ -44,7 +44,7 @@ abstract class ReferenceGetTooltipChain
         \Project $project,
         \PFUser $user,
         string $keyword,
-        string $value
+        string $value,
     ): void {
         if ($this->next) {
             $this->next->process($reference, $project, $user, $keyword, $value);

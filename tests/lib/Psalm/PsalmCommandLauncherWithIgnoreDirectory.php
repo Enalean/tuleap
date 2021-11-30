@@ -40,7 +40,7 @@ final class PsalmCommandLauncherWithIgnoreDirectory
     public function __construct(
         string $temporary_directory,
         PsalmIgnoreDirectory $ignore_directory,
-        ShellPassthrough $shell_passthrough
+        ShellPassthrough $shell_passthrough,
     ) {
         $this->temporary_directory = $temporary_directory;
         $this->ignore_directory    = $ignore_directory;

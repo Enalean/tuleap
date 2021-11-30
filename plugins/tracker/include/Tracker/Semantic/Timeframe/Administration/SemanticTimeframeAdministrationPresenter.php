@@ -55,7 +55,7 @@ class SemanticTimeframeAdministrationPresenter
         array $usable_numeric_fields,
         IComputeTimeframes $timeframe,
         SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter,
-        array $suitable_trackers
+        array $suitable_trackers,
     ) {
         $start_date_field     = $timeframe->getStartDateField();
         $end_date_field       = $timeframe->getEndDateField();
@@ -80,7 +80,7 @@ class SemanticTimeframeAdministrationPresenter
         $this->tracker_semantic_admin_url = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
-                'func' => 'admin-semantic'
+                'func' => 'admin-semantic',
             ]
         );
     }

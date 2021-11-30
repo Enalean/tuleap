@@ -63,7 +63,7 @@ class WidgetDashboardController
         DashboardWidgetReorder $widget_reorder,
         DashboardWidgetChecker $widget_checker,
         DashboardWidgetDeletor $widget_deletor,
-        DashboardWidgetLineUpdater $widget_line_updater
+        DashboardWidgetLineUpdater $widget_line_updater,
     ) {
         $this->csrf                = $csrf;
         $this->widget_retriever    = $widget_retriever;
@@ -180,7 +180,7 @@ class WidgetDashboardController
         $dashboard_id,
         array $widgets_lines,
         $new_line_rank,
-        array $new_ids
+        array $new_ids,
     ) {
         if (empty($new_line_id) && empty($new_column_id)) {
             $new_line_id            = strval(

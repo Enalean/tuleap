@@ -41,7 +41,7 @@ class WebhookRouter extends RouterLink
     public function __construct(
         WebhookAddController $add_controller,
         WebhookEditController $edit_controller,
-        WebhookDeleteController $delete_controller
+        WebhookDeleteController $delete_controller,
     ) {
         parent::__construct();
         $this->add_controller    = $add_controller;

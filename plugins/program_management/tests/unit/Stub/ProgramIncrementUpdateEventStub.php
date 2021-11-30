@@ -43,7 +43,7 @@ final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEve
         private ProgramIncrementIdentifier $program_increment,
         private UserIdentifier $user,
         private ChangesetIdentifier $changeset,
-        PendingIterationCreation ...$iterations
+        PendingIterationCreation ...$iterations,
     ) {
         $this->iterations = $iterations;
     }
@@ -52,7 +52,7 @@ final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEve
         int $program_increment_id,
         int $user_id,
         int $changeset_id,
-        PendingIterationCreation ...$iterations
+        PendingIterationCreation ...$iterations,
     ): self {
         $user              = UserIdentifierStub::withId($user_id);
         $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser($program_increment_id, $user);

@@ -52,7 +52,7 @@ class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_status = Mockery::spy(Tracker_Semantic_Status::class);
         $this->semantic_status->shouldReceive('getOpenValues')->andReturn([
             1,
-            2
+            2,
         ]);
 
         $this->xml_semantic_status = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>

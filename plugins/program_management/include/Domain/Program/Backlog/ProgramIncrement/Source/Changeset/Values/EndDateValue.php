@@ -37,7 +37,7 @@ final class EndDateValue
 
     public static function fromEndDateReference(
         RetrieveEndDateValue $end_date_retriever,
-        EndDateFieldReference $end_date
+        EndDateFieldReference $end_date,
     ): self {
         return new self($end_date_retriever->getEndDateValue($end_date));
     }

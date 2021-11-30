@@ -85,7 +85,7 @@ function ugroup_db_get_members(
     $ugroup_id,
     $with_display_preferences = false,
     $keyword = null,
-    array $user_ids = []
+    array $user_ids = [],
 ) {
     $data_access = CodendiDataAccess::instance();
 
@@ -320,7 +320,7 @@ function ugroup_db_get_dynamic_members(
     $keyword = null,
     $show_suspended = false,
     bool $show_deleted = false,
-    array $user_ids = []
+    array $user_ids = [],
 ): ?string {
     $data_access = CodendiDataAccess::instance();
 
@@ -520,7 +520,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     $em = EventManager::instance();
     $em->processEvent('project_admin_ugroup_creation', [
         'group_id'  => $group_id,
-        'ugroup_id' => $ugroup_id
+        'ugroup_id' => $ugroup_id,
     ]);
 
     return $ugroup_id;
@@ -586,7 +586,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
         'ugroup_name' => $ugroup_name,
         'ugroup_old_name' => $ugroup_old_name,
         'ugroup_desc' => $ugroup_description,
-        'pick_list' => $pickList
+        'pick_list' => $pickList,
     ]);
 
     // Now log in project history

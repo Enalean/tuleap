@@ -79,7 +79,7 @@ class MediawikiLanguageManager
         foreach ($available_languages as $available_language) {
             $formatted_available_languages[] = [
                 'language' => $available_language,
-                'used'     => $available_language == $project_language
+                'used'     => $available_language == $project_language,
             ];
         }
 

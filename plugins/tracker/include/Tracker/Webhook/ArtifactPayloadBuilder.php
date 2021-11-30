@@ -61,7 +61,7 @@ class ArtifactPayloadBuilder
                 'action'   => $previous_changeset === null ? 'create' : 'update',
                 'user'     => $user_representation,
                 'current'  => $last_changeset_content,
-                'previous' => $previous_changeset_content
+                'previous' => $previous_changeset_content,
             ]
         );
     }

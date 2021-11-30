@@ -346,7 +346,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->registration_checker,
                 $this->project_categories_updater,
                 $this->email_copier,
-                $force_activation
+                $force_activation,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
     }

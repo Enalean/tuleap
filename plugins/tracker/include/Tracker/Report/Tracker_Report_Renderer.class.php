@@ -152,7 +152,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         if (! $request->isAjax()) {
             $params = [
                 'report'   => $this->report->id,
-                'renderer' => $this->id
+                'renderer' => $this->id,
             ];
             if ($request->existAndNonEmpty('pv')) {
                 $params['pv'] = (int) $request->get('pv');
@@ -177,7 +177,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
                     'renderer' => $this->id,
                     'pv'       => 1,
                 ]
-            ) . '"><i class="fa fa-print"></i> ' . $GLOBALS['Language']->getText('global', 'printer_version') . '</a></div>'
+            ) . '"><i class="fa fa-print"></i> ' . $GLOBALS['Language']->getText('global', 'printer_version') . '</a></div>',
         ];
         $this->addDashboardButtons($current_user, $items);
 
@@ -280,7 +280,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         $html .= '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'report'   => $this->report->id,
-                'renderer' => $this->id
+                'renderer' => $this->id,
             ]
         );
         $html .= '"';

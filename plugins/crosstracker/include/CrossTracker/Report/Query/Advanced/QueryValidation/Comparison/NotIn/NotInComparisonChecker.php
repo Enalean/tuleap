@@ -30,7 +30,7 @@ class NotInComparisonChecker extends ComparisonChecker
 
     public function visitInValueWrapper(
         InValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         $values = $value_wrapper->getValueWrappers();
         foreach ($values as $value) {

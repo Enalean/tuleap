@@ -64,7 +64,7 @@ class Tracker_HierarchyFactory
         HierarchyDAO $hierarchy_dao,
         TrackerFactory $tracker_factory,
         Tracker_ArtifactFactory $artifact_factory,
-        TypeIsChildLinkRetriever $child_link_retriever
+        TypeIsChildLinkRetriever $child_link_retriever,
     ) {
         $this->hierarchy_dao        = $hierarchy_dao;
         $this->tracker_factory      = $tracker_factory;

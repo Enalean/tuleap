@@ -111,7 +111,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
                 [
                     'project'         => $project,
                     'new_ugroup_name' => $ugroup_name,
-                    'old_ugroup_name' => $ugroup_old_name
+                    'old_ugroup_name' => $ugroup_old_name,
                 ]
             );
             return;

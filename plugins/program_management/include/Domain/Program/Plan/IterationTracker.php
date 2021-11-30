@@ -48,7 +48,7 @@ final class IterationTracker
     public static function fromPlanIterationChange(
         RetrieveTracker $tracker_retriever,
         PlanIterationChange $iteration_representation,
-        ProgramForAdministrationIdentifier $program
+        ProgramForAdministrationIdentifier $program,
     ): self {
         TrackerIsValidChecker::checkTrackerIsValid(
             $tracker_retriever,

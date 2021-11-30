@@ -46,7 +46,7 @@ final class BatchResponseObjectWithActions implements BatchResponseObject
             'oid'           => $this->object->getOID()->getValue(),
             'size'          => $this->object->getSize(),
             'authenticated' => true,
-            'actions'       => $this->actions
+            'actions'       => $this->actions,
         ];
     }
 }

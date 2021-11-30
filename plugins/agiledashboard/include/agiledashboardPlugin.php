@@ -1381,7 +1381,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                     new BurnupCacheDao(),
                     new CountElementsCacheDao(),
                     $this->getLogger(),
-                    new BurnupCacheDateRetriever()
+                    new BurnupCacheDateRetriever(),
                 ];
                 break;
             case SystemEvent_BURNUP_GENERATE::class:
@@ -1396,7 +1396,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                     new BurnupCacheDao(),
                     new CountElementsCacheDao(),
                     $this->getLogger(),
-                    new BurnupCacheDateRetriever()
+                    new BurnupCacheDateRetriever(),
                 ];
                 break;
             default:
@@ -1552,7 +1552,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 [
                     "ugroup_id"            => $ugroup_id,
                     "project_id"           => $project->getID(),
-                    "selected_ugroup_name" => $ugroup_name
+                    "selected_ugroup_name" => $ugroup_name,
                 ]
             );
 
@@ -1697,7 +1697,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     private function getBacklogItemCollectionFactory(
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $presenter_builder
+        AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $presenter_builder,
     ): AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         $form_element_factory = Tracker_FormElementFactory::instance();
 

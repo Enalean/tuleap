@@ -76,7 +76,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         Planning_RequestValidator $planning_request_validator,
         XMLImporter $explicit_backlog_xml_import,
         ExternalFieldsExtractor $external_field_extractor,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -130,7 +130,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      */
     public function importProject(
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ): void {
         $this->checkUserIsAdmin();
         $project = $this->request->getProject();
@@ -172,7 +172,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
             $request_params = [
                 'planning'    => $planning,
                 'group_id'    => $this->group_id,
-                'planning_id' => ''
+                'planning_id' => '',
             ];
 
             $request = new Codendi_Request($request_params);

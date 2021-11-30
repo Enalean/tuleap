@@ -163,7 +163,7 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
         $fullpath,
         $fullpath_ids,
         $nb_max_values,
-        $is_project_flag
+        $is_project_flag,
     ) {
         $shortname       = $this->da->quoteSmart($shortname);
         $fullname        = $this->da->quoteSmart($fullname);
@@ -209,7 +209,7 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
         $fullpath,
         $fullpath_ids,
         $nb_max_values,
-        $is_project_flag
+        $is_project_flag,
     ) {
         $escaped_shortname     = $this->da->quoteSmart($shortname);
         $escaped_fullname      = $this->da->quoteSmart($fullname);

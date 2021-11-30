@@ -395,7 +395,7 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 135 => $c_fld135,
                 112 => $c_fld112,
                 140 => $c_fld140,
-                150 => $c_fld150
+                150 => $c_fld150,
             ],
             $itemList
         );
@@ -433,7 +433,7 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'groupId'          => null,
             'ownerId'          => null,
             'status'           => null,
-            'obsolescenceDate' => null
+            'obsolescenceDate' => null,
         ]));
         $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
 

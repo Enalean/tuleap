@@ -66,7 +66,7 @@ class ArtifactDependenciesDeletor
         Tracker_ArtifactDao $dao,
         ComputedFieldDaoCache $computed_dao_cache,
         RecentlyVisitedDao $recently_visited_dao,
-        PendingArtifactRemovalDao $artifact_removal
+        PendingArtifactRemovalDao $artifact_removal,
     ) {
         $this->permissions_manager               = $permissions_manager;
         $this->cross_reference_manager           = $cross_reference_manager;

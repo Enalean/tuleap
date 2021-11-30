@@ -59,7 +59,7 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
                                'data_array'       => null,
                                'package_releases' => null,
                                'error_state'      => null,
-                               'error_message'    => null
+                               'error_message'    => null,
                                ];
         $frs_package_factory = new FRSPackageFactory();
         $package1            = $frs_package_factory->getFRSPackageFromArray($packageArray1);
@@ -73,7 +73,7 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
                                'data_array'       => null,
                                'package_releases' => null,
                                'error_state'      => null,
-                               'error_message'    => null
+                               'error_message'    => null,
                                ];
         $package2      = $frs_package_factory->getFRSPackageFromArray($packageArray2);
 

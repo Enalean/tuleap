@@ -170,7 +170,7 @@ class LicenseAgreementDao extends DataAccessObject
                 $project->getID(),
                 $license_agreement->getId(),
                 \FRSPackage::STATUS_ACTIVE,
-                \FRSPackage::STATUS_HIDDEN
+                \FRSPackage::STATUS_HIDDEN,
             ]
         );
         return $result === false;

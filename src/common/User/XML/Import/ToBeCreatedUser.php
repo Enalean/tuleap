@@ -39,7 +39,7 @@ class ToBeCreatedUser extends ActionToBeTakenForUser
                 $this->realname,
                 $this->username,
                 $this->email
-            )
+            ),
         ];
     }
 

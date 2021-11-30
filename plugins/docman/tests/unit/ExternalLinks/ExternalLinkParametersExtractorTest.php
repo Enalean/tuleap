@@ -46,7 +46,7 @@ class ExternalLinkParametersExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $request         = Mockery::mock(HTTPRequest::class);
         $request->params = [
             'action' => 'show',
-            'id'     => 100
+            'id'     => 100,
         ];
         $extractor       = new ExternalLinkParametersExtractor();
         $this->assertEquals(
@@ -67,7 +67,7 @@ class ExternalLinkParametersExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request         = Mockery::mock(HTTPRequest::class);
         $request->params = [
-            'switcholdui' => true
+            'switcholdui' => true,
         ];
         $extractor       = new ExternalLinkParametersExtractor();
         $this->assertTrue($extractor->extractRequestIsForOldUIParams($request));

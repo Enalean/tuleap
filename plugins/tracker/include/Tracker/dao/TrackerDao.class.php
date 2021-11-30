@@ -236,7 +236,7 @@ class TrackerDao extends DataAccessObject
         $log_priority_changes,
         $notifications_level,
         $color,
-        $enable_emailgateway
+        $enable_emailgateway,
     ) {
         $group_id                     = $this->da->escapeInt($group_id);
         $name                         = $this->da->quoteSmart($name);

@@ -55,7 +55,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getUser'        => Mockery::mock(\PFUser::class),
-                    'getCurrentHref' => '/account'
+                    'getCurrentHref' => '/account',
                 ]
             );
     }
@@ -66,7 +66,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getRemoteServersForUser' => [Mockery::mock(Git_RemoteServer_GerritServer::class)],
-                    'hasRemotesSetUp'         => true
+                    'hasRemotesSetUp'         => true,
                 ]
             );
 
@@ -83,7 +83,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getRemoteServersForUser' => [],
-                    'hasRemotesSetUp'         => true
+                    'hasRemotesSetUp'         => true,
                 ]
             );
 
@@ -100,7 +100,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getRemoteServersForUser' => [Mockery::mock(Git_RemoteServer_GerritServer::class)],
-                    'hasRemotesSetUp'         => false
+                    'hasRemotesSetUp'         => false,
                 ]
             );
 
@@ -117,7 +117,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getRemoteServersForUser' => [],
-                    'hasRemotesSetUp'         => false
+                    'hasRemotesSetUp'         => false,
                 ]
             );
 

@@ -51,7 +51,7 @@ class GerritStatusPresenter
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         array $gerrit_servers,
-        \PFUser $user
+        \PFUser $user,
     ) {
         $status                      = $project_creator_status->getStatus($repository);
         $this->is_migration_queued   = ($status === Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE);
@@ -75,7 +75,7 @@ class GerritStatusPresenter
                         "action"   => "repo_management",
                         "group_id" => $repository->getProjectId(),
                         "repo_id"  => $repository->getId(),
-                        "pane"     => "gerrit"
+                        "pane"     => "gerrit",
                     ]
                 );
         }

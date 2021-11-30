@@ -73,7 +73,7 @@ class ScrumPresenterBuilder
         EventManager $event_manager,
         PlanningFactory $planning_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
-        AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao
+        AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
     ) {
         $this->config_manager                     = $config_manager;
         $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
@@ -128,7 +128,7 @@ class ScrumPresenterBuilder
     private function doesConfigurationAllowsPlanningCreation(
         PFUser $user,
         int $project_id,
-        bool $can_create_planning
+        bool $can_create_planning,
     ): bool {
         if ($this->isScrumMonoMilestoneEnable($project_id) === false) {
             return $can_create_planning;

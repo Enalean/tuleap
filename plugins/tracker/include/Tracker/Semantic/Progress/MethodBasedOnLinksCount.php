@@ -40,7 +40,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
     public function __construct(
         SemanticProgressDao $dao,
-        string $artifact_link_type
+        string $artifact_link_type,
     ) {
         $this->dao                = $dao;
         $this->artifact_link_type = $artifact_link_type;

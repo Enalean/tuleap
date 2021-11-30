@@ -125,7 +125,7 @@ class DocmanItemsResource extends AuthenticatedResource
                 [
                     'current_user' => $items_request->getUser(),
                     'is_a_direct_access' => true,
-                    'with_size' => $with_size
+                    'with_size' => $with_size,
                 ]
             );
         } catch (UnknownMetadataException $exception) {

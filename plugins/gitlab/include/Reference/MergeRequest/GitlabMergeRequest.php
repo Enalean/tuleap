@@ -55,7 +55,7 @@ final class GitlabMergeRequest
         string $state,
         DateTimeImmutable $created_at,
         ?string $author_name,
-        ?string $author_email
+        ?string $author_email,
     ) {
         $this->title        = $title;
         $this->state        = $state;

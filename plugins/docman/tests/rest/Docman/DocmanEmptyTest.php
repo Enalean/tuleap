@@ -202,7 +202,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
             'title'             => 'PUT EM New title',
             'description'       => 'Danger ! Danger !',
             'owner_id'          => $this->test_user_1_id,
-            'status'            => 'none'
+            'status'            => 'none',
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
@@ -368,7 +368,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $new_content = json_encode(
             [
-                'content' => 'youhououh content'
+                'content' => 'youhououh content',
             ]
         );
 
@@ -442,7 +442,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $file_properties = json_encode(
             [
                 'file_name' => 'Blanka',
-                'file_size' => $file_size
+                'file_size' => $file_size,
             ]
         );
 
@@ -528,7 +528,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $new_link_url = json_encode(
             [
-                'link_url' => 'https://example.test'
+                'link_url' => 'https://example.test',
             ]
         );
 
@@ -717,7 +717,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $content  = json_encode(
             [
-                'content' => 'You just get jealous about my fame'
+                'content' => 'You just get jealous about my fame',
             ]
         );
         $response = $this->getResponse(
@@ -729,7 +729,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $file_properties = json_encode(
             [
                 'file_name' => 'Spongebob.jpeg',
-                'file_size' => 10
+                'file_size' => 10,
             ]
         );
         $response        = $this->getResponse(
@@ -740,7 +740,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $link_url = json_encode(
             [
-                'link_url' => 'https://example.test'
+                'link_url' => 'https://example.test',
             ]
         );
         $response = $this->getResponse(

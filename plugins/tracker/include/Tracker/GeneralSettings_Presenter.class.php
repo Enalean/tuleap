@@ -174,7 +174,7 @@ class Tracker_GeneralSettings_Presenter // phpcs:ignore PSR1.Classes.ClassDeclar
         Tracker_ColorPresenterCollection $color_presenter_collection,
         MailGatewayConfig $config,
         Tracker_ArtifactByEmailStatus $artifactbyemail_status,
-        $cannot_configure_instantiate_for_new_projects
+        $cannot_configure_instantiate_for_new_projects,
     ) {
         $this->action_url                                    = $action_url;
         $this->cannot_configure_instantiate_for_new_projects = $cannot_configure_instantiate_for_new_projects;

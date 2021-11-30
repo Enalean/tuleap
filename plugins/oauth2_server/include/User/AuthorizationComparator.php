@@ -45,7 +45,7 @@ class AuthorizationComparator
     public function areRequestedScopesAlreadyGranted(
         \PFUser $user,
         OAuth2App $app,
-        array $requested_scopes
+        array $requested_scopes,
     ): bool {
         $saved_scopes = $this->scope_factory->getAuthorizedScopes($user, $app);
         return array_reduce(
@@ -59,7 +59,7 @@ class AuthorizationComparator
 
     private function doesSomeSavedScopeCoverRequestedScope(
         AuthenticationScope $requested_scope,
-        AuthenticationScope ...$saved_scopes
+        AuthenticationScope ...$saved_scopes,
     ): bool {
         return array_reduce(
             $saved_scopes,

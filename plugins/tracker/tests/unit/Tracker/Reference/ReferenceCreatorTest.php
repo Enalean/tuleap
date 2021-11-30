@@ -64,7 +64,7 @@ class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->project->shouldReceive([
             'usesService' => true,
-            'getID'       => 101
+            'getID'       => 101,
         ]);
 
         $this->tv3->shouldReceive('available')->andReturns(true);

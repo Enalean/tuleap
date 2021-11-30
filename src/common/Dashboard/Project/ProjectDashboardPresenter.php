@@ -36,7 +36,7 @@ class ProjectDashboardPresenter extends DashboardPresenter
                 'action'         => 'get-add-modal-content',
                 'group_id'       => $this->project_id,
                 'dashboard-id'   => $this->id,
-                'dashboard-type' => ProjectDashboardController::DASHBOARD_TYPE
+                'dashboard-type' => ProjectDashboardController::DASHBOARD_TYPE,
             ]
         );
         $this->url_add_widget         = '/widgets/?' . http_build_query(
@@ -44,7 +44,7 @@ class ProjectDashboardPresenter extends DashboardPresenter
                 'action'         => 'add-widget',
                 'group_id'       => $this->project_id,
                 'dashboard-id'   => $this->id,
-                'dashboard-type' => ProjectDashboardController::DASHBOARD_TYPE
+                'dashboard-type' => ProjectDashboardController::DASHBOARD_TYPE,
             ]
         );
     }

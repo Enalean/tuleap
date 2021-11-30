@@ -63,7 +63,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
         CSRFSynchronizerToken $csrf_token,
         UserManager $user_manager,
         EmailUpdater $email_updater,
-        AvatarGenerator $avatar_generator
+        AvatarGenerator $avatar_generator,
     ) {
         $this->event_dispatcher = $event_dispatcher;
         $this->csrf_token       = $csrf_token;

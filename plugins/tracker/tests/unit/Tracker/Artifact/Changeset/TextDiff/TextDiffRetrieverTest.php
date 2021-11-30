@@ -102,7 +102,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text"
+                "format"       => "text",
             ]
         );
     }
@@ -133,7 +133,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text"
+                "format"       => "text",
             ]
         );
     }
@@ -162,7 +162,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text"
+                "format"       => "text",
             ]
         );
     }
@@ -195,7 +195,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text"
+                "format"       => "text",
             ]
         );
     }
@@ -234,7 +234,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "text"
+                "format"       => "text",
             ]
         );
     }
@@ -272,7 +272,7 @@ final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'changeset_id' => 12,
                 'artifact_id'  => 123,
                 'field_id'     => 567,
-                "format"       => "html"
+                "format"       => "html",
             ]
         );
     }

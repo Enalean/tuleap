@@ -76,7 +76,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         FRSPermissionManager $permission_manager,
         private ContentInterpretor $interpreter,
         TemplateRenderer $renderer,
-        IncludeAssets $assets
+        IncludeAssets $assets,
     ) {
         $this->release_factory                = $release_factory;
         $this->license_agreement_factory      = $license_agreement_factory;
@@ -150,7 +150,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
                 'title'        => $translated_title,
                 'group'        => $project->getID(),
                 'toptab'       => Service::FILE,
-                'main_classes' => []
+                'main_classes' => [],
             ]
         );
         $this->renderer->renderToPage($presenter->getTemplateName(), $presenter);

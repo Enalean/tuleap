@@ -67,7 +67,7 @@ final class ThreadsPresenter
         array $threads,
         string $post_thread_url,
         string $search,
-        PaginationPresenter $pagination
+        PaginationPresenter $pagination,
     ) {
         $this->list_name       = $list_name;
         $this->nb_threads      = $nb_threads;

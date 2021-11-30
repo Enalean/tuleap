@@ -49,7 +49,7 @@ class ListValueExtractor implements ValueWrapperVisitor
 
     public function visitInValueWrapper(
         InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         $values = [];
         foreach ($collection_of_value_wrappers->getValueWrappers() as $value_wrapper) {
@@ -61,14 +61,14 @@ class ListValueExtractor implements ValueWrapperVisitor
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new RuntimeException('Should not end there');
     }
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new RuntimeException('Should not end there');
     }
@@ -80,7 +80,7 @@ class ListValueExtractor implements ValueWrapperVisitor
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         return $value_wrapper->getValue();
     }

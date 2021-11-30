@@ -58,7 +58,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
                      'maxpages' => '',    // maximum number of pages to include, change that to limit
                      //'exclude'  => '',
                      /*'relative' => false, */
-                     'info'     => ''
+                     'info'     => '',
             ]
         );
     }

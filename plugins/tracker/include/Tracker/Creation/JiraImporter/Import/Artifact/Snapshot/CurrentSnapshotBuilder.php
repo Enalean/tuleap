@@ -57,7 +57,7 @@ class CurrentSnapshotBuilder
     public function __construct(
         LoggerInterface $logger,
         CreationStateListValueFormatter $creation_state_list_value_formatter,
-        JiraUserRetriever $jira_user_retriever
+        JiraUserRetriever $jira_user_retriever,
     ) {
         $this->logger                              = $logger;
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
@@ -71,7 +71,7 @@ class CurrentSnapshotBuilder
         PFUser $snapshot_owner,
         IssueAPIRepresentation $issue_api_representation,
         FieldMappingCollection $jira_field_mapping_collection,
-        LinkedIssuesCollection $linked_issues_collection
+        LinkedIssuesCollection $linked_issues_collection,
     ): Snapshot {
         $this->logger->debug("Build current snapshot...");
 
@@ -112,7 +112,7 @@ class CurrentSnapshotBuilder
         FieldMapping $mapping,
         $value,
         IssueAPIRepresentation $issue_api_representation,
-        LinkedIssuesCollection $linked_issues_collection
+        LinkedIssuesCollection $linked_issues_collection,
     ) {
         if (
             $mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE &&
@@ -155,11 +155,11 @@ class CurrentSnapshotBuilder
             foreach ($linked_issues_collection->getChildren($issue_api_representation->getKey()) as $child) {
                 $added_values[] = [
                     'type' => [
-                        'name' => '_is_child'
+                        'name' => '_is_child',
                     ],
                     'outwardIssue' => [
                         'id' => $child,
-                    ]
+                    ],
                 ];
             }
             return new ArtifactLinkValue(array_merge($value, $added_values), $issue_api_representation->getFields()[AlwaysThereFieldsExporter::JIRA_SUB_TASKS_NAME]);

@@ -48,7 +48,7 @@ class RegexpPermissionFilter
         FineGrainedPermissionFactory $permission_factory,
         PatternValidator $pattern_validator,
         FineGrainedPermissionDestructor $permission_destructor,
-        DefaultFineGrainedPermissionFactory $default_permission_factory
+        DefaultFineGrainedPermissionFactory $default_permission_factory,
     ) {
         $this->permission_factory         = $permission_factory;
         $this->pattern_validator          = $pattern_validator;

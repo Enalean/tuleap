@@ -53,7 +53,7 @@ class WidgetKanbanCreator
         $owner_type,
         $kanban_id,
         $kanban_title,
-        $tracker_report_id
+        $tracker_report_id,
     ) {
         return $this->widget_kanban_dao->createKanbanWidget(
             $owner_id,

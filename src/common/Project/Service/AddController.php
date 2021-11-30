@@ -57,7 +57,7 @@ class AddController implements DispatchableWithRequest
         ProjectAdministratorChecker $project_administrator_checker,
         ServiceCreator $service_creator,
         ServicePOSTDataBuilder $builder,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $project_administrator_checker;

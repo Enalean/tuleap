@@ -42,7 +42,7 @@ final class ProgramManagementConfigXMLImporter
         CreatePlan $plan_creator,
         ParseXMLConfig $xml_config_parser,
         ExtractXMLConfig $xml_config_extractor,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->plan_creator         = $plan_creator;
         $this->xml_config_parser    = $xml_config_parser;
@@ -54,7 +54,7 @@ final class ProgramManagementConfigXMLImporter
         ProgramForAdministrationIdentifier $program_identifier,
         string $extraction_path,
         array $created_trackers_mapping,
-        UserReference $user
+        UserReference $user,
     ): void {
         if (! $this->xml_config_parser->isThereAConfigToImport($extraction_path)) {
             $this->logger->info('[ProgramManagementConfigXMLImporter] No config to be imported');
@@ -99,7 +99,7 @@ final class ProgramManagementConfigXMLImporter
     private function createConfig(
         ProgramForAdministrationIdentifier $project,
         UserReference $user,
-        ProgramManagementXMLConfig $xml_config
+        ProgramManagementXMLConfig $xml_config,
     ): void {
         $plan_program_increment_change = new PlanProgramIncrementChange(
             $xml_config->increments_source_tracker_id,

@@ -60,7 +60,7 @@ class LoginController implements DispatchableWithRequestNoAuthz
 
         $layout->header([
             'title' => sprintf(_('%1$s login'), ForgeConfig::get('sys_name')),
-            'body_class' => ['login-page']
+            'body_class' => ['login-page'],
         ]);
         $renderer = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
         $renderer->renderToPage('login-page', $presenter);

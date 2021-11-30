@@ -188,7 +188,7 @@ class UserResource extends AuthenticatedResource
     public function get(
         $query,
         $limit = self::DEFAULT_LIMIT,
-        $offset = self::DEFAULT_OFFSET
+        $offset = self::DEFAULT_OFFSET,
     ) {
         $this->checkAccess();
         if ($this->json_decoder->looksLikeJson($query)) {
@@ -353,7 +353,7 @@ class UserResource extends AuthenticatedResource
     public function getMembership(
         $id,
         $scope = self::DEFAULT_USER_MEMBERSHIP_SCOPE,
-        $format = self::DEFAULT_USER_MEMBERSHIP_FORMAT
+        $format = self::DEFAULT_USER_MEMBERSHIP_FORMAT,
     ) {
         $this->checkAccess();
 

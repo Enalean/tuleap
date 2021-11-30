@@ -122,7 +122,7 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user = new PFUser([
             'language_id' => 'en',
-            'user_id' => 101
+            'user_id' => 101,
         ]);
 
         $this->artifact_link_usage_dao = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
@@ -153,8 +153,8 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = [
             'list_of_artifactlinkinfo' => [],
             'removed_values' => [
-                36 => 1
-            ]
+                36 => 1,
+            ],
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -179,9 +179,9 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [
             'list_of_artifactlinkinfo' => [
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->initial_linked_artifact, 'fixed_in')
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->initial_linked_artifact, 'fixed_in'),
             ],
-            'removed_values' => []
+            'removed_values' => [],
         ];
 
         $this->dao->shouldReceive('create')->once()->andReturns(true);
@@ -205,9 +205,9 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = [
             'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, 'fixed_in'),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in')
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in'),
             ],
-            'removed_values' => []
+            'removed_values' => [],
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -230,9 +230,9 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = [
             'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, 'fixed_in'),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in')
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in'),
             ],
-            'removed_values' => []
+            'removed_values' => [],
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -255,9 +255,9 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = [
             'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, ''),
             ],
-            'removed_values' => []
+            'removed_values' => [],
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker_child);
@@ -280,9 +280,9 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = [
             'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, ''),
             ],
-            'removed_values' => []
+            'removed_values' => [],
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -305,9 +305,9 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [
             'list_of_artifactlinkinfo' => [
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->another_artifact, '_is_child')
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->another_artifact, '_is_child'),
             ],
-            'removed_values' => []
+            'removed_values' => [],
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -330,9 +330,9 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = [
             'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, ''),
             ],
-            'removed_values' => []
+            'removed_values' => [],
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);

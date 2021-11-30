@@ -69,7 +69,7 @@ final class TrackerColor
         'deep_blue',
         'plum_crazy',
         'peggy_pink',
-        'flamingo_pink'
+        'flamingo_pink',
     ];
 
     /**

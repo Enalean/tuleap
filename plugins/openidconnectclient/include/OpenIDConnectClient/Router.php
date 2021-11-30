@@ -39,7 +39,7 @@ class Router implements DispatchableWithRequestNoAuthz
 
     public function __construct(
         Login\Controller $login_controller,
-        AccountLinker\Controller $account_linker_controller
+        AccountLinker\Controller $account_linker_controller,
     ) {
         $this->login_controller          = $login_controller;
         $this->account_linker_controller = $account_linker_controller;

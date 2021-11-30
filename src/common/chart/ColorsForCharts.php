@@ -115,7 +115,7 @@ class ColorsForCharts
             'peru',
             'darkolivegreen',
             'darksalmon',
-            'purple4'
+            'purple4',
         ];
     }
 
@@ -137,7 +137,7 @@ class ColorsForCharts
             'yellowgreen',
             'burlywood',
             'coral',
-            'mistyrose3'
+            'mistyrose3',
         ];
     }
 

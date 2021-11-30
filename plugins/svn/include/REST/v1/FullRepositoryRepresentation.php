@@ -52,7 +52,7 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
         HookConfig $hook_config,
         ImmutableTag $immutable_tag,
         AccessFileHistory $access_file_history,
-        array $notifications
+        array $notifications,
     ): self {
         $immutable_tag_representation = ImmutableTagRepresentation::build($immutable_tag);
 

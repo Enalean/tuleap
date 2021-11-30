@@ -59,7 +59,7 @@ class LFSBasicTransferObjectSaver
         DBConnection $db_connection,
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
-        Prometheus $prometheus
+        Prometheus $prometheus,
     ) {
         $this->filesystem           = $filesystem;
         $this->db_connection        = $db_connection;
@@ -138,7 +138,7 @@ class LFSBasicTransferObjectSaver
     private function checkTemporaryObjectFileMatchesExpectations(
         LFSObject $lfs_object,
         BlockToMaxSizeOnReadFilter $max_size_blocker_filter,
-        SHA256ComputeOnReadFilter $sha256_processor
+        SHA256ComputeOnReadFilter $sha256_processor,
     ) {
         if ($max_size_blocker_filter->getReadDataSize() !== $lfs_object->getSize()) {
             throw new LFSBasicTransferObjectSizeException($lfs_object->getSize(), $max_size_blocker_filter->getReadDataSize());
@@ -154,7 +154,7 @@ class LFSBasicTransferObjectSaver
         $temporary_path,
         $ready_to_be_added_path,
         \GitRepository $repository,
-        LFSObject $lfs_object
+        LFSObject $lfs_object,
     ): void {
         $oid_value = $lfs_object->getOID()->getValue();
         if (! $this->doesObjectNeedsToBeSaved($ready_to_be_added_path, $repository, $lfs_object)) {

@@ -154,7 +154,7 @@ class URL
                 'url'         => $req_uri,
                 'project_id'  => &$group_id,
                 'project_dao' => $this->getProjectDao(),
-                'request'     => new Codendi_Request($_REQUEST)
+                'request'     => new Codendi_Request($_REQUEST),
             ]
         );
 

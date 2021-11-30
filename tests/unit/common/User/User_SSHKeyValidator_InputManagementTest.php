@@ -65,7 +65,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
     {
         $keys = $this->validator->validateAllKeys([
             $this->key1,
-            $this->key2
+            $this->key2,
         ]);
 
         $this->assertCount(2, $keys);
@@ -77,7 +77,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
     {
         $keys = $this->validator->validateAllKeys([
             $this->key1 . " ",
-            $this->key2
+            $this->key2,
         ]);
 
         $this->assertCount(2, $keys);
@@ -90,7 +90,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
         $keys = $this->validator->validateAllKeys([
             $this->key1,
             '',
-            $this->key2
+            $this->key2,
         ]);
 
         $this->assertCount(2, $keys);

@@ -85,8 +85,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_values  = '32';
         $fields_data = [
             $this->art_link_id => [
-                'new_values' => $new_values
-            ]
+                'new_values' => $new_values,
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -104,8 +104,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => $new_values,
-                'parent'     => $parent_id
-            ]
+                'parent'     => $parent_id,
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -122,8 +122,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => $new_values,
-                'parent'     => $parent_id
-            ]
+                'parent'     => $parent_id,
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -141,8 +141,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => $new_values,
-                'type'       => $type
-            ]
+                'type'       => $type,
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -170,8 +170,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [
             $this->art_link_id => [
                 'new_values' => '356,357',
-                'type'       => '_is_parent'
-            ]
+                'type'       => '_is_parent',
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -183,7 +183,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'new_values' => '',
                 'type'       => '',
-                'parent'     => [356, 357]
+                'parent'     => [356, 357],
             ],
             $fields_data[$this->art_link_id]
         );
@@ -200,8 +200,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
                     '234' => '_is_child',
                     '345' => '_is_parent',
                     '456' => '_is_parent',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -221,7 +221,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'removed_values' => [
                     '345' => [345],
                     '456' => [456],
-                ]
+                ],
             ],
             $fields_data[$this->art_link_id]
         );
@@ -238,8 +238,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
                     '234' => '_is_child',
                     '345' => '_is_parent',
                     '456' => '_is_parent',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -259,7 +259,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'removed_values' => [
                     '345' => [345],
                     '456' => [456],
-                ]
+                ],
             ],
             $fields_data[$this->art_link_id]
         );
@@ -275,9 +275,9 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
                     '456' => '_is_parent',
                 ],
                 'removed_values' => [
-                    '456' => ['456']
-                ]
-            ]
+                    '456' => ['456'],
+                ],
+            ],
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
@@ -291,8 +291,8 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'type' => '',
                 'types' => [],
                 'removed_values' => [
-                    '456' => ['456']
-                ]
+                    '456' => ['456'],
+                ],
             ],
             $fields_data[$this->art_link_id]
         );

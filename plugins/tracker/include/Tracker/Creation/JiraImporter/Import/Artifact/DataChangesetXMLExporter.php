@@ -64,7 +64,7 @@ class DataChangesetXMLExporter
         FieldChangeXMLExporter $field_change_xml_exporter,
         IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder,
         CommentXMLExporter $comment_xml_exporter,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->simplexml_cdata_factory           = $simplexml_cdata_factory;
         $this->field_change_xml_exporter         = $field_change_xml_exporter;
@@ -82,7 +82,7 @@ class DataChangesetXMLExporter
         IssueAPIRepresentation $issue_api_representation,
         AttachmentCollection $attachment_collection,
         LinkedIssuesCollection $linked_issues_collection,
-        string $jira_base_url
+        string $jira_base_url,
     ): void {
         $this->logger->debug("Start exporting data in changeset XML...");
         $snapshot_collection = $this->issue_snapshot_collection_builder->buildCollectionOfSnapshotsForIssue(

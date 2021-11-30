@@ -140,7 +140,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'R',
                     'is_anonymous' => false,
-                    'has_avatar'   => false
+                    'has_avatar'   => false,
                 ],
                 //rest_api_restricted_2 is project_member because he is also member of "Developpers"
                 [
@@ -155,7 +155,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'R',
                     'is_anonymous' => false,
-                    'has_avatar'   => false
+                    'has_avatar'   => false,
                 ],
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
@@ -169,7 +169,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => true
+                    'has_avatar'   => true,
                 ],
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
@@ -183,7 +183,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => false
+                    'has_avatar'   => false,
                 ],
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME],
@@ -197,7 +197,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => false
+                    'has_avatar'   => false,
                 ],
                 //rest_api_tester_5 is project_member because he is also member of "Developpers"
                 [
@@ -212,8 +212,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => false
-                ]
+                    'has_avatar'   => false,
+                ],
             ]
         );
     }
@@ -237,8 +237,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => true
-                ]
+                    'has_avatar'   => true,
+                ],
             ]
         );
         $this->assertEquals($response->getStatusCode(), 200);
@@ -262,7 +262,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => true
+                    'has_avatar'   => true,
                 ],
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
@@ -276,8 +276,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => false
-                ]
+                    'has_avatar'   => false,
+                ],
             ]
         );
         $this->assertEquals($response->getStatusCode(), 200);
@@ -289,8 +289,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             [
                 "user_references" => [
                     ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
-                    ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME]]
-                ]
+                    ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME]],
+                ],
             ]
         );
 
@@ -316,8 +316,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $put_resource = json_encode([
             "user_references" => [
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME]]
-            ]
+                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME]],
+            ],
         ]);
 
         $response = $this->getResponse(
@@ -353,7 +353,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]],
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME]],
-            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME]]
+            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME]],
         ]);
 
         $this->getResponse(
@@ -378,7 +378,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
                             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME]],
                             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME]],
-                            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME]]
+                            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME]],
                         ]
                     )
                 )
@@ -443,7 +443,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $put_resource = json_encode(
             [
                 ['username' => REST_TestDataBuilder::TEST_USER_1_NAME],
-                ['username' => REST_TestDataBuilder::TEST_USER_3_NAME]
+                ['username' => REST_TestDataBuilder::TEST_USER_3_NAME],
             ]
         );
 
@@ -481,7 +481,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     {
         $put_resource = json_encode([
             ['email' => REST_TestDataBuilder::TEST_USER_2_EMAIL],
-            ['email' => REST_TestDataBuilder::TEST_USER_3_EMAIL]
+            ['email' => REST_TestDataBuilder::TEST_USER_3_EMAIL],
         ]);
 
         $response = $this->getResponse(
@@ -519,7 +519,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $put_resource = json_encode(
             [
                 ['email' => REST_TestDataBuilder::TEST_USER_1_EMAIL],
-                ['email' => REST_TestDataBuilder::TEST_USER_3_EMAIL]
+                ['email' => REST_TestDataBuilder::TEST_USER_3_EMAIL],
             ]
         );
 
@@ -546,7 +546,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             [
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]],
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME]]
+                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME]],
             ]
         );
 
@@ -587,7 +587,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             [
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]],
-                ['username' => REST_TestDataBuilder::TEST_USER_3_NAME]
+                ['username' => REST_TestDataBuilder::TEST_USER_3_NAME],
             ]
         );
 
@@ -614,7 +614,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             [
                 ['unknown' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
                 ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]],
-                ['id' => REST_TestDataBuilder::TEST_USER_3_NAME]
+                ['id' => REST_TestDataBuilder::TEST_USER_3_NAME],
             ]
         );
 
@@ -639,7 +639,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     {
         $put_resource = json_encode(
             [
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]]
+                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
             ]
         );
 
@@ -666,8 +666,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             [
                 [
                     'id'       => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
-                    'username' => REST_TestDataBuilder::TEST_USER_1_NAME
-                ]
+                    'username' => REST_TestDataBuilder::TEST_USER_1_NAME,
+                ],
             ]
         );
 
@@ -697,7 +697,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $post_resource = json_encode(
             [
                 'project_id' => $this->project_private_member_id,
-                'short_name' => 'static_ugroup_rest_1'
+                'short_name' => 'static_ugroup_rest_1',
             ]
         );
 
@@ -714,7 +714,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $post_resource = json_encode(
             [
             'project_id' => $this->project_private_member_id,
-            'short_name' => 'static_ugroup_rest_1'
+            'short_name' => 'static_ugroup_rest_1',
             ]
         );
 
@@ -749,7 +749,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
         $body = json_encode(
             [
-                ['username' => REST_TestDataBuilder::TEST_USER_4_NAME]
+                ['username' => REST_TestDataBuilder::TEST_USER_4_NAME],
             ]
         );
 

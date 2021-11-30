@@ -37,7 +37,7 @@ class GerritCanMigrateChecker
 
     public function __construct(
         EventManager $event_manager,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
     ) {
         $this->event_manager         = $event_manager;
         $this->gerrit_server_factory = $gerrit_server_factory;
@@ -53,7 +53,7 @@ class GerritCanMigrateChecker
         $this->event_manager->processEvent(
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             [
-                'platform_can_use_gerrit' => &$platform_can_use_gerrit
+                'platform_can_use_gerrit' => &$platform_can_use_gerrit,
             ]
         );
 

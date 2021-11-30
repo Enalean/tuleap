@@ -61,7 +61,7 @@ class TrackerChecker
         TrackerFactory $tracker_factory,
         FrozenFieldsDao $frozen_fields_dao,
         HiddenFieldsetsDao $hidden_fieldsets_dao,
-        FieldUsageDetector $field_usage_detector
+        FieldUsageDetector $field_usage_detector,
     ) {
         $this->tracker_factory      = $tracker_factory;
         $this->frozen_fields_dao    = $frozen_fields_dao;

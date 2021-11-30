@@ -83,19 +83,19 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getUserByUserName')->with('recipient1')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 101
+                'user_id' => 101,
             ])
         );
         $this->user_manager->shouldReceive('getUserByUserName')->with('recipient2')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 102
+                'user_id' => 102,
             ])
         );
         $this->user_manager->shouldReceive('getUserByUserName')->with('recipient3')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 103
+                'user_id' => 103,
             ])
         );
 
@@ -170,8 +170,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient3']
-                ]
+                    'recipients'        => ['recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
@@ -261,8 +261,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient3']
-                ]
+                    'recipients'        => ['recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
@@ -291,8 +291,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient3']
-                ]
+                    'recipients'        => ['recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
@@ -321,8 +321,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient3']
-                ]
+                    'recipients'        => ['recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
@@ -351,8 +351,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => []
-                ]
+                    'recipients'        => [],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
@@ -381,8 +381,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient3']
-                ]
+                    'recipients'        => ['recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
@@ -412,8 +412,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient3']
-                ]
+                    'recipients'        => ['recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
@@ -452,8 +452,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'on_updates'        => true,
                 'check_permissions' => true,
-                'recipients'        => []
-            ]
+                'recipients'        => [],
+            ],
         ]);
         $tracker->shouldReceive('getNotificationsLevel')->andReturns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
         $changeset->shouldReceive('getTracker')->andReturns($tracker);
@@ -483,8 +483,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient3']
-                ]
+                    'recipients'        => ['recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
@@ -514,8 +514,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient2', 'recipient3']
-                ]
+                    'recipients'        => ['recipient2', 'recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
@@ -547,8 +547,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient2', 'recipient3']
-                ]
+                    'recipients'        => ['recipient2', 'recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
@@ -580,8 +580,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'on_updates'        => true,
                     'check_permissions' => true,
-                    'recipients'        => ['recipient2', 'recipient3']
-                ]
+                    'recipients'        => ['recipient2', 'recipient3'],
+                ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
@@ -619,7 +619,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         array $tracker_recipients,
         $tracker_notification_level,
         $has_empty_body,
-        $previous_changeset
+        $previous_changeset,
     ) {
         $changeset       = Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset_value = Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class);
@@ -650,11 +650,11 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'recipients'        =>
                     [
                         'noctali@example.com',
-                        'aquali@example.com'
+                        'aquali@example.com',
                     ],
                 'on_updates'        => false,
-                'check_permissions' => true
-            ]
+                'check_permissions' => true,
+            ],
         ];
 
         $tracker = Mockery::spy(\Tracker::class);
@@ -663,13 +663,13 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getUserByEmail')->with('noctali@example.com')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 101
+                'user_id' => 101,
             ])
         );
         $this->user_manager->shouldReceive('getUserByEmail')->with('aquali@example.com')->andReturns(
             new PFUser([
                 'language_id' => 'en',
-                'user_id' => 102
+                'user_id' => 102,
             ])
         );
 

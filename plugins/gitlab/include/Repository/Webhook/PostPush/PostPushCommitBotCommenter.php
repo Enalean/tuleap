@@ -61,7 +61,7 @@ class PostPushCommitBotCommenter
         CredentialsRetriever $credentials_retriever,
         LoggerInterface $logger,
         BotCommentReferencePresenterBuilder $bot_comment_reference_presenter_builder,
-        TemplateRendererFactory $template_renderer_factory
+        TemplateRendererFactory $template_renderer_factory,
     ) {
         $this->comment_sender                          = $comment_sender;
         $this->credentials_retriever                   = $credentials_retriever;
@@ -76,7 +76,7 @@ class PostPushCommitBotCommenter
     public function addCommentOnCommit(
         PostPushCommitWebhookData $commit,
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        array $references
+        array $references,
     ): void {
         if (count($references) === 0) {
             return;

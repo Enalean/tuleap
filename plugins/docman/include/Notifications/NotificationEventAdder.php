@@ -59,7 +59,7 @@ class NotificationEventAdder
         Docman_NotificationsManager_Add $notifications_manager_add,
         Docman_NotificationsManager_Delete $notifications_manager_delete,
         Docman_NotificationsManager_Move $notifications_manager_move,
-        Docman_NotificationsManager_Subscribers $notifications_manager_subscribers
+        Docman_NotificationsManager_Subscribers $notifications_manager_subscribers,
     ) {
         $this->notifications_manager             = $notifications_manager;
         $this->event_manager                     = $event_manager;

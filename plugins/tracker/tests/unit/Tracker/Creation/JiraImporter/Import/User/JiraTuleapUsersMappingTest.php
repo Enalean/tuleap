@@ -50,7 +50,7 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_user = new ActiveJiraCloudUser([
             'displayName' => 'Jeannot',
             'accountId' => 'e8a4sd5d6',
-            'emailAddress' => 'john.doe@example.com'
+            'emailAddress' => 'john.doe@example.com',
         ]);
 
         $this->tuleap_user->shouldReceive('getId')->andReturn(105);
@@ -67,7 +67,7 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
                 'jira_display_name'       => 'Jeannot',
                 'tuleap_user_real_name'   => 'John Doe',
                 'tuleap_user_profile_url' => 'https:///users/jdoe',
-                'tuleap_user_username'    => 'jdoe'
+                'tuleap_user_username'    => 'jdoe',
             ],
             $identified_users[0]
         );
@@ -78,7 +78,7 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_user = new ActiveJiraCloudUser([
             'displayName' => 'Jeannot',
             'accountId' => 'e8a4sd5d6',
-            'emailAddress' => 'john.doe@example.com'
+            'emailAddress' => 'john.doe@example.com',
         ]);
 
         $this->tuleap_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);

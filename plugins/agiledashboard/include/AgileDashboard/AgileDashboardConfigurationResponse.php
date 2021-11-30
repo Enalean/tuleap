@@ -124,7 +124,7 @@ class AgileDashboardConfigurationResponse
         $query_parts = [
             'group_id' => $this->project->getId(),
             'action'   => 'admin',
-            'pane'     => $pane
+            'pane'     => $pane,
         ];
         $GLOBALS['Response']->redirect('/plugins/agiledashboard/?' . http_build_query($query_parts));
     }
@@ -132,7 +132,7 @@ class AgileDashboardConfigurationResponse
     private function redirectToHome()
     {
         $query_parts = [
-            'group_id' => $this->project->getId()
+            'group_id' => $this->project->getId(),
         ];
         $GLOBALS['Response']->redirect('/plugins/agiledashboard/?' . http_build_query($query_parts));
     }

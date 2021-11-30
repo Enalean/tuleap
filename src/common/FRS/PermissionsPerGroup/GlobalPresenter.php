@@ -37,7 +37,7 @@ class GlobalPresenter
 
     public function __construct(
         PermissionPerGroupPanePresenter $service_presenter,
-        PermissionPerGroupLoadAllButtonPresenter $package_load_all_presenter
+        PermissionPerGroupLoadAllButtonPresenter $package_load_all_presenter,
     ) {
         $this->service_presenter          = $service_presenter;
         $this->package_load_all_presenter = $package_load_all_presenter;

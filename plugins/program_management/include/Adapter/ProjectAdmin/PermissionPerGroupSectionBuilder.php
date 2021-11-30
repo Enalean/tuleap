@@ -36,7 +36,7 @@ final class PermissionPerGroupSectionBuilder
         private RetrieveProjectUgroupsCanPrioritizeItems $retrieve_project_ugroups_can_prioritize_items,
         private PermissionPerGroupUGroupFormatter $formatter,
         private UGroupManager $ugroup_manager,
-        private TemplateRenderer $template_renderer
+        private TemplateRenderer $template_renderer,
     ) {
     }
 

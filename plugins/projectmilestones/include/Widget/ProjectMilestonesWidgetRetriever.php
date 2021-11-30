@@ -67,7 +67,7 @@ class ProjectMilestonesWidgetRetriever
         ProjectManager $project_manager,
         ProjectMilestonesDao $project_milestones_dao,
         TemplateRenderer $renderer,
-        ProjectMilestonesPresenterBuilder $presenter_builder
+        ProjectMilestonesPresenterBuilder $presenter_builder,
     ) {
         $this->project_access_checker = $project_access_checker;
         $this->project_manager        = $project_manager;
@@ -114,7 +114,7 @@ class ProjectMilestonesWidgetRetriever
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('projectmilestones.js')]
+            ['file' => $this->getAssets()->getFileURL('projectmilestones.js')],
         ];
     }
 

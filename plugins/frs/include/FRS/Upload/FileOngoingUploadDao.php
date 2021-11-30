@@ -28,7 +28,7 @@ class FileOngoingUploadDao extends DataAccessObject
     public function searchFileOngoingUploadByReleaseIDNameAndExpirationDate(
         int $release_id,
         string $name,
-        int $current_time
+        int $current_time,
     ): array {
         $sql = 'SELECT *
                 FROM plugin_frs_file_upload
@@ -42,7 +42,7 @@ class FileOngoingUploadDao extends DataAccessObject
         int $release_id,
         string $name,
         int $file_size,
-        int $user_id
+        int $user_id,
     ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_frs_file_upload',
@@ -51,7 +51,7 @@ class FileOngoingUploadDao extends DataAccessObject
                 'release_id'      => $release_id,
                 'name'            => $name,
                 'user_id'         => $user_id,
-                'file_size'       => $file_size
+                'file_size'       => $file_size,
             ]
         );
     }
@@ -59,7 +59,7 @@ class FileOngoingUploadDao extends DataAccessObject
     public function searchFileOngoingUploadByIDUserIDAndExpirationDate(
         int $id,
         int $user_id,
-        int $current_time
+        int $current_time,
     ): array {
         return $this->getDB()->row(
             'SELECT * FROM plugin_frs_file_upload WHERE id = ? AND user_id = ? AND expiration_date > ?',

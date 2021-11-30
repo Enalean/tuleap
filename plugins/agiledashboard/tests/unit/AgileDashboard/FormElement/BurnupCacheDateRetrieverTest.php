@@ -39,7 +39,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_days = [
             \DateTime::createFromFormat('d-m-Y H:i:s', '18-12-2017 23:59:59')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i:s', '19-12-2017 23:59:59')->getTimestamp()
+            \DateTime::createFromFormat('d-m-Y H:i:s', '19-12-2017 23:59:59')->getTimestamp(),
         ];
 
         $this->assertSame($days_to_cache, $expected_days);
@@ -57,7 +57,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_days = [
             \DateTime::createFromFormat('d-m-Y H:i:s', '18-12-2017 23:59:59')->getTimestamp(),
             \DateTime::createFromFormat('d-m-Y H:i:s', '19-12-2017 23:59:59')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i:s', '20-12-2017 23:59:59')->getTimestamp()
+            \DateTime::createFromFormat('d-m-Y H:i:s', '20-12-2017 23:59:59')->getTimestamp(),
         ];
 
         $this->assertSame($days_to_cache, $expected_days);
@@ -90,7 +90,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             \DateTime::createFromFormat('d-m-Y H:i:s', '21-12-2017 23:59:59')->getTimestamp(),
             \DateTime::createFromFormat('d-m-Y H:i:s', '22-12-2017 23:59:59')->getTimestamp(),
             \DateTime::createFromFormat('d-m-Y H:i:s', '25-12-2017 23:59:59')->getTimestamp(),
-            \DateTime::createFromFormat('d-m-Y H:i:s', '26-12-2017 23:59:59')->getTimestamp()
+            \DateTime::createFromFormat('d-m-Y H:i:s', '26-12-2017 23:59:59')->getTimestamp(),
         ];
 
         $this->assertSame($days_to_cache, $expected_days);

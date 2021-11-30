@@ -42,7 +42,7 @@ final class ProgramUserGroup
     public static function buildProgramUserGroup(
         RetrieveProgramUserGroup $ugroup_retriever,
         string $raw_user_group_id,
-        ProgramForAdministrationIdentifier $program
+        ProgramForAdministrationIdentifier $program,
     ): self {
         $user_group_id = $ugroup_retriever->getProjectUserGroupId($raw_user_group_id, $program);
         return new self($user_group_id);

@@ -44,7 +44,7 @@ final class IterationIdentifier implements TimeboxIdentifier
         VerifyIsIteration $iteration_verifier,
         VerifyIsVisibleArtifact $visibility_verifier,
         int $artifact_id,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ?self {
         if (
             ! $iteration_verifier->isIteration($artifact_id)
@@ -62,7 +62,7 @@ final class IterationIdentifier implements TimeboxIdentifier
         SearchIterations $iteration_searcher,
         VerifyIsVisibleArtifact $visibility_verifier,
         ProgramIncrementIdentifier $program_increment,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): array {
         $iteration_ids = $iteration_searcher->searchIterations($program_increment);
         $visible_ids   = array_filter(
@@ -77,7 +77,7 @@ final class IterationIdentifier implements TimeboxIdentifier
 
     public static function fromArtifactUpdateEvent(
         VerifyIsIterationTracker $iteration_tracker_verifier,
-        ArtifactUpdatedEvent $event
+        ArtifactUpdatedEvent $event,
     ): ?self {
         if (! $iteration_tracker_verifier->isIterationTracker($event->getTracker()->getId())) {
             return null;

@@ -31,7 +31,7 @@ final class RedirectToProgramManagementProcessor
     public static function process(
         ProgramRedirectionParameters $program_management_redirect_manager,
         RedirectUserAfterArtifactCreationOrUpdateEvent $event,
-        ProjectReference $project
+        ProjectReference $project,
     ): void {
         if (! $program_management_redirect_manager->isRedirectionNeeded()) {
             return;

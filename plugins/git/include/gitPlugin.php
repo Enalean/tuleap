@@ -525,7 +525,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $this->getGitSystemEventManager(),
                     $this->getUgroupsToNotifyDao(),
                     $this->getUsersToNotifyDao(),
-                    EventManager::instance()
+                    EventManager::instance(),
                 ];
                 break;
             case SystemEvent_GIT_LEGACY_REPO_DELETE::NAME:
@@ -565,7 +565,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             case SystemEvent_GIT_REPO_FORK::NAME:
                 $params['class']        = 'SystemEvent_GIT_REPO_FORK';
                 $params['dependencies'] = [
-                    $this->getRepositoryFactory()
+                    $this->getRepositoryFactory(),
                 ];
                 break;
             case SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME:
@@ -580,7 +580,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
-                    $this->getGerritDriverFactory()
+                    $this->getGerritDriverFactory(),
                 ];
                 break;
             case SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME:
@@ -588,14 +588,14 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
-                    $this->getGerritDriverFactory()
+                    $this->getGerritDriverFactory(),
                 ];
                 break;
             case SystemEvent_GIT_USER_RENAME::NAME:
                 $params['class']        = 'SystemEvent_GIT_USER_RENAME';
                 $params['dependencies'] = [
                     $this->getSSHKeyDumper(),
-                    UserManager::instance()
+                    UserManager::instance(),
                 ];
                 break;
             case SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME:
@@ -631,21 +631,21 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $this->getSSHKeyDumper(),
                     $this->getUserAccountManager(),
                     $this->getGitSystemEventManager(),
-                    $this->getLogger()
+                    $this->getLogger(),
                 ];
                 break;
             case SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME:
                 $params['class']        = 'SystemEvent_GIT_DUMP_ALL_SSH_KEYS';
                 $params['dependencies'] = [
                     $this->getSSHKeyMassDumper(),
-                    $this->getLogger()
+                    $this->getLogger(),
                 ];
                 break;
             case SystemEvent_GIT_REPO_RESTORE::NAME:
                 $params['class']        = 'SystemEvent_GIT_REPO_RESTORE';
                 $params['dependencies'] = [
                     $this->getRepositoryFactory(),
-                    $this->getGitSystemEventManager()
+                    $this->getGitSystemEventManager(),
                 ];
                 break;
             case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
@@ -660,39 +660,39 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             case SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME:
                 $params['class']        = 'SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
                 $params['dependencies'] = [
-                    $this->getGitoliteDriver()
+                    $this->getGitoliteDriver(),
                 ];
                 break;
             case SystemEvent_GIT_UPDATE_MIRROR::NAME:
                 $params['class']        = 'SystemEvent_GIT_UPDATE_MIRROR';
                 $params['dependencies'] = [
-                    $this->getGitoliteDriver()
+                    $this->getGitoliteDriver(),
                 ];
                 break;
             case SystemEvent_GIT_DELETE_MIRROR::NAME:
                 $params['class']        = 'SystemEvent_GIT_DELETE_MIRROR';
                 $params['dependencies'] = [
-                    $this->getGitoliteDriver()
+                    $this->getGitoliteDriver(),
                 ];
                 break;
             case SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME:
                 $params['class']        = 'SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG';
                 $params['dependencies'] = [
                     $this->getGitoliteDriver(),
-                    $this->getProjectManager()
+                    $this->getProjectManager(),
                 ];
                 break;
             case ProjectIsSuspended::NAME:
                 $params['class']        = ProjectIsSuspended::class;
                 $params['dependencies'] = [
                     $this->getGitoliteDriver(),
-                    $this->getProjectManager()
+                    $this->getProjectManager(),
                 ];
                 break;
             case ParseGitolite3Logs::NAME:
                 $params['class']        = '\\Tuleap\\Git\\SystemEvents\\ParseGitolite3Logs';
                 $params['dependencies'] = [
-                    $this->getGitolite3Parser()
+                    $this->getGitolite3Parser(),
                 ];
                 break;
             default:
@@ -766,7 +766,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
 
     public function referenceAdministrationWarningsCollectorEvent(
-        ReferenceAdministrationWarningsCollectorEvent $event
+        ReferenceAdministrationWarningsCollectorEvent $event,
     ): void {
         (new ReferenceAdministrationWarningsCollectorEventHandler())
             ->handle($event);
@@ -1407,7 +1407,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             [
                 'user_id'   => $event->getUser()->getId(),
                 'group_id'  => $event->getProject()->getID(),
-                'ugroup_id' => ProjectUGroup::PROJECT_ADMIN
+                'ugroup_id' => ProjectUGroup::PROJECT_ADMIN,
             ]
         );
     }
@@ -1418,7 +1418,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             [
                 'user_id'   => $event->getUser()->getId(),
                 'group_id'  => $event->getProject()->getID(),
-                'ugroup_id' => ProjectUGroup::PROJECT_ADMIN
+                'ugroup_id' => ProjectUGroup::PROJECT_ADMIN,
             ]
         );
     }
@@ -1433,7 +1433,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $calling = [
                 'group_id' => $project_id,
                 'user_id'  => $user->getId(),
-                'ugroup'   => $ugroup
+                'ugroup'   => $ugroup,
             ];
             $this->project_admin_ugroup_remove_user($calling);
         }
@@ -2427,7 +2427,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
 
     public function collectProjectAdminNavigationPermissionDropdownQuickLinks(
-        NavigationDropdownQuickLinksCollector $quick_links_collector
+        NavigationDropdownQuickLinksCollector $quick_links_collector,
     ) {
         $project = $quick_links_collector->getProject();
 
@@ -2441,7 +2441,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $this->getPluginPath() . '/?' . http_build_query(
                     [
                         'group_id' => $project->getID(),
-                        'action'   => 'admin-git-admins'
+                        'action'   => 'admin-git-admins',
                     ]
                 )
             )

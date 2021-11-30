@@ -92,7 +92,7 @@ abstract class PaneInfo
                     'planning_id' => $this->milestone->getPlanningId(),
                     'action'      => $this->action,
                     'aid'         => $this->milestone->getArtifactId(),
-                    'pane'        => $this->getIdentifier()
+                    'pane'        => $this->getIdentifier(),
                 ]
             );
     }

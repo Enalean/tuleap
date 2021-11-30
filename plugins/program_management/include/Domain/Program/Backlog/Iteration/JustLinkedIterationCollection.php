@@ -47,7 +47,7 @@ final class JustLinkedIterationCollection
     public static function fromIterations(
         VerifyIterationHasBeenLinkedBefore $link_verifier,
         ProgramIncrementIdentifier $program_increment,
-        IterationIdentifier ...$iterations
+        IterationIdentifier ...$iterations,
     ): self {
         $iterations_that_have_never_been_linked_before = array_filter(
             $iterations,

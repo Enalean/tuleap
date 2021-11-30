@@ -120,7 +120,7 @@ class MetadataValueUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'field_id' => 1,
                     'item_id'  => 100,
-                    'value'    => "old value"
+                    'value'    => "old value",
                 ]
             )
         )->once();

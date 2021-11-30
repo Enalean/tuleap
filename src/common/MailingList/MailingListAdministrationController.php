@@ -61,7 +61,7 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
         ProjectAdministratorChecker $administrator_checker,
         \TemplateRenderer $renderer,
         MailingListDao $dao,
-        MailingListPresenterCollectionBuilder $presenter_collection_builder
+        MailingListPresenterCollectionBuilder $presenter_collection_builder,
     ) {
         $this->renderer                     = $renderer;
         $this->dao                          = $dao;

@@ -35,7 +35,7 @@ final class ProgramPrivacy
         public bool $project_is_private_incl_restricted,
         public string $explanation_text,
         public string $privacy_title,
-        public string $project_name
+        public string $project_name,
     ) {
     }
 
@@ -47,7 +47,7 @@ final class ProgramPrivacy
         bool $project_is_private_incl_restricted,
         string $explanation_text,
         string $privacy_title,
-        string $project_name
+        string $project_name,
     ): self {
         return new self(
             $are_restricted_users_allowed,

@@ -38,7 +38,7 @@ class MonoMilestoneItemsFinder
 
     public function __construct(
         MonoMilestoneBacklogItemDao $backlog_item_dao,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->backlog_item_dao = $backlog_item_dao;
         $this->artifact_factory = $artifact_factory;
@@ -48,7 +48,7 @@ class MonoMilestoneItemsFinder
         PFUser $user,
         array $backlog_tracker_ids,
         ?int $limit,
-        ?int $offset
+        ?int $offset,
     ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
         $result = $this->backlog_item_dao->getTopBacklogArtifactsWithLimitAndOffset(
             $backlog_tracker_ids,
@@ -63,7 +63,7 @@ class MonoMilestoneItemsFinder
         PFUser $user,
         array $backlog_tracker_ids,
         ?int $limit,
-        ?int $offset
+        ?int $offset,
     ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
         $result = $this->backlog_item_dao->getTopBacklogOpenClosedArtifactsWithLimitAndOffset(
             $backlog_tracker_ids,

@@ -73,7 +73,7 @@ class TransitionPOSTHandler
         TransitionValidator $validator,
         DBTransactionExecutor $transaction_executor,
         StateFactory $state_factory,
-        TransitionCreator $transition_creator
+        TransitionCreator $transition_creator,
     ) {
         $this->user_manager               = $user_manager;
         $this->tracker_factory            = $tracker_factory;

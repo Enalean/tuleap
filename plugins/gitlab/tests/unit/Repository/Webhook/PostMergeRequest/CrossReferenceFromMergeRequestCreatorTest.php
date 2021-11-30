@@ -245,7 +245,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
                             'nature',
                             1,
                             110
-                        )
+                        ),
                     ],
                     [
                         66,
@@ -259,8 +259,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
                             'nature',
                             1,
                             110
-                        )
-                    ]
+                        ),
+                    ],
                 ]
             );
 
@@ -278,7 +278,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
                                 && $cross_reference->getRefTargetId() === 42
                                 && $cross_reference->getRefTargetGid() === 110;
                         }
-                    )
+                    ),
                 ],
                 [
                     $this->callback(
@@ -290,7 +290,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
                                 && $cross_reference->getRefTargetId() === 66
                                 && $cross_reference->getRefTargetGid() === 110;
                         }
-                    )
+                    ),
                 ]
             );
 

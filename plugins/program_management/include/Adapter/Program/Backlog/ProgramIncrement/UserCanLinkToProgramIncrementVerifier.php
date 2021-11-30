@@ -32,13 +32,13 @@ final class UserCanLinkToProgramIncrementVerifier implements VerifyUserCanLinkTo
 {
     public function __construct(
         private RetrieveUser $user_retriever,
-        private RetrieveFullArtifactLinkField $field_retriever
+        private RetrieveFullArtifactLinkField $field_retriever,
     ) {
     }
 
     public function canUserLinkToProgramIncrement(
         ProgramIncrementTrackerIdentifier $program_increment_tracker,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): bool {
         $pfuser = $this->user_retriever->getUserWithId($user);
         $field  = $this->field_retriever->getArtifactLinkField($program_increment_tracker);

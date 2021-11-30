@@ -47,7 +47,7 @@ class Gitolite3Dumper implements Dumper
     public function __construct(
         AuthorizedKeysFileCreator $authorized_keys_file_creator,
         System_Command $system_command,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->authorized_keys_file_creator = $authorized_keys_file_creator;
         $this->system_command               = $system_command;

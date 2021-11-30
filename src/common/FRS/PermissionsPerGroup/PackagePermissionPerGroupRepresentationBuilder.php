@@ -55,7 +55,7 @@ class PackagePermissionPerGroupRepresentationBuilder
         PermissionPerGroupUGroupRetriever $permission_ugroup_retriever,
         FRSPackageFactory $package_factory,
         PermissionPerGroupUGroupRepresentationBuilder $ugroup_representation_builder,
-        PackagePermissionPerGroupReleaseRepresentationBuilder $release_representation_builder
+        PackagePermissionPerGroupReleaseRepresentationBuilder $release_representation_builder,
     ) {
         $this->permission_ugroup_retriever    = $permission_ugroup_retriever;
         $this->package_factory                = $package_factory;
@@ -69,7 +69,7 @@ class PackagePermissionPerGroupRepresentationBuilder
      */
     public function build(
         Project $project,
-        $selected_ugroup_id = null
+        $selected_ugroup_id = null,
     ) {
         $permissions = [];
 
@@ -121,14 +121,14 @@ class PackagePermissionPerGroupRepresentationBuilder
         Project $project,
         FRSPackage $package,
         array $formatted_package_permissions,
-        array $releases_permissions
+        array $releases_permissions,
     ) {
         return new PackagePermissionPerGroupRepresentation(
             '/file/admin/package.php?' . http_build_query(
                 [
                     "func"     => "edit",
                     "group_id" => $project->getID(),
-                    "id"       => $package->getPackageID()
+                    "id"       => $package->getPackageID(),
                 ]
             ),
             $package->getName(),
@@ -140,7 +140,7 @@ class PackagePermissionPerGroupRepresentationBuilder
     private function addPermissionWhenNoFilterIsSelected(
         array &$permissions,
         $selected_ugroup_id,
-        PackagePermissionPerGroupRepresentation $package_permission_representation
+        PackagePermissionPerGroupRepresentation $package_permission_representation,
     ) {
         if (! $selected_ugroup_id) {
             $permissions[] = $package_permission_representation;
@@ -152,7 +152,7 @@ class PackagePermissionPerGroupRepresentationBuilder
         $selected_ugroup_id,
         array $package_permissions_ids,
         array $release_permissions_ids,
-        PackagePermissionPerGroupRepresentation $formatted_permission
+        PackagePermissionPerGroupRepresentation $formatted_permission,
     ) {
         $object_permissions = array_merge($package_permissions_ids, $release_permissions_ids);
         if ($selected_ugroup_id && in_array($selected_ugroup_id, $object_permissions)) {

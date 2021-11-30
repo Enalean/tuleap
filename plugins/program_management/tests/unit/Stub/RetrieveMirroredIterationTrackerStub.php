@@ -35,7 +35,7 @@ final class RetrieveMirroredIterationTrackerStub implements RetrieveMirroredIter
         private bool $has_no_root_planning,
         private bool $has_no_second_planning,
         private bool $has_broken_planning,
-        private array $trackers
+        private array $trackers,
     ) {
     }
 
@@ -62,7 +62,7 @@ final class RetrieveMirroredIterationTrackerStub implements RetrieveMirroredIter
     public function retrieveSecondPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerReference {
         if ($this->has_no_root_planning) {
             $errors_collector?->addTeamMilestonePlanningNotFoundOrNotAccessible($project);

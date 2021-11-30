@@ -36,7 +36,7 @@ class ImportXMLFromTracker
     private $rng_validator;
 
     public function __construct(
-        XML_RNGValidator $rng_validator
+        XML_RNGValidator $rng_validator,
     ) {
         $this->rng_validator = $rng_validator;
     }

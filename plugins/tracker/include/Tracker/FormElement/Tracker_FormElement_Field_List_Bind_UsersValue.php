@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function getDataset(): array
     {
         return [
-            'data-avatar-url' => $this->getUser()->getAvatarUrl()
+            'data-avatar-url' => $this->getUser()->getAvatarUrl(),
         ];
     }
 

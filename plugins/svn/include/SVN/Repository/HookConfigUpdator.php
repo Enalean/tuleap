@@ -48,7 +48,7 @@ class HookConfigUpdator
         \ProjectHistoryDao $project_history_dao,
         HookConfigChecker $hook_config_checker,
         HookConfigSanitizer $hook_config_sanitizer,
-        ProjectHistoryFormatter $project_history_formatter
+        ProjectHistoryFormatter $project_history_formatter,
     ) {
         $this->hook_dao                  = $hook_dao;
         $this->project_history_dao       = $project_history_dao;

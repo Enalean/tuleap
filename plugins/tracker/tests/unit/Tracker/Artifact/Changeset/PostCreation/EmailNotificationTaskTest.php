@@ -113,7 +113,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             '[story #666] ', // subject
             \Mockery::any(), // html body
             \Mockery::any(), // text body
-            \Mockery::any()  // msg id
+            \Mockery::any(),  // msg id
         ])->once();
 
         $mail_notification_task = new EmailNotificationTask(
@@ -265,7 +265,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $recipients = [
             'user01' => false,
             'user02' => false,
-            'user03' => false
+            'user03' => false,
         ];
 
         $messages = $mail_notification_task->buildAMessagePerRecipient($this->changeset, $recipients, true);

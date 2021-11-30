@@ -35,9 +35,9 @@ class Dashboard
             'three-columns',
             'three-columns-small-big-small',
             'three-columns-big-small-small',
-            'three-columns-small-small-big'
+            'three-columns-small-small-big',
         ],
-        4 => [ 'too-many-columns' ]
+        4 => [ 'too-many-columns' ],
     ];
 
     private $id;

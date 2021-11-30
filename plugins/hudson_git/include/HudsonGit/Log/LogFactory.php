@@ -46,7 +46,7 @@ class LogFactory
     public function __construct(
         JobDao $job_dao,
         ProjectJobDao $project_job_dao,
-        GitRepositoryFactory $git_repository_factory
+        GitRepositoryFactory $git_repository_factory,
     ) {
         $this->job_dao                = $job_dao;
         $this->project_job_dao        = $project_job_dao;

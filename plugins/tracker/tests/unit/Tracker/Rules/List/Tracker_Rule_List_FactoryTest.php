@@ -125,11 +125,11 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping   = [
             [
                 'from'  => 123,
-                'to'    => 888
+                'to'    => 888,
             ],
             [
                 'from'  => 456,
-                'to'    => 999
+                'to'    => 999,
             ],
         ];
 
@@ -151,30 +151,30 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'from'  => 123,
                 'to'    => 888,
                 'values' => [
-                    789 => 777
-                ]
+                    789 => 777,
+                ],
             ],
             [
                 'from'  => 456,
                 'to'    => 999,
                 'values' => [
-                    101 => 666
-                ]
+                    101 => 666,
+                ],
             ],
             [
                 'from'  => 1001,
                 'to'    => 9999,
                 'values' => [
-                    1003 => 9998
-                ]
+                    1003 => 9998,
+                ],
             ],
             [
                 'from'  => 1002,
                 'to'    => 9997,
                 'values' => [
                     1004 => 9996,
-                    1005 => 9995
-                ]
+                    1005 => 9995,
+                ],
             ],
         ];
 
@@ -182,21 +182,21 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'source_field_id' => 123,
             'target_field_id' => 456,
             'source_value_id' => 789,
-            'target_value_id' => 101
+            'target_value_id' => 101,
         ];
 
         $db_data2 = [
             'source_field_id' => 1001,
             'target_field_id' => 1002,
             'source_value_id' => 1003,
-            'target_value_id' => 1004
+            'target_value_id' => 1004,
         ];
 
         $db_data3 = [
             'source_field_id' => 1001,
             'target_field_id' => 1002,
             'source_value_id' => 1003,
-            'target_value_id' => 1005
+            'target_value_id' => 1005,
         ];
 
         $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);

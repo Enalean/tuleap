@@ -35,7 +35,7 @@ class TestmanagementTrackersConfigurator
     private $testmanagement_trackers_configuration;
 
     public function __construct(
-        TestmanagementTrackersConfiguration $testmanagement_trackers_configuration
+        TestmanagementTrackersConfiguration $testmanagement_trackers_configuration,
     ) {
         $this->testmanagement_trackers_configuration = $testmanagement_trackers_configuration;
     }

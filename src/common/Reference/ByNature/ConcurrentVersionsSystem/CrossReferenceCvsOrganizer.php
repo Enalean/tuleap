@@ -60,7 +60,7 @@ class CrossReferenceCvsOrganizer
         CvsDao $dao,
         TlpRelativeDatePresenterBuilder $date_presenter_builder,
         \UserManager $user_manager,
-        \UserHelper $user_helper
+        \UserHelper $user_helper,
     ) {
         $this->project_manager        = $project_manager;
         $this->dao                    = $dao;
@@ -71,7 +71,7 @@ class CrossReferenceCvsOrganizer
 
     public function organizeCvsReference(
         CrossReferencePresenter $cross_reference_presenter,
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
@@ -101,7 +101,7 @@ class CrossReferenceCvsOrganizer
     private function getCvsCrossReferencePresenter(
         CrossReferencePresenter $cross_reference_presenter,
         array $commit_row,
-        \PFUser $user
+        \PFUser $user,
     ): CrossReferencePresenter {
         $additional_badges = [];
         if ($commit_row['revision']) {

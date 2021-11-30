@@ -44,7 +44,7 @@ class PostPushWebhookDataBuilder
         string $event_name,
         int $project_id,
         string $project_url,
-        array $webhook_content
+        array $webhook_content,
     ): PostPushWebhookData {
         if (! array_key_exists(self::REFERENCE_KEY, $webhook_content)) {
             throw new MissingKeyException(self::REFERENCE_KEY);

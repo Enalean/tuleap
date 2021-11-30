@@ -46,7 +46,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \Tuleap\Test
         $project_trackers = [
             3  => $this->tracker,
             10 => $this->tracker_10,
-            20 => $this->tracker_20
+            20 => $this->tracker_20,
         ];
 
         $tracker_factory = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackersByGroupId')->with($group_id)->andReturns($project_trackers)->getMock();
@@ -86,7 +86,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \Tuleap\Test
     {
         $expected_trackers = [
             10 => $this->tracker_10,
-            20 => $this->tracker_20
+            20 => $this->tracker_20,
         ];
 
         $this->assertSame($expected_trackers, $this->factory->getTrackers($this->tracker));

@@ -50,7 +50,7 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
 
     public function __construct(
         DateFormatValidator $date_validator,
-        ListValueValidator $list_value_validator
+        ListValueValidator $list_value_validator,
     ) {
         $this->date_validator       = $date_validator;
         $this->list_value_validator = $list_value_validator;
@@ -78,7 +78,7 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new ToNowComparisonException($parameters->getMetadata());
     }
@@ -106,14 +106,14 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
 
     public function visitInValueWrapper(
         InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         // Do nothing, EqualComparison should not receive a InValueWrapper
     }
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         $metadata = $parameters->getMetadata();
         if (! in_array($metadata->getName(), AllowedMetadata::USERS)) {
@@ -123,7 +123,7 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         if ($parameters->getMetadata()->getName() !== AllowedMetadata::STATUS) {
             throw new ToStatusOpenComparisonException($parameters->getMetadata());

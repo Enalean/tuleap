@@ -56,7 +56,7 @@ class Codendi_HTMLPurifier
         'ftp'    => true,
         'nntp'   => true,
         'news'   => true,
-        'tel'    => true
+        'tel'    => true,
     ];
 
     /**

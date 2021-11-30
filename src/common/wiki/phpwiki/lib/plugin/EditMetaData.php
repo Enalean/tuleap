@@ -67,7 +67,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return ['page'       => '[pagename]'
+        return ['page'       => '[pagename]',
                     ];
     }
 

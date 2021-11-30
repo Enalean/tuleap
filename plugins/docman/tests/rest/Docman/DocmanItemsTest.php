@@ -228,7 +228,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             $folder['folder_properties'],
             [
                 'total_size' => 6,
-                'nb_files' => 3
+                'nb_files' => 3,
             ]
         );
     }
@@ -283,7 +283,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         ?array $file,
         ?array $link,
         ?array $embedded,
-        ?array $wiki
+        ?array $wiki,
     ): void {
         $this->assertGreaterThan(0, count($items));
 

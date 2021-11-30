@@ -66,7 +66,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         AgileDashboard_PaneInfoFactory $pane_info_factory,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->request                        = $request;
         $this->milestone_factory              = $milestone_factory;
@@ -179,7 +179,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     private function getPlanningV2Pane(
         PlanningV2PaneInfo $info,
-        Planning_Milestone $milestone
+        Planning_Milestone $milestone,
     ): AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane {
         $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
         $this->event_manager->processEvent($allowed_additional_panes_to_display_collector);

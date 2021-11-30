@@ -218,7 +218,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         $changeset_id,
         $ignore_perms,
         $format = 'html',
-        ?PFUser $user = null
+        ?PFUser $user = null,
     ) {
         return $this->formatDiff($changeset_value, $format, true);
     }
@@ -311,7 +311,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         $format,
         $still_existing_files_ids,
         &$added,
-        &$previews
+        &$previews,
     ) {
         foreach ($files as $file) {
             \assert($file instanceof Tracker_FileInfo);

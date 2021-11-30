@@ -82,7 +82,7 @@ class SystemEventManager
             'mail_list_create',
             'mail_list_delete',
             Event::SERVICE_IS_USED,
-            'codendi_daily_start'
+            'codendi_daily_start',
         ];
         if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $events_to_listen[] = Event::EDIT_SSH_KEYS;
@@ -519,7 +519,7 @@ class SystemEventManager
                     $user_manager,
                     new ProjectHistoryDao(),
                     new UGroupManager()
-                )
+                ),
                 ];
                 break;
             case SystemEvent::TYPE_SYSTEM_CHECK:
@@ -567,7 +567,7 @@ class SystemEventManager
                     new ProjectHistoryDao(),
                     $ugroup_manager
                 ),
-                    $ugroup_manager
+                    $ugroup_manager,
                 ];
                 break;
             case SystemEvent::TYPE_PROJECT_ACTIVE:
@@ -638,7 +638,7 @@ class SystemEventManager
                     Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE,
                     [
                         'queue' => $queue,
-                        'types' => &$types
+                        'types' => &$types,
                     ]
                 );
 

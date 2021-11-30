@@ -60,19 +60,19 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
         $this->permissions         = [
             ProjectUGroup::ANONYMOUS => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::REGISTERED => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::PROJECT_ADMIN => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
         ];
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
@@ -83,7 +83,7 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     public function testItDoesNothingTryingToGrantAnonymousSubmittedOnly(): void
     {
         $request = new Tracker_Permission_PermissionRequest([
-            ProjectUGroup::ANONYMOUS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
+            ProjectUGroup::ANONYMOUS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->never();
@@ -95,7 +95,7 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     public function testItGrantsRegisteredSubmittedOnly(): void
     {
         $request = new Tracker_Permission_PermissionRequest([
-            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
+            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::REGISTERED)->once();
@@ -108,7 +108,7 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     {
         $request = new Tracker_Permission_PermissionRequest([
             ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
-            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
+            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::ANONYMOUS)->once();
@@ -121,10 +121,10 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     {
         $request                                                    = new Tracker_Permission_PermissionRequest([
             ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
-            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
+            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
         $this->permissions[ProjectUGroup::ANONYMOUS]['permissions'] = [
-            Tracker::PERMISSION_FULL => 1
+            Tracker::PERMISSION_FULL => 1,
         ];
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::WARN);
@@ -136,7 +136,7 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     public function testItGrantsProjectMembersSubmittedOnly(): void
     {
         $request = new Tracker_Permission_PermissionRequest([
-            ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
+            ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS)->once();
@@ -148,11 +148,11 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     public function testItRevokesPreviousPermissionWhenGrantsProjectMembersSubmittedOnly(): void
     {
         $request = new Tracker_Permission_PermissionRequest([
-            ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
+            ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
         $this->permissions[ProjectUGroup::PROJECT_MEMBERS]['permissions'] = [
-            Tracker::PERMISSION_FULL => 1
+            Tracker::PERMISSION_FULL => 1,
         ];
 
         $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS)->once();

@@ -52,7 +52,7 @@ final class RedirectParameterInjector
         AgileDashboard_PaneRedirectionExtractor $params_extractor,
         \Tracker_ArtifactFactory $artifact_factory,
         Response $response,
-        TemplateRenderer $template_renderer
+        TemplateRenderer $template_renderer,
     ) {
         $this->params_extractor  = $params_extractor;
         $this->artifact_factory  = $artifact_factory;
@@ -62,7 +62,7 @@ final class RedirectParameterInjector
 
     public function injectAndInformUserAboutBacklogItemWillBeLinked(
         Codendi_Request $request,
-        Tracker_Artifact_Redirect $redirect
+        Tracker_Artifact_Redirect $redirect,
     ): void {
         $this->informUserThatTheArtifactWillBeLinkedToTheMilestone($request);
 

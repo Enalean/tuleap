@@ -63,7 +63,7 @@ class DefinitionRepresentationBuilder
         ConfigConformanceValidator $conformance_validator,
         RequirementRetriever $requirement_retriever,
         \Codendi_HTMLPurifier $purifier,
-        ContentInterpretor $interpreter
+        ContentInterpretor $interpreter,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->conformance_validator        = $conformance_validator;
@@ -144,7 +144,7 @@ class DefinitionRepresentationBuilder
         PFUser $user,
         Artifact $artifact,
         ?Tracker_Artifact_Changeset $changeset,
-        string $field_shortname
+        string $field_shortname,
     ): ?\Tracker_Artifact_ChangesetValue {
         $field = $form_element_factory->getUsedFieldByNameForUser(
             $tracker_id,
@@ -166,7 +166,7 @@ class DefinitionRepresentationBuilder
         PFUser $user,
         Artifact $artifact,
         ?Tracker_Artifact_Changeset $changeset,
-        string $field_shortname
+        string $field_shortname,
     ): string {
         $field_value = self::getTextField(
             $form_element_factory,
@@ -189,7 +189,7 @@ class DefinitionRepresentationBuilder
         PFUser $user,
         Artifact $artifact,
         ?Tracker_Artifact_Changeset $changeset,
-        string $field_shortname
+        string $field_shortname,
     ): ?Tracker_Artifact_ChangesetValue_Text {
         $field_value = self::getFieldValue(
             $form_element_factory,

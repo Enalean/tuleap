@@ -65,7 +65,7 @@ final class ThreadInfoPresenter
         bool $has_avatar,
         string $avatar_url,
         string $sender,
-        TlpRelativeDatePresenter $created_on
+        TlpRelativeDatePresenter $created_on,
     ) {
         $this->subject    = $subject;
         $this->nb_replies = $nb_replies;

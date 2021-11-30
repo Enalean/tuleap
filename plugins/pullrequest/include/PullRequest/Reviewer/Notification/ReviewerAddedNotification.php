@@ -61,7 +61,7 @@ final class ReviewerAddedNotification implements NotificationToProcess
         PullRequest $pull_request,
         string $change_user_display_name,
         array $new_reviewers,
-        NotificationEnhancedContent $enhanced_content
+        NotificationEnhancedContent $enhanced_content,
     ) {
         $this->pull_request             = $pull_request;
         $this->change_user_display_name = $change_user_display_name;
@@ -77,7 +77,7 @@ final class ReviewerAddedNotification implements NotificationToProcess
         HTMLURLBuilder $html_url_builder,
         PullRequest $pull_request,
         PFUser $change_user,
-        array $new_reviewers
+        array $new_reviewers,
     ): self {
         $reviewers_to_notify = [];
 

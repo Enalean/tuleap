@@ -42,7 +42,7 @@ class AuthorizationCreator
     public function __construct(
         DBTransactionExecutor $executor,
         AuthorizationDao $authorization_dao,
-        AuthorizationScopeDao $scope_dao
+        AuthorizationScopeDao $scope_dao,
     ) {
         $this->executor          = $executor;
         $this->authorization_dao = $authorization_dao;

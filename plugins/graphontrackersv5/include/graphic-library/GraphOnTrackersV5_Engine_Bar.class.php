@@ -151,7 +151,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
                 'title'  => $this->title,
                 'height' => $this->height,
                 'width'  => $this->width,
-                'legend' => array_values($this->legend)
+                'legend' => array_values($this->legend),
             ]
         );
     }

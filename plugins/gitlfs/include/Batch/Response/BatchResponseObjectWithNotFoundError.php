@@ -39,7 +39,7 @@ final class BatchResponseObjectWithNotFoundError implements BatchResponseObject
         return [
             'oid'    => $this->object->getOID()->getValue(),
             'size'   => $this->object->getSize(),
-            'errors' => ['code' => 404, 'message' => 'Object does not exist']
+            'errors' => ['code' => 404, 'message' => 'Object does not exist'],
         ];
     }
 }

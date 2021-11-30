@@ -31,7 +31,7 @@ class ProjectTrackerTest extends TrackerBase
     public function testProjectAdministratorHaveAllTheTrackersOfTheProject()
     {
         $url = 'projects/' . $this->tracker_administrator_project_id . '/trackers?' . http_build_query([
-            'query'  => '{"is_tracker_admin":true}'
+            'query'  => '{"is_tracker_admin":true}',
         ]);
 
         $response      = $this->getResponse($this->request_factory->createRequest('GET', $url));
@@ -46,7 +46,7 @@ class ProjectTrackerTest extends TrackerBase
     public function testProjectMembersHaveOnlyTheTrackersOfTheProjectTheyAreAdminstrator()
     {
         $url = 'projects/' . $this->tracker_administrator_project_id . '/trackers?' . http_build_query([
-            'query'  => '{"is_tracker_admin":true}'
+            'query'  => '{"is_tracker_admin":true}',
         ]);
 
         $response      = $this->getResponse($this->request_factory->createRequest('GET', $url), DataBuilder::USER_TESTER_NAME);
@@ -60,7 +60,7 @@ class ProjectTrackerTest extends TrackerBase
     public function testItReturnsAnErrorIfTheTrackerAdministratorFilterIsSetToFalse()
     {
         $url = 'projects/' . $this->tracker_administrator_project_id . '/trackers?' . http_build_query([
-            'query'  => '{"is_tracker_admin":false}'
+            'query'  => '{"is_tracker_admin":false}',
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url), DataBuilder::USER_TESTER_NAME);

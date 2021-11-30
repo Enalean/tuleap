@@ -54,7 +54,7 @@ class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertSame(
             [
-                $pane
+                $pane,
             ],
             $this->collector->getPanes()
         );
@@ -72,7 +72,7 @@ class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(
             [
                 $pane_cardwall,
-                $pane_taskboard
+                $pane_taskboard,
             ],
             $this->collector->getPanes()
         );
@@ -93,7 +93,7 @@ class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $pane_frs,
                 $pane_cardwall,
-                $pane_taskboard
+                $pane_taskboard,
             ],
             $this->collector->getPanes()
         );
@@ -114,7 +114,7 @@ class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $pane_cardwall,
                 $pane_taskboard,
-                $pane_frs
+                $pane_frs,
             ],
             $this->collector->getPanes()
         );
@@ -134,7 +134,7 @@ class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $pane_cardwall,
                 $pane_taskboard,
-                $pane_frs
+                $pane_frs,
             ],
             $this->collector->getPanes()
         );

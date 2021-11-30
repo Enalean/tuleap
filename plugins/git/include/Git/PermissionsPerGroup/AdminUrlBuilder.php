@@ -32,7 +32,7 @@ class AdminUrlBuilder
                 'action'   => 'repo_management',
                 'group_id' => $project->getID(),
                 'repo_id'  => $repository->getId(),
-                'pane'     => 'perms'
+                'pane'     => 'perms',
             ]
         );
         return GIT_BASE_URL . '/?' . $admin_url_params;

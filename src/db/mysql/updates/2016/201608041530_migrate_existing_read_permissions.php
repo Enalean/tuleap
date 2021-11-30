@@ -105,7 +105,7 @@ class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgra
 
         return [
             "ugroups"  => $ugroups,
-            "projects" => $projects
+            "projects" => $projects,
         ];
     }
 }

@@ -57,7 +57,7 @@ class PullrequestDisplayer
         TemplateRenderer $template_renderer,
         MergeSettingRetriever $merge_setting_retriever,
         GitRepositoryHeaderDisplayer $header_displayer,
-        GitRepositoryFactory $repository_factory
+        GitRepositoryFactory $repository_factory,
     ) {
         $this->factory                 = $factory;
         $this->template_renderer       = $template_renderer;

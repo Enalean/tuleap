@@ -124,7 +124,7 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'user_name' => 'abc',
                 'realname' => $this->user_realname,
                 'language' => $language,
-                'email' => 'email@example.com'
+                'email' => 'email@example.com',
             ]
         );
         $example->shouldReceive('getRealname')->andReturn($this->user_realname);
@@ -150,7 +150,7 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->custom_email_sender->shouldReceive('getCustomSender')->andReturn(
             [
                 'format' => $this->default_format,
-                'enabled' => $custom_sender_enabled
+                'enabled' => $custom_sender_enabled,
             ]
         );
          return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true), false);

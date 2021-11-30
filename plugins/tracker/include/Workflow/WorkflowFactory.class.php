@@ -69,7 +69,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         WorkflowBackendLogger $logger,
         FrozenFieldsDao $read_only_dao,
-        StateFactory $state_factory
+        StateFactory $state_factory,
     ) {
         $this->transition_factory    = $transition_factory;
         $this->tracker_factory       = $tracker_factory;
@@ -376,7 +376,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         SimpleXMLElement $xml,
         array &$xml_mapping,
         Tracker $tracker,
-        Project $project
+        Project $project,
     ) {
         $workflow_field = $this->getWorkflowField($xml, $xml_mapping);
         $transitions    = [];

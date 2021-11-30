@@ -69,13 +69,13 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     'editmyusercss',
     'editmyuserjs',
     'viewmyprivateinfo',
-    'editmyprivateinfo'
+    'editmyprivateinfo',
     ];
 
     $read_permissions = [
     'read',
     'viewmywatchlist',
-    'editmywatchlist'
+    'editmywatchlist',
     ];
 
     $write_permissions = [
@@ -83,7 +83,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     'createpage',
     'move',
     'createtalk',
-    'writeapi'
+    'writeapi',
     ];
 
 //Trust Mediawiki security
@@ -287,7 +287,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         $fusionforgeproject,
         array $forbidden_permissions,
         array $read_permissions,
-        array $write_permissions
+        array $write_permissions,
     ) {
         $user_manager = UserManager::instance();
         $tuleap_user  = $user_manager->getCurrentUser();

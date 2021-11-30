@@ -120,7 +120,7 @@ function RemovePage(&$request)
                 'group_id'  => GROUP_ID,
                 'wiki_page' => $pagename,
                 'user'      => $user,
-                'version'   => $version
+                'version'   => $version,
             ]
         );
 

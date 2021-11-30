@@ -32,7 +32,7 @@ class AgileDashboard_PaneInfoIdentifier
     {
         return in_array($pane_info_identifier, [
             PlanningV2PaneInfo::IDENTIFIER,
-            TopPlanningV2PaneInfo::IDENTIFIER
+            TopPlanningV2PaneInfo::IDENTIFIER,
         ]);
     }
 }

@@ -60,7 +60,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
         LayoutHelper $layout_helper,
         TroveCatDao $dao,
         TemplateRenderer $renderer,
-        IncludeAssets $assets
+        IncludeAssets $assets,
     ) {
         $this->layout_helper = $layout_helper;
         $this->dao           = $dao;
@@ -108,7 +108,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
                     'fullpath'    => $row_value['fullpath'],
                     'label'       => $row_value['fullname'],
                     'is_selected' => $row_value['is_selected'],
-                    'id'          => $row_value['trove_cat_id']
+                    'id'          => $row_value['trove_cat_id'],
                 ];
                 if ($row_value['is_selected']) {
                     $nb_selected++;
@@ -120,7 +120,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
                 'is_mandatory'             => (bool) $row['mandatory'],
                 'maximum_selection_length' => $row['nb_max_values'],
                 'is_multiple'              => $row['nb_max_values'] > 1 || $nb_selected > 1,
-                'values'                   => $values
+                'values'                   => $values,
             ];
         }
 
@@ -129,7 +129,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
 
         return [
             'categories' => $categories,
-            'csrf'       => $csrf
+            'csrf'       => $csrf,
         ];
     }
 }

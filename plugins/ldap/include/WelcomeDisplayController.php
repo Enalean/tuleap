@@ -94,7 +94,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
             $layout->header(
                 [
                     'title' => sprintf(dgettext('tuleap-ldap', 'Welcome %1$s'), $this->html_purifier->purify($lr->getCommonName())),
-                    'registeration_process' => true
+                    'registeration_process' => true,
                 ]
             );
         }

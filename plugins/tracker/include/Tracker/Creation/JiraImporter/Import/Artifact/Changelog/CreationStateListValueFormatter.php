@@ -81,7 +81,7 @@ class CreationStateListValueFormatter
     private function formatValueAsArray(string $value): array
     {
         return [
-            'id' => trim($value)
+            'id' => trim($value),
         ];
     }
 }

@@ -27,7 +27,7 @@ final class ProgramBaseInfo
     private function __construct(
         public string $program_label,
         public string $program_shortname,
-        public string $program_icon
+        public string $program_icon,
     ) {
     }
 

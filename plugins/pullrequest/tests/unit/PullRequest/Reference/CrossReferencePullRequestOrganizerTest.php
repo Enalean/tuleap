@@ -110,7 +110,7 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                         CrossReferencePresenterBuilder::get(2)->withType('tracker')->build(),
                         CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -137,7 +137,7 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                         $ref,
                         CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -171,7 +171,7 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                         $ref,
                         CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -212,7 +212,7 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                         $ref,
                         CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -253,7 +253,7 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                         $ref,
                         CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -297,7 +297,7 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
             PFUser::class,
             [
                 'getLocale'     => 'en_US',
-                'getPreference' => 'relative_first-absolute_tooltip'
+                'getPreference' => 'relative_first-absolute_tooltip',
             ]
         );
 
@@ -314,7 +314,7 @@ class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCa
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                         $ref,
                         CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
-                    ]
+                    ],
                 ]
             )->getMock();
 

@@ -49,7 +49,7 @@ class PullRequestsCommitRepresentationFactory
         Git_Exec $git_exec,
         Project $project,
         GitRepositoryFactory $repository_factory,
-        GitCommitRepresentationBuilder $commit_representation_builder
+        GitCommitRepresentationBuilder $commit_representation_builder,
     ) {
         $this->git_exec                      = $git_exec;
         $this->project                       = $project;

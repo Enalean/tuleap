@@ -197,7 +197,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->external_validator,
                 $this->feedback_collector,
                 $this->tracker_creation_data_checker,
-                $this->tracker_xml_saver
+                $this->tracker_xml_saver,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -448,7 +448,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field1685->shouldReceive('setCachePermission')->with(4, 'PLUGIN_TRACKER_FIELD_UPDATE')->once();
 
         $field_mapping = [
-            'F1685' => $this->field1685
+            'F1685' => $this->field1685,
         ];
 
         $this->tracker_xml_importer->setPermissions(
@@ -527,7 +527,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'enable_emailgateway'          => 0,
             'instantiate_for_new_projects' => 1,
             'log_priority_changes'         => 0,
-            'notifications_level'          => Tracker::NOTIFICATIONS_LEVEL_DEFAULT
+            'notifications_level'          => Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
         ];
 
         $this->assertEquals($expected_row, $row);
@@ -607,7 +607,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_mapping = [
             "T101" => 444,
             "T102" => 555,
-            "T103" => 666
+            "T103" => 666,
         ];
 
         $this->assertEquals($expected_mapping, $result);
@@ -645,7 +645,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_mapping = [
             "T101" => 444,
             "T102" => 555,
-            "T103" => 666
+            "T103" => 666,
         ];
 
         $this->assertEquals($expected_mapping, $result);
@@ -661,7 +661,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_mapping = [
             "T101" => 444,
             "T102" => 555,
-            "T103" => 666
+            "T103" => 666,
         ];
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::type(ImportXMLProjectTrackerDone::class));
@@ -845,7 +845,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker->shouldReceive('getFormElementFields')->andReturn([
             $field_1,
-            $field_2
+            $field_2,
         ]);
 
         $this->tracker_xml_importer->updateFromXML($this->project, $xml_tracker);

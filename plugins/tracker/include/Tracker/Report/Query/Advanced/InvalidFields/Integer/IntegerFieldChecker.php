@@ -42,7 +42,7 @@ class IntegerFieldChecker implements InvalidFieldChecker
 
     public function __construct(
         EmptyStringChecker $empty_string_checker,
-        CollectionOfAlphaNumericValuesExtractor $values_extractor
+        CollectionOfAlphaNumericValuesExtractor $values_extractor,
     ) {
         $this->empty_string_checker = $empty_string_checker;
         $this->values_extractor     = $values_extractor;

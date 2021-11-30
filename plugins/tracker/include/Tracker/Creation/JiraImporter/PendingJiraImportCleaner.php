@@ -56,7 +56,7 @@ class PendingJiraImportCleaner
         PendingJiraImportDao $dao,
         DBTransactionExecutor $transaction_executor,
         PendingJiraImportBuilder $builder,
-        CancellationOfJiraImportNotifier $notifier
+        CancellationOfJiraImportNotifier $notifier,
     ) {
         $this->logger               = $logger;
         $this->dao                  = $dao;

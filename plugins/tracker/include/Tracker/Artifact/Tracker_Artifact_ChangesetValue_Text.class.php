@@ -163,7 +163,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         $changeset_id,
         $ignore_perms,
         $format = 'html',
-        ?PFUser $user = null
+        ?PFUser $user = null,
     ) {
         $previous = explode(PHP_EOL, $changeset_value->getText());
         $next     = explode(PHP_EOL, $this->getText());

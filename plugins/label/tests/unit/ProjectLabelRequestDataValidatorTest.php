@@ -53,15 +53,15 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'project_id' => '102',
                 'name'       => 'test',
                 'is_outline' => '0',
-                'color'      => 'fiesta-red'
+                'color'      => 'fiesta-red',
             ],
             [
                 'id'         => '3',
                 'project_id' => '102',
                 'name'       => 'test2',
                 'is_outline' => '0',
-                'color'      => 'acid-green'
-            ]
+                'color'      => 'acid-green',
+            ],
         ];
         $this->request->shouldReceive('validArray')->andReturn(true);
 
@@ -101,15 +101,15 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'project_id' => '102',
                 'name'       => 'test',
                 'is_outline' => '0',
-                'color'      => 'fiesta-red'
+                'color'      => 'fiesta-red',
             ],
             [
                 'id'         => '2',
                 'project_id' => '102',
                 'name'       => 'test2',
                 'is_outline' => '0',
-                'color'      => 'acid-green'
-            ]
+                'color'      => 'acid-green',
+            ],
         ];
         $this->request->shouldReceive('validArray')->andReturn(true);
 

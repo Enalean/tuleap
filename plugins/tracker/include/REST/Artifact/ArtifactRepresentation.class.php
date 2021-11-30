@@ -132,7 +132,7 @@ class ArtifactRepresentation
         string $last_modified_date,
         ?string $status,
         ?string $title,
-        array $assignees
+        array $assignees,
     ) {
         $this->id                 = $id;
         $this->uri                = $uri;

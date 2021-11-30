@@ -212,7 +212,7 @@ function html_build_select_box_from_arrays(
     $show_unchanged = false,
     $text_unchanged = '',
     $purify_level = CODENDI_PURIFIER_CONVERT_HTML,
-    $show_unknown_value = true
+    $show_unknown_value = true,
 ) {
     global $Language;
         $return           = '';
@@ -360,7 +360,7 @@ function html_build_select_box(
     $show_unchanged = false,
     $text_unchanged = '',
     $purify_level = CODENDI_PURIFIER_CONVERT_HTML,
-    $show_unknown_value = true
+    $show_unknown_value = true,
 ) {
         global $Language;
     /*
@@ -657,7 +657,7 @@ function html_field_date(
     $size = '10',
     $maxlength = '10',
     $form_name = 'artifact_form',
-    $today = false
+    $today = false,
 ) {
     if ($ro) {
         $html = $value;

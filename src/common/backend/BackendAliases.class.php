@@ -167,7 +167,7 @@ class BackendAliases extends Backend
         EventManager::instance()->processEvent(
             Event::BACKEND_ALIAS_GET_ALIASES,
             [
-                'aliases' => &$aliases
+                'aliases' => &$aliases,
             ]
         );
 

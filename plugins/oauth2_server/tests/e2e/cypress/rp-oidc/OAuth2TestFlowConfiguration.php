@@ -48,7 +48,7 @@ final class OAuth2TestFlowConfiguration
         string $authorization_endpoint,
         string $token_endpoint,
         string $userinfo_endpoint,
-        string $jwks_uri
+        string $jwks_uri,
     ) {
         $this->authorization_endpoint = $authorization_endpoint;
         $this->token_endpoint         = $token_endpoint;

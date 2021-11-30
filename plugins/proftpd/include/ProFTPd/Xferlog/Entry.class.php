@@ -79,7 +79,7 @@ class Entry
         $service_name,
         $authentication_method,
         $authenticated_user_id,
-        $completion_status
+        $completion_status,
     ) {
         $this->current_time          = $current_time;
         $this->transfer_time         = $transfer_time;

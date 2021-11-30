@@ -397,7 +397,7 @@ class KanbanResource extends AuthenticatedResource
         $label = null,
         ?KanbanCollapseColumnRepresentation $collapse_column = null,
         $collapse_archive = null,
-        $collapse_backlog = null
+        $collapse_backlog = null,
     ) {
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
@@ -614,7 +614,7 @@ class KanbanResource extends AuthenticatedResource
         $id,
         ?OrderRepresentation $order = null,
         ?KanbanAddRepresentation $add = null,
-        $from_column = null
+        $from_column = null,
     ) {
         try {
             $current_user = UserManager::instance()->getCurrentUser();
@@ -713,7 +713,7 @@ class KanbanResource extends AuthenticatedResource
         AgileDashboard_Kanban $kanban,
         PFUser $user,
         KanbanAddRepresentation $add,
-        $column_id
+        $column_id,
     ) {
         foreach ($add->ids as $artifact_id) {
             $artifact     = $this->artifact_factory->getArtifactById($artifact_id);
@@ -724,7 +724,7 @@ class KanbanResource extends AuthenticatedResource
             }
 
             $fields_data = [
-                $status_field->getId() => $column_id
+                $status_field->getId() => $column_id,
             ];
 
             $artifact->createNewChangeset($fields_data, '', $user);
@@ -859,7 +859,7 @@ class KanbanResource extends AuthenticatedResource
         $id,
         ?OrderRepresentation $order = null,
         ?KanbanAddRepresentation $add = null,
-        $from_column = null
+        $from_column = null,
     ) {
         try {
             $current_user = UserManager::instance()->getCurrentUser();
@@ -1050,7 +1050,7 @@ class KanbanResource extends AuthenticatedResource
         $column_id,
         ?OrderRepresentation $order = null,
         ?KanbanAddRepresentation $add = null,
-        $from_column = null
+        $from_column = null,
     ) {
         try {
             $current_user = UserManager::instance()->getCurrentUser();

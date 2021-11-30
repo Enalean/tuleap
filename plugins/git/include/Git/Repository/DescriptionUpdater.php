@@ -89,7 +89,7 @@ class DescriptionUpdater
             'action'   => 'repo_management',
             'group_id' => $project_id,
             'repo_id'  => $repository_id,
-            'pane'     => 'settings'
+            'pane'     => 'settings',
         ];
 
         $url = "/plugins/git/?" . http_build_query($query_parts);

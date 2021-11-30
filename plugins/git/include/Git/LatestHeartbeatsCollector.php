@@ -36,7 +36,7 @@ class LatestHeartbeatsCollector
         private Git_LogDao $dao,
         private Git_GitRepositoryUrlManager $git_url_manager,
         private UserManager $user_manager,
-        private UserHelper $user_helper
+        private UserHelper $user_helper,
     ) {
     }
 

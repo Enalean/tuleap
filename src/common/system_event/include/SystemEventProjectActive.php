@@ -31,7 +31,7 @@ class SystemEventProjectActive extends SystemEvent
     private $svn_authentication_cache_invalidator;
 
     public function injectDependencies(
-        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator
+        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator,
     ) {
         $this->svn_authentication_cache_invalidator = $svn_authentication_cache_invalidator;
     }

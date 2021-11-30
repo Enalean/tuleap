@@ -47,7 +47,7 @@ class PreferencesController
     public function __construct(
         DashboardWidgetDao $dao,
         WidgetFactory $widget_factory,
-        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
     ) {
         $this->dao                              = $dao;
         $this->widget_factory                   = $widget_factory;
@@ -160,7 +160,7 @@ class PreferencesController
         $GLOBALS['Response']->redirect(
             $url . '?' . http_build_query(
                 [
-                    'dashboard_id' => $row['dashboard_id']
+                    'dashboard_id' => $row['dashboard_id'],
                 ]
             )
         );

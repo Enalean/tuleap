@@ -47,7 +47,7 @@ class LabelsUpdater
     public function __construct(
         LabelDao $project_label_dao,
         LabelableDao $item_label_dao,
-        ProjectHistoryDao $history_dao
+        ProjectHistoryDao $history_dao,
     ) {
         $this->item_label_dao    = $item_label_dao;
         $this->project_label_dao = $project_label_dao;

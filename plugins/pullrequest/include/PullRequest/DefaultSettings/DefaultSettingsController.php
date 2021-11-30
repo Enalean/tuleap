@@ -82,7 +82,7 @@ class DefaultSettingsController implements DispatchableWithRequest
             [
                 'action'   => 'admin-default-settings',
                 'group_id' => $project->getID(),
-                'pane'     => PullRequestPane::NAME
+                'pane'     => PullRequestPane::NAME,
             ]
         );
     }

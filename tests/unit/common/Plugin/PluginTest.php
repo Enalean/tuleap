@@ -320,7 +320,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $services = [];
         $params   = [
             'project'  => Mockery::mock(Project::class),
-            'services' => &$services
+            'services' => &$services,
         ];
         $plugin->services_allowed_for_project($params);
 
@@ -335,7 +335,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $services = [];
         $params   = [
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
-            'services' => &$services
+            'services' => &$services,
         ];
         $plugin->services_allowed_for_project($params);
 
@@ -351,7 +351,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $services = [];
         $params   = [
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
-            'services' => &$services
+            'services' => &$services,
         ];
         $plugin->services_allowed_for_project($params);
 
@@ -366,7 +366,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $services = [];
         $params   = [
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
-            'services' => &$services
+            'services' => &$services,
         ];
         $plugin->services_allowed_for_project($params);
 

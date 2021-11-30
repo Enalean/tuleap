@@ -29,6 +29,6 @@ interface VerifyUserCanLinkToProgramIncrement
 {
     public function canUserLinkToProgramIncrement(
         ProgramIncrementTrackerIdentifier $program_increment_tracker,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): bool;
 }

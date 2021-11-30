@@ -44,7 +44,7 @@ class ActionAuthorizationVerifier
     public function __construct(
         ActionAuthorizationDAO $dao,
         SplitTokenVerificationStringHasher $hasher,
-        \GitRepositoryFactory $git_repository_factory
+        \GitRepositoryFactory $git_repository_factory,
     ) {
         $this->dao                    = $dao;
         $this->hasher                 = $hasher;
@@ -61,7 +61,7 @@ class ActionAuthorizationVerifier
         \DateTimeImmutable $current_time,
         SplitToken $authorization_token,
         $oid,
-        ActionAuthorizationType $action_type
+        ActionAuthorizationType $action_type,
     ) {
         $row = $this->dao->searchAuthorizationByIDAndExpiration($authorization_token->getID(), $current_time->getTimestamp());
         if ($row === null) {

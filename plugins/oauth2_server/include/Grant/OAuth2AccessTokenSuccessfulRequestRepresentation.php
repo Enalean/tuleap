@@ -53,7 +53,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
         ConcealedString $access_token_identifier,
         ?ConcealedString $refresh_token,
         int $expires_in_seconds,
-        ?string $id_token
+        ?string $id_token,
     ) {
         $this->access_token  = $access_token_identifier;
         $this->refresh_token = $refresh_token;
@@ -67,7 +67,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
     public static function fromAccessTokenAndRefreshToken(
         OAuth2AccessTokenWithIdentifier $access_token,
         ?ConcealedString $refresh_token,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
     ): self {
         return new self(
             $access_token->getIdentifier(),
@@ -81,7 +81,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
         OAuth2AccessTokenWithIdentifier $access_token,
         ?ConcealedString $refresh_token,
         ?string $id_token,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
     ): self {
         return new self(
             $access_token->getIdentifier(),

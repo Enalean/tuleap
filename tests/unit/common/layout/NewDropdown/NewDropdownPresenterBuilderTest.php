@@ -196,7 +196,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->andReturn($collector);
 
         $current_context_section = new NewDropdownLinkSectionPresenter("Current context", [
-            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', [])
+            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', []),
         ]);
 
         $presenter = $builder->getPresenter($this->user, $this->project, $current_context_section);

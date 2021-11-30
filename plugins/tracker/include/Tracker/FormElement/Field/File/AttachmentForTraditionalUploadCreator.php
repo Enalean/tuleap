@@ -49,7 +49,7 @@ class AttachmentForTraditionalUploadCreator implements AttachmentCreator
         \PFUser $current_user,
         Tracker_FormElement_Field_File $field,
         array $submitted_value_info,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): ?Tracker_FileInfo {
         if (! $this->rule_file->isValid($submitted_value_info)) {
             return null;

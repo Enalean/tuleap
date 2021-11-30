@@ -75,7 +75,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             [
                 'title'       => 'Faboulous Folder With Status',
                 'description' => 'A description',
-                'status'      => 'approved'
+                'status'      => 'approved',
             ]
         );
 
@@ -102,7 +102,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             [
                 'title'       => 'Faboulous Folder With Status',
                 'description' => 'A description',
-                'status'      => 'approved'
+                'status'      => 'approved',
             ]
         );
 
@@ -127,7 +127,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             [
                 'title'             => 'Faboulous Empty With Status',
                 'status'            => 'rejected',
-                'obsolescence_date' => '3000-08-20'
+                'obsolescence_date' => '3000-08-20',
             ]
         );
 
@@ -154,7 +154,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             [
                 'title'             => 'Faboulous Empty With Status',
                 'status'            => 'rejected',
-                'obsolescence_date' => '3000-08-20'
+                'obsolescence_date' => '3000-08-20',
             ]
         );
 
@@ -181,7 +181,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'description'         => 'A description',
                 'embedded_properties' => $embedded_properties,
                 'status'              => 'approved',
-                'obsolescence_date'   => '3000-08-25'
+                'obsolescence_date'   => '3000-08-25',
             ]
         );
 
@@ -210,7 +210,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'description'         => 'A description',
                 'embedded_properties' => $embedded_properties,
                 'status'              => 'approved',
-                'obsolescence_date'   => '3000-08-25'
+                'obsolescence_date'   => '3000-08-25',
             ]
         );
 
@@ -235,7 +235,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'description'       => 'A description',
                 'link_properties'   => $link_properties,
                 'status'            => 'approved',
-                'obsolescence_date' => '3000-08-25'
+                'obsolescence_date' => '3000-08-25',
             ]
         );
 
@@ -262,7 +262,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'description'       => 'A description',
                 'link_properties'   => $link_properties,
                 'status'            => 'approved',
-                'obsolescence_date' => '3000-08-25'
+                'obsolescence_date' => '3000-08-25',
             ]
         );
 
@@ -287,7 +287,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'description'       => 'A description',
                 'wiki_properties'   => $wiki_properties,
                 'status'            => 'approved',
-                'obsolescence_date' => '3000-08-08'
+                'obsolescence_date' => '3000-08-08',
             ]
         );
 
@@ -314,7 +314,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'description'       => 'A description',
                 'wiki_properties'   => $wiki_properties,
                 'status'            => 'approved',
-                'obsolescence_date' => '3000-08-08'
+                'obsolescence_date' => '3000-08-08',
             ]
         );
 
@@ -344,7 +344,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'title'             => 'File1',
                 'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
                 'status'            => 'approved',
-                'obsolescence_date' => $formatted_date
+                'obsolescence_date' => $formatted_date,
             ]
         );
 
@@ -408,7 +408,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'title'             => 'My File2352',
                 'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
                 'status'            => 'approved',
-                'obsolescence_date' => '3019-05-2030096'
+                'obsolescence_date' => '3019-05-2030096',
             ]
         );
 
@@ -433,7 +433,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'title'             => 'My File2352',
                 'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
                 'status'            => 'approved',
-                'obsolescence_date' => '3019-05-20'
+                'obsolescence_date' => '3019-05-20',
             ]
         );
 
@@ -475,7 +475,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             'description'       => 'Whoo ! Whoo !',
             'owner_id'          => 101,
             'status'            => 'approved',
-            'obsolescence_date' => $formatted_date
+            'obsolescence_date' => $formatted_date,
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
@@ -524,7 +524,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             'description'       => 'Whoo ! Whoo !',
             'owner_id'          => 101,
             'obsolescence_date' => '2020-51-1515410',
-            'status'            => 'none'
+            'status'            => 'none',
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
@@ -563,7 +563,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             'description'       => 'Whoo ! Whoo !',
             'owner_id'          => 101,
             'status'            => 'approved',
-            'obsolescence_date' => $formatted_date
+            'obsolescence_date' => $formatted_date,
         ];
 
         $updated_metadata_file_response = $this->getResponse(

@@ -79,7 +79,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => false,
                 'is_in_new_tab' => false,
                 'scope'         => Service::SCOPE_SYSTEM,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
 
@@ -103,7 +103,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => false,
                 'is_in_new_tab' => false,
                 'scope'         => Service::SCOPE_PROJECT,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
 
@@ -127,7 +127,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => false,
                 'is_in_new_tab' => false,
                 'scope'         => Service::SCOPE_PROJECT,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
 
@@ -151,7 +151,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => false,
                 'is_in_new_tab' => false,
                 'scope'         => Service::SCOPE_PROJECT,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
 
@@ -175,7 +175,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => false,
                 'is_in_new_tab' => false,
                 'scope'         => Service::SCOPE_SYSTEM,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
         $this->event_manager->shouldReceive('processEvent')
@@ -208,7 +208,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => false,
                 'is_in_new_tab' => false,
                 'scope'         => Service::SCOPE_PROJECT,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
 
@@ -232,7 +232,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => true,
                 'is_in_new_tab' => true,
                 'scope'         => Service::SCOPE_PROJECT,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
 
@@ -256,7 +256,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_in_iframe'  => false,
                 'is_in_new_tab' => false,
                 'scope'         => Service::SCOPE_SYSTEM,
-                'is_active'     => true
+                'is_active'     => true,
             ]
         );
 
@@ -329,14 +329,14 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_admin_service = M::mock(Service::class);
         $current_admin_service->shouldReceive([
             'getInternationalizedName' => 'Admin',
-            'getInternationalizedDescription' => 'Admin'
+            'getInternationalizedDescription' => 'Admin',
         ]);
         $this->service_manager
             ->shouldReceive('getListOfAllowedServicesForProject')
             ->with($project)
             ->once()
             ->andReturn([
-                12 => $current_admin_service
+                12 => $current_admin_service,
             ]);
 
         $admin_service = $this->service_postdata_builder->buildFromRequest($request, $project, $response);
@@ -412,7 +412,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         string $submitted_label,
         string $submitted_description,
         string $expected_label,
-        string $expected_description
+        string $expected_description,
     ): void {
         $service = M::mock(Service::class);
         $service->shouldReceive(
@@ -428,7 +428,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getListOfAllowedServicesForProject')
             ->with($project)
             ->andReturns([
-                12 => $service
+                12 => $service,
             ]);
         $response = M::mock(BaseLayout::class);
         $request  = M::mock(\HTTPRequest::class);
@@ -484,20 +484,20 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'SVN',
                 'SVN plugin to manage multiple SVN repositories',
                 'plugin_svn:service_lbl_key',
-                'plugin_svn:service_lbl_description'
+                'plugin_svn:service_lbl_description',
             ],
             'customised label' => [
                 'My SVN',
                 'SVN plugin to manage multiple SVN repositories',
                 'My SVN',
-                'plugin_svn:service_lbl_description'
+                'plugin_svn:service_lbl_description',
             ],
             'customised label and description' => [
                 'My SVN',
                 'My SVN description',
                 'My SVN',
-                'My SVN description'
-            ]
+                'My SVN description',
+            ],
         ];
     }
 }

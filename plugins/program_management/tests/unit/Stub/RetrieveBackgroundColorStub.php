@@ -41,7 +41,7 @@ final class RetrieveBackgroundColorStub implements RetrieveBackgroundColor
 
     public function retrieveBackgroundColor(
         ArtifactIdentifier $artifact_identifier,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): BackgroundColor {
         return new BackgroundColor($this->color);
     }

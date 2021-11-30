@@ -43,7 +43,7 @@ class RegexpFineGrainedEnabler
     public function __construct(
         RegexpFineGrainedDao $regexp_dao,
         RegexpRepositoryDao $regexp_repository_dao,
-        RegexpTemplateDao $regexp_template_dao
+        RegexpTemplateDao $regexp_template_dao,
     ) {
         $this->regexp_dao            = $regexp_dao;
         $this->regexp_repository_dao = $regexp_repository_dao;

@@ -70,7 +70,7 @@ final class EditionPresenter
     public function __construct(
         \CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->csrf_token = $csrf_token;
         $this->tabs       = $tabs;

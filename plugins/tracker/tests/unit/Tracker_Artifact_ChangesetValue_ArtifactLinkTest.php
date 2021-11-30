@@ -59,7 +59,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
                 $field,
                 false,
                 $artifact_links,
-                $reverse_artifact_links
+                $reverse_artifact_links,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $value->shouldReceive('getTypePresenterFactory')->andReturn(Mockery::mock(TypePresenterFactory::class));
@@ -132,7 +132,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
     {
         $old_values = [
             1 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
-            2 => Mockery::spy(Tracker_ArtifactLinkInfo::class)
+            2 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
         ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
@@ -146,8 +146,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
         $new_value = [
             'list_of_artifactlinkinfo' => [
                 2 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
-                1 => Mockery::spy(Tracker_ArtifactLinkInfo::class)
-            ]
+                1 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
+            ],
         ];
 
         $this->assertFalse($changeset_value->hasChanges($new_value));
@@ -157,7 +157,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
     {
         $old_values = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
-            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
         ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
@@ -172,8 +172,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
             'list_of_artifactlinkinfo' => [
                 1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
                 2 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
-                3 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
-            ]
+                3 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
+            ],
         ];
 
         $this->assertTrue($changeset_value->hasChanges($new_value));
@@ -183,7 +183,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
     {
         $old_values = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
-            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
         ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
@@ -196,8 +196,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
         $new_value = [
             'list_of_artifactlinkinfo' => [
-                1 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
-            ]
+                1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
+            ],
         ];
 
         $this->assertTrue($changeset_value->hasChanges($new_value));
@@ -207,7 +207,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
     {
         $old_values = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => '_is_child']),
-            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => ''])
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => '']),
         ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
@@ -221,8 +221,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
         $new_value = [
             'list_of_artifactlinkinfo' => [
                 1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => 'fixed_in']),
-                2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => ''])
-            ]
+                2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => '']),
+            ],
         ];
 
         $this->assertTrue($changeset_value->hasChanges($new_value));

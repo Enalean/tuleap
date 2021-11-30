@@ -47,7 +47,7 @@ class MetadataRepresentationBuilder
     public function __construct(
         Docman_MetadataFactory $factory,
         Codendi_HTMLPurifier $html_purifier,
-        UserHelper $user_helper
+        UserHelper $user_helper,
     ) {
         $this->factory       = $factory;
         $this->html_purifier = $html_purifier;
@@ -116,14 +116,14 @@ class MetadataRepresentationBuilder
             return [
                 'value'                => $this->user_helper->getDisplayNameFromUserId($value),
                 'post_processed_value' => $this->user_helper->getLinkOnUserFromUserId($value),
-                'list_value'           => null
+                'list_value'           => null,
             ];
         }
 
         return [
             'value'                => (string) $value,
             'post_processed_value' => $this->html_purifier->purifyTextWithReferences($value, $metadata->getGroupId()),
-            'list_value'           => null
+            'list_value'           => null,
         ];
     }
 

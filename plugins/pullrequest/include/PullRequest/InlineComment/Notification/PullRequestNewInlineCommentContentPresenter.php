@@ -68,7 +68,7 @@ final class PullRequestNewInlineCommentContentPresenter
         string $pull_request_url,
         string $inline_comment,
         string $file_path,
-        string $code_context
+        string $code_context,
     ) {
         $this->change_user_display_name = $change_user_display_name;
         $this->change_user_profile_url  = $change_user_profile_url;

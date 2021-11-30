@@ -30,6 +30,6 @@ interface IProvideArtifactChildrenForComputedCalculation
         bool $stop_on_manual_value,
         string $target_field_name,
         int $computed_field_id,
-        ArtifactsAlreadyProcessedDuringComputationCollection $already_seen
+        ArtifactsAlreadyProcessedDuringComputationCollection $already_seen,
     ): array;
 }

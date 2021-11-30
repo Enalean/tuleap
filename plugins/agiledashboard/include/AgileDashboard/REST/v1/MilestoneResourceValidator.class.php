@@ -66,7 +66,7 @@ class MilestoneResourceValidator
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_row_collection_factory,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
     ) {
         $this->planning_factory                = $planning_factory;
         $this->tracker_artifact_factory        = $tracker_artifact_factory;
@@ -154,7 +154,7 @@ class MilestoneResourceValidator
         array $backlog_tracker_ids,
         ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo = null,
         ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done = null,
-        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned = null
+        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned = null,
     ) {
         $artifacts = [];
 

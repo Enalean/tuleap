@@ -54,7 +54,7 @@ class PermissionPerGroupUGroupFormatter
             'is_project_admin' => $this->isProjectAdmin($user_group),
             'is_static'        => $user_group->isStatic(),
             'is_custom'        => ! $this->isProjectAdmin($user_group) && ! $user_group->isStatic(),
-            'name'             => $user_group->getTranslatedName()
+            'name'             => $user_group->getTranslatedName(),
         ];
     }
 

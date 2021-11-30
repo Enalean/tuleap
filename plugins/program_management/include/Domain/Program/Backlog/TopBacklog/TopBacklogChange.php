@@ -36,7 +36,7 @@ final class TopBacklogChange
         public array $potential_features_id_to_add,
         public array $potential_features_id_to_remove,
         public bool $remove_program_increments_link_to_feature_to_add,
-        public ?FeaturesToReorder $elements_to_order
+        public ?FeaturesToReorder $elements_to_order,
     ) {
     }
 }

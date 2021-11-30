@@ -49,7 +49,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertTrue($this->parser->accept([
             "type" => "set_field_value",
-            "field_type" => "float"
+            "field_type" => "float",
         ]));
     }
 
@@ -62,7 +62,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertFalse($this->parser->accept([
             "type" => "set_field_value",
-            "field_type" => "date"
+            "field_type" => "date",
         ]));
     }
 
@@ -83,7 +83,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => 43,
-                "value" => 1.23
+                "value" => 1.23,
             ]
         );
         $expected_action = new SetFloatValue(43, 1.23);
@@ -102,7 +102,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => 43,
-                "value" => 1
+                "value" => 1,
             ]
         );
         $expected_action = new SetFloatValue(43, 1);
@@ -120,7 +120,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => 43,
-                "value" => 1
+                "value" => 1,
             ]
         );
         $expected_action = new SetFloatValue(43, 1);
@@ -139,7 +139,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => 43,
-                "value" => 1
+                "value" => 1,
             ]
         );
         $expected_action = new SetFloatValue(43, 1);
@@ -158,7 +158,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 "type" => "set_field_value",
                 "field_type" => "float",
-                "value" => 1
+                "value" => 1,
             ]
         );
     }
@@ -176,7 +176,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => null,
-                "value" => 1
+                "value" => 1,
             ]
         );
     }
@@ -194,7 +194,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => "not int",
-                "value" => 1
+                "value" => 1,
             ]
         );
     }
@@ -211,7 +211,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 "type" => "set_field_value",
                 "field_type" => "float",
-                "field_id" => 43
+                "field_id" => 43,
             ]
         );
     }
@@ -229,7 +229,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => 43,
-                "value" => null
+                "value" => null,
             ]
         );
     }
@@ -247,7 +247,7 @@ class SetFloatValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
                 "type" => "set_field_value",
                 "field_type" => "float",
                 "field_id" => 43,
-                "value" => "not numeric"
+                "value" => "not numeric",
             ]
         );
     }

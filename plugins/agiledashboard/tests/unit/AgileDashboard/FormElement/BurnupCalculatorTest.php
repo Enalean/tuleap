@@ -64,14 +64,14 @@ class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, 1537187828)
             ->andReturn([
                 ['id' => 102],
-                ['id' => 103]
+                ['id' => 103],
             ]);
 
         $burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
             ->with(101, 1537189326)
             ->andReturn([
                 ['id' => 102],
-                ['id' => 103]
+                ['id' => 103],
             ]);
 
         $tracker       = Mockery::mock(Tracker::class);

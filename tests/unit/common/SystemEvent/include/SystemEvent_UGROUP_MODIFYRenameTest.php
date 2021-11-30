@@ -56,7 +56,7 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
             $_SERVER['REQUEST_TIME'],
             $_SERVER['REQUEST_TIME'],
             $_SERVER['REQUEST_TIME'],
-            ''
+            '',
         ];
 
         $this->system_event = \Mockery::mock(\SystemEvent_UGROUP_MODIFY::class, $event_params)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -88,7 +88,7 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'project'         => $this->project,
                     'new_ugroup_name' => 'Amleth',
-                    'old_ugroup_name' => 'Hamlet'
+                    'old_ugroup_name' => 'Hamlet',
                 ]
             )
             ->once();

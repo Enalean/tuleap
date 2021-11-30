@@ -157,7 +157,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "owner"       => null,
                 "description" => "Linux4ever",
                 "reference"   => null,
-                "modified"    => $this->current_time
+                "modified"    => $this->current_time,
             ],
             $content["/linux/kernel.git"]
         );
@@ -182,7 +182,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "owner"       => null,
                 "description" => "",
                 "reference"   => null,
-                "modified"    => $this->current_time
+                "modified"    => $this->current_time,
             ],
             $content["/gitolite-admin.git"],
         );
@@ -201,7 +201,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "owner"       => null,
                 "description" => "Linux4ever",
                 "reference"   => null,
-                "modified"    => 1414684049
+                "modified"    => 1414684049,
             ],
             $content["/linux/kernel.git"]
         );
@@ -220,7 +220,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "owner"       => null,
                 "description" => "free and open-source web browser",
                 "reference"   => null,
-                "modified"    => $this->current_time
+                "modified"    => $this->current_time,
             ],
             $content["/mozilla/firefox.git"]
         );
@@ -239,7 +239,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "owner"       => null,
                 "description" => "Linux4ever",
                 "reference"   => null,
-                "modified"    => $this->current_time
+                "modified"    => $this->current_time,
             ],
             $content["/linux/kernel.git"]
         );
@@ -295,7 +295,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "owner"       => null,
                 "description" => "free and open-source web browser",
                 "reference"   => null,
-                "modified"    => $this->current_time
+                "modified"    => $this->current_time,
             ],
             $content["/mozilla/firefox.git"],
         );
@@ -331,7 +331,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "owner"       => null,
                 "description" => "",
                 "reference"   => null,
-                "modified"    => $this->time_in_the_past
+                "modified"    => $this->time_in_the_past,
             ],
             $content["/gitolite-admin.git"]
         );

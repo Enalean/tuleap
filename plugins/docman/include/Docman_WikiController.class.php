@@ -151,7 +151,7 @@ class Docman_WikiController extends Docman_Controller
                     'url'            => $diff_link,
                     'wiki_page'      => $wiki_page_name,
                     'old_value'      => $version,
-                    'new_value'      => $version + 1
+                    'new_value'      => $version + 1,
                 ]);
         }
         $event_manager->processEvent('send_notifications', []);
@@ -384,7 +384,7 @@ class Docman_WikiController extends Docman_Controller
             $item      = $item_factory->getItemFromDb($item->getParentId());
             $parents[] = [
                 'id'    => $item->getId(),
-                'title' => $item->getTitle()
+                'title' => $item->getTitle(),
             ];
         }
 
@@ -418,7 +418,7 @@ class Docman_WikiController extends Docman_Controller
                 $item      = $item_factory->getItemFromDb($item->getParentId());
                 $parents[] = [
                     'id'    => $item->getId(),
-                    'title' => $item->getTitle()
+                    'title' => $item->getTitle(),
                 ];
             }
             $parents  = array_reverse($parents);

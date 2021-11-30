@@ -48,7 +48,7 @@ class ChildrenRequiredTrackerCollection
                     [
                         "tracker"  => $children_tracker->getTracker()->getId(),
                         "func"     => "admin-semantic",
-                        "semantic" => "velocity"
+                        "semantic" => "velocity",
                     ]
                 ),
             ];

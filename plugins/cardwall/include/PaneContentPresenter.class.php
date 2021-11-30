@@ -70,7 +70,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
         $is_display_avatar_selected,
         Planning $planning,
         Planning_Milestone $milestone,
-        Cardwall_EffortProgressPresenter $progress_presenter
+        Cardwall_EffortProgressPresenter $progress_presenter,
     ) {
         parent::__construct($board, $redirect_parameter);
         $this->swimline_title              = dgettext('tuleap-cardwall', 'Backlog items');

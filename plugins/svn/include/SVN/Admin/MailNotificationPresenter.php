@@ -67,7 +67,7 @@ class MailNotificationPresenter extends BaseAdminPresenter
         CSRFSynchronizerToken $token,
         $title,
         $mail_header,
-        array $notifications
+        array $notifications,
     ) {
         parent::__construct();
 

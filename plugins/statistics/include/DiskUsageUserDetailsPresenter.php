@@ -38,7 +38,7 @@ class DiskUsageUserDetailsPresenter
         DiskUsageUserDetailsSearchFieldsPresenter $search_fields,
         $graph_url,
         array $data_user_details,
-        $error_message
+        $error_message,
     ) {
         $this->header            = $header;
         $this->search_fields     = $search_fields;

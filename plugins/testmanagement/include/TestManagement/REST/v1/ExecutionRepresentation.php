@@ -124,7 +124,7 @@ class ExecutionRepresentation
         int $time,
         array $steps_results,
         ?FileUploadData $file_field_data,
-        array $attachments
+        array $attachments,
     ) {
         $this->id               = JsonCast::toInt($artifact_id);
         $this->uri              = self::ROUTE . '/' . $this->id;

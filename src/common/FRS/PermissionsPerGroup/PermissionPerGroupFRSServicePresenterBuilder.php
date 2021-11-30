@@ -39,7 +39,7 @@ class PermissionPerGroupFRSServicePresenterBuilder
 
     public function __construct(
         PermissionPerTypeExtractor $extractor,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->ugroup_manager = $ugroup_manager;
         $this->extractor      = $extractor;

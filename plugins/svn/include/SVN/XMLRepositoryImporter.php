@@ -108,7 +108,7 @@ class XMLRepositoryImporter
         \UserManager $user_manager,
         NotificationsEmailsBuilder $notifications_emails_builder,
         RepositoryCopier $repository_copier,
-        XMLUserChecker $xml_user_checker
+        XMLUserChecker $xml_user_checker,
     ) {
         $attrs      = $xml_repo->attributes();
         $this->name = (string) $attrs['name'];
@@ -123,7 +123,7 @@ class XMLRepositoryImporter
             $a                     = $notif->attributes();
             $this->subscriptions[] = [
                 'path' => $a['path'],
-                'emails' => $a['emails']
+                'emails' => $a['emails'],
             ];
         }
 
@@ -146,7 +146,7 @@ class XMLRepositoryImporter
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
         RuleName $rule_name,
-        \PFUser $committer
+        \PFUser $committer,
     ) {
         if (! $rule_name->isValid($this->name)) {
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: " . $rule_name->getErrorMessage());
@@ -240,7 +240,7 @@ class XMLRepositoryImporter
     private function importAccessFile(
         LoggerInterface $logger,
         Repository $repo,
-        AccessFileHistoryCreator $accessfile_history_creator
+        AccessFileHistoryCreator $accessfile_history_creator,
     ) {
         $writer = $this->getAccessFileWriter($repo);
 
@@ -262,7 +262,7 @@ class XMLRepositoryImporter
     private function importSubscriptions(
         LoggerInterface $logger,
         Repository $repo,
-        MailNotificationManager $mail_notification_manager
+        MailNotificationManager $mail_notification_manager,
     ) {
         foreach ($this->subscriptions as $subscription) {
             $logger->info("[svn {$this->name}] Add subscription to {$subscription['path']}: {$subscription['emails']}");

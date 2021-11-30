@@ -96,7 +96,7 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends \Tuleap\Test\PHP
                                                 Mockery::mock(ScrumForMonoMilestoneChecker::class),
                                                 Mockery::mock(SemanticTimeframeBuilder::class),
                                                 new NullLogger(),
-                                                Mockery::spy(MilestoneBurndownFieldChecker::class)
+                                                Mockery::spy(MilestoneBurndownFieldChecker::class),
                                             ]
         )
             ->makePartial()

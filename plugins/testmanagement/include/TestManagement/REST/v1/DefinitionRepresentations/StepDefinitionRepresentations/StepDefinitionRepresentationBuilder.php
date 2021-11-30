@@ -72,7 +72,7 @@ final class StepDefinitionRepresentationBuilder
         string $step_content,
         Artifact $artifact,
         Codendi_HTMLPurifier $purifier,
-        ContentInterpretor $content_interpretor
+        ContentInterpretor $content_interpretor,
     ): StepDefinitionTextField {
         $project_id = (int) $artifact->getTracker()->getGroupId();
 

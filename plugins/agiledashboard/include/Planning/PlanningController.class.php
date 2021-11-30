@@ -103,7 +103,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         Planning_RequestValidator $planning_request_validator,
         UpdateIsAllowedChecker $root_planning_update_checker,
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
-        UpdateRequestValidator $update_request_validator
+        UpdateRequestValidator $update_request_validator,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -306,7 +306,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                             'planning_id' => $milestone->getPlanningId(),
                             'action'      => 'show',
                             'aid'         => $milestone->getArtifactId(),
-                            'pane'        => 'cardwall'
+                            'pane'        => 'cardwall',
                         ]
                     ),
                     'fa-th-large',
@@ -671,7 +671,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             [
                 'group_id'    => $this->group_id,
                 'planning_id' => $this->request->get('planning_id'),
-                'action'      => 'edit'
+                'action'      => 'edit',
             ]
         );
     }
@@ -750,7 +750,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $semantic_url = TRACKER_BASE_URL . "?" . http_build_query(
                 [
                     "tracker" => $planning_tracker->getId(),
-                    "func"    => "admin-formElements"
+                    "func"    => "admin-formElements",
                 ]
             );
 

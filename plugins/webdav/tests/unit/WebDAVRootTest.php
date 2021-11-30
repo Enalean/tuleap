@@ -119,7 +119,7 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetChildrenUserHaveNoProjectsWithWebDAVActivated(): void
     {
         $this->user->shouldReceive('getProjects')->andReturns([
-            '101'
+            '101',
         ]);
 
         $this->project_manager->shouldReceive('getProject')->with(101)->andReturn(ProjectTestBuilder::aProject()->withId(101)->build());
@@ -135,7 +135,7 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetChildrenUserHaveProjects(): void
     {
         $this->user->shouldReceive('getProjects')->andReturns([
-            '101'
+            '101',
         ]);
 
         $this->project_manager->shouldReceive('getProject')->with(101)->andReturn(ProjectTestBuilder::aProject()->withId(101)->withUnixName('FooBar')->build());

@@ -133,7 +133,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
     private function setFieldAndTrackerPermissions(
         Tracker_FormElement_Field $field,
         $user_can_read_field,
-        $user_can_view_tracker
+        $user_can_view_tracker,
     ) {
         $field->shouldReceive('userCanRead')->andReturn($user_can_read_field);
         $this->tracker->shouldReceive('userCanView')->andReturn($user_can_view_tracker);
@@ -229,7 +229,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
         Tracker_SharedFormElementFactory $shared_form_element_factory,
         array $form_element_data,
         PFUser $user,
-        Tracker_FormElement_Field_List_BindFactory $bind_factory
+        Tracker_FormElement_Field_List_BindFactory $bind_factory,
     ) {
         $form_element_factory->shouldReceive('createFormElement')->withArgs(
             [

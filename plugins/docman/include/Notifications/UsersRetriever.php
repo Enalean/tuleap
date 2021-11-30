@@ -39,7 +39,7 @@ class UsersRetriever
 
     public function __construct(
         UsersToNotifyDao $user_dao,
-        Docman_ItemFactory $item_factory
+        Docman_ItemFactory $item_factory,
     ) {
         $this->user_dao     = $user_dao;
         $this->item_factory = $item_factory;

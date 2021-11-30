@@ -162,7 +162,7 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
                      'p'    => false,     // "displaythissinglephoto.jpg"
                      'h'    => false,     // "highlightcolorofthisphoto.jpg"
                      'duration' => 6, // in slide mode, in seconds
-                     'thumbswidth' => 80 //width of thumbnails
+                     'thumbswidth' => 80, //width of thumbnails
                      ];
     }
     // descriptions (instead of filenames) for image alt-tags

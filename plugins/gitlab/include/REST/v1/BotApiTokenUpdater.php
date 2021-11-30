@@ -69,7 +69,7 @@ class BotApiTokenUpdater
         GitPermissionsManager $permissions_manager,
         IntegrationApiTokenInserter $bot_api_token_inserter,
         WebhookCreator $webhook_creator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->project_builder                = $project_builder;
         $this->repository_integration_factory = $repository_integration_factory;

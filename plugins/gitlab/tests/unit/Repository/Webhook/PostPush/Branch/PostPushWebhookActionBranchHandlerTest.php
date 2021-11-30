@@ -108,7 +108,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -181,7 +181,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -236,7 +236,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -291,7 +291,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -351,7 +351,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -424,7 +424,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 

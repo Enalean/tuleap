@@ -113,11 +113,11 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                                 'id' => 4,
                                 'key' => 'indeterminate',
                                 'colorName' => 'yellow',
-                                'name' => 'In Progress'
-                            ]
-                        ]
-                    ]
-                    ]
+                                'name' => 'In Progress',
+                            ],
+                        ],
+                    ],
+                    ],
                     ];
             }
         };
@@ -152,7 +152,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -170,7 +170,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -188,7 +188,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -206,7 +206,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -224,7 +224,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -240,11 +240,11 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 AlwaysThereFieldsExporter::JIRA_RESOLUTION_DATE_RANK,
                 false,
                 [
-                    'display_time' => '1'
+                    'display_time' => '1',
                 ],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -266,7 +266,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     return $status->getId() === 3 && $status->getName() === "In Progress";
                 }),
                 $this->field_mapping_collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             ]
         )->once();
 
@@ -284,7 +284,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -300,7 +300,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 
@@ -316,7 +316,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
                 [],
                 $this->field_mapping_collection,
-                null
+                null,
             ]
         )->once();
 

@@ -67,7 +67,7 @@ class PostPushCommitWebhookData
         string $branch_name,
         int $commit_date,
         string $author_email,
-        string $author_name
+        string $author_name,
     ) {
         $this->sha1         = $sha1;
         $this->title        = $title;

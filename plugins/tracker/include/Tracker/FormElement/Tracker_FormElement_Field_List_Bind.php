@@ -81,7 +81,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
             $representation = new FieldValueRepresentation();
             $representation->build([
                 self::REST_ID_KEY    => $value->getId(),
-                self::REST_LABEL_KEY => $value->getAPIValue()
+                self::REST_LABEL_KEY => $value->getAPIValue(),
             ]);
             $rest_array[] = $representation;
         }
@@ -144,7 +144,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
         $bind_type    = $bind_factory->getType($this);
         return [
             self::REST_TYPE_KEY => $bind_type,
-            self::REST_LIST_KEY => $this->getRESTBindingList()
+            self::REST_LIST_KEY => $this->getRESTBindingList(),
         ];
     }
 
@@ -513,7 +513,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
         SimpleXMLElement $root,
         &$xmlMapping,
         $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     );
 
     /**
@@ -681,7 +681,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
         $representation = new FieldValueRepresentation();
         $values         = [
             self::REST_ID_KEY    => $value->getId(),
-            self::REST_LABEL_KEY => $value->getAPIValue()
+            self::REST_LABEL_KEY => $value->getAPIValue(),
         ];
         $representation->build($values);
         return $representation;

@@ -34,7 +34,7 @@ class AgileDashboard_KanbanColumnFactory
 
     public function __construct(
         AgileDashboard_KanbanColumnDao $column_dao,
-        AgileDashboard_KanbanUserPreferences $user_preferences
+        AgileDashboard_KanbanUserPreferences $user_preferences,
     ) {
         $this->column_dao       = $column_dao;
         $this->user_preferences = $user_preferences;

@@ -49,7 +49,7 @@ class FilesDownloadLimitsAdminPresenter
         \CSRFSynchronizerToken $csrf_token,
         FileDownloadLimits $limits,
         DocmanSettingsTabsPresenterCollection $tabs_collection,
-        string $current_url
+        string $current_url,
     ) {
         $this->csrf_token        = $csrf_token;
         $this->max_archive_size  = $limits->getMaxArchiveSize();

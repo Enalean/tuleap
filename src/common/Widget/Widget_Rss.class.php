@@ -148,7 +148,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url)
         SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, url

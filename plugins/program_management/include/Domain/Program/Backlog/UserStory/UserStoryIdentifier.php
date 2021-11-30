@@ -46,7 +46,7 @@ final class UserStoryIdentifier implements ArtifactIdentifier
         SearchChildrenOfFeature $user_stories_searcher,
         VerifyIsVisibleArtifact $visibility_verifier,
         PlannableFeatureIdentifier $feature,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): array {
         $rows         = $user_stories_searcher->getChildrenOfFeatureInTeamProjects($feature->getId());
         $user_stories = [];
@@ -66,7 +66,7 @@ final class UserStoryIdentifier implements ArtifactIdentifier
         SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration,
         MirroredIterationIdentifierCollection $mirrored_iterations,
         VerifyIsVisibleArtifact $artifact_visibility_verifier,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): array {
         $user_stories = [];
         foreach ($mirrored_iterations->getMirroredIterations() as $mirrored_iteration) {

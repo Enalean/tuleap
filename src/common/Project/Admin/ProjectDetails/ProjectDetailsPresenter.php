@@ -112,7 +112,7 @@ class ProjectDetailsPresenter
         CSRFSynchronizerToken $csrf_token,
         bool $is_description_mandatory,
         ?string $project_icon,
-        string $all_project_icon
+        string $all_project_icon,
     ) {
         $this->group_id                            = $project->getID();
         $this->group_info                          = $group_info;

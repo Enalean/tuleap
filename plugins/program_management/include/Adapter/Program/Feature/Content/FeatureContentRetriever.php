@@ -40,7 +40,7 @@ final class FeatureContentRetriever
         private FeatureRepresentationBuilder $feature_representation_builder,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveProgramOfProgramIncrement $program_retriever,
-        private BuildProgram $program_builder
+        private BuildProgram $program_builder,
     ) {
     }
 

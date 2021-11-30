@@ -74,7 +74,7 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->semantic_status->shouldReceive('getOpenValues')->andReturns([
             1,
-            2
+            2,
         ]);
 
         $field = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(101)->getMock();
@@ -82,7 +82,7 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getAllVisibleValues')->andReturns([
             1 => $this->to_do_value,
             2 => $this->on_going_value,
-            3 => $this->done_value
+            3 => $this->done_value,
         ]);
 
         $this->semantic_status->shouldReceive('getField')->andReturns($field);
@@ -94,7 +94,7 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
                 'F14-V66' => 1,
                 'F14-V67' => 2,
                 'F14-V68' => 3,
-            ]
+            ],
         ];
 
         $semantic_done = new SemanticDone(
@@ -123,7 +123,7 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
                 'F14-V66' => 1,
                 'F14-V67' => 2,
                 'F14-V68' => 3,
-            ]
+            ],
         ];
 
         $semantic_done = new SemanticDone(

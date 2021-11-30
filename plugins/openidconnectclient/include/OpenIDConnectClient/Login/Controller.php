@@ -79,7 +79,7 @@ class Controller
         AutomaticUserRegistration $automatic_user_registration,
         Flow $flow,
         LoggerInterface $logger,
-        array &$session_storage
+        array &$session_storage,
     ) {
         $this->user_manager                = $user_manager;
         $this->user_mapping_manager        = $user_mapping_manager;

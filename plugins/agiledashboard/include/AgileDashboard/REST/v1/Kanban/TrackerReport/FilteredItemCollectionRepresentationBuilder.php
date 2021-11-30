@@ -45,7 +45,7 @@ class FilteredItemCollectionRepresentationBuilder
         ReportFilterFromWhereBuilder $from_where_builder,
         ReportArtifactFactory $report_artifact_factory,
         Tracker_Artifact_PriorityDao $priority_dao,
-        ItemRepresentationBuilder $item_representation_builder
+        ItemRepresentationBuilder $item_representation_builder,
     ) {
         $this->report_artifact_factory     = $report_artifact_factory;
         $this->from_where_builder          = $from_where_builder;
@@ -58,7 +58,7 @@ class FilteredItemCollectionRepresentationBuilder
         PFUser $user,
         Tracker_Report $report,
         $limit,
-        $offset
+        $offset,
     ) {
         $additional_from_where = $this->from_where_builder->getFromWhere($report->getTracker(), $column_identifier);
 
@@ -81,7 +81,7 @@ class FilteredItemCollectionRepresentationBuilder
     private function getItemCollectionFromArtifactCollection(
         ColumnIdentifier $column_identifier,
         PFUser $user,
-        ArtifactMatchingReportCollection $artifact_collection
+        ArtifactMatchingReportCollection $artifact_collection,
     ) {
         $item_collection = [];
         $artifact_ids    = [];

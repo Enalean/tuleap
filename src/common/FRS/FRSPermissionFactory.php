@@ -28,7 +28,7 @@ class FRSPermissionFactory
     private $permission_dao;
 
     public function __construct(
-        FRSPermissionDao $permission_dao
+        FRSPermissionDao $permission_dao,
     ) {
         $this->permission_dao = $permission_dao;
     }

@@ -92,17 +92,17 @@ final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::ARTIFACT_LINK_ID => [
                     'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
                     'types'      => [
-                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME
-                    ]
+                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME,
+                    ],
                 ],
                 self::TITLE_ID         => self::TITLE_VALUE,
                 self::DESCRIPTION_ID   => [
                     'content' => self::DESCRIPTION_CONTENT,
-                    'format'  => self::DESCRIPTION_FORMAT
+                    'format'  => self::DESCRIPTION_FORMAT,
                 ],
                 self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
                 self::START_DATE_ID    => '2020-10-01',
-                self::END_DATE_ID      => '2020-10-10'
+                self::END_DATE_ID      => '2020-10-10',
             ],
             $this->getFormatter()->formatForTrackerPlugin($this->values_with_end_date)
         );
@@ -127,9 +127,9 @@ final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::ARTIFACT_LINK_ID => [
                     'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
                     'types'      => [
-                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
-                    ]
-                ]
+                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+                    ],
+                ],
             ],
             $this->getFormatter()->formatArtifactLink($artifact_link_field, $value)
         );

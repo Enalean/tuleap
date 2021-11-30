@@ -54,7 +54,7 @@ class PlanningEditionPresenterBuilder
         \EventManager $event_manager,
         ScrumPlanningFilter $scrum_planning_filter,
         \PlanningPermissionsManager $planning_permissions_manager,
-        \Tracker_FormElementFactory $tracker_form_element_factory
+        \Tracker_FormElementFactory $tracker_form_element_factory,
     ) {
         $this->planning_factory             = $planning_factory;
         $this->event_manager                = $event_manager;
@@ -144,7 +144,7 @@ class PlanningEditionPresenterBuilder
             $semantic_url = '/plugins/tracker?' . http_build_query(
                 [
                     "tracker" => $planning_tracker->getId(),
-                    "func"    => "admin-formElements"
+                    "func"    => "admin-formElements",
                 ]
             );
 

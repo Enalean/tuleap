@@ -32,7 +32,7 @@ class SemanticTimeframeImpliedFromAnotherTrackerRepresentation implements IRepre
     {
         $this->implied_from_tracker = [
             "id" => $implied_from_tracker_id,
-            "uri" => CompleteTrackerRepresentation::ROUTE . '/' . $implied_from_tracker_id
+            "uri" => CompleteTrackerRepresentation::ROUTE . '/' . $implied_from_tracker_id,
         ];
     }
 }

@@ -63,7 +63,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $fields_data = [
-            '98' => '59'
+            '98' => '59',
         ];
 
         $previous_changeset = null;
@@ -111,7 +111,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $fields_data = [
-            'request_method_called' => 'submit-artifact'
+            'request_method_called' => 'submit-artifact',
         ];
 
         $previous_changeset = null;
@@ -167,7 +167,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $fields_data = [
-            '98' => '59'
+            '98' => '59',
         ];
 
         $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);

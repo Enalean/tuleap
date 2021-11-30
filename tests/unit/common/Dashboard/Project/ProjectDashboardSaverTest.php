@@ -50,7 +50,7 @@ class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('searchByProjectIdAndName')->with(1, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar([
             'id'         => 1,
             'project_id' => 1,
-            'name'       => 'existing_dashboard'
+            'name'       => 'existing_dashboard',
         ]));
 
         $this->admin_user = \Mockery::spy(\PFUser::class);

@@ -280,7 +280,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
 
     public function postVersion(
         int $id,
-        DocmanEmbeddedFileVersionPOSTRepresentation $representation
+        DocmanEmbeddedFileVersionPOSTRepresentation $representation,
     ) {
         $this->checkAccess();
         $this->setVersionHeaders();
@@ -330,7 +330,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      */
     public function putMetadata(
         int $id,
-        PUTMetadataRepresentation $representation
+        PUTMetadataRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setMetadataHeaders();
@@ -488,7 +488,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         int $status,
         int $obsolesence_date,
         string $title,
-        ?string $description
+        ?string $description,
     ) {
         $project      = $item_request->getProject();
         $item         = $item_request->getItem();
@@ -503,7 +503,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
                     'approval_table_action' => $representation->approval_table_action,
                     'document_type'         => Docman_EmbeddedFile::class,
                     'title'                 => $title,
-                    'project'               => $project
+                    'project'               => $project,
                 ]
             );
             assert($item instanceof Docman_EmbeddedFile);

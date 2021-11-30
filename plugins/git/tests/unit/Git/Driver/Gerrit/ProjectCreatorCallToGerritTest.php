@@ -124,7 +124,7 @@ class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
                 $use_ssl,
                 $gerrit_version,
                 $http_password,
-                ''
+                '',
             ]
         )
             ->makePartial()

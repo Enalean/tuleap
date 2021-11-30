@@ -124,7 +124,7 @@ class AdminController extends BaseController
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
         CountElementsModeChecker $count_elements_mode_checker,
-        ScrumPresenterBuilder $scrum_presenter_builder
+        ScrumPresenterBuilder $scrum_presenter_builder,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -359,7 +359,7 @@ class AdminController extends BaseController
     {
         $this->redirect(
             [
-                'group_id' => $this->group_id
+                'group_id' => $this->group_id,
             ]
         );
     }

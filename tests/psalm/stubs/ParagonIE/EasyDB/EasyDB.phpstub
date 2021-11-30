@@ -86,7 +86,7 @@ class EasyDB
     public function insertOnDuplicateKeyUpdate(
         string $table,
         array $map,
-        array $on_duplicate_key_update
+        array $on_duplicate_key_update,
     ): int {
     }
 

@@ -41,14 +41,14 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
                     "from"       => null,
                     "fromString" => "string01",
                     "to"         => null,
-                    "toString"   => "string02"
-                ]
+                    "toString"   => "string02",
+                ],
             ],
             'author' => [
                 'accountId' => 'e8a7dbae5',
                 'displayName' => 'John Doe',
-                'emailAddress' => 'john.doe@example.com'
-            ]
+                'emailAddress' => 'john.doe@example.com',
+            ],
         ];
 
         $representation = JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
@@ -66,9 +66,9 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
                 [
                     "fieldId"    => "field01",
                     "from"       => null,
-                    "fromString" => "string01"
-                ]
-            ]
+                    "fromString" => "string01",
+                ],
+            ],
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -89,14 +89,14 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
                 [
                     "fieldId"    => "field01",
                     "from"       => null,
-                    "fromString" => "string01"
-                ]
+                    "fromString" => "string01",
+                ],
             ],
             'author' => [
                 'accountId' => 'e8a7dbae5',
                 'displayName' => 'John Doe',
-                'emailAddress' => 'john.doe@example.com'
-            ]
+                'emailAddress' => 'john.doe@example.com',
+            ],
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -115,9 +115,9 @@ class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUni
                     "from"       => null,
                     "fromString" => "string01",
                     "to"         => null,
-                    "toString"   => "string02"
-                ]
-            ]
+                    "toString"   => "string02",
+                ],
+            ],
         ];
 
         $representation = JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);

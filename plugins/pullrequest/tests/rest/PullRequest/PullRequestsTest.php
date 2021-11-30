@@ -62,7 +62,7 @@ class PullRequestsTest extends RestBase
     public function testPATCHPullRequestThrow400IfStatusIsUnknown()
     {
         $data = json_encode([
-            'status' => 'whatever'
+            'status' => 'whatever',
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', 'pull_requests/1')->withBody($this->stream_factory->createStream($data)));

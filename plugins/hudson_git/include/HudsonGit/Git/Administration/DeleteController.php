@@ -59,7 +59,7 @@ class DeleteController implements DispatchableWithRequest
         GitPermissionsManager $git_permissions_manager,
         JenkinsServerFactory $jenkins_server_factory,
         JenkinsServerDeleter $jenkins_server_deleter,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->git_permissions_manager = $git_permissions_manager;
         $this->jenkins_server_factory  = $jenkins_server_factory;

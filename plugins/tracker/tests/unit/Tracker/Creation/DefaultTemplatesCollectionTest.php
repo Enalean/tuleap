@@ -98,7 +98,7 @@ class DefaultTemplatesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
-                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange')
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange'),
             ],
             $collection->getSortedDefaultTemplatesRepresentations()
         );

@@ -52,7 +52,7 @@ class WebhookSettingsPresenter
         array $create_buttons,
         array $sections,
         WebhookModalPresenter $create_modal,
-        WebhookModalPresenter $edit_modal
+        WebhookModalPresenter $edit_modal,
     ) {
         $this->csrf_token     = $csrf->getToken();
         $this->title          = $title;

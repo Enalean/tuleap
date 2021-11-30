@@ -29,7 +29,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
 {
     public function visitField(
         Field $searchable_field,
-        InvalidSearchableCollectorParameters $parameters
+        InvalidSearchableCollectorParameters $parameters,
     ) {
         $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
             $searchable_field->getName()
@@ -38,7 +38,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
 
     public function visitMetadata(
         Metadata $metadata,
-        InvalidSearchableCollectorParameters $parameters
+        InvalidSearchableCollectorParameters $parameters,
     ) {
         $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
         if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {

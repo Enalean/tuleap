@@ -52,7 +52,7 @@ class ArtifactLinkUpdater
         Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
-        string $type
+        string $type,
     ): void {
         $artlink_field = $artifact->getAnArtifactLinkField($current_user);
         if (! $artlink_field) {
@@ -77,7 +77,7 @@ class ArtifactLinkUpdater
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
         array $new_linked_artifact_ids,
-        string $type
+        string $type,
     ): array {
         $artifact_ids_already_linked = $this->getElementsAlreadyLinkedToArtifact($artifact, $current_user);
 
@@ -103,7 +103,7 @@ class ArtifactLinkUpdater
         PFUser $user,
         IFilterValidElementsToUnkink $filter,
         array $elements_already_linked,
-        array $new_ids
+        array $new_ids,
     ): array {
         $artifacts_to_be_removed = $this->getAllLinkedArtifactsThatShouldBeRemoved($elements_already_linked, $new_ids);
 
@@ -129,7 +129,7 @@ class ArtifactLinkUpdater
         Artifact $artifact,
         array $to_add,
         array $to_remove,
-        string $type
+        string $type,
     ): void {
         $artifact_link_field = $artifact->getAnArtifactLinkField($user);
         if (! $artifact_link_field) {
@@ -152,7 +152,7 @@ class ArtifactLinkUpdater
         Artifact $artifact,
         array $fields_data,
         PFUser $current_user,
-        array $linked_artifact_ids
+        array $linked_artifact_ids,
     ): void {
         try {
             $artifact->createNewChangeset($fields_data, '', $current_user, false);

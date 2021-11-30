@@ -44,7 +44,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     public function __construct(
         $dstGroupId,
         ProjectManager $project_manager,
-        Docman_LinkVersionFactory $link_version_factory
+        Docman_LinkVersionFactory $link_version_factory,
     ) {
         $this->dstGroupId           = $dstGroupId;
         $this->_cacheMetadataUsage  = [];

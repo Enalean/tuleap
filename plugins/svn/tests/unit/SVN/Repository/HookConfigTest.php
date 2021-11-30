@@ -68,7 +68,7 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'unix_group_name'    => 'test_project',
                 'access'             => 'private',
                 'svn_tracker'        => null,
-                'svn_can_change_log' => null
+                'svn_can_change_log' => null,
             ]
         );
 
@@ -106,7 +106,7 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->hook_dao->shouldReceive('getHookConfig')->withArgs([33])->andReturn(
             [
-                HookConfig::MANDATORY_REFERENCE => true
+                HookConfig::MANDATORY_REFERENCE => true,
             ]
         );
 
@@ -123,7 +123,7 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->hook_dao->shouldReceive('updateHookConfig')->withArgs(
             [
                 22,
-                [HookConfig::MANDATORY_REFERENCE => true]
+                [HookConfig::MANDATORY_REFERENCE => true],
             ]
         )->once()->andReturn(true);
 
@@ -131,7 +131,7 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             $repository,
             [
                 HookConfig::MANDATORY_REFERENCE => true,
-                'foo'                           => true
+                'foo'                           => true,
             ]
         );
     }

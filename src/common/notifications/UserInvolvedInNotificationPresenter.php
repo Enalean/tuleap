@@ -32,7 +32,7 @@ class UserInvolvedInNotificationPresenter
         $user_id,
         $user_name,
         $real_name,
-        $avatar_url
+        $avatar_url,
     ) {
         $this->user_id    = $user_id;
         $this->avatar_url = $avatar_url;

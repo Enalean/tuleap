@@ -136,7 +136,7 @@ class ArtifactXMLExporterArtifact
                 'data_type'      => ArtifactStringFieldXMLExporter::TV3_DATA_TYPE,
                 'valueText'      => $artifact_row['summary'],
                 'value_function' => '',
-            ]
+            ],
         ];
         if (isset($artifact_row['details'])) {
             $fields_values[] = [

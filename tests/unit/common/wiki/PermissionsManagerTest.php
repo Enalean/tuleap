@@ -60,17 +60,17 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsPageRights(): void
     {
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '3', '4', '14', '107'
+            '3', '4', '14', '107',
         ]);
 
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '2'
+            '2',
         ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
         $expected = [
-            '@perceval_project_members', '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107'
+            '@perceval_project_members', '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107',
         ];
 
         $this->assertEquals(
@@ -82,17 +82,17 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsServiceRightsIfPageRightsAreWeeker(): void
     {
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '3'
+            '3',
         ]);
 
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '4', '14', '107'
+            '4', '14', '107',
         ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
         $expected = [
-            '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107'
+            '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107',
         ];
 
         $this->assertEquals(
@@ -104,17 +104,17 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsMixedServiceAndPageRights(): void
     {
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '107', '108', '4'
+            '107', '108', '4',
         ]);
 
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '14', '106'
+            '14', '106',
         ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
         $expected = [
-            '@perceval_wiki_admin', '@ug_106', '@perceval_project_admin'
+            '@perceval_wiki_admin', '@ug_106', '@perceval_project_admin',
         ];
 
         $this->assertEquals(
@@ -126,17 +126,17 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotReturnNonMemberUgroupsIfProjectIsPrivate(): void
     {
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '2'
+            '2',
         ]);
 
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '2'
+            '2',
         ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(false);
 
         $expected = [
-            '@perceval_project_admin', '@perceval_wiki_admin'
+            '@perceval_project_admin', '@perceval_wiki_admin',
         ];
 
         $this->assertEquals(
@@ -148,17 +148,17 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAlwaysReturnsWikiAndProjectAdminGroups(): void
     {
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '107'
+            '107',
         ]);
 
         $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '3'
+            '3',
         ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
         $expected = [
-            '@ug_107', '@perceval_project_admin', '@perceval_wiki_admin'
+            '@ug_107', '@perceval_project_admin', '@perceval_wiki_admin',
         ];
 
         $this->assertEquals(

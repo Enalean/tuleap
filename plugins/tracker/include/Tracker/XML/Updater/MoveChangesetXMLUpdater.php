@@ -74,7 +74,7 @@ class MoveChangesetXMLUpdater
         MoveTitleSemanticChecker $title_semantic_checker,
         MoveDescriptionSemanticChecker $description_semantic_checker,
         MoveStatusSemanticChecker $status_semantic_checker,
-        MoveContributorSemanticChecker $contributor_semantic_checker
+        MoveContributorSemanticChecker $contributor_semantic_checker,
     ) {
         $this->event_manager                = $event_manager;
         $this->field_value_matcher          = $field_value_matcher;
@@ -92,7 +92,7 @@ class MoveChangesetXMLUpdater
         PFUser $submitted_by,
         $submitted_on,
         $moved_time,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $artifact_xml['tracker_id'] = $target_tracker->getId();
 
@@ -133,7 +133,7 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $artifact_xml,
         PFUser $submitted_by,
         $submitted_on,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $last_index = $artifact_xml->changeset === null ? -1 : count($artifact_xml->changeset) - 1;
         if ($artifact_xml->changeset === null) {
@@ -176,7 +176,7 @@ class MoveChangesetXMLUpdater
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $title_semantic_can_be_moved = $this->title_semantic_checker->areSemanticsAligned(
             $source_tracker,
@@ -297,7 +297,7 @@ class MoveChangesetXMLUpdater
     private function isFieldChangeCorrespondingToTitleSemanticField(
         SimpleXMLElement $changeset_xml,
         Tracker $source_tracker,
-        $index
+        $index,
     ) {
         $source_title_field = $source_tracker->getTitleField();
         if ($source_title_field && $this->isFieldChangeCorrespondingToField($changeset_xml, $source_title_field, $index)) {
@@ -310,7 +310,7 @@ class MoveChangesetXMLUpdater
     private function isFieldChangeCorrespondingToDescriptionSemanticField(
         SimpleXMLElement $changeset_xml,
         Tracker $source_tracker,
-        $index
+        $index,
     ) {
         $source_description_field = $source_tracker->getDescriptionField();
         if (
@@ -329,7 +329,7 @@ class MoveChangesetXMLUpdater
     private function isFieldChangeCorrespondingToStatusSemanticField(
         SimpleXMLElement $changeset_xml,
         ?Tracker_FormElement_Field $source_status_field,
-        $index
+        $index,
     ) {
         return $source_status_field !== null && $this->isFieldChangeCorrespondingToField($changeset_xml, $source_status_field, $index);
     }
@@ -337,7 +337,7 @@ class MoveChangesetXMLUpdater
     private function isFieldChangeCorrespondingToContributorSemanticField(
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field $source_contributor_field,
-        $index
+        $index,
     ) {
         return $this->isFieldChangeCorrespondingToField($changeset_xml, $source_contributor_field, $index);
     }
@@ -345,7 +345,7 @@ class MoveChangesetXMLUpdater
     private function isFieldChangeCorrespondingToField(
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field $source_field,
-        $index
+        $index,
     ) {
         $field_change = $changeset_xml->field_change[$index];
 
@@ -355,7 +355,7 @@ class MoveChangesetXMLUpdater
     private function useTargetTrackerFieldName(
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field $target_field,
-        $index
+        $index,
     ) {
         $changeset_xml->field_change[$index]['field_name'] = $target_field->getName();
     }
@@ -365,7 +365,7 @@ class MoveChangesetXMLUpdater
         Tracker_FormElement_Field $source_status_field,
         Tracker_FormElement_Field $target_status_field,
         $index,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $xml_value = (int) $changeset_xml->field_change[$index]->value;
 
@@ -392,7 +392,7 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field_List $target_contributor_field,
         $field_change_index,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $last_index = count($changeset_xml->field_change[$field_change_index]->value) - 1;
         for ($value_index = $last_index; $value_index >= 0; $value_index--) {
@@ -434,7 +434,7 @@ class MoveChangesetXMLUpdater
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
         $index,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $event = new MoveArtifactParseFieldChangeNodes(
             $source_tracker,
@@ -453,7 +453,7 @@ class MoveChangesetXMLUpdater
         PFUser $current_user,
         SimpleXMLElement $artifact_xml,
         Tracker $source_tracker,
-        $moved_time
+        $moved_time,
     ) {
         $last_changeset = $artifact_xml->addChild('changeset');
 
@@ -473,7 +473,7 @@ class MoveChangesetXMLUpdater
         PFUser $current_user,
         SimpleXMLElement $last_changeset,
         Tracker $source_tracker,
-        $moved_time
+        $moved_time,
     ) {
         $comments_tag = $last_changeset->addChild('comments');
         $comment_tag  = $comments_tag->addChild('comment');

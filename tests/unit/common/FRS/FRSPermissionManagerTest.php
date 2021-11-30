@@ -80,7 +80,7 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $permissions = [
             '5' => new FRSPermission('5'),
-            '4' => new FRSPermission('4')
+            '4' => new FRSPermission('4'),
         ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
@@ -94,7 +94,7 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $permissions = [
             '5' => new FRSPermission('5'),
-            '4' => new FRSPermission('4')
+            '4' => new FRSPermission('4'),
         ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
@@ -108,7 +108,7 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('isSuperUser')->andReturns(true);
 
         $permissions = [
-            '4' => new FRSPermission('4')
+            '4' => new FRSPermission('4'),
         ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
@@ -134,7 +134,7 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserHasReadAccessIfTheyAreAdmin()
     {
         $permissions = [
-            '4' => new FRSPermission('4')
+            '4' => new FRSPermission('4'),
         ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
@@ -147,7 +147,7 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permission_dao->shouldReceive('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->andReturns(
             [
-                [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3]
+                [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3],
             ]
         );
         $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturns(true);
@@ -159,7 +159,7 @@ class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permission_dao->shouldReceive('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->andReturns(
             [
-                [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3]
+                [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3],
             ]
         );
         $this->user->shouldReceive('isMemberOfUGroup')->andReturns(false);

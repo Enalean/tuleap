@@ -69,7 +69,7 @@ class ArtifactViewBuilder
         PermissionsRetriever $permissions_retriever,
         TimeRetriever $time_retriever,
         TimePresenterBuilder $time_presenter_builder,
-        DateFormatter $date_formatter
+        DateFormatter $date_formatter,
     ) {
         $this->plugin                 = $plugin;
         $this->timetracking_enabler   = $timetracking_enabler;

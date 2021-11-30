@@ -110,7 +110,7 @@ class PluginHudsonJobDao extends DataAccessObject
         $use_svn_trigger,
         $use_cvs_trigger,
         $token,
-        $svn_paths
+        $svn_paths,
     ) {
         $project_id      = $this->da->quoteSmart($project_id);
         $hudson_job_url  = $this->da->quoteSmart($hudson_job_url);
@@ -133,7 +133,7 @@ class PluginHudsonJobDao extends DataAccessObject
         $use_svn_trigger,
         $use_cvs_trigger,
         $token,
-        $svn_paths
+        $svn_paths,
     ) {
         $job_id          = $this->da->quoteSmart($job_id);
         $hudson_job_url  = $this->da->quoteSmart($hudson_job_url);

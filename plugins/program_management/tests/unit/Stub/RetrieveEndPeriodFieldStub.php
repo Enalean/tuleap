@@ -59,7 +59,7 @@ final class RetrieveEndPeriodFieldStub implements RetrieveEndPeriodField
     }
 
     public function getEndPeriodField(
-        TrackerIdentifier $tracker_identifier
+        TrackerIdentifier $tracker_identifier,
     ): EndDateFieldReference|DurationFieldReference {
         if ($this->should_throw) {
             throw new MissingTimeFrameFieldException($tracker_identifier->getId(), 'end date or duration');

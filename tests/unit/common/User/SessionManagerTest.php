@@ -97,7 +97,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns([
             'session_hash' => $hashed_session_token,
-            'user_id'      => '101'
+            'user_id'      => '101',
         ]);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
@@ -117,7 +117,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns([
             'session_hash' => $hashed_session_token,
             'user_id'      => $user_id,
-            'user_agent'   => 'old_user_agent'
+            'user_agent'   => 'old_user_agent',
         ]);
         $this->session_dao->shouldReceive('updateUserAgentByID')->once();
         $user = \Mockery::spy(\PFUser::class);

@@ -58,7 +58,7 @@ class TransitionReplicator
         PostActionsRetriever $post_actions_retriever,
         PostActionCollectionUpdater $post_actions_updater,
         PostActionsMapper $post_action_mapper,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->condition_factory      = $condition_factory;
         $this->conditions_updater     = $conditions_updater;

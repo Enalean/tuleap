@@ -657,7 +657,7 @@ class ArtifactFieldFactory
         $keep_history,
         $special,
         $use_it,
-        $field_set_id
+        $field_set_id,
     ) {
         global $Language;
 
@@ -761,8 +761,8 @@ class ArtifactFieldFactory
                              [
                                    $GLOBALS['UGROUP_ANONYMOUS']     => permission_get_input_value_from_permission('TRACKER_FIELD_READ'),
                                    $GLOBALS['UGROUP_REGISTERED']    => permission_get_input_value_from_permission('TRACKER_FIELD_SUBMIT'),
-                                   $GLOBALS['UGROUP_PROJECT_MEMBERS']  => permission_get_input_value_from_permission('TRACKER_FIELD_UPDATE')
-                             ]
+                                   $GLOBALS['UGROUP_PROJECT_MEMBERS']  => permission_get_input_value_from_permission('TRACKER_FIELD_UPDATE'),
+                             ],
            ];
 
            permission_process_update_fields_permissions(

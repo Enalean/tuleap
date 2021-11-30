@@ -233,7 +233,7 @@ final class SetupMysqlInitCommand extends Command
         string $app_dbname,
         string $app_user,
         string $grant_hostname,
-        ?string $app_password
+        ?string $app_password,
     ): void {
         if (! $app_password || ! $app_user) {
             return;
@@ -261,7 +261,7 @@ final class SetupMysqlInitCommand extends Command
         string $app_dbname,
         string $grant_hostname,
         string $nss_user,
-        ?string $nss_password
+        ?string $nss_password,
     ): void {
         if (! $nss_password) {
             return;
@@ -291,7 +291,7 @@ final class SetupMysqlInitCommand extends Command
         SymfonyStyle $output,
         DBWrapperInterface $db,
         string $app_user,
-        string $grant_hostname
+        string $grant_hostname,
     ): void {
         $mediawiki = $input->getOption(self::OPT_MEDIAWIKI);
         if ($mediawiki) {
@@ -308,7 +308,7 @@ final class SetupMysqlInitCommand extends Command
         string $dbname,
         string $user,
         string $azure_suffix,
-        ?string $password
+        ?string $password,
     ): int {
         if ($password === null) {
             return 0;

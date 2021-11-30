@@ -59,7 +59,7 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         \Docman_PermissionsManager $permission_manager,
         \PFUser $current_user,
         Docman_Item $item,
-        DoesItemHasExpectedTypeVisitor $does_item_has_expected_type_visitor
+        DoesItemHasExpectedTypeVisitor $does_item_has_expected_type_visitor,
     ) {
         $this->current_user                        = $current_user;
         $this->item                                = $item;

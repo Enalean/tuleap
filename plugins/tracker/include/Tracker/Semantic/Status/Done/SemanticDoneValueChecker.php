@@ -33,7 +33,7 @@ class SemanticDoneValueChecker
      */
     public function isValueAPossibleDoneValue(
         Tracker_FormElement_Field_List_Value $value,
-        Tracker_Semantic_Status $semantic_status
+        Tracker_Semantic_Status $semantic_status,
     ) {
         return $this->isValueNotOpenAndVisible($value, $semantic_status->getOpenValues());
     }
@@ -43,7 +43,7 @@ class SemanticDoneValueChecker
      */
     public function isValueAPossibleDoneValueInXMLImport(
         Tracker_FormElement_Field_List_Value $value,
-        SimpleXMLElement $xml_semantic_status
+        SimpleXMLElement $xml_semantic_status,
     ) {
         return $this->isValueNotOpenAndVisible($value, $this->getOpenValuesFromXMLSemanticStatus($xml_semantic_status));
     }

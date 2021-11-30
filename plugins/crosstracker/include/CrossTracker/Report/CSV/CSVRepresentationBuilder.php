@@ -42,7 +42,7 @@ class CSVRepresentationBuilder
     public function __construct(
         CSVFormatterVisitor $visitor,
         UserManager $user_manager,
-        SimilarFieldsFormatter $similar_fields_formatter
+        SimilarFieldsFormatter $similar_fields_formatter,
     ) {
         $this->visitor                  = $visitor;
         $this->user_manager             = $user_manager;
@@ -64,7 +64,7 @@ class CSVRepresentationBuilder
             "submitted_by",
             "submitted_on",
             "last_update_by",
-            "last_update_date"
+            "last_update_date",
         ];
 
         $all_fields = array_merge(
@@ -112,7 +112,7 @@ class CSVRepresentationBuilder
      */
     private function formatSemanticsAndAlwaysThereFields(
         Artifact $artifact,
-        FormatterParameters $formatter_parameters
+        FormatterParameters $formatter_parameters,
     ) {
         $tracker                = $artifact->getTracker();
         $project_name           = new TextValue($tracker->getProject()->getPublicName());
@@ -154,7 +154,7 @@ class CSVRepresentationBuilder
             $formatted_submitted_by,
             $formatted_submitted_on,
             $formatted_last_update_by,
-            $formatted_last_update_date
+            $formatted_last_update_date,
         ];
     }
 }

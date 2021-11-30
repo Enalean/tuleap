@@ -40,7 +40,7 @@ class TrackerPermissionPerGroupPermissionRepresentation
 
     public function __construct(
         $permission_name,
-        array $granted_groups
+        array $granted_groups,
     ) {
         $this->permission_name = $permission_name;
         $this->granted_groups  = $granted_groups;

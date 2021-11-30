@@ -34,7 +34,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     public function testItThrowsAnExceptionWhenMoreThan10Trackers()
     {
         $params   = [
-            "trackers_id" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            "trackers_id" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         ];
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
@@ -44,7 +44,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     public function testItThrowsAnExceptionWhenATrackerIsNotFoundOnePlatform()
     {
         $params   = [
-            "trackers_id" => [1001]
+            "trackers_id" => [1001],
         ];
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
@@ -54,7 +54,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     public function testItThrowsAnExceptionWhenTrackerIsDuplicateInList()
     {
         $params   = [
-            "trackers_id" => [$this->epic_tracker_id, $this->epic_tracker_id]
+            "trackers_id" => [$this->epic_tracker_id, $this->epic_tracker_id],
         ];
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
@@ -64,7 +64,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     public function testItDoesNotAddTrackersUserCantView()
     {
         $params   = [
-            "trackers_id" => [$this->epic_tracker_id, $this->kanban_tracker_id]
+            "trackers_id" => [$this->epic_tracker_id, $this->kanban_tracker_id],
         ];
         $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
@@ -75,7 +75,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     {
         $query = json_encode(
             [
-                "trackers_id" => "toto"
+                "trackers_id" => "toto",
             ]
         );
 
@@ -90,7 +90,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     {
         $query = json_encode(
             [
-                "trackers_id" => ["toto"]
+                "trackers_id" => ["toto"],
             ]
         );
 

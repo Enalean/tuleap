@@ -73,7 +73,7 @@ class XMLSvnExporter
         XML_SimpleXMLCDATAFactory $cdata_section_factory,
         MailNotificationManager $mail_notification_manager,
         LoggerInterface $logger,
-        AccessFileReader $access_file_reader
+        AccessFileReader $access_file_reader,
     ) {
         $this->repository_manager        = $repository_manager;
         $this->project                   = $project;

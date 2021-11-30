@@ -63,7 +63,7 @@ class PluginPropertiesPresenter
         $are_there_additional_options,
         $additional_options,
         \CSRFSynchronizerToken $csrf_token,
-        bool $is_enabled
+        bool $is_enabled,
     ) {
         $this->id                           = $id;
         $this->name                         = $name;

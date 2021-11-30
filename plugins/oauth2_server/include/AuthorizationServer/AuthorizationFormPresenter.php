@@ -90,7 +90,7 @@ final class AuthorizationFormPresenter
         AuthorizationFormData $data,
         UriInterface $deny_authorization_uri,
         array $scope_definition_presenters,
-        array $scope_identifier_presenters
+        array $scope_identifier_presenters,
     ) {
         $app = $data->getApp();
 

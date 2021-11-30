@@ -53,7 +53,7 @@ class TrackerCreationDataChecker
         \ReferenceManager $reference_manager,
         TrackerDao $tracker_dao,
         PendingJiraImportDao $pending_jira_import_dao,
-        \TrackerFactory $tracker_factory
+        \TrackerFactory $tracker_factory,
     ) {
         $this->reference_manager       = $reference_manager;
         $this->tracker_dao             = $tracker_dao;
@@ -74,7 +74,7 @@ class TrackerCreationDataChecker
     public function areMandatoryCreationInformationValid(
         $tracker_name,
         $tracker_shortname,
-        int $project_id
+        int $project_id,
     ): bool {
         return $this->isRequiredInformationAvailable($tracker_name, $tracker_shortname)
             && self::isShortNameValid($tracker_shortname) && ! $this->doesNameExistsForProject(

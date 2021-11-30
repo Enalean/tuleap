@@ -46,7 +46,7 @@ class BatchResponseActionContent implements \JsonSerializable
         BatchResponseActionHref $href,
         SplitToken $action_authorization_token,
         SplitTokenFormatter $token_header_formatter,
-        $expires_in
+        $expires_in,
     ) {
         $this->href                       = $href;
         $this->action_authorization_token = $action_authorization_token;
@@ -60,8 +60,8 @@ class BatchResponseActionContent implements \JsonSerializable
             'href'       => $this->href->getHref(),
             'expires_in' => $this->expires_in,
             'header'     => [
-                'Authorization' => (string) $this->token_header_formatter->getIdentifier($this->action_authorization_token)
-            ]
+                'Authorization' => (string) $this->token_header_formatter->getIdentifier($this->action_authorization_token),
+            ],
         ];
     }
 }

@@ -49,7 +49,7 @@ class SinglePageExporter
         Tracker $tracker,
         array $ordered_artifact_rows,
         PFUser $current_user,
-        $server_url
+        $server_url,
     ) {
         $this->sendFileDownloadHeaders($tracker);
 

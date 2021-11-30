@@ -38,7 +38,7 @@ final class ArtifactLinkChangesetBuilder
         int $artifact_link_field_id,
         ArtifactLinkType $link_type,
         int $linked_artifact_id,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ArtifactLinkChangeset {
         return ArtifactLinkChangeset::fromMirroredProgramIncrement(
             RetrieveTrackerOfArtifactStub::withIds(28),

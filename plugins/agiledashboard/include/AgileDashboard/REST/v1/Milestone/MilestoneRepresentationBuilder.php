@@ -69,7 +69,7 @@ class MilestoneRepresentationBuilder
         ParentTrackerRetriever $parent_tracker_retriever,
         \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $sub_milestone_finder,
         \PlanningFactory $planning_factory,
-        ProjectBackgroundConfiguration $project_background_configuration
+        ProjectBackgroundConfiguration $project_background_configuration,
     ) {
         $this->milestone_factory                = $milestone_factory;
         $this->backlog_factory                  = $backlog_factory;
@@ -84,7 +84,7 @@ class MilestoneRepresentationBuilder
     public function getMilestoneRepresentation(
         \Planning_Milestone $milestone,
         \PFUser $user,
-        string $representation_type
+        string $representation_type,
     ): MilestoneRepresentation {
         $status_count = [];
         if ($representation_type === MilestoneRepresentation::ALL_FIELDS) {
@@ -151,7 +151,7 @@ class MilestoneRepresentationBuilder
     public function buildRepresentationsFromCollection(
         PaginatedMilestones $collection,
         \PFUser $user,
-        string $representation_type
+        string $representation_type,
     ): PaginatedMilestonesRepresentations {
         $representations = [];
         foreach ($collection->getMilestones() as $milestone) {

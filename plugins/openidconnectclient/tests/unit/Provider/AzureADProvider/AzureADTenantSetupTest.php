@@ -31,7 +31,7 @@ final class AzureADTenantSetupTest extends \Tuleap\Test\PHPUnit\TestCase
             AzureADTenantSetup::tenantSpecific(),
             AzureADTenantSetup::organizations(),
             AzureADTenantSetup::consumers(),
-            AzureADTenantSetup::common()
+            AzureADTenantSetup::common(),
         ];
         $all_setups   = AzureADTenantSetup::allPossibleSetups();
 

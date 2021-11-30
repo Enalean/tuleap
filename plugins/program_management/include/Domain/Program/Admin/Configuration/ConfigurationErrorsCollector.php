@@ -105,7 +105,7 @@ final class ConfigurationErrorsCollector
     public function addSemanticError(
         string $semantic_name,
         string $semantic_short_name,
-        array $potential_trackers_in_error
+        array $potential_trackers_in_error,
     ): void {
         $this->semantic_errors[] = new SemanticErrorPresenter(
             $semantic_name,

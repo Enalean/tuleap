@@ -91,8 +91,8 @@ final class RepositoryTest extends TestBase
             [
                 "migrate_to_gerrit" => [
                     "server" => 1,
-                    "permissions" => "default"
-                ]
+                    "permissions" => "default",
+                ],
             ]
         );
 
@@ -110,7 +110,7 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file01',
-            'ref'          => 'master'
+            'ref'          => 'master',
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', $url));
@@ -121,7 +121,7 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
                 'path_to_file' => 'file01',
-                'ref'          => 'master'
+                'ref'          => 'master',
             ]);
 
         $response = $this->getResponse(
@@ -136,7 +136,7 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
                 'path_to_file' => 'file01',
-                'ref' => 'master'
+                'ref' => 'master',
             ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
@@ -148,7 +148,7 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
                 'path_to_file' => 'file01',
-                'ref' => 'master'
+                'ref' => 'master',
             ]);
 
         $response = $this->getResponse(
@@ -172,7 +172,7 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file02',
-            'ref'          => 'branch_file_02'
+            'ref'          => 'branch_file_02',
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
@@ -187,7 +187,7 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'NotAFile',
-            'ref'          => 'master'
+            'ref'          => 'master',
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
@@ -199,7 +199,7 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file01',
-            'ref'          => 'NotABranch'
+            'ref'          => 'NotABranch',
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
@@ -269,10 +269,10 @@ final class RepositoryTest extends TestBase
                             'ldap_id'      => 'tester1',
                             'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                             'is_anonymous' => false,
-                            'has_avatar'   => true
+                            'has_avatar'   => true,
                         ],
                         'commit_status' => null,
-                        'verification'  => ['signature' => null]
+                        'verification'  => ['signature' => null],
                     ],
                 ],
                 [
@@ -296,11 +296,11 @@ final class RepositoryTest extends TestBase
                             'ldap_id'      => 'tester1',
                             'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                             'is_anonymous' => false,
-                            'has_avatar'   => true
+                            'has_avatar'   => true,
                         ],
                         'commit_status' => null,
-                        'verification'  => ['signature' => null]
-                    ]
+                        'verification'  => ['signature' => null],
+                    ],
                 ],
             ]
         );
@@ -371,7 +371,7 @@ final class RepositoryTest extends TestBase
         $post_payload = json_encode(
             [
                 'project_id' => $project_id,
-                'name' => 'newTestGitRepository'
+                'name' => 'newTestGitRepository',
             ]
         );
         $response     = $this->getResponse(
@@ -388,7 +388,7 @@ final class RepositoryTest extends TestBase
         $post_payload = json_encode(
             [
                 'project_id' => $project_id,
-                'name' => 'newTestGitRepository'
+                'name' => 'newTestGitRepository',
             ]
         );
         $response     = $this->getResponse(
@@ -403,7 +403,7 @@ final class RepositoryTest extends TestBase
         $post_payload = json_encode(
             [
                 "state" => "success",
-                "token" => "someToken"
+                "token" => "someToken",
             ]
         );
 
@@ -443,12 +443,12 @@ final class RepositoryTest extends TestBase
                             'ldap_id'      => 'tester1',
                             'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                             'is_anonymous' => false,
-                            'has_avatar'   => true
+                            'has_avatar'   => true,
                         ],
                         'commit_status' => null,
-                        'verification'  => ['signature' => null]
-                    ]
-                ]
+                        'verification'  => ['signature' => null],
+                    ],
+                ],
             ]
         );
     }
@@ -522,10 +522,10 @@ final class RepositoryTest extends TestBase
                     'ldap_id'      => 'tester1',
                     'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                     'is_anonymous' => false,
-                    'has_avatar'   => true
+                    'has_avatar'   => true,
                 ],
                 'commit_status' => null,
-                'verification'  => ['signature' => null]
+                'verification'  => ['signature' => null],
             ]
         );
     }
@@ -535,7 +535,7 @@ final class RepositoryTest extends TestBase
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
             [
                 'path' => '',
-                'ref' => 'master'
+                'ref' => 'master',
             ]
         )));
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -546,7 +546,7 @@ final class RepositoryTest extends TestBase
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
             [
              'path' => '',
-             'ref'  => 'master'
+             'ref'  => 'master',
             ]
         );
 
@@ -560,7 +560,7 @@ final class RepositoryTest extends TestBase
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
             [
              'path' => 'file01',
-             'ref'  => 'master'
+             'ref'  => 'master',
             ]
         );
 

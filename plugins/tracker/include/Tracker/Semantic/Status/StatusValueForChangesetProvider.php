@@ -32,7 +32,7 @@ class StatusValueForChangesetProvider
 {
     public function getStatusValueForChangeset(
         Tracker_Artifact_Changeset $changeset,
-        PFUser $user
+        PFUser $user,
     ): ?Tracker_FormElement_Field_List_BindValue {
         $status_field = $this->loadSemantic($changeset)->getField();
         if (! $status_field) {

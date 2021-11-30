@@ -36,7 +36,7 @@ class Tracker_UgroupPermissionsGoldenRetriever
 
     public function __construct(
         Tracker_PermissionsDao $permissions_dao,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->permissions_dao = $permissions_dao;
         $this->ugroup_manager  = $ugroup_manager;

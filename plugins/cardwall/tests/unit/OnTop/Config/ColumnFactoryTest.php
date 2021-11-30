@@ -84,7 +84,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestC
                         'bg_red'         => '123',
                         'bg_green'       => '12',
                         'bg_blue'        => '10',
-                        'tlp_color_name' => null
+                        'tlp_color_name' => null,
                     ],
                     [
                         'id'             => 2,
@@ -92,7 +92,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestC
                         'bg_red'         => null,
                         'bg_green'       => null,
                         'bg_blue'        => null,
-                        'tlp_color_name' => null
+                        'tlp_color_name' => null,
                     ],
                     [
                         'id'             => 2,
@@ -100,8 +100,8 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestC
                         'bg_red'         => null,
                         'bg_green'       => null,
                         'bg_blue'        => null,
-                        'tlp_color_name' => 'peggy-pink'
-                    ]
+                        'tlp_color_name' => 'peggy-pink',
+                    ],
                 ]
             );
         $columns = $this->factory->getDashboardColumns($this->tracker);
@@ -144,7 +144,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestC
             'bg_red' => null,
             'bg_green' => null,
             'bg_blue' => null,
-            'tlp_color_name' => 'acid-green'
+            'tlp_color_name' => 'acid-green',
         ];
         $dar        = M::mock(DataAccessResult::class)
             ->shouldReceive(['getRow' => $column_row])

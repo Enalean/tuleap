@@ -66,7 +66,7 @@ class LabeledItemCollection implements Dispatchable
         PFUser $user,
         array $label_ids,
         $limit,
-        $offset
+        $offset,
     ) {
         $this->project   = $project;
         $this->user      = $user;

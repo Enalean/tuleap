@@ -149,7 +149,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         PFUser $current_user,
         $in_dashboard = false,
         $readonly = false,
-        $store_in_session = true
+        $store_in_session = true,
     ): string {
         $html = '';
 
@@ -214,7 +214,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     private function widgetMustDisplayEmptyState(
         bool $in_dashboard,
         array $report_charts,
-        array $matching_ids
+        array $matching_ids,
     ): bool {
         if ($in_dashboard === true) {
             if (count($report_charts) === 0) {
@@ -452,7 +452,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('graphontrackersv5.js')]
+            ['file' => $this->getAssets()->getFileURL('graphontrackersv5.js')],
         ];
     }
 

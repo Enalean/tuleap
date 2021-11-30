@@ -44,7 +44,7 @@ class TestPlanTestDefinitionWithTestStatusRetriever
     public function __construct(
         TestPlanTestDefinitionsTestStatusDAO $dao,
         TestStatusPerTestDefinitionsInformationForUserRetriever $test_status_per_test_definitions_information_for_user_retriever,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->dao                                                             = $dao;
         $this->test_status_per_test_definitions_information_for_user_retriever = $test_status_per_test_definitions_information_for_user_retriever;

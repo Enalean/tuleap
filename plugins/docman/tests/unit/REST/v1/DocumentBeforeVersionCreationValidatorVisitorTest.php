@@ -94,7 +94,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $link_item->accept($this->validator_visitor, $params);
     }
@@ -110,7 +110,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $embedded_file_item->accept($this->validator_visitor, $params);
     }
@@ -126,7 +126,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $empty_item->accept($this->validator_visitor, $params);
     }
@@ -142,7 +142,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $wiki_item->accept($this->validator_visitor, $params);
     }
@@ -158,7 +158,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $folder_item->accept($this->validator_visitor, $params);
     }
@@ -174,7 +174,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $item->accept($this->validator_visitor, $params);
     }
@@ -192,7 +192,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -215,7 +215,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -238,7 +238,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -261,7 +261,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_Folder::class,
             'item'                  => Mockery::mock(Docman_Folder::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -282,7 +282,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -301,7 +301,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'user'                  => Mockery::mock(PFUser::class),
             'document_type'         => Docman_File::class,
             'item'                  => Mockery::mock(Docman_File::class),
-            'title'                 => 'my document title'
+            'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -323,7 +323,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'document_type'         => Docman_Wiki::class,
             'item'                  => Mockery::mock(Docman_Wiki::class),
             'title'                 => 'my document title',
-            'project'               => $project
+            'project'               => $project,
         ];
 
         $this->expectException(RestException::class);
@@ -348,7 +348,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
             'document_type'         => Docman_Wiki::class,
             'item'                  => Mockery::mock(Docman_Wiki::class),
             'title'                 => 'my document title',
-            'project'               => $project
+            'project'               => $project,
         ];
 
         $this->expectException(I18NRestException::class);

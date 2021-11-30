@@ -53,7 +53,7 @@ class ArtifactsFoldersToScrumV2Converter
         Tracker_ArtifactFactory $artifact_factory,
         HierarchyOfFolderBuilder $hierarchy_of_folder_builder,
         LoggerInterface $logger,
-        AncestorFolderChecker $ancestor_folder_checker
+        AncestorFolderChecker $ancestor_folder_checker,
     ) {
         $this->converter_dao               = $converter_dao;
         $this->artifact_factory            = $artifact_factory;

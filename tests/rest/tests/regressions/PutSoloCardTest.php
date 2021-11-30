@@ -39,7 +39,7 @@ class Regressions_PutSoloCardTest extends RestBase
             [
                 "label"     => "Whatever",
                 "column_id" => null,
-                "values"    => []
+                "values"    => [],
             ]
         );
         $response = $this->getResponse(

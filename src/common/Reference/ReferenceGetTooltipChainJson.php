@@ -44,7 +44,7 @@ class ReferenceGetTooltipChainJson extends ReferenceGetTooltipChain
     public function __construct(
         EventManager $event_manager,
         JSONResponseBuilder $json_response_builder,
-        EmitterInterface $emitter
+        EmitterInterface $emitter,
     ) {
         $this->event_manager         = $event_manager;
         $this->json_response_builder = $json_response_builder;
@@ -56,7 +56,7 @@ class ReferenceGetTooltipChainJson extends ReferenceGetTooltipChain
         \Project $project,
         \PFUser $user,
         string $keyword,
-        string $value
+        string $value,
     ): void {
         $event = new ReferenceGetTooltipRepresentationEvent($reference, $project, $user, $keyword, $value);
         $this->event_manager->processEvent($event);

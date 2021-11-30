@@ -164,7 +164,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 $this->rules_processor,
                 $workflow_logger,
                 \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class),
-                new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
+                new WorkflowRulesManagerLoopSafeGuard($workflow_logger),
             ]
         )
             ->makePartial()
@@ -180,14 +180,14 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
 
         $new_field_01->shouldReceive('getAllValues')->andReturn([
                                                                     $this->buildStaticValue(601),
-                                                                    $this->buildStaticValue(602)
+                                                                    $this->buildStaticValue(602),
                                                                 ]);
 
         $new_field_02->shouldReceive('getAllValues')->andReturn([
                                                                     $this->buildStaticValue(701),
                                                                     $this->buildStaticValue(702),
                                                                     $this->buildStaticValue(703),
-                                                                    $this->buildStaticValue(704)
+                                                                    $this->buildStaticValue(704),
                                                                 ]);
 
         $new_field_03->shouldReceive('getAllValues')->andReturn([
@@ -217,7 +217,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
             ),
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
             [
-                $trigger_01
+                $trigger_01,
             ]
         );
 
@@ -229,7 +229,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
             ),
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
             [
-                $trigger_02
+                $trigger_02,
             ]
         );
 
@@ -245,8 +245,8 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 'to'     => 502,
                 'values' => [
                     101 => 601,
-                    102 => 602
-                ]
+                    102 => 602,
+                ],
             ],
             1 => [
                 'from'   => 103,
@@ -256,7 +256,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                     102 => 702,
                     103 => 703,
                     104 => 704,
-                ]
+                ],
             ],
             2 => [
                 'from'   => 101,
@@ -264,8 +264,8 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 'values' => [
                     101 => 801,
                     102 => 802,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->manager->shouldReceive('add')->times(2);
@@ -379,7 +379,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                     'id' => $this->rule_id,
                     'field_id' => $this->target_field_id,
                     'value_id' => $this->target_value_id,
-                    'rule_condition' => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE
+                    'rule_condition' => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
                 ]
             )
         );
@@ -521,7 +521,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 $this->rules_processor,
                 $workflow_logger,
                 \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class),
-                new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
+                new WorkflowRulesManagerLoopSafeGuard($workflow_logger),
             ]
         )
             ->makePartial()
@@ -621,7 +621,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->field_1685,
                     $this->value_2060
-                )
+                ),
             ]
         );
 
@@ -636,7 +636,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->field_1685,
                     $this->value_2061
-                )
+                ),
             ]
         );
 

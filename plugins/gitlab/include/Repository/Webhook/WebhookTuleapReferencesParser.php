@@ -57,7 +57,7 @@ class WebhookTuleapReferencesParser
     public const  IMPLEMENTS_KEYWORD = "implements";
 
     public function extractCollectionOfTuleapReferences(
-        string $message
+        string $message,
     ): WebhookTuleapReferenceCollection {
         $matches = [];
         $pattern = '/(' . $this->buildClosureKeywordsRegexpPart() . ')?(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';

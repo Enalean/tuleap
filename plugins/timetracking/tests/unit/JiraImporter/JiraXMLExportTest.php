@@ -102,7 +102,7 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
                         ]
                     ),
                     "content 01 content 02"
-                )
+                ),
             ]);
 
         $time_user = Mockery::mock(PFUser::class);

@@ -172,12 +172,12 @@ class WikiViews extends Views
         $eM->processEvent('isWikiPageReferenced', [
                           'referenced' => &$referenced,
                           'wiki_page'  => $pagename,
-                          'group_id' => $this->gid
+                          'group_id' => $this->gid,
                         ]);
         if ($referenced) {
             $label = '';
             $eM->processEvent('getPermsLabelForWiki', [
-                              'label'  => &$label
+                              'label'  => &$label,
                             ]);
             print '<p align="center"><br><b>' . $label . '</b></p>';
         } else {

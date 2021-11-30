@@ -47,7 +47,7 @@ class FRSReleaseDao extends DataAccessObject
         $_id       = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(' p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) . ' AND r.package_id=p.package_id AND p.status_id!=' . db_ei($this->STATUS_DELETED), '', ' ORDER BY release_date DESC LIMIT 1', [
-            'frs_package AS p'
+            'frs_package AS p',
         ], $extraFlags);
     }
 
@@ -59,7 +59,7 @@ class FRSReleaseDao extends DataAccessObject
 
         return $this->_search(' p.package_id=' . $this->da->escapeInt($_package_id) . ' AND p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) .
         ' AND r.package_id=p.package_id AND p.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED), '', 'ORDER BY release_date DESC LIMIT 1', [
-            'frs_package AS p'
+            'frs_package AS p',
         ], $extraFlags);
     }
 
@@ -238,7 +238,7 @@ class FRSReleaseDao extends DataAccessObject
             'notes',
             'changes',
             'status_id',
-            'release_date'
+            'release_date',
         ];
         $is_date = false;
         foreach ($data_array as $key => $value) {

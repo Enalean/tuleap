@@ -66,7 +66,7 @@ class CampaignCreator
         TrackerFactory $tracker_factory,
         DefinitionSelector $definition_selector,
         Tracker_REST_Artifact_ArtifactCreator $artifact_creator,
-        ExecutionCreator $execution_creator
+        ExecutionCreator $execution_creator,
     ) {
         $this->config              = $config;
         $this->project_manager     = $project_manager;
@@ -120,7 +120,7 @@ class CampaignCreator
         PFUser $user,
         string $test_selector,
         int $milestone_id,
-        int $report_id
+        int $report_id,
     ): array {
         $execution_ids = [];
         $project       = $this->project_manager->getProject($project_id);
@@ -172,7 +172,7 @@ class CampaignCreator
         TrackerReference $tracker_reference,
         PFUser $user,
         string $label,
-        array $execution_ids
+        array $execution_ids,
     ): array {
         $label_field  = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_NAME);
         $status_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_STATUS);
@@ -196,7 +196,7 @@ class CampaignCreator
     private function getField(
         TrackerReference $tracker_reference,
         PFUser $user,
-        string $field_name
+        string $field_name,
     ): \Tracker_FormElement_Field {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_reference->id,

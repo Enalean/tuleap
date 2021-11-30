@@ -29,7 +29,7 @@ final class TypeSelectorRenderer
 {
     public function __construct(
         private IRetrieveAllUsableTypesInProject $types_retriever,
-        private \TemplateRenderer $renderer
+        private \TemplateRenderer $renderer,
     ) {
     }
 
@@ -37,7 +37,7 @@ final class TypeSelectorRenderer
         Artifact $artifact,
         string $prefill_type,
         string $name,
-        ?PossibleParentSelector $possible_parent_selector
+        ?PossibleParentSelector $possible_parent_selector,
     ): string {
         $types = $this->types_retriever->getAllUsableTypesInProject(
             $artifact->getTracker()->getProject()
@@ -50,7 +50,7 @@ final class TypeSelectorRenderer
             $types_presenter[] = [
                 'shortname'     => $type->shortname,
                 'forward_label' => $type->forward_label,
-                'is_selected'   => ($type->shortname === $prefill_type)
+                'is_selected'   => ($type->shortname === $prefill_type),
             ];
 
             if ($is_parent_selector_displayed) {
@@ -61,7 +61,7 @@ final class TypeSelectorRenderer
                 $types_presenter[] = [
                     'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
                     'forward_label' => $type->reverse_label,
-                    'is_selected'   => (\Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $prefill_type)
+                    'is_selected'   => (\Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $prefill_type),
                 ];
             }
         }

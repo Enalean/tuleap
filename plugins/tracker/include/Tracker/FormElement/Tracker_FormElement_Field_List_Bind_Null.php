@@ -259,7 +259,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
         SimpleXMLElement $root,
         &$xmlMapping,
         $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ) {
         return '';
     }

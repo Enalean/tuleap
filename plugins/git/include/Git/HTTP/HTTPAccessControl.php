@@ -78,7 +78,7 @@ class HTTPAccessControl
         HTTPBasicAuthUserAccessKeyAuthenticator $access_key_authenticator,
         PermissionsManager $permissions_manager,
         UserDao $user_dao,
-        GitHTTPAskBasicAuthenticationChallenge $ask_basic_authentication_challenge
+        GitHTTPAskBasicAuthenticationChallenge $ask_basic_authentication_challenge,
     ) {
         $this->logger                              = $logger;
         $this->forge_access                        = $forge_access;

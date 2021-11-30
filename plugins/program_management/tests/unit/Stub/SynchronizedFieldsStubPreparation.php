@@ -31,7 +31,7 @@ final class SynchronizedFieldsStubPreparation
         public ?StartDateFieldReferenceStub $start_date,
         public ?EndDateFieldReferenceStub $end_date,
         public ?DurationFieldReferenceStub $duration,
-        public ?ArtifactLinkFieldReferenceStub $artifact_link
+        public ?ArtifactLinkFieldReferenceStub $artifact_link,
     ) {
     }
 
@@ -41,7 +41,7 @@ final class SynchronizedFieldsStubPreparation
         int $status_field_id,
         int $start_date_field_id,
         int $end_date_field_id,
-        int $artifact_link_field_id
+        int $artifact_link_field_id,
     ): self {
         return new self(
             TitleFieldReferenceStub::withId($title_field_id),
@@ -60,7 +60,7 @@ final class SynchronizedFieldsStubPreparation
         int $status_field_id,
         int $start_date_field_id,
         int $duration_field_id,
-        int $artifact_link_field_id
+        int $artifact_link_field_id,
     ): self {
         return new self(
             TitleFieldReferenceStub::withId($title_field_id),

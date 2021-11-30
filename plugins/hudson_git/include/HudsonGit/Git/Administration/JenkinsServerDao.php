@@ -35,7 +35,7 @@ class JenkinsServerDao extends DataAccessObject
                 'jenkins_server_url' => $jenkins_server_url,
             ],
             [
-                'jenkins_server_url'
+                'jenkins_server_url',
             ]
         );
     }
@@ -52,7 +52,7 @@ class JenkinsServerDao extends DataAccessObject
     public function getPaginatedJenkinsServerOfProject(
         int $project_id,
         int $limit,
-        int $offset
+        int $offset,
     ): array {
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_hudson_git_project_server
@@ -93,7 +93,7 @@ class JenkinsServerDao extends DataAccessObject
         $this->getDB()->delete(
             'plugin_hudson_git_project_server',
             [
-                'id' => $jenkins_server_id
+                'id' => $jenkins_server_id,
             ]
         );
     }

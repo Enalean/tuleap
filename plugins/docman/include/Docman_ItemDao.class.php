@@ -168,7 +168,7 @@ class Docman_ItemDao extends DataAccessObject
             'limit'           => $limit,
             'offset'          => $offset,
             'ignore_deleted'  => true,
-            'ignore_obselete' => true
+            'ignore_obselete' => true,
         ];
 
         $where = " i.group_id = $groupId AND i.delete_date IS NULL";
@@ -456,7 +456,7 @@ class Docman_ItemDao extends DataAccessObject
         $item_type = null,
         $link_url = null,
         $wiki_page = null,
-        $file_is_embedded = null
+        $file_is_embedded = null,
     ) {
         $argArray = [];
 

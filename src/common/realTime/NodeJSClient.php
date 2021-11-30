@@ -53,7 +53,7 @@ class NodeJSClient implements Client
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->http_client     = $http_client;
         $this->request_factory = $request_factory;

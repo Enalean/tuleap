@@ -41,7 +41,7 @@ class PostMergeRequestWebhookAuthorDataRetriever
 
     public function __construct(
         ClientWrapper $gitlab_api_client,
-        CredentialsRetriever $credentials_retriever
+        CredentialsRetriever $credentials_retriever,
     ) {
         $this->gitlab_api_client     = $gitlab_api_client;
         $this->credentials_retriever = $credentials_retriever;
@@ -53,7 +53,7 @@ class PostMergeRequestWebhookAuthorDataRetriever
      */
     public function retrieveAuthorData(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        PostMergeRequestWebhookData $webhook_data
+        PostMergeRequestWebhookData $webhook_data,
     ): ?array {
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
 

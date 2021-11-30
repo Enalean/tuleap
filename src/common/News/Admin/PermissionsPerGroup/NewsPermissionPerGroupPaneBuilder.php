@@ -37,7 +37,7 @@ class NewsPermissionPerGroupPaneBuilder
     private $ugroup_manager;
 
     public function __construct(
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->ugroup_manager = $ugroup_manager;
     }

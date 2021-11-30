@@ -79,7 +79,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         string $title,
         int $item_type,
         string $link_url = '',
-        string $wiki_page = ''
+        string $wiki_page = '',
     ) {
         $item_id = $this->createItem($user_id, $docman_root_id, $title, $item_type, $link_url, $wiki_page);
 
@@ -113,7 +113,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         string $title,
         int $item_type,
         string $link_url = '',
-        string $wiki_page = ''
+        string $wiki_page = '',
     ) {
         $item = [
             'parent_id'         => $docman_root_id,
@@ -129,7 +129,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
             'item_type'         => $item_type,
             'link_url'          => $link_url,
             'wiki_page'         => $wiki_page,
-            'file_is_embedded'  => ''
+            'file_is_embedded'  => '',
         ];
 
         return $this->docman_item_factory->create($item, 1);
@@ -150,7 +150,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
             'filename'  => $title,
             'filesize'  => 3,
             'filetype'  => $item_type,
-            'path'      => $file_path
+            'path'      => $file_path,
         ];
         $version_factory = new \Docman_VersionFactory();
         return $version_factory->create($version);
@@ -260,7 +260,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         string $file_version_title,
         int $approval_status,
         int $user_id,
-        int $item_type
+        int $item_type,
     ): void {
         $item_id = $this->createItem(
             $user_id,

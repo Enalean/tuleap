@@ -34,7 +34,7 @@ class ArtifactRightsPresenter implements MessageRightsPresenter
 
     public function __construct(
         Artifact $artifact,
-        Tracker_Permission_PermissionsSerializer $permission_serializer
+        Tracker_Permission_PermissionsSerializer $permission_serializer,
     ) {
         $this->submitter_id       = intval($artifact->getSubmittedByUser()->getId());
         $this->submitter_can_view = $artifact->userCanView($artifact->getSubmittedByUser());

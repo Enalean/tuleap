@@ -62,7 +62,7 @@ final class ConfigDumpCommandTest extends TestCase
             'variables_defined' => [
                 'sys_dbhost' => 'localhost',
             ],
-            'expected_output' =>  \json_encode(['sys_dbhost' => 'localhost'])
+            'expected_output' =>  \json_encode(['sys_dbhost' => 'localhost']),
         ];
 
         yield 'one integer value' => [
@@ -99,7 +99,7 @@ final class ConfigDumpCommandTest extends TestCase
                 'keys'     => ['sys_dbhost', 'sys_dbport'],
             ],
             [
-                'capture_stderr_separately' => true
+                'capture_stderr_separately' => true,
             ],
         );
 

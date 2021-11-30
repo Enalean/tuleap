@@ -90,7 +90,7 @@ class Tracker_Report_HeaderInReportPresenter
         string $has_changed_classname,
         array $warnings,
         Tracker_Report $report,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->browse_instructions   = $browse_instructions;
         $this->title                 = $title;

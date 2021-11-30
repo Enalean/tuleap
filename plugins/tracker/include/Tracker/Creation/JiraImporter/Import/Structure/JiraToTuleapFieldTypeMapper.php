@@ -48,7 +48,7 @@ class JiraToTuleapFieldTypeMapper
     public function __construct(
         FieldXmlExporter $field_xml_exporter,
         ErrorCollector $error_collector,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->field_xml_exporter = $field_xml_exporter;
         $this->error_collector    = $error_collector;
@@ -59,7 +59,7 @@ class JiraToTuleapFieldTypeMapper
         JiraFieldAPIRepresentation $jira_field,
         ContainersXMLCollection $containers_collection,
         FieldMappingCollection $jira_field_mapping_collection,
-        PlatformConfiguration $platform_configuration
+        PlatformConfiguration $platform_configuration,
     ): void {
         $id               = $jira_field->getId();
         $jira_field_label = $jira_field->getLabel();
@@ -174,7 +174,7 @@ class JiraToTuleapFieldTypeMapper
                         4,
                         $required,
                         [
-                            'display_time' => '0'
+                            'display_time' => '0',
                         ],
                         $jira_field->getBoundValues(),
                         $jira_field_mapping_collection,
@@ -191,7 +191,7 @@ class JiraToTuleapFieldTypeMapper
                         4,
                         $required,
                         [
-                            'display_time' => '1'
+                            'display_time' => '1',
                         ],
                         $jira_field->getBoundValues(),
                         $jira_field_mapping_collection,

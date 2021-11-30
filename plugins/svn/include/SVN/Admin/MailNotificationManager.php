@@ -63,7 +63,7 @@ class MailNotificationManager
         UgroupsToNotifyDao $ugroup_to_notify_dao,
         ProjectHistoryDao $project_history_dao,
         NotificationsEmailsBuilder $notifications_emails_builder,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->dao                          = $dao;
         $this->user_to_notify_dao           = $user_to_notify_dao;

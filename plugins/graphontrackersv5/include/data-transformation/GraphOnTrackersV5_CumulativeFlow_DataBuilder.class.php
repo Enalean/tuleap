@@ -65,7 +65,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         $this->observed_field_id = $observed_field->getId();
         $this->timeFiller        = [GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600 * 24,
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600 * 24 * 7,
-            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600 * 24 * 30.45
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600 * 24 * 30.45,
         ];
         $this->startDate         = $this->chart->getStartDate();
         $this->stopDate          = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();

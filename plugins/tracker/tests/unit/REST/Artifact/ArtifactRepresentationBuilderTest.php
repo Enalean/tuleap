@@ -76,7 +76,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
                 'getAvatarUrl' => '',
                 'isAnonymous'  => false,
                 'isNone'       => false,
-                'hasAvatar'    => false
+                'hasAvatar'    => false,
             ]
         );
 
@@ -94,7 +94,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
                 'getSubmittedByUser' => $submitted_by,
                 'getUri'             => '/plugins/tracker/?aid=12',
                 'getXRef'            => 'Tracker_Artifact #12',
-                'getAssignedTo'      => [$current_user]
+                'getAssignedTo'      => [$current_user],
             ]
         );
 
@@ -160,7 +160,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             [
                 $first_field_user_cant_read,
                 $field_user_can_read,
-                $second_field_user_cant_read
+                $second_field_user_cant_read,
             ]
         );
         $artifact = $this->buildBasicArtifactMock();
@@ -178,7 +178,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $second_field->shouldReceive(
             [
                 'userCanRead'  => true,
-                'getRESTValue' => 'whatever'
+                'getRESTValue' => 'whatever',
             ]
         );
         $third_field = Mockery::mock(\Tracker_FormElement_Field::class)
@@ -189,7 +189,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             [
                 $first_field,
                 $second_field,
-                $third_field
+                $third_field,
             ]
         );
 
@@ -209,7 +209,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             [
                 'userCanRead'  => true,
                 'getName'      => 'field01',
-                'getRESTValue' => '01'
+                'getRESTValue' => '01',
             ]
         );
         $second_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
@@ -217,7 +217,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             [
                 'userCanRead'  => true,
                 'getName'      => 'field02',
-                'getRESTValue' => 'whatever'
+                'getRESTValue' => 'whatever',
             ]
         );
         $third_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
@@ -246,7 +246,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             [
                 'userCanRead'  => true,
                 'getName'      => 'field01',
-                'getRESTValue' => '01'
+                'getRESTValue' => '01',
             ]
         );
         $second_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
@@ -254,7 +254,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             [
                 'userCanRead'  => true,
                 'getName'      => 'field02',
-                'getRESTValue' => 'whatever'
+                'getRESTValue' => 'whatever',
             ]
         );
         $third_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
@@ -421,7 +421,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
                 'getId'      => 888,
                 'getProject' => $project,
                 'getName'    => 'Tuleap\Artifact\Artifact',
-                'getColor'   => TrackerColor::default()
+                'getColor'   => TrackerColor::default(),
             ]
         );
         return $tracker;

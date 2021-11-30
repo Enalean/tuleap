@@ -81,7 +81,7 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->addChildren(
                     $this->getTrove('41')
                         ->addChildren($this->getTrove('411'))
-                )
+                ),
         ]);
 
         $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([])->byDefault();

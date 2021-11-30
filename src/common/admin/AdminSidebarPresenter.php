@@ -72,7 +72,7 @@ class AdminSidebarPresenter
         $all_projects_count,
         $pending_projects_count,
         $pending_news_count,
-        $plugins
+        $plugins,
     ) {
         $this->all_users_count        = $all_users_count;
         $this->users_need_approval    = $users_need_approval;

@@ -53,7 +53,7 @@ class b201612231324_update_trove_categories_incorrect_values extends \Tuleap\For
                     $root_parent,
                     $fullpath,
                     $fullpath_ids,
-                    $trove_category_id
+                    $trove_category_id,
                 ]
             );
             if ($has_been_executed === false) {

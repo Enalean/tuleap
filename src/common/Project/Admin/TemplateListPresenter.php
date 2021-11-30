@@ -34,7 +34,7 @@ class TemplateListPresenter
     public function __construct(
         ProjectCreationNavBarPresenter $navbar,
         $title,
-        array $templates_presenters
+        array $templates_presenters,
     ) {
         $this->navbar    = $navbar;
         $this->title     = $title;

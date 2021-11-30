@@ -208,7 +208,7 @@ while ($row = db_fetch_array($res_grp)) {
 }
 
 $pagination_params = [
-    'form_cat' => $form_cat
+    'form_cat' => $form_cat,
 ];
 if ($special_cat) {
     $pagination_params['special_cat'] = $special_cat;

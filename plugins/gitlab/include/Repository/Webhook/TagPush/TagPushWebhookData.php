@@ -62,7 +62,7 @@ class TagPushWebhookData implements WebhookData
         string $gitlab_web_url,
         string $ref,
         string $before,
-        string $after
+        string $after,
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;

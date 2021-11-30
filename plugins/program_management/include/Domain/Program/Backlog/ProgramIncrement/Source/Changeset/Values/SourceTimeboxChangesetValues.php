@@ -45,7 +45,7 @@ final class SourceTimeboxChangesetValues
         private DescriptionValue $description_value,
         private StatusValue $status_value,
         private StartDateValue $start_date_value,
-        private DurationValue|EndDateValue $end_period_value
+        private DurationValue|EndDateValue $end_period_value,
     ) {
     }
 
@@ -57,7 +57,7 @@ final class SourceTimeboxChangesetValues
         GatherSynchronizedFields $fields_gatherer,
         RetrieveFieldValuesGatherer $field_values_retriever,
         RetrieveChangesetSubmissionDate $submission_retriever,
-        TimeboxMirroringOrder $order
+        TimeboxMirroringOrder $order,
     ): self {
         $timebox           = $order->getTimebox();
         $fields            = SynchronizedFieldReferences::fromTrackerIdentifier(

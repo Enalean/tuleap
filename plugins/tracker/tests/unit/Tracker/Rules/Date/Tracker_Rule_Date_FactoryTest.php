@@ -136,7 +136,7 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'source_field_id'   => $this->source_field_id,
             'target_field_id'   => $this->target_field_id,
             'tracker_id'        => $this->tracker_id,
-            'id'                => 20
+            'id'                => 20,
         ];
 
         $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns([$data]);
@@ -170,11 +170,11 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping   = [
             [
                 'from'  => 123,
-                'to'    => 888
+                'to'    => 888,
             ],
             [
                 'from'  => 456,
-                'to'    => 999
+                'to'    => 999,
             ],
         ];
 
@@ -195,11 +195,11 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = [
             [
                 'from'  => 123,
-                'to'    => 888
+                'to'    => 888,
             ],
             [
                 'from'  => 456,
-                'to'    => 999
+                'to'    => 999,
             ],
         ];
 
@@ -226,19 +226,19 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = [
             [
                 'from'  => 111,
-                'to'    => 555
+                'to'    => 555,
             ],
             [
                 'from'  => 222,
-                'to'    => 666
+                'to'    => 666,
             ],
             [
                 'from'  => 333,
-                'to'    => 777
+                'to'    => 777,
             ],
             [
                 'from'  => 444,
-                'to'    => 888
+                'to'    => 888,
             ],
         ];
 

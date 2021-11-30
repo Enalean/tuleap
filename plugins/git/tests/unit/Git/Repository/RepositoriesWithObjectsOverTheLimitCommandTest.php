@@ -54,7 +54,7 @@ final class RepositoriesWithObjectsOverTheLimitCommandTest extends \Tuleap\Test\
         $project->shouldReceive('getUnixName')->andReturns('project_name');
         $repository->shouldReceive('getProject')->andReturns($project);
         $this->repository_factory->shouldReceive('getAllRepositoriesWithActivityInTheLast2Months')->andReturns([
-            $repository
+            $repository,
         ]);
         $repository_with_largest_object_size = new LargestObjectSizeGitRepository($repository, PHP_INT_MAX);
         $this->repository_objects_size_retriever->shouldReceive('getLargestObjectSize')->andReturns(
@@ -78,8 +78,8 @@ final class RepositoriesWithObjectsOverTheLimitCommandTest extends \Tuleap\Test\
                     'project_unixname' => 'project_name',
                     'repository_id'    => 2000,
                     'repository_name'  => 'repository_name',
-                    'object_size'      => PHP_INT_MAX
-                ]
+                    'object_size'      => PHP_INT_MAX,
+                ],
             ],
             $json_output
         );

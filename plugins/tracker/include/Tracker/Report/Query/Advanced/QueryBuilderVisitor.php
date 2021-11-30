@@ -157,7 +157,7 @@ class QueryBuilderVisitor implements Visitor
         MetadataGreaterThanOrEqualComparisonFromWhereBuilder $metadata_greater_than_or_equal_comparison_from_where_builder,
         MetadataBetweenComparisonFromWhereBuilder $metadata_between_comparison_from_where_builder,
         MetadataInComparisonFromWhereBuilder $metadata_in_comparison_from_where_builder,
-        MetadataNotInComparisonFromWhereBuilder $metadata_not_in_comparison_from_where_builder
+        MetadataNotInComparisonFromWhereBuilder $metadata_not_in_comparison_from_where_builder,
     ) {
         $this->equal_comparison_visitor                                     = $equal_comparison_visitor;
         $this->not_equal_comparison_visitor                                 = $not_equal_comparison_visitor;

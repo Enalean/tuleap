@@ -47,7 +47,7 @@ class DynamicUserCreator
         DynamicCredentialSession $dynamic_credential_session,
         \UserManager $user_manager,
         $user_realname,
-        callable $invalid_state_clean_up
+        callable $invalid_state_clean_up,
     ) {
         $this->dynamic_credential_session = $dynamic_credential_session;
         $this->user_manager               = $user_manager;

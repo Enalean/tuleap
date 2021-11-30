@@ -65,7 +65,7 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('cmmt123')
             ->andReturn([
                 'repository_id' => 1,
-                'sha1' => 'commitsha1'
+                'sha1' => 'commitsha1',
             ]);
 
         $repository = Mockery::mock(GitRepository::class);
@@ -120,7 +120,7 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('cmmt123')
             ->andReturn([
                 'repository_id' => 1,
-                'sha1' => 'commitsha1'
+                'sha1' => 'commitsha1',
             ]);
 
         $this->repository_factory->shouldReceive('getRepositoryById')

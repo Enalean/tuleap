@@ -60,7 +60,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
         Artifact $campaign,
         array $current_user_ugroup_ids,
         int $test_exec_status_field_id,
-        int $test_campaign_art_link_field_id
+        int $test_campaign_art_link_field_id,
     ) {
         $this->campaign_id                     = (int) $campaign->getId();
         $this->current_user_ugroup_ids         = $current_user_ugroup_ids;
@@ -73,7 +73,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
         PFUser $user,
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
-        Tracker_FormElementFactory $form_element_factory
+        Tracker_FormElementFactory $form_element_factory,
     ): ?self {
         if (! $campaign->userCanView($user)) {
             return null;
@@ -103,7 +103,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
         Project $project,
-        PFUser $user
+        PFUser $user,
     ): ?int {
         $test_exec_tracker_id = $testmanagement_config->getTestExecutionTrackerId($project);
 
@@ -127,7 +127,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
     private static function getReadableByTheUserTestCampaignArtLinkFieldID(
         Tracker_FormElementFactory $form_element_factory,
         Artifact $campaign,
-        PFUser $user
+        PFUser $user,
     ): ?int {
         $test_campaign_tracker = $campaign->getTracker();
 

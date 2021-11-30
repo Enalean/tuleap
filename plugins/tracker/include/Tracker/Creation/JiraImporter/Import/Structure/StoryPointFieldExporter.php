@@ -50,7 +50,7 @@ final class StoryPointFieldExporter
         PlatformConfiguration $configuration,
         ContainersXMLCollection $containers_collection,
         FieldMappingCollection $field_mapping_collection,
-        IssueType $issue_type
+        IssueType $issue_type,
     ): void {
         if ($issue_type->isSubtask()) {
             $this->logger->debug('-- is sub task, abort');

@@ -166,7 +166,7 @@ project_admin_header(
     [
         'title' => $Language->getText('project_admin_utils', 'user_perms'),
         'group' => $group_id,
-        'help' => 'project-admin.html#user-permissions'
+        'help' => 'project-admin.html#user-permissions',
     ],
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );

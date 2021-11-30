@@ -49,7 +49,7 @@ class DocmanFilesUploadLimitsAdminPresenter
         \CSRFSynchronizerToken $csrf_token,
         int $max_number_of_files,
         int $max_size_of_file,
-        DocmanSettingsTabsPresenterCollection $tabs_collection
+        DocmanSettingsTabsPresenterCollection $tabs_collection,
     ) {
         $this->csrf_token          = $csrf_token;
         $this->max_size_of_file    = $max_size_of_file;

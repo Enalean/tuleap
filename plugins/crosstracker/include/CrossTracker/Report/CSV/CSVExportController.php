@@ -83,7 +83,7 @@ class CSVExportController implements DispatchableWithRequest
         CrossTrackerReportDao $cross_tracker_dao,
         ProjectManager $project_manager,
         CrossTrackerPermissionGate $cross_tracker_permission_gate,
-        SimilarFieldsMatcher $similar_fields_matcher
+        SimilarFieldsMatcher $similar_fields_matcher,
     ) {
         $this->report_factory                = $report_factory;
         $this->artifact_report_factory       = $artifact_report_factory;

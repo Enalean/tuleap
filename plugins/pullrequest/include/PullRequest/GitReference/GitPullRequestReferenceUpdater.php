@@ -37,7 +37,7 @@ class GitPullRequestReferenceUpdater
 
     public function __construct(
         GitPullRequestReferenceDAO $dao,
-        GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker
+        GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker,
     ) {
         $this->dao                            = $dao;
         $this->namespace_availability_checker = $namespace_availability_checker;
@@ -51,7 +51,7 @@ class GitPullRequestReferenceUpdater
         PullRequest $pull_request,
         GitExec $executor_repository_source,
         GitExec $executor_repository_destination,
-        GitRepository $repository_destination
+        GitRepository $repository_destination,
     ) {
         if ((int) $pull_request->getRepoDestId() !== (int) $repository_destination->getId()) {
             throw new \LogicException('Destination repository ID does not match the one of the PR');
@@ -91,7 +91,7 @@ class GitPullRequestReferenceUpdater
     private function ensureAvailabilityGitReferenceNamespace(
         PullRequest $pull_request,
         GitExec $executor_repository,
-        GitPullRequestReference $reference
+        GitPullRequestReference $reference,
     ) {
         $reference_id = $reference->getGitReferenceId();
         while (! $this->namespace_availability_checker->isAvailable($executor_repository, $reference_id)) {

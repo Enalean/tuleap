@@ -78,7 +78,7 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->previous_changesetvalue = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $this->previous_changesetvalue->shouldReceive('getValue')->andReturns(
             [
-                201 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_201, '_is_child')
+                201 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_201, '_is_child'),
             ]
         );
 
@@ -96,8 +96,8 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitted_value = [
             'new_values' => '',
             'types'      => [
-                '201' => 'fixed_in'
-            ]
+                '201' => 'fixed_in',
+            ],
         ];
 
         $updated_submitted_value = $this->convertor->convert(
@@ -113,8 +113,8 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitted_value = [
             'new_values' => '',
             'types'      => [
-                '201' => ''
-            ]
+                '201' => '',
+            ],
         ];
 
         $updated_submitted_value = $this->convertor->convert(
@@ -130,8 +130,8 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitted_value = [
             'new_values' => '',
             'types'      => [
-                '201' => '_is_child'
-            ]
+                '201' => '_is_child',
+            ],
         ];
 
         $updated_submitted_value = $this->convertor->convert(
@@ -163,7 +163,7 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_value = [
             'new_values' => '123, 124',
-            'types'      => ['123' => '_is_child', '124' => '_is_child']
+            'types'      => ['123' => '_is_child', '124' => '_is_child'],
         ];
 
         $updated_submitted_value = $this->convertor->convert(
@@ -178,7 +178,7 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $submitted_value = [
             'new_values' => '123, 124',
-            'types'      => ['123' => '_is_child', '124' => '_is_foo']
+            'types'      => ['123' => '_is_child', '124' => '_is_foo'],
         ];
 
         $updated_submitted_value = $this->convertor->convert(

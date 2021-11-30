@@ -57,8 +57,8 @@ final class TaskboardCellTest extends \RestBase
             'order' => [
                 'ids'         => $other_task_ids,
                 'direction'   => 'before',
-                'compared_to' => $first_task_id
-            ]
+                'compared_to' => $first_task_id,
+            ],
         ];
 
         $response           = $this->getResponse(
@@ -87,7 +87,7 @@ final class TaskboardCellTest extends \RestBase
         $US4_swimlane_id  = self::$swimlane_ids['US5'];
         $review_column_id = self::$column_ids['Review'];
         $patch_payload    = [
-            'add' => $US4_swimlane_id
+            'add' => $US4_swimlane_id,
         ];
         $response         = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'taskboard_cells/' . $US4_swimlane_id . '/column/' . $review_column_id)->withBody($this->stream_factory->createStream(json_encode($patch_payload))),
@@ -113,7 +113,7 @@ final class TaskboardCellTest extends \RestBase
             'add'         => $task1_id,
             'ids'         => [$task1_id],
             'direction'   => 'after',
-            'compared_to' => $task4_id
+            'compared_to' => $task4_id,
         ];
         $response         = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'taskboard_cells/' . $US2_swimlane_id . '/column/' . $review_column_id)->withBody($this->stream_factory->createStream(json_encode($patch_payload)))
@@ -129,7 +129,7 @@ final class TaskboardCellTest extends \RestBase
     {
         return [
             'REST API User 1' => [REST_TestDataBuilder::TEST_USER_1_NAME, 200],
-            'Read-only bot' => [REST_TestDataBuilder::TEST_BOT_USER_NAME, 404]
+            'Read-only bot' => [REST_TestDataBuilder::TEST_BOT_USER_NAME, 404],
         ];
     }
 

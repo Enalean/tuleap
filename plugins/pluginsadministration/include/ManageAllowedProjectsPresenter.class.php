@@ -43,7 +43,7 @@ class PluginsAdministration_ManageAllowedProjectsPresenter
     public function __construct(
         Plugin $plugin,
         array $allowed_projects,
-        $is_plugin_restricted
+        $is_plugin_restricted,
     ) {
         $this->plugin                 = $plugin;
         $this->allowed_projects       = $allowed_projects;

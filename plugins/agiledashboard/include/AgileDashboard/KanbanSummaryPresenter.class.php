@@ -29,7 +29,7 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
-        AgileDashboard_KanbanItemDao $kanban_item_dao
+        AgileDashboard_KanbanItemDao $kanban_item_dao,
     ) {
         $this->kanban          = $kanban;
         $this->kanban_item_dao = $kanban_item_dao;

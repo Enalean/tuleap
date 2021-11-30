@@ -44,12 +44,12 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 42,
-                'field_id'            => 100
+                'field_id'            => 100,
             ],
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
-                'field_id'            => null
+                'field_id'            => null,
             ]
         ));
         $this->dao->shouldReceive('save')->with($this->tracker_id, 42, 123)->once()->andReturns(true);
@@ -75,12 +75,12 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 42,
-                'field_id'            => 123
+                'field_id'            => 123,
             ],
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
-                'field_id'            => 321
+                'field_id'            => 321,
             ]
         ));
         $this->dao->shouldReceive('save')->with($this->tracker_id, 69, 322)->once();

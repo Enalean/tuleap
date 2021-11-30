@@ -40,7 +40,7 @@ class TroveCatHierarchyRetriever
         array &$last_parent,
         array &$already_seen,
         array &$trove_cat_list,
-        array &$last_parent_ids
+        array &$last_parent_ids,
     ) {
         $this->readTree(
             $node_id,
@@ -57,7 +57,7 @@ class TroveCatHierarchyRetriever
         array &$last_parent,
         array &$already_seen,
         array &$trove_cat_list,
-        array &$last_parent_ids
+        array &$last_parent_ids,
     ) {
         $this->readTree(
             $node_id,
@@ -75,7 +75,7 @@ class TroveCatHierarchyRetriever
         array &$already_seen,
         array &$trove_cat_list,
         array &$last_parent_ids,
-        $retrieve_only_direct_child
+        $retrieve_only_direct_child,
     ) {
         $already_seen[$node_id] = true;
 
@@ -106,7 +106,7 @@ class TroveCatHierarchyRetriever
                         [Codendi_HTMLPurifier::instance()->purify($row_child['fullname'], CODENDI_PURIFIER_FULL)]
                     ),
                     CODENDI_PURIFIER_LIGHT
-                )
+                ),
             ];
 
             if (! isset($already_seen[$row_child['trove_cat_id']])) {
@@ -137,7 +137,7 @@ class TroveCatHierarchyRetriever
         array &$last_parent,
         array &$already_seen,
         array &$trove_cat_list,
-        array &$last_parent_ids
+        array &$last_parent_ids,
     ) {
         $already_seen[$node_id] = true;
 

@@ -36,7 +36,7 @@ class AllowedFieldRetriever
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        FieldUsedInSemanticObjectChecker $semantic_field_checker
+        FieldUsedInSemanticObjectChecker $semantic_field_checker,
     ) {
         $this->form_element_factory   = $form_element_factory;
         $this->semantic_field_checker = $semantic_field_checker;

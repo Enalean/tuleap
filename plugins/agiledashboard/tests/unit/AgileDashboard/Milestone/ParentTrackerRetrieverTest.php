@@ -97,7 +97,7 @@ final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->planning_factory->shouldReceive('getSubPlannings')->with($release_planning, $user)->andReturns(
             [
-                $sprint_planning
+                $sprint_planning,
             ]
         );
 
@@ -124,7 +124,7 @@ final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->planning_factory->shouldReceive('getSubPlannings')->with($release_planning, $user)->andReturns(
             [
-                $sprint_planning
+                $sprint_planning,
             ]
         );
 
@@ -157,7 +157,7 @@ final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->shouldReceive('getSubPlannings')->with($release_planning, $user)->andReturns(
             [
                 $sprint_planning,
-                $sub_sprint_planning
+                $sub_sprint_planning,
             ]
         );
 

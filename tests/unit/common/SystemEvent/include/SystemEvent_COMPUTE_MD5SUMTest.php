@@ -51,7 +51,7 @@ class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()

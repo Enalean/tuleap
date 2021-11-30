@@ -54,7 +54,7 @@ final class Rsyslog
                 ],
                 [
                     $tuleap_fqdn,
-                    $log_server
+                    $log_server,
                 ],
                 file_get_contents(__DIR__ . '/../../resources/rsyslog/logforward.conf')
             );

@@ -69,16 +69,16 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     460 => 6226,
                     461 => 6227,
                     462 => 6228,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
-            ['value_id' => '462']
+            ['value_id' => '462'],
         ]);
 
         $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::arrayToDar([
-            'field_id' => '712'
+            'field_id' => '712',
         ]));
 
         $this->done_dao->shouldReceive('addForTracker')
@@ -98,8 +98,8 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     460 => 6226,
                     461 => 6227,
                     462 => 6228,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([]);
@@ -120,12 +120,12 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     460 => 6226,
                     461 => 6227,
                     462 => 6228,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
-            ['value_id' => '462']
+            ['value_id' => '462'],
         ]);
 
         $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::emptyDar());
@@ -145,16 +145,16 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     460 => 6226,
                     461 => 6227,
                     462 => 6228,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
-            ['value_id' => '463']
+            ['value_id' => '463'],
         ]);
 
         $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::arrayToDar([
-            'field_id' => '712'
+            'field_id' => '712',
         ]));
 
         $this->done_dao->shouldNotReceive('addForTracker');

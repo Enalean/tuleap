@@ -71,7 +71,7 @@ class VersionImporter
         Project $project,
         string $extraction_path,
         \DateTimeImmutable $current_date,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $this->version_factory     = $version_factory;
         $this->docman_file_storage = $docman_file_storage;
@@ -124,7 +124,7 @@ class VersionImporter
         PFUser $user,
         SimpleXMLElement $version,
         string $file_path,
-        \DateTimeImmutable $date
+        \DateTimeImmutable $date,
     ): void {
         $is_item_created = $this->version_factory->create(
             [
@@ -137,7 +137,7 @@ class VersionImporter
                 'path'      => $file_path,
                 'date'      => $date->getTimestamp(),
                 'label'     => (string) $version->label,
-                'changelog' => (string) $version->changelog
+                'changelog' => (string) $version->changelog,
             ]
         );
         if ($is_item_created === false) {

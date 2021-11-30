@@ -42,7 +42,7 @@ class CrossReferenceGitEnhancer
 
     public function __construct(
         \UserHelper $user_helper,
-        TlpRelativeDatePresenterBuilder $relative_date_builder
+        TlpRelativeDatePresenterBuilder $relative_date_builder,
     ) {
         $this->user_helper           = $user_helper;
         $this->relative_date_builder = $relative_date_builder;
@@ -52,7 +52,7 @@ class CrossReferenceGitEnhancer
         CrossReferencePresenter $basic_cross_reference_presenter,
         CommitDetails $commit_details,
         \PFUser $user,
-        UserEmailCollection $user_email_collection
+        UserEmailCollection $user_email_collection,
     ): CrossReferencePresenter {
         $git_commit_reference = $basic_cross_reference_presenter
             ->withTitle($commit_details->getTitle(), null)
@@ -100,7 +100,7 @@ class CrossReferenceGitEnhancer
         return array_merge(
             $this->getBadgePresentersForBranchOrTag($commit_details),
             [
-                AdditionalBadgePresenter::buildSecondary(substr($commit_details->getHash(), 0, 10))
+                AdditionalBadgePresenter::buildSecondary(substr($commit_details->getHash(), 0, 10)),
             ]
         );
     }
@@ -113,14 +113,14 @@ class CrossReferenceGitEnhancer
         $first_branch = $commit_details->getFirstBranch();
         if (! empty($first_branch)) {
             return [
-                AdditionalBadgePresenter::buildPrimary($first_branch)
+                AdditionalBadgePresenter::buildPrimary($first_branch),
             ];
         }
 
         $first_tag = $commit_details->getFirstTag();
         if (! empty($first_tag)) {
             return [
-                AdditionalBadgePresenter::buildPrimaryPlain($first_tag)
+                AdditionalBadgePresenter::buildPrimaryPlain($first_tag),
             ];
         }
 

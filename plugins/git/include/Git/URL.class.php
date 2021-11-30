@@ -78,7 +78,7 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     public function __construct(
         ProjectManager $project_manager,
         GitRepositoryFactory $repository_factory,
-        $uri
+        $uri,
     ) {
         $this->project_manager    = $project_manager;
         $this->repository_factory = $repository_factory;

@@ -136,7 +136,7 @@ class nusoap_base
     'SOAP-ENV' => 'http://schemas.xmlsoap.org/soap/envelope/',
     'xsd' => 'http://www.w3.org/2001/XMLSchema',
     'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-    'SOAP-ENC' => 'http://schemas.xmlsoap.org/soap/encoding/'
+    'SOAP-ENC' => 'http://schemas.xmlsoap.org/soap/encoding/',
     ];
 
     /**
@@ -176,7 +176,7 @@ class nusoap_base
     'timeInstant' => 'string','base64Binary' => 'string','base64' => 'string','ur-type' => 'array'],
     'http://soapinterop.org/xsd' => ['SOAPStruct' => 'struct'],
     'http://schemas.xmlsoap.org/soap/encoding/' => ['base64' => 'string','array' => 'array','Array' => 'array'],
-    'http://xml.apache.org/xml-soap' => ['Map']
+    'http://xml.apache.org/xml-soap' => ['Map'],
     ];
 
     /**
@@ -1841,7 +1841,7 @@ class XMLSchema extends nusoap_base
         'restrictionBase' => $restrictionBase,
         'elements'    => $elements,
         'attrs'        => $attrs,
-        'arrayType'    => $arrayType
+        'arrayType'    => $arrayType,
         ];
 
         $this->xdebug("addComplexType $name:");
@@ -1867,7 +1867,7 @@ class XMLSchema extends nusoap_base
         'typeClass'        => $typeClass,
         'phpType'        => $phpType,
         'type'            => $restrictionBase,
-        'enumeration'    => $enumeration
+        'enumeration'    => $enumeration,
         ];
 
         $this->xdebug("addSimpleType $name:");
@@ -2996,7 +2996,7 @@ class soap_transport_http extends nusoap_base
              'domain' => $domain,
              'path' => $path,
              'expires' => $expires,
-             'secure' => $secure
+             'secure' => $secure,
              ];
             return $cookie;
         }

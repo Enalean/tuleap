@@ -50,7 +50,7 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
         Cardwall_OnTop_ColumnMappingFieldDao $dao,
         Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao,
         TrackerFactory $tracker_factory,
-        array $existing_mappings
+        array $existing_mappings,
     ) {
         parent::__construct($tracker);
         $this->dao               = $dao;

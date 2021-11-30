@@ -60,7 +60,7 @@ if ($svn_preamble != '') {
         'svn_intro_in_plugin' => &$svn_intro_in_plugin,
         'svn_intro_info'      => &$svn_intro_info,
         'group_id'            => $group_id,
-        'user_id'             => $user->getId()
+        'user_id'             => $user->getId(),
     ];
 
     $event_manager->processEvent(Event::SVN_INTRO, $svn_params);

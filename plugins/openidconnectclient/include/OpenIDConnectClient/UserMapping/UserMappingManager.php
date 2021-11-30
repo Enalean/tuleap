@@ -48,7 +48,7 @@ class UserMappingManager
         UserMappingDao $dao,
         UserDao $user_dao,
         CanRemoveUserMappingChecker $can_remove_user_mapping_checker,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->dao                             = $dao;
         $this->user_dao                        = $user_dao;

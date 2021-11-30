@@ -224,7 +224,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             'width'                 => $column['width'],
                             'rank'                  => $column['rank'],
                             'artlink_nature'        => $artlink_nature,
-                            'artlink_nature_format' => $artlink_nature_format
+                            'artlink_nature_format' => $artlink_nature_format,
                         ];
                     }
                 }
@@ -468,7 +468,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $prefill_types,
         $is_reverse,
         $only_rows = false,
-        $from_aid = null
+        $from_aid = null,
     ) {
         $html             = '';
         $total_rows       = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
@@ -1105,7 +1105,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $prefill_types = [],
         $only_rows = false,
         $read_only = false,
-        $from_aid = null
+        $from_aid = null,
     ) {
         $html = '';
         if (! $only_rows) {
@@ -1192,7 +1192,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     if (! $only_one_column) {
                         $params = [
-                            'aid' => $row['id']
+                            'aid' => $row['id'],
                         ];
                         if ($from_aid != null) {
                             $params['from_aid'] = $from_aid;
@@ -1256,7 +1256,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 $types_presenter[]          = [
                                     'shortname'     => $type->shortname,
                                     'forward_label' => $type->forward_label,
-                                    'is_selected'   => $should_select_current_type
+                                    'is_selected'   => $should_select_current_type,
                                 ];
 
                                 if ($is_parent_selector_displayed) {
@@ -1269,7 +1269,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     $types_presenter[]          = [
                                         'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
                                         'forward_label' => $type->reverse_label,
-                                        'is_selected'   => $should_select_current_type
+                                        'is_selected'   => $should_select_current_type,
                                     ];
                                 }
                             }
@@ -1280,7 +1280,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     $types_presenter[] = [
                                         'shortname'     => $type->shortname,
                                         'forward_label' => $type->forward_label,
-                                        'is_selected'   => true
+                                        'is_selected'   => true,
                                     ];
                                 }
                             }
@@ -1408,7 +1408,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     private function fetchAddAggregatesUsedFunctionsHeader(
         Tracker_FormElement_Field $field,
         array $used_aggregates,
-        array $results
+        array $results,
     ) {
         if (! isset($used_aggregates[$field->getId()])) {
             return '';
@@ -1452,7 +1452,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     private function fetchAddAggregatesUsedFunctionsValue(
         Tracker_FormElement_Field $field,
         array $used_aggregates,
-        array $results
+        array $results,
     ) {
         if (! isset($used_aggregates[$field->getId()])) {
             return '';
@@ -1509,7 +1509,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         Tracker_FormElement_Field $field,
         PFUser $current_user,
         array $used_aggregates,
-        $is_first
+        $is_first,
     ) {
         $aggregate_functions = $field->getAggregateFunctions();
 
@@ -1558,9 +1558,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             'renderer'   => $this->getId(),
             'renderer_table' => [
                 'add_aggregate' => [
-                    $field_id => $function
-                ]
-            ]
+                    $field_id => $function,
+                ],
+            ],
         ];
         return TRACKER_BASE_URL . '/?' . http_build_query($params);
     }
@@ -1948,7 +1948,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     'width'                 => 12,
                                     'rank'                  => $nb_col,
                                     'artlink_nature'        => $artlink_type,
-                                    'artlink_nature_format' => null
+                                    'artlink_nature_format' => null,
                                 ]
                             );
                             $this->report_session->setHasChanged();
@@ -2567,7 +2567,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 'report'                    => $this->report->id,
                 'renderer'                  => $this->id,
                 'func'                      => 'renderer',
-                'renderer_table[resetsort]' => 1
+                'renderer_table[resetsort]' => 1,
             ];
             $html             .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($reset_sort_params) . '">'
                 . '<i class="fa fa-reply"></i> '
@@ -2579,7 +2579,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 'report'                    => $this->report->id,
                 'renderer'                  => $this->id,
                 'func'                      => 'renderer',
-                'renderer_table[multisort]' => 1
+                'renderer_table[multisort]' => 1,
             ];
             $multisort_label  = dgettext('tuleap-tracker', 'Enable multisort');
             if ($this->multisort) {
@@ -2634,7 +2634,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function getJavascriptDependencies()
     {
         return [
-            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates'],
         ];
     }
 

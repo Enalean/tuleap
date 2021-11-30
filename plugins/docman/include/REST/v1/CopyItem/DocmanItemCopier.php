@@ -79,7 +79,7 @@ final class DocmanItemCopier
         EventManager $event_manager,
         ProjectManager $project_manager,
         Docman_LinkVersionFactory $link_version_factory,
-        string $docman_root_path
+        string $docman_root_path,
     ) {
         $this->item_factory             = $item_factory;
         $this->before_copy_visitor      = $before_copy_visitor;
@@ -95,7 +95,7 @@ final class DocmanItemCopier
         DateTimeImmutable $current_time,
         Docman_Folder $destination_folder,
         PFUser $user,
-        DocmanCopyItemRepresentation $representation
+        DocmanCopyItemRepresentation $representation,
     ): CreatedItemRepresentation {
         $item_to_copy_id = $representation->item_id;
         $item_to_copy    = $this->item_factory->getItemFromDb($item_to_copy_id);

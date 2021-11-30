@@ -85,7 +85,7 @@ class ConfigPermissionsSerializerMirrorsTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $this->mirror_mapper->shouldReceive('fetchAllRepositoryMirrors')->with($this->repository)->andReturn(
             [
-                $this->mirror_1
+                $this->mirror_1,
             ]
         );
 

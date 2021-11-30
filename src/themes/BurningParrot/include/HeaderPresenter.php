@@ -216,7 +216,7 @@ class HeaderPresenter
         bool $is_svg_logo_customized,
         InviteBuddiesPresenter $invite_buddies_presenter,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
-        bool $is_a_broken_browser
+        bool $is_a_broken_browser,
     ) {
         $this->date_time_format            = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone               = TimezoneRetriever::getUserTimezone($user);
@@ -273,7 +273,7 @@ class HeaderPresenter
                 ++$index;
                 $this->feedbacks[$index] = [
                     'level'             => $this->convertFeedbackLevel($feedback['level']),
-                    'purified_messages' => []
+                    'purified_messages' => [],
                 ];
                 $old_level               = $feedback['level'];
             }

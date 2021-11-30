@@ -75,7 +75,7 @@ class Dao extends DataAccessObject
     public function store(
         $user_id,
         $group_id,
-        Entry $entry
+        Entry $entry,
     ) {
         $user_id               = $this->da->escapeInt($user_id);
         $group_id              = $this->da->escapeInt($group_id);

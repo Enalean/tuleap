@@ -100,7 +100,7 @@ if ($action == 'permissions_frs_package') {
                 $release    =  [
                     'name' => $name,
                     'package_id' => $package_id,
-                    'date' => $date
+                    'date' => $date,
                 ];
                 if ($validator->isValidForCreation($release, $group_id)) {
                     //frs valid
@@ -142,7 +142,7 @@ if ($action == 'permissions_frs_package') {
                         'name' => $name,
                         'release_id' => $release_id,
                         'package_id' => $package_id,
-                        'date' => $date
+                        'date' => $date,
                     ];
                     if ($validator->isValidForUpdate($release, $group_id)) {
                         //frs valid

@@ -45,7 +45,7 @@ class ArtifactLinkValidator
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
         TypePresenterFactory $type_presenter_factory,
-        ArtifactLinksUsageDao $dao
+        ArtifactLinksUsageDao $dao,
     ) {
         $this->artifact_factory       = $artifact_factory;
         $this->type_presenter_factory = $type_presenter_factory;
@@ -59,7 +59,7 @@ class ArtifactLinkValidator
         $value,
         \Tuleap\Tracker\Artifact\Artifact $artifact,
         Tracker_FormElement_Field_ArtifactLink $field,
-        ArtifactLinkValidationContext $context
+        ArtifactLinkValidationContext $context,
     ): bool {
         if ($value === null || $this->isDataSent($value) === false) {
             return true;
@@ -161,7 +161,7 @@ class ArtifactLinkValidator
     private function isTrackerDeleted(
         Artifact $artifact,
         Tracker_FormElement_Field_ArtifactLink $field,
-        $artifact_id
+        $artifact_id,
     ) {
         if ($artifact->getTracker()->isDeleted()) {
             $GLOBALS['Response']->addFeedback(
@@ -202,7 +202,7 @@ class ArtifactLinkValidator
         Artifact $artifact,
         array $value,
         Tracker_FormElement_Field_ArtifactLink $field,
-        ArtifactLinkValidationContext $context
+        ArtifactLinkValidationContext $context,
     ): bool {
         if ($artifact->getTracker()->isProjectAllowedToUseType() === false || ! isset($value['types'])) {
             return true;

@@ -66,7 +66,7 @@ class SemanticCardPresenter
         \CSRFSynchronizerToken $token,
         $form_url,
         array $card_preview,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->background_color_presenter = $background_color_presenter;
         $this->fields_presenter           = $fields_presenter;
@@ -77,7 +77,7 @@ class SemanticCardPresenter
         $this->back_url                   = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
-                'func'    => 'admin-semantic'
+                'func'    => 'admin-semantic',
             ]
         );
 

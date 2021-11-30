@@ -137,7 +137,7 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
                 'expiration_date'       => $expiration_timestamp,
                 'has_already_been_used' => 0,
                 'pkce_code_challenge'   => null,
-                'oidc_nonce'            => null
+                'oidc_nonce'            => null,
             ],
             $authorization_code_row
         );

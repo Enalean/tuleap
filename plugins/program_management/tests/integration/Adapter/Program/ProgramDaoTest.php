@@ -44,12 +44,12 @@ final class ProgramDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 'submitted_by'             => 143,
                 'submitted_on'             => 1234567890,
                 'use_artifact_permissions' => 0,
-                'per_tracker_artifact_id'  => 1
+                'per_tracker_artifact_id'  => 1,
             ]
         );
         $db->insert('plugin_program_management_program', [
             'program_project_id'           => self::PROGRAM_ID,
-            'program_increment_tracker_id' => self::PROGRAM_INCREMENT_TRACKER_ID
+            'program_increment_tracker_id' => self::PROGRAM_INCREMENT_TRACKER_ID,
         ]);
     }
 

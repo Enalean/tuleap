@@ -42,7 +42,7 @@ final class IterationCreatorChecker
         private VerifyIsIterationTracker $verify_is_iteration,
         private RetrieveVisibleIterationTracker $iteration_tracker_retriever,
         private TimeboxCreatorChecker $timebox_creator_checker,
-        private LogMessage $logger
+        private LogMessage $logger,
     ) {
     }
 
@@ -51,7 +51,7 @@ final class IterationCreatorChecker
         ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
         ConfigurationErrorsCollector $errors_collector,
-        UserReference $user_identifier
+        UserReference $user_identifier,
     ): bool {
         if (! $this->verify_is_iteration->isIterationTracker($tracker->getId())) {
             return true;

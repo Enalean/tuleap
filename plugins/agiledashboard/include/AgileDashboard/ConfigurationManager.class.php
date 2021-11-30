@@ -39,7 +39,7 @@ class AgileDashboard_ConfigurationManager
 
     public function __construct(
         AgileDashboard_ConfigurationDao $dao,
-        Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher
+        Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
     ) {
         $this->dao              = $dao;
         $this->event_dispatcher = $event_dispatcher;
@@ -97,7 +97,7 @@ class AgileDashboard_ConfigurationManager
         $scrum_is_activated,
         $kanban_is_activated,
         $scrum_title,
-        $kanban_title
+        $kanban_title,
     ) {
         $this->dao->updateConfiguration(
             $project_id,

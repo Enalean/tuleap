@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         if ($value != "") {
             $dao_pub_key = new TrackerPublicKeyDao();
@@ -214,7 +214,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
+        $submitted_values = [],
     ) {
         $html = '';
         if (
@@ -238,7 +238,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
      */
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null,
     ) {
         if (isset($value) === false || $value->getValue() === '') {
             return $this->getNoValueLabel();
@@ -252,7 +252,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     protected function getHiddenArtifactValueForEdition(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return '<div class="tracker_hidden_edition_field" data-field-id="' . $this->getId() . '">' .
             $this->fetchArtifactValue($artifact, $value, $submitted_values) . '</div>';
@@ -280,7 +280,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     protected function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
+        $submitted_values = [],
     ) {
         return "<div class='tracker-form-element-encrypted'>" . $this->fetchArtifactValueReadOnly($artifact, $value) . "</div>" .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);

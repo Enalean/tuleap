@@ -56,7 +56,7 @@ final class LinkToGitFileProcessor
                 'a'  => $node instanceof Image ? 'blob_plain' : 'blob',
                 'hb' => $blob->getCommitRef(),
                 'h'  => $blob->getBlobRef(),
-                'f'  => $blob->getPath()
+                'f'  => $blob->getPath(),
             ]);
 
             $node->setUrl('?' . $query);

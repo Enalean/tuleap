@@ -64,7 +64,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
         OAuth2GrantAccessTokenFromRefreshToken $access_token_from_refresh_token,
         LoggerInterface $logger,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->access_token_grant_error_response_builder = $access_token_grant_error_response_builder;

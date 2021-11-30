@@ -58,19 +58,19 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
         $this->permissions         = [
             ProjectUGroup::ANONYMOUS => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::REGISTERED => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::PROJECT_ADMIN => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
         ];
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);

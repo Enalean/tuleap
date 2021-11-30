@@ -171,7 +171,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $offset                    = 0;
         $limit                     = 50;
         $query_for_active_projects = http_build_query([
-            'limit' => $limit, 'offset' => $offset
+            'limit' => $limit, 'offset' => $offset,
         ]);
 
         $this->getProjectsIdsWithQuery($query_for_active_projects, $limit);
@@ -180,7 +180,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $query_for_deleted_projects = http_build_query([
             'limit'  => $limit,
             'offset' => $offset,
-            'query'  => json_encode(["with_status" => $deleted_status_label])
+            'query'  => json_encode(["with_status" => $deleted_status_label]),
         ]);
 
         $this->getProjectsIdsWithQuery($query_for_deleted_projects, $limit);
@@ -189,7 +189,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $query_for_suspended_projects = http_build_query([
             'limit'  => $limit,
             'offset' => $offset,
-            'query'  => json_encode(["with_status" => $suspended_status_label])
+            'query'  => json_encode(["with_status" => $suspended_status_label]),
         ]);
 
         $this->getProjectsIdsWithQuery($query_for_suspended_projects, $limit);
@@ -423,7 +423,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
     {
         $query = urlencode(
             json_encode([
-                "username" => $user_name
+                "username" => $user_name,
             ])
         );
 

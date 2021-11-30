@@ -118,7 +118,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'f_1' => 'A2',
                     'f_2' => 'B3',
                     'f_3' => 'C1',
-                    'f_4' => 'D1'
+                    'f_4' => 'D1',
                 ],
                 $aff
             )
@@ -132,7 +132,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'f_1' => 'A2',
                     'f_2' => 'B3',
                     'f_3' => 'C2', //C2 cannot access to B3 !
-                    'f_4' => 'D1'
+                    'f_4' => 'D1',
                 ],
                 $aff
             )
@@ -146,7 +146,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'f_1' => ['A1', 'A2'],
                     'f_2' => 'B3',
                     'f_3' => 'C1',
-                    'f_4' => 'D1'
+                    'f_4' => 'D1',
                 ],
                 $aff
             )
@@ -161,7 +161,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'f_1' => ['A1', 'A2'],
                     'f_2' => 'B2',
                     'f_3' => 'C2',
-                    'f_4' => 'D1'
+                    'f_4' => 'D1',
                 ],
                 $aff
             )
@@ -177,7 +177,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'f_1' => 'A1',
                     'f_2' => ['B1', 'B3'],
                     'f_3' => 'C1',
-                    'f_4' => 'D1'
+                    'f_4' => 'D1',
                 ],
                 $aff
             )
@@ -193,7 +193,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'f_1' => 'A1',
                     'f_2' => ['B1', 'B2'], //A1 cannot access to B2 !
                     'f_3' => 'C1',
-                    'f_4' => 'D1'
+                    'f_4' => 'D1',
                 ],
                 $aff
             )

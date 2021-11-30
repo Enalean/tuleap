@@ -36,7 +36,7 @@ class DocmanSettingsTabsPresenterCollection implements Dispatchable
     public function __construct()
     {
         $this->tabs = [
-            new FileUploadTabPresenter()
+            new FileUploadTabPresenter(),
         ];
     }
 

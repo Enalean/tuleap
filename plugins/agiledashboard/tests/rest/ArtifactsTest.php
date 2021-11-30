@@ -42,7 +42,7 @@ class ArtifactsTest extends ArtifactBase
             ["date" => '2017-12-15T23:59:59+01:00', "team_effort" => 20, "total_effort" => 100],
             ["date" => '2017-12-18T23:59:59+01:00', "team_effort" => 30, "total_effort" => 110],
             ["date" => '2017-12-19T23:59:59+01:00', "team_effort" => 30, "total_effort" => 110],
-            ["date" => '2017-12-20T23:59:59+01:00', "team_effort" => 30, "total_effort" => 110]
+            ["date" => '2017-12-20T23:59:59+01:00', "team_effort" => 30, "total_effort" => 110],
         ];
 
         foreach ($burnup['values'] as $field) {

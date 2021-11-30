@@ -37,7 +37,7 @@ final class FeatureAdditionProcessor implements AddFeature
     public function __construct(
         private RetrieveFullArtifact $artifact_retriever,
         private ArtifactLinkUpdater $artifact_link_updater,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 

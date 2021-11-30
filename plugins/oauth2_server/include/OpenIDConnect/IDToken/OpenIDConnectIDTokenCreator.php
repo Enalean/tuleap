@@ -68,7 +68,7 @@ class OpenIDConnectIDTokenCreator
         \DateInterval $date_interval,
         OpenIDConnectSigningKeyFactory $signing_key_factory,
         Sha256 $signer,
-        \UserManager $user_manager
+        \UserManager $user_manager,
     ) {
         $this->sign_in_scope             = $sign_in_scope;
         $this->builder_factory           = $builder_factory;

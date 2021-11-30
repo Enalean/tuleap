@@ -35,7 +35,7 @@ class DashboardWidget
         $content_id,
         $column_id,
         $rank,
-        $is_minimized
+        $is_minimized,
     ) {
         $this->id           = $id;
         $this->name         = $name;

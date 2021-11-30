@@ -63,7 +63,7 @@ final class ImportProperties
         \DateTimeImmutable $create_date,
         \DateTimeImmutable $update_date,
         PFUser $owner,
-        ?string $link_url
+        ?string $link_url,
     ) {
         $this->title        = $title;
         $this->description  = $description;
@@ -80,7 +80,7 @@ final class ImportProperties
         string $link_url,
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
-        PFUser $owner
+        PFUser $owner,
     ): self {
         return new self(
             $title,
@@ -98,7 +98,7 @@ final class ImportProperties
         string $description,
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
-        PFUser $owner
+        PFUser $owner,
     ): self {
         return new self(
             $title,
@@ -116,7 +116,7 @@ final class ImportProperties
         string $description,
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
-        PFUser $owner
+        PFUser $owner,
     ): self {
         return new self(
             $title,
@@ -134,7 +134,7 @@ final class ImportProperties
         string $description,
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
-        PFUser $owner
+        PFUser $owner,
     ): self {
         return new self(
             $title,
@@ -152,7 +152,7 @@ final class ImportProperties
         string $description,
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
-        PFUser $owner
+        PFUser $owner,
     ): self {
         return new self(
             $title,

@@ -34,7 +34,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
 
     public function __construct(
         PlanningV2PaneInfo $info,
-        AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter $presenter
+        AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter $presenter,
     ) {
         $this->info      = $info;
         $this->presenter = $presenter;

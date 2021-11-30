@@ -103,7 +103,7 @@ final class SemanticTimeframeDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::$first_timeframe_using_end_date_tracker_id,
                 self::$second_timeframe_using_end_date_tracker_id,
                 self::$first_timeframe_using_duration_tracker_id,
-                self::$second_timeframe_using_duration_tracker_id
+                self::$second_timeframe_using_duration_tracker_id,
             ]
         );
         $db->delete('tracker_semantic_timeframe', $tracker_ids_statement);
@@ -118,7 +118,7 @@ final class SemanticTimeframeDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::$first_timeframe_using_duration_tracker_id,
                 self::$second_timeframe_using_duration_tracker_id,
                 self::$first_timeframe_using_end_date_tracker_id,
-                self::$second_timeframe_using_end_date_tracker_id
+                self::$second_timeframe_using_end_date_tracker_id,
             ]
         );
         $db->delete('tracker', $tracker_ids_statement);
@@ -152,7 +152,7 @@ final class SemanticTimeframeDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                     self::$first_timeframe_using_duration_tracker_id,
                     self::$second_timeframe_using_duration_tracker_id,
                     self::$first_timeframe_using_end_date_tracker_id,
-                    self::$second_timeframe_using_end_date_tracker_id
+                    self::$second_timeframe_using_end_date_tracker_id,
                 ]
             )
         );

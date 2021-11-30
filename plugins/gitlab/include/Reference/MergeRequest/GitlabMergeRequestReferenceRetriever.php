@@ -39,7 +39,7 @@ class GitlabMergeRequestReferenceRetriever
 
     public function getGitlabMergeRequestInRepositoryWithId(
         GitlabRepositoryIntegration $repository_integration,
-        int $merge_request_id
+        int $merge_request_id,
     ): ?GitlabMergeRequest {
         $row = $this->merge_request_tuleap_reference_dao->searchMergeRequestInRepositoryWithId(
             $repository_integration->getId(),

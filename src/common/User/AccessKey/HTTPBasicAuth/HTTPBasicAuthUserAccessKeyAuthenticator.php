@@ -53,7 +53,7 @@ class HTTPBasicAuthUserAccessKeyAuthenticator
         SplitTokenIdentifierTranslator $access_key_identifier_unserializer,
         AccessKeyVerifier $access_key_verifier,
         AuthenticationScope $authentication_scope,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->access_key_identifier_unserializer = $access_key_identifier_unserializer;
         $this->access_key_verifier                = $access_key_verifier;

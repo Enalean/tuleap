@@ -105,8 +105,8 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             [
                 $field_id => [
                     'ugroups' => [
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 
@@ -132,14 +132,14 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                     'ugroups' => [
                         [
                             'ugroup' => [
-                                'id' => ProjectUGroup::ANONYMOUS
+                                'id' => ProjectUGroup::ANONYMOUS,
                             ],
                             'permissions' => [
-                                Tracker_FormElement::PERMISSION_READ => 1
-                            ]
-                        ]
-                    ]
-                ]
+                                Tracker_FormElement::PERMISSION_READ => 1,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -168,14 +168,14 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                     'ugroups' => [
                         [
                             'ugroup' => [
-                                'id' => ProjectUGroup::ANONYMOUS
+                                'id' => ProjectUGroup::ANONYMOUS,
                             ],
                             'permissions' => [
-                                Tracker_FormElement::PERMISSION_SUBMIT => 1
-                            ]
-                        ]
-                    ]
-                ]
+                                Tracker_FormElement::PERMISSION_SUBMIT => 1,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -204,14 +204,14 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                     'ugroups' => [
                         [
                             'ugroup' => [
-                                'id' => ProjectUGroup::ANONYMOUS
+                                'id' => ProjectUGroup::ANONYMOUS,
                             ],
                             'permissions' => [
-                                Tracker_FormElement::PERMISSION_UPDATE => 1
-                            ]
-                        ]
-                    ]
-                ]
+                                Tracker_FormElement::PERMISSION_UPDATE => 1,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -238,14 +238,14 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                     'ugroups' => [
                         [
                             'ugroup' => [
-                                'id' => ProjectUGroup::ANONYMOUS
+                                'id' => ProjectUGroup::ANONYMOUS,
                             ],
                             'permissions' => [
-                                Tracker_FormElement::PERMISSION_UPDATE => 1
-                            ]
-                        ]
-                    ]
-                ]
+                                Tracker_FormElement::PERMISSION_UPDATE => 1,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -275,14 +275,14 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                     'ugroups' => [
                         [
                             'ugroup' => [
-                                'id' => ProjectUGroup::ANONYMOUS
+                                'id' => ProjectUGroup::ANONYMOUS,
                             ],
                             'permissions' => [
-                                Tracker_FormElement::PERMISSION_UPDATE => 1
-                            ]
-                        ]
-                    ]
-                ]
+                                Tracker_FormElement::PERMISSION_UPDATE => 1,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -327,32 +327,32 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                     'ugroups' => [
                         [
                             'ugroup' => [
-                                'id' => ProjectUGroup::ANONYMOUS
+                                'id' => ProjectUGroup::ANONYMOUS,
                             ],
                             'permissions' => [
-                                Tracker_FormElement::PERMISSION_READ => 1
-                            ]
+                                Tracker_FormElement::PERMISSION_READ => 1,
+                            ],
                         ],
                         [
                             'ugroup' => [
-                                'id' => ProjectUGroup::PROJECT_MEMBERS
+                                'id' => ProjectUGroup::PROJECT_MEMBERS,
                             ],
                             'permissions' => [
                                 Tracker_FormElement::PERMISSION_SUBMIT => 1,
                                 Tracker_FormElement::PERMISSION_UPDATE => 1,
-                            ]
+                            ],
                         ],
                         [
                             'ugroup' => [
-                                'id' => $developers_id
+                                'id' => $developers_id,
                             ],
                             'permissions' => [
                                 Tracker_FormElement::PERMISSION_SUBMIT => 1,
                                 Tracker_FormElement::PERMISSION_UPDATE => 1,
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 

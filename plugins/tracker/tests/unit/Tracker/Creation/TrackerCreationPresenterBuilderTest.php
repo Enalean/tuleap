@@ -251,7 +251,7 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $expected_template                  = new TrackerCreationPresenter(
             [
                 new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
-                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange')
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange'),
             ],
             [],
             $expected_list_of_existing_trackers,
@@ -278,14 +278,14 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                     'id'          => '1',
                     'name'        => 'request',
                     'description' => 'Description',
-                    'color'       => 'peggy-pink'
+                    'color'       => 'peggy-pink',
                 ],
                 [
                     'id'          => '2',
                     'name'        => 'stories',
                     'description' => 'Description',
-                    'color'       => 'sherwood-green'
-                ]
+                    'color'       => 'sherwood-green',
+                ],
             ]
         );
         $this->pending_jira_dao->shouldReceive('searchByProjectId')->with(101)->andReturn([]);
@@ -314,7 +314,7 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             ->with('101', $this->current_user)
             ->andReturn([
                 $tracker_user_not_admin,
-                $tracker_user_admin
+                $tracker_user_admin,
             ]);
 
         $tracker_bugs  = new TrackerTemplatesRepresentation('1', 'request', 'Description', 'peggy-pink');
@@ -331,22 +331,22 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                     'id'          => '1',
                     'name'        => 'Bugs',
                     'description' => 'Description',
-                    'item_name'   => 'bugz'
+                    'item_name'   => 'bugz',
                 ],
                 [
                     'id'          => '2',
                     'name'        => 'Epics',
                     'description' => 'Description',
-                    'item_name'   => 'epico'
-                ]
+                    'item_name'   => 'epico',
+                ],
             ]
         );
         $this->pending_jira_dao->shouldReceive('searchByProjectId')->with(104)->andReturn(
             [
                 [
                     'tracker_name'      => 'Pending tracker from Jira',
-                    'tracker_shortname' => 'from_jira'
-                ]
+                    'tracker_shortname' => 'from_jira',
+                ],
             ]
         );
 
@@ -364,10 +364,10 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                         'id' => 4,
                         'name' => 'MyAwesomeTracker',
                         'description' => 'Description',
-                        'tlp_color' => 'red-wine'
-                    ]
-                ]
-            ]
+                        'tlp_color' => 'red-wine',
+                    ],
+                ],
+            ],
         ];
 
         $this->jira_runner->shouldReceive(['canBeProcessedAsynchronously' => true]);
@@ -393,7 +393,7 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         return [
             'colors_names' => TrackerColor::COLOR_NAMES,
-            'default_color' => TrackerColor::default()->getName()
+            'default_color' => TrackerColor::default()->getName(),
         ];
     }
 }

@@ -154,7 +154,7 @@ class BurndownFieldDao extends SpecificPropertiesDao
     public function getBurndownInformationBasedOnDuration(
         int $artifact_id,
         int $start_date_field_id,
-        int $duration_field_id
+        int $duration_field_id,
     ) {
         $artifact_id         = $this->da->escapeInt($artifact_id);
         $start_date_field_id = $this->da->escapeInt($start_date_field_id);
@@ -220,7 +220,7 @@ class BurndownFieldDao extends SpecificPropertiesDao
     public function getBurndownInformationBasedOnEndDate(
         int $artifact_id,
         int $start_date_field_id,
-        int $end_date_field_id
+        int $end_date_field_id,
     ) {
         $artifact_id         = $this->da->escapeInt($artifact_id);
         $start_date_field_id = $this->da->escapeInt($start_date_field_id);

@@ -54,7 +54,7 @@ class RepositoryPermissionSimpleRepresentation
         string $url,
         array $readers,
         array $writers,
-        array $rewinders
+        array $rewinders,
     ) {
         $this->has_fined_grained_permissions = false;
         $this->readers                       = $readers;

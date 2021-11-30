@@ -51,7 +51,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         private BuildProgram $build_program,
         private TopBacklogChangeProcessor $top_backlog_change_processor,
         private SearchByWorkflow $search_by_workflow,
-        private CreatePostAction $create_post_action
+        private CreatePostAction $create_post_action,
     ) {
     }
 
@@ -84,7 +84,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
                         $this->cache[$workflow_id][$transition_id],
                         $this->build_program,
                         $this->top_backlog_change_processor
-                    )
+                    ),
                 ];
             }
             return [];
@@ -106,7 +106,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
                     $row['id'],
                     $this->build_program,
                     $this->top_backlog_change_processor
-                )
+                ),
             ];
         }
 

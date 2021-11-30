@@ -36,14 +36,14 @@ final class SemanticsVerifier implements VerifySemanticsAreConfigured
         private \Tracker_Semantic_TitleDao $semantic_title_dao,
         private \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         private SemanticTimeframeDao $semantic_timeframe_dao,
-        private VerifyStatusIsAligned $status_verifier
+        private VerifyStatusIsAligned $status_verifier,
     ) {
     }
 
     public function areTrackerSemanticsWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,
-        ConfigurationErrorsCollector $configuration_errors
+        ConfigurationErrorsCollector $configuration_errors,
     ): bool {
         $tracker_ids = $source_tracker_collection->getSourceTrackerIds();
 
@@ -123,7 +123,7 @@ final class SemanticsVerifier implements VerifySemanticsAreConfigured
         ConfigurationErrorsCollector $configuration_errors,
         array $trackers,
         string $semantic_name,
-        string $semantic_shortname
+        string $semantic_shortname,
     ): void {
         $configuration_errors->addSemanticError($semantic_name, $semantic_shortname, $trackers);
     }

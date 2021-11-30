@@ -63,7 +63,7 @@ class AgileDashboard_XMLImporter
                 PlanningParameters::BACKLOG_TITLE       => (string) $attributes[PlanningParameters::BACKLOG_TITLE],
                 PlanningParameters::PLANNING_TITLE      => (string) $attributes[PlanningParameters::PLANNING_TITLE],
                 PlanningParameters::PLANNING_TRACKER_ID => (string) $planning_tracker_id,
-                PlanningParameters::BACKLOG_TRACKER_IDS => $this->toArrayBacklogIds($planning, $tracker_mappings)
+                PlanningParameters::BACKLOG_TRACKER_IDS => $this->toArrayBacklogIds($planning, $tracker_mappings),
             ];
 
             foreach ($this->toArrayPermissions($planning) as $permission_name => $ugroups) {

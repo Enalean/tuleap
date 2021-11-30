@@ -40,7 +40,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
         \Tracker $current_tracker,
         IComputeTimeframes $i_compute_timeframes,
         SemanticTimeframeDao $dao,
-        \TrackerFactory $tracker_factory
+        \TrackerFactory $tracker_factory,
     ) {
         $this->current_tracker      = $current_tracker;
         $this->i_compute_timeframes = $i_compute_timeframes;
@@ -82,9 +82,9 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
                     [
                         'tracker' => $tracker->getId(),
                         'func' => 'admin-semantic',
-                        'semantic' => 'timeframe'
+                        'semantic' => 'timeframe',
                     ]
-                )
+                ),
             ];
         }
 

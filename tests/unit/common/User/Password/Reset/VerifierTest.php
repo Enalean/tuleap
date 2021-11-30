@@ -35,7 +35,7 @@ final class VerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('getTokenInformationById')->andReturns([
             'verifier'      => 'token_verification_part_password_hashed',
             'user_id'       => 101,
-            'creation_date' => $creation_date->getTimestamp()
+            'creation_date' => $creation_date->getTimestamp(),
         ]);
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
@@ -104,7 +104,7 @@ final class VerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('getTokenInformationById')->andReturns([
             'verifier'      => 'token_verification_part_password_hashed',
             'user_id'       => 101,
-            'creation_date' => $expired_creation_date->getTimestamp()
+            'creation_date' => $expired_creation_date->getTimestamp(),
         ]);
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);

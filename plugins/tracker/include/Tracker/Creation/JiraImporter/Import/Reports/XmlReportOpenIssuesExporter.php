@@ -41,7 +41,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
 
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
-        XmlReportTableExporter $report_table_exporter
+        XmlReportTableExporter $report_table_exporter,
     ) {
         $this->default_criteria_exporter = $default_criteria_exporter;
         $this->report_table_exporter     = $report_table_exporter;
@@ -56,7 +56,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $priority_field,
         ?FieldMapping $link_field,
         ?FieldMapping $created_field,
-        ?FieldMapping $updated_field
+        ?FieldMapping $updated_field,
     ): void {
         if (! $status_field) {
             return;
@@ -70,7 +70,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
             [
                $summary_field,
                $description_field,
-               $priority_field
+               $priority_field,
             ]
         );
 
@@ -78,7 +78,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
             $summary_field,
             $status_field,
             $link_field,
-            $priority_field
+            $priority_field,
         ]);
 
         $this->exportOpenIssuesCriteria(
@@ -101,7 +101,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
         SimpleXMLElement $criterias_node,
         array $field_mappings,
         FieldMapping $status_field,
-        StatusValuesCollection $status_values_collection
+        StatusValuesCollection $status_values_collection,
     ): void {
         $criteria_node = $criterias_node->addChild('criteria');
 

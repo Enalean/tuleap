@@ -524,7 +524,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new FieldCalculator(new BurndownCalculator(new ComputedFieldDao())),
                     new ComputedFieldDaoCache(new ComputedFieldDao()),
                     BackendLogger::getDefaultLogger(),
-                    new BurndownCacheDateRetriever()
+                    new BurndownCacheDateRetriever(),
                 ];
                 break;
             case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME:
@@ -536,7 +536,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new FieldCalculator(new BurndownCalculator(new ComputedFieldDao())),
                     new ComputedFieldDaoCache(new ComputedFieldDao()),
                     BackendLogger::getDefaultLogger(),
-                    new BurndownCacheDateRetriever()
+                    new BurndownCacheDateRetriever(),
                 ];
                 break;
             default:
@@ -897,7 +897,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->removeOrphanWidgets([
             Tracker_Widget_MyArtifacts::ID,
             Tracker_Widget_MyRenderer::ID,
-            Tracker_Widget_ProjectRenderer::ID
+            Tracker_Widget_ProjectRenderer::ID,
         ]);
     }
 
@@ -1402,7 +1402,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         PFUser $user,
         $can_bypass_threshold,
         ArchiveInterface $archive,
-        SimpleXMLElement $into_xml
+        SimpleXMLElement $into_xml,
     ) {
         $tracker_id = $options['tracker_id'];
         $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
@@ -1482,7 +1482,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             'label'       => dgettext('tuleap-tracker', 'Configure trackers'),
             'uri'         => TRACKER_BASE_URL . '/?group_id=' . (int) $template->getID(),
             'is_disabled' => ! $is_service_used,
-            'title'       => ! $is_service_used ? dgettext('tuleap-tracker', 'This template does not use trackers') : ''
+            'title'       => ! $is_service_used ? dgettext('tuleap-tracker', 'This template does not use trackers') : '',
         ];
     }
 

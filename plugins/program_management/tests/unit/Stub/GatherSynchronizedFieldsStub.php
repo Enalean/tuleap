@@ -41,7 +41,7 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         private RetrieveStatusFieldStub $status_stub,
         private RetrieveStartDateFieldStub $start_date_stub,
         private RetrieveEndPeriodFieldStub $end_period_stub,
-        private RetrieveArtifactLinkFieldStub $artifact_link_stub
+        private RetrieveArtifactLinkFieldStub $artifact_link_stub,
     ) {
     }
 
@@ -139,7 +139,7 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
 
     public function getArtifactLinkField(
         TrackerIdentifier $program_increment,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): ArtifactLinkFieldReference {
         return $this->artifact_link_stub->getArtifactLinkField($program_increment, $errors_collector);
     }

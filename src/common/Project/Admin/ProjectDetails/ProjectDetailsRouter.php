@@ -34,7 +34,7 @@ class ProjectDetailsRouter
     private $project_details_controller;
 
     public function __construct(
-        ProjectDetailsController $project_details_controller
+        ProjectDetailsController $project_details_controller,
     ) {
         $this->project_details_controller = $project_details_controller;
     }

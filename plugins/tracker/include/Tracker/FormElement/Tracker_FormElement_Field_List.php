@@ -414,7 +414,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function setCriteriaValueFromXML(
         Tracker_Report_Criteria $criteria,
         SimpleXMLElement $xml_criteria_value,
-        array $xml_field_mapping
+        array $xml_field_mapping,
     ) {
         if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
             return;
@@ -563,7 +563,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         int $id,
         string $selected,
         array $styles,
-        string $label
+        string $label,
     ): string {
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -680,7 +680,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $values          = $submitted_values[$this->id] ?? [];
         $selected_values = $value ? $value->getListValues() : [];
@@ -709,7 +709,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         $output = '';
         switch ($format) {
@@ -768,7 +768,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
@@ -1187,7 +1187,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function fetchCardValue(
         Artifact $artifact,
-        ?Tracker_CardDisplayPreferences $display_preferences = null
+        ?Tracker_CardDisplayPreferences $display_preferences = null,
     ) {
         $html = '';
         //We have to fetch all values of the changeset as we are a list of value
@@ -1248,7 +1248,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         SimpleXMLElement $parent_node,
         array &$xmlMapping,
         bool $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ): SimpleXMLElement {
         $node = parent::exportToXML($parent_node, $xmlMapping, $project_export_context, $user_xml_exporter);
         if ($this->getBind() && $this->shouldBeBindXML()) {
@@ -1281,7 +1281,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $xml,
         &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        TrackerXmlImportFeedbackCollector $feedback_collector
+        TrackerXmlImportFeedbackCollector $feedback_collector,
     ) {
         parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
         // if field is a list add bind
@@ -1329,7 +1329,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         return $this->getValueDao()->create($changeset_value_id, $value);
     }

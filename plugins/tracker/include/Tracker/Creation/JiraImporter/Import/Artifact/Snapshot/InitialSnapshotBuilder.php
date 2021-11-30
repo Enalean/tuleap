@@ -50,7 +50,7 @@ class InitialSnapshotBuilder
 
     public function __construct(
         LoggerInterface $logger,
-        ListFieldChangeInitialValueRetriever $list_field_change_value_retriever
+        ListFieldChangeInitialValueRetriever $list_field_change_value_retriever,
     ) {
         $this->logger                            = $logger;
         $this->list_field_change_value_retriever = $list_field_change_value_retriever;
@@ -67,7 +67,7 @@ class InitialSnapshotBuilder
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentation $issue_api_representation,
         AttachmentCollection $attachment_collection,
-        string $jira_base_url
+        string $jira_base_url,
     ): Snapshot {
         $already_parsed_fields_keys = [];
         $field_snapshots            = [];
@@ -127,7 +127,7 @@ class InitialSnapshotBuilder
         AttachmentCollection $attachment_collection,
         FieldMappingCollection $jira_field_mapping_collection,
         array &$field_snapshots,
-        array &$already_parsed_fields_keys
+        array &$already_parsed_fields_keys,
     ): void {
         $already_parsed_fields_keys[AlwaysThereFieldsExporter::JIRA_ATTACHMENT_NAME] = true;
 
@@ -163,7 +163,7 @@ class InitialSnapshotBuilder
     private function getAttachmentsIdsAddedInHistory(
         array $changelog_entries,
         FieldMapping $jira_attachment_field_mapping,
-        array $attachment_ids
+        array $attachment_ids,
     ): array {
         $attachment_ids_added_in_history = [];
         foreach ($changelog_entries as $changelog_entry) {
@@ -183,7 +183,7 @@ class InitialSnapshotBuilder
     private function retrieveFieldsNotModifiedSinceIssueCreation(
         Snapshot $current_snapshot,
         array &$field_snapshots,
-        array &$already_parsed_fields_keys
+        array &$already_parsed_fields_keys,
     ): void {
         foreach ($current_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             $jira_field_id = $field_snapshot->getFieldMapping()->getJiraFieldId();
@@ -204,7 +204,7 @@ class InitialSnapshotBuilder
         ChangelogEntryValueRepresentation $changelog_entry,
         Snapshot $current_snapshot,
         array &$field_snapshots,
-        array &$already_parsed_fields_keys
+        array &$already_parsed_fields_keys,
     ): void {
         foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
             $changed_field_id       = $changed_field->getFieldId();
@@ -262,7 +262,7 @@ class InitialSnapshotBuilder
         array &$field_snapshots,
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentation $issue_api_representation,
-        string $jira_base_url
+        string $jira_base_url,
     ): void {
         $jira_link_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
         if ($jira_link_field_mapping === null) {
@@ -281,7 +281,7 @@ class InitialSnapshotBuilder
 
     private function mustFieldBeCheckedInChangelog(
         ?FieldSnapshot $current_snapshot_field,
-        array $already_parsed_fields_keys
+        array $already_parsed_fields_keys,
     ): bool {
         return $current_snapshot_field !== null &&
             ! array_key_exists($current_snapshot_field->getFieldMapping()->getJiraFieldId(), $already_parsed_fields_keys);

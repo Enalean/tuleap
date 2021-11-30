@@ -48,7 +48,7 @@ class Docman_MIMETypeDetector
         '.pptm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
         '.potm' => 'application/vnd.ms-powerpoint.template.macroEnabled.12',
         '.ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
-        '.xps'  => 'application/vnd.ms-xpsdocument'
+        '.xps'  => 'application/vnd.ms-xpsdocument',
     ];
 
     /**

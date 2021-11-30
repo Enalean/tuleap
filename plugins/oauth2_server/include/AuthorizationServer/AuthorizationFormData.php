@@ -70,7 +70,7 @@ final class AuthorizationFormData
         ?string $state,
         ?string $pkce_code_challenge,
         ?string $oidc_nonce,
-        AuthenticationScope ...$scopes
+        AuthenticationScope ...$scopes,
     ) {
         $this->app                 = $app;
         $this->csrf_token          = $csrf_token;

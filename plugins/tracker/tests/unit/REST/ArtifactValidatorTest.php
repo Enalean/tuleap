@@ -114,20 +114,20 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
     {
         $values = [
             'integer' => [
-               'value' => 42
+               'value' => 42,
             ],
             'floatibulle' => [
-                'value' => 3.14
+                'value' => 3.14,
             ],
             'string' => [
-                'value' => 'My text'
+                'value' => 'My text',
             ],
             'text' => [
                 'value' => [
                     'format'  => 'text',
-                    'content' => 'My awesome text'
-                ]
-            ]
+                    'content' => 'My awesome text',
+                ],
+            ],
         ];
 
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
@@ -143,7 +143,7 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
             3 => 'My text',
             4 => [
                 'format'  => 'text',
-                'content' => 'My awesome text'
+                'content' => 'My awesome text',
             ],
         ];
 
@@ -158,8 +158,8 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
             'string'      => 'My text',
             'text'        => [
                 'format'  => 'text',
-                'content' => 'My awesome text'
-            ]
+                'content' => 'My awesome text',
+            ],
         ];
 
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
@@ -175,7 +175,7 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
     public function testItThrowsAnExceptionIfFieldIsNotAlphaNumeric(): void
     {
         $values = [
-            'msb' => ['whatever']
+            'msb' => ['whatever'],
         ];
 
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'msb')->andReturns($this->field_msb);

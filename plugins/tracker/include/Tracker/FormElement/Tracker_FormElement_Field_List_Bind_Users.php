@@ -215,19 +215,19 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                     case 'group_members':
                         $ugroups[] = [
                             self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                            self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
+                            self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS'])),
                         ];
                         break;
                     case 'group_admins':
                         $ugroups[] = [
                             self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_ADMIN'],
-                            self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
+                            self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN'])),
                         ];
                         break;
                     case 'artifact_submitters':
                         $ugroups[] = [
                             self::REST_BINDING_LIST_ID    => 0,
-                            self::REST_BINDING_LIST_LABEL => $ugroup
+                            self::REST_BINDING_LIST_LABEL => $ugroup,
                         ];
                         break;
                     default:
@@ -732,7 +732,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         SimpleXMLElement $root,
         &$xmlMapping,
         $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ) {
         if ($this->value_function) {
             $child = $root->addChild('items');

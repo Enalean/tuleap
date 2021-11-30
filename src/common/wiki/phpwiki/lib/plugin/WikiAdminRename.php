@@ -60,7 +60,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
                      's'     => false,
                      /* Columns to include in listing */
                      'info'     => 'pagename,mtime',
-                     'updatelinks' => 0
+                     'updatelinks' => 0,
             ]
         );
     }

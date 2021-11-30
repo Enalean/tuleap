@@ -47,7 +47,7 @@ class PreferencePresenter
         string $selected_default_timescale,
         ?int $selected_lvl1_iteration_tracker_id,
         ?int $selected_lvl2_iteration_tracker_id,
-        array $trackers
+        array $trackers,
     ) {
         $this->widget_id = $widget_id;
         $this->title     = $title;

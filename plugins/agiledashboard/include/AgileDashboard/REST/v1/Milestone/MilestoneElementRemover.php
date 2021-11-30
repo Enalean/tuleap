@@ -46,7 +46,7 @@ class MilestoneElementRemover
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        \Tracker_ArtifactFactory $artifact_factory
+        \Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;

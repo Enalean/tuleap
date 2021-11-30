@@ -45,7 +45,7 @@ final class IterationUpdateEventProxy implements IterationUpdateEvent
     private function __construct(
         private IterationIdentifier $iteration,
         private UserIdentifier $user,
-        private ChangesetIdentifier $changeset
+        private ChangesetIdentifier $changeset,
     ) {
     }
 
@@ -55,7 +55,7 @@ final class IterationUpdateEventProxy implements IterationUpdateEvent
         VerifyIsIteration $iteration_verifier,
         VerifyIsChangeset $changeset_verifier,
         VerifyIsVisibleArtifact $artifact_visibility_verifier,
-        WorkerEvent $event
+        WorkerEvent $event,
     ): ?self {
         $event_name = $event->getEventName();
         if ($event_name !== self::TOPIC) {

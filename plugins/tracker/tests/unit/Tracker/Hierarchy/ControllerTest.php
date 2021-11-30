@@ -82,7 +82,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $possible_children = [
             '11' => $this->getTrackerWithIdAndName(11, 'Bugs'),
-            '22' => $this->getTrackerWithIdAndName(22, 'Tasks')
+            '22' => $this->getTrackerWithIdAndName(22, 'Tasks'),
         ];
 
         $this->factory->shouldReceive('getPossibleChildren')->with($this->hierarchical_tracker)
@@ -96,7 +96,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->assertEquals(
             [
                 ['id' => 11, 'name' => 'Bugs', 'selected' => false],
-                ['id' => 22, 'name' => 'Tasks', 'selected' => false]
+                ['id' => 22, 'name' => 'Tasks', 'selected' => false],
             ],
             $possible_children
         );
@@ -129,9 +129,9 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
                 'id' => $sprints_id,
                 'current_class' => '',
                 'children' => [
-                    ['name' => 'Stories', 'id' => $stories_id, 'current_class' => '', 'children' => []]
-                ]
-            ]
+                    ['name' => 'Stories', 'id' => $stories_id, 'current_class' => '', 'children' => []],
+                ],
+            ],
         ];
         $this->factory->shouldReceive('getPossibleChildren')->andReturns([]);
         $this->factory->shouldReceive('getHierarchy')->once()->andReturns(

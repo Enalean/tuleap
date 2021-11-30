@@ -40,7 +40,7 @@ final class ProgramIncrementCreationDispatcher implements DispatchProgramIncreme
     public function __construct(
         private LoggerInterface $logger,
         private QueueFactory $queue_factory,
-        private BuildProgramIncrementCreationProcessor $processor_builder
+        private BuildProgramIncrementCreationProcessor $processor_builder,
     ) {
     }
 
@@ -53,7 +53,7 @@ final class ProgramIncrementCreationDispatcher implements DispatchProgramIncreme
                 [
                     'artifact_id'  => $creation->getProgramIncrement()->getId(),
                     'user_id'      => $creation->getUser()->getId(),
-                    'changeset_id' => $creation->getChangeset()->getId()
+                    'changeset_id' => $creation->getChangeset()->getId(),
                 ]
             );
         } catch (NoQueueSystemAvailableException | QueueServerConnectionException $exception) {

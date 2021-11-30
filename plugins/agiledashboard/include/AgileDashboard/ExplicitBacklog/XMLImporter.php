@@ -53,7 +53,7 @@ class XMLImporter
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
-        UnplannedArtifactsAdder $unplanned_artifacts_adder
+        UnplannedArtifactsAdder $unplanned_artifacts_adder,
     ) {
         $this->explicit_backlog_dao                = $explicit_backlog_dao;
         $this->top_backlog_elements_to_add_checker = $top_backlog_elements_to_add_checker;
@@ -75,7 +75,7 @@ class XMLImporter
         Project $project,
         PFUser $user,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ): void {
         if (! isset($xml->top_backlog)) {
             return;

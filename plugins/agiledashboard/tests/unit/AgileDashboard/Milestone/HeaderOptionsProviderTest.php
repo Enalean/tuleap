@@ -89,7 +89,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'getArtifactTitle' => 'Milestone title',
                     'getPlanningId' => 69,
-                    'getArtifactId' => 42
+                    'getArtifactId' => 42,
                 ]
             )->getMock();
 
@@ -151,7 +151,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'getId'                 => 101,
                     'getItemName'           => 'epic',
-                    'userCanSubmitArtifact' => true
+                    'userCanSubmitArtifact' => true,
                 ]
             )
             ->getMock();
@@ -164,7 +164,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'getId'                 => 102,
                     'getItemName'           => 'story',
-                    'userCanSubmitArtifact' => true
+                    'userCanSubmitArtifact' => true,
                 ]
             )
             ->getMock();
@@ -177,7 +177,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'getId'                 => 103,
                     'getItemName'           => 'req',
-                    'userCanSubmitArtifact' => false
+                    'userCanSubmitArtifact' => false,
                 ]
             )
             ->getMock();
@@ -190,7 +190,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'getId'                 => 104,
                     'getItemName'           => 'task',
-                    'userCanSubmitArtifact' => true
+                    'userCanSubmitArtifact' => true,
                 ]
             )
             ->getMock();
@@ -203,7 +203,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'getId'                 => 105,
                     'getItemName'           => 'top',
-                    'userCanSubmitArtifact' => false
+                    'userCanSubmitArtifact' => false,
                 ]
             )
             ->getMock();
@@ -229,7 +229,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'getId'                 => 101,
                     'getItemName'           => 'epic',
-                    'userCanSubmitArtifact' => true
+                    'userCanSubmitArtifact' => true,
                 ]
             )
             ->getMock();
@@ -243,7 +243,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getId'                 => 102,
                     'getSubmitUrl'          => '/path/to/102',
                     'getItemName'           => 'story',
-                    'userCanSubmitArtifact' => true
+                    'userCanSubmitArtifact' => true,
                 ]
             )
             ->getMock();
@@ -257,7 +257,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getId'                 => 103,
                     'getSubmitUrl'          => '/path/to/103',
                     'getItemName'           => 'req',
-                    'userCanSubmitArtifact' => false
+                    'userCanSubmitArtifact' => false,
                 ]
             )
             ->getMock();
@@ -271,7 +271,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getId'                 => 104,
                     'getSubmitUrl'          => '/path/to/104',
                     'getItemName'           => 'task',
-                    'userCanSubmitArtifact' => true
+                    'userCanSubmitArtifact' => true,
                 ]
             )
             ->getMock();
@@ -285,7 +285,7 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getId'                 => 105,
                     'getSubmitUrl'          => '/path/to/105',
                     'getItemName'           => 'top',
-                    'userCanSubmitArtifact' => false
+                    'userCanSubmitArtifact' => false,
                 ]
             )
             ->getMock();

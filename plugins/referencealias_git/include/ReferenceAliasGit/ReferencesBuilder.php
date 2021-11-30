@@ -38,7 +38,7 @@ class ReferencesBuilder
 
     public function __construct(
         Dao $dao,
-        GitRepositoryFactory $repository_factory
+        GitRepositoryFactory $repository_factory,
     ) {
         $this->dao                = $dao;
         $this->repository_factory = $repository_factory;
@@ -69,8 +69,8 @@ class ReferencesBuilder
                         (?P<val>[0-9]+)
                     )
                     (?![_A-Za-z0-9])   # ensure the pattern is not folloed by digits or letters
-                /x'
-            ]
+                /x',
+            ],
         ];
     }
 

@@ -90,7 +90,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
     {
         $post_link_body = json_encode([
             'title' => 'Link document to cut',
-            'link_properties' => ['link_url' => 'https://example.com']
+            'link_properties' => ['link_url' => 'https://example.com'],
         ]);
 
         $response_link_creation_with_rest_read_noly_user = $this->getResponse(
@@ -365,7 +365,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
 
@@ -402,7 +402,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -432,7 +432,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'reset'
+                'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -464,7 +464,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'empty'
+                'approval_table_action' => 'empty',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -487,7 +487,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
      * @depends testGetDocumentItemsForAdminUser
      */
     public function testPostVersionItThrowsExceptionWhenUserSetApprovalTableOnItemWithoutApprovalTable(
-        array $items
+        array $items,
     ): void {
         $item_to_update    = $this->findItemByTitle($items, 'POST L V No AT');
         $item_to_update_id = $item_to_update['id'];
@@ -498,7 +498,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'reset'
+                'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -528,7 +528,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -563,7 +563,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -600,7 +600,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 'link_properties'  => ['link_url' => 'https://example.com'],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -634,7 +634,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
             'title'             => 'PUT L New Title',
             'description'       => 'Danger ! Danger !',
             'owner_id'          => $this->test_user_1_id,
-            'status'            => 'none'
+            'status'            => 'none',
         ];
 
         $updated_metadata_file_response_with_rest_read_only_user = $this->getResponse(

@@ -41,7 +41,7 @@ class Docman_View_Admin_Permissions extends Docman_View_Extra
         //}}}
 
         $postUrl = DocmanViewURLBuilder::buildUrl($params['default_url'], [
-            'action' => 'admin_set_permissions'
+            'action' => 'admin_set_permissions',
         ]);
         permission_display_selection_form("PLUGIN_DOCMAN_ADMIN", $params['group_id'], $params['group_id'], $postUrl);
     }

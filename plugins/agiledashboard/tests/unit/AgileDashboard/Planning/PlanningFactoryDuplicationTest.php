@@ -91,7 +91,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             $sprint_tracker_id => $sprint_tracker_copy_id,
             $story_tracker_id  => $story_tracker_copy_id,
             $bug_tracker_id    => $bug_tracker_copy_id,
-            $faq_tracker_id    => $faq_tracker_copy_id
+            $faq_tracker_id    => $faq_tracker_copy_id,
         ];
 
         $rows = [
@@ -101,8 +101,8 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
                 'group_id'            => $group_id,
                 'planning_tracker_id' => $sprint_tracker_id,
                 'backlog_title'       => 'Release Backlog',
-                'plan_title'          => 'Sprint Plan'
-            ]
+                'plan_title'          => 'Sprint Plan',
+            ],
         ];
 
         $this->planning_dao->shouldReceive('searchByMilestoneTrackerIds')->with(
@@ -113,7 +113,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturns(
                 [
-                    ['planning_id' => 1, 'tracker_id' => $story_tracker_id]
+                    ['planning_id' => 1, 'tracker_id' => $story_tracker_id],
                 ]
             );
 
@@ -124,7 +124,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             'backlog_title'       => 'Backlog',
             'plan_title'          => 'Plan',
             'planning_tracker_id' => $sprint_tracker_copy_id,
-            'backlog_tracker_ids' => [$story_tracker_copy_id]
+            'backlog_tracker_ids' => [$story_tracker_copy_id],
         ];
 
         $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns($parameters);
@@ -168,7 +168,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             $sprint_tracker_id => $sprint_tracker_copy_id,
             $story_tracker_id  => $story_tracker_copy_id,
             $bug_tracker_id    => $bug_tracker_copy_id,
-            $faq_tracker_id    => $faq_tracker_copy_id
+            $faq_tracker_id    => $faq_tracker_copy_id,
         ];
 
         $rows = [
@@ -178,8 +178,8 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
                 'group_id'            => $group_id,
                 'planning_tracker_id' => $sprint_tracker_id,
                 'backlog_title'       => 'Release Backlog',
-                'plan_title'          => 'Sprint Plan'
-            ]
+                'plan_title'          => 'Sprint Plan',
+            ],
         ];
 
         $this->planning_dao->shouldReceive('searchByMilestoneTrackerIds')->with(
@@ -188,7 +188,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')->with(1)->andReturns(
             [
-                ['planning_id' => 1, 'tracker_id' => $story_tracker_id]
+                ['planning_id' => 1, 'tracker_id' => $story_tracker_id],
             ]
         );
 
@@ -199,7 +199,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             'backlog_title'       => 'Backlog',
             'plan_title'          => 'Plan',
             'planning_tracker_id' => $sprint_tracker_copy_id,
-            'backlog_tracker_ids' => [$story_tracker_copy_id]
+            'backlog_tracker_ids' => [$story_tracker_copy_id],
         ];
         $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns($parameters);
 
@@ -213,7 +213,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroups_mapping = [
             103 => 113,
-            104 => 114
+            104 => 114,
         ];
 
         $this->planning_permissions_manager->shouldReceive('getGroupIdsWhoHasPermissionOnPlanning')

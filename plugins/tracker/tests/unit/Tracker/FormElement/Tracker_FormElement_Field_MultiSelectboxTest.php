@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesNotAddNoneValueAtArtifactUpdate()
     {
         $fields_data = [
-            'request_method_called' => 'artifact-update'
+            'request_method_called' => 'artifact-update',
         ];
 
         $this->field->augmentDataFromRequest($fields_data);
@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesNotAddNoneValueAtArtifactMasschange()
     {
         $fields_data = [
-            'request_method_called' => 'artifact-masschange'
+            'request_method_called' => 'artifact-masschange',
         ];
 
         $this->field->augmentDataFromRequest($fields_data);
@@ -141,7 +141,7 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesNotAddNoneValueIfUserCannotSubmitFieldAtArtifactCreation()
     {
         $fields_data = [
-            'request_method_called' => 'submit-artifact'
+            'request_method_called' => 'submit-artifact',
         ];
 
         $this->permission_manager->shouldReceive('userHasPermission')
@@ -161,7 +161,7 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\
     public function testItAddsNoneValueIfUserCanUpdateFieldAtArtifactCreation()
     {
         $fields_data = [
-            'request_method_called' => 'submit-artifact'
+            'request_method_called' => 'submit-artifact',
         ];
 
         $this->permission_manager->shouldReceive('userHasPermission')
@@ -195,7 +195,7 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\
     {
         $fields_data = [
             'request_method_called' => 'submit-artifact',
-            1 => [201]
+            1 => [201],
         ];
 
         $this->permission_manager->shouldReceive('userHasPermission')

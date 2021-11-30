@@ -160,7 +160,7 @@ class ReportsResource extends AuthenticatedResource
         bool $with_unsaved_changes = false,
         ?string $values = self::DEFAULT_VALUES,
         int $limit = self::DEFAULT_LIMIT,
-        int $offset = self::DEFAULT_OFFSET
+        int $offset = self::DEFAULT_OFFSET,
     ): array {
         $this->checkAccess();
 

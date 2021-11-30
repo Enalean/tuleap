@@ -45,7 +45,7 @@ class PermissionDeniedPrivateProjectController
     public function __construct(
         ThemeManager $theme_manager,
         PlaceHolderBuilder $place_holder_builder,
-        ErrorDependenciesInjector $dependencies_injector
+        ErrorDependenciesInjector $dependencies_injector,
     ) {
         $this->theme_manager         = $theme_manager;
         $this->dependencies_injector = $dependencies_injector;

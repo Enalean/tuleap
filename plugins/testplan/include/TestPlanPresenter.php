@@ -118,7 +118,7 @@ class TestPlanPresenter
         int $expand_backlog_item_id,
         int $highlight_test_definition_id,
         string $platform_name,
-        string $platform_logo_url
+        string $platform_logo_url,
     ) {
         $this->milestone_presenter          = $milestone_presenter;
         $this->user_display_name            = $user_display_name;

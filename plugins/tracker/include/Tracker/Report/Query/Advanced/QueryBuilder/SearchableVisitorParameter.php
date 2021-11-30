@@ -47,7 +47,7 @@ class SearchableVisitorParameter implements VisitorParameters
         Comparison $comparison,
         FieldComparisonVisitor $field_comparison_visitor,
         Tracker $tracker,
-        MetadataComparisonFromWhereBuilder $metadata_comparison_from_where_builder
+        MetadataComparisonFromWhereBuilder $metadata_comparison_from_where_builder,
     ) {
         $this->comparison                             = $comparison;
         $this->tracker                                = $tracker;

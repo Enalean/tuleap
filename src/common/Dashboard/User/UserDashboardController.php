@@ -91,7 +91,7 @@ class UserDashboardController
         DashboardWidgetPresenterBuilder $widget_presenter_builder,
         WidgetDeletor $widget_deletor,
         WidgetMinimizor $widget_minimizor,
-        AssetsIncluder $assets_includer
+        AssetsIncluder $assets_includer,
     ) {
         $this->csrf                     = $csrf;
         $this->retriever                = $retriever;
@@ -132,7 +132,7 @@ class UserDashboardController
         $purifier = Codendi_HTMLPurifier::instance();
         $GLOBALS['Response']->header([
             'title' => $purifier->purify($title),
-            'body_class' => ['body-user-dashboard', 'reduce-help-button']
+            'body_class' => ['body-user-dashboard', 'reduce-help-button'],
         ]);
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'

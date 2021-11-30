@@ -30,7 +30,7 @@ class Tracker_Action_CreateArtifact
     public function __construct(
         Tracker $tracker,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElementFactory $formelement_factory
+        Tracker_FormElementFactory $formelement_factory,
     ) {
         $this->tracker             = $tracker;
         $this->artifact_factory    = $artifact_factory;
@@ -148,7 +148,7 @@ class Tracker_Action_CreateArtifact
         Artifact $artifact,
         PFUser $current_user,
         Tracker_Artifact_Redirect $redirect,
-        Codendi_Request $request
+        Codendi_Request $request,
     ): void {
         $parent_tracker = $this->tracker->getParent();
         if ($parent_tracker && count($artifact->getAllAncestors($current_user)) == 0) {
@@ -161,7 +161,7 @@ class Tracker_Action_CreateArtifact
                     'tracker'      => (string) $parent_tracker->getId(),
                     'func'         => 'new-artifact',
                     $art_link_key  => (string) $artifact->getId(),
-                    $art_link_type => urlencode(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
+                    $art_link_type => urlencode(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD),
                 ];
                 $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
                 $redirect->query_parameters = $redirect_params;

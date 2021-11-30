@@ -49,7 +49,7 @@ final class ProgramUserGroupCollection
     public static function fromRawIdentifiers(
         RetrieveProgramUserGroup $user_group_builder,
         ProgramForAdministrationIdentifier $program,
-        array $raw_user_group_ids
+        array $raw_user_group_ids,
     ): self {
         $program_user_groups = [];
 

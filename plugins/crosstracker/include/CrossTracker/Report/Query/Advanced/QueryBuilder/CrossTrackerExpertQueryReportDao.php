@@ -31,7 +31,7 @@ class CrossTrackerExpertQueryReportDao extends DataAccessObject
         IProvideParametrizedFromAndWhereSQLFragments $from_where,
         array $tracker_ids,
         $limit,
-        $offset
+        $offset,
     ) {
         $unique_parametrized_from = array_unique($from_where->getAllParametrizedFrom());
 

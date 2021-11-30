@@ -84,7 +84,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
                 'has_already_been_used' => 0,
                 'authorization_code_id' => 12,
-                'app_id'                => $app->getId()
+                'app_id'                => $app->getId(),
             ]
         );
         $this->dao->expects(self::once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
@@ -137,7 +137,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
                 'has_already_been_used' => 1,
-                'authorization_code_id' => 12
+                'authorization_code_id' => 12,
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
@@ -157,7 +157,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('yesterday'))->getTimestamp(),
-                'has_already_been_used' => 0
+                'has_already_been_used' => 0,
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
@@ -178,7 +178,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
                 'has_already_been_used' => 0,
-                'app_id'                => $app->getId()
+                'app_id'                => $app->getId(),
             ]
         );
         $this->dao->expects(self::once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
@@ -201,7 +201,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
                 'has_already_been_used' => 0,
-                'app_id'                => $app->getId() + 999
+                'app_id'                => $app->getId() + 999,
             ]
         );
         $this->dao->expects(self::once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());

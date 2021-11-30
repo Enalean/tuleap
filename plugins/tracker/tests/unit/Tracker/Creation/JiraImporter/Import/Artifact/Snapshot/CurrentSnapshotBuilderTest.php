@@ -113,28 +113,28 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'summary'   => 'summary01',
                     'issuetype' =>
                         [
-                            'id' => '10004'
+                            'id' => '10004',
                         ],
                     'created' => '2020-03-25T14:10:10.823+0100',
                     'updated' => '2020-04-25T14:10:10.823+0100',
                     'assignee' => [
                         'accountId'    => 'e6a7dae9',
                         'displayName'  => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
+                        'emailAddress' => 'john.doe@example.com',
                     ],
                     'homies' => [
                         [
                             'accountId'    => 'e6a7dae9',
                             'displayName'  => 'John Doe',
-                            'emailAddress' => 'john.doe@example.com'
+                            'emailAddress' => 'john.doe@example.com',
                         ], [
                             'accountId'    => 'd45a6r4f',
                             'displayName'  => 'Mysterio',
-                            'emailAddress' => 'myster.io@example.com'
-                        ]
-                    ]
+                            'emailAddress' => 'myster.io@example.com',
+                        ],
+                    ],
                 ],
-                'renderedFields' => []
+                'renderedFields' => [],
             ]
         );
     }
@@ -232,13 +232,13 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'fields'         => [
                     'updated' => '2020-04-25T14:10:10.823+0100',
                     'issuelinks' => [
-                        'issue links representation'
+                        'issue links representation',
                     ],
                     'subtasks'   => [
-                        'subtask representation'
-                    ]
+                        'subtask representation',
+                    ],
                 ],
-                'renderedFields' => []
+                'renderedFields' => [],
             ]
         );
     }
@@ -277,7 +277,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'issuelinks' => [],
                         'subtasks'   => [],
                     ],
-                    'renderedFields' => []
+                    'renderedFields' => [],
                 ]
             ),
             $jira_field_mapping_collection,
@@ -291,12 +291,12 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     [
                         'type' => [
-                            'name' => '_is_child'
+                            'name' => '_is_child',
                         ],
                         'outwardIssue' => [
                             'id' => '10005',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 []
             ),

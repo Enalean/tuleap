@@ -56,7 +56,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
      */
     public function testBuildTransformsProjectAppsIntoPresenters(
         ?LastGeneratedClientSecret $last_generated_client_secret,
-        ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter
+        ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter,
     ): void {
         $project    = ProjectTestBuilder::aProject()->withId(102)->build();
         $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
@@ -65,7 +65,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(
                 [
                     new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project),
-                    new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, $project)
+                    new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, $project),
                 ]
             );
         $this->client_secret_store->expects(self::once())->method('getLastGeneratedClientSecret')->willReturn(
@@ -76,7 +76,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $project,
             [
                 new AppPresenter(1, 'Jenkins', 'https://jenkins.example.com', 'tlp-client-id-1', true),
-                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com', 'tlp-client-id-2', true)
+                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com', 'tlp-client-id-2', true),
             ],
             $csrf_token,
             $expected_last_created_oauth2_presenter
@@ -89,14 +89,14 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
      */
     public function testBuildTransformsSiteAppsIntoPresenters(
         ?LastGeneratedClientSecret $last_generated_client_secret,
-        ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter
+        ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter,
     ): void {
         $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
         $this->app_factory->expects(self::once())->method('getSiteLevelApps')
             ->willReturn(
                 [
                     new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, null),
-                    new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, null)
+                    new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, null),
                 ]
             );
         $this->client_secret_store->expects(self::once())->method('getLastGeneratedClientSecret')->willReturn(
@@ -106,7 +106,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $expected = AdminOAuth2AppsPresenter::forSiteAdministration(
             [
                 new AppPresenter(1, 'Jenkins', 'https://jenkins.example.com', 'tlp-client-id-1', true),
-                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com', 'tlp-client-id-2', true)
+                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com', 'tlp-client-id-2', true),
             ],
             $csrf_token,
             $expected_last_created_oauth2_presenter
@@ -120,7 +120,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             'No app has just been created' => [null, null],
             'An app has just been created' => [
                 new LastGeneratedClientSecret(2, new ConcealedString('secret')),
-                new LastCreatedOAuth2AppPresenter('tlp-client-id-2', new ConcealedString('secret'))
+                new LastCreatedOAuth2AppPresenter('tlp-client-id-2', new ConcealedString('secret')),
             ],
         ];
     }

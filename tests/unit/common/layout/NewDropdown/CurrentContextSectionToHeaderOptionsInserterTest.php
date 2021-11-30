@@ -52,7 +52,7 @@ class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPU
             'new_dropdown_current_context_section' => new NewDropdownLinkSectionPresenter(
                 'Existing section',
                 [$existing_link]
-            )
+            ),
         ];
 
         (new CurrentContextSectionToHeaderOptionsInserter())

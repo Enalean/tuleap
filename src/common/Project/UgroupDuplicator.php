@@ -63,7 +63,7 @@ class UgroupDuplicator
         UGroupManager $manager,
         UGroupBinding $binding,
         MemberAdder $member_adder,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->dao           = $dao;
         $this->manager       = $manager;

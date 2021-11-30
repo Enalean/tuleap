@@ -37,7 +37,7 @@ class GitPullRequestReferenceDAO extends DataAccessObject
                     'repository_dest_id' => $repository_dest_id,
                     'reference_id'       => $reference_id,
                     'pr_id'              => $pull_request_id,
-                    'status'             => $status
+                    'status'             => $status,
                 ]
             );
             $this->getDB()->commit();

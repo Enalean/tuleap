@@ -38,7 +38,7 @@ class TrackerPresenterCollectionBuilder
     public function __construct(
         TrackerCollectionRetriever $trackers_retriever,
         MappedFieldRetriever $mapped_field_retriever,
-        AddInPlaceRetriever $add_in_place_tracker_retriever
+        AddInPlaceRetriever $add_in_place_tracker_retriever,
     ) {
         $this->trackers_retriever     = $trackers_retriever;
         $this->mapped_field_retriever = $mapped_field_retriever;

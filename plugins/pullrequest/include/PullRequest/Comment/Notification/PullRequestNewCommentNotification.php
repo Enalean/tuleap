@@ -68,7 +68,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
         string $change_user_display_name,
         array $owners_without_change_user,
         string $comment,
-        NotificationEnhancedContent $enhanced_content
+        NotificationEnhancedContent $enhanced_content,
     ) {
         $this->pull_request             = $pull_request;
         $this->change_user_display_name = $change_user_display_name;
@@ -87,7 +87,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
         PullRequest $pull_request,
         PFUser $change_user,
         array $owners,
-        string $comment
+        string $comment,
     ): self {
         $change_user_display_name   = $user_helper->getDisplayNameFromUser($change_user) ?? '';
         $owners_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners);

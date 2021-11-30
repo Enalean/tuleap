@@ -61,7 +61,7 @@ class PostPushCommitArtifactUpdater
         StatusValueRetriever $status_value_retriever,
         DoneValueRetriever $done_value_retriever,
         UserManager $user_manager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->status_value_retriever = $status_value_retriever;
         $this->done_value_retriever   = $done_value_retriever;
@@ -75,7 +75,7 @@ class PostPushCommitArtifactUpdater
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
         \Tracker_FormElement_Field_List $status_field,
-        GitlabRepositoryIntegration $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration,
     ): void {
         try {
             if (! $artifact->isOpen()) {
@@ -91,7 +91,7 @@ class PostPushCommitArtifactUpdater
             );
 
             $fields_data = [
-                $status_field->getId() => $status_field->getFieldData($closed_value->getLabel())
+                $status_field->getId() => $status_field->getFieldData($closed_value->getLabel()),
             ];
 
             $new_followups = $artifact->createNewChangeset(
@@ -132,7 +132,7 @@ class PostPushCommitArtifactUpdater
     public function addTuleapArtifactCommentNoSemanticDefined(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
-        PostPushCommitWebhookData $commit
+        PostPushCommitWebhookData $commit,
     ): void {
         try {
             $committer           = $this->getTuleapUserNameFromGitlabCommitter($commit);

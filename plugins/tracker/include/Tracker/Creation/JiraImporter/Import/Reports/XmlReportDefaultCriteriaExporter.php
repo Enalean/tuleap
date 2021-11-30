@@ -35,7 +35,7 @@ class XmlReportDefaultCriteriaExporter
      */
     public function exportDefaultCriteria(
         array $field_mappings,
-        SimpleXMLElement $criterias_node
+        SimpleXMLElement $criterias_node,
     ): void {
         $next_rank_in_node = $criterias_node->count();
 

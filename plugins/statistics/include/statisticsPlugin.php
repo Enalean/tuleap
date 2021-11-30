@@ -93,7 +93,7 @@ class StatisticsPlugin extends Plugin
                     $queue->getLogger(),
                     $this->getConfigurationManager(),
                     $this->getDiskUsagePurger($queue->getLogger()),
-                    $this->getDiskUsageManager()
+                    $this->getDiskUsageManager(),
                 ];
                 break;
             default:
@@ -202,12 +202,12 @@ class StatisticsPlugin extends Plugin
     {
         $user_url_params = [
             'menu' => 'one_user_details',
-            'user' => $params['user']->getRealName() . ' (' . $params['user']->getUserName() . ')'
+            'user' => $params['user']->getRealName() . ' (' . $params['user']->getUserName() . ')',
         ];
 
         $params['links'][] = [
             'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($user_url_params),
-            'label' => dgettext('tuleap-statistics', 'Disk usage')
+            'label' => dgettext('tuleap-statistics', 'Disk usage'),
         ];
     }
 
@@ -220,11 +220,11 @@ class StatisticsPlugin extends Plugin
 
         $project_url_params = [
             'menu'           => 'services',
-            'project_filter' => $params['project']->getPublicName() . ' (' . $params['project']->getUnixName() . ')'
+            'project_filter' => $params['project']->getPublicName() . ' (' . $params['project']->getUnixName() . ')',
         ];
         $params['links'][]  = [
             'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($project_url_params),
-            'label' => dgettext('tuleap-statistics', 'Disk usage')
+            'label' => dgettext('tuleap-statistics', 'Disk usage'),
         ];
     }
 

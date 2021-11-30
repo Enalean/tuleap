@@ -43,7 +43,7 @@ class SemanticTimeframeBuilder
         SemanticTimeframeDao $dao,
         \Tracker_FormElementFactory $form_element_factory,
         \TrackerFactory $tracker_factory,
-        LinksRetriever $links_retriever
+        LinksRetriever $links_retriever,
     ) {
         $this->dao                  = $dao;
         $this->form_element_factory = $form_element_factory;

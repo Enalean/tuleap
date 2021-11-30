@@ -70,13 +70,13 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "customfield_10045" => "02/Feb/21",
                     "status" => "10001",
                     "customfield_10040" => [
-                        "10009", "10010"
+                        "10009", "10010",
                     ],
-                    "description" => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*"
+                    "description" => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*",
                 ],
                 'renderedFields' => [
-                    "description" => "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>"
-                ]
+                    "description" => "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>",
+                ],
             ]
         );
 
@@ -100,7 +100,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "image/gif",
                     "URL2",
                     3056
-                )
+                ),
             ]
         );
 
@@ -248,14 +248,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => null,
                             "fromString" => null,
                             "to"         => null,
-                            "toString"   => "9"
-                        ]
+                            "toString"   => "9",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -268,14 +268,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => null,
                             "fromString" => "9",
                             "to"         => null,
-                            "toString"   => "11"
-                        ]
+                            "toString"   => "11",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -288,14 +288,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => "10000",
                             "fromString" => "To Do",
                             "to"         => "10001",
-                            "toString"   => "Done"
-                        ]
+                            "toString"   => "Done",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -308,21 +308,21 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => "[10009]",
                             "fromString" => "mulit1",
                             "to"         => "[10009, 10010]",
-                            "toString"   => "mulit1,multi2"
+                            "toString"   => "mulit1,multi2",
                         ],
                         1 => [
                             "fieldId"    => "environment",
                             "from"       => null,
                             "fromString" => "\r\n----\r\n",
                             "to"         => null,
-                            "toString"   => "----\r\n"
-                        ]
+                            "toString"   => "----\r\n",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -335,14 +335,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => null,
                             "fromString" => null,
                             "to"         => "10007",
-                            "toString"   => "file.png"
-                        ]
+                            "toString"   => "file.png",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -355,14 +355,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => null,
                             "fromString" => "dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq",
                             "to"         => null,
-                            "toString"   => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*"
-                        ]
+                            "toString"   => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -375,14 +375,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => "e8d9s4f123ds",
                             "fromString" => "Mysterio",
                             "to"         => "e485s54bacs5",
-                            "toString"   => "John (The great) Doe"
-                        ]
+                            "toString"   => "John (The great) Doe",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -395,14 +395,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => 'e485s54bacs5',
                             "fromString" => 'John (The great) Doe',
                             "to"         => "e485s54bacs5, a5b1d5f6e78b",
-                            "toString"   => "John (The great) Doe, Mysterio (The mysterious)"
-                        ]
+                            "toString"   => "John (The great) Doe, Mysterio (The mysterious)",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -415,14 +415,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from"       => "2021-01-01",
                             "fromString" => "01/Jan/21",
                             "to"         => "2021-02-02",
-                            "toString"   => "02/Feb/21"
-                        ]
+                            "toString"   => "02/Feb/21",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
         ];
@@ -445,7 +445,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         [],
                     ),
                     [
-                        'id' => "10000"
+                        'id' => "10000",
                     ],
                     null
                 ),
@@ -460,7 +460,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         [],
                     ),
                     [
-                        ['id' => "10009"]
+                        ['id' => "10009"],
                     ],
                     null
                 ),
@@ -495,7 +495,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         "file",
                     ),
                     [
-                        "id" => "10007"
+                        "id" => "10007",
                     ],
                     null
                 ),
@@ -510,7 +510,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         [],
                     ),
                     [
-                        "id" => "104"
+                        "id" => "104",
                     ],
                     null
                 ),

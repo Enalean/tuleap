@@ -193,7 +193,7 @@ final class Tracker_Artifact_PriorityManagerTest extends \Tuleap\Test\PHPUnit\Te
             ->andReturn(
                 [
                     ['artifact_id' => 123, 'rank' => 1000],
-                    ['artifact_id' => 789, 'rank' => 1042]
+                    ['artifact_id' => 789, 'rank' => 1042],
                 ]
             );
         $this->priority_dao->shouldReceive('getGlobalRank')
@@ -227,7 +227,7 @@ final class Tracker_Artifact_PriorityManagerTest extends \Tuleap\Test\PHPUnit\Te
             ->andReturn(
                 [
                     ['artifact_id' => 123, 'rank' => 2040],
-                    ['artifact_id' => 789, 'rank' => 2041]
+                    ['artifact_id' => 789, 'rank' => 2041],
                 ]
             );
         $this->priority_dao->shouldReceive('getGlobalRank')
@@ -255,7 +255,7 @@ final class Tracker_Artifact_PriorityManagerTest extends \Tuleap\Test\PHPUnit\Te
             ->andReturn(
                 [
                     ['artifact_id' => 123, 'rank' => 1000],
-                    ['artifact_id' => 789, 'rank' => 1042]
+                    ['artifact_id' => 789, 'rank' => 1042],
                 ]
             );
         $this->priority_dao->shouldReceive('getGlobalRank')
@@ -289,7 +289,7 @@ final class Tracker_Artifact_PriorityManagerTest extends \Tuleap\Test\PHPUnit\Te
             ->andReturn(
                 [
                     ['artifact_id' => 123, 'rank' => 2040],
-                    ['artifact_id' => 789, 'rank' => 2041]
+                    ['artifact_id' => 789, 'rank' => 2041],
                 ]
             );
         $this->priority_dao->shouldReceive('getGlobalRank')

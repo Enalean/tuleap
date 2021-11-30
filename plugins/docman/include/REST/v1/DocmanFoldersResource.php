@@ -738,7 +738,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      */
     public function putMetadata(
         int $id,
-        PUTMetadataFolderRepresentation $representation
+        PUTMetadataFolderRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setMetadataHeaders();

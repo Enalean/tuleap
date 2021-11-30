@@ -150,7 +150,7 @@ final class PackagesTest extends RestBase
     {
         $post_resource = json_encode([
             'project_id' => $this->project_id,
-            'label' => 'New package'
+            'label' => 'New package',
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('POST', 'frs_packages')->withBody($this->stream_factory->createStream($post_resource)));
@@ -164,7 +164,7 @@ final class PackagesTest extends RestBase
     {
         $post_resource = json_encode([
             'project_id' => $this->project_id,
-            'label' => 'New package'
+            'label' => 'New package',
         ]);
 
         $response = $this->getResponse(

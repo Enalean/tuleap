@@ -57,7 +57,7 @@ class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'filesize'     => 123,
                     'filetype'     => 'image/jpg',
                     'field_id'     => 1001,
-                    'submitted_by' => 101
+                    'submitted_by' => 101,
                 ],
                 [
                     'id'           => 13,
@@ -66,8 +66,8 @@ class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'filesize'     => 94830,
                     'filetype'     => 'text/plain',
                     'field_id'     => 1001,
-                    'submitted_by' => 101
-                ]
+                    'submitted_by' => 101,
+                ],
             ]
         );
 

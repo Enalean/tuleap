@@ -67,7 +67,7 @@ class Planning_MilestoneController extends BaseController
         Planning_MilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
-        HeaderOptionsProvider $header_options_provider
+        HeaderOptionsProvider $header_options_provider,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory                  = $milestone_factory;
@@ -153,7 +153,7 @@ class Planning_MilestoneController extends BaseController
 
         if (! $request_has_redirect = $extractor->getRedirectToParameters($this->request, $this->project)) {
             $this->redirect([
-                'group_id' => $this->project->getGroupId()
+                'group_id' => $this->project->getGroupId(),
             ]);
         }
 

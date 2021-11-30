@@ -36,7 +36,7 @@ final class ProgramIncrementChanged
     private function __construct(
         public ProgramIncrementIdentifier $program_increment,
         public ProgramIncrementTrackerIdentifier $tracker,
-        public UserIdentifier $user
+        public UserIdentifier $user,
     ) {
     }
 

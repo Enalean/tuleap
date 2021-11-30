@@ -38,7 +38,7 @@ class Docman_View_Embedded extends Docman_View_Display
                     'group_id' => $params['group_id'],
                     'item'     => &$params['item'],
                     'version'  => $version->getNumber(),
-                    'user'     => &$params['user']
+                    'user'     => &$params['user'],
                 ]);
                 $mime = explode('/', $version->getFiletype());
                 if (in_array($mime[1], ['plain', 'css', 'javascript'])) {

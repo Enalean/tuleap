@@ -72,7 +72,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 ['id' => 1, 'label' => 'Velocity', 'is_selected' => false],
                 ['id' => 2, 'label' => 'Remaining effort', 'is_selected' => false],
-                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false]
+                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false],
             ],
             $presenter->total_effort_options
         );
@@ -81,7 +81,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 ['id' => 1, 'label' => 'Velocity', 'is_selected' => false],
                 ['id' => 2, 'label' => 'Remaining effort', 'is_selected' => false],
-                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false]
+                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false],
             ],
             $presenter->remaining_effort_options
         );
@@ -114,7 +114,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 ['id' => 1, 'label' => 'Velocity', 'is_selected' => false],
                 ['id' => 2, 'label' => 'Remaining effort', 'is_selected' => false],
-                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false]
+                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false],
             ],
             $presenter->total_effort_options
         );
@@ -123,7 +123,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 ['id' => 1, 'label' => 'Velocity', 'is_selected' => false],
                 ['id' => 2, 'label' => 'Remaining effort', 'is_selected' => false],
-                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false]
+                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false],
             ],
             $presenter->remaining_effort_options
         );
@@ -160,7 +160,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 ['id' => 1, 'label' => 'Velocity', 'is_selected' => false],
                 ['id' => 2, 'label' => 'Remaining effort', 'is_selected' => false],
-                ['id' => 3, 'label' => 'Total effort', 'is_selected' => true]
+                ['id' => 3, 'label' => 'Total effort', 'is_selected' => true],
             ],
             $presenter->total_effort_options
         );
@@ -169,7 +169,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 ['id' => 1, 'label' => 'Velocity', 'is_selected' => false],
                 ['id' => 2, 'label' => 'Remaining effort', 'is_selected' => true],
-                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false]
+                ['id' => 3, 'label' => 'Total effort', 'is_selected' => false],
             ],
             $presenter->remaining_effort_options
         );
@@ -218,7 +218,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             \Tracker_FormElement_Field_Numeric::class,
             [
                 'getId' => $id,
-                'getLabel' => $label
+                'getLabel' => $label,
             ]
         );
     }
@@ -239,7 +239,7 @@ class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                 [
                     $this->getNumericFieldMock(1, "Velocity"),
                     $this->getNumericFieldMock(2, "Remaining effort"),
-                    $this->getNumericFieldMock(3, "Total effort")
+                    $this->getNumericFieldMock(3, "Total effort"),
                 ]
             )->once();
     }

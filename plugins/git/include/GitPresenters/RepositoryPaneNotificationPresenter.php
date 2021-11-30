@@ -38,7 +38,7 @@ class RepositoryPaneNotificationPresenter
         GitRepository $repository,
         $identifier,
         array $users_to_be_notified,
-        array $groups_to_be_notified
+        array $groups_to_be_notified,
     ) {
         $this->identifier            = $identifier;
         $this->users_to_be_notified  = $users_to_be_notified;
@@ -68,7 +68,7 @@ class RepositoryPaneNotificationPresenter
 
         foreach ($repository->getNotifiedMails() as $mail) {
             $list_of_mails[] = [
-                'mail' => $mail
+                'mail' => $mail,
             ];
         }
 

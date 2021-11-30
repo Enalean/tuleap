@@ -119,38 +119,38 @@ foreach ($dao->searchAll() as $row) {
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_NEW)),
             'value'            => SystemEvent::STATUS_NEW,
             'checked'          => in_array(SystemEvent::STATUS_NEW, $status_selected),
-            'is_first_checked' => in_array(SystemEvent::STATUS_NEW, $status_selected) && ! $checked ? $checked = true : false
+            'is_first_checked' => in_array(SystemEvent::STATUS_NEW, $status_selected) && ! $checked ? $checked = true : false,
         ],
         [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_RUNNING)),
             'value'            => SystemEvent::STATUS_RUNNING,
             'checked'          => in_array(SystemEvent::STATUS_RUNNING, $status_selected),
-            'is_first_checked' => in_array(SystemEvent::STATUS_RUNNING, $status_selected) && ! $checked ? $checked = true : false
+            'is_first_checked' => in_array(SystemEvent::STATUS_RUNNING, $status_selected) && ! $checked ? $checked = true : false,
         ],
         [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_DONE)),
             'value'            => SystemEvent::STATUS_DONE,
             'checked'          => in_array(SystemEvent::STATUS_DONE, $status_selected),
-            'is_first_checked' => in_array(SystemEvent::STATUS_DONE, $status_selected) && ! $checked ? $checked = true : false
+            'is_first_checked' => in_array(SystemEvent::STATUS_DONE, $status_selected) && ! $checked ? $checked = true : false,
         ],
         [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_WARNING)),
             'value'            => SystemEvent::STATUS_WARNING,
             'checked'          => in_array(SystemEvent::STATUS_WARNING, $status_selected),
-            'is_first_checked' => in_array(SystemEvent::STATUS_WARNING, $status_selected) && ! $checked ? $checked = true : false
+            'is_first_checked' => in_array(SystemEvent::STATUS_WARNING, $status_selected) && ! $checked ? $checked = true : false,
         ],
         [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_ERROR)),
             'value'            => SystemEvent::STATUS_ERROR,
             'checked'          => in_array(SystemEvent::STATUS_ERROR, $status_selected),
-            'is_first_checked' => in_array(SystemEvent::STATUS_ERROR, $status_selected) && ! $checked ? $checked = true : false
-        ]
+            'is_first_checked' => in_array(SystemEvent::STATUS_ERROR, $status_selected) && ! $checked ? $checked = true : false,
+        ],
     ];
 
     $notifications[] = [
         'id'     => $row['id'],
         'emails' => $row['emails'],
-        'status' => $status
+        'status' => $status,
     ];
 }
 

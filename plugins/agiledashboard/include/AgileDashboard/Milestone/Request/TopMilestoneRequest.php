@@ -63,7 +63,7 @@ final class TopMilestoneRequest
         int $limit,
         int $offset,
         string $order,
-        FilteringQuery $filtering_query
+        FilteringQuery $filtering_query,
     ) {
         $this->user            = $user;
         $this->project         = $project;

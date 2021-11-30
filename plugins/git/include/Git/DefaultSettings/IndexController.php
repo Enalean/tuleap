@@ -88,7 +88,7 @@ class IndexController
         RegexpFineGrainedRetriever $regexp_retriever,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         HeaderRenderer $header_renderer,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->access_rights_builder                   = $access_rights_builder;
         $this->git_permissions_manager                 = $git_permissions_manager;

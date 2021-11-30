@@ -39,17 +39,17 @@ class AllowedMetadata
         self::LAST_UPDATE_DATE,
         self::SUBMITTED_BY,
         self::LAST_UPDATE_BY,
-        self::ASSIGNED_TO
+        self::ASSIGNED_TO,
     ];
 
     public const DATES = [
         self::SUBMITTED_ON,
-        self::LAST_UPDATE_DATE
+        self::LAST_UPDATE_DATE,
     ];
 
     public const USERS = [
         self::SUBMITTED_BY,
         self::LAST_UPDATE_BY,
-        self::ASSIGNED_TO
+        self::ASSIGNED_TO,
     ];
 }

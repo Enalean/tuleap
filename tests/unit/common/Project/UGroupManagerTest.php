@@ -91,7 +91,7 @@ class UGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_group_dao,
                 $this->event_manager,
                 $this->user_group_user_dao,
-                $this->dynamic_user_group_member_updater
+                $this->dynamic_user_group_member_updater,
             ]
         )->makePartial();
 

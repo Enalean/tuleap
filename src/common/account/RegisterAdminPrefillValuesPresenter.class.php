@@ -33,7 +33,7 @@ class Account_RegisterAdminPrefillValuesPresenter extends Account_RegisterPrefil
         $timezone,
         $restricted,
         $send_email,
-        $does_platform_allows_restricted
+        $does_platform_allows_restricted,
     ) {
         parent::__construct($login_name, $email, $password, $realname, $register_purpose, $mail_site, $timezone);
         $this->does_platform_allows_restricted = $does_platform_allows_restricted;

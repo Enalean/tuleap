@@ -63,7 +63,7 @@ class URLRedirect
         $url = '/account/login.php?return_to=' . urlencode($returnTo) . $print_view;
         $this->event_manager->processEvent(Event::GET_LOGIN_URL, [
             'return_to' => $returnTo,
-            'login_url' => &$url
+            'login_url' => &$url,
         ]);
         return $url;
     }

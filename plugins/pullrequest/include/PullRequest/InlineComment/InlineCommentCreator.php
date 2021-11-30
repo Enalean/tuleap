@@ -47,7 +47,7 @@ class InlineCommentCreator
     public function __construct(
         Dao $dao,
         ReferenceManager $reference_manager,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->dao               = $dao;
         $this->reference_manager = $reference_manager;
@@ -59,7 +59,7 @@ class InlineCommentCreator
         PFUser $user,
         PullRequestInlineCommentPOSTRepresentation $comment_data,
         $post_date,
-        $project_id
+        $project_id,
     ): int {
         $pull_request_id = $pull_request->getId();
 

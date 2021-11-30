@@ -109,7 +109,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         Restrictor $gerrit_restrictor,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         IncludeAssets $include_assets,
-        VersionDetector $version_detector
+        VersionDetector $version_detector,
     ) {
         $this->gerrit_server_factory            = $gerrit_server_factory;
         $this->csrf                             = $csrf;

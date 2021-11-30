@@ -110,7 +110,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUni
             [
                 'getId'    => 16,
                 'getName'  => 'tracker name',
-                'getColor' => TrackerColor::default()
+                'getColor' => TrackerColor::default(),
             ]
         );
     }
@@ -124,7 +124,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUni
         $this->admin_dao->shouldReceive("foundRows")->andReturns(1);
         $this->admin_dao->shouldReceive('getProjectTrackersWithEnabledTimetracking')->andReturns(
             [
-                ['tracker_id' => 16]
+                ['tracker_id' => 16],
             ]
         );
 
@@ -155,7 +155,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUni
         $this->admin_dao->shouldReceive("foundRows")->andReturns(1);
         $this->admin_dao->shouldReceive('getProjectTrackersWithEnabledTimetracking')->andReturns(
             [
-                ['tracker_id' => 16]
+                ['tracker_id' => 16],
             ]
         );
 

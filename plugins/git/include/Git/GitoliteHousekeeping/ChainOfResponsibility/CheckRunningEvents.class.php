@@ -40,7 +40,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents extends 
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
         SystemEventProcessManager $process_manager,
-        SystemEventProcess $process
+        SystemEventProcess $process,
     ) {
         parent::__construct();
         $this->process_manager = $process_manager;

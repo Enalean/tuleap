@@ -150,7 +150,7 @@ class ProjectNote extends \Widget
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         return $this->dao->duplicate($new_project->getID(), $id);
     }
@@ -163,13 +163,13 @@ class ProjectNote extends \Widget
         $this->interpretContent();
         if ($this->code_block_features->isSyntaxHighlightNeeded()) {
             $javascript_dependencies[] = [
-                'file' => $this->getAssets()->getFileURL('syntax-highlight.js')
+                'file' => $this->getAssets()->getFileURL('syntax-highlight.js'),
             ];
         }
 
         if ($this->code_block_features->isMermaidNeeded()) {
             $javascript_dependencies[] = [
-                'file' => $this->getAssets()->getFileURL('mermaid.js')
+                'file' => $this->getAssets()->getFileURL('mermaid.js'),
             ];
         }
 

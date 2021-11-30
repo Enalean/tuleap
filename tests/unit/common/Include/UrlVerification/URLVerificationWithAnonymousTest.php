@@ -58,7 +58,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $server = [
             'SERVER_NAME' => 'example.com',
-            'SCRIPT_NAME' => '/account/login.php'
+            'SCRIPT_NAME' => '/account/login.php',
         ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
@@ -73,7 +73,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
-            'REQUEST_URI' => '/'
+            'REQUEST_URI' => '/',
         ];
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -89,7 +89,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $server = [
             'SERVER_NAME' => 'example.com',
-            'SCRIPT_NAME' => ''
+            'SCRIPT_NAME' => '',
         ];
         $this->user->shouldReceive('isAnonymous')->andReturns(false);
 
@@ -104,7 +104,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
-            'REQUEST_URI' => '/'
+            'REQUEST_URI' => '/',
         ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
@@ -122,7 +122,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
-            'REQUEST_URI' => '/script/'
+            'REQUEST_URI' => '/script/',
         ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
@@ -140,7 +140,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
-            'REQUEST_URI' => '/script?pv=2'
+            'REQUEST_URI' => '/script?pv=2',
         ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
@@ -157,7 +157,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $server = [
             'SERVER_NAME' => 'example.com',
-            'SCRIPT_NAME' => ''
+            'SCRIPT_NAME' => '',
         ];
         $this->user->shouldReceive('isAnonymous')->andReturns(false);
 

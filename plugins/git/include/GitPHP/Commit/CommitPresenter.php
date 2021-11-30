@@ -98,7 +98,7 @@ class CommitPresenter
             http_build_query(
                 [
                     'a' => 'commitdiff',
-                    'h' => $this->commit->getHash()
+                    'h' => $this->commit->getHash(),
                 ]
             );
     }
@@ -110,7 +110,7 @@ class CommitPresenter
                 [
                     'a' => 'commitdiff',
                     'h' => $this->commit->getHash(),
-                    'o' => 'side-by-side'
+                    'o' => 'side-by-side',
                 ]
             );
     }
@@ -129,7 +129,7 @@ class CommitPresenter
                     'h'  => $diff_line->getToHash(),
                     'hp' => $diff_line->getFromHash(),
                     'hb' => $this->commit->getHash(),
-                    'f'  => $diff_line->getToFile()
+                    'f'  => $diff_line->getToFile(),
                 ]
             );
     }

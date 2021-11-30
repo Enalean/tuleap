@@ -86,7 +86,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
         $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
         $expected_list = [
             new Artifact(111, null, null, null, null),
-            new Artifact(222, null, null, null, null)
+            new Artifact(222, null, null, null, null),
         ];
 
         $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
@@ -185,7 +185,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
                 'getAnArtifactLinkField' => \Mockery::mock(
                     Tracker_FormElement_Field_ArtifactLink::class,
                     [
-                        'getLinkedArtifacts' => []
+                        'getLinkedArtifacts' => [],
                     ]
                 ),
             ]
@@ -198,7 +198,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
                 'getAnArtifactLinkField' => \Mockery::mock(
                     Tracker_FormElement_Field_ArtifactLink::class,
                     [
-                        'getLinkedArtifacts' => []
+                        'getLinkedArtifacts' => [],
                     ]
                 ),
             ]
@@ -218,7 +218,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
                 'getAnArtifactLinkField' => \Mockery::mock(
                     Tracker_FormElement_Field_ArtifactLink::class,
                     [
-                        'getLinkedArtifacts' => [$artifact2]
+                        'getLinkedArtifacts' => [$artifact2],
                     ]
                 ),
             ]
@@ -231,7 +231,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
                 'getAnArtifactLinkField' => \Mockery::mock(
                     Tracker_FormElement_Field_ArtifactLink::class,
                     [
-                        'getLinkedArtifacts' => [$artifact1, $artifact3]
+                        'getLinkedArtifacts' => [$artifact1, $artifact3],
                     ]
                 ),
             ]
@@ -241,7 +241,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
             \Mockery::mock(
                 Tracker_FormElement_Field_ArtifactLink::class,
                 [
-                    'getLinkedArtifacts' => [$artifact2, $artifact4]
+                    'getLinkedArtifacts' => [$artifact2, $artifact4],
                 ]
             )
         );

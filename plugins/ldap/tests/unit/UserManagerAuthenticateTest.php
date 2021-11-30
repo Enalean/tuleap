@@ -92,8 +92,8 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
                     'uid'  => 'john_lane',
                     'mail' => 'john.mc.lane@nypd.gov',
                     'uuid' => 'ed1234',
-                    'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
-                ]
+                    'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local',
+                ],
             ],
             $this->ldap_params
         );
@@ -233,15 +233,15 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
                     'uid'  => 'john_lane',
                     'mail' => 'john.mc.lane@nypd.gov',
                     'uuid' => 'ed1234',
-                    'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
+                    'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local',
                 ],
                 [
                     'cn'   => 'William Wallas',
                     'uid'  => 'will_wall',
                     'mail' => 'will_wall@edimburgh.co.uk',
                     'uuid' => 'ed5432',
-                    'dn'   => 'uid=will_wall,ou=people,dc=tuleap,dc=local'
-                ]
+                    'dn'   => 'uid=will_wall,ou=people,dc=tuleap,dc=local',
+                ],
             ],
             $this->ldap_params
         ));
@@ -324,7 +324,7 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
             $nb_params_excluding_dn = count($people) - 1;
             $ldap_info[$i]          = [
                 'dn'    => $people['dn'],
-                'count' => $nb_params_excluding_dn
+                'count' => $nb_params_excluding_dn,
             ];
             $j                      = 0;
             foreach ($people as $param => $value) {

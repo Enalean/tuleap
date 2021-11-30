@@ -38,7 +38,7 @@ class Collector
 
     public function __construct(
         SVN_LogDao $svn_log_dao,
-        Retriever $retriever
+        Retriever $retriever,
     ) {
         $this->svn_log_dao = $svn_log_dao;
         $this->retriever   = $retriever;

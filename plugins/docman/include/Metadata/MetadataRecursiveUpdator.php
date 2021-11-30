@@ -50,7 +50,7 @@ class MetadataRecursiveUpdator
         Docman_MetadataFactory $metadata_factory,
         Docman_PermissionsManager $permissions_manager,
         Docman_MetadataValueFactory $metadata_value_factory,
-        ReferenceManager $reference_manager
+        ReferenceManager $reference_manager,
     ) {
         $this->permissions_manager    = $permissions_manager;
         $this->metadata_value_factory = $metadata_value_factory;
@@ -64,7 +64,7 @@ class MetadataRecursiveUpdator
     public function updateRecursiveMetadataOnFolder(
         ItemImpactedByMetadataChangeCollection $collection,
         int $folder_id,
-        int $project_id
+        int $project_id,
     ): void {
         $inheritable_metadata_fields = $this->metadata_factory->getInheritableMdLabelArray();
         if (count(array_diff($collection->getFieldsToUpdate(), $inheritable_metadata_fields)) > 0) {
@@ -87,7 +87,7 @@ class MetadataRecursiveUpdator
     public function updateRecursiveMetadataOnFolderAndItems(
         ItemImpactedByMetadataChangeCollection $collection,
         int $folder_id,
-        int $project_id
+        int $project_id,
     ): void {
         $inheritable_metadata_fields = $this->metadata_factory->getInheritableMdLabelArray();
         if (count(array_diff($collection->getFieldsToUpdate(), $inheritable_metadata_fields)) > 0) {
@@ -105,7 +105,7 @@ class MetadataRecursiveUpdator
     private function updateFolderSubItems(
         ItemImpactedByMetadataChangeCollection $collection,
         int $folder_id,
-        array $list_of_elements_to_update
+        array $list_of_elements_to_update,
     ): void {
         $this->metadata_value_factory->massUpdateFromRow($folder_id, $collection->getFieldsToUpdate(), $list_of_elements_to_update);
     }
@@ -113,7 +113,7 @@ class MetadataRecursiveUpdator
     private function extractCrossRefForCustomProperties(
         int $project_id,
         ItemImpactedByMetadataChangeCollection $collection,
-        array $list_of_elements_to_update
+        array $list_of_elements_to_update,
     ): void {
         foreach ($collection->getValuesToExtractCrossReferences() as $value) {
             foreach ($list_of_elements_to_update as $curr_item_id) {
@@ -131,7 +131,7 @@ class MetadataRecursiveUpdator
         ItemImpactedByMetadataChangeCollection $collection,
         int $folder_id,
         int $project_id,
-        array $list_of_elements_to_update
+        array $list_of_elements_to_update,
     ): void {
         // Remove the first element (parent item) to keep only the children.
         array_shift($list_of_elements_to_update);

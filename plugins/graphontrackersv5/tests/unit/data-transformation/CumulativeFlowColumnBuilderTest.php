@@ -77,15 +77,15 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                 [
                     'id'             => 1,
                     'label'          => 'A tlp color',
-                    'tlp_color_name' => 'inca-silver'
+                    'tlp_color_name' => 'inca-silver',
                 ],
                 [
                     'id'    => 2,
                     'label' => 'A legacy color',
                     'red'   => '255',
                     'blue'  => '255',
-                    'green' => '255'
-                ]
+                    'green' => '255',
+                ],
             ]
         );
 
@@ -93,7 +93,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             [
                 'id'             => 1,
                 'label'          => 'A tlp color',
-                'tlp_color_name' => 'placid-blue'
+                'tlp_color_name' => 'placid-blue',
             ]
         );
 
@@ -101,19 +101,19 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             'values' => [],
             'color'  => 'placid-blue',
             'label'  => null,
-            'id'     => 100
+            'id'     => 100,
         ];
         $expected[1]   = [
             'values' => [],
             'color'  => 'inca-silver',
             'label'  => 'A tlp color',
-            'id'     => 1
+            'id'     => 1,
         ];
         $expected[2]   = [
             'values' => [],
             'color'  => '#FFFFFF',
             'label'  => 'A legacy color',
-            'id'     => 2
+            'id'     => 2,
         ];
 
         $this->assertEquals(
@@ -135,8 +135,8 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                 [
                     'id'             => 1,
                     'label'          => 'A tlp color',
-                    'tlp_color_name' => 'inca-silver'
-                ]
+                    'tlp_color_name' => 'inca-silver',
+                ],
             ]
         );
 
@@ -146,7 +146,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                 'label'          => 'A tlp color',
                 'red'   => '255',
                 'blue'  => '255',
-                'green' => '255'
+                'green' => '255',
             ]
         );
 
@@ -154,13 +154,13 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             'values' => [],
             'color'  => '#FFFFFF',
             'label'  => null,
-            'id'     => 100
+            'id'     => 100,
         ];
         $expected[1]   = [
             'values' => [],
             'color'  => 'inca-silver',
             'label'  => 'A tlp color',
-            'id'     => 1
+            'id'     => 1,
         ];
 
         $this->assertEquals(
@@ -182,8 +182,8 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
                 [
                     'id'             => 1,
                     'label'          => 'A tlp color',
-                    'tlp_color_name' => 'inca-silver'
-                ]
+                    'tlp_color_name' => 'inca-silver',
+                ],
             ]
         );
 
@@ -193,13 +193,13 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             'values' => [],
             'color'  => null,
             'label'  => null,
-            'id'     => 100
+            'id'     => 100,
         ];
         $expected[1]   = [
             'values' => [],
             'color'  => 'inca-silver',
             'label'  => 'A tlp color',
-            'id'     => 1
+            'id'     => 1,
         ];
 
         $this->assertEquals(

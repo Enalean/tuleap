@@ -68,7 +68,7 @@ final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $expected_result = [
             $text_field_2_id => 'Value01',
-            $list_field_2_id => ['Value02']
+            $list_field_2_id => ['Value02'],
         ];
 
         $this->assertEquals(

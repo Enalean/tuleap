@@ -32,7 +32,7 @@ class Tracker_Artifact_Presenter_ArtifactLinkPresenter
         $tracker_name,
         $group_id,
         $artifact_id,
-        $title
+        $title,
     ) {
         $this->tracker_name = $tracker_name;
         $this->group_id     = $group_id;

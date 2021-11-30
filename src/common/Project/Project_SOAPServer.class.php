@@ -67,7 +67,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         Project_CustomDescription_CustomDescriptionValueManager $description_manager,
         Project_CustomDescription_CustomDescriptionValueFactory $description_value_factory,
         Project_Service_ServiceUsageFactory $service_usage_factory,
-        Project_Service_ServiceUsageManager $service_usage_manager
+        Project_Service_ServiceUsageManager $service_usage_manager,
     ) {
         $this->projectManager            = $projectManager;
         $this->userManager               = $userManager;

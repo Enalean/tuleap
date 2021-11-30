@@ -74,7 +74,7 @@ class ListFieldCheckerWithBindStaticTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $list_values = [
             100 => $value_100,
-            101 => $value_101
+            101 => $value_101,
         ];
 
         $this->bind->shouldReceive('getAllValues')->andReturns($list_values);

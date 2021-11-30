@@ -129,7 +129,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $da                = CodendiDataAccess::instance();
         $id                = $da->escapeInt($id);

@@ -39,7 +39,7 @@ final class ArtifactLinkChangeset
         public MirroredProgramIncrementIdentifier $mirrored_program_increment,
         public UserIdentifier $user,
         public ArtifactLinkFieldReference $artifact_link_field,
-        public ArtifactLinkValue $artifact_link_value
+        public ArtifactLinkValue $artifact_link_value,
     ) {
     }
 

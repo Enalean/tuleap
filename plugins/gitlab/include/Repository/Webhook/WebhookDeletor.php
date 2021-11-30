@@ -46,7 +46,7 @@ class WebhookDeletor
     public function __construct(
         WebhookDao $dao,
         ClientWrapper $gitlab_api_client,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->gitlab_api_client = $gitlab_api_client;
         $this->dao               = $dao;
@@ -55,7 +55,7 @@ class WebhookDeletor
 
     public function deleteGitlabWebhookFromGitlabRepository(
         ?Credentials $credentials,
-        GitlabRepositoryIntegration $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration,
     ): void {
         $integration_id = $gitlab_repository_integration->getId();
 

@@ -91,7 +91,7 @@ class ProjectRegistrationPresenter
         array $field_list,
         array $company_templates,
         array $tuleap_templates,
-        array $external_templates
+        array $external_templates,
     ) {
         $this->tuleap_templates             = json_encode($tuleap_templates);
         $this->are_restricted_users_allowed = (bool) ForgeConfig::areRestrictedUsersAllowed();

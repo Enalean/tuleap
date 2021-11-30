@@ -70,7 +70,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         TrackerCreator $tracker_creator,
         TrackerCreationPermissionChecker $permission_checker,
         DefaultTemplatesCollectionBuilder $default_templates_collection_builder,
-        AsyncJiraScheduler $async_jira_scheduler
+        AsyncJiraScheduler $async_jira_scheduler,
     ) {
         $this->user_manager                         = $user_manager;
         $this->project_manager                      = $project_manager;

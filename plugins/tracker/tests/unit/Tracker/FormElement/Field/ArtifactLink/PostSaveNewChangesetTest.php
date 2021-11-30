@@ -49,7 +49,7 @@ final class PostSaveNewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
                     PFUser $submitter,
                     Tracker_Artifact_Changeset $new_changeset,
                     array $fields_data,
-                    ?Tracker_Artifact_Changeset $previous_changeset = null
+                    ?Tracker_Artifact_Changeset $previous_changeset = null,
                 ): void {
                     return;
                 }

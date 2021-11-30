@@ -56,7 +56,7 @@ class ListFieldChecker implements InvalidFieldChecker
         CollectionOfListValuesExtractor $values_extractor,
         ListFieldBindValueNormalizer $value_normalizer,
         CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor,
-        UgroupLabelConverter $label_converter
+        UgroupLabelConverter $label_converter,
     ) {
         $this->empty_string_checker  = $empty_string_checker;
         $this->values_extractor      = $values_extractor;
@@ -67,7 +67,7 @@ class ListFieldChecker implements InvalidFieldChecker
 
     public function checkFieldIsValidForComparison(
         Comparison $comparison,
-        Tracker_FormElement_Field $field
+        Tracker_FormElement_Field $field,
     ) {
         $values            = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $normalized_labels = $this->bind_labels_extractor->extractCollectionOfNormalizedLabels($field);

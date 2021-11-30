@@ -191,7 +191,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             ];
             $params['hidden_fields'][]  = [
                 'name'  => 'group_id',
-                'value' => $project->getID()
+                'value' => $project->getID(),
             ];
         }
     }
@@ -707,7 +707,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         $params['types'] = array_merge($params['types'], [
             SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
-            SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME
+            SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME,
         ]);
     }
 
@@ -723,7 +723,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                     new MediawikiSiteAdminResourceRestrictor(
                         new MediawikiSiteAdminResourceRestrictorDao(),
                         $this->getProjectManager()
-                    )
+                    ),
                 ];
                 break;
             case SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME:
@@ -852,7 +852,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                 $this->getPluginPath() . '/forge_admin.php?' . http_build_query(
                     [
                         'group_id' => $project->getID(),
-                        'pane'     => 'permissions'
+                        'pane'     => 'permissions',
                     ]
                 )
             )

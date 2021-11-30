@@ -63,7 +63,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         ?EventManager $event_manager = null,
         ?UGroupUserDao $ugroup_user_dao = null,
         ?DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater = null,
-        ?ProjectMemberAdder $project_member_adder = null
+        ?ProjectMemberAdder $project_member_adder = null,
     ) {
         $this->dao                            = $dao;
         $this->event_manager                  = $event_manager;
@@ -280,7 +280,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return new ProjectUGroup([
             'ugroup_id' => $ugroup_id,
             'name'      => $name,
-            'group_id'  => $project->getID()
+            'group_id'  => $project->getID(),
         ]);
     }
 
@@ -462,7 +462,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->getEventManager()->processEvent(
                 Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE,
                 [
-                    'ugroup' => $ugroup
+                    'ugroup' => $ugroup,
                 ]
             );
         } else {

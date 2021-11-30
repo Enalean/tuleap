@@ -29,14 +29,14 @@ class MethodBuilder
     public function __construct(
         private \Tracker_FormElementFactory $form_element_factory,
         private SemanticProgressDao $dao,
-        private TypePresenterFactory $type_presenter_factory
+        private TypePresenterFactory $type_presenter_factory,
     ) {
     }
 
     public function buildMethodBasedOnEffort(
         \Tracker $tracker,
         int $total_effort_field_id,
-        int $remaining_effort_field_id
+        int $remaining_effort_field_id,
     ): IComputeProgression {
         if ($total_effort_field_id === $remaining_effort_field_id) {
             return new InvalidMethod(
@@ -80,7 +80,7 @@ class MethodBuilder
 
     public function buildMethodBasedOnChildCount(
         \Tracker $tracker,
-        string $link_type
+        string $link_type,
     ): IComputeProgression {
         $artifact_links_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
         if (empty($artifact_links_fields)) {

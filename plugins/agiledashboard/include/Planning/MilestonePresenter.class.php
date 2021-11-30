@@ -39,7 +39,7 @@ class AgileDashboard_MilestonePresenter
 
     public function __construct(
         Planning_Milestone $milestone,
-        PanePresenterData $presenter_data
+        PanePresenterData $presenter_data,
     ) {
         $this->milestone      = $milestone;
         $this->presenter_data = $presenter_data;

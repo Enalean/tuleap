@@ -62,7 +62,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
         SimpleXMLElement $all_semantics_xml,
         array $xml_mapping,
         Tracker $tracker,
-        array $tracker_mapping
+        array $tracker_mapping,
     ): ?Tracker_Semantic {
         $xml_field            = $current_semantic_xml->field;
         $xml_field_attributes = $xml_field->attributes();

@@ -57,7 +57,7 @@ class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PH
         $preference_set_by_site_admin,
         string $position_from_context,
         string $expected_preference,
-        string $expected_placement
+        string $expected_placement,
     ): void {
         \ForgeConfig::set(
             DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY,
@@ -77,44 +77,44 @@ class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PH
                 \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
                 'right',
                 'absolute',
-                'right'
+                'right',
             ],
             'absolute top' => [
                 \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
                 'top',
                 'absolute',
-                'top'
+                'top',
             ],
             'absolute tooltip' => [
                 \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
                 'right',
                 'absolute',
-                'tooltip'
+                'tooltip',
             ],
             'relative right' => [
                 \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
                 'right',
                 'relative',
-                'right'
+                'right',
             ],
             'relative top' => [
                 \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
                 'top',
                 'relative',
-                'top'
+                'top',
             ],
             'relative tooltip' => [
                 \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
                 'right',
                 'relative',
-                'tooltip'
+                'tooltip',
             ],
             'default relative tooltip' => [
                 false,
                 'right',
                 'relative',
-                'tooltip'
-            ]
+                'tooltip',
+            ],
         ];
     }
 }

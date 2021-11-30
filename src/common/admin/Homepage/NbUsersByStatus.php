@@ -67,7 +67,7 @@ class NbUsersByStatus
         $nb_deleted,
         $nb_pending,
         $nb_validated,
-        $nb_validated_restricted
+        $nb_validated_restricted,
     ) {
         $this->nb_active               = $nb_active;
         $this->nb_restricted           = $nb_restricted;

@@ -55,7 +55,7 @@ class ProjectVisibilityConfigPresenter
         ProjectCreationNavBarPresenter $menu_tabs,
         ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator,
         string $current_default_project_visibility_retriever,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->navbar                                 = $menu_tabs;
         $this->csrf_token                             = $csrf_token;

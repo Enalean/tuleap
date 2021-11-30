@@ -47,7 +47,7 @@ class ContainerFieldsetInArtifactContextRepresentation extends Tracker_REST_Form
         string $type,
         array $permissions,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
-        bool $is_hidden
+        bool $is_hidden,
     ): self {
         return new self(
             parent::build($form_element, $type, $permissions, $permissions_for_groups),

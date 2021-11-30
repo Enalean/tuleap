@@ -55,7 +55,7 @@ class CommitDetailsCacheDao extends DataAccessObject
         string $committer_name,
         int $committer_epoch,
         string $first_branch,
-        string $first_tag
+        string $first_tag,
     ): void {
         $sql = '
             INSERT INTO plugin_git_commit_details_cache

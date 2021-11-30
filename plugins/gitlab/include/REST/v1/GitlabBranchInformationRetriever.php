@@ -37,7 +37,7 @@ class GitlabBranchInformationRetriever
     public function __construct(
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
         CredentialsRetriever $credentials_retriever,
-        GitlabProjectBuilder $gitlab_project_builder
+        GitlabProjectBuilder $gitlab_project_builder,
     ) {
         $this->repository_integration_factory = $repository_integration_factory;
         $this->credentials_retriever          = $credentials_retriever;

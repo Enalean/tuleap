@@ -43,7 +43,7 @@ class FollowUpPresenter
     public function __construct(
         \Tuleap\Tracker\Artifact\Artifact $artifact,
         \Tracker_FormElement_Field_Text $field,
-        \Tracker_Artifact_ChangesetValue_Text $changeset_value
+        \Tracker_Artifact_ChangesetValue_Text $changeset_value,
     ) {
         $this->changeset_id = (int) $changeset_value->getChangeset()->getId();
         $this->artifact_id  = $artifact->getId();

@@ -42,7 +42,7 @@ class BreadCrumbLink
 
     public function __construct(
         $label,
-        $url
+        $url,
     ) {
         $this->label        = $label;
         $this->url          = $url;

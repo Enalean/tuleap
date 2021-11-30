@@ -42,7 +42,7 @@ class RepositoryTest extends TestBase
 
         $patch_body = json_encode(
             [
-                'allow_artifact_closure' => true
+                'allow_artifact_closure' => true,
             ]
         );
 
@@ -62,7 +62,7 @@ class RepositoryTest extends TestBase
 
         $patch_body = json_encode(
             [
-                'create_branch_prefix' => "dev-"
+                'create_branch_prefix' => "dev-",
             ]
         );
 
@@ -81,7 +81,7 @@ class RepositoryTest extends TestBase
 
         $patch_body = json_encode(
             [
-                'create_branch_prefix' => "dev:"
+                'create_branch_prefix' => "dev:",
             ]
         );
 

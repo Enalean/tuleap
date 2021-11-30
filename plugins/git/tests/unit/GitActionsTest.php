@@ -81,7 +81,7 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
                 \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
                 Mockery::mock(UsersToNotifyDao::class),
                 Mockery::mock(UgroupsToNotifyDao::class),
-                \Mockery::spy(\UGroupManager::class)
+                \Mockery::spy(\UGroupManager::class),
             ]
         )
             ->makePartial()
@@ -419,7 +419,7 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'id'   => '3',
                 'name' => 'c',
-            ]
+            ],
         ];
 
         $repo_owners = TestHelper::arrayToDar(

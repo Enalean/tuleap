@@ -44,7 +44,7 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
-        GitRepositoryObjectsSizeRetriever $repository_objects_size_retriever
+        GitRepositoryObjectsSizeRetriever $repository_objects_size_retriever,
     ) {
         parent::__construct(self::NAME);
         $this->repository_factory                = $repository_factory;
@@ -106,7 +106,7 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
                 $repository->getProject()->getUnixName(),
                 $repository->getId(),
                 $repository->getFullName(),
-                $repository_over_the_limit->getLargestObjectSize()
+                $repository_over_the_limit->getLargestObjectSize(),
             ];
         }
 
@@ -127,7 +127,7 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
                 'project_unixname' => $repository->getProject()->getUnixName(),
                 'repository_id' => $repository->getId(),
                 'repository_name' => $repository->getFullName(),
-                'object_size' => $repository_over_the_limit->getLargestObjectSize()
+                'object_size' => $repository_over_the_limit->getLargestObjectSize(),
             ];
         }
         $output->write(json_encode($rows));

@@ -67,7 +67,7 @@ class PullRequest implements Labelable
         $branch_dest,
         $sha1_dest,
         $status = 'R',
-        $merge_status = self::UNKNOWN_MERGE
+        $merge_status = self::UNKNOWN_MERGE,
     ) {
         $this->id            = $id;
         $this->title         = $title;

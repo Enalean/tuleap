@@ -48,7 +48,7 @@ class LastGeneratedClientSecretStore
     public function __construct(
         SplitTokenFormatter $split_token_formatter,
         EncryptionKey $encryption_key,
-        array &$storage
+        array &$storage,
     ) {
         $this->split_token_formatter = $split_token_formatter;
         $this->encryption_key        = $encryption_key;
@@ -59,7 +59,7 @@ class LastGeneratedClientSecretStore
     {
         $this->storage[self::STORAGE_NAME] = [
             'app_id'   => $app_id,
-            'verifier' => SymmetricCrypto::encrypt($secret->getString(), $this->encryption_key)
+            'verifier' => SymmetricCrypto::encrypt($secret->getString(), $this->encryption_key),
         ];
     }
 

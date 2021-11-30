@@ -36,7 +36,7 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
     public function __construct(
         Transition $transition,
         Workflow_Transition_Condition_CommentNotEmpty_Dao $dao,
-        $is_comment_required
+        $is_comment_required,
     ) {
         parent::__construct($transition);
         $this->dao                 = $dao;

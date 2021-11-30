@@ -67,7 +67,7 @@ class ProfilePresenterBuilder
             [
                 'user_id'     => $user->getId(),
                 'entry_label' => &$additional_entry_labels,
-                'entry_value' => &$additional_entry_values
+                'entry_value' => &$additional_entry_values,
             ]
         );
 
@@ -77,7 +77,7 @@ class ProfilePresenterBuilder
 
             $additional_entries[] = [
                 'label' => $label,
-                'purified_value' => $this->purifier->purify($value, CODENDI_PURIFIER_LIGHT)
+                'purified_value' => $this->purifier->purify($value, CODENDI_PURIFIER_LIGHT),
             ];
         }
 

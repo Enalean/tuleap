@@ -79,7 +79,7 @@ class KanbanPresenter
         $project_id,
         $dashboard_widget_id,
         $selected_tracker_report_id,
-        bool $has_current_project_parents
+        bool $has_current_project_parents,
     ) {
         $user_preferences              = new AgileDashboard_KanbanUserPreferences();
         $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
@@ -131,7 +131,7 @@ class KanbanPresenter
             [
                     'group_id' => $this->project_id,
                     'action'   => 'showKanban',
-                    'id'       => $kanban->getId()
+                    'id'       => $kanban->getId(),
                 ]
         );
         $this->user_accessibility_mode           = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));

@@ -34,7 +34,7 @@ class RoadmapDashboardCreator
         SimpleXMLElement $xml_dashboards,
         array $jira_issue_types,
         string $jira_epic_issue_type,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ): void {
         foreach ($jira_issue_types as $issue_type) {
             if ($issue_type->getName() === $jira_epic_issue_type) {

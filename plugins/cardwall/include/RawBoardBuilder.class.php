@@ -38,7 +38,7 @@ class Cardwall_RawBoardBuilder
         Tracker_ArtifactFactory $artifact_factory,
         Planning_Milestone $milestone,
         Cardwall_OnTop_Config $config,
-        Cardwall_OnTop_Config_ColumnCollection $columns
+        Cardwall_OnTop_Config_ColumnCollection $columns,
     ) {
         $planning       = $milestone->getPlanning();
         $field_provider = new Cardwall_OnTop_Config_MappedFieldProvider(

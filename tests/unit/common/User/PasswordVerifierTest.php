@@ -53,7 +53,7 @@ class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             [false, md5('not valid'), 'Tuleap', false],
             [true, md5('not valid'), 'Tuleap', true],
             [false, md5('Tuleap'), 'Tuleap', true],
-            [true, md5('Tuleap'), 'Tuleap', true]
+            [true, md5('Tuleap'), 'Tuleap', true],
         ];
     }
 

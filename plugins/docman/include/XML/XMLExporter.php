@@ -64,7 +64,7 @@ class XMLExporter
         Docman_VersionFactory $version_factory,
         UserManager $user_manager,
         UserXMLExporter $user_exporter,
-        PermissionsExporter $permissions_exporter
+        PermissionsExporter $permissions_exporter,
     ) {
         $this->logger               = $logger;
         $this->item_factory         = $item_factory;

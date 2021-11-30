@@ -36,7 +36,7 @@ class Tracker_UgroupMappingBuilder
 
     public function __construct(
         Tracker_UgroupPermissionsGoldenRetriever $permissions_retriever,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->permissions_retriever = $permissions_retriever;
         $this->ugroup_manager        = $ugroup_manager;

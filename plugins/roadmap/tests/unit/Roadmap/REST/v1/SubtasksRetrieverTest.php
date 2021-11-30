@@ -61,7 +61,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation_builder_cache = new class implements ICacheTaskRepresentationBuilderForTracker {
             public function getRepresentationBuilderForTracker(
                 Tracker $tracker,
-                \PFUser $user
+                \PFUser $user,
             ): ?IBuildATaskRepresentation {
                 return new class implements IBuildATaskRepresentation {
                     public function buildRepresentation(Artifact $artifact, \PFUser $user): TaskRepresentation

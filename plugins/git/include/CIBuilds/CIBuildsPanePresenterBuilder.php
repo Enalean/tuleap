@@ -46,7 +46,7 @@ class CIBuildsPanePresenterBuilder
         CITokenManager $ci_token_manager,
         \GitRepository $repository,
         AccessRightsPresenterOptionsBuilder $access_right_options_builder,
-        BuildStatusChangePermissionManager $build_status_change_permission_manager
+        BuildStatusChangePermissionManager $build_status_change_permission_manager,
     ) {
         $this->ci_token_manager                       = $ci_token_manager;
         $this->repository                             = $repository;

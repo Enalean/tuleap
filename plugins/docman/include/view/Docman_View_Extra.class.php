@@ -25,7 +25,7 @@ class Docman_View_Extra extends Docman_View_Docman
     {
         $toolbar[] = [
             'title' => dgettext('tuleap-docman', 'Project Documentation'),
-            'url'   => $params['default_url']
+            'url'   => $params['default_url'],
         ];
     }
 }

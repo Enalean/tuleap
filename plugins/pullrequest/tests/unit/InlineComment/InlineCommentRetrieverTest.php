@@ -55,7 +55,7 @@ final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'file_path'       => 'path',
             'unidiff_offset'  => 2,
             'content'         => 'My comment',
-            'is_outdated'     => 0
+            'is_outdated'     => 0,
         ]);
 
         $this->assertNotNull($this->retriever->getInlineCommentByID(12));

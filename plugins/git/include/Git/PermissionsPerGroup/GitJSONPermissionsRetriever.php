@@ -41,7 +41,7 @@ class GitJSONPermissionsRetriever
                     Feedback::ERROR => dgettext(
                         'tuleap-git',
                         "Git service is disabled."
-                    )
+                    ),
                 ]
             );
         }

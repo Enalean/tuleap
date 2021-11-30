@@ -51,7 +51,7 @@ class Git_Gitolite_GitoliteConfWriter
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         \Psr\Log\LoggerInterface $logger,
         ProjectManager $project_manager,
-        $gitolite_administration_path
+        $gitolite_administration_path,
     ) {
         $this->gitoliterc_reader            = $gitoliterc_reader;
         $this->permissions_serializer       = $permissions_serializer;
@@ -130,7 +130,7 @@ class Git_Gitolite_GitoliteConfWriter
     private function modifyGitConfigurationFileInGitolite(
         Project $project,
         Git_Gitolite_GitModifications $git_modifications,
-        $config_file_content
+        $config_file_content,
     ) {
         $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . "...");
         $config_file = $this->getProjectPermissionConfFile($project);
@@ -203,7 +203,7 @@ class Git_Gitolite_GitoliteConfWriter
 
     private function dumpSuspendedProjectRepositoriesConfigurationForMirrors(
         Project $project,
-        Git_Gitolite_GitModifications $git_modifications
+        Git_Gitolite_GitModifications $git_modifications,
     ) {
         $mirrors = $this->mirror_data_mapper->fetchAllForProject($project);
         foreach ($mirrors as $mirror) {
@@ -238,7 +238,7 @@ class Git_Gitolite_GitoliteConfWriter
     private function dumpSuspendedProjectRepositoriesConfigurationForAGivenMirror(
         Project $project,
         Git_Mirror_Mirror $mirror,
-        Git_Gitolite_GitModifications $git_modifications
+        Git_Gitolite_GitModifications $git_modifications,
     ) {
         if (empty($mirror->hostname)) {
             return;

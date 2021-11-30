@@ -350,12 +350,12 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             PlanningParameters::BACKLOG_TITLE                => 'Release Backlog',
             PlanningParameters::PLANNING_TITLE               => 'Sprint Plan',
             PlanningParameters::BACKLOG_TRACKER_IDS          => [
-                '2'
+                '2',
             ],
             PlanningPermissionsManager::PERM_PRIORITY_CHANGE => [
                 '2',
-                '3'
-            ]
+                '3',
+            ],
         ];
 
         $this->request->shouldReceive('getCurrentUser')->andReturn($user);

@@ -96,7 +96,7 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                         <testcase name="thirdtest" time="5.649"></testcase>
                     </testsuite>
                 </testsuite>
-             </testsuites>'
+             </testsuites>',
         ];
 
         $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(3);
@@ -112,7 +112,7 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'thirdtest' => $extracted_test_3,
                 'testSuite' => $extracted_test_suite,
                 'testSuite2' => $extracted_test_suite_2,
-                'testSuite3' => $extracted_test_suite_3
+                'testSuite3' => $extracted_test_suite_3,
             ],
             $result
         );
@@ -147,7 +147,7 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     </testcase>
                     <testcase name="failtest" time="10"></testcase>
                 </testsuite>
-             </testsuites>'
+             </testsuites>',
         ];
 
         $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(3);
@@ -164,7 +164,7 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
         $automated_tests_results_representation->build_url      = 'http://exemple/of/url';
         $automated_tests_results_representation->junit_contents = [
-            'Oui'
+            'Oui',
         ];
 
         $this->expectException(AutomatedTestsNotXmlException::class);
@@ -196,7 +196,7 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                         <failure>this is a failure</failure>
                     </testcase>
                 </testsuite>
-             </testsuites>'
+             </testsuites>',
         ];
 
         $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(2);

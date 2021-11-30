@@ -62,7 +62,7 @@ class HomePagePresenter
         $display_new_account_button,
         $login_url,
         StatisticsCollection $statistics_collection,
-        NewsCollection $news_collection
+        NewsCollection $news_collection,
     ) {
         $this->is_custom_logo_used        = Admin_Homepage_LogoFinder::isCustomLogoUsed();
         $this->path_custom_logo           = Admin_Homepage_LogoFinder::getCurrentUrl();

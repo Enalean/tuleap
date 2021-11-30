@@ -53,7 +53,7 @@ class DiskUsageProjectsPresenter
         $nb_projects,
         $order,
         $offset,
-        $limit
+        $limit,
     ) {
         $page = '/plugins/statistics/disk_usage.php';
         $menu = 'projects';
@@ -98,7 +98,7 @@ class DiskUsageProjectsPresenter
     {
         $params = [
             'menu'  => $menu,
-            'order' => $order
+            'order' => $order,
         ];
         return array_merge($this->search_fields->fields_values_url, $params);
     }

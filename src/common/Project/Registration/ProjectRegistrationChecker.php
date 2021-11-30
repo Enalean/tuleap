@@ -30,6 +30,6 @@ interface ProjectRegistrationChecker
 {
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
-        ProjectCreationData $project_creation_data
+        ProjectCreationData $project_creation_data,
     ): ProjectRegistrationErrorsCollection;
 }

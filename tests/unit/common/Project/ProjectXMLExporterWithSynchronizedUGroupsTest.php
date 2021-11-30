@@ -79,7 +79,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
         );
 
         $this->options    = [
-            'tracker_id' => 10
+            'tracker_id' => 10,
         ];
         $this->export_dir = "__fixtures";
 

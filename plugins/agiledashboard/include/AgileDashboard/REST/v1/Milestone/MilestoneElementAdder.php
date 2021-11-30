@@ -73,7 +73,7 @@ class MilestoneElementAdder
         ResourcesPatcher $resources_patcher,
         TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
         Tracker_ArtifactFactory $artifact_factory,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
     ) {
         $this->explicit_backlog_dao                = $explicit_backlog_dao;
         $this->unplanned_artifacts_adder           = $unplanned_artifacts_adder;

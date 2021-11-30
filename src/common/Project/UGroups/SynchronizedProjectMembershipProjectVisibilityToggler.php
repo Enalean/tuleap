@@ -35,7 +35,7 @@ class SynchronizedProjectMembershipProjectVisibilityToggler
         Project::ACCESS_PRIVATE_WO_RESTRICTED => [
             Project::ACCESS_PUBLIC              => true,
             Project::ACCESS_PUBLIC_UNRESTRICTED => true,
-        ]
+        ],
     ];
 
     /** @var SynchronizedProjectMembershipDao */

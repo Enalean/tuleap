@@ -46,7 +46,7 @@ class MethodBasedOnEffort implements IComputeProgression
     public function __construct(
         SemanticProgressDao $dao,
         Tracker_FormElement_Field_Numeric $total_effort_field,
-        Tracker_FormElement_Field_Numeric $remaining_effort_field
+        Tracker_FormElement_Field_Numeric $remaining_effort_field,
     ) {
         $this->dao                    = $dao;
         $this->total_effort_field     = $total_effort_field;

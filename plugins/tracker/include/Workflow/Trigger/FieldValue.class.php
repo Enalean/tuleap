@@ -28,7 +28,7 @@ class Tracker_Workflow_Trigger_FieldValue
 
     public function __construct(
         Tracker_FormElement_Field_List $field,
-        Tracker_FormElement_Field_List_BindValue $value
+        Tracker_FormElement_Field_List_BindValue $value,
     ) {
         $this->field = $field;
         $this->value = $value;
@@ -72,7 +72,7 @@ class Tracker_Workflow_Trigger_FieldValue
     public function getFieldData()
     {
         return [
-            $this->getField()->getId() => $this->getValue()->getId()
+            $this->getField()->getId() => $this->getValue()->getId(),
         ];
     }
 

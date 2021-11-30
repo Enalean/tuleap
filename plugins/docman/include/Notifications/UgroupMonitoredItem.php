@@ -36,7 +36,7 @@ class UgroupMonitoredItem
 
     public function __construct(
         UgroupToBeNotifiedPresenter $ugroup_presenter,
-        Docman_Item $monitored_item
+        Docman_Item $monitored_item,
     ) {
         $this->ugroup_presenter = $ugroup_presenter;
         $this->monitored_item   = $monitored_item;

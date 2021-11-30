@@ -73,7 +73,7 @@ class XMLExport
         Tracker_ArtifactFactory $artifact_factory,
         TimeRetriever $time_retriever,
         UserXMLExporter $user_xml_exporter,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->timetracking_enabler          = $timetracking_enabler;
         $this->timetracking_ugroup_retriever = $timetracking_ugroup_retriever;
@@ -86,7 +86,7 @@ class XMLExport
     public function export(
         SimpleXMLElement $xml,
         PFUser $user,
-        array $exported_trackers
+        array $exported_trackers,
     ): void {
         if (! isset($xml->trackers)) {
             return;

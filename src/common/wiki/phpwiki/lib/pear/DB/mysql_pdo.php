@@ -45,7 +45,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
             'prepare' => false,
             'pconnect' => true,
             'transactions' => true,
-            'limit' => 'alter'
+            'limit' => 'alter',
         ];
         $this->errorcode_map = [
             1004 => DB_ERROR_CANNOT_CREATE,
@@ -64,7 +64,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
             1136 => DB_ERROR_VALUE_COUNT_ON_ROW,
             1146 => DB_ERROR_NOSUCHTABLE,
             1048 => DB_ERROR_CONSTRAINT,
-            1216 => DB_ERROR_CONSTRAINT
+            1216 => DB_ERROR_CONSTRAINT,
         ];
     }
 

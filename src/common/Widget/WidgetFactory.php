@@ -70,7 +70,7 @@ class WidgetFactory implements IBuildInstanceOfWidgets
     public function __construct(
         UserManager $user_manager,
         User_ForgeUserGroupPermissionsManager $forge_ugroup_permissions_manager,
-        EventDispatcherInterface $event_manager
+        EventDispatcherInterface $event_manager,
     ) {
         $this->user_manager                     = $user_manager;
         $this->forge_ugroup_permissions_manager = $forge_ugroup_permissions_manager;

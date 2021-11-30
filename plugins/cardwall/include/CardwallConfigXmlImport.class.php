@@ -73,7 +73,7 @@ class CardwallConfigXmlImport
         Cardwall_OnTop_ColumnMappingFieldValueDao $mapping_field_value_dao,
         EventManager $event_manager,
         XML_RNGValidator $xml_validator,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->mapping                 = $mapping;
         $this->field_mapping           = $field_mapping;
@@ -120,7 +120,7 @@ class CardwallConfigXmlImport
                 'xml_content'         => $xml_input,
                 'mapping'             => $this->mapping,
                 'logger'              => $this->logger,
-                'artifact_id_mapping' => $this->artifact_id_mapping
+                'artifact_id_mapping' => $this->artifact_id_mapping,
             ]
         );
     }
@@ -219,7 +219,7 @@ class CardwallConfigXmlImport
         array $column_mapping,
         $cardwall_tracker_id,
         $tracker_id,
-        $field_id
+        $field_id,
     ) {
         foreach ($xml_values->{CardwallConfigXml::NODE_VALUE} as $xml_value) {
             $new_value_id  = $this->getNewValueId($xml_value);

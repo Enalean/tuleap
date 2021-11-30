@@ -47,7 +47,7 @@ class BurndownDataBuilderForREST
     public function __construct(
         LoggerInterface $logger,
         BurndownRemainingEffortAdderForREST $remaining_effort_adder,
-        BurndownCommonDataBuilder $common_data_builder
+        BurndownCommonDataBuilder $common_data_builder,
     ) {
         $this->logger                 = $logger;
         $this->remaining_effort_adder = $remaining_effort_adder;
@@ -87,7 +87,7 @@ class BurndownDataBuilderForREST
         PFUser $user,
         TimePeriodWithoutWeekEnd $time_period,
         $capacity,
-        $is_burndown_under_calculation
+        $is_burndown_under_calculation,
     ) {
         $user_time_period   = $this->common_data_builder->getTimePeriod($time_period);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);

@@ -33,7 +33,7 @@ class XMLImportFieldStrategyComputed implements Tracker_Artifact_XMLImport_XMLIm
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $computed_value = [];
 

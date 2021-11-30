@@ -34,7 +34,7 @@ class TokenTest extends RestBase
             $this->stream_factory->createStream(
                 json_encode([
                     "username" => 'I don\'t exists',
-                    "password" => 'pwd'
+                    "password" => 'pwd',
                 ])
             )
         ));
@@ -50,7 +50,7 @@ class TokenTest extends RestBase
             $this->stream_factory->createStream(
                 json_encode([
                     "username" => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    "password" => 'pwd'
+                    "password" => 'pwd',
                 ])
             )
         ));

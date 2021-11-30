@@ -49,7 +49,7 @@ class AddController
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
         ProjectHistoryDao $history_dao,
-        AllowedColorsCollection $allowed_colors
+        AllowedColorsCollection $allowed_colors,
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;

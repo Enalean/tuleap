@@ -121,7 +121,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $item      = $this->_controller->getItemFactory()->getItemFromDb($item->getParentId());
             $parents[] = [
                 'id'    => $item->getId(),
-                'title' => $item->getTitle()
+                'title' => $item->getTitle(),
             ];
         }
         $parents  = array_reverse($parents);

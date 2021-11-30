@@ -35,7 +35,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
-        array $additional_classes
+        array $additional_classes,
     ) {
         return $this->fetchWithColumnGroup('fetchArtifact', [$artifact, $submitted_values]);
     }

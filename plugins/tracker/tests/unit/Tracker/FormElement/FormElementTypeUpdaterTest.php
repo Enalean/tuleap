@@ -109,7 +109,7 @@ class FormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 $target_field_01,
-                $target_field_02
+                $target_field_02,
             ]);
 
         $this->form_element_factory->shouldReceive('changeFormElementType')
@@ -144,7 +144,7 @@ class FormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 $target_field_01,
-                $target_field_02
+                $target_field_02,
             ]);
 
         $this->form_element_factory->shouldReceive('changeFormElementType')

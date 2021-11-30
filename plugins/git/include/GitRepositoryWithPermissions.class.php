@@ -33,7 +33,7 @@ class GitRepositoryWithPermissions
         Git::PERM_READ          => [],
         Git::PERM_WRITE         => [],
         Git::PERM_WPLUS         => [],
-        Git::SPECIAL_PERM_ADMIN => []
+        Git::SPECIAL_PERM_ADMIN => [],
     ];
 
     public function __construct(GitRepository $repository, array $permissions = [])

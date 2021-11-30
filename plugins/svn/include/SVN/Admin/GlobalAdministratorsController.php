@@ -53,7 +53,7 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
     public function __construct(
         \ProjectManager $project_manager,
         User_ForgeUserGroupFactory $ugroup_factory,
-        SvnPermissionManager $permissions_manager
+        SvnPermissionManager $permissions_manager,
     ) {
         $this->project_manager     = $project_manager;
         $this->ugroup_factory      = $ugroup_factory;

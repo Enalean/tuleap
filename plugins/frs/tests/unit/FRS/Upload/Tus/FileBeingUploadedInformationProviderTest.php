@@ -43,7 +43,7 @@ class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\Test
         $dao->shouldReceive('searchFileOngoingUploadByIDUserIDAndExpirationDate')->andReturns(
             [
                 'file_size' => 123456,
-                'name'      => 'readme.md'
+                'name'      => 'readme.md',
             ]
         );
 

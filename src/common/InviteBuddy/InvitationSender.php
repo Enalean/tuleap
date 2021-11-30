@@ -61,7 +61,7 @@ class InvitationSender
         \UserManager $user_manager,
         InvitationDao $dao,
         LoggerInterface $logger,
-        InvitationInstrumentation $instrumentation
+        InvitationInstrumentation $instrumentation,
     ) {
         $this->gate_keeper     = $gate_keeper;
         $this->email_notifier  = $email_notifier;

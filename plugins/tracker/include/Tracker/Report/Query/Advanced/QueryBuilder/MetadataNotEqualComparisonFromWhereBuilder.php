@@ -50,7 +50,7 @@ class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFr
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new \RuntimeException("Metadata is not supported here.");
     }
@@ -67,21 +67,21 @@ class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFr
 
     public function visitInValueWrapper(
         InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new \RuntimeException("Metadata is not supported here.");
     }

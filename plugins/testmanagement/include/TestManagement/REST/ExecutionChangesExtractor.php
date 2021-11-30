@@ -53,7 +53,7 @@ class ExecutionChangesExtractor
         FormattedChangesetValueForFileFieldRetriever $formatted_changeset_value_for_file_field_retriever,
         FormattedChangesetValueForIntFieldRetriever $formatted_changeset_value_for_int_field_retriever,
         FormattedChangesetValueForTextFieldRetriever $formatted_changeset_value_for_text_field_retriever,
-        FormattedChangesetValueForListFieldRetriever $formatted_changeset_value_for_list_field_retriever
+        FormattedChangesetValueForListFieldRetriever $formatted_changeset_value_for_list_field_retriever,
     ) {
         $this->formatted_changeset_value_for_file_field_retriever = $formatted_changeset_value_for_file_field_retriever;
         $this->formatted_changeset_value_for_int_field_retriever  = $formatted_changeset_value_for_int_field_retriever;
@@ -71,7 +71,7 @@ class ExecutionChangesExtractor
         int $time,
         string $results,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): array {
         $changes = [];
 

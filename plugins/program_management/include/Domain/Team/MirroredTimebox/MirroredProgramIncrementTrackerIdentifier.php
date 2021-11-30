@@ -43,7 +43,7 @@ final class MirroredProgramIncrementTrackerIdentifier implements TrackerIdentifi
         RetrieveMirroredProgramIncrementTracker $tracker_retriever,
         RetrieveProjectReference $project_retriever,
         TeamIdentifier $team,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ?self {
         $team_project                       = $project_retriever->buildFromId($team->getId());
         $mirrored_program_increment_tracker = $tracker_retriever->retrieveRootPlanningMilestoneTracker(

@@ -44,7 +44,7 @@ class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar([
             'id'      => 1,
             'user_id' => 1,
-            'name'    => 'existing_dashboard'
+            'name'    => 'existing_dashboard',
         ]));
 
         $this->user_saver = new UserDashboardSaver($this->dao);

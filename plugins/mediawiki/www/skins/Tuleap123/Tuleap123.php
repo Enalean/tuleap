@@ -290,19 +290,19 @@ class Tuleap123Template extends BaseTemplate
             $url_redirect    = new URLRedirect($event_manager);
             $added_toolbox[] = [
                 'text' => $GLOBALS['Language']->getText('include_menu', 'login'),
-                'href' => $url_redirect->buildReturnToLogin($_SERVER)
+                'href' => $url_redirect->buildReturnToLogin($_SERVER),
             ];
         }
 
         $added_toolbox[] = [
            'text' => sprintf(dgettext('tuleap-mediawiki', 'Go back to %1$s'), $forge_name),
-           'href' => '/projects/' . $GLOBALS['group']->getUnixName()
+           'href' => '/projects/' . $GLOBALS['group']->getUnixName(),
         ];
 
         if ($this->IsUserAdmin()) {
             $added_toolbox[] = [
                 'text' => $GLOBALS['Language']->getText('global', 'Administration'),
-                'href' => '/plugins/mediawiki/forge_admin.php?group_id=' . $GLOBALS['group']->getId()
+                'href' => '/plugins/mediawiki/forge_admin.php?group_id=' . $GLOBALS['group']->getId(),
             ];
         }
 

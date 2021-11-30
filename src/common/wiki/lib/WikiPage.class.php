@@ -130,10 +130,10 @@ class WikiPage
         $this->convertAuthorIdToUserId($current_revision_metadata);
 
         $content = [
-            'content' => $this->getLastVersionContent()
+            'content' => $this->getLastVersionContent(),
         ];
         $summary = [
-            'summary' => $this->getSummaryForCurrentRevision()
+            'summary' => $this->getSummaryForCurrentRevision(),
         ];
 
         return $current_revision_metadata + $content + $summary;
@@ -296,7 +296,7 @@ class WikiPage
             [
                 'referenced' => &$referenced,
                 'wiki_page'  => $this->pagename,
-                'group_id'   => self::$gid
+                'group_id'   => self::$gid,
             ]
         );
 
@@ -311,7 +311,7 @@ class WikiPage
             $eM->processEvent('userCanAccessWikiDocument', [
                             'canAccess' => &$userCanAccess,
                             'wiki_page'  => $this->pagename,
-                            'group_id' => self::$gid
+                            'group_id' => self::$gid,
                             ]);
             if (! $userCanAccess) {
                 return false;
@@ -595,7 +595,7 @@ class WikiPage
              ,"PageGroupTest/Two","PageGroupTest/Three","PageGroupTest/Four"
              ,"PgsrcRefactoring","PgsrcTranslation","PhpWikiRecentChanges"
              ,"ProjectSummary","RecentVisitors","ReleaseNotes","SystemInfoPlugin"
-             ,"HomePageAlias","PhpWeatherPlugin","RateIt","RawHtmlPlugin"
+             ,"HomePageAlias","PhpWeatherPlugin","RateIt","RawHtmlPlugin",
 
              ];
     }

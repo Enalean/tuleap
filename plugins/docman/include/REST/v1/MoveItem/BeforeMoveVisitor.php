@@ -59,7 +59,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     public function __construct(
         DoesItemHasExpectedTypeVisitor $does_item_has_expected_type,
         Docman_ItemFactory $item_factory,
-        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever
+        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
     ) {
         $this->does_item_has_expected_type       = $does_item_has_expected_type;
         $this->item_factory                      = $item_factory;
@@ -141,7 +141,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     private function handleDocument(
         Docman_Document $document_to_move,
         Docman_Folder $destination,
-        DateTimeImmutable $current_time
+        DateTimeImmutable $current_time,
     ): void {
         $this->handleItem($document_to_move);
 

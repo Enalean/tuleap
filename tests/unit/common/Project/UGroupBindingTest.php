@@ -129,12 +129,12 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_row  = [
             'ugroup_id' => 300,
             'name'      => 'panicmongering',
-            'group_id'  => 138
+            'group_id'  => 138,
         ];
         $second_row = [
             'ugroup_id' => 400,
             'name'      => 'counteraverment',
-            'group_id'  => 185
+            'group_id'  => 185,
         ];
         $dar->shouldReceive('valid')->andReturn(true, true, false);
         $dar->shouldReceive('current')->andReturn($first_row, $second_row);
@@ -145,12 +145,12 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals([300, 400], $bound_ugroup_ids);
         $first_bound_ugroup = [
             'cloneName' => 'panicmongering',
-            'group_id'  => 138
+            'group_id'  => 138,
         ];
         $this->assertEquals($first_bound_ugroup, $result[300]);
         $second_bound_ugroup = [
             'cloneName' => 'counteraverment',
-            'group_id'  => 185
+            'group_id'  => 185,
         ];
         $this->assertEquals($second_bound_ugroup, $result[400]);
     }

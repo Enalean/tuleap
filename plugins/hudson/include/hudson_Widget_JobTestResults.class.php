@@ -145,7 +145,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('test-results-pie.js')]
+            ['file' => $this->getAssets()->getFileURL('test-results-pie.js')],
         ];
     }
 

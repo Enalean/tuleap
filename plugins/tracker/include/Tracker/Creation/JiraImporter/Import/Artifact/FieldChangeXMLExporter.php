@@ -90,7 +90,7 @@ class FieldChangeXMLExporter
         FieldChangeFloatBuilder $field_change_float_builder,
         FieldChangeListBuilder $field_change_list_builder,
         FieldChangeFileBuilder $field_change_file_builder,
-        FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder
+        FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder,
     ) {
         $this->logger                              = $logger;
         $this->field_change_date_builder           = $field_change_date_builder;
@@ -104,7 +104,7 @@ class FieldChangeXMLExporter
 
     public function exportFieldChanges(
         Snapshot $current_snapshot,
-        SimpleXMLElement $changeset_node
+        SimpleXMLElement $changeset_node,
     ): void {
         foreach ($current_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             try {
@@ -128,7 +128,7 @@ class FieldChangeXMLExporter
         FieldMapping $mapping,
         SimpleXMLElement $changeset_node,
         $value,
-        $rendered_value
+        $rendered_value,
     ): void {
         if ($mapping->getType() === Tracker_FormElementFactory::FIELD_STRING_TYPE) {
             $this->field_change_string_builder->build(
@@ -176,7 +176,7 @@ class FieldChangeXMLExporter
 
             if ($mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
                 $value_ids = [
-                    $value['id']
+                    $value['id'],
                 ];
             } else {
                 $mapped_value = $mapping->getValueForId((int) $value['id']);

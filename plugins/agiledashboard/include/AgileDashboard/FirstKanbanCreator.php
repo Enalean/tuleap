@@ -64,7 +64,7 @@ class AgileDashboard_FirstKanbanCreator
         TrackerXmlImport $xml_import,
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerReportUpdater $tracker_report_updater,
-        Tracker_ReportFactory $report_factory
+        Tracker_ReportFactory $report_factory,
     ) {
         $this->project                = $project;
         $this->kanban_manager         = $kanban_manager;
@@ -111,7 +111,7 @@ class AgileDashboard_FirstKanbanCreator
                 [
                     'group_id' => $this->project->getId(),
                     'action'   => 'showKanban',
-                    'id'       => $kanban_id
+                    'id'       => $kanban_id,
                 ]
             )),
             CODENDI_PURIFIER_DISABLED

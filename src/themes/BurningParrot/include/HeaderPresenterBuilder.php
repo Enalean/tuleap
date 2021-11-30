@@ -95,7 +95,7 @@ class HeaderPresenterBuilder
         ?SwitchToPresenter $switch_to,
         IDetectIfLogoIsCustomized $customized_logo_detector,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
-        DetectedBrowser $detected_browser
+        DetectedBrowser $detected_browser,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->current_user             = $current_user;
@@ -170,7 +170,7 @@ class HeaderPresenterBuilder
             [
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'tlp'),
                 new CssAssetWithDensityVariants($core_assets, 'tlp-vars'),
-                new CssAssetWithoutVariantDeclinaisons($core_assets, 'BurningParrot/burning-parrot')
+                new CssAssetWithoutVariantDeclinaisons($core_assets, 'BurningParrot/burning-parrot'),
             ]
         );
         $this->css_assets = $css_assets->merge($this->css_assets);
@@ -185,7 +185,7 @@ class HeaderPresenterBuilder
             [
                 'variant'         => $this->getMainColor(),
                 'stylesheets'     => &$stylesheets,
-                'theme_variation' => $theme_variation
+                'theme_variation' => $theme_variation,
             ]
         );
 

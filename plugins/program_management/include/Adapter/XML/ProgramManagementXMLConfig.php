@@ -59,7 +59,7 @@ final class ProgramManagementXMLConfig
         ?string $program_increments_milestones_name,
         ?int $iterations_source_tracker_id,
         ?string $iterations_section_name,
-        ?string $iterations_milestones_name
+        ?string $iterations_milestones_name,
     ) {
         $this->increments_source_tracker_id           = $increments_source_tracker_id;
         $this->increments_plannable_trackers_ids      = $increments_plannable_trackers_ids;
@@ -84,7 +84,7 @@ final class ProgramManagementXMLConfig
         ExtractXMLConfig $config_extracter,
         ProgramForAdministrationIdentifier $program_identifier,
         string $extraction_path,
-        array $created_trackers_mapping
+        array $created_trackers_mapping,
     ): self {
         $xml_config = $config_parser->parseConfig($extraction_path);
         return new self(

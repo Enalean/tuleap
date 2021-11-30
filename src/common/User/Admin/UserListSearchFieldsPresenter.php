@@ -54,7 +54,7 @@ class UserListSearchFieldsPresenter
             $this->getStatusValuePresenter(PFUser::STATUS_SUSPENDED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "suspended")),
             $this->getStatusValuePresenter(PFUser::STATUS_PENDING, $status_values, $GLOBALS['Language']->getText("admin_userlist", "pending")),
             $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "validated")),
-            $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED_RESTRICTED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "validated_restricted"))
+            $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED_RESTRICTED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "validated_restricted")),
         ];
     }
 
@@ -70,7 +70,7 @@ class UserListSearchFieldsPresenter
         return [
             'value'       => $status,
             'is_selected' => $selected,
-            'label'       => $label
+            'label'       => $label,
         ];
     }
 }

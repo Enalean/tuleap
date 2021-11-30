@@ -92,7 +92,7 @@ abstract class ClientWrapper implements JiraClient
     private static function getClientDependingOnServer(
         JiraCredentials $jira_credentials,
         RequestFactoryInterface $request_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ): JiraServerClient|JiraCloudClient {
         $client_without_authentication = HttpClientFactory::createClient();
         $server_info_uri               = $jira_credentials->getJiraUrl() . self::JIRA_CORE_BASE_URL . '/serverInfo';

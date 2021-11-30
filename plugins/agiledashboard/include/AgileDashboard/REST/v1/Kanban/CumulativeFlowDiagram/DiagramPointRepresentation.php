@@ -32,7 +32,7 @@ class DiagramPointRepresentation
 
     public function build(
         $start_date,
-        $kanban_items_count
+        $kanban_items_count,
     ) {
         $this->start_date         = $start_date;
         $this->kanban_items_count = JsonCast::toInt($kanban_items_count);

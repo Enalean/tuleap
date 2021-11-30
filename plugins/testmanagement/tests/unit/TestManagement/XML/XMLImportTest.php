@@ -85,7 +85,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T1' => 101,
             'T2' => 102,
             'T3' => 103,
-            'T4' => 104
+            'T4' => 104,
         ];
 
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
@@ -150,7 +150,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [
             'T2' => 102,
-            'T3' => 103
+            'T3' => 103,
         ];
 
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->never();
@@ -181,7 +181,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T1' => 101,
             'T2' => 102,
             'T3' => 103,
-            'T4' => 104
+            'T4' => 104,
         ];
 
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
@@ -215,7 +215,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T1' => 101,
             'T2' => 102,
             'T3' => 103,
-            'T4' => 104
+            'T4' => 104,
         ];
 
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
@@ -250,7 +250,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T1' => 101,
             'T2' => 102,
             'T3' => 103,
-            'T4' => 104
+            'T4' => 104,
         ];
 
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
@@ -285,7 +285,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T1' => 101,
             'T2' => 102,
             'T3' => 103,
-            'T4' => 104
+            'T4' => 104,
         ];
 
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
@@ -320,7 +320,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T1' => 101,
             'T2' => 102,
             'T3' => 103,
-            'T4' => 104
+            'T4' => 104,
         ];
 
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);

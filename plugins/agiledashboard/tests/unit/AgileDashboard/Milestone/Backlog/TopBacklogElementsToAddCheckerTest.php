@@ -119,7 +119,7 @@ class TopBacklogElementsToAddCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $added_artifact_ids = [
             201,
-            202
+            202,
         ];
 
         $this->checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(
@@ -168,7 +168,7 @@ class TopBacklogElementsToAddCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $added_artifact_ids = [
             201,
-            202
+            202,
         ];
 
         $this->checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(

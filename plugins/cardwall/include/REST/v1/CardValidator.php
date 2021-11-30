@@ -46,7 +46,7 @@ class CardValidator
         $semantic_title = Tracker_Semantic_Title::load($single_card->getArtifact()->getTracker());
         if ($semantic_title) {
             return [
-                $semantic_title->getFieldId() => $label
+                $semantic_title->getFieldId() => $label,
             ];
         }
         return [];
@@ -61,7 +61,7 @@ class CardValidator
         foreach ($mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getColumnId() == $column_id) {
                 return [
-                    $mapping->getField()->getId() => $value_mapping->getValueId()
+                    $mapping->getField()->getId() => $value_mapping->getValueId(),
                 ];
             }
         }

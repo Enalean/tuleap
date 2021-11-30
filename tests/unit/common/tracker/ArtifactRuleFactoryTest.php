@@ -36,7 +36,7 @@ final class ArtifactRuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'source_value_id'   => 10,
             'target_field_id'   => 4,
             'rule_type'         => 4, //RuleValue
-            'target_value_id'   => 100
+            'target_value_id'   => 100,
         ]);
 
         $rules_dao = \Mockery::spy(\ArtifactRuleDao::class);

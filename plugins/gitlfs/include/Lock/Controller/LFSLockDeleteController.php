@@ -83,7 +83,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
         LockDestructor $lock_destructor,
         LockRetriever $lock_retriever,
         UserRetriever $user_retriever,
-        Prometheus $prometheus
+        Prometheus $prometheus,
     ) {
         $this->plugin                = $plugin;
         $this->repository_factory    = $repository_factory;
@@ -134,7 +134,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
         int $lock_id,
         LockDeleteRequest $lock_delete_request,
         \GitRepository $repository,
-        \PFUser $user
+        \PFUser $user,
     ): void {
         $locks = $this->lock_retriever->retrieveLocks(
             $lock_id,

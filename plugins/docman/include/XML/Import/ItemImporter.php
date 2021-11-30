@@ -38,7 +38,7 @@ class ItemImporter
 
     public function __construct(
         PermissionsImporter $permissions_importer,
-        Docman_ItemFactory $item_factory
+        Docman_ItemFactory $item_factory,
     ) {
         $this->item_factory         = $item_factory;
         $this->permissions_importer = $permissions_importer;
@@ -52,7 +52,7 @@ class ItemImporter
         NodeImporter $node_importer,
         PostImporter $post_importer,
         Docman_Item $parent_item,
-        ImportProperties $properties
+        ImportProperties $properties,
     ): void {
         $item = $this->item_factory->createWithoutOrdering(
             $properties->getTitle(),

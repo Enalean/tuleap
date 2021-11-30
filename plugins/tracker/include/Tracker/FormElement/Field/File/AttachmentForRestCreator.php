@@ -51,7 +51,7 @@ class AttachmentForRestCreator implements AttachmentCreator
         AttachmentToFinalPlaceMover $mover,
         Tracker_Artifact_Attachment_TemporaryFileManager $temporary_file_manager,
         AttachmentCreator $next_creator_in_chain,
-        Rule_File $rule_file
+        Rule_File $rule_file,
     ) {
         $this->temporary_file_manager = $temporary_file_manager;
         $this->mover                  = $mover;
@@ -63,7 +63,7 @@ class AttachmentForRestCreator implements AttachmentCreator
         PFUser $current_user,
         Tracker_FormElement_Field_File $field,
         array $submitted_value_info,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): ?Tracker_FileInfo {
         if (! $this->rule_file->isValid($submitted_value_info)) {
             return $this->next_creator_in_chain->createAttachment(

@@ -80,7 +80,7 @@ class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
                             [],
                             null,
                         ),
-                    ]
+                    ],
                 ]
             )->getMock();
 

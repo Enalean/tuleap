@@ -94,7 +94,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
             [
-                ['id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456]
+                ['id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456],
             ]
         );
 
@@ -131,7 +131,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
             [
-                ['user_id' => 103]
+                ['user_id' => 103],
             ]
         );
 
@@ -168,7 +168,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
             [
-                ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456]
+                ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456],
             ]
         );
 

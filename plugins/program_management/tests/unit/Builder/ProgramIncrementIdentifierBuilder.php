@@ -37,7 +37,7 @@ final class ProgramIncrementIdentifierBuilder
 
     public static function buildWithIdAndUser(
         int $program_increment_id,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ProgramIncrementIdentifier {
         return ProgramIncrementIdentifier::fromId(
             VerifyIsProgramIncrementStub::withValidProgramIncrement(),

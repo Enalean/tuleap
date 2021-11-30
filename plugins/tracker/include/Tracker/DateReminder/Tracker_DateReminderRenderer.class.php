@@ -181,7 +181,7 @@ class Tracker_DateReminderRenderer
          $all_possible_roles = [
             new Tracker_DateReminder_Role_Submitter(),
             new Tracker_DateReminder_Role_Assignee(),
-            new Tracker_DateReminder_Role_Commenter()
+            new Tracker_DateReminder_Role_Commenter(),
          ];
          $purifier           = Codendi_HTMLPurifier::instance();
          foreach ($all_possible_roles as $role) {
@@ -335,7 +335,7 @@ class Tracker_DateReminderRenderer
         $all_possible_roles = [
             new Tracker_DateReminder_Role_Submitter(),
             new Tracker_DateReminder_Role_Assignee(),
-            new Tracker_DateReminder_Role_Commenter()
+            new Tracker_DateReminder_Role_Commenter(),
         ];
         foreach ($all_possible_roles as $possible_role) {
             $roles[] = $possible_role->getIdentifier();

@@ -49,7 +49,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
                 [
                     'user' => $params['user'],
                     'ignore_collapse' => true,
-                    'obsolete_only' => true
+                    'obsolete_only' => true,
                 ]
             );
         } else {

@@ -50,7 +50,7 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
              * @psalm-return AuthenticationScope<AuthenticationScopeIdentifier>|null
              */
             public function buildAuthenticationScopeFromScopeIdentifier(
-                AuthenticationScopeIdentifier $scope_identifier
+                AuthenticationScopeIdentifier $scope_identifier,
             ): ?AuthenticationScope {
                 if ($scope_identifier->toString() === 'foo:bar' || $scope_identifier->toString() === 'type:value') {
                     return AuthenticationTestCoveringScope::fromIdentifier($scope_identifier);

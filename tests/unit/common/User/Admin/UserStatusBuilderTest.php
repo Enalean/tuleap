@@ -69,41 +69,41 @@ class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'key'        => PFUser::STATUS_ACTIVE,
                 'status'     => null,
-                'is_current' => false
+                'is_current' => false,
             ],
             [
                 'key'        => PFUser::STATUS_SUSPENDED,
                 'status'     => null,
-                'is_current' => false
+                'is_current' => false,
             ],
             [
                 'key'        => PFUser::STATUS_DELETED,
                 'status'     => null,
-                'is_current' => false
-            ]
+                'is_current' => false,
+            ],
         ];
 
         $this->status_with_restricted = [
             [
                 'key'        => PFUser::STATUS_ACTIVE,
                 'status'     => null,
-                'is_current' => false
+                'is_current' => false,
             ],
             [
                 'key'        => PFUser::STATUS_RESTRICTED,
                 'status'     => null,
-                'is_current' => false
+                'is_current' => false,
             ],
             [
                 'key'        => PFUser::STATUS_SUSPENDED,
                 'status'     => null,
-                'is_current' => false
+                'is_current' => false,
             ],
             [
                 'key'        => PFUser::STATUS_DELETED,
                 'status'     => null,
-                'is_current' => false
-            ]
+                'is_current' => false,
+            ],
         ];
     }
 

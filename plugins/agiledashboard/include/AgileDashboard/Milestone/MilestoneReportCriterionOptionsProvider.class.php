@@ -50,7 +50,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
         Tracker_HierarchyFactory $hierarchy_factory,
         PlanningFactory $planning_factory,
         TrackerFactory $tracker_factory,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->nearest_planning_tracker_provider = $nearest_planning_tracker_provider;
         $this->hierarchy_factory                 = $hierarchy_factory;

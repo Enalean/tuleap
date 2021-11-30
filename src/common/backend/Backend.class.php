@@ -98,7 +98,7 @@ class Backend
             //for example plugin ldap will override BackendSVN
             $params = [
                 'base'  => &$base,
-                'setup' => &$setup
+                'setup' => &$setup,
             ];
             $event  = Event::BACKEND_FACTORY_GET_PREFIX . strtolower($type);
             EventManager::instance()->processEvent($event, $params);

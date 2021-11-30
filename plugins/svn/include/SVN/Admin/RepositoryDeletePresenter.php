@@ -50,7 +50,7 @@ class RepositoryDeletePresenter extends BaseAdminPresenter
         Repository $repository,
         Project $project,
         $title,
-        CSRFSynchronizerToken $token
+        CSRFSynchronizerToken $token,
     ) {
         parent::__construct();
 

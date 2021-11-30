@@ -308,7 +308,7 @@ class LdapPlugin extends Plugin
                             'login'        => $tuleap_user->getUserName(),
                             'user_id'      => $tuleap_user->getId(),
                             'has_avatar'   => $tuleap_user->hasAvatar(),
-                            'avatar_url'   => $tuleap_user->getAvatarUrl()
+                            'avatar_url'   => $tuleap_user->getAvatarUrl(),
                         ];
                     } else {
                         $params['userList'][] = [
@@ -316,7 +316,7 @@ class LdapPlugin extends Plugin
                             'login'        => $lr->getLogin(),
                             'user_id'      => $tuleap_user_id,
                             'has_avatar'   => false,
-                            'avatar_url'   => ''
+                            'avatar_url'   => '',
                         ];
                     }
                 }
@@ -525,7 +525,7 @@ class LdapPlugin extends Plugin
                 'login_info'     => $login_info,
                 'ldap_id_label'  => $ldap_id_label,
                 'ldap_id'        => $ldap_id,
-                'has_login_info' => $has_login_info
+                'has_login_info' => $has_login_info,
             ];
         }
     }
@@ -1029,7 +1029,7 @@ class LdapPlugin extends Plugin
                     UserManager::instance(),
                     Backend::instance(Backend::SVN),
                     ProjectManager::instance(),
-                    new LDAP_ProjectManager()
+                    new LDAP_ProjectManager(),
                 ];
                 break;
         }

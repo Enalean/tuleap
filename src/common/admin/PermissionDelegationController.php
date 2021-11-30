@@ -108,7 +108,7 @@ class Admin_PermissionDelegationController
         UserManager $user_manager,
         SiteAdministratorPermissionChecker $site_admin_permission_checker,
         PermissionPresenterBuilder $permission_builder,
-        User_ForgeUserGroupPermissionsDao $dao
+        User_ForgeUserGroupPermissionsDao $dao,
     ) {
         $this->request    = $request;
         $this->csrf_token = $csrf_token;

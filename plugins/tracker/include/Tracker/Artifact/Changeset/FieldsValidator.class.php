@@ -36,7 +36,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        ArtifactLinkValidator $artifact_link_validator
+        ArtifactLinkValidator $artifact_link_validator,
     ) {
         $this->formelement_factory     = $formelement_factory;
         $this->artifact_link_validator = $artifact_link_validator;
@@ -54,7 +54,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
         Artifact $artifact,
         \PFUser $user,
         $fields_data,
-        ChangesetValidationContext $changeset_validation_context
+        ChangesetValidationContext $changeset_validation_context,
     ): bool {
         $is_valid    = true;
         $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
@@ -83,7 +83,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
         PFUser $user,
         Tracker_FormElement_Field $field,
         $submitted_value,
-        ChangesetValidationContext $changeset_validation_context
+        ChangesetValidationContext $changeset_validation_context,
     ): bool {
         if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
             $is_field_generally_valid = $this->validateField($artifact, $field, $user, $submitted_value);
@@ -103,7 +103,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
     abstract protected function canValidateField(
         Artifact $artifact,
         Tracker_FormElement_Field $field,
-        PFUser $user
+        PFUser $user,
     ): bool;
 
     /**
@@ -113,7 +113,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
         Artifact $artifact,
         Tracker_FormElement_Field $field,
         \PFUser $user,
-        $submitted_value
+        $submitted_value,
     );
 
     private function getSubmittedValue(Tracker_FormElement_Field $field, $fields_data)

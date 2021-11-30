@@ -56,7 +56,7 @@ class HelpDropdownPresenter
         ?string $explorer_url,
         ?HelpLinkPresenter $release_note_link,
         bool $has_release_note_been_seen,
-        array $site_content_links
+        array $site_content_links,
     ) {
         $this->platform_links             = $platform_links;
         $this->release_note_link          = $release_note_link;

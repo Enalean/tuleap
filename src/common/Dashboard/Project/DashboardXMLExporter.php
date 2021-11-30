@@ -42,7 +42,7 @@ class DashboardXMLExporter
         IRetrieveDashboards $dashboards_retriever,
         IRetrieveDashboardWidgets $widgets_retriever,
         IBuildInstanceOfWidgets $widget_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->retriever         = $dashboards_retriever;
         $this->widgets_retriever = $widgets_retriever;

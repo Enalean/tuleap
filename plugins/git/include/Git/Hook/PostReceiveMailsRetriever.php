@@ -46,7 +46,7 @@ class PostReceiveMailsRetriever
     public function __construct(
         UsersToNotifyDao $user_dao,
         UgroupsToNotifyDao $ugroup_dao,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->user_dao       = $user_dao;
         $this->ugroup_dao     = $ugroup_dao;

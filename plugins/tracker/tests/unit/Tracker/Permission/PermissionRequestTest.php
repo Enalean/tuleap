@@ -33,7 +33,7 @@ final class Tracker_Permission_PermissionRequestTest extends \Tuleap\Test\PHPUni
             ProjectUGroup::ANONYMOUS,
             ProjectUGroup::REGISTERED,
             ProjectUGroup::PROJECT_MEMBERS,
-            ProjectUGroup::PROJECT_ADMIN
+            ProjectUGroup::PROJECT_ADMIN,
         ];
     }
 

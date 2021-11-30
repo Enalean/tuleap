@@ -41,7 +41,7 @@ final class TeamAdapter implements BuildTeam
         private RetrieveFullProject $retrieve_full_project,
         private VerifyIsProgram $program_verifier,
         private ExplicitBacklogDao $explicit_backlog_dao,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 

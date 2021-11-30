@@ -40,7 +40,7 @@ class PermissionPerGroupServicePresenter extends PermissionPerGroupPanePresenter
     public function __construct(
         array $permissions,
         Project $project,
-        ?ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null,
     ) {
         parent::__construct($permissions, $selected_ugroup);
 

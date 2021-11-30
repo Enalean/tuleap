@@ -84,7 +84,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         Project $project,
         $has_been_raised,
         PFUser $prioritized_by,
-        $prioritized_on
+        $prioritized_on,
     ) {
         $this->tracker_artifact_factory = $tracker_artifact_factory;
         $this->id                       = $id;
@@ -249,7 +249,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         $format = 'html',
         $user = null,
         $ignore_perms = false,
-        $for_mail = false
+        $for_mail = false,
     ) {
         return '';
     }

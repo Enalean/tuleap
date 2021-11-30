@@ -38,7 +38,7 @@ class SimilarFieldsMatcher
         SupportedFieldsDao $similar_fields_dao,
         \Tracker_FormElementFactory $form_element_factory,
         SimilarFieldsFilter $similar_fields_filter,
-        BindNameVisitor $bind_name_visitor
+        BindNameVisitor $bind_name_visitor,
     ) {
         $this->similar_fields_dao    = $similar_fields_dao;
         $this->form_element_factory  = $form_element_factory;

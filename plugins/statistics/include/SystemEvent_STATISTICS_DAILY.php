@@ -47,7 +47,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
         \Psr\Log\LoggerInterface $logger,
         Statistics_ConfigurationManager $configuration_manager,
         Statistics_DiskUsagePurger $disk_usage_purger,
-        Statistics_DiskUsageManager $disk_usage_manager
+        Statistics_DiskUsageManager $disk_usage_manager,
     ) {
         $this->logger                = $logger;
         $this->configuration_manager = $configuration_manager;

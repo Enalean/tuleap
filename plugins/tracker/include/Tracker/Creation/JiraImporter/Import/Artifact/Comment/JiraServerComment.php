@@ -35,7 +35,7 @@ final class JiraServerComment implements Comment
     public function __construct(
         private ActiveJiraServerUser $update_author,
         private DateTimeImmutable $date,
-        private string $rendered_value
+        private string $rendered_value,
     ) {
     }
 

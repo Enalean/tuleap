@@ -312,7 +312,7 @@ class Git extends PluginController
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UGroupManager $ugroup_manager,
-        HeaderRenderer $header_renderer
+        HeaderRenderer $header_renderer,
     ) {
         parent::__construct($user_manager, $request);
 
@@ -520,7 +520,7 @@ class Git extends PluginController
         $params            = [
             'repository'        => $repository,
             'user'              => $user,
-            'permitted_actions' => &$permitted_actions
+            'permitted_actions' => &$permitted_actions,
         ];
 
         EventManager::instance()->processEvent(GIT_ADDITIONAL_PERMITTED_ACTIONS, $params);
@@ -674,7 +674,7 @@ class Git extends PluginController
                             $added_branches_permissions,
                             $added_tags_permissions,
                             $updated_permissions,
-                            $use_regexp
+                            $use_regexp,
                         ]
                     );
                     $this->addView('view');
@@ -819,7 +819,7 @@ class Git extends PluginController
                     $this->addAction('updateMirroring', [
                         $this->request->getProject(),
                         $repositories,
-                        $this->request->get('selected_mirror_ids')
+                        $this->request->get('selected_mirror_ids'),
                     ]);
                 }
 
@@ -978,7 +978,7 @@ class Git extends PluginController
                     $this->addAction('updateMirroring', [
                         $this->request->getProject(),
                         [$repository],
-                        $selected_mirror_ids
+                        $selected_mirror_ids,
                     ]);
                 } else {
                     $this->addError(dgettext('tuleap-git', 'This request is not valid (invalid mirror ids).'));

@@ -39,7 +39,7 @@ class EmptyFileToUploadFinisher
 
     public function __construct(
         DocumentUploadFinisher $finisher,
-        UploadPathAllocator $document_upload_path_allocator
+        UploadPathAllocator $document_upload_path_allocator,
     ) {
         $this->finisher                       = $finisher;
         $this->document_upload_path_allocator = $document_upload_path_allocator;

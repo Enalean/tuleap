@@ -39,7 +39,7 @@ class AdministratorPresenterBuilder
         UGroupUserDao $dao,
         \UserManager $user_manager,
         \UserHelper $user_helper,
-        \EventManager $event_manager
+        \EventManager $event_manager,
     ) {
         $this->dao           = $dao;
         $this->user_manager  = $user_manager;

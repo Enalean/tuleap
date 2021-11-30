@@ -64,7 +64,7 @@ final class CommitDetails
         string $first_tag,
         string $author_email,
         string $author_name,
-        int $committer_epoch
+        int $committer_epoch,
     ) {
         $this->hash            = $hash;
         $this->title           = $title;

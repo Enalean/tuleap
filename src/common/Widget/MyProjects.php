@@ -179,14 +179,14 @@ class MyProjects extends \Widget
                 $html .= '<span class="dashboard-widget-my-projects-legend-title">' . $GLOBALS['Language']->getText('my_index', 'my_projects_legend') . '</span>';
                 $icons = [
                     ['classname' => 'fa-lock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'private')],
-                    ['classname' => 'fa-lock-open', 'label' => $GLOBALS['Language']->getText('project_privacy', 'public')]
+                    ['classname' => 'fa-lock-open', 'label' => $GLOBALS['Language']->getText('project_privacy', 'public')],
                 ];
                 if (ForgeConfig::areRestrictedUsersAllowed()) {
                     $icons = [
                         ['classname' => 'fa-lock', 'label' => _('Private')],
                         ['classname' => 'fa-tlp-lock-plus-r', 'label' => _('Private incl. restricted')],
                         ['classname' => 'fa-lock-open', 'label' => _('Public')],
-                        ['classname' => 'fa-tlp-unlock-plus-r', 'label' => _('Public incl. restricted')]
+                        ['classname' => 'fa-tlp-unlock-plus-r', 'label' => _('Public incl. restricted')],
                     ];
                 }
                 foreach ($icons as $icon) {
@@ -240,7 +240,7 @@ class MyProjects extends \Widget
             $rss->addItem([
                 'title'       => 'Error',
                 'description' => $GLOBALS['Language']->getText('my_index', 'not_member') . db_error(),
-                'link'        => $server_url
+                'link'        => $server_url,
             ]);
         } else {
             for ($i = 0; $i < $rows; $i++) {
@@ -257,7 +257,7 @@ class MyProjects extends \Widget
                 $rss->addItem([
                     'title'       => $hp->purify($title),
                     'description' => $desc,
-                    'link'        => $server_url . '/projects/' . db_result($result, $i, 'unix_group_name')
+                    'link'        => $server_url . '/projects/' . db_result($result, $i, 'unix_group_name'),
                 ]);
             }
         }

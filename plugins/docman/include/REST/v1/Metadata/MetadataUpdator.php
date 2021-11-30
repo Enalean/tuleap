@@ -92,7 +92,7 @@ class MetadataUpdator
         MetadataRecursiveUpdator $recursive_updator,
         DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
         CustomMetadataRepresentationRetriever $custom_metadata_representation_retriever,
-        MetadataValueUpdator $metadata_value_updator
+        MetadataValueUpdator $metadata_value_updator,
     ) {
         $this->item_factory                             = $item_factory;
         $this->status_mapper                            = $status_mapper;
@@ -114,7 +114,7 @@ class MetadataUpdator
     public function updateDocumentMetadata(
         PUTMetadataRepresentation $representation,
         \Docman_Item $item,
-        PFUser $current_user
+        PFUser $current_user,
     ): void {
         if (
             $representation->title !== $item->getTitle() &&
@@ -183,7 +183,7 @@ class MetadataUpdator
             'description'       => $representation->description,
             'status'            => $status,
             'obsolescence_date' => $obsolescence_date,
-            'user_id'           => $representation->owner_id
+            'user_id'           => $representation->owner_id,
         ];
 
         if ($representation->owner_id !== $item->getOwnerId()) {
@@ -210,7 +210,7 @@ class MetadataUpdator
         PUTMetadataFolderRepresentation $representation,
         \Docman_Item $item,
         Project $project,
-        PFUser $user
+        PFUser $user,
     ): void {
         if (
             $representation->title !== $item->getTitle() &&
@@ -233,7 +233,7 @@ class MetadataUpdator
             'id'          => $item_id,
             'title'       => $representation->title,
             'description' => $representation->description,
-            'status'      => $status
+            'status'      => $status,
         ];
         $this->item_factory->update($row);
         $this->sendStatusUpdateEvent($item, $user, $status);

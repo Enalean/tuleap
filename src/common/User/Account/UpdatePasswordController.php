@@ -83,7 +83,7 @@ final class UpdatePasswordController implements DispatchableWithRequest
         PasswordVerifier $password_verifier,
         User_UserStatusManager $user_status_manager,
         PasswordChanger $password_changer,
-        PasswordSanityChecker $password_sanity_checker
+        PasswordSanityChecker $password_sanity_checker,
     ) {
         $this->event_dispatcher        = $event_dispatcher;
         $this->csrf_token              = $csrf_token;

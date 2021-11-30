@@ -107,7 +107,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         LoggerInterface $logger,
-        MilestoneBurndownFieldChecker $burndown_field_checker
+        MilestoneBurndownFieldChecker $burndown_field_checker,
     ) {
         $this->planning_factory             = $planning_factory;
         $this->artifact_factory             = $artifact_factory;
@@ -307,7 +307,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getPlannedArtifacts(
         PFUser $user,
-        Artifact $milestone_artifact
+        Artifact $milestone_artifact,
     ) {
         if ($milestone_artifact == null) {
             return; //it is not possible!
@@ -328,7 +328,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         PFUser $user,
         Artifact $artifact,
         TreeNode $parent_node,
-        array $parents
+        array $parents,
     ) {
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
         if (! $linked_artifacts) {

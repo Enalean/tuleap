@@ -48,7 +48,7 @@ final class FeatureRemoval
     public static function fromFeature(
         VerifyLinkedUserStoryIsNotPlanned $story_verifier,
         FeatureIdentifier $feature,
-        UserCanPrioritize $user
+        UserCanPrioritize $user,
     ): self {
         if ($story_verifier->isLinkedToAtLeastOnePlannedUserStory($user, $feature)) {
             throw new FeatureHasPlannedUserStoryException($feature->id);

@@ -40,7 +40,7 @@ final class OrganizeableGitCrossReferencesAndTheContributors
      */
     public function __construct(
         array $organizeable_cross_references_information_collection,
-        UserEmailCollection $contributors_email_collection
+        UserEmailCollection $contributors_email_collection,
     ) {
         $this->organizeable_cross_references_information_collection = $organizeable_cross_references_information_collection;
         $this->contributors_email_collection                        = $contributors_email_collection;

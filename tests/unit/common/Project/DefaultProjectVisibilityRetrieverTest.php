@@ -57,7 +57,7 @@ final class DefaultProjectVisibilityRetrieverTest extends \Tuleap\Test\PHPUnit\T
     public function testAllPossibleProjectVisibilityCanBeSetAsTheDefaultValue(
         string $setting_value,
         bool $are_restricted_allowed,
-        string $expected_access
+        string $expected_access,
     ): void {
         if ($are_restricted_allowed) {
             ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);

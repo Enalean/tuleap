@@ -44,7 +44,7 @@ class TrackerPermissionPerGroupRepresentationBuilder
 
     public function __construct(
         TrackerFactory $tracker_factory,
-        TrackerPermissionPerGroupPermissionRepresentationBuilder $permission_representation_builder
+        TrackerPermissionPerGroupPermissionRepresentationBuilder $permission_representation_builder,
     ) {
         $this->tracker_factory                   = $tracker_factory;
         $this->permission_representation_builder = $permission_representation_builder;
@@ -86,7 +86,7 @@ class TrackerPermissionPerGroupRepresentationBuilder
         $query_parameters = http_build_query(
             [
                 "tracker" => $tracker->getId(),
-                "func"    => "admin-perms-tracker"
+                "func"    => "admin-perms-tracker",
             ]
         );
 

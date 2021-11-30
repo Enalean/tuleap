@@ -52,7 +52,7 @@ class NewDropdownCurrentContextSectionForKanbanProvider
         \AgileDashboard_KanbanFactory $kanban_factory,
         \TrackerFactory $tracker_factory,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
-        AgileDashboard_KanbanActionsChecker $kanban_actions_checker
+        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
     ) {
         $this->presenter_builder      = $presenter_builder;
         $this->kanban_factory         = $kanban_factory;
@@ -74,7 +74,7 @@ class NewDropdownCurrentContextSectionForKanbanProvider
             return new NewDropdownLinkSectionPresenter(
                 dgettext("tuleap-agiledashboard", "Kanban"),
                 [
-                    $this->presenter_builder->build($tracker)
+                    $this->presenter_builder->build($tracker),
                 ],
             );
         } catch (

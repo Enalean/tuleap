@@ -78,7 +78,7 @@ final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testOnlyRetrievesBuildableScopes(): void
     {
         $this->scope_dao->method('searchScopeIdentifiersByOAuth2SplitTokenID')->willReturn([
-            ['scope_key' => 'unknown']
+            ['scope_key' => 'unknown'],
         ]);
 
         $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(null);

@@ -28,7 +28,7 @@ interface Tracker_FormElement_IComputeValues
     public function getComputedValue(
         PFUser $user,
         Artifact $artifact,
-        $timestamp = null
+        $timestamp = null,
     );
 
     public function getCachedValue(PFUser $user, Artifact $artifact, $timestamp = null);

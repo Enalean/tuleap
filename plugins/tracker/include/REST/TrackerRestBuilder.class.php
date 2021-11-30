@@ -46,7 +46,7 @@ class Tracker_REST_TrackerRestBuilder
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         FormElementRepresentationsBuilder $form_element_representations_builder,
-        PermissionsRepresentationBuilder $permissions_representation_builder
+        PermissionsRepresentationBuilder $permissions_representation_builder,
     ) {
         $this->formelement_factory                  = $formelement_factory;
         $this->form_element_representations_builder = $form_element_representations_builder;

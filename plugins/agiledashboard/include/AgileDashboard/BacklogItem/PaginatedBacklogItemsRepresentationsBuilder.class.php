@@ -45,7 +45,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
         BacklogItemRepresentationFactory $backlog_item_representation_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        ExplicitBacklogDao $explicit_backlog_dao
+        ExplicitBacklogDao $explicit_backlog_dao,
     ) {
         $this->backlog_item_representation_factory = $backlog_item_representation_factory;
         $this->backlog_item_collection_factory     = $backlog_item_collection_factory;
@@ -79,7 +79,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
         ISearchOnStatus $criterion,
         int $limit,
-        int $offset
+        int $offset,
     ): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
         $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $backlog, $criterion, $limit, $offset);
         $backlog_items_representations = [];
@@ -97,7 +97,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
         ISearchOnStatus $criterion,
         int $limit,
-        int $offset
+        int $offset,
     ) {
         if (
             $milestone instanceof Planning_VirtualTopMilestone &&

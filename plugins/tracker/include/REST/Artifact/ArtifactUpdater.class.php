@@ -47,7 +47,7 @@ class Tracker_REST_Artifact_ArtifactUpdater
         PFUser $user,
         Artifact $artifact,
         array $values,
-        ?NewChangesetCommentRepresentation $comment = null
+        ?NewChangesetCommentRepresentation $comment = null,
     ): void {
         $this->checkArtifact($user, $artifact);
         $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);

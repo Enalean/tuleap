@@ -65,7 +65,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
             'group_id' => '102',
             'tracker_id' => '456',
             'nature' => '',
-            'last_changeset_id' => '789'
+            'last_changeset_id' => '789',
         ]));
         $value_dao->shouldReceive('searchReverseLinksById')->andReturn(TestHelper::emptyDar());
 
@@ -199,7 +199,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifacts          = $field->getLinkedArtifacts($changeset, $user);
         $expected_artifacts = [
             $artifact_1,
-            $artifact_2
+            $artifact_2,
         ];
         $this->assertEquals($expected_artifacts, $artifacts);
     }
@@ -223,7 +223,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
         $expected_artifacts = [
             $artifact_1,
-            $artifact_2
+            $artifact_2,
         ];
         $this->assertEquals($expected_artifacts, $sliced->getArtifacts());
         $this->assertEquals(2, $sliced->getTotalSize());
@@ -247,7 +247,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 1, 0);
         $expected_artifacts = [
-            $artifact_1
+            $artifact_1,
         ];
         $this->assertEquals($expected_artifacts, $sliced->getArtifacts());
         $this->assertEquals(2, $sliced->getTotalSize());
@@ -271,7 +271,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 1, 1);
         $expected_artifacts = [
-            $artifact_2
+            $artifact_2,
         ];
         $this->assertEquals($expected_artifacts, $sliced->getArtifacts());
         $this->assertEquals(2, $sliced->getTotalSize());
@@ -332,7 +332,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         $artifacts          = $field->getLinkedArtifacts($changeset, $user);
         $expected_artifacts = [
-            $artifact_2
+            $artifact_2,
         ];
         $this->assertEquals($expected_artifacts, $artifacts);
     }
@@ -355,7 +355,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
         $expected_artifacts = [
-            $artifact_2
+            $artifact_2,
         ];
         $this->assertEquals($expected_artifacts, $sliced->getArtifacts());
         $this->assertEquals(2, $sliced->getTotalSize());
@@ -401,7 +401,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
         $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 1, 1);
         $expected_artifacts = [
-            $artifact_2
+            $artifact_2,
         ];
         $this->assertEquals($expected_artifacts, $sliced->getArtifacts());
         $this->assertEquals(2, $sliced->getTotalSize());
@@ -434,10 +434,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
     {
         return [
             [
-                []
+                [],
             ],
             [
-                ["links" => 123]
+                ["links" => 123],
             ],
         ];
     }
@@ -457,14 +457,14 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 'new_values'     => '123,234',
                 'removed_values' => [],
                 'types'          => [
-                    234 => '_is_child'
+                    234 => '_is_child',
                 ],
             ],
             $field->getFieldDataFromRESTValue([
                 "links" => [
                     ["id" => 123],
-                    ["id" => 234, "type" => "_is_child"]
-                ]
+                    ["id" => 234, "type" => "_is_child"],
+                ],
             ], null),
         );
     }
@@ -497,14 +497,14 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 'new_values'     => '124,234',
                 'removed_values' => [],
                 'types'          => [
-                    234 => '_is_child'
+                    234 => '_is_child',
                 ],
             ],
             $field->getFieldDataFromRESTValue([
                 "parent" => ["id" => 123],
                 "links" => [
                     ["id" => 124],
-                    ["id" => 234, "type" => "_is_child"]
+                    ["id" => 234, "type" => "_is_child"],
                 ],
             ], null),
         );
@@ -564,14 +564,14 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 'new_values'     => '124,234',
                 'removed_values' => [666 => [666]],
                 'types'          => [
-                    234 => '_is_child'
+                    234 => '_is_child',
                 ],
             ],
             $field->getFieldDataFromRESTValue([
                 "parent" => ["id" => 123],
                 "links" => [
                     ["id" => 124],
-                    ["id" => 234, "type" => "_is_child"]
+                    ["id" => 234, "type" => "_is_child"],
                 ],
             ], $artifact),
         );
@@ -593,7 +593,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 {
                     return [
                         'func' => 'artifactlink-renderer-async',
-                        'renderer_data' => json_encode(["artifact_id" => 123])
+                        'renderer_data' => json_encode(["artifact_id" => 123]),
                     ][$variable];
                 }
 

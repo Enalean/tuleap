@@ -53,7 +53,7 @@ final class XmlReportTableExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $renderers,
             [
                 $summary_field_mapping,
-                $description_field_mapping
+                $description_field_mapping,
             ]
         );
 

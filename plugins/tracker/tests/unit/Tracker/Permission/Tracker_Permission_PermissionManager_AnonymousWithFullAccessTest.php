@@ -68,16 +68,16 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
             ProjectUGroup::ANONYMOUS       => [
                 'ugroup'      => ['name' => 'whatever'],
                 'permissions' => [
-                    Tracker::PERMISSION_FULL => 1
-                ]
+                    Tracker::PERMISSION_FULL => 1,
+                ],
             ],
             ProjectUGroup::REGISTERED      => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 'ugroup'      => ['name' => 'whatever'],
-                'permissions' => []
+                'permissions' => [],
             ],
         ];
 
@@ -235,15 +235,15 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
         $this->permissions[ProjectUGroup::ANONYMOUS] = [
             'ugroup'      => ['name' => 'whatever'],
             'permissions' => [
-                Tracker::PERMISSION_FULL => 1
-            ]
+                Tracker::PERMISSION_FULL => 1,
+            ],
         ];
 
         $this->permissions[ProjectUGroup::PROJECT_MEMBERS] = [
             'ugroup'      => ['name' => 'whatever'],
             'permissions' => [
-                Tracker::PERMISSION_SUBMITTER_ONLY => 1
-            ]
+                Tracker::PERMISSION_SUBMITTER_ONLY => 1,
+            ],
         ];
 
         $this->permissions_manager->shouldReceive('addPermission')->never();
@@ -270,10 +270,10 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
             ]
         );
         $this->permissions[ProjectUGroup::ANONYMOUS]['permissions']       = [
-            Tracker::PERMISSION_FULL => 1
+            Tracker::PERMISSION_FULL => 1,
         ];
         $this->permissions[ProjectUGroup::PROJECT_MEMBERS]['permissions'] = [
-            Tracker::PERMISSION_ADMIN => 1
+            Tracker::PERMISSION_ADMIN => 1,
         ];
 
         $this->permissions_manager->shouldReceive('addPermission')->never();

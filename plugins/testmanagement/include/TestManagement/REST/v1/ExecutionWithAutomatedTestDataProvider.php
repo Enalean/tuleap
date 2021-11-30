@@ -40,7 +40,7 @@ class ExecutionWithAutomatedTestDataProvider
 
     public function __construct(
         ExecutionDao $execution_dao,
-        Tracker_FormElementFactory $form_element_factory
+        Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->execution_dao        = $execution_dao;
         $this->form_element_factory = $form_element_factory;
@@ -49,7 +49,7 @@ class ExecutionWithAutomatedTestDataProvider
     public function getExecutionWithAutomatedTestData(
         Artifact $execution,
         Artifact $definition,
-        PFUser $user
+        PFUser $user,
     ): ?ExecutionWithAutomatedTestData {
         $definition_changeset_id = $this->execution_dao->searchDefinitionChangesetIdForExecution($execution->getId());
 

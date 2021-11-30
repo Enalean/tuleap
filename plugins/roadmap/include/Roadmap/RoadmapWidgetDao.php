@@ -37,7 +37,7 @@ class RoadmapWidgetDao extends DataAccessObject
         array $tracker_ids,
         string $default_timescale,
         ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
+        ?int $lvl2_iteration_tracker_id,
     ): int {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($owner_id, $owner_type, $title, $tracker_ids, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id): int {
@@ -69,7 +69,7 @@ class RoadmapWidgetDao extends DataAccessObject
     public function cloneContent(
         int $id,
         int $destination_owner_id,
-        string $destination_owner_type
+        string $destination_owner_type,
     ): int {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($id, $destination_owner_id, $destination_owner_type): int {
@@ -145,7 +145,7 @@ class RoadmapWidgetDao extends DataAccessObject
         array $tracker_ids,
         string $default_timescale,
         ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
+        ?int $lvl2_iteration_tracker_id,
     ): void {
         $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($id, $owner_id, $owner_type, $title, $tracker_ids, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id) {

@@ -64,7 +64,7 @@ class WebDAVRoot extends \Sabre\DAV\FS\Directory
         ProjectManager $project_manager,
         WebDAVUtils $utils,
         PluginManager $plugin_manager,
-        ProjectAccessChecker $project_access_checker
+        ProjectAccessChecker $project_access_checker,
     ) {
         $this->user                   = $user;
         $this->plugin                 = $plugin;

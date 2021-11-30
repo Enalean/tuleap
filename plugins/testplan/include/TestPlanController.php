@@ -82,7 +82,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         VisitRecorder $visit_recorder,
         \Planning_MilestoneFactory $milestone_factory,
         TestPlanPresenterBuilder $presenter_builder,
-        TestPlanHeaderOptionsProvider $header_options_provider
+        TestPlanHeaderOptionsProvider $header_options_provider,
     ) {
         $this->renderer                  = $renderer;
         $this->bread_crumbs_builder      = $bread_crumbs_builder;

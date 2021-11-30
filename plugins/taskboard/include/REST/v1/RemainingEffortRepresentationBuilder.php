@@ -40,7 +40,7 @@ class RemainingEffortRepresentationBuilder
 
     public function __construct(
         RemainingEffortValueRetriever $remaining_effort_value_retriever,
-        \Tracker_FormElementFactory $form_element_factory
+        \Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->remaining_effort_value_retriever = $remaining_effort_value_retriever;
         $this->form_element_factory             = $form_element_factory;

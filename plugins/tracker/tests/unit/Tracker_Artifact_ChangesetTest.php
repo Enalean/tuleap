@@ -147,7 +147,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $submitted_by,
         int $submitted_on,
         string $email,
-        $comment
+        $comment,
     ) {
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class, [$id, $artifact, $submitted_by, $submitted_on, $email])
             ->makePartial()
@@ -244,7 +244,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchById')->once()->andReturns([
             ['changeset_id' => 66, 'field_id' => 1, 'id' => 11, 'has_changed' => 1],
-            ['changeset_id' => 66, 'field_id' => 2, 'id' => 21, 'has_changed' => 0]
+            ['changeset_id' => 66, 'field_id' => 2, 'id' => 21, 'has_changed' => 0],
         ]);
 
         $fact->shouldReceive('getFieldById')->with(1)->andReturns($field1);

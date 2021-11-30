@@ -46,7 +46,7 @@ class RedirectAfterArtifactCreationOrUpdateEvent implements Dispatchable
     public function __construct(
         Codendi_Request $request,
         Tracker_Artifact_Redirect $redirect,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $this->request  = $request;
         $this->redirect = $redirect;

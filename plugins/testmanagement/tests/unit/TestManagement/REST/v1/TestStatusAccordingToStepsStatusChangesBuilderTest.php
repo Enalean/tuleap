@@ -72,7 +72,7 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
     public function testNoChangesWhenNoStepsStatusChange()
     {
         $steps_defined_in_test = [
-            $this->createMock(Step::class)
+            $this->createMock(Step::class),
         ];
 
         $changes = [];
@@ -121,48 +121,48 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'passed'],
-                $this->passed_id
+                $this->passed_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'notrun'],
-                $this->notrun_id
+                $this->notrun_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'failed'],
-                $this->failed_id
+                $this->failed_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'blocked'],
-                $this->blocked_id
+                $this->blocked_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'notrun', 1003 => 'failed'],
-                $this->failed_id
+                $this->failed_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'notrun', 1003 => 'blocked'],
-                $this->blocked_id
+                $this->blocked_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'blocked', 1003 => 'failed'],
-                $this->failed_id
+                $this->failed_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'failed', 1003 => 'blocked'],
-                $this->failed_id
+                $this->failed_id,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed'],
-                $this->notrun_id
-            ]
+                $this->notrun_id,
+            ],
         ];
     }
 }

@@ -46,7 +46,7 @@ class Router
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_URLVerification $url_verification,
-        Controller $controller
+        Controller $controller,
     ) {
         $this->artifact_factory = $artifact_factory;
         $this->url_verification = $url_verification;

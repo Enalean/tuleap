@@ -42,7 +42,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
 
     public function __construct(
         \Tracker_FormElement_Field_Date $start_date_field,
-        \Tracker_FormElement_Field_Date $end_date_field
+        \Tracker_FormElement_Field_Date $end_date_field,
     ) {
         $this->start_date_field = $start_date_field;
         $this->end_date_field   = $end_date_field;

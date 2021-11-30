@@ -56,7 +56,7 @@ class ScalarFieldMapping implements FieldMapping
         string $jira_field_label,
         string $xml_id,
         string $field_name,
-        string $type
+        string $type,
     ) {
         $this->jira_field_id    = $jira_field_id;
         $this->jira_field_label = $jira_field_label;

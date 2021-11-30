@@ -216,7 +216,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                     'end'     => 'finish',
                     'label'   => "",
                     'caption' => "",
-                    'height'  => 0.2
+                    'height'  => 0.2,
                 ]);
                 $this->addMilestone($i, $this->data[$i], ['date' => 'finish']);
             } elseif (! $start_date && $due_date && $finish_date && $finish_date < $due_date) { //Early milestone
@@ -225,18 +225,18 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                     'end'     => 'due',
                     'label'   => "",
                     'caption' => "",
-                    'height'  => 0.2
+                    'height'  => 0.2,
                 ]);
                 $this->addMilestone($i, $this->data[$i], ['date' => 'finish']);
             } elseif ($start_date && ! $due_date && $start_date <= $finish_date) { //Bar, start to finish
                 $this->addBar($i, $this->data[$i], true, [
                     'start'   => 'start',
-                    'end'     => 'finish'
+                    'end'     => 'finish',
                 ]);
             } elseif ($start_date && $due_date && $start_date <= $due_date && (! $finish_date || $due_date === $finish_date)) { //Bar, start to due
                 $this->addBar($i, $this->data[$i], true, [
                     'start'   => 'start',
-                    'end'     => 'due'
+                    'end'     => 'due',
                 ]);
             } elseif ($start_date && $due_date && $finish_date && $start_date <= $due_date && $due_date < $finish_date) { //Late bar, start to due to finish
                 $this->addBar($i, $this->data[$i], true, [

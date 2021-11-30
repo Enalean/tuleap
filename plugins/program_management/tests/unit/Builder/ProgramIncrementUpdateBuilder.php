@@ -37,7 +37,7 @@ final class ProgramIncrementUpdateBuilder
         int $user_id,
         int $program_increment_id,
         int $tracker_id,
-        int $changeset_id
+        int $changeset_id,
     ): ProgramIncrementUpdate {
         $event                    = ArtifactUpdatedEventStub::withIds($program_increment_id, $tracker_id, $user_id, $changeset_id);
         $program_increment_update = ProgramIncrementUpdate::fromArtifactUpdatedEvent(

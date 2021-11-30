@@ -33,7 +33,7 @@ class AgileDashboard_SequenceIdManager
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
     ) {
         $this->backlog_item_collection_factory = $backlog_item_collection_factory;
         $this->backlog_factory                 = $backlog_factory;

@@ -42,7 +42,7 @@ class SemanticVelocityAdminPresenterBuilder
     public function __construct(
         MissingRequirementRetriever $missing_requirement_retriever,
         BacklogRetriever $backlog_retriever,
-        VelocitySemanticChecker $semantic_checker
+        VelocitySemanticChecker $semantic_checker,
     ) {
         $this->missing_requirement_retriever = $missing_requirement_retriever;
         $this->backlog_retriever             = $backlog_retriever;
@@ -54,7 +54,7 @@ class SemanticVelocityAdminPresenterBuilder
         CSRFSynchronizerToken $csrf,
         SemanticDone $semantic_done,
         array $possible_fields,
-        $semantic_velocity_field_id
+        $semantic_velocity_field_id,
     ) {
         $backlog_trackers                     = $this->backlog_retriever->getBacklogTrackers($tracker);
         $backlog_required_trackers_collection = $this->missing_requirement_retriever->buildCollectionFromBacklogTrackers(

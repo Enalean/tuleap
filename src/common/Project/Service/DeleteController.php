@@ -61,7 +61,7 @@ class DeleteController implements DispatchableWithRequest
         ProjectAdministratorChecker $administrator_checker,
         ServiceDao $dao,
         CSRFSynchronizerToken $csrf_token,
-        ServiceManager $service_manager
+        ServiceManager $service_manager,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;

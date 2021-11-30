@@ -51,7 +51,7 @@ class PendingProjectBuilder
         ProjectManager $project_manager,
         UserManager $user_manager,
         ProjectDescriptionFieldBuilder $field_builder,
-        TroveCatCollectionRetriever $trove_cat_collection_retriever
+        TroveCatCollectionRetriever $trove_cat_collection_retriever,
     ) {
         $this->project_manager                = $project_manager;
         $this->user_manager                   = $user_manager;
@@ -99,7 +99,7 @@ class PendingProjectBuilder
 
         return [
             'project_list' => $project_list,
-            'projects_id' => implode(',', $projects_id)
+            'projects_id' => implode(',', $projects_id),
         ];
     }
 

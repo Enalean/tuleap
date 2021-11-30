@@ -54,8 +54,8 @@ class PackageRepresentation extends PackageMinimalRepresentation
 
         $this->resources = [
             'releases' => [
-                'uri' => $this->uri . '/' . ReleaseRepresentation::ROUTE
-            ]
+                'uri' => $this->uri . '/' . ReleaseRepresentation::ROUTE,
+            ],
         ];
     }
 }

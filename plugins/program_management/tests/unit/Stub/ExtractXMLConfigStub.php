@@ -52,7 +52,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         ?string $milestones_name,
         ?int $iterations_source_tracker_id,
         ?string $iterations_section_name,
-        ?string $iterations_milestones_name
+        ?string $iterations_milestones_name,
     ) {
         $this->source_tracker_id               = $source_tracker_id;
         $this->plannable_trackers_ids          = $plannable_trackers_ids;
@@ -86,7 +86,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         ?string $milestones_name,
         ?int $iterations_source_tracker_id,
         ?string $iterations_section_name,
-        ?string $iterations_milestones_name
+        ?string $iterations_milestones_name,
     ): self {
         return new self(
             $source_tracker_id,

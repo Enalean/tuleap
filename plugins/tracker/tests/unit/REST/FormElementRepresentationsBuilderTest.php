@@ -49,7 +49,7 @@ class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $field1->shouldReceive('userCanRead')->andReturnTrue();
         $field1->shouldReceive('getRESTBindingProperties')->andReturn([
             'bind_type' => null,
-            'bind_list' => []
+            'bind_list' => [],
         ]);
 
         $field2 = Mockery::mock(Tracker_FormElement_Field_String::class);
@@ -63,7 +63,7 @@ class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $field2->shouldReceive('userCanRead')->andReturnFalse();
         $field2->shouldReceive('getRESTBindingProperties')->andReturn([
             'bind_type' => null,
-            'bind_list' => []
+            'bind_list' => [],
         ]);
 
         $field3 = Mockery::mock(Tracker_FormElement_Field_String::class);
@@ -77,7 +77,7 @@ class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $field3->shouldReceive('userCanRead')->andReturnTrue();
         $field3->shouldReceive('getRESTBindingProperties')->andReturn([
             'bind_type' => null,
-            'bind_list' => []
+            'bind_list' => [],
         ]);
 
         $form_element_factory           = Mockery::mock(Tracker_FormElementFactory::class);

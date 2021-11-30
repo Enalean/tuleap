@@ -38,7 +38,7 @@ class LockRetriever
 
     public function __construct(
         LockDao $lock_dao,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->lock_dao     = $lock_dao;
         $this->user_manager = $user_manager;
@@ -49,7 +49,7 @@ class LockRetriever
         ?string $path,
         ?string $ref,
         ?PFUser $owner,
-        GitRepository $repository
+        GitRepository $repository,
     ): array {
         $lock_rows = $this->lock_dao->searchLocks(
             $id,

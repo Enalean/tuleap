@@ -68,7 +68,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'State parameter is kept unmodified' => [
                 ['https://example.com/redirect?key=value', 'state_value', 'error_type'],
                 'https://example.com/redirect?key=value&state=state_value&error=error_type',
-            ]
+            ],
         ];
     }
 
@@ -86,24 +86,24 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return [
             'Base redirect URI has no query' => [
                 ['https://example.com/redirect', null, new ConcealedString('auth_code')],
-                'https://example.com/redirect?code=auth_code'
+                'https://example.com/redirect?code=auth_code',
             ],
             'Base redirect URI has a query' => [
                 ['https://example.com/redirect?key=value', null, new ConcealedString('auth_code')],
-                'https://example.com/redirect?key=value&code=auth_code'
+                'https://example.com/redirect?key=value&code=auth_code',
             ],
             'Base redirect URI has no path' => [
                 ['https://example.com?key=value', null, new ConcealedString('auth_code')],
-                'https://example.com?key=value&code=auth_code'
+                'https://example.com?key=value&code=auth_code',
             ],
             'Base redirect URI has a port' => [
                 ['https://example.com:8080/redirect?key=value', null, new ConcealedString('auth_code')],
-                'https://example.com:8080/redirect?key=value&code=auth_code'
+                'https://example.com:8080/redirect?key=value&code=auth_code',
             ],
             'State parameter is kept unmodified' => [
                 ['https://example.com/redirect?key=value', 'state_value', new ConcealedString('auth_code')],
-                'https://example.com/redirect?key=value&state=state_value&code=auth_code'
-            ]
+                'https://example.com/redirect?key=value&state=state_value&code=auth_code',
+            ],
         ];
     }
 }

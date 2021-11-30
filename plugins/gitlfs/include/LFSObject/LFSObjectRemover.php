@@ -46,7 +46,7 @@ class LFSObjectRemover
         LFSObjectDAO $dao,
         DBTransactionExecutor $transaction_executor,
         FilesystemWriter $filesystem,
-        LFSObjectPathAllocator $path_allocator
+        LFSObjectPathAllocator $path_allocator,
     ) {
         $this->dao                  = $dao;
         $this->transaction_executor = $transaction_executor;

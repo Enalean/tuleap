@@ -93,7 +93,7 @@ class QueryBuilderVisitor implements Visitor
         LesserThanOrEqualComparisonFromWhereBuilder $lesser_than_or_equal_comparison_from_where_builder,
         BetweenComparisonFromWhereBuilder $between_comparison_from_where_builder,
         InComparisonFromWhereBuilder $in_comparison_from_where_builder,
-        NotInComparisonFromWhereBuilder $not_in_comparison_from_where_builder
+        NotInComparisonFromWhereBuilder $not_in_comparison_from_where_builder,
     ) {
         $this->searchable_visitor                                  = $searchable_visitor;
         $this->equal_comparison_from_where_builder                 = $equal_comparison_from_where_builder;
@@ -142,7 +142,7 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitLesserThanComparison(
         LesserThanComparison $comparison,
-        QueryBuilderVisitorParameters $parameters
+        QueryBuilderVisitorParameters $parameters,
     ) {
         return $comparison->getSearchable()->accept(
             $this->searchable_visitor,
@@ -156,7 +156,7 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitGreaterThanComparison(
         GreaterThanComparison $comparison,
-        QueryBuilderVisitorParameters $parameters
+        QueryBuilderVisitorParameters $parameters,
     ) {
         return $comparison->getSearchable()->accept(
             $this->searchable_visitor,
@@ -170,7 +170,7 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitLesserThanOrEqualComparison(
         LesserThanOrEqualComparison $comparison,
-        QueryBuilderVisitorParameters $parameters
+        QueryBuilderVisitorParameters $parameters,
     ) {
         return $comparison->getSearchable()->accept(
             $this->searchable_visitor,
@@ -184,7 +184,7 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitGreaterThanOrEqualComparison(
         GreaterThanOrEqualComparison $comparison,
-        QueryBuilderVisitorParameters $parameters
+        QueryBuilderVisitorParameters $parameters,
     ) {
         return $comparison->getSearchable()->accept(
             $this->searchable_visitor,

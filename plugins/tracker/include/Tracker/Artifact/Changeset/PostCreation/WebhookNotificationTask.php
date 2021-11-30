@@ -50,7 +50,7 @@ final class WebhookNotificationTask implements PostCreationTask
         \Psr\Log\LoggerInterface $logger,
         WebhookEmitter $webhook_emitter,
         WebhookFactory $webhook_factory,
-        ArtifactPayloadBuilder $payload_builder
+        ArtifactPayloadBuilder $payload_builder,
     ) {
         $this->logger          = $logger;
         $this->webhook_emitter = $webhook_emitter;

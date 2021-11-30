@@ -44,7 +44,7 @@ class TagPushWebhookActionProcessor
     public function __construct(
         TagPushWebhookCreateAction $push_webhook_create_action,
         TagPushWebhookDeleteAction $push_webhook_delete_action,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
     ) {
         $this->push_webhook_create_action = $push_webhook_create_action;
         $this->push_webhook_delete_action = $push_webhook_delete_action;

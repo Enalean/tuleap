@@ -33,7 +33,7 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
     private $computed_dao;
 
     public function __construct(
-        ComputedFieldDao $computed_dao
+        ComputedFieldDao $computed_dao,
     ) {
         $this->computed_dao = $computed_dao;
     }
@@ -44,7 +44,7 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
         bool $stop_on_manual_value,
         string $target_field_name,
         int $computed_field_id,
-        ArtifactsAlreadyProcessedDuringComputationCollection $already_seen
+        ArtifactsAlreadyProcessedDuringComputationCollection $already_seen,
     ): array {
         $enhanced_dar = $this->getChildrenForBurndownWithComputedValuesAtGivenDate(
             $artifact_ids_to_fetch,
@@ -57,14 +57,14 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
 
         return [
             'children'   => $dar,
-            'manual_sum' => $manual_sum
+            'manual_sum' => $manual_sum,
         ];
     }
 
     private function getChildrenForBurndownWithComputedValuesAtGivenDate(
         array $artifact_ids_to_fetch,
         int $timestamp,
-        ArtifactsAlreadyProcessedDuringComputationCollection $already_seen
+        ArtifactsAlreadyProcessedDuringComputationCollection $already_seen,
     ): array {
         $computed_artifacts = [];
         $manual_sum         = null;
@@ -95,13 +95,13 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
                     $computed_artifacts,
                     $selected_day->getTimestamp()
                 ),
-                'manual_sum'      => $manual_sum
+                'manual_sum'      => $manual_sum,
             ];
         }
 
         return [
             'computed_values' => false,
-            'manual_sum'      => $manual_sum
+            'manual_sum'      => $manual_sum,
         ];
     }
 }

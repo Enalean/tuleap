@@ -53,7 +53,7 @@ class ArtifactsDeletionConfigPresenter
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $artifacts_limit,
-        $is_archiving_enabled
+        $is_archiving_enabled,
     ) {
         $this->sections             = new ArtifactsDeletionPresenter();
         $this->csrf_token           = $csrf;

@@ -67,7 +67,7 @@ class ProjectDashboardDuplicator
         DashboardWidgetDao $widget_dao,
         DashboardWidgetRetriever $widget_retriever,
         WidgetFactory $widget_factory,
-        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
     ) {
         $this->dao                              = $dao;
         $this->retriever                        = $retriever;
@@ -106,7 +106,7 @@ class ProjectDashboardDuplicator
         Project $new_project,
         ProjectDashboard $template_dashboard,
         $new_dashboard_id,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $template_dashboard_id = $template_dashboard->getId();
 
@@ -132,7 +132,7 @@ class ProjectDashboardDuplicator
         Project $new_project,
         DashboardWidgetLine $template_line,
         $new_line_id,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         foreach ($template_line->getWidgetColumns() as $template_column) {
             $new_column_id = $this->widget_dao->duplicateColumn($template_line->getId(), $new_line_id, $template_column->getId());
@@ -152,7 +152,7 @@ class ProjectDashboardDuplicator
         Project $new_project,
         DashboardWidgetColumn $template_column,
         $new_column_id,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         foreach ($template_column->getWidgets() as $template_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($template_widget->getName());

@@ -32,7 +32,7 @@ class ShortStat
     public function __construct(
         $files_changed,
         $lines_added,
-        $lines_removed
+        $lines_removed,
     ) {
         $this->files_changed = $files_changed;
         $this->lines_added   = $lines_added;

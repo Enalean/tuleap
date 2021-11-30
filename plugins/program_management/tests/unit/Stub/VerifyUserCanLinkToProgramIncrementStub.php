@@ -43,7 +43,7 @@ final class VerifyUserCanLinkToProgramIncrementStub implements \Tuleap\ProgramMa
 
     public function canUserLinkToProgramIncrement(
         ProgramIncrementTrackerIdentifier $program_increment_tracker,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): bool {
         return $this->can_link;
     }
