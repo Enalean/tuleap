@@ -30,6 +30,7 @@
                 <button
                     type="submit"
                     class="tlp-button-primary tlp-button-outline tlp-button-small new-iteration-button"
+                    data-test="planned-iterations-add-iteration-button"
                 >
                     <i aria-hidden="true" class="fas fa-plus tlp-button-icon"></i>
                     <span

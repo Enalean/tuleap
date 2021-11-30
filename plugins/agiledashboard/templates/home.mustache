@@ -62,7 +62,7 @@
                             {{# milestone_presenters }}
                                 <div class="planning">
                                     <h3>{{ milestone_type }}</h3>
-                                    <table class="table">
+                                    <table class="table" data-test="home-releases">
                                         {{# milestones }}
                                         <tr>
                                             <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}&agiledashboard[home]=1" data-artifact-id="{{ getArtifactId }}"><i class="far fa-edit"></i></a></td>
@@ -91,7 +91,7 @@
                                         {{# milestone_summary_presenters }}
                                             <div class="milestone">
                                                 <div class="header">
-                                                    <p class="title">{{ milestone_title }}
+                                                    <p class="title" data-test="home-sprint-title">{{ milestone_title }}
                                                         <a href="{{ edit_base_link }}{{ artifact_id }}"
                                                            data-test="release-id"
                                                            data-artifact-id="{{ artifact_id }}"><i class="far fa-edit"></i>

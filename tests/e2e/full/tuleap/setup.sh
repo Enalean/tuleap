@@ -126,14 +126,18 @@ seed_data() {
     chown -R codendiadm:codendiadm /var/log/tuleap
 }
 
+setup_system_configuration() {
+    sudo -u codendiadm /usr/bin/tuleap config-set sys_project_approval 0
+    sudo -u codendiadm /usr/bin/tuleap config-set project_admin_can_choose_visibility 1
+    sudo -u codendiadm /usr/bin/tuleap config-set feature_flag_program_management_display_iteration 1
+}
+
 setup_lhs
 setup_tuleap
 setup_database
 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy
 seed_data
-
-/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
-/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set project_admin_can_choose_visibility 1
+setup_system_configuration
 
 sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf
 /usr/sbin/postfix -c /etc/postfix start
