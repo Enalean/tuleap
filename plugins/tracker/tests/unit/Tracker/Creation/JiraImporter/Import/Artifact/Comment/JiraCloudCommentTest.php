@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 
-class CommentTest extends \Tuleap\Test\PHPUnit\TestCase
+class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsACommentFromAPIResponse(): void
     {
-        $comment = Comment::buildFromAPIResponse(
+        $comment = JiraCloudComment::buildFromAPIResponse(
             [
                 "body" => "Comment 01",
                 "renderedBody" => "<p>Comment 01</p>",
@@ -49,7 +49,7 @@ class CommentTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(CommentAPIResponseNotWellFormedException::class);
 
-        Comment::buildFromAPIResponse(
+        JiraCloudComment::buildFromAPIResponse(
             [
                 "body" => "Comment 01",
                 "created" => "2020-04-21T11:36:46.601+0200",
@@ -62,7 +62,7 @@ class CommentTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CommentAPIResponseNotWellFormedException::class);
 
-        Comment::buildFromAPIResponse(
+        JiraCloudComment::buildFromAPIResponse(
             [
                 "body" => "Comment 01",
                 "renderedBody" => "<p>Comment 01</p>",
@@ -75,7 +75,7 @@ class CommentTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CommentAPIResponseNotWellFormedException::class);
 
-        $comment = Comment::buildFromAPIResponse(
+        $comment = JiraCloudComment::buildFromAPIResponse(
             [
                 "body" => "Comment 01",
                 "renderedBody" => "<p>Comment 01</p>",

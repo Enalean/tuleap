@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 
-class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsARepresentationFromAPIResponse(): void
     {

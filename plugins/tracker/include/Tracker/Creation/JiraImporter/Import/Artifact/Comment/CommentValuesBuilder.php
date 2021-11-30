@@ -23,56 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
-class CommentValuesBuilder
+interface CommentValuesBuilder
 {
-    /**
-     * @var JiraClient
-     */
-    private $jira_client;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(
-        JiraClient $jira_client,
-        LoggerInterface $logger
-    ) {
-        $this->jira_client = $jira_client;
-        $this->logger      = $logger;
-    }
-
     /**
      * @return Comment[]
      * @throws JiraConnectionException
      */
-    public function buildCommentCollectionForIssue(string $jira_issue_key): array
-    {
-        if (! $this->jira_client->isJiraCloud()) {
-            return [];
-        }
-
-        $this->logger->debug("Start build comment collection ...");
-        $comment_collection = [];
-
-        $iterator = JiraCollectionBuilder::iterateUntilTotal(
-            $this->jira_client,
-            $this->logger,
-            ClientWrapper::JIRA_CORE_BASE_URL . '/issue/' . urlencode($jira_issue_key) . '/comment?' . http_build_query(['expand' => 'renderedBody']),
-            'comments',
-        );
-        foreach ($iterator as $comment) {
-            $comment_collection[] = Comment::buildFromAPIResponse($comment);
-        }
-
-        $this->logger->debug("End build comment collection ...");
-
-        return $comment_collection;
-    }
+    public function buildCommentCollectionForIssue(string $jira_issue_key): array;
 }

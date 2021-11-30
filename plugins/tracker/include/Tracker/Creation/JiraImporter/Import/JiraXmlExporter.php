@@ -36,9 +36,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationState
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraServerChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraCloudCommentValuesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraServerCommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
@@ -159,8 +160,10 @@ class JiraXmlExporter
 
         if ($wrapper->isJiraCloud()) {
             $changelog_entries_builder = new JiraCloudChangelogEntriesBuilder($wrapper, $logger);
+            $comment_value_builder     = new JiraCloudCommentValuesBuilder($wrapper, $logger);
         } else {
             $changelog_entries_builder = new JiraServerChangelogEntriesBuilder($wrapper, $logger);
+            $comment_value_builder     = new JiraServerCommentValuesBuilder($wrapper, $logger);
         }
 
         return new self(
@@ -219,10 +222,7 @@ class JiraXmlExporter
                             $logger,
                             $jira_user_retriever
                         ),
-                        new CommentValuesBuilder(
-                            $wrapper,
-                            $logger
-                        ),
+                        $comment_value_builder,
                         $logger,
                         $jira_user_retriever
                     ),

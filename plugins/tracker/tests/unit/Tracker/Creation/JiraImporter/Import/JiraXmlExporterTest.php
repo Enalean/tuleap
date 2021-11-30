@@ -34,9 +34,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXM
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraServerChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraServerCommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
@@ -192,7 +192,7 @@ class JiraXmlExporterTest extends TestCase
                             $logger,
                             $jira_user_retriever
                         ),
-                        new CommentValuesBuilder(
+                        new JiraServerCommentValuesBuilder(
                             $jira_client,
                             $logger
                         ),
