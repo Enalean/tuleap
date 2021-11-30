@@ -18,7 +18,7 @@
  */
 import type { IPropertiesOptions } from "docx/build/file/core-properties";
 import { AlignmentType, convertInchesToTwip, HeadingLevel, LevelFormat } from "docx";
-import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "../html-styles";
+import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
 
 export const MAIN_TITLES_NUMBERING_ID = "main-titles";
 export const HEADER_STYLE_SECTION_TITLE = "SectionTitle";
