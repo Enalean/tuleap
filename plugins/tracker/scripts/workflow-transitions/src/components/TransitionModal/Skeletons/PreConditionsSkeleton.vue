@@ -24,10 +24,7 @@
                 <span class="tlp-skeleton-text"></span>
             </label>
             <select
-                class="
-                    tlp-select tlp-skeleton-field
-                    tracker-workflow-transition-modal-authorized-ugroups
-                "
+                class="tlp-select tlp-skeleton-field tracker-workflow-transition-modal-authorized-ugroups"
                 disabled
             ></select>
         </template>

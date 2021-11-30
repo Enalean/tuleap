@@ -20,11 +20,7 @@
 
 <template>
     <div
-        class="
-            roadmap-gantt-task-header
-            roadmap-gantt-subtask-header
-            roadmap-gantt-subtask-header-last-one
-        "
+        class="roadmap-gantt-task-header roadmap-gantt-subtask-header roadmap-gantt-subtask-header-last-one"
         v-bind:class="classes"
     ></div>
 </template>

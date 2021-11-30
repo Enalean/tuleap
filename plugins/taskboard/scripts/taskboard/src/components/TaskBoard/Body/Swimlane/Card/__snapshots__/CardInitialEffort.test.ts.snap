@@ -2,11 +2,7 @@
 
 exports[`CardInitialEffort displays the initial effort of the card in a badge 1`] = `
 <span
-  class="
-        taskboard-card-inital-effort
-        tlp-badge-outline tlp-badge-rounded
-        taskboard-no-text-selection
-     tlp-badge-lake-placid-blue"
+  class="taskboard-card-inital-effort tlp-badge-outline tlp-badge-rounded taskboard-no-text-selection tlp-badge-lake-placid-blue"
   title="Initial effort"
 >
   <i

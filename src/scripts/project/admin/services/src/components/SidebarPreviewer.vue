@@ -27,9 +27,7 @@
                     v-bind:class="[props.allowed_icons[props.icon_name]['fa-icon']]"
                 ></i>
                 <span
-                    class="
-                        project-sidebar-nav-item-label project-admin-services-modal-preview-label
-                    "
+                    class="project-sidebar-nav-item-label project-admin-services-modal-preview-label"
                 >
                     {{ props.label }}
                 </span>

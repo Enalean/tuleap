@@ -33,10 +33,7 @@
         <div
             v-for="reason of sorted_reasons"
             v-bind:key="reason.filename"
-            class="
-                tlp-pane-section
-                document-dragndrop-file-upload document-dragndrop-file-upload-error
-            "
+            class="tlp-pane-section document-dragndrop-file-upload document-dragndrop-file-upload-error"
         >
             <div class="document-uploads-file">
                 <span class="document-uploads-file-title">{{ reason.filename }}</span>

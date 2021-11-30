@@ -19,11 +19,7 @@ exports[`ProjectsEmptyState Display an empty state 1`] = `
   </p>
    
   <trove-cat-link-stub
-    class="
-            tlp-button-secondary
-            switch-to-projects-softwaremap-empty-state
-            empty-state-action
-        "
+    class="tlp-button-secondary switch-to-projects-softwaremap-empty-state empty-state-action"
   >
     
         Browse all projects

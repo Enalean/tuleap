@@ -22,10 +22,7 @@
     <div class="taskboard-card-cancel-save-buttons" data-not-drag-handle="true">
         <button
             type="button"
-            class="
-                tlp-button tlp-button-primary tlp-button-outline tlp-button-small
-                taskboard-card-cancel-button
-            "
+            class="tlp-button tlp-button-primary tlp-button-outline tlp-button-small taskboard-card-cancel-button"
             v-bind:disabled="is_action_ongoing"
             v-on:click="cancel"
             data-test="cancel"

@@ -28,9 +28,7 @@
             data-test="table-action"
         >
             <button
-                class="
-                    tlp-button-small tlp-button-primary tlp-button-outline tlp-table-actions-element
-                "
+                class="tlp-button-small tlp-button-primary tlp-button-outline tlp-table-actions-element"
                 v-on:click="setAreVoidTrackersHidden"
             >
                 <i

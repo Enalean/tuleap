@@ -25,10 +25,7 @@
         <time-tracking-overview-tracker-list />
         <div class="timetracking-writing-mode-actions">
             <button
-                class="
-                    tlp-button-primary tlp-button-outline
-                    timetracking-overview-writing-mode-actions-cancel
-                "
+                class="tlp-button-primary tlp-button-outline timetracking-overview-writing-mode-actions-cancel"
                 type="button"
                 v-on:click="switchToReadingMode()"
                 v-translate

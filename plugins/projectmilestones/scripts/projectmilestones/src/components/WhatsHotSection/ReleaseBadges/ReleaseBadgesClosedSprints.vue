@@ -19,10 +19,7 @@
 
 <template>
     <div
-        class="
-            project-release-closed-sprint-badge project-release-info-badge
-            tlp-badge-secondary tlp-badge-outline
-        "
+        class="project-release-closed-sprint-badge project-release-info-badge tlp-badge-secondary tlp-badge-outline"
         v-if="display_closed_badge"
         data-test="total-closed-sprints"
     >

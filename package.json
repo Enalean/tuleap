@@ -55,7 +55,7 @@
     "pofile": "^1.1.0",
     "postcss": "^8.3.1",
     "postcss-loader": "^6.0.0",
-    "prettier": "^2.3.1",
+    "prettier": "^2.5.0",
     "sass": "^1.32.2",
     "sass-loader": "^11.0.1",
     "stylelint": "^13.12.0",
