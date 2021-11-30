@@ -54,6 +54,10 @@ class CommentValuesBuilder
      */
     public function buildCommentCollectionForIssue(string $jira_issue_key): array
     {
+        if (! $this->jira_client->isJiraCloud()) {
+            return [];
+        }
+
         $this->logger->debug("Start build comment collection ...");
         $comment_collection = [];
 

@@ -53,6 +53,8 @@ abstract class ClientWrapper implements JiraClient
      */
     public const JIRA_CORE_BASE_URL = '/rest/api/2';
 
+    public const DEBUG_MARKER_BODY = 'Body content:';
+
     private const DEPLOYMENT_TYPE_CLOUD = 'Cloud';
 
     private ?string $debug_directory = null;
@@ -174,7 +176,7 @@ abstract class ClientWrapper implements JiraClient
             foreach ($response->getHeaders() as $header_name => $header_values) {
                 file_put_contents($response_debug_path, "$header_name: " . implode(', ', $header_values) . PHP_EOL, FILE_APPEND);
             }
-            file_put_contents($response_debug_path, PHP_EOL . "Body content: " . PHP_EOL, FILE_APPEND);
+            file_put_contents($response_debug_path, PHP_EOL . self::DEBUG_MARKER_BODY . PHP_EOL, FILE_APPEND);
             file_put_contents($response_debug_path, $body_contents, FILE_APPEND);
         }
 

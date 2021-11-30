@@ -66,8 +66,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClientReplay;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -86,52 +86,7 @@ class JiraXmlExporterTest extends TestCase
 
     public function testImportFromDebugTraces(): void
     {
-        $this->markTestSkipped('Cannot be played in CI yet because its a work in progress. Comment this line to continue dev.');
-
-        $jira_client = new class (__DIR__ . '/_fixtures/SBX') extends JiraServerClientStub {
-
-            private $payloads = [];
-
-            public function __construct(string $log_dir)
-            {
-                foreach (file($log_dir . '/manifest.log', FILE_IGNORE_NEW_LINES) as $line) {
-                    [$url, $file, $code] = explode(' ', $line);
-                    if ($code === '200') {
-                        $url_chunks = parse_url($url);
-                        $sub_url    = $url_chunks['path'];
-                        if (isset($url_chunks['query'])) {
-                            $sub_url .= '?' . $url_chunks['query'];
-                        }
-                        if (isset($url_chunks['fragment'])) {
-                            $sub_url .= '#' . $url_chunks['fragment'];
-                        }
-                        $this->payloads[$sub_url] = $this->getResponse($log_dir . '/' . $file);
-                    }
-                }
-            }
-
-            private function getResponse(string $file_path): string
-            {
-                $file_contents = file_get_contents($file_path);
-
-                $marker     = 'Body content:';
-                $marker_pos = strpos($file_contents, $marker);
-                if ($marker_pos === false) {
-                    return $file_contents;
-                }
-
-                return substr($file_contents, $marker_pos + strlen($marker));
-            }
-
-            public function getUrl(string $url): ?array
-            {
-                if (isset($this->payloads[$url])) {
-                    return \json_decode($this->payloads[$url], true, 512, JSON_THROW_ON_ERROR);
-                }
-
-                throw new \RuntimeException('REST call not covered: ' . $url);
-            }
-        };
+        $jira_client = JiraClientReplay::buildJiraServer(__DIR__ . '/_fixtures/SBX');
 
         $logger = new NullLogger();
 
@@ -160,7 +115,7 @@ class JiraXmlExporterTest extends TestCase
         $forge_user = UserTestBuilder::buildWithId(TrackerImporterUser::ID);
 
         $user_manager->method('getUserById')->with(TrackerImporterUser::ID)->willReturn($forge_user);
-        $user_manager->method('getAllUsersByEmail')->with('john.doe@example.com')->willReturn([UserTestBuilder::anActiveUser()->withId(101)->build()]);
+        $user_manager->method('getAllUsersByEmail')->with('john.doe@example.com')->willReturn([UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build()]);
 
         $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
             new JiraTuleapUsersMapping(),
@@ -303,5 +258,7 @@ class JiraXmlExporterTest extends TestCase
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
         );
+
+        self::assertCount(3, $tracker_xml->xpath('//artifacts/artifact'));
     }
 }
