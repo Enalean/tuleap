@@ -30,11 +30,7 @@
         </p>
 
         <trove-cat-link
-            class="
-                tlp-button-secondary
-                switch-to-projects-softwaremap-empty-state
-                empty-state-action
-            "
+            class="tlp-button-secondary switch-to-projects-softwaremap-empty-state empty-state-action"
         >
             {{ trove_cat_label }}
         </trove-cat-link>

@@ -31,10 +31,7 @@
             v-bind:data-test="`dropdown-gitlab-administration-${repository.id}`"
         ></i>
         <div
-            class="
-                tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right
-                gitlab-administration-dropdown
-            "
+            class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right gitlab-administration-dropdown"
             ref="dropdown_gitlab_administration_menu_options"
             data-test="dropdown-gitlab-administration-menu-options"
             role="menu"

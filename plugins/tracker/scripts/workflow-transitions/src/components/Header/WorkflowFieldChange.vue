@@ -35,10 +35,7 @@
             <div>
                 <span>{{ workflow_field_label }}</span>
                 <button
-                    class="
-                        tlp-button-danger tlp-button-outline tlp-button-small
-                        tracker-workflow-transition-configuration-form-button
-                    "
+                    class="tlp-button-danger tlp-button-outline tlp-button-small tracker-workflow-transition-configuration-form-button"
                     data-target="modal-confirm-change-field"
                     v-on:click="showModal()"
                     v-bind:disabled="is_operation_running"

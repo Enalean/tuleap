@@ -23,25 +23,14 @@
         <div class="tlp-dropdown-split-button test-plan-add-test-dropdown">
             <a
                 v-bind:href="add_button_href"
-                class="
-                    tlp-button-primary
-                    tlp-button-outline
-                    tlp-button-small
-                    tlp-dropdown-split-button-main
-                "
+                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
                 data-test="add-test-button"
                 v-translate
             >
                 Create a new test
             </a>
             <button
-                class="
-                    tlp-button-primary
-                    tlp-button-outline
-                    tlp-append
-                    tlp-dropdown-split-button-caret
-                    tlp-button-small
-                "
+                class="tlp-button-primary tlp-button-outline tlp-append tlp-dropdown-split-button-caret tlp-button-small"
                 ref="dropdownTrigger"
             >
                 <i class="fa fa-caret-down"></i>

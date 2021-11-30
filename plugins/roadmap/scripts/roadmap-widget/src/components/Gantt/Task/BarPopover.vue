@@ -77,10 +77,7 @@
                         </td>
                         <td>
                             <p
-                                class="
-                                    roadmap-gantt-task-popover-value
-                                    roadmap-gantt-task-popover-value-error
-                                "
+                                class="roadmap-gantt-task-popover-value roadmap-gantt-task-popover-value-error"
                                 v-if="is_progress_in_error"
                             >
                                 {{ task.progress_error_message }}

@@ -27,10 +27,7 @@
         <div class="project-registration-content">
             <button
                 type="button"
-                class="
-                    tlp-button-primary tlp-button-large tlp-form-element-disabled
-                    project-registration-next-button
-                "
+                class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                 data-test="project-registration-next-button"
                 v-bind:disabled="!is_template_selected"
                 v-on:click.prevent="goToInformationPage"

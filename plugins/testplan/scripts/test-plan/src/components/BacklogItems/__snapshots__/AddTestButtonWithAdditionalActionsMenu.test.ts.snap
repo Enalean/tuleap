@@ -8,12 +8,7 @@ exports[`AddTestButtonWithAdditionalActionsMenu Displays the button if condition
     class="tlp-dropdown-split-button test-plan-add-test-dropdown"
   >
     <a
-      class="
-                tlp-button-primary
-                tlp-button-outline
-                tlp-button-small
-                tlp-dropdown-split-button-main
-            "
+      class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
       data-current-language="en_US"
       data-msgid="
             Create a new test
@@ -27,13 +22,7 @@ exports[`AddTestButtonWithAdditionalActionsMenu Displays the button if condition
     </a>
      
     <button
-      class="
-                tlp-button-primary
-                tlp-button-outline
-                tlp-append
-                tlp-dropdown-split-button-caret
-                tlp-button-small
-            "
+      class="tlp-button-primary tlp-button-outline tlp-append tlp-dropdown-split-button-caret tlp-button-small"
     >
       <i
         class="fa fa-caret-down"

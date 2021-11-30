@@ -21,11 +21,7 @@
 <template>
     <span
         v-if="has_initial_effort"
-        class="
-            taskboard-card-inital-effort
-            tlp-badge-outline tlp-badge-rounded
-            taskboard-no-text-selection
-        "
+        class="taskboard-card-inital-effort tlp-badge-outline tlp-badge-rounded taskboard-no-text-selection"
         v-bind:class="color_classname"
         v-bind:title="initial_effort_label"
     >

@@ -22,10 +22,7 @@
         <div class="project-release-open-sprint-badges">
             <i class="project-release-open-sprint-badge-icon-toggle fa" />
             <div
-                class="
-                    project-release-info-badge project-release-info-badge-open-sprint
-                    tlp-badge-primary
-                "
+                class="project-release-info-badge project-release-info-badge-open-sprint tlp-badge-primary"
                 v-bind:class="{ 'tlp-badge-outline': isPastRelease || not_in_progress() }"
                 data-test="sprint-label"
             >

@@ -23,10 +23,7 @@
         <translate tag="h2" class="test-plan-list-of-campaigns-title">Test campaigns</translate>
         <button
             type="button"
-            class="
-                tlp-button-primary tlp-button-outline tlp-button-small
-                test-plan-list-of-campaigns-new-button
-            "
+            class="tlp-button-primary tlp-button-outline tlp-button-small test-plan-list-of-campaigns-new-button"
             v-if="should_button_be_displayed"
             data-test="new-campaign"
             v-on:click="showCreateModal"

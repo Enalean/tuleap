@@ -25,10 +25,7 @@
                     {{ tracker_program_increment_label }}
                 </h2>
                 <button
-                    class="
-                        tlp-button-primary tlp-button-outline tlp-button-small
-                        program-increment-title-button
-                    "
+                    class="tlp-button-primary tlp-button-outline tlp-button-small program-increment-title-button"
                     v-if="user_can_create_program_increment"
                     data-test="create-program-increment-button"
                 >

@@ -28,10 +28,7 @@
             data-test="entry-link"
         >
             <span
-                class="
-                    switch-to-recent-items-entry-badge
-                    cross-ref-badge cross-ref-badge-on-dark-background
-                "
+                class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
                 v-bind:class="xref_color"
                 v-if="entry.xref"
             >

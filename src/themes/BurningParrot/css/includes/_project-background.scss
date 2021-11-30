@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../../../themes/common/css/project-background/background" with ($project-background-images-path: "../../common/images/project-background/");
+@use "../../../../themes/common/css/project-background/background" with (
+    $project-background-images-path: "../../common/images/project-background/"
+);
 @use "sass:map";
 @use "global-variables";
 

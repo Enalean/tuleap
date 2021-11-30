@@ -23,10 +23,7 @@
         <button
             v-if="item.user_can_write"
             type="button"
-            class="
-                tlp-button-primary tlp-button-small
-                document-quick-look-folder-action-new-folder-button
-            "
+            class="tlp-button-primary tlp-button-small document-quick-look-folder-action-new-folder-button"
             v-on:click.prevent="showNewFolderModal"
         >
             <i class="far fa-folder-open tlp-button-icon"></i>

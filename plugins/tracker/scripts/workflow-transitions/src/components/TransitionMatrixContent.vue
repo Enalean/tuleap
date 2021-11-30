@@ -52,10 +52,7 @@
             <button
                 v-if="is_workflow_advanced"
                 type="button"
-                class="
-                    tlp-button-primary tlp-button-mini
-                    tracker-workflow-advanced-transition-button
-                "
+                class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
                 v-bind:class="{ 'tlp-button-success': is_transition_updated }"
                 v-on:click="openModal()"
                 data-test-action="configure-transition"

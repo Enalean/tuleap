@@ -21,9 +21,7 @@
 <template>
     <button
         type="button"
-        class="
-            tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main
-        "
+        class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
         data-test="document-quick-look-button"
         v-on:click="toggleQuickLook()"
     >
