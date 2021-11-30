@@ -30,6 +30,8 @@ use Tuleap\SVN\Repository\Repository;
 
 class ImmutableTagCreator
 {
+    private const MAX_LIST_SIZE = 65535;
+
     /**
      * @var ProjectHistoryFormatter
      */
@@ -59,6 +61,10 @@ class ImmutableTagCreator
         $this->immutable_tag_factory     = $immutable_tag_factory;
     }
 
+    /**
+     * @throws CannotCreateImmuableTagException
+     * @throws ImmutableTagListTooBigException
+     */
     public function save(Repository $repository, $immutable_tags_path, $immutable_tags_whitelist)
     {
         $this->saveWithoutHistory($repository, $immutable_tags_path, $immutable_tags_whitelist);
@@ -72,6 +78,10 @@ class ImmutableTagCreator
         );
     }
 
+    /**
+     * @throws CannotCreateImmuableTagException
+     * @throws ImmutableTagListTooBigException
+     */
     public function saveWithoutHistory(Repository $repository, $immutable_tags_path, $immutable_tags_whitelist)
     {
         if (
@@ -87,10 +97,19 @@ class ImmutableTagCreator
         }
     }
 
-    private function cleanImmutableTag($immutable_tags_path)
+    /**
+     * @throws ImmutableTagListTooBigException
+     */
+    private function cleanImmutableTag(string $immutable_tags_path): string
     {
         $immutable_paths = explode(PHP_EOL, $immutable_tags_path);
 
-        return implode(PHP_EOL, array_map('trim', $immutable_paths));
+        $cleaned_list = implode(PHP_EOL, array_map('trim', $immutable_paths));
+
+        if (\strlen($cleaned_list) > self::MAX_LIST_SIZE) {
+            throw new ImmutableTagListTooBigException();
+        }
+
+        return $cleaned_list;
     }
 }

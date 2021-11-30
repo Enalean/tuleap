@@ -27,6 +27,7 @@ use SystemEventManager;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\ImmutableTagCreator;
+use Tuleap\SVN\Admin\ImmutableTagListTooBigException;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
@@ -147,6 +148,7 @@ class RepositoryCreator
     }
 
     /**
+     * @throws ImmutableTagListTooBigException
      * @throws CannotCreateRepositoryException
      * @throws UserIsNotSVNAdministratorException
      */
@@ -248,6 +250,9 @@ class RepositoryCreator
         return $svn_repository;
     }
 
+    /**
+     * @throws \Tuleap\SVN\Admin\ImmutableTagListTooBigException
+     */
     private function addSettingsToRepository(Repository $repository, Settings $settings)
     {
         $this->createCommitRules($repository, $settings);
@@ -274,6 +279,9 @@ class RepositoryCreator
         }
     }
 
+    /**
+     * @throws \Tuleap\SVN\Admin\ImmutableTagListTooBigException
+     */
     private function createImmutableTags(Repository $repository, Settings $settings): void
     {
         $immutable_tag = $settings->getImmutableTag();
