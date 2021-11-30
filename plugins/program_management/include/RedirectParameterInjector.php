@@ -87,5 +87,8 @@ final class RedirectParameterInjector
 
         $redirect->query_parameters[IterationRedirectionParameters::FLAG]               = IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
         $redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID] = $iteration_redirection_parameters->getIncrementId();
+        $redirect->query_parameters["link-artifact-id"]                                 = $iteration_redirection_parameters->getIncrementId();
+        $redirect->query_parameters["link-type"]                                        = \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $redirect->query_parameters["immediate"]                                        = "true";
     }
 }

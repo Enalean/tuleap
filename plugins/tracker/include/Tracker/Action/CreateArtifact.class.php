@@ -52,7 +52,7 @@ class Tracker_Action_CreateArtifact
         $link     = (int) $request->get('link-artifact-id');
         $artifact = $this->createArtifact($layout, $request, $current_user);
         if ($artifact) {
-            $this->associateImmediatelyIfNeeded($artifact, $link, $request->get('immediate'), $current_user);
+            $this->associateImmediatelyIfNeeded($artifact, $request, $current_user);
             $this->redirect($request, $current_user, $artifact);
         }
         assert($layout instanceof Tracker_IFetchTrackerSwitcher);
@@ -84,14 +84,26 @@ class Tracker_Action_CreateArtifact
         return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, $email, true);
     }
 
-    private function associateImmediatelyIfNeeded(Artifact $new_artifact, $link_artifact_id, $doitnow, PFUser $current_user)
+    protected function associateImmediatelyIfNeeded(Artifact $new_artifact, \Codendi_Request $request, PFUser $current_user): void
     {
-        if ($link_artifact_id && $doitnow) {
-            $source_artifact = $this->artifact_factory->getArtifactById($link_artifact_id);
-            if ($source_artifact) {
-                $source_artifact->linkArtifact($new_artifact->getId(), $current_user);
-            }
+        $link_artifact_id   = (int) $request->get('link-artifact-id');
+        $is_immediate       = (bool) $request->get('immediate');
+        $artifact_link_type = $request->get('link-type') ?: "";
+
+        if (! $link_artifact_id || ! $is_immediate) {
+            return;
         }
+
+        $source_artifact = $this->artifact_factory->getArtifactById($link_artifact_id);
+        if (! $source_artifact) {
+            return;
+        }
+
+        $source_artifact->linkArtifact(
+            $new_artifact->getId(),
+            $current_user,
+            $artifact_link_type ?: Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+        );
     }
 
     private function redirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact)
