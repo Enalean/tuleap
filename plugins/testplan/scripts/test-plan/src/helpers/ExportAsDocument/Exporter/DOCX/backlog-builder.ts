@@ -23,7 +23,7 @@ import {
     HEADER_LEVEL_SECTION_TITLE,
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
-} from "./Table/document-properties";
+} from "./document-properties";
 import { buildTableCellContent, TABLE_BORDERS } from "./Table/table-builder";
 
 export function getMilestoneBacklogTitle(

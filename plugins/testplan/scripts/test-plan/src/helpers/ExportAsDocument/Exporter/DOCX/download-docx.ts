@@ -31,7 +31,7 @@ import {
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
     properties,
-} from "./Table/document-properties";
+} from "./document-properties";
 import { buildMilestoneBacklog } from "./backlog-builder";
 import { buildFooter, buildHeader } from "./header-footer";
 import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
