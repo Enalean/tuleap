@@ -577,6 +577,35 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
+    public function testItDoesNotRaiseWarningIfItDoesNotHaveAllInformationToDisplayAnAsyncRenderer(): void
+    {
+        $field = $this->buildField();
+
+        $field->process(
+            $this->createMock(Tracker_IDisplayTrackerLayout::class),
+            new class extends Codendi_Request {
+                public function __construct()
+                {
+                    parent::__construct([]);
+                }
+
+                public function get($variable)
+                {
+                    return [
+                        'func' => 'artifactlink-renderer-async',
+                        'renderer_data' => json_encode(["artifact_id" => 123])
+                    ][$variable];
+                }
+
+                public function isAjax()
+                {
+                    return true;
+                }
+            },
+            \Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build()
+        );
+    }
+
     private function buildField(): Tracker_FormElement_Field_ArtifactLink
     {
         return new Tracker_FormElement_Field_ArtifactLink(

@@ -845,6 +845,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     return;
                 }
 
+                $expected_keys                  = array_flip([
+                    'artifact_id',
+                    'tracker_id',
+                    'reverse_artifact_links',
+                    'read_only',
+                    'prefill_removed_values',
+                    'prefill_edited_types',
+                    'from_aid',
+                ]);
+                $are_expected_keys_part_of_data = empty(array_diff_key($expected_keys, $renderer_data));
+                if (! $are_expected_keys_part_of_data) {
+                    return;
+                }
+
                 $artifact_id = $renderer_data['artifact_id'];
                 $artifact    = $this->getArtifactFactory()->getArtifactByIdUserCanView($current_user, $artifact_id);
                 if (! $artifact) {
