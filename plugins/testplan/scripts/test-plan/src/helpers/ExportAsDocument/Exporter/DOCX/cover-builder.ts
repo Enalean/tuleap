@@ -34,6 +34,7 @@ import {
 } from "docx";
 import { loadImage } from "./Image/image-loader";
 import { buildTableCellContent, buildTableCellLabel, TABLE_BORDERS } from "./Table/table-builder";
+import { buildMilestoneTitle } from "./cover-milestone-title-builder";
 
 export async function buildCoverPage(
     gettext_provider: VueGettextProvider,
@@ -45,6 +46,7 @@ export async function buildCoverPage(
         platform_logo_url,
         project_name,
         milestone_name,
+        parent_milestone_name,
         milestone_url,
         user_display_name,
     } = global_export_properties;
@@ -67,6 +69,7 @@ export async function buildCoverPage(
             platform_name,
             project_name,
             milestone_name,
+            parent_milestone_name,
             milestone_url,
             user_display_name,
             exported_formatted_date
@@ -80,6 +83,7 @@ function buildCoverTable(
     platform_name: string,
     project_name: string,
     milestone_name: string,
+    parent_milestone_name: string,
     milestone_url: string,
     user_name: string,
     exported_formatted_date: string
@@ -95,7 +99,10 @@ function buildCoverTable(
         rows: [
             buildCoverTableRow(gettext_provider.$gettext("Platform"), new TextRun(platform_name)),
             buildCoverTableRow(gettext_provider.$gettext("Project"), new TextRun(project_name)),
-            buildCoverTableRow(gettext_provider.$gettext("Milestone"), new TextRun(milestone_name)),
+            buildCoverTableRow(
+                gettext_provider.$gettext("Milestone"),
+                new TextRun(buildMilestoneTitle(milestone_name, parent_milestone_name))
+            ),
             buildCoverTableRow(gettext_provider.$gettext("Exported by"), new TextRun(user_name)),
             buildCoverTableRow(
                 gettext_provider.$gettext("Exported on"),

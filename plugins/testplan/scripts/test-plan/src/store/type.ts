@@ -28,6 +28,7 @@ export interface State {
     readonly project_name: string;
     readonly milestone_id: number;
     readonly milestone_title: string;
+    readonly parent_milestone_title: string;
     readonly milestone_url: string;
     readonly user_can_create_campaign: boolean;
     readonly testdefinition_tracker_id: number | null;

@@ -51,6 +51,10 @@ class TestPlanPresenter
      */
     public $milestone_title;
     /**
+     * @psalm-readonly
+     */
+    public string $parent_milestone_title;
+    /**
      * @var int
      *
      * @psalm-readonly
@@ -110,6 +114,7 @@ class TestPlanPresenter
         string $user_display_name,
         int $milestone_id,
         string $milestone_title,
+        string $parent_milestone_title,
         string $milestone_url,
         int $project_id,
         string $project_name,
@@ -124,6 +129,7 @@ class TestPlanPresenter
         $this->user_display_name            = $user_display_name;
         $this->milestone_id                 = $milestone_id;
         $this->milestone_title              = $milestone_title;
+        $this->parent_milestone_title       = $parent_milestone_title;
         $this->milestone_url                = $milestone_url;
         $this->project_id                   = $project_id;
         $this->project_name                 = $project_name;

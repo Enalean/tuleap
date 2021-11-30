@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         highlight_test_definition_id = null;
     }
     const milestone_title = vue_mount_point.dataset.milestoneTitle || "";
+    const parent_milestone_title = vue_mount_point.dataset.parentMilestoneTitle || "";
     const user_can_create_campaign = vue_mount_point.dataset.userCanCreateCampaign === "1";
     let testdefinition_tracker_id: number | null = Number.parseInt(
         vue_mount_point.dataset.testDefinitionTrackerId || "0",
@@ -83,6 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_name,
         milestone_id,
         milestone_title,
+        parent_milestone_title,
         milestone_url,
         user_can_create_campaign,
         testdefinition_tracker_id,

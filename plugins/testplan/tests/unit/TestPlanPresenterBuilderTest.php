@@ -24,6 +24,7 @@ namespace Tuleap\TestPlan;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Planning_ArtifactMilestone;
+use Planning_Milestone;
 use Planning_MilestonePaneFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
@@ -71,6 +72,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->milestone->shouldReceive('getGroupId')->andReturn(102);
         $this->milestone->shouldReceive('getPlanningId')->andReturn(111);
         $this->milestone->shouldReceive('getArtifactId')->andReturn(999);
+        $this->milestone->shouldReceive('getParent')->andReturnNull()->byDefault();
 
         $this->testmanagement_config       = \Mockery::mock(Config::class);
         $this->tracker_factory             = \Mockery::mock(TrackerFactory::class);
@@ -106,6 +108,28 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertTrue($presenter->user_can_create_campaign);
+    }
+
+    public function testBuildsPresenterWithParentMilestoneTitleIfAny(): void
+    {
+        $parent_artifact = $this->createMock(Planning_Milestone::class);
+        $parent_artifact->method('getArtifactTitle')->willReturn("Parent 01");
+
+        $this->milestone->shouldReceive('getParent')->andReturn($parent_artifact);
+
+        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
+        $tracker = \Mockery::mock(\Tracker::class);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(true);
+
+        $presenter = $this->builder->getPresenter(
+            $this->milestone,
+            UserTestBuilder::aUser()->build(),
+            42,
+            101,
+        );
+
+        $this->assertSame("Parent 01", $presenter->parent_milestone_title);
     }
 
     public function testBuildsPresenterWithAUserThatDoesNotHaveEnoughPermissionsToCreateACampaign(): void

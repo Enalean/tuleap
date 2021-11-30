@@ -102,6 +102,7 @@ export interface GlobalExportProperties {
     readonly user_timezone: string;
     readonly user_locale: string;
     readonly milestone_name: string;
+    readonly parent_milestone_name: string;
     readonly milestone_url: string;
 }
 
