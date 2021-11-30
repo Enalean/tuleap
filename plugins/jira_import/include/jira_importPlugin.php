@@ -25,6 +25,7 @@ use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\JiraImport\Project\CreateProjectFromJira;
 use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
+use Tuleap\JiraImport\Project\ReplayImportCommand;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -110,6 +111,13 @@ final class jira_importPlugin extends Plugin
                     )
                 );
             }
+        );
+
+        $commands_collector->addCommand(
+            ReplayImportCommand::NAME,
+            static fn () => new ReplayImportCommand(
+                new XMLImportHelper(UserManager::instance())
+            )
         );
     }
 }
