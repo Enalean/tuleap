@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement;
 
 use Tracker_Artifact_Redirect;
 use Tuleap\ProgramManagement\Domain\Redirections\IterationRedirectionParameters;
+use Tuleap\ProgramManagement\Domain\Redirections\ProgramRedirectionParameters;
 
 final class RedirectParameterInjector
 {
@@ -33,7 +34,7 @@ final class RedirectParameterInjector
     ): void {
         $this->injectAndInformUserAboutProgramItemWillBeUpdating($response);
 
-        $redirect->query_parameters[RedirectToProgramManagementAppManager::FLAG] = RedirectToProgramManagementAppManager::REDIRECT_AFTER_UPDATE_ACTION;
+        $redirect->query_parameters[ProgramRedirectionParameters::FLAG] = ProgramRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION;
     }
 
     public function injectAndInformUserAboutProgramItem(
@@ -42,7 +43,7 @@ final class RedirectParameterInjector
     ): void {
         $this->injectAndInformUserAboutProgramItemWillBeCreatedIntoTeams($response);
 
-        $redirect->query_parameters[RedirectToProgramManagementAppManager::FLAG] = RedirectToProgramManagementAppManager::REDIRECT_AFTER_CREATE_ACTION;
+        $redirect->query_parameters[ProgramRedirectionParameters::FLAG] = ProgramRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
     }
 
     private function injectAndInformUserAboutProgramItemWillBeUpdating(\Response $response): void

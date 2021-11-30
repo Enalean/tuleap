@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,36 +16,38 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement;
+namespace Tuleap\ProgramManagement\Domain\Redirections;
 
-use Tracker_Artifact_Redirect;
+use Tuleap\ProgramManagement\Domain\Events\RedirectUserAfterArtifactCreationOrUpdateEvent;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 
-class RedirectToProgramIncrementAppHandler
+final class RedirectToProgramManagementProcessor
 {
-    public function process(
-        RedirectToProgramManagementAppManager $program_management_redirect_manager,
-        Tracker_Artifact_Redirect $redirect,
-        \Project $project
+    public static function process(
+        ProgramRedirectionParameters $program_management_redirect_manager,
+        RedirectUserAfterArtifactCreationOrUpdateEvent $event,
+        ProjectReference $project
     ): void {
         if (! $program_management_redirect_manager->isRedirectionNeeded()) {
             return;
         }
 
-        if ($redirect->mode === Tracker_Artifact_Redirect::STATE_CONTINUE) {
-            $redirect->query_parameters[RedirectToProgramManagementAppManager::FLAG] = $program_management_redirect_manager->getRedirectValue();
+        if ($event->isContinueMode()) {
+            $event->setProgramIncrementQueryParameter($program_management_redirect_manager);
 
             return;
         }
 
-        if ($redirect->mode === Tracker_Artifact_Redirect::STATE_STAY) {
+        if ($event->isStayMode()) {
             return;
         }
 
-        $redirect->base_url         = '/program_management/' . urlencode($project->getUnixNameMixedCase());
-        $redirect->query_parameters = [];
+        $event->setBaseUrl('/program_management/' . urlencode($project->getProjectShortName()));
+        $event->resetQueryParameters();
     }
 }
