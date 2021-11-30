@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/plugin-docgen-docx": "file:./scripts/lib/docx",
     "docx": "^7.2.0",
     "dompurify": "^2.2.9",
     "sprintf-js": "^1.1.2"

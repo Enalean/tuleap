@@ -18,7 +18,7 @@
  */
 
 import * as trigger_download from "../trigger-blob-download";
-import * as image_loader from "./Image/image-loader";
+import * as image_loader from "@tuleap/plugin-docgen-docx";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { downloadDocx } from "./download-docx";
 import { ImageRun } from "docx";
