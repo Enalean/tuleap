@@ -1,0 +1,605 @@
+{
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+    "id": "10777",
+    "self": "https://jira.example.com/rest/api/2/issue/10777",
+    "key": "SBX-6",
+    "fields": {
+        "issuetype": {
+            "self": "https://jira.example.com/rest/api/2/issuetype/10102",
+            "id": "10102",
+            "description": "",
+            "iconUrl": "https://jira.example.com/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+            "name": "Bogue",
+            "subtask": false,
+            "avatarId": 10303
+        },
+        "timespent": null,
+        "project": {
+            "self": "https://jira.example.com/rest/api/2/project/10103",
+            "id": "10103",
+            "key": "SBX",
+            "name": "SANDBOX",
+            "projectTypeKey": "software",
+            "avatarUrls": {
+                "48x48": "https://jira.example.com/secure/projectavatar?pid=10103&avatarId=10712",
+                "24x24": "https://jira.example.com/secure/projectavatar?size=small&pid=10103&avatarId=10712",
+                "16x16": "https://jira.example.com/secure/projectavatar?size=xsmall&pid=10103&avatarId=10712",
+                "32x32": "https://jira.example.com/secure/projectavatar?size=medium&pid=10103&avatarId=10712"
+            },
+            "projectCategory": {
+                "self": "https://jira.example.com/rest/api/2/projectCategory/10104",
+                "id": "10104",
+                "description": "Projet interne à ACME",
+                "name": "ACME"
+            }
+        },
+        "fixVersions": [],
+        "customfield_10231": "-vcvd",
+        "customfield_10232": "-",
+        "aggregatetimespent": null,
+        "customfield_10233": "-",
+        "customfield_10234": "-",
+        "customfield_10235": "-",
+        "customfield_10104": null,
+        "customfield_10105": "0|i004bb:",
+        "customfield_10501": null,
+        "customfield_10502": null,
+        "customfield_10229": "-",
+        "resolutiondate": null,
+        "workratio": -1,
+        "lastViewed": "2021-11-19T16:27:05.862+0100",
+        "watches": {
+            "self": "https://jira.example.com/rest/api/2/issue/SBX-6/watchers",
+            "watchCount": 0,
+            "isWatching": false
+        },
+        "created": "2021-03-24T10:56:18.499+0100",
+        "customfield_10100": null,
+        "priority": {
+            "self": "https://jira.example.com/rest/api/2/priority/4",
+            "iconUrl": "https://jira.example.com/images/icons/priorities/trivial.svg",
+            "name": "Normal",
+            "id": "4"
+        },
+        "customfield_10214": null,
+        "customfield_10215": {
+            "self": "https://jira.example.com/rest/api/2/customFieldOption/10361",
+            "value": "Composant_1",
+            "id": "10361"
+        },
+        "timeestimate": null,
+        "aggregatetimeoriginalestimate": null,
+        "versions": [
+            {
+                "self": "https://jira.example.com/rest/api/2/version/10109",
+                "id": "10109",
+                "description": "",
+                "name": "1.0",
+                "archived": false,
+                "released": false
+            }
+        ],
+        "issuelinks": [],
+        "assignee": {
+            "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+            "name": "jdoe",
+            "key": "JIRAUSER10131",
+            "emailAddress": "john.doe@example.com",
+            "avatarUrls": {
+                "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+            },
+            "displayName": "DOE John",
+            "active": true,
+            "timeZone": "Europe/Paris"
+        },
+        "updated": "2021-03-24T11:08:56.931+0100",
+        "status": {
+            "self": "https://jira.example.com/rest/api/2/status/10007",
+            "description": "(limegreen)",
+            "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+            "name": "VALIDATION",
+            "id": "10007",
+            "statusCategory": {
+                "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                "id": 4,
+                "key": "indeterminate",
+                "colorName": "yellow",
+                "name": "En cours"
+            }
+        },
+        "components": [],
+        "customfield_10290": null,
+        "timeoriginalestimate": null,
+        "description": "gdg",
+        "timetracking": {},
+        "customfield_10401": null,
+        "customfield_10204": "dgdg",
+        "customfield_10249": {
+            "self": "https://jira.example.com/rest/api/2/customFieldOption/10242",
+            "value": "STD_ITG",
+            "id": "10242"
+        },
+        "customfield_10403": "2021-03-24",
+        "customfield_10404": null,
+        "attachment": [],
+        "customfield_10405": null,
+        "aggregatetimeestimate": null,
+        "customfield_10406": null,
+        "customfield_10407": null,
+        "customfield_10408": null,
+        "summary": "bug1",
+        "creator": {
+            "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+            "name": "jdoe",
+            "key": "JIRAUSER10131",
+            "emailAddress": "john.doe@example.com",
+            "avatarUrls": {
+                "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+            },
+            "displayName": "DOE John",
+            "active": true,
+            "timeZone": "Europe/Paris"
+        },
+        "subtasks": [],
+        "reporter": {
+            "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+            "name": "jdoe",
+            "key": "JIRAUSER10131",
+            "emailAddress": "john.doe@example.com",
+            "avatarUrls": {
+                "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+            },
+            "displayName": "DOE John",
+            "active": true,
+            "timeZone": "Europe/Paris"
+        },
+        "customfield_10000": "{summaryBean=com.atlassian.jira.plugin.devstatus.rest.SummaryBean@69f35df5[summary={pullrequest=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@36eb3cb2[overall=PullRequestOverallBean{stateCount=0, state='OPEN', details=PullRequestOverallDetails{openCount=0, mergedCount=0, declinedCount=0}},byInstanceType={}], build=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@67d20fe7[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BuildOverallBean@833a103[failedBuildCount=0,successfulBuildCount=0,unknownBuildCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], review=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@2b8bf462[overall=com.atlassian.jira.plugin.devstatus.summary.beans.ReviewsOverallBean@50ee1b07[stateCount=0,state=<null>,dueDate=<null>,overDue=false,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], deployment-environment=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@27b48bca[overall=com.atlassian.jira.plugin.devstatus.summary.beans.DeploymentOverallBean@329a1d86[topEnvironments=[],showProjects=false,successfulCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], repository=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@4646c753[overall=com.atlassian.jira.plugin.devstatus.summary.beans.CommitOverallBean@6650dabf[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], branch=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@65b9e764[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BranchOverallBean@7adb078[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}]},errors=[],configErrors=[]], devSummaryJson={\"cachedValue\":{\"errors\":[],\"configErrors\":[],\"summary\":{\"pullrequest\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":\"OPEN\",\"details\":{\"openCount\":0,\"mergedCount\":0,\"declinedCount\":0,\"total\":0},\"open\":true},\"byInstanceType\":{}},\"build\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"failedBuildCount\":0,\"successfulBuildCount\":0,\"unknownBuildCount\":0},\"byInstanceType\":{}},\"review\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":null,\"dueDate\":null,\"overDue\":false,\"completed\":false},\"byInstanceType\":{}},\"deployment-environment\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"topEnvironments\":[],\"showProjects\":false,\"successfulCount\":0},\"byInstanceType\":{}},\"repository\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}},\"branch\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}}}},\"isStale\":false}}",
+        "aggregateprogress": {
+            "progress": 0,
+            "total": 0
+        },
+        "customfield_10287": null,
+        "customfield_10202": {
+            "self": "https://jira.example.com/rest/api/2/customFieldOption/10100",
+            "value": "Logiciel",
+            "id": "10100"
+        },
+        "customfield_10236": "-",
+        "customfield_10237": {
+            "self": "https://jira.example.com/rest/api/2/customFieldOption/10192",
+            "value": "-",
+            "id": "10192"
+        },
+        "environment": null,
+        "duedate": "2021-03-24",
+        "progress": {
+            "progress": 0,
+            "total": 0
+        },
+        "comment": {
+            "comments": [
+                {
+                    "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12119",
+                    "id": "12119",
+                    "author": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "body": "sdgdsg",
+                    "updateAuthor": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "created": "2021-03-24T11:08:12.562+0100",
+                    "updated": "2021-03-24T11:08:12.562+0100"
+                },
+                {
+                    "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12120",
+                    "id": "12120",
+                    "author": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "body": "vdv",
+                    "updateAuthor": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "created": "2021-03-24T11:08:22.476+0100",
+                    "updated": "2021-03-24T11:08:22.476+0100"
+                },
+                {
+                    "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12121",
+                    "id": "12121",
+                    "author": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "body": "vdvd",
+                    "updateAuthor": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "created": "2021-03-24T11:08:32.562+0100",
+                    "updated": "2021-03-24T11:08:32.562+0100"
+                },
+                {
+                    "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12122",
+                    "id": "12122",
+                    "author": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "body": "ffdfdgf",
+                    "updateAuthor": {
+                        "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                        "name": "jdoe",
+                        "key": "JIRAUSER10131",
+                        "emailAddress": "john.doe@example.com",
+                        "avatarUrls": {
+                            "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                            "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                            "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                            "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                        },
+                        "displayName": "DOE John",
+                        "active": true,
+                        "timeZone": "Europe/Paris"
+                    },
+                    "created": "2021-03-24T11:08:56.930+0100",
+                    "updated": "2021-03-24T11:08:56.930+0100"
+                }
+            ],
+            "maxResults": 4,
+            "total": 4,
+            "startAt": 0
+        },
+        "worklog": {
+            "startAt": 0,
+            "maxResults": 20,
+            "total": 0,
+            "worklogs": []
+        }
+    },
+    "changelog": {
+        "startAt": 0,
+        "maxResults": 8,
+        "total": 8,
+        "histories": [
+            {
+                "id": "19074",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:06:46.027+0100",
+                "items": [
+                    {
+                        "field": "duedate",
+                        "fieldtype": "jira",
+                        "from": null,
+                        "fromString": null,
+                        "to": "2021-03-24",
+                        "toString": "2021-03-24 00:00:00.0"
+                    }
+                ]
+            },
+            {
+                "id": "19075",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:08:07.365+0100",
+                "items": [
+                    {
+                        "field": "assignee",
+                        "fieldtype": "jira",
+                        "from": null,
+                        "fromString": null,
+                        "to": "JIRAUSER10131",
+                        "toString": "DOE John"
+                    }
+                ]
+            },
+            {
+                "id": "19076",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:08:12.564+0100",
+                "items": [
+                    {
+                        "field": "status",
+                        "fieldtype": "jira",
+                        "from": "10000",
+                        "fromString": "NOUVEAU",
+                        "to": "3",
+                        "toString": "ANALYSE"
+                    }
+                ]
+            },
+            {
+                "id": "19077",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:08:17.528+0100",
+                "items": [
+                    {
+                        "field": "Fil d'analyse",
+                        "fieldtype": "custom",
+                        "from": null,
+                        "fromString": "-",
+                        "to": null,
+                        "toString": "-vcvd"
+                    },
+                    {
+                        "field": "status",
+                        "fieldtype": "jira",
+                        "from": "3",
+                        "fromString": "ANALYSE",
+                        "to": "10003",
+                        "toString": "ATTENTE_ACCORD"
+                    }
+                ]
+            },
+            {
+                "id": "19078",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:08:22.477+0100",
+                "items": [
+                    {
+                        "field": "status",
+                        "fieldtype": "jira",
+                        "from": "10003",
+                        "fromString": "ATTENTE_ACCORD",
+                        "to": "10004",
+                        "toString": "CORRECTION"
+                    }
+                ]
+            },
+            {
+                "id": "19079",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:08:27.728+0100",
+                "items": [
+                    {
+                        "field": "status",
+                        "fieldtype": "jira",
+                        "from": "10004",
+                        "fromString": "CORRECTION",
+                        "to": "10005",
+                        "toString": "RELECTURE"
+                    }
+                ]
+            },
+            {
+                "id": "19080",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:08:32.563+0100",
+                "items": [
+                    {
+                        "field": "status",
+                        "fieldtype": "jira",
+                        "from": "10005",
+                        "fromString": "RELECTURE",
+                        "to": "10006",
+                        "toString": "INTEGRATION"
+                    }
+                ]
+            },
+            {
+                "id": "19081",
+                "author": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "created": "2021-03-24T11:08:56.932+0100",
+                "items": [
+                    {
+                        "field": "Branche intégration",
+                        "fieldtype": "custom",
+                        "from": "10197",
+                        "fromString": "-",
+                        "to": "10242",
+                        "toString": "STD_ITG"
+                    },
+                    {
+                        "field": "status",
+                        "fieldtype": "jira",
+                        "from": "10006",
+                        "fromString": "INTEGRATION",
+                        "to": "10007",
+                        "toString": "VALIDATION"
+                    }
+                ]
+            }
+        ]
+    }
+}

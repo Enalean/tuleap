@@ -173,7 +173,7 @@ class ChangelogSnapshotBuilder
                 continue;
             }
 
-            if ($field_mapping->getJiraFieldId() === AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME) {
+            if ($changed_field_to_string !== null && $field_mapping->getJiraFieldId() === AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME) {
                 $fields_snapshot[] = $this->extractFieldSnapshotFromChangesetToString(
                     $current_snapshot,
                     $field_id,

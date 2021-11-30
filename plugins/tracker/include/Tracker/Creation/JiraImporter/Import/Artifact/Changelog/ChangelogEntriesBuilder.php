@@ -23,53 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
-class ChangelogEntriesBuilder
+interface ChangelogEntriesBuilder
 {
-    /**
-     * @var JiraClient
-     */
-    private $jira_client;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(
-        JiraClient $jira_client,
-        LoggerInterface $logger
-    ) {
-        $this->jira_client = $jira_client;
-        $this->logger      = $logger;
-    }
-
     /**
      * @return ChangelogEntryValueRepresentation[]
      * @throws JiraConnectionException
      */
-    public function buildEntriesCollectionForIssue(string $jira_issue_key): array
-    {
-        $this->logger->debug("  Start build changelog entries collection ...");
-
-        $changelog_entries = [];
-
-        $iterator = JiraCollectionBuilder::iterateUntilTotal(
-            $this->jira_client,
-            $this->logger,
-            ClientWrapper::JIRA_CORE_BASE_URL . "/issue/" . urlencode($jira_issue_key) . "/changelog",
-            'values',
-        );
-        foreach ($iterator as $value) {
-            $changelog_entries[] = ChangelogEntryValueRepresentation::buildFromAPIResponse($value);
-        }
-
-        $this->logger->debug("  Changelog entries built with success");
-
-        return $changelog_entries;
-    }
+    public function buildEntriesCollectionForIssue(string $jira_issue_key): array;
 }

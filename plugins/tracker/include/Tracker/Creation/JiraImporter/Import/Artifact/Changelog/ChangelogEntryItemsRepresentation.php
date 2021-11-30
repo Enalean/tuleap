@@ -26,96 +26,20 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 /**
  * @psalm-immutable
  */
-class ChangelogEntryItemsRepresentation
+interface ChangelogEntryItemsRepresentation
 {
-    /**
-     * @var string
-     */
-    private $field_id;
-
-    /**
-     * @var string|null
-     */
-    private $from;
-
-    /**
-     * @var string|null
-     */
-    private $from_string;
-
-    /**
-     * @var string|null
-     */
-    private $to;
-
-    /**
-     * @var string|null
-     */
-    private $toString;
-
-    public function __construct(
-        string $field_id,
-        ?string $from,
-        ?string $from_string,
-        ?string $to,
-        ?string $toString
-    ) {
-        $this->field_id    = $field_id;
-        $this->from        = $from;
-        $this->from_string = $from_string;
-        $this->to          = $to;
-        $this->toString    = $toString;
-    }
-
     /**
      * @throws ChangelogAPIResponseNotWellFormedException
      */
-    public static function buildFromAPIResponse(array $response): ?self
-    {
-        if (! array_key_exists('fieldId', $response)) {
-            return null;
-        }
+    public static function buildFromAPIResponse(array $response): ?self;
 
-        if (
-            ! array_key_exists('from', $response) ||
-            ! array_key_exists('fromString', $response) ||
-            ! array_key_exists('to', $response) ||
-            ! array_key_exists('toString', $response)
-        ) {
-            throw new ChangelogAPIResponseNotWellFormedException();
-        }
+    public function getFieldId(): string;
 
-        return new self(
-            $response['fieldId'],
-            $response['from'],
-            $response['fromString'],
-            $response['to'],
-            $response['toString'],
-        );
-    }
+    public function getFrom(): ?string;
 
-    public function getFieldId(): string
-    {
-        return $this->field_id;
-    }
+    public function getFromString(): ?string;
 
-    public function getFrom(): ?string
-    {
-        return $this->from;
-    }
+    public function getTo(): ?string;
 
-    public function getFromString(): ?string
-    {
-        return $this->from_string;
-    }
-
-    public function getTo(): ?string
-    {
-        return $this->to;
-    }
-
-    public function getToString(): ?string
-    {
-        return $this->toString;
-    }
+    public function getToString(): ?string;
 }

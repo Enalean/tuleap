@@ -36,9 +36,7 @@ class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
             "toString"   => "string02"
         ];
 
-        $representation = ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
-
-        $this->assertInstanceOf(ChangelogEntryItemsRepresentation::class, $representation);
+        $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $this->assertSame("field01", $representation->getFieldId());
         $this->assertNull($representation->getFrom());
@@ -54,9 +52,7 @@ class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
             "toString"   => "string03"
         ];
 
-        $representation = ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
-
-        $this->assertInstanceOf(ChangelogEntryItemsRepresentation::class, $representation);
+        $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $this->assertSame("field02", $representation->getFieldId());
         $this->assertSame("10001", $representation->getFrom());
@@ -74,7 +70,7 @@ class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
             "fromString" => null
         ];
 
-        $representation = ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
+        $representation = JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $this->assertNull($representation);
     }
@@ -90,7 +86,7 @@ class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
-        ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
+        JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $response = [
             "fieldId" => "field01",
@@ -101,7 +97,7 @@ class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
-        ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
+        JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $response = [
             "fieldId"    => "field01",
@@ -112,7 +108,7 @@ class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
-        ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
+        JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
 
         $response = [
             "fieldId"    => "field01",
@@ -123,6 +119,6 @@ class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
-        ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
+        JiraCloudChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
     }
 }

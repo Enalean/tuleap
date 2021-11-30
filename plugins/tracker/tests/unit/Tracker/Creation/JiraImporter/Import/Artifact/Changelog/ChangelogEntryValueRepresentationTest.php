@@ -51,9 +51,7 @@ class ChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         ];
 
-        $representation = ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
-
-        $this->assertInstanceOf(ChangelogEntryValueRepresentation::class, $representation);
+        $representation = JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
 
         $this->assertSame(10057, $representation->getId());
         $this->assertSame(1585141810, $representation->getCreated()->getTimestamp());
@@ -75,7 +73,7 @@ class ChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
-        ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
+        JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
 
         $response = [
             "id" => "10057",
@@ -83,7 +81,7 @@ class ChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
-        ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
+        JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
 
         $response = [
             "id" => "10057",
@@ -103,7 +101,7 @@ class ChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
-        ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
+        JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
     }
 
     public function testItBuildsARepresentationFromAPIResponseWithChangeMadeByAnonymous(): void
@@ -122,9 +120,7 @@ class ChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         ];
 
-        $representation = ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
-
-        assertInstanceOf(ChangelogEntryValueRepresentation::class, $representation);
+        $representation = JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse($response);
 
         assertEquals(10057, $representation->getId());
         assertEquals(1585141810, $representation->getCreated()->getTimestamp());

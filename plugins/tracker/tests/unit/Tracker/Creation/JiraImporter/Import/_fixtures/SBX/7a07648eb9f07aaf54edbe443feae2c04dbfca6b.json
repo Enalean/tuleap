@@ -1,0 +1,1148 @@
+[
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10102",
+        "id": "10102",
+        "name": "Bug",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10000",
+                "description": "(blue)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "NOUVEAU",
+                "id": "10000",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/3",
+                "description": "(crimson)\r\nThis issue is being actively worked on at the moment by the assignee.",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/inprogress.png",
+                "name": "ANALYSE",
+                "id": "3",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10002",
+                "description": "(brown)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "FERME",
+                "id": "10002",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10003",
+                "description": "(orange)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD",
+                "id": "10003",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10004",
+                "description": "(gold)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION",
+                "id": "10004",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10005",
+                "description": "(lemonchiffon)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE",
+                "id": "10005",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10006",
+                "description": "(greenyellow)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION",
+                "id": "10006",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10007",
+                "description": "(limegreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION",
+                "id": "10007",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10008",
+                "description": "(forestgreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION",
+                "id": "10008",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10009",
+                "description": "(peru)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RESOLUTION",
+                "id": "10009",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10010",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION_SUSPENDUE",
+                "id": "10010",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10016",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ANALYSE_SUSPENDUE",
+                "id": "10016",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10017",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD_SUSPENDUE",
+                "id": "10017",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10018",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE_SUSPENDUE",
+                "id": "10018",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10019",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION_SUSPENDUE",
+                "id": "10019",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10020",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION_SUSPENDUE",
+                "id": "10020",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10021",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION_SUSPENDUE",
+                "id": "10021",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10103",
+        "id": "10103",
+        "name": "Improvement",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10000",
+                "description": "(blue)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "NOUVEAU",
+                "id": "10000",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/3",
+                "description": "(crimson)\r\nThis issue is being actively worked on at the moment by the assignee.",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/inprogress.png",
+                "name": "ANALYSE",
+                "id": "3",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10002",
+                "description": "(brown)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "FERME",
+                "id": "10002",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10003",
+                "description": "(orange)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD",
+                "id": "10003",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10004",
+                "description": "(gold)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION",
+                "id": "10004",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10005",
+                "description": "(lemonchiffon)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE",
+                "id": "10005",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10006",
+                "description": "(greenyellow)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION",
+                "id": "10006",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10007",
+                "description": "(limegreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION",
+                "id": "10007",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10008",
+                "description": "(forestgreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION",
+                "id": "10008",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10009",
+                "description": "(peru)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RESOLUTION",
+                "id": "10009",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10010",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION_SUSPENDUE",
+                "id": "10010",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10016",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ANALYSE_SUSPENDUE",
+                "id": "10016",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10017",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD_SUSPENDUE",
+                "id": "10017",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10018",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE_SUSPENDUE",
+                "id": "10018",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10019",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION_SUSPENDUE",
+                "id": "10019",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10020",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION_SUSPENDUE",
+                "id": "10020",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10021",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION_SUSPENDUE",
+                "id": "10021",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10105",
+        "id": "10105",
+        "name": "Documentation",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10000",
+                "description": "(blue)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "NOUVEAU",
+                "id": "10000",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10002",
+                "description": "(brown)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "FERME",
+                "id": "10002",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10004",
+                "description": "(gold)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION",
+                "id": "10004",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10005",
+                "description": "(lemonchiffon)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE",
+                "id": "10005",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10006",
+                "description": "(greenyellow)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION",
+                "id": "10006",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10007",
+                "description": "(limegreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION",
+                "id": "10007",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10009",
+                "description": "(peru)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RESOLUTION",
+                "id": "10009",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10010",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION_SUSPENDUE",
+                "id": "10010",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10018",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE_SUSPENDUE",
+                "id": "10018",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10019",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION_SUSPENDUE",
+                "id": "10019",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10020",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION_SUSPENDUE",
+                "id": "10020",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10106",
+        "id": "10106",
+        "name": "Robustness",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10000",
+                "description": "(blue)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "NOUVEAU",
+                "id": "10000",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/3",
+                "description": "(crimson)\r\nThis issue is being actively worked on at the moment by the assignee.",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/inprogress.png",
+                "name": "ANALYSE",
+                "id": "3",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10002",
+                "description": "(brown)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "FERME",
+                "id": "10002",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10003",
+                "description": "(orange)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD",
+                "id": "10003",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10004",
+                "description": "(gold)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION",
+                "id": "10004",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10005",
+                "description": "(lemonchiffon)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE",
+                "id": "10005",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10006",
+                "description": "(greenyellow)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION",
+                "id": "10006",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10007",
+                "description": "(limegreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION",
+                "id": "10007",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10008",
+                "description": "(forestgreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION",
+                "id": "10008",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10009",
+                "description": "(peru)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RESOLUTION",
+                "id": "10009",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10010",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION_SUSPENDUE",
+                "id": "10010",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10016",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ANALYSE_SUSPENDUE",
+                "id": "10016",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10017",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD_SUSPENDUE",
+                "id": "10017",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10018",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE_SUSPENDUE",
+                "id": "10018",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10019",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION_SUSPENDUE",
+                "id": "10019",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10020",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION_SUSPENDUE",
+                "id": "10020",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10021",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION_SUSPENDUE",
+                "id": "10021",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10217",
+        "id": "10217",
+        "name": "Sous-ticket",
+        "subtask": true,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10000",
+                "description": "(blue)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "NOUVEAU",
+                "id": "10000",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/3",
+                "description": "(crimson)\r\nThis issue is being actively worked on at the moment by the assignee.",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/inprogress.png",
+                "name": "ANALYSE",
+                "id": "3",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10002",
+                "description": "(brown)",
+                "iconUrl": "https://jira.example.com/",
+                "name": "FERME",
+                "id": "10002",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10003",
+                "description": "(orange)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD",
+                "id": "10003",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10004",
+                "description": "(gold)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION",
+                "id": "10004",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10005",
+                "description": "(lemonchiffon)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE",
+                "id": "10005",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10006",
+                "description": "(greenyellow)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION",
+                "id": "10006",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10007",
+                "description": "(limegreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION",
+                "id": "10007",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10008",
+                "description": "(forestgreen)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION",
+                "id": "10008",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10009",
+                "description": "(peru)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RESOLUTION",
+                "id": "10009",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10010",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "CORRECTION_SUSPENDUE",
+                "id": "10010",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10016",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ANALYSE_SUSPENDUE",
+                "id": "10016",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10017",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "ATTENTE_ACCORD_SUSPENDUE",
+                "id": "10017",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10018",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "RELECTURE_SUSPENDUE",
+                "id": "10018",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10019",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "INTEGRATION_SUSPENDUE",
+                "id": "10019",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10020",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VALIDATION_SUSPENDUE",
+                "id": "10020",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10021",
+                "description": "(darkgray)",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "VERIFICATION_SUSPENDUE",
+                "id": "10021",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    }
+]

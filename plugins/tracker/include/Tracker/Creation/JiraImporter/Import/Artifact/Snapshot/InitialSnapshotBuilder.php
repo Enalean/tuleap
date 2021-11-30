@@ -226,7 +226,7 @@ class InitialSnapshotBuilder
                 }
 
                 $field_mapping = $current_snapshot_field->getFieldMapping();
-                if ($this->fieldListHasInitialValue($field_mapping, $changed_field)) {
+                if ($changed_field_from !== null && $this->fieldListHasInitialValue($field_mapping, $changed_field)) {
                     $bound_value       = $this->list_field_change_value_retriever->retrieveBoundValue($changed_field_from, $field_mapping);
                     $field_snapshots[] = new FieldSnapshot(
                         $field_mapping,
