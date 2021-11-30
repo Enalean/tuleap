@@ -44,6 +44,7 @@ describe("download-docx", () => {
         await downloadDocx(
             {
                 name: "Document Title",
+                backlog: [],
             },
             gettext_provider,
             {

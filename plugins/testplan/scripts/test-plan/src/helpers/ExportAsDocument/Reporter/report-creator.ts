@@ -18,17 +18,18 @@
  */
 
 import type { VueGettextProvider } from "../../vue-gettext-provider";
-import type { GlobalExportProperties } from "../../../type";
-import type { ExportDocument } from "../../../type";
+import type { BacklogItem, ExportDocument, GlobalExportProperties } from "../../../type";
 
 export function createExportReport(
     gettext_provider: VueGettextProvider,
-    global_properties: GlobalExportProperties
+    global_properties: GlobalExportProperties,
+    backlog_items: ReadonlyArray<BacklogItem>
 ): ExportDocument {
     return {
         name: gettext_provider.$gettextInterpolate(
             gettext_provider.$gettext("Test Report %{ milestone_title }"),
             { milestone_title: global_properties.milestone_name }
         ),
+        backlog: backlog_items,
     };
 }

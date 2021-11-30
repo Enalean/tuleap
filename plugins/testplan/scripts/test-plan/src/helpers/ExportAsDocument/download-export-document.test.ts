@@ -44,7 +44,8 @@ describe("Start download of export document", () => {
                 milestone_url: "/path/to/13.3",
             },
             gettext_provider,
-            download_document
+            download_document,
+            []
         );
 
         expect(create_export_report).toHaveBeenCalledTimes(1);

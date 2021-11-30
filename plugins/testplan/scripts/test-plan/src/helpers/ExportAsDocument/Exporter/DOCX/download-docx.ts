@@ -19,14 +19,22 @@
 
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { triggerBlobDownload } from "./trigger-blob-download";
-import { File, Packer } from "docx";
+import { File, Packer, Paragraph, StyleLevel } from "docx";
 import type {
     DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
 } from "../../../../type";
 import { buildCoverPage } from "./cover-builder";
-import { properties } from "./Table/document-properties";
+import {
+    HEADER_LEVEL_SECTION,
+    HEADER_STYLE_SECTION_TITLE,
+    MAIN_TITLES_NUMBERING_ID,
+    properties,
+} from "./Table/document-properties";
+import { buildMilestoneBacklog } from "./backlog-builder";
+import { buildFooter, buildHeader } from "./header-footer";
+import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
 
 export async function downloadDocx(
     document: ExportDocument,
@@ -38,6 +46,14 @@ export async function downloadDocx(
         datetime_locale_information.locale,
         { timeZone: datetime_locale_information.timezone }
     );
+
+    const footers = {
+        default: buildFooter(gettext_provider, global_export_properties, exported_formatted_date),
+    };
+
+    const headers = {
+        default: buildHeader(global_export_properties),
+    };
 
     const file = new File({
         ...properties,
@@ -53,6 +69,35 @@ export async function downloadDocx(
                 properties: {
                     titlePage: true,
                 },
+            },
+            {
+                headers,
+                children: [
+                    new Paragraph({
+                        text: gettext_provider.$gettext("Table of contents"),
+                        heading: HEADER_LEVEL_SECTION,
+                        numbering: {
+                            reference: MAIN_TITLES_NUMBERING_ID,
+                            level: 0,
+                        },
+                    }),
+                    new TableOfContentsPrefilled(gettext_provider, global_export_properties, {
+                        hyperlink: true,
+                        stylesWithLevels: [
+                            new StyleLevel(
+                                HEADER_STYLE_SECTION_TITLE,
+                                Number(HEADER_STYLE_SECTION_TITLE.substr(-1))
+                            ),
+                        ],
+                    }),
+                ],
+            },
+            {
+                headers,
+                children: [
+                    ...buildMilestoneBacklog(document, gettext_provider, global_export_properties),
+                ],
+                footers,
             },
         ],
     });
