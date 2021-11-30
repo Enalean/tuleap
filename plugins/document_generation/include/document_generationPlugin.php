@@ -82,7 +82,7 @@ class document_generationPlugin extends Plugin
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
 
-        $report_criteria_json = (new ReportCriteriaJsonBuilder())->buildReportCriteriaJson($report);
+        $report_criteria_json = (new ReportCriteriaJsonBuilder(new UGroupManager()))->buildReportCriteriaJson($report);
 
         $event->addExportItem(
             $renderer->renderToString(
