@@ -37,6 +37,7 @@ use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Adapter\Events\BuildRedirectFormActionEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\CanSubmitNewArtifactEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\CollectLinkedProjectsProxy;
 use Tuleap\ProgramManagement\Adapter\Events\IterationUpdateEventProxy;
@@ -169,6 +170,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionA
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Redirections\BuildRedirectFormActionHandler;
 use Tuleap\ProgramManagement\Domain\Redirections\RedirectToIterationsProcessor;
 use Tuleap\ProgramManagement\Domain\Redirections\RedirectToProgramManagementProcessor;
 use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
@@ -179,7 +181,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
-use Tuleap\ProgramManagement\RedirectParameterInjector;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\ProgramManagement\Templates\ProgramTemplate;
 use Tuleap\ProgramManagement\Templates\TeamTemplate;
@@ -875,28 +876,16 @@ final class program_managementPlugin extends Plugin
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $program_management_redirect_manager = ProgramRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
-        $iteration_redirection_parameters    = IterationRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
+        $program_increment_redirection_parameters = ProgramRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
+        $iteration_redirection_parameters         = IterationRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
 
-        if (! $program_management_redirect_manager->isRedirectionNeeded() && ! $iteration_redirection_parameters->isRedirectionNeeded()) {
-            return;
-        }
-
-        $redirect = new RedirectParameterInjector();
-
-        if ($program_management_redirect_manager->needsRedirectionAfterUpdate()) {
-            $redirect->injectAndInformUserAboutUpdatingProgramItem($event->getRedirect(), $GLOBALS['Response']);
-
-            return;
-        }
-
-        if ($iteration_redirection_parameters->needsRedirectionAfterCreate()) {
-            $redirect->injectAndInformUserAboutCreatingIncrementIteration($event->getRedirect(), $GLOBALS['Response'], $iteration_redirection_parameters);
-
-            return;
-        }
-
-        $redirect->injectAndInformUserAboutProgramItem($event->getRedirect(), $GLOBALS['Response']);
+        BuildRedirectFormActionHandler::injectParameters(
+            $program_increment_redirection_parameters,
+            $iteration_redirection_parameters,
+            BuildRedirectFormActionEventProxy::fromEvent(
+                $event
+            )
+        );
     }
 
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
