@@ -267,6 +267,8 @@ $spacing-between-nav-items: 5px;
 }
 
 .project-sidebar-title {
+    display: flex;
+    align-items: center;
     margin: 0 0 0 calc(-1 * var(--tlp-small-spacing));
     padding: var(--tlp-small-spacing);
     border-radius: var(--tlp-large-radius);
@@ -275,6 +277,7 @@ $spacing-between-nav-items: 5px;
     font-weight: 600;
     line-height: 1.3125rem;
     text-decoration: none;
+    overflow-wrap: anywhere;
 
     &:visited {
         color: var(--tlp-white-color);
